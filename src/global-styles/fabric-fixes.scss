@@ -1,0 +1,205 @@
+@import "./shadows.scss";
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+	font-weight: 100;
+}
+
+.ms-Button--compound .ms-Button-icon {
+	padding-bottom: 8px;
+	font-size: 17px;
+}
+
+.ms-Nav-groupHeaderFontSize {
+	font-size: 14px !important;
+	font-weight: 400 !important;
+	.ms-Nav-chevron {
+		font-size: 10px !important;
+	}
+}
+
+.ms-table {
+	@include box_shadow(2);
+	width: 100%;
+	border-collapse: collapse;
+	thead tr th {
+		text-align: left;
+	}
+	th,
+	td {
+		border: none;
+		background: #fff;
+		padding: 12px;
+		font-size: 14px;
+	}
+	th {
+		font-weight: 300;
+		font-size: 13px;
+		padding: 12px 15px;
+		background: #fafafa;
+		.sort-indicators .positive,
+		.sort-indicators .negative {
+			display: none;
+		}
+		&.current {
+			background: #212121;
+			color: #fff;
+			.sort-indicators {
+				float: right;
+			}
+			&.positive {
+				.sort-indicators .positive {
+					display: block;
+				}
+			}
+			&.negative {
+				.sort-indicators .negative {
+					display: block;
+				}
+			}
+		}
+	}
+	.table-head-sort {
+		cursor: pointer;
+		&:hover {
+			background: #f5f5f5;
+			color: #212121;
+		}
+	}
+}
+
+.ms-CommandBar.fixed {
+	box-sizing: content-box;
+	@include box_shadow(3);
+	background-color: #fff !important;
+	border-bottom: 1px solid #e0e0e0;
+	.ms-CommandBarSearch {
+		border-right: none !important;
+	}
+	.ms-CommandBar-primaryCommands {
+		margin-right: 0;
+		right: 0;
+	}
+	.ms-CommandBarSearch:before {
+		border-bottom: none;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.ms-Panel-content {
+		padding-bottom: 40px;
+	}
+	#root {
+		padding-bottom: 40px;
+	}
+	.ms-Button--primary.delete {
+		position: fixed;
+		width: 100%;
+		bottom: 0;
+		left: 0;
+		border-radius: 0;
+		padding: 20px;
+		z-index: 1;
+		margin: 0;
+	}
+	.dental-history-toggle {
+		display: none;
+	}
+	.ms-CommandBarItem-commandText {
+		display: none !important;
+	}
+	table.responsive {
+		margin: 0;
+		padding: 0;
+		border: 1px solid transparent;
+		box-shadow: none !important;
+		thead {
+			display: none;
+		}
+		tbody {
+			tr {
+				background: #fff;
+				display: block;
+				margin: 0 auto;
+				margin-top: 15px;
+				@include box_shadow(2);
+				td:not(.no-label):before {
+					content: attr(data-head);
+					float: left;
+					font-size: 12px;
+					text-transform: uppercase;
+					font-weight: bold;
+					padding: 13px;
+					clear: both;
+					background: #f5f5f5;
+					min-width: 130px;
+					text-align: left;
+				}
+				td {
+					display: block;
+					text-align: right;
+					font-size: 14px;
+				}
+			}
+		}
+	}
+}
+.ms-BasePicker {
+	.ms-BasePicker-text {
+		border-color: #a6a6a6;
+	}
+	.ms-BasePicker-input {
+		height: auto;
+	}
+}
+
+.ms-Persona.treatment-link {
+	background: #eeeeee;
+	transition: 0.4s all;
+}
+
+.ms-Persona.treatment-link:hover {
+	@include box_shadow(4);
+	background: #fff;
+}
+
+.ms-Persona.treatment-link.ms-Persona--xxs {
+	height: 25px;
+	.ms-Persona-primaryText {
+		font-size: 12px;
+	}
+}
+
+.ms-Button--primary {
+	border-radius: 2px;
+	transition: 0.4s all;
+	&:hover {
+		@include box_shadow(3);
+	}
+	&.delete {
+		background: #f44336;
+		&:hover {
+			background: #c62828;
+		}
+	}
+}
+
+.ms-Toggle-stateText {
+	position: relative;
+	top: 2px;
+}
+
+.ms-Panel-content {
+	height: 100%;
+}
+
+.ms-Dropdown-title {
+	text-align: left;
+}
+
+.ms-TextField {
+	margin-bottom: 10px !important;
+}

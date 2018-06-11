@@ -1,0 +1,112 @@
+@import "../../../global-styles/shadows.scss";
+
+.appointment-hr {
+	border: none;
+	margin-bottom: 20px;
+	border-top: 1px dotted #e0e0e0;
+}
+
+.appointment-top {
+	position: relative;
+	.send-reminder {
+		position: absolute;
+		top: 25px;
+		right: 0;
+	}
+}
+
+.appointment-input {
+	margin-bottom: 20px;
+	position: relative;
+	.time-input {
+		display: inline-block;
+		margin-bottom: 0;
+		width: 22%;
+		&:not(.seconds) .ms-TextField-wrapper div {
+			border-right: none;
+		}
+	}
+	.appendage {
+		position: absolute;
+		right: 0;
+	}
+	label {
+		display: block;
+		margin-bottom: 10px;
+	}
+	.involved-teeth .ms-BasePicker-text,
+	.prescription .ms-BasePicker-text,
+	.treatment-type .ms-Dropdown-title {
+		border-color: #a6a6a6;
+	}
+	.payment-insight {
+		margin-top: 8px;
+	}
+	.payment-insight,
+	.insight {
+		font-size: 12px;
+		span {
+			color: #fff;
+		}
+	}
+	.insight {
+		span {
+			padding: 2px 7px 3px;
+			border-radius: 20px;
+			&.num-0 {
+				color: #262626;
+				background: transparent;
+			}
+			&.num-1 {
+				background: #ffebee;
+				color: #262626;
+			}
+			&.num-2 {
+				background: #ffcdd2;
+			}
+			&.num-3 {
+				background: #ef9a9a;
+			}
+			&.num-4 {
+				background: #e57373;
+			}
+			&.num-5 {
+				background: #ef5350;
+			}
+			&.num-6 {
+				background: #f44336;
+			}
+			&.num-7 {
+				background: #e53935;
+			}
+			&.num-8 {
+				background: #d32f2f;
+			}
+			&.num-9 {
+				background: #c62828;
+			}
+			// more than 9
+			background: #b71c1c;
+		}
+	}
+}
+
+.appointment-editor a.delete {
+	font-size: 13px;
+	background: #f44336;
+	color: #fff;
+	padding: 5px 8px;
+	display: inline-block;
+	margin-bottom: 30px;
+	border-radius: 2px;
+	cursor: pointer;
+	transition: 0.4s all;
+	i {
+		font-size: 9px;
+		margin-right: 5px;
+	}
+	&:hover {
+		background: #c62828;
+		@include box_shadow(2);
+	}
+}

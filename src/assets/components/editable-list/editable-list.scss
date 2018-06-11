@@ -1,0 +1,73 @@
+@import "../../../global-styles/shadows.scss";
+
+.editable-list-component {
+	margin-top: 10px;
+	font-size: 13px;
+	line-height: 1;
+	.editable-list {
+		border: 1px solid #a6a6a6;
+	}
+	.input {
+		transition: 0.3s all;
+		background: #fff;
+		border-bottom: 1px solid #c8c8c8;
+		&:hover {
+			@include box_shadow(2);
+			border-bottom-color: #4aa9f5;
+		}
+		.input-field,
+		.input-icon {
+			padding: 10px;
+		}
+		.input-icon {
+			padding: 10px;
+			color: #2196f3;
+			cursor: pointer;
+		}
+		.input-image {
+			color: #2196f3;
+			font-size: 20px;
+			padding: 6px 8px;
+			cursor: pointer;
+		}
+		.input-field {
+			border: none;
+			display: block;
+			width: 100%;
+		}
+	}
+	.items {
+		.item {
+			transition: 0.3s all;
+			border-bottom: 1px dotted #c8c8c8;
+			background: #fff;
+			display: block;
+			&:last-child {
+				border-bottom: none;
+			}
+			&:hover {
+				border-color: #2196f3;
+				@include box_shadow(2);
+			}
+			&.toBeDeleted {
+				border-color: red;
+			}
+			.editViewItem {
+				background: transparent;
+				border: 0;
+				padding: 10px;
+				width: 100%;
+			}
+			.delete {
+				transition: 0.4s all;
+				font-size: 10px;
+				cursor: pointer;
+				padding: 12px 12px 12px 5px;
+				color: #000;
+				&:hover {
+					color: red;
+				}
+			}
+		}
+	}
+}

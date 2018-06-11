@@ -1,0 +1,28 @@
+@import "../../../global-styles/shadows.scss";
+
+.settings-component {
+	font-size: 13px;
+	background: #fff;
+	@include box_shadow(2);
+	padding: 20px;
+	.form {
+		.ms-TextField-prefix {
+			font-size: 11px;
+			width: 90px;
+		}
+	}
+	hr {
+		border: none;
+		border-bottom: 1px solid #e3e3e3;
+		margin-bottom: 20px;
+		margin-top: 20px;
+	}
+}
+
+@media screen and (min-width: 992px) {
+	.settings-component {
+		margin-top: 67px;
+		margin-right: 15px;
+		border-radius: 3px;
+	}
+}

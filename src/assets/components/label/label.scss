@@ -1,0 +1,30 @@
+@import "../../../global-styles/shadows.scss";
+.label {
+	background: #212121;
+	padding: 5px 10px 7px;
+	color: #fff;
+	border-radius: 2px;
+	font-size: 13px;
+	margin-right: 3px;
+	margin-bottom: 3px;
+	display: inline-block;
+	@include box_shadow(3);
+	&.clickable {
+		cursor: pointer;
+	}
+	&.warning {
+		background: #fb8c00;
+	}
+	&.primary {
+		background: #3f51b5;
+	}
+	&.danger {
+		background: #f44336;
+	}
+	&.success {
+		background: #4caf50;
+	}
+	&.info {
+		background: #212121;
+	}
+}

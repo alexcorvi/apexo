@@ -1,0 +1,48 @@
+.prescriptions-component {
+	tr {
+		&.to-be-deleted td input {
+			background: #f44336;
+			transition: 0.4s all;
+			color: #fff;
+		}
+		border-bottom: 1px solid #f5f5f5;
+	}
+	td {
+		padding: 0;
+		input {
+			margin-top: 5px;
+		}
+		&.disabled-cell {
+			background: #fafafa;
+		}
+
+		.ms-Dropdown {
+			margin-bottom: 0;
+			.ms-Dropdown-title {
+				border: none;
+			}
+		}
+	}
+	tr:not(.to-be-deleted) {
+		th,
+		td {
+			border-right: 1px solid #f5f5f5;
+		}
+	}
+	.ms-TextField-wrapper div {
+		border: none;
+		background: none;
+	}
+	.delete-item {
+		transition: 0.4s all;
+		background: #f5f5f5;
+		padding: 12px 5px;
+		width: 100%;
+		text-align: center;
+		cursor: pointer;
+		&:hover {
+			background: #f44336;
+			color: #fff;
+		}
+	}
+}

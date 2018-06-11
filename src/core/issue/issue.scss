@@ -1,0 +1,60 @@
+@import "../../global-styles/shadows.scss";
+
+.issues-component {
+	.header {
+		padding: 30px;
+		font-size: 12px;
+		color: #818181;
+		@include box_shadow(1);
+	}
+
+	.ms-Panel-content {
+		margin-bottom: 80px;
+		border-bottom: 1px solid #e3e3e3;
+		border-top: 1px solid #e3e3e3;
+	}
+
+	.issue {
+		margin-bottom: 20px;
+		.content {
+			position: relative;
+			padding: 10px;
+			font-size: 13px;
+			background: #e3e3e3;
+			border-radius: 3px;
+			&:before {
+				content: "";
+				position: absolute;
+				background: #e3e3e3;
+				right: -5px;
+				width: 10px;
+				height: 10px;
+				transform: rotate(45deg);
+			}
+		}
+		.time {
+			font-size: 11px;
+			color: #818181;
+			margin-top: 5px;
+		}
+		&.incoming {
+			.content {
+				background: #e91e63;
+				color: #fff;
+				&:before {
+					right: auto;
+					left: -5px;
+					background: #e91e63;
+				}
+			}
+		}
+	}
+
+	.send-issue {
+		position: absolute;
+		width: 90%;
+		left: 5%;
+		bottom: 15px;
+		@include box_shadow(1);
+	}
+}

@@ -1,0 +1,10 @@
+export { Patient } from './class.patient';
+export { Tooth } from './class.tooth';
+export { ISOTeeth, ISOTeethArr } from './const.iso';
+export { default as patients } from './data.patients';
+export { Gender, genderToString, stringToGender } from './enum.gender';
+export { ToothCondition, conditionToColor } from './enum.toothCondition';
+export { Label } from './interface.label';
+export { namespace } from './const.namespace';
+export { PatientJSON } from './interface.patient-json';
+export { ToothJSON } from './interface.tooth-json';

@@ -1,0 +1,18 @@
+@mixin input () {
+	padding:5px 12px;
+}
+
+@mixin line_box () {
+	@include input();
+	border:0;
+	padding:5px 12px 5px 2px;
+	border-bottom: 1px solid #9E9E9E;
+	background: transparent;
+	font-size: 13px;
+	min-width:300px;
+
+	&:hover {
+		border-bottom-color:#424242;
+	}
+	
+}

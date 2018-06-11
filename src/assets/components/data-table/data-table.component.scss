@@ -1,0 +1,9 @@
+.ms-table {
+    td.clickable {
+        transition: 0.3s all;
+        cursor: pointer;
+        &:hover {
+            background: #f5f5f5;
+        }
+    }
+}

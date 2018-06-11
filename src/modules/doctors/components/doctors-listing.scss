@@ -1,0 +1,38 @@
+@media screen and (max-width: 800px) {
+	.doctors-component {
+		padding: 10px;
+	}
+}
+
+.doctor-editor {
+	.doctor-input {
+		margin-bottom: 15px;
+		label {
+			margin-bottom: 5px;
+			display: block;
+		}
+	}
+}
+
+.duty-table {
+	tr {
+		border: 1px solid #eeeeee;
+	}
+}
+
+.appointments-listing {
+	padding-top: 13px;
+	padding-bottom: 20px;
+}
+
+@media (max-width: 1200px) {
+	.duty-table {
+		margin-top: 15px;
+	}
+}
+
+@media (max-width: 435px) {
+	.duty-table {
+		display: none;
+	}
+}

@@ -1,0 +1,23 @@
+@import "../../global-styles/shadows.scss";
+
+.home {
+	padding-top: 15px;
+	.item {
+		cursor: pointer;
+		transition: 0.4s all;
+		margin-bottom: 20px;
+		padding: 25px;
+		text-align: center;
+		background: #fff;
+		@include box_shadow(1);
+		&:hover {
+			@include box_shadow(3);
+		}
+		i {
+			font-size: 50px;
+		}
+		.title {
+			text-transform: capitalize;
+		}
+	}
+}
