@@ -3,31 +3,9 @@ var WebpackOnBuildPlugin = require('on-build-webpack');
 var webpack = require('webpack');
 var fs = require('fs');
 var nodeSass = require('node-sass');
-var ncp = require('ncp');
 
 var extractCSS = new ExtractTextPlugin('style.css');
 var extractHTML = new ExtractTextPlugin('index.html');
-var buildSpecificPlatforms = new WebpackOnBuildPlugin(() => {
-	require('child_process').exec('rm -rf ./dist/electron/application', function() {
-		require('child_process').exec('rm -rf ./dist/phonegap/www', function() {
-			// build for phonegap
-			ncp('./dist/application', './dist/phonegap/www', function(err) {
-				if (err) {
-					return console.error(err);
-				}
-				console.log('Built for phonegap');
-			});
-
-			// build for electron
-			ncp('./dist/application', './dist/electron/application', function(err) {
-				if (err) {
-					return console.error(err);
-				}
-				console.log('Built for electron');
-			});
-		});
-	});
-});
 
 module.exports = {
 	entry: './src/app.tsx',
@@ -64,5 +42,5 @@ module.exports = {
 		]
 	},
 
-	plugins: [ extractCSS, extractHTML, buildSpecificPlatforms ]
+	plugins: [ extractCSS, extractHTML ]
 };
