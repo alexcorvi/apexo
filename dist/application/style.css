@@ -401,7 +401,7 @@ template {
 
 * {
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent; }
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 
 *:before,
 *:after {
@@ -467,10 +467,7 @@ textarea {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-  color: inherit; }
-
-input[type="text"],
-textarea {
+  color: inherit;
   -webkit-appearance: none; }
 
 ul,
@@ -8271,7 +8268,7 @@ hr {
   fill: lightblue; }
 
 .nvd3 .nv-bars text {
-  fill: transparent; }
+  fill: rgba(0, 0, 0, 0); }
 
 .nvd3 .nv-bars .hover text {
   fill: black; }
@@ -8292,7 +8289,7 @@ hr {
 .nvd3 .nv-multibarHorizontal .nv-groups text {
   font-weight: bold;
   fill: black;
-  stroke: transparent; }
+  stroke: rgba(0, 0, 0, 0); }
 
 /* boxplot CSS */
 .nvd3 .nv-boxplot circle {
@@ -8901,51 +8898,6 @@ Interactive Layer
       text-transform: capitalize; }
 .user-component .persona {
   padding: 10px 25px 0; }
-.issues-component .header {
-  padding: 30px;
-  font-size: 12px;
-  color: #818181;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
-
-.issues-component .ms-Panel-content {
-  margin-bottom: 80px;
-  border-bottom: 1px solid #e3e3e3;
-  border-top: 1px solid #e3e3e3; }
-
-.issues-component .issue {
-  margin-bottom: 20px; }
-  .issues-component .issue .content {
-    position: relative;
-    padding: 10px;
-    font-size: 13px;
-    background: #e3e3e3;
-    border-radius: 3px; }
-    .issues-component .issue .content:before {
-      content: "";
-      position: absolute;
-      background: #e3e3e3;
-      right: -5px;
-      width: 10px;
-      height: 10px;
-      transform: rotate(45deg); }
-  .issues-component .issue .time {
-    font-size: 11px;
-    color: #818181;
-    margin-top: 5px; }
-  .issues-component .issue.incoming .content {
-    background: #e91e63;
-    color: #fff; }
-    .issues-component .issue.incoming .content:before {
-      right: auto;
-      left: -5px;
-      background: #e91e63; }
-
-.issues-component .send-issue {
-  position: absolute;
-  width: 90%;
-  left: 5%;
-  bottom: 15px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
 .confirmation-modal .ms-Panel-main {
   box-shadow: 0px -20px 50px rgba(0, 0, 0, 0.14) !important;
   height: 100px;
