@@ -1,4 +1,4 @@
-import { connectToDB, databases, reSync as reSyncDBWithRemote, reSyncFunctions } from './db';
+import { connectToDB } from './db';
 import { ChooseDoctor } from './login/choose-doctor';
 import { HeaderComponent } from './header/header';
 import { LoginComponent } from './login/login';
@@ -14,10 +14,6 @@ import { messaging } from './messaging/messaging';
 import { prompts } from './prompts/data.prompts';
 import { router } from './router/data.router';
 import { user } from './user/data.user';
-import { constants } from './constants';
-import { report } from './report/report';
-import issues from './issue/data.issues';
-import { IssuesComponent } from './issue/issue';
 import { modals } from './modal/data.modal';
 import { ModalsComponent } from './modal/modal';
 
@@ -29,14 +25,8 @@ export const API = {
 	prompts,
 	messaging,
 	connectToDB,
-	databases,
 	login,
 	user,
-	constants,
-	report,
-	reSyncDBWithRemote,
-	reSyncFunctions,
-	issues,
 	LoginStep,
 	modals
 };
@@ -51,6 +41,7 @@ export const components = {
 	LoginComponent,
 	UserComponent,
 	ChooseDoctor,
-	IssuesComponent,
 	ModalsComponent
 };
+
+(window as any).API = API;
