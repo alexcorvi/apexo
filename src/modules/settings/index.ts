@@ -18,10 +18,7 @@ export const register = {
 			order: 999,
 			url: ''
 		});
-		API.connectToDB<settingsData.SettingItemJSON>(settingsData.namespace)(
-			settingsData.SettingsItem,
-			settingsData.settings
-		);
+		(API.connectToDB(settingsData.namespace) as any)(settingsData.SettingsItem, settingsData.settings);
 	},
 	order: 0
 };

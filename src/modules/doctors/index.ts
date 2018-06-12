@@ -16,7 +16,7 @@ export const register = {
 			order: 0,
 			url: ''
 		});
-		API.connectToDB<doctorsData.DoctorJSON>(doctorsData.namespace, false)(doctorsData.Doctor, doctorsData.doctors);
+		(API.connectToDB(doctorsData.namespace, true) as any)(doctorsData.Doctor, doctorsData.doctors);
 	},
 	order: 7
 };

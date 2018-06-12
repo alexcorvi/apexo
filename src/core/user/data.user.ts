@@ -19,10 +19,10 @@ class UserData {
 		}
 	}
 	logout() {
-		API.login.setLocalStorage({ p: '', u: '' });
 		API.login.loggedIn = false;
-		API.login.clinicID = '';
-		API.login.clinicServer = '';
+		API.login.username = '';
+		API.login.password = '';
+		API.login.server = '';
 		API.login.currentDoctorID = '';
 	}
 }

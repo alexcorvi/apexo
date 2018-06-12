@@ -23,7 +23,7 @@ export const register = {
 			url: '',
 			condition: () => !!settingsData.settings.getSetting('module_prescriptions')
 		});
-		API.connectToDB<prescriptionsData.PrescriptionItemJSON>(prescriptionsData.namespace)(
+		(API.connectToDB(prescriptionsData.namespace) as any)(
 			prescriptionsData.PrescriptionItem,
 			prescriptionsData.prescriptions
 		);

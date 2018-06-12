@@ -17,7 +17,7 @@ export const register = {
 			order: 3,
 			url: ''
 		});
-		API.connectToDB<appointmentsData.AppointmentJSON>(appointmentsData.namespace)(
+		(API.connectToDB(appointmentsData.namespace, true) as any)(
 			appointmentsData.Appointment,
 			appointmentsData.appointments
 		);

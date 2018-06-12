@@ -16,10 +16,7 @@ export const register = {
 			url: '',
 			key: treatmentsData.namespace
 		});
-		API.connectToDB<treatmentsData.TreatmentJSON>(treatmentsData.namespace)(
-			treatmentsData.Treatment,
-			treatmentsData.treatments
-		);
+		(API.connectToDB(treatmentsData.namespace) as any)(treatmentsData.Treatment, treatmentsData.treatments);
 	},
 	order: 3
 };

@@ -25,7 +25,7 @@ export const register = {
 
 			condition: () => !!settingsData.settings.getSetting('module_orthodontics')
 		});
-		API.connectToDB<orthoData.CaseJSON>(orthoData.namespace)(orthoData.OrthoCase, orthoData.cases);
+		(API.connectToDB(orthoData.namespace) as any)(orthoData.OrthoCase, orthoData.cases);
 	},
 	order: 8
 };

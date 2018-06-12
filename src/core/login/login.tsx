@@ -11,8 +11,9 @@ import { observer } from 'mobx-react';
 
 @observer
 export class LoginComponent extends React.Component<{}, {}> {
-	clinicID: TextField;
-	clinicPassword: TextField;
+	usernameField: TextField | undefined;
+	passwordField: TextField | undefined;
+	serverField: TextField | undefined;
 	@observable errorMessage: string = '';
 	@observable disableInputs: boolean = false;
 	@observable step: number = 1;
@@ -21,16 +22,25 @@ export class LoginComponent extends React.Component<{}, {}> {
 			<div className="container m-t-50" style={{ maxWidth: '400px' }}>
 				<div className="login-step">
 					<TextField
+						name="server"
+						label="CouchDB Server location"
+						ref={(el) => (el ? (this.serverField = el) : '')}
+						disabled={this.disableInputs}
+						defaultValue={
+							/* location.origin.replace(/:\d+$/g, ':5984') */ 'http://46.101.172.26:5984/asd/_all_docs'
+						}
+					/>
+					<TextField
 						name="identification"
-						label="Clinic ID"
-						ref={(el) => (el ? (this.clinicID = el) : '')}
+						label="Username"
+						ref={(el) => (el ? (this.usernameField = el) : '')}
 						disabled={this.disableInputs}
 					/>
 					<TextField
 						name="password"
 						type="Password"
-						label="Clinic Password"
-						ref={(el) => (el ? (this.clinicPassword = el) : '')}
+						label="Password"
+						ref={(el) => (el ? (this.passwordField = el) : '')}
 						disabled={this.disableInputs}
 					/>
 					<PrimaryButton
@@ -38,16 +48,21 @@ export class LoginComponent extends React.Component<{}, {}> {
 						disabled={this.disableInputs}
 						className="m-t-15 m-b-15"
 						onClick={async () => {
-							if (!(this.clinicID.value && this.clinicPassword)) {
+							if (!(this.passwordField && this.usernameField && this.serverField)) {
+								return;
+							}
+							if (!(this.usernameField.value && this.passwordField.value && this.serverField.value)) {
+								this.errorMessage = 'All fields are necessary';
 								return;
 							}
 							this.errorMessage = '';
 							const result = await login.login({
-								u: this.clinicID.value || '',
-								p: this.clinicPassword.value || ''
+								user: this.usernameField.value,
+								pass: this.passwordField.value,
+								server: this.serverField.value.replace(/([^\/])\/[^\/].+/, '$1')
 							});
 							if (result !== true) {
-								this.errorMessage = 'Incorrect clinic ID or password';
+								this.errorMessage = result;
 							}
 						}}
 					/>

@@ -90,10 +90,7 @@ class Router {
 			if (newLocation !== this.currentLocation) {
 				this.currentLocation = location.hash.substr(3);
 				// resync this namespace database
-				const resyncFunction = API.reSyncFunctions[this.currentNamespace];
-				if (resyncFunction) {
-					resyncFunction();
-				}
+				// todo
 			}
 		}, 20);
 
