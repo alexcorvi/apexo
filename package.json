@@ -43,8 +43,6 @@
 		"@types/react": "^16.0.19",
 		"@types/react-dom": "^16.0.2",
 		"css-loader": "^0.28.7",
-		"electron-builder": "^19.46.9",
-		"electron-packager": "^9.1.0",
 		"extract-text-webpack-plugin": "^3.0.2",
 		"lite-server": "^2.3.0",
 		"mobx-react-devtools": "^4.2.15",
