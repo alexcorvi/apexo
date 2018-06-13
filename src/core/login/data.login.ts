@@ -37,13 +37,14 @@ class Login {
 			this.username = user;
 			this.password = pass;
 			this.server = server;
+			localStorage.setItem('server_location', server);
 			this.loggedIn = true;
 			registerModules();
 			return true;
 		} catch (e) {
 			return (
 				e.reason ||
-				"An error occured, please make sure that you have entered the right server address and it's accessible"
+				'An error occured, please make sure that the server is online and it\'s accessible. Click "change" to change into another server'
 			);
 		}
 	}
