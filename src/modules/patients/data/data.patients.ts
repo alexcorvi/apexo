@@ -75,17 +75,8 @@ class PatientsData {
 		});
 
 		// delete photos
-		patient.gallery.forEach(async (file) => {
-			const fileID = file.replace('http://storage.googleapis.com/yre/', '');
-			const deleteRes = await API.login.request<{
-				ok: number;
-				n: number;
-			}>({
-				namespace: 'files',
-				subPath: 'delete_clinic',
-				method: 'post',
-				data: { id: fileID }
-			});
+		patient.gallery.forEach(async (fileID) => {
+			await API.files.remove(fileID);
 		});
 
 		// delete orthodontic case

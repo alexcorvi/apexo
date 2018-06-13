@@ -18,7 +18,6 @@ import { convert } from '../../../../assets/utils/teeth-numbering-systems';
 import { observer } from 'mobx-react';
 import { treatmentsData } from '../../../treatments';
 import { Row, Col } from 'antd';
-import { Gallery } from '../../../../assets/components/gallery/gallery';
 
 @observer
 export class DentalHistory extends React.Component<{ patient: Patient; hideTitle?: boolean }, {}> {

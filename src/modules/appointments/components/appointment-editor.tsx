@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Appointment, appointments } from '../data';
 import { DatePicker, Dropdown, Icon, Panel, PanelType, PrimaryButton, TextField, Toggle } from 'office-ui-fabric-react';
 import { Label, LabelType } from '../../../assets/components/label/label.component';
-import { computed, observable } from 'mobx';
+import { computed, observable, toJS } from 'mobx';
 import { Row, Col } from 'antd';
 import { API } from '../../../core';
 import { Profile } from '../../../assets/components/profile/profile';
@@ -372,11 +372,12 @@ export class AppointmentEditor extends React.Component<
 						<hr className="appointment-hr" />
 
 						<Gallery
-							gallery={this.props.appointment.records || []}
-							onChange={(v) => {
-								if (this.props.appointment) {
-									this.props.appointment.records = v;
+							gallery={this.props.appointment.records}
+							onChange={(list) => {
+								if (!this.props.appointment) {
+									return;
 								}
+								this.props.appointment.records = list;
 							}}
 						/>
 						<br />

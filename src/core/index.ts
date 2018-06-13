@@ -10,12 +10,12 @@ import { RouterComponent } from './router/router';
 import { UserComponent } from './user/user';
 import { login, LoginStep } from './login/data.login';
 import { menu } from './menu/data.menu';
-import { messaging } from './messaging/messaging';
 import { prompts } from './prompts/data.prompts';
 import { router } from './router/data.router';
 import { user } from './user/data.user';
 import { modals } from './modal/data.modal';
 import { ModalsComponent } from './modal/modal';
+import { files } from './files/files';
 
 // API
 export const API = {
@@ -23,12 +23,12 @@ export const API = {
 	router,
 	Prompt,
 	prompts,
-	messaging,
 	connectToDB,
 	login,
 	user,
 	LoginStep,
-	modals
+	modals,
+	files
 };
 
 // Components

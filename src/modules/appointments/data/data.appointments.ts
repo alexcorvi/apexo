@@ -49,14 +49,8 @@ class AppointmentsData {
 		const i = this.getIndexByID(id);
 		const appointment = this.list.splice(i, 1)[0];
 		// delete photos
-		appointment.records.forEach(async (file) => {
-			const fileID = file.replace('http://storage.googleapis.com/yre/', '');
-			const deleteRes = await API.login.request<{}>({
-				namespace: 'files',
-				subPath: 'delete_clinic',
-				method: 'post',
-				data: { id: fileID }
-			});
+		appointment.records.forEach(async (fileID) => {
+			await API.files.remove(fileID);
 		});
 	}
 }

@@ -17,7 +17,7 @@ export class PickFile extends React.Component<
 	},
 	{}
 > {
-	pickFileEl: HTMLInputElement;
+	pickFileEl: HTMLInputElement | undefined;
 	render() {
 		return (
 			<div>
@@ -28,6 +28,9 @@ export class PickFile extends React.Component<
 					style={{ display: 'none' }}
 					accept={this.props.accept.join(',')}
 					onChange={() => {
+						if (!this.pickFileEl) {
+							return;
+						}
 						const fileList = this.pickFileEl.files;
 						const resultArr: string[] = [];
 						if (!fileList || !fileList[0]) {
@@ -37,21 +40,17 @@ export class PickFile extends React.Component<
 							const file = fileList.item(index);
 							const reader = new FileReader();
 							reader.onload = async (event: Event) => {
-								const upload = await API.login.request<{ href: string }>({
-									namespace: 'files',
-									method: 'post',
-									subPath: 'upload',
-									data: {
-										file: (event.target as any).result
-									}
-								});
-								if (upload) {
-									resultArr.push(upload.href);
-								}
+								const imageID = await API.files.save(
+									(event.target as any).result.replace(/.*base64,/, '')
+								);
+								resultArr.push(imageID);
 							};
 							reader.readAsDataURL(file);
 						}
 						const checkInterval = setInterval(() => {
+							if (!this.pickFileEl) {
+								return;
+							}
 							if (resultArr.length !== fileList.length) {
 								return;
 							}
@@ -65,6 +64,9 @@ export class PickFile extends React.Component<
 		);
 	}
 	click() {
+		if (!this.pickFileEl) {
+			return;
+		}
 		this.pickFileEl.click();
 	}
 }

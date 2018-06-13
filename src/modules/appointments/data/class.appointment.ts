@@ -1,4 +1,4 @@
-import { computed, intercept, observable } from 'mobx';
+import { computed, intercept, observable, observe } from 'mobx';
 
 import { AppointmentJSON } from './index';
 import { doctorsData } from '../../doctors';
@@ -16,6 +16,8 @@ export class Appointment {
 	 * @memberof Appointment
 	 */
 	_id: string = generateID();
+
+	@observable triggerUpdate: number = 0;
 
 	/**
 	 * If a timer is running then it should be here
@@ -121,7 +123,7 @@ export class Appointment {
 	 */
 	@observable prescriptions: { prescription: string; id: string }[] = [];
 
-	@observable records: string[] = [];
+	@observable records: string[] = observable([]);
 
 	/**
 	 * Doctors who are about to treat the patient
@@ -298,7 +300,7 @@ export class Appointment {
 		this.diagnosis = json.diagnosis;
 		this.complaint = json.complaint;
 		this.doctorsID = json.doctorsID;
-		this.records = Array.isArray(json.records) ? json.records : [];
+		this.records = json.records;
 	}
 
 	/**
@@ -322,7 +324,7 @@ export class Appointment {
 			diagnosis: this.diagnosis,
 			complaint: this.complaint,
 			doctorsID: Array.from(this.doctorsID),
-			records: this.records
+			records: Array.from(this.records)
 		};
 	}
 
