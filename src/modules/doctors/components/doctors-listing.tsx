@@ -214,8 +214,8 @@ export class DoctorsListing extends React.Component<{}, {}> {
 						<hr className="appointment-hr" />
 						<div className="doctor-editor m-t-20">
 							<div className="doctor-input">
-								<label>Name: </label>
 								<TextField
+									label="Name: "
 									prefix="Dr."
 									value={this.doctor.name}
 									onChanged={(val) => (this.doctor.name = val)}
@@ -224,8 +224,8 @@ export class DoctorsListing extends React.Component<{}, {}> {
 							<Row gutter={12}>
 								<Col sm={12}>
 									<div className="doctor-input">
-										<label>Phone Number: </label>
 										<TextField
+											label="Phone Number: "
 											value={this.doctor.phone}
 											onChanged={(val) => (this.doctor.phone = val)}
 										/>
@@ -233,8 +233,8 @@ export class DoctorsListing extends React.Component<{}, {}> {
 								</Col>
 								<Col sm={12}>
 									<div className="doctor-input">
-										<label>Email: </label>
 										<TextField
+											label="Email: "
 											value={this.doctor.email}
 											onChanged={(val) => (this.doctor.email = val)}
 										/>
