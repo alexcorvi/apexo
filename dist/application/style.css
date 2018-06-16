@@ -7526,7 +7526,7 @@ hr {
 .doctor-editor .doctor-input {
   margin-bottom: 15px; }
   .doctor-editor .doctor-input label {
-    margin-bottom: 5px;
+    padding-bottom: 5px;
     display: block; }
 
 .duty-table tr {
