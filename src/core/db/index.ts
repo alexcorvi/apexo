@@ -13,7 +13,23 @@ import { IMobXStore } from './interface.mobx-store';
 import { observeItem } from './observe-item';
 import { singleItemUpdateQue } from './single-item-update-que';
 
-export const resyncFunctions: Array<() => Promise<void>> = [];
+export const resync: { resyncMethods: Array<() => Promise<void>>; resync: () => Promise<boolean> } = {
+	resyncMethods: [],
+	resync: async function() {
+		return new Promise<boolean>((resolve) => {
+			let done = 0;
+			this.resyncMethods.forEach((resyncMethod) => {
+				resyncMethod().then(() => done++).catch(() => done++);
+			});
+			const checkInterval = setInterval(() => {
+				if (done === this.resyncMethods.length) {
+					resolve(true);
+					clearInterval(checkInterval);
+				}
+			}, 300);
+		});
+	}
+};
 
 export function connectToDB(name: string, shouldLog: boolean = false, config?: PouchDB.AdapterWebSql.Configuration) {
 	/**
@@ -109,7 +125,7 @@ export function connectToDB(name: string, shouldLog: boolean = false, config?: P
 			})
 			.on('error', (err) => log(name, 'Error occurred', err));
 
-		resyncFunctions.push(async () => {
+		resync.resyncMethods.push(async () => {
 			await localDatabase.sync(remoteDatabase);
 		});
 

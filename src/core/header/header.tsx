@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { API, components } from '../';
-import { resyncFunctions } from '../db';
+import { resync } from '../db';
 import { observer } from 'mobx-react';
 import { observable, computed } from 'mobx';
 import { Row, Col } from 'antd';
@@ -44,12 +44,10 @@ export class HeaderComponent extends React.Component<{}, {}> {
 					<Col span={8} style={{ textAlign: 'right' }}>
 						<section className="notifications-button">
 							<IconButton
-								onClick={() => {
+								onClick={async () => {
 									API.router.reSyncing = true;
-									resyncFunctions.map(async (f) => {
-										return await f();
-									});
-									setTimeout(() => (API.router.reSyncing = false), 1500);
+									await resync.resync();
+									API.router.reSyncing = false;
 								}}
 								disabled={false}
 								iconProps={{ iconName: 'Sync' }}
