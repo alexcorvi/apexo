@@ -20,7 +20,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 				<hr />
 				<div className="form">
 					<TextField
-						prefix="Hour Rate"
+						label="Hour Rate"
 						type="number"
 						value={settings.getSetting('hourlyRate')}
 						onChanged={(newVal) => {
@@ -30,7 +30,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 				</div>
 				<div className="form">
 					<TextField
-						prefix="Currency"
+						label="Currency"
 						value={settings.getSetting('currencySymbol')}
 						onChanged={(newVal) => {
 							settings.setSetting('currencySymbol', newVal.toString());

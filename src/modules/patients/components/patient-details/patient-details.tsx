@@ -2,7 +2,17 @@ import './patient-details.scss';
 
 import * as React from 'react';
 
-import { DatePicker, Dropdown, Icon, Panel, PanelType, PrimaryButton, TextField, Toggle } from 'office-ui-fabric-react';
+import {
+	DatePicker,
+	Dropdown,
+	Icon,
+	Panel,
+	PanelType,
+	PrimaryButton,
+	TextField,
+	Toggle,
+	Label as MSLabel
+} from 'office-ui-fabric-react';
 import { Gender, ISOTeethArr, Patient, patients } from '../../data';
 import { Label, LabelType, getRandomLabelType } from '../../../../assets/components/label/label.component';
 import { TeethDeciduousChart, TeethPermanentChart } from '../index';
@@ -36,14 +46,14 @@ export class PatientDetails extends React.Component<
 					<div className="">
 						<div className="name">
 							<TextField
-								prefix="Name"
+								label="Name"
 								value={this.props.patient.name}
 								onChanged={(name) => (this.props.patient.name = name)}
 							/>
 						</div>
 						<div className="birth">
 							<TextField
-								prefix="Birth"
+								label="Birth"
 								value={this.props.patient.birthYear.toString()}
 								onChanged={(year) => (this.props.patient.birthYear = Number(year))}
 								type="number"
@@ -51,6 +61,7 @@ export class PatientDetails extends React.Component<
 						</div>
 						<div className="gender">
 							<Dropdown
+								label="Gender"
 								placeHolder="Gender"
 								selectedKey={this.props.patient.gender === Gender.male ? 'male' : 'female'}
 								options={[ { key: 'male', text: 'Male' }, { key: 'female', text: 'Female' } ]}
@@ -65,21 +76,22 @@ export class PatientDetails extends React.Component<
 						</div>
 					</div>
 					<TextField
-						prefix="Email"
+						label="Email"
 						value={this.props.patient.email}
 						onChanged={(email) => (this.props.patient.email = email)}
 					/>
 					<TextField
-						prefix="Phone"
+						label="Phone"
 						value={this.props.patient.phone}
 						onChanged={(phone) => (this.props.patient.phone = phone)}
 						type="number"
 					/>
 					<TextField
-						prefix="Address"
+						label="Address"
 						value={this.props.patient.address}
 						onChanged={(address) => (this.props.patient.address = address)}
 					/>
+					<MSLabel>Labels</MSLabel>
 					<TagInput
 						className="patient-tags"
 						placeholder="Labels"
@@ -106,6 +118,7 @@ export class PatientDetails extends React.Component<
 							onChange={(newVal) => {
 								this.props.patient.medicalHistory = newVal;
 							}}
+							style={{ marginTop: '0' }}
 						/>
 					</div>
 					<Gallery
