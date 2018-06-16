@@ -15,20 +15,46 @@ import t4mat from 't4mat';
 class Component extends React.Component<{}, {}> {
 	@computed
 	get values() {
-		return statistics.selectedAppointmentsByDay.map((x) => ({ y: x.appointments.length, x: x.day.getTime() }));
+		type plotValues = { x: number; y: number }[];
+		const initialValue: { missed: plotValues; outstanding: plotValues; paid: plotValues } = {
+			missed: [],
+			outstanding: [],
+			paid: []
+		};
+
+		return statistics.selectedAppointmentsByDay.reduce((acc, val) => {
+			acc.paid.push({ x: val.day.getTime(), y: val.appointments.filter((a) => a.paid).length });
+			acc.outstanding.push({ x: val.day.getTime(), y: val.appointments.filter((a) => a.outstanding).length });
+			acc.missed.push({ x: val.day.getTime(), y: val.appointments.filter((a) => a.missed).length });
+			return acc;
+		}, initialValue);
 	}
 	render() {
 		return (
 			<BarChart
 				height={'400px'}
 				xLabelsFormatter={(x) => t4mat({ time: x, format: '{d} {M}' })}
-				reduceXTicks={true}
+				reduceXTicks
+				stacked
+				showLegend
+				showControls
+				staggerLabels
 				{...{
 					data: [
 						{
-							key: 'Appointments:',
-							color: colors.greenish[0],
-							values: this.values
+							key: 'Paid',
+							color: colors.green[0],
+							values: this.values.paid
+						},
+						{
+							key: 'Outstanding',
+							color: colors.yellow[0],
+							values: this.values.outstanding
+						},
+						{
+							key: 'Missed',
+							color: colors.purple[0],
+							values: this.values.missed
 						}
 					]
 				}}
