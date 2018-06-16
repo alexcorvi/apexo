@@ -111,6 +111,7 @@ export class PatientDetails extends React.Component<
 							text: label.text
 						}))}
 					/>
+					<MSLabel style={{ marginTop: '10px' }}>Notes and medical history</MSLabel>
 					<div className="medical-history">
 						<EditableList
 							label="Notes"
