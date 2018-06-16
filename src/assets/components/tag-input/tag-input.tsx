@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { computed, observable } from 'mobx';
 
-import { Icon } from 'office-ui-fabric-react';
+import { Icon, Label } from 'office-ui-fabric-react';
 import { generateID } from '../../../assets/utils/generate-id';
 import { observer } from 'mobx-react';
 
@@ -28,7 +28,7 @@ export interface TagInputProps {
 
 @observer
 export class TagInput extends React.Component<TagInputProps, {}> {
-	inputElement: HTMLInputElement;
+	inputElement: HTMLInputElement | undefined;
 
 	@observable searchText: string = '';
 
@@ -78,6 +78,9 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 	}
 
 	setSearchText(value: string) {
+		if (!this.inputElement) {
+			return;
+		}
 		this.showAll = false;
 		if (value.length === 0) {
 			this.keyboardSelectedIndex = -1;
@@ -135,6 +138,9 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 	}
 
 	keyboardEventCallback(event: React.KeyboardEvent<HTMLInputElement>) {
+		if (!this.inputElement) {
+			return;
+		}
 		if (event.key.length === 1) {
 			this.setSearchText(this.inputElement.value);
 		}
@@ -158,6 +164,9 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 			<div
 				className={'tag-input-component ' + (this.props.className || '')}
 				onClick={() => {
+					if (!this.inputElement) {
+						return;
+					}
 					this.inputElement.focus();
 				}}
 				onKeyDown={(event) => this.keyboardNavigation(event)}
@@ -170,6 +179,9 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 					onKeyDown={(event) => this.keyboardEventCallback(event)}
 					onKeyUp={(event) => this.keyboardEventCallback(event)}
 					onChange={(event) => {
+						if (!this.inputElement) {
+							return;
+						}
 						this.setSearchText(this.inputElement.value);
 					}}
 				/>

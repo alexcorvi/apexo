@@ -36,7 +36,7 @@ export class LoginComponent extends React.Component<{}, {}> {
 						''
 					) : (
 						<Label>
-							CouchDB server: <LabelC text={this.couchDBDefaultServer} type={LabelType.info} />
+							<LabelC text={this.couchDBDefaultServer} type={LabelType.info} />
 							<LabelC
 								text={
 									this.serverLabelColor === LabelType.danger ? (

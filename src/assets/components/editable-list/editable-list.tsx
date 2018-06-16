@@ -38,7 +38,12 @@ export class ViewTextual extends React.Component<
 
 @observer
 export class EditableList extends React.Component<
-	{ label: string; value: string[]; onChange?: (newVal: string[]) => void },
+	{
+		label: string;
+		value: string[];
+		onChange?: (newVal: string[]) => void;
+		style: any;
+	},
 	{}
 > {
 	inputElement: HTMLInputElement;
@@ -53,7 +58,7 @@ export class EditableList extends React.Component<
 
 	render() {
 		return (
-			<div className="editable-list-component">
+			<div className="editable-list-component" style={this.props.style}>
 				<div className="editable-list">
 					<div
 						className="input"

@@ -101,6 +101,20 @@ export class Doctor {
 		});
 	}
 
+	@computed
+	get lastWeekAppointments() {
+		const c = new appointmentsData.Calendar();
+		c.selectDayByTimeStamp(new Date().getTime() - 1000 * 60 * 60 * 24 * 7);
+		return c.selectedWeek.map((day) => {
+			const d = day.date;
+			const m = c.currentMonth;
+			const y = c.currentYear;
+			return appointmentsData.appointments
+				.appointmentsForDay(y, m + 1, d + 1)
+				.filter((appointment) => appointment.doctorsID.indexOf(this._id) !== -1);
+		});
+	}
+
 	/**
 	 * Last appointment of the doctor
 	 * 
