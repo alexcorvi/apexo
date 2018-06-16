@@ -241,7 +241,10 @@ export class Patient {
 		observe(this.gallery, () => this.triggerUpdate++);
 		observe(this.labels, () => this.triggerUpdate++);
 		this.teeth.forEach((tooth, index) => {
-			observe(this.teeth[index], () => this.triggerUpdate++);
+			if (tooth) {
+				observe(this.teeth[index], () => this.triggerUpdate++);
+				observe(this.teeth[index].notes, () => this.triggerUpdate++);
+			}
 		});
 	}
 
