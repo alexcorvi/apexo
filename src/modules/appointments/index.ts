@@ -5,7 +5,7 @@ import { API } from '../../core';
 import { settingsData } from '../settings/index';
 
 export const register = {
-	register() {
+	async register() {
 		API.router.register(appointmentsData.namespace, /^appointments/, appointmentsComponents.Calendar);
 		API.menu.items.push({
 			icon: 'Calendar',
@@ -17,10 +17,11 @@ export const register = {
 			order: 3,
 			url: ''
 		});
-		(API.connectToDB(appointmentsData.namespace, true) as any)(
+		await (API.connectToDB(appointmentsData.namespace, true) as any)(
 			appointmentsData.Appointment,
 			appointmentsData.appointments
 		);
+		return true;
 	},
 	order: 9
 };

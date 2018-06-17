@@ -4,7 +4,7 @@ import * as treatmentsData from './data';
 import { API } from '../../core';
 
 export const register = {
-	register() {
+	async register() {
 		API.router.register(treatmentsData.namespace, /^treatments/, treatmentsComponents.Treatments);
 		API.menu.items.push({
 			icon: 'Cricket',
@@ -16,7 +16,8 @@ export const register = {
 			url: '',
 			key: treatmentsData.namespace
 		});
-		(API.connectToDB(treatmentsData.namespace) as any)(treatmentsData.Treatment, treatmentsData.treatments);
+		await (API.connectToDB(treatmentsData.namespace) as any)(treatmentsData.Treatment, treatmentsData.treatments);
+		return true;
 	},
 	order: 3
 };

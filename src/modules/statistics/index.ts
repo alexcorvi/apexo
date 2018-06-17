@@ -5,7 +5,7 @@ import { API } from '../../core';
 import { settingsData } from '../settings/index';
 
 export const register = {
-	register() {
+	async register() {
 		API.router.register(
 			statisticsData.namespace,
 			/^statistics\/?$/,
@@ -23,6 +23,7 @@ export const register = {
 			url: '',
 			condition: () => !!settingsData.settings.getSetting('module_statistics')
 		});
+		return true;
 	},
 	order: 10
 };

@@ -60,9 +60,21 @@ let alreadyRegistered = false;
  * Modules registration function
  * @export
  */
-export function registerModules() {
-	if (!alreadyRegistered) {
-		register.sort((a, b) => a.order - b.order).forEach((module) => module.register());
+export async function registerModules() {
+	return new Promise<boolean>((resolve) => {
+		if (alreadyRegistered) {
+			resolve(true);
+		}
 		alreadyRegistered = true;
-	}
+		let done = 0;
+		register.sort((a, b) => a.order - b.order).forEach(async (module) => {
+			await module.register();
+			done++;
+		});
+		const checkRegistered = setInterval(() => {
+			if (done === register.length) {
+				resolve(true);
+			}
+		}, 300);
+	});
 }

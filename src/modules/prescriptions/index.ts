@@ -5,7 +5,7 @@ import { API } from '../../core';
 import { settingsData } from '../settings/index';
 
 export const register = {
-	register() {
+	async register() {
 		API.router.register(
 			prescriptionsData.namespace,
 			/^prescriptions\/?$/,
@@ -23,10 +23,11 @@ export const register = {
 			url: '',
 			condition: () => !!settingsData.settings.getSetting('module_prescriptions')
 		});
-		(API.connectToDB(prescriptionsData.namespace) as any)(
+		await (API.connectToDB(prescriptionsData.namespace) as any)(
 			prescriptionsData.PrescriptionItem,
 			prescriptionsData.prescriptions
 		);
+		return true;
 	},
 	order: 5
 };

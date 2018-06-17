@@ -22,6 +22,7 @@ export const resync: { resyncMethods: Array<() => Promise<void>>; resync: () => 
 				resyncMethod().then(() => done++).catch(() => done++);
 			});
 			const checkInterval = setInterval(() => {
+				// console.log(done, this.resyncMethods.length);
 				if (done === this.resyncMethods.length) {
 					resolve(true);
 					clearInterval(checkInterval);
@@ -57,7 +58,7 @@ export function connectToDB(name: string, shouldLog: boolean = false, config?: P
 		 * [Remote DB] ====> [Local DB] =====> [MobX Store]
 		 * **/
 
-		localDatabase.sync(remoteDatabase);
+		await localDatabase.sync(remoteDatabase);
 		const response = (await localDatabase.allDocs({ include_docs: true })).rows.map((x) => x.doc) || [];
 		data.ignoreObserver = true;
 		const newData = response.map((x) => new Class(x));

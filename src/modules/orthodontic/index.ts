@@ -5,7 +5,7 @@ import { API } from '../../core';
 import { settingsData } from '../settings/index';
 
 export const register = {
-	register() {
+	async register() {
 		API.router.register(
 			orthoData.namespace,
 			/^orthodontic$/,
@@ -25,7 +25,8 @@ export const register = {
 
 			condition: () => !!settingsData.settings.getSetting('module_orthodontics')
 		});
-		(API.connectToDB(orthoData.namespace) as any)(orthoData.OrthoCase, orthoData.cases);
+		await (API.connectToDB(orthoData.namespace) as any)(orthoData.OrthoCase, orthoData.cases);
+		return true;
 	},
 	order: 8
 };
