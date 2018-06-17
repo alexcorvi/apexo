@@ -22,11 +22,16 @@ class Component extends React.Component<{}, {}> {
 			let totalExpenses = 0;
 			let totalPayments = 0;
 			let totalProfits = 0;
+
 			for (let index = 0; index < date.appointments.length; index++) {
 				const appointment = date.appointments[index];
-				totalExpenses = totalExpenses + appointment.expenses;
-				totalPayments = totalPayments + appointment.paid;
-				totalProfits = totalProfits + appointment.profit;
+				if (appointment.isDone) {
+					totalExpenses = totalExpenses + appointment.expenses;
+				}
+				if (appointment.isPaid) {
+					totalPayments = totalPayments + appointment.paid;
+					totalProfits = totalProfits + appointment.profit;
+				}
 			}
 			totalExpenses = round(totalExpenses);
 			totalPayments = round(totalPayments);
