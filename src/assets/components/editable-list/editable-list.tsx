@@ -42,7 +42,7 @@ export class EditableList extends React.Component<
 		label: string;
 		value: string[];
 		onChange?: (newVal: string[]) => void;
-		style: any;
+		style?: any;
 	},
 	{}
 > {
