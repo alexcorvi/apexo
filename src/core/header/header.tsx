@@ -68,5 +68,3 @@ export class HeaderComponent extends React.Component<{}, {}> {
 		);
 	}
 }
-
-// TODO: add a bubble on the notifications icon.

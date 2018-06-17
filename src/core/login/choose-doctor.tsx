@@ -6,7 +6,7 @@ import { API } from '../';
 import { Dropdown, PrimaryButton, TextField } from 'office-ui-fabric-react';
 import { Label, LabelType } from '../../assets/components/label/label.component';
 import { data } from '../../modules';
-import { login } from './data.login';
+import { login, LoginStep } from './data.login';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 
@@ -64,6 +64,7 @@ export class ChooseDoctor extends React.Component<{}, {}> {
 						})}
 						onChanged={(doctor) => {
 							login.currentDoctorID = doctor.key.toString();
+							login.step = LoginStep.allDone;
 							API.router.go([ '' ]);
 						}}
 					/>

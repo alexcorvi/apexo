@@ -19,7 +19,7 @@ class UserData {
 		}
 	}
 	logout() {
-		API.login.loggedIn = false;
+		API.login.step = API.LoginStep.initial;
 		API.login.username = '';
 		API.login.password = '';
 		API.login.server = '';

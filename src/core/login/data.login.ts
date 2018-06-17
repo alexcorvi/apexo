@@ -5,31 +5,23 @@ import { registerModules } from '../../modules';
 
 import PouchDB from 'pouchdb-browser';
 import auth from 'pouchdb-authentication';
+import { resync } from '../db';
 PouchDB.plugin(auth);
 
 export enum LoginStep {
+	loadingData,
 	allDone,
 	chooseDoctor,
-	login
+	initial
 }
 
 class Login {
-	@observable loggedIn: boolean = false;
 	@observable username: string = '';
 	@observable password: string = '';
 	@observable server: string = '';
 	@observable currentDoctorID: string = '';
 
-	@computed
-	get step() {
-		if (!this.loggedIn) {
-			return LoginStep.login;
-		} else if (this.loggedIn && !this.currentDoctorID) {
-			return LoginStep.chooseDoctor;
-		} else {
-			return LoginStep.allDone;
-		}
-	}
+	@observable step: LoginStep = LoginStep.initial;
 
 	async login({ user, pass, server }: { user: string; pass: string; server: string }): Promise<true | string> {
 		try {
@@ -38,8 +30,9 @@ class Login {
 			this.password = pass;
 			this.server = server;
 			localStorage.setItem('server_location', server);
-			this.loggedIn = true;
-			registerModules();
+			this.step = LoginStep.loadingData;
+			await registerModules();
+			this.step = LoginStep.chooseDoctor;
 			return true;
 		} catch (e) {
 			return (

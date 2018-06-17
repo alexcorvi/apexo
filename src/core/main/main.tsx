@@ -23,7 +23,7 @@ export class MainComponent extends React.Component<{}, {}> {
 			);
 		} else if (API.login.step === API.LoginStep.chooseDoctor) {
 			return <components.ChooseDoctor />;
-		} else if (API.login.step === API.LoginStep.login) {
+		} else if (API.login.step === API.LoginStep.initial) {
 			return <components.LoginComponent />;
 		} else {
 			return (
