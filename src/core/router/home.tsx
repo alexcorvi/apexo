@@ -81,12 +81,17 @@ export class Home extends React.Component<{}, {}> {
 									{appointmentsData.appointments
 										.appointmentsForDay(this.time.year, this.time.month + 1, this.time.day)
 										.map((appointment) => (
-											<tr style={{ borderBottom: '1px solid #f5f5f5' }}>
+											<tr key={appointment._id} style={{ borderBottom: '1px solid #f5f5f5' }}>
 												<td>{<PatientLink id={appointment.patientID} />}</td>
 												<td>{<TreatmentLink id={appointment.treatmentID} />}</td>
 												<td>
 													{appointment.doctors.map((operator) => (
-														<Profile name={operator.name} size={3} onClick={() => {}} />
+														<Profile
+															key={operator._id}
+															name={operator.name}
+															size={3}
+															onClick={() => {}}
+														/>
 													))}
 												</td>
 											</tr>
@@ -109,12 +114,17 @@ export class Home extends React.Component<{}, {}> {
 									{appointmentsData.appointments
 										.appointmentsForDay(this.time.year, this.time.month + 1, this.time.day + 1)
 										.map((appointment) => (
-											<tr style={{ borderBottom: '1px solid #f5f5f5' }}>
+											<tr key={appointment._id} style={{ borderBottom: '1px solid #f5f5f5' }}>
 												<td>{<PatientLink id={appointment.patientID} />}</td>
 												<td>{<TreatmentLink id={appointment.treatmentID} />}</td>
 												<td>
 													{appointment.doctors.map((operator) => (
-														<Profile name={operator.name} size={3} onClick={() => {}} />
+														<Profile
+															key={operator._id}
+															name={operator.name}
+															size={3}
+															onClick={() => {}}
+														/>
 													))}
 												</td>
 											</tr>
