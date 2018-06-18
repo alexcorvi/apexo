@@ -64,10 +64,11 @@ class Component extends React.Component<{}, {}> {
 				yLabelsFormatter={(y) => settingsData.settings.getSetting('currencySymbol') + y}
 				showLegend={true}
 				{...{
+					area: true,
 					data: [
 						{
 							key: 'Expenses',
-							color: colors.greenish[0],
+							color: colors.yellow[0],
 							values: this.expensesValues
 						},
 						{
@@ -77,7 +78,7 @@ class Component extends React.Component<{}, {}> {
 						},
 						{
 							key: 'Profits',
-							color: colors.orange[0],
+							color: colors.blue[0],
 							values: this.profitValues
 						}
 					]
