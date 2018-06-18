@@ -23,6 +23,9 @@ class Component extends React.Component<{}, {}> {
 			times: number;
 		}[] = [];
 		statistics.selectedAppointments.forEach((appointment) => {
+			if (!appointment.paid) {
+				return;
+			}
 			const i = selectedTreatments.findIndex((t) => t.treatment._id === appointment.treatment._id);
 			if (i === -1) {
 				selectedTreatments.push({
