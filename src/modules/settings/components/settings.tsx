@@ -8,6 +8,7 @@ import { TextField, Toggle } from 'office-ui-fabric-react';
 import { observer } from 'mobx-react';
 import { settings } from '../data';
 import { observable } from 'mobx';
+import { Row, Col } from 'antd';
 
 @observer
 export class SettingsComponent extends React.Component<{}, {}> {
@@ -18,28 +19,52 @@ export class SettingsComponent extends React.Component<{}, {}> {
 			<div className="settings-component p-15 p-l-10 p-r-10">
 				<h3>Financial Settings</h3>
 				<hr />
-				<div className="form">
-					<TextField
-						label="Hour Rate"
-						type="number"
-						value={settings.getSetting('hourlyRate')}
-						onChanged={(newVal) => {
-							settings.setSetting('hourlyRate', newVal.toString());
-						}}
-					/>
-				</div>
-				<div className="form">
-					<TextField
-						label="Currency"
-						value={settings.getSetting('currencySymbol')}
-						onChanged={(newVal) => {
-							settings.setSetting('currencySymbol', newVal.toString());
-						}}
-					/>
-				</div>
+				{!!settings.getSetting('time_tracking') ? (
+					<Row gutter={12}>
+						<Col md={12}>
+							<div className="form">
+								<TextField
+									label="Time expenses (per hour)"
+									type="number"
+									value={settings.getSetting('hourlyRate')}
+									onChanged={(newVal) => {
+										settings.setSetting('hourlyRate', newVal.toString());
+									}}
+								/>
+							</div>
+						</Col>
+						<Col md={12}>
+							<p className="hint">
+								When time tracking enabled, this is used to calculate profits and expenses, as time is
+								also added to the expenses. So here you can put the electricity, rent, and other time
+								dependent expenses.
+							</p>
+						</Col>
+					</Row>
+				) : (
+					''
+				)}
+
+				<Row gutter={12}>
+					<Col md={12}>
+						<div className="form">
+							<TextField
+								label="Currency Symbol"
+								value={settings.getSetting('currencySymbol')}
+								onChanged={(newVal) => {
+									settings.setSetting('currencySymbol', newVal.toString());
+								}}
+							/>
+						</div>
+					</Col>
+					<Col md={12}>
+						<p className="hint">This symbol you enter here will be used across your application.</p>
+					</Col>
+				</Row>
+
 				<br />
 				<br />
-				<h3>Optional Modules</h3>
+				<h3>Optional Modules and features</h3>
 				<hr />
 
 				<div className="form">
@@ -65,6 +90,14 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						defaultChecked={!!settings.getSetting('module_statistics')}
 						onChanged={(val) => {
 							settings.setSetting('module_statistics', val ? 'enable' : '');
+						}}
+					/>
+					<Toggle
+						onText="Time Tracking Enabled"
+						offText="Time Tracking Disabled"
+						defaultChecked={!!settings.getSetting('time_tracking')}
+						onChanged={(val) => {
+							settings.setSetting('time_tracking', val ? 'enable' : '');
 						}}
 					/>
 				</div>

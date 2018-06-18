@@ -223,87 +223,91 @@ export class AppointmentEditor extends React.Component<
 
 						<Row gutter={6}>
 							<Col sm={12}>
-								<div className="appointment-input time">
-									<label>Time (Hours, minutes, seconds)</label>
-									<TextField
-										className="time-input hours"
-										type="number"
-										ref={(el) => (el ? (this.timerInput[0] = el) : '')}
-										value={this.formatMillisecondsToTime(this.props.appointment.time).hours}
-										onChanged={(newVal) => this.manuallyUpdateTime()}
-									/>
-									<TextField
-										className="time-input minutes"
-										type="number"
-										ref={(el) => (el ? (this.timerInput[1] = el) : '')}
-										value={this.formatMillisecondsToTime(this.props.appointment.time).minutes}
-										onChanged={(newVal) => this.manuallyUpdateTime()}
-									/>
-									<TextField
-										className="time-input seconds"
-										type="number"
-										ref={(el) => (el ? (this.timerInput[2] = el) : '')}
-										value={this.formatMillisecondsToTime(this.props.appointment.time).seconds}
-										onChanged={(newVal) => {
-											this.manuallyUpdateTime();
-										}}
-									/>
-									{this.props.appointment.timer ? (
-										<PrimaryButton
-											iconProps={{ iconName: 'Timer' }}
-											className="appendage"
-											style={{ background: '#ff9800' }}
-											text="Stop"
-											onClick={() => {
-												if (!this.props.appointment) {
-													return;
-												}
-												const timer = this.props.appointment.timer;
-												if (timer) {
-													clearInterval(timer);
-												}
-												this.props.appointment.timer = null;
+								{settingsData.settings.getSetting('time_tracking') ? (
+									<div className="appointment-input time">
+										<label>Time (Hours, minutes, seconds)</label>
+										<TextField
+											className="time-input hours"
+											type="number"
+											ref={(el) => (el ? (this.timerInput[0] = el) : '')}
+											value={this.formatMillisecondsToTime(this.props.appointment.time).hours}
+											onChanged={(newVal) => this.manuallyUpdateTime()}
+										/>
+										<TextField
+											className="time-input minutes"
+											type="number"
+											ref={(el) => (el ? (this.timerInput[1] = el) : '')}
+											value={this.formatMillisecondsToTime(this.props.appointment.time).minutes}
+											onChanged={(newVal) => this.manuallyUpdateTime()}
+										/>
+										<TextField
+											className="time-input seconds"
+											type="number"
+											ref={(el) => (el ? (this.timerInput[2] = el) : '')}
+											value={this.formatMillisecondsToTime(this.props.appointment.time).seconds}
+											onChanged={(newVal) => {
+												this.manuallyUpdateTime();
 											}}
 										/>
-									) : (
-										<PrimaryButton
-											iconProps={{ iconName: 'Timer' }}
-											className="appendage"
-											text="Start"
-											onClick={() => {
-												if (!this.props.appointment) {
-													return;
+										{this.props.appointment.timer ? (
+											<PrimaryButton
+												iconProps={{ iconName: 'Timer' }}
+												className="appendage"
+												style={{ background: '#ff9800' }}
+												text="Stop"
+												onClick={() => {
+													if (!this.props.appointment) {
+														return;
+													}
+													const timer = this.props.appointment.timer;
+													if (timer) {
+														clearInterval(timer);
+													}
+													this.props.appointment.timer = null;
+												}}
+											/>
+										) : (
+											<PrimaryButton
+												iconProps={{ iconName: 'Timer' }}
+												className="appendage"
+												text="Start"
+												onClick={() => {
+													if (!this.props.appointment) {
+														return;
+													}
+													const i = appointments.getIndexByID(this.props.appointment._id);
+													const appointment = appointments.list[i];
+													this.props.appointment.timer = window.setInterval(() => {
+														appointment.time = appointment.time + 1000;
+													}, 1000);
+												}}
+											/>
+										)}
+										<p className="payment-insight">
+											<Label
+												text={
+													'Time value: ' +
+													settingsData.settings.getSetting('currencySymbol') +
+													round(this.props.appointment.spentTimeValue).toString()
 												}
-												const i = appointments.getIndexByID(this.props.appointment._id);
-												const appointment = appointments.list[i];
-												this.props.appointment.timer = window.setInterval(() => {
-													appointment.time = appointment.time + 1000;
-												}, 1000);
-											}}
-										/>
-									)}
-									<p className="payment-insight">
-										<Label
-											text={
-												'Time value: ' +
-												settingsData.settings.getSetting('currencySymbol') +
-												round(this.props.appointment.spentTimeValue).toString()
-											}
-											type={LabelType.info}
-										/>
-										<br />
-										<Label
-											text={
-												'Expenses: ' +
-												settingsData.settings.getSetting('currencySymbol') +
-												round(this.props.appointment.expenses).toString()
-											}
-											type={LabelType.info}
-										/>
-									</p>
-								</div>
+												type={LabelType.info}
+											/>
+											<br />
+											<Label
+												text={
+													'Expenses: ' +
+													settingsData.settings.getSetting('currencySymbol') +
+													round(this.props.appointment.expenses).toString()
+												}
+												type={LabelType.info}
+											/>
+										</p>
+									</div>
+								) : (
+									''
+								)}
 							</Col>
-							<Col sm={12}>
+							<Col sm={settingsData.settings.getSetting('time_tracking') ? 12 : 24}>
 								<div className="appointment-input paid">
 									<label>Final Price</label>
 									<TextField
