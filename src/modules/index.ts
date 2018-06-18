@@ -68,7 +68,13 @@ export async function registerModules() {
 		alreadyRegistered = true;
 		let done = 0;
 		register.sort((a, b) => a.order - b.order).forEach(async (module) => {
-			await module.register();
+			try {
+				await module.register();
+			} catch (e) {
+				try {
+					await module.register();
+				} catch (e) {}
+			}
 			done++;
 		});
 		const checkRegistered = setInterval(() => {

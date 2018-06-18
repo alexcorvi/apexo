@@ -57,8 +57,13 @@ export function connectToDB(name: string, shouldLog: boolean = false, config?: P
 		 * We need to pass the data like this:
 		 * [Remote DB] ====> [Local DB] =====> [MobX Store]
 		 * **/
-
-		await localDatabase.sync(remoteDatabase);
+		try {
+			await localDatabase.sync(remoteDatabase);
+		} catch (e) {
+			try {
+				await localDatabase.sync(remoteDatabase);
+			} catch (e) {}
+		}
 		const response = (await localDatabase.allDocs({ include_docs: true })).rows.map((x) => x.doc) || [];
 		data.ignoreObserver = true;
 		const newData = response.map((x) => new Class(x));
