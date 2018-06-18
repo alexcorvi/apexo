@@ -52,6 +52,7 @@ class Component extends React.Component<{}, {}> {
 				height={'400px'}
 				xLabelsFormatter={(x) => `${this.values[x].title} (${this.values[x].times})`}
 				yLabelsFormatter={(y) => round(y) + settingsData.settings.getSetting('currencySymbol')}
+				staggerLabels
 				{...{
 					data: [
 						{
