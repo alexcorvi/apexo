@@ -1,11 +1,15 @@
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var WebpackOnBuildPlugin = require('on-build-webpack');
 var webpack = require('webpack');
+var production = process.argv.find((x) => x === '-p');
 var fs = require('fs');
 var nodeSass = require('node-sass');
 
 var extractCSS = new ExtractTextPlugin('style.css');
 var extractHTML = new ExtractTextPlugin('index.html');
+
+if (production) {
+	console.log('Building for production');
+}
 
 module.exports = {
 	entry: './src/app.tsx',
@@ -16,6 +20,7 @@ module.exports = {
 	resolve: {
 		extensions: [ '.ts', '.tsx', '.js', '.json', '.css', '.scss' ]
 	},
+	mode: production ? 'production' : 'development',
 	module: {
 		rules: [
 			{
@@ -42,5 +47,15 @@ module.exports = {
 		]
 	},
 
-	plugins: [ extractCSS, extractHTML ]
+	plugins: production
+		? [
+				extractCSS,
+				extractHTML,
+				new webpack.DefinePlugin({
+					'process.env': {
+						NODE_ENV: JSON.stringify('production')
+					}
+				})
+			]
+		: [ extractCSS, extractHTML ]
 };

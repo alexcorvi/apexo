@@ -2,7 +2,15 @@ import './listing.scss';
 
 import * as React from 'react';
 
-import { CommandBar, Persona, PersonaPresence, PersonaSize } from 'office-ui-fabric-react';
+import {
+	CommandBar,
+	Persona,
+	PersonaPresence,
+	PersonaSize,
+	ICommandBarItemProps,
+	TextField,
+	SearchBox
+} from 'office-ui-fabric-react';
 import { Gender, genderToString, patients } from '../../data';
 
 import { API } from '../../../../core';
@@ -16,36 +24,15 @@ import { observer } from 'mobx-react';
 
 @observer
 export class PatientsListing extends React.Component<{}, {}> {
-	componentDidMount() {
-		patients.filter = '';
-		const searchBox = document.querySelectorAll('.patients-component .ms-CommandBarSearch-input');
-		if (searchBox.length) {
-			const inputBox = searchBox.item(0) as HTMLInputElement;
-			inputBox.onkeydown = inputBox.onkeyup = () => {
-				patients.filter = inputBox.value;
-			};
-		}
-	}
-
 	render() {
 		return (
 			<div className="patients-component p-15 p-l-10 p-r-10">
-				<CommandBar
-					{...{
-						className: 'commandBar fixed m-b-15',
-						isSearchBoxVisible: true,
-						searchPlaceholderText: 'Search Patients...',
-						elipisisAriaLabel: 'More options',
-						items: [],
-						farItems: commands
-					}}
-				/>
 				<DataTable
 					className={'patients-data-table'}
 					heads={[ 'Profile', 'Last Appointment', 'Next Appointment', 'Label' ]}
-					rows={patients.filtered.map((patient) => [
+					rows={patients.list.map((patient) => [
 						{
-							sortableValue: patient.name,
+							dataValue: patient.name + ' ' + patient.age + ' ' + genderToString(patient.gender),
 							component: (
 								<Profile
 									name={patient.name}
@@ -59,7 +46,7 @@ export class PatientsListing extends React.Component<{}, {}> {
 							className: 'no-label'
 						},
 						{
-							sortableValue: (patient.lastAppointment || { date: 0 }).date,
+							dataValue: (patient.lastAppointment || { date: 0 }).date,
 							component: patient.lastAppointment ? (
 								<AppointmentThumb appointment={patient.lastAppointment} />
 							) : (
@@ -68,7 +55,7 @@ export class PatientsListing extends React.Component<{}, {}> {
 							className: 'hidden-xs'
 						},
 						{
-							sortableValue: (patient.nextAppointment || { date: Infinity }).date,
+							dataValue: (patient.nextAppointment || { date: Infinity }).date,
 							component: patient.nextAppointment ? (
 								<AppointmentThumb appointment={patient.nextAppointment} />
 							) : (
@@ -77,7 +64,7 @@ export class PatientsListing extends React.Component<{}, {}> {
 							className: 'hidden-xs'
 						},
 						{
-							sortableValue: patient.name,
+							dataValue: patient.name,
 							component: (
 								<div>
 									{patient.labels.map((label, index) => {
@@ -88,6 +75,7 @@ export class PatientsListing extends React.Component<{}, {}> {
 							className: 'hidden-xs'
 						}
 					])}
+					commands={commands}
 				/>
 			</div>
 		);

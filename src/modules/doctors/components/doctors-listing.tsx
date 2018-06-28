@@ -61,52 +61,17 @@ export class DoctorsListing extends React.Component<{}, {}> {
 		return this.viewingPastAppointments ? this.doctor.pastAppointments : this.doctor.nextAppointments;
 	}
 
-	componentDidMount() {
-		doctors.filter = '';
-		const searchBox = document.querySelectorAll('.doctors-component .ms-CommandBarSearch-input');
-		if (searchBox.length) {
-			const inputBox = searchBox.item(0) as HTMLInputElement;
-			inputBox.onkeydown = inputBox.onkeyup = () => {
-				doctors.filter = inputBox.value;
-			};
-		}
-	}
-
 	render() {
 		return (
 			<div className="doctors-component p-15 p-l-10 p-r-10">
 				<Row gutter={16}>
 					<Col lg={16}>
-						<CommandBar
-							{...{
-								className: 'commandBar fixed m-b-15',
-								isSearchBoxVisible: true,
-								searchPlaceholderText: 'Search Doctors...',
-								elipisisAriaLabel: 'More options',
-								items: [],
-								farItems: [
-									{
-										key: 'addNew',
-										title: 'Add new',
-										name: 'Add New',
-										onClick: () => {
-											const patient = new Doctor();
-											doctors.list.push(patient);
-											this.selectedDoctorIndex = doctors.list.length - 1;
-										},
-										iconProps: {
-											iconName: 'Add'
-										}
-									}
-								]
-							}}
-						/>
 						<DataTable
 							className={'doctors-data-table'}
 							heads={[ 'Profile', 'Last Appointment', 'Next Appointment' ]}
-							rows={doctors.filtered.map((doctor) => [
+							rows={doctors.list.map((doctor) => [
 								{
-									sortableValue: doctor.name,
+									dataValue: doctor.name,
 									component: (
 										<Profile
 											name={doctor.name}
@@ -123,7 +88,7 @@ export class DoctorsListing extends React.Component<{}, {}> {
 									className: 'no-label'
 								},
 								{
-									sortableValue: (doctor.lastAppointment || { date: 0 }).date,
+									dataValue: (doctor.lastAppointment || { date: 0 }).date,
 									component: doctor.lastAppointment ? (
 										<AppointmentThumb appointment={doctor.lastAppointment} />
 									) : (
@@ -132,7 +97,7 @@ export class DoctorsListing extends React.Component<{}, {}> {
 									className: 'hidden-xs'
 								},
 								{
-									sortableValue: (doctor.nextAppointment || { date: Infinity }).date,
+									dataValue: (doctor.nextAppointment || { date: Infinity }).date,
 									component: doctor.nextAppointment ? (
 										<AppointmentThumb appointment={doctor.nextAppointment} />
 									) : (
@@ -141,6 +106,21 @@ export class DoctorsListing extends React.Component<{}, {}> {
 									className: 'hidden-xs'
 								}
 							])}
+							commands={[
+								{
+									key: 'addNew',
+									title: 'Add new',
+									name: 'Add New',
+									onClick: () => {
+										const patient = new Doctor();
+										doctors.list.push(patient);
+										this.selectedDoctorIndex = doctors.list.length - 1;
+									},
+									iconProps: {
+										iconName: 'Add'
+									}
+								}
+							]}
 						/>
 					</Col>
 					<Col lg={8}>

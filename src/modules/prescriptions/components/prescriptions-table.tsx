@@ -54,13 +54,6 @@ export class ItemInput extends React.Component<
 export class PrescriptionsTable extends React.Component<{}, {}> {
 	dataTable: DataTable;
 	componentDidMount() {
-		const searchBox = document.querySelectorAll('.prescriptions-component .ms-CommandBarSearch-input');
-		if (searchBox.length) {
-			const inputBox = searchBox.item(0) as HTMLInputElement;
-			inputBox.onkeydown = inputBox.onkeyup = () => {
-				data.prescriptions.filter = inputBox.value;
-			};
-		}
 		// by default data table here should not be sorted
 		this.dataTable.currentColIndex = 4;
 	}
@@ -68,31 +61,21 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 	render() {
 		return (
 			<div className="prescriptions-component p-15 p-l-10 p-r-10">
-				<CommandBar
-					{...{
-						className: 'commandBar fixed m-b-15',
-						isSearchBoxVisible: true,
-						searchPlaceholderText: 'Search Prescriptions...',
-						elipisisAriaLabel: 'More options',
-						items: [],
-						farItems: commands
-					}}
-				/>
 				<DataTable
 					ref={(c) => (c ? (this.dataTable = c) : '')}
 					className={'prescriptions-data-table'}
 					heads={[ 'Item Name', 'Dose in mg.', 'Form', 'Times Per Day', '' ]}
-					rows={data.prescriptions.filtered.map((item) => [
+					rows={data.prescriptions.list.map((item) => [
 						{
-							sortableValue: item.name,
+							dataValue: item.name,
 							component: <ItemInput item={item} valueKey={'name'} type={ValType.string} />
 						},
 						{
-							sortableValue: item.doseInMg,
+							dataValue: item.doseInMg,
 							component: <ItemInput item={item} valueKey={'doseInMg'} type={ValType.number} />
 						},
 						{
-							sortableValue: item.form,
+							dataValue: item.form,
 							component: (
 								<Dropdown
 									className="form-picker"
@@ -112,11 +95,11 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 							)
 						},
 						{
-							sortableValue: item.timesPerDay,
+							dataValue: item.timesPerDay,
 							component: <ItemInput item={item} valueKey={'timesPerDay'} type={ValType.number} />
 						},
 						{
-							sortableValue: 0,
+							dataValue: 0,
 							component: (
 								<Icon
 									iconName={'trash'}
@@ -131,6 +114,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 							className: 'no-label'
 						}
 					])}
+					commands={commands}
 				/>
 			</div>
 		);

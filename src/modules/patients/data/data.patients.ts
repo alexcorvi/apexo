@@ -18,42 +18,6 @@ class PatientsData {
 	@observable list: Patient[] = [];
 
 	/**
-	 * Filter to be applied to patients list for searching purposes
-	 * 
-	 * @type {string}
-	 * @memberof PatientsData
-	 */
-	@observable filter: string = '';
-
-	/**
-	 * Patients that has the criteria of the search filter
-	 * 
-	 * @readonly
-	 * @type {Patient[]}
-	 * @memberof PatientsData
-	 */
-	@computed
-	get filtered(): Patient[] {
-		if (this.filter === '') {
-			return this.list;
-		} else {
-			const filters = this.filter.split(' ').map((filterString) => new RegExp(escapeRegExp(filterString), 'gim'));
-			return this.list.filter((patient) => {
-				const entryString = `
-					${patient.name} ${patient.birthYear} ${patient.age} ${patient.email} ${patient.phone} ${patient.address} ${patient.tags}
-					${patient.labels.map((x) => x.text).join(' ')}
-					${patient.medicalHistory.join(' ')}
-					${genderToString(patient.gender)}
-					${patient.teeth.map((x) => x.condition + ' ' + x.notes.join(' ')).join(' ')}
-				`;
-				return filters.every((filter) => {
-					return filter.test(entryString);
-				});
-			});
-		}
-	}
-
-	/**
 	 * Get index of the patient (in the list) by the ID
 	 * 
 	 * @param {string} id 

@@ -33,40 +33,9 @@ export class OrthoList extends React.Component<{}, {}> {
 	@observable showAdditionPanel: boolean = false;
 	@observable newPatientName: string = '';
 
-	componentDidMount() {
-		cases.filter = '';
-		const searchBox = document.querySelectorAll('.orthodontic-cases-component .ms-CommandBarSearch-input');
-		if (searchBox.length) {
-			const inputBox = searchBox.item(0) as HTMLInputElement;
-			inputBox.onkeydown = inputBox.onkeyup = () => {
-				cases.filter = inputBox.value;
-			};
-		}
-	}
-
 	render() {
 		return (
 			<div className="orthodontic-cases-component p-15 p-l-10 p-r-10">
-				<CommandBar
-					{...{
-						className: 'commandBar fixed m-b-15',
-						isSearchBoxVisible: true,
-						searchPlaceholderText: 'Search Patients...',
-						elipisisAriaLabel: 'More options',
-						items: [],
-						farItems: [
-							{
-								key: 'addNew',
-								title: 'Add new',
-								name: 'Add New',
-								onClick: () => (this.showAdditionPanel = true),
-								iconProps: {
-									iconName: 'Add'
-								}
-							}
-						]
-					}}
-				/>
 				<DataTable
 					className={'orthodontic-cases-data-table'}
 					heads={[ 'Patient', 'Started', 'Next Appointment' ]}
@@ -74,7 +43,7 @@ export class OrthoList extends React.Component<{}, {}> {
 						const patient = orthoCase.patient || new patientsData.Patient();
 						return [
 							{
-								sortableValue: patient.name,
+								dataValue: patient.name,
 								component: (
 									<Profile
 										name={patient.name}
@@ -88,12 +57,12 @@ export class OrthoList extends React.Component<{}, {}> {
 								}
 							},
 							{
-								sortableValue: orthoCase.started,
+								dataValue: orthoCase.started,
 								component: t4mat({ time: orthoCase.started }),
 								className: 'hidden-xs'
 							},
 							{
-								sortableValue: (patient.nextAppointment || { date: 0 }).date,
+								dataValue: (patient.nextAppointment || { date: 0 }).date,
 								component: patient.nextAppointment ? (
 									<AppointmentThumb appointment={patient.nextAppointment} />
 								) : (
@@ -103,6 +72,17 @@ export class OrthoList extends React.Component<{}, {}> {
 							}
 						];
 					})}
+					commands={[
+						{
+							key: 'addNew',
+							title: 'Add new',
+							name: 'Add New',
+							onClick: () => (this.showAdditionPanel = true),
+							iconProps: {
+								iconName: 'Add'
+							}
+						}
+					]}
 				/>
 				<Panel
 					isOpen={this.showAdditionPanel}

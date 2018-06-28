@@ -36,7 +36,7 @@ export class TreatmentLink extends React.Component<Props, {}> {
 		return (
 			<Persona
 				className={'treatment-link'}
-				primaryText={this.type}
+				text={this.type}
 				size={this.props.small ? PersonaSize.extraExtraSmall : PersonaSize.extraSmall}
 				onClick={() => {
 					if (!this.props.notClickable && this.found) {

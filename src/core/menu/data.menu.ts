@@ -40,7 +40,10 @@ class MenuData {
 	 */
 	@computed
 	get sortedItems() {
-		return this.items.sort((a, b) => a.order - b.order).filter((item) => !item.condition || item.condition());
+		return this.items
+			.slice()
+			.sort((a, b) => a.order - b.order)
+			.filter((item) => !item.condition || item.condition());
 	}
 
 	@computed

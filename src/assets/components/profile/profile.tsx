@@ -35,7 +35,7 @@ export class Profile extends React.Component<
 				imageInitials={this.props.name.charAt(0)}
 				size={this.props.size || PersonaSize.large}
 				presence={PersonaPresence.none}
-				primaryText={this.props.name}
+				text={this.props.name}
 				secondaryText={this.props.secondaryText}
 				tertiaryText={this.props.tertiaryText}
 			/>

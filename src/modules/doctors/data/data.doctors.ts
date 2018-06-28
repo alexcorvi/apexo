@@ -18,41 +18,6 @@ class DoctorsData {
 	@observable list: Doctor[] = [];
 
 	/**
-     * Filter to be applied to doctors list for searching purposes
-     * 
-     * @type {string}
-     * @memberof PatientsData
-     */
-	@observable filter: string = '';
-
-	/**
-	 * Doctors that has the criteria of the search filter
-	 * 
-	 * @readonly
-	 * @type {Patient[]}
-	 * @memberof PatientsData
-	 */
-	@computed
-	get filtered(): Doctor[] {
-		if (this.filter === '') {
-			return this.list;
-		} else {
-			const filters = this.filter.split(' ').map((filterString) => new RegExp(escapeRegExp(filterString), 'gim'));
-			return this.list.filter((doctor) => {
-				const entryString = `
-					${doctor.name} ${doctor.email} ${doctor.phone}
-					${doctor.appointments
-						.map((x) => x.treatment.type + ' ' + x.prescriptions.map((x) => x.prescription).join(' '))
-						.join(' ')}
-				`;
-				return filters.every((filter) => {
-					return filter.test(entryString);
-				});
-			});
-		}
-	}
-
-	/**
      * Get doctor index in the list by his id
      * 
      * @param {string} id 

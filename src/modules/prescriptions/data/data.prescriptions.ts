@@ -17,36 +17,6 @@ class Prescriptions {
 	@observable list: PrescriptionItem[] = [];
 
 	/**
-	 * A search filter to be applied to the list
-	 * 
-	 * @type {string}
-	 * @memberof Prescriptions
-	 */
-	@observable filter: string = '';
-
-	/**
-	 * Search results
-	 * 
-	 * @readonly
-	 * @type {PrescriptionItem[]}
-	 * @memberof Prescriptions
-	 */
-	@computed
-	get filtered(): PrescriptionItem[] {
-		if (this.filter === '') {
-			return this.list;
-		} else {
-			const filters = this.filter.split(' ').map((filterString) => new RegExp(escapeRegExp(filterString), 'gim'));
-			return this.list.filter((entry) => {
-				const entryString = JSON.stringify(entry);
-				return filters.every((filter) => {
-					return filter.test(entryString);
-				});
-			});
-		}
-	}
-
-	/**
 	 * get item index by ID
 	 * 
 	 * @param {string} id 
@@ -65,7 +35,7 @@ class Prescriptions {
 	 */
 	deleteByID(id: string) {
 		const i = this.getIndexByID(id);
-		this.list.splice(i, 1)[0];
+		this.list.splice(i, 1);
 	}
 }
 

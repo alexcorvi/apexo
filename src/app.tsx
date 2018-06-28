@@ -9,7 +9,7 @@ import { API, components } from './core';
 
 import { Fabric } from 'office-ui-fabric-react';
 
-initializeIcons('./fonts/');
+initializeIcons();
 
 ReactDOM.render(
 	<Fabric>

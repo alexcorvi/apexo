@@ -1,9 +1,26 @@
-.ms-table {
-    td.clickable {
-        transition: 0.3s all;
-        cursor: pointer;
-        &:hover {
-            background: #f5f5f5;
-        }
-    }
+.data-table {
+	.ms-table {
+		td.clickable {
+			transition: 0.3s all;
+			cursor: pointer;
+			&:hover {
+				background: #f5f5f5;
+			}
+		}
+	}
+	.ms-SearchBox {
+		border: none;
+		margin-top: 4px;
+	}
+	.ms-CommandBar-secondaryCommand {
+		border-left: 1px solid #f3f3f3;
+	}
+	.ms-CommandBarItem-link {
+		background: #fff !important;
+		transition: 0.3s all;
+	}
+
+	.ms-CommandBarItem-link:hover {
+		background: #eeeeee !important;
+	}
 }

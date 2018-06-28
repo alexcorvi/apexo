@@ -58,6 +58,8 @@ export class AppointmentThumb extends React.Component<
 		 * show patient
 		 */
 		showPatient?: boolean;
+
+		hideTreatment?: boolean;
 	},
 	{}
 > {
@@ -111,7 +113,11 @@ export class AppointmentThumb extends React.Component<
 				) : (
 					''
 				)}{' '}
-				<treatmentsComponents.TreatmentLink small={this.props.small} id={treatmentID} />
+				{this.props.hideTreatment ? (
+					''
+				) : (
+					<treatmentsComponents.TreatmentLink small={this.props.small} id={treatmentID} />
+				)}
 				{this.props.hideDate ? (
 					''
 				) : (
