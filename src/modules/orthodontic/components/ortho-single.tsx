@@ -70,7 +70,7 @@ export class OrthoSingle extends React.Component<{}, {}> {
 	 * @type {string}
 	 * @memberof SinglePatient
 	 */
-	@observable requestedID: string;
+	@observable requestedID: string = '';
 
 	/**
 	 * patient index

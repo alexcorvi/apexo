@@ -20,7 +20,7 @@ export class Treatment {
 	 * @type {string}
 	 * @memberof Treatment
 	 */
-	@observable type: string;
+	@observable type: string = '';
 
 	/**
 	 * Treatment expected expenses

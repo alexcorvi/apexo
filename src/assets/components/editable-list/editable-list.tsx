@@ -46,9 +46,12 @@ export class EditableList extends React.Component<
 	},
 	{}
 > {
-	inputElement: HTMLInputElement;
+	inputElement: HTMLInputElement | undefined;
 
 	addItem() {
+		if (!this.inputElement) {
+			return;
+		}
 		if (this.inputElement.value.replace(/\W/, '').length) {
 			this.props.value.push(this.inputElement.value);
 			this.inputElement.value = '';
@@ -63,6 +66,9 @@ export class EditableList extends React.Component<
 					<div
 						className="input"
 						onClick={() => {
+							if (!this.inputElement) {
+								return;
+							}
 							this.inputElement.focus();
 						}}
 						style={this.props.value.length ? {} : { borderBottom: 'none' }}

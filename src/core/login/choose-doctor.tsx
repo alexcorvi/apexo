@@ -13,7 +13,7 @@ import { observer } from 'mobx-react';
 @observer
 export class ChooseDoctor extends React.Component<{}, {}> {
 	@observable newDoc: boolean = false;
-	newDocNameTextField: TextField;
+	newDocNameTextField: TextField | undefined;
 	render() {
 		return (
 			<div className="container m-t-50" style={{ maxWidth: '400px' }}>
@@ -43,6 +43,9 @@ export class ChooseDoctor extends React.Component<{}, {}> {
 						<PrimaryButton
 							text="Register"
 							onClick={() => {
+								if (!this.newDocNameTextField) {
+									return;
+								}
 								if (!this.newDocNameTextField.value) {
 									return;
 								}

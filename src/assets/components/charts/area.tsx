@@ -69,7 +69,7 @@ export class AreaChart extends React.Component<
 				}
 			}
 
-			d3.select('#' + this.id).datum(this.props.data).call(chart);
+			d3.select('#' + this.id).datum(this.props.data).call(chart as any);
 			nv.utils.windowResize(chart.update);
 
 			return chart;

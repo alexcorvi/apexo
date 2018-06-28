@@ -45,7 +45,7 @@ export class PickFile extends React.Component<
 								);
 								resultArr.push(imageID);
 							};
-							reader.readAsDataURL(file);
+							reader.readAsDataURL(file as any);
 						}
 						const checkInterval = setInterval(() => {
 							if (!this.pickFileEl) {

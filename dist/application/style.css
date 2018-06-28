@@ -1,3 +1,90 @@
+.appointment-thumbnail-component {
+  position: relative;
+  transition: 0.4s all; }
+  .appointment-thumbnail-component .ms-Persona {
+    transition: 0.4s all; }
+  .appointment-thumbnail-component .ms-Persona:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); }
+  .appointment-thumbnail-component .delete {
+    cursor: pointer;
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    font-size: 13px;
+    color: #262626; }
+    .appointment-thumbnail-component .delete:hover {
+      color: #f44336; }
+  .appointment-thumbnail-component.to-delete {
+    border-color: #f44336 !important; }
+  .appointment-thumbnail-component.clickable {
+    cursor: pointer; }
+    .appointment-thumbnail-component.clickable:hover {
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      border-color: #0078d7; }
+  .appointment-thumbnail-component.labeled {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    padding: 6px 6px 0;
+    margin-bottom: 5px; }
+    .appointment-thumbnail-component.labeled .date-link {
+      display: inline-block;
+      margin-left: 20px; }
+      .appointment-thumbnail-component.labeled .date-link a {
+        border: none; }
+    .appointment-thumbnail-component.labeled:before {
+      content: "PAST";
+      background: #e0e0e0;
+      display: inline-block;
+      margin-right: 6px;
+      padding: 6px 5px 7px;
+      border-radius: 0;
+      font-size: 10px; }
+    .appointment-thumbnail-component.labeled.today-due {
+      border-color: #b2ebf2; }
+      .appointment-thumbnail-component.labeled.today-due:before {
+        content: "TODAY";
+        background: #b2ebf2; }
+    .appointment-thumbnail-component.labeled.tomorrow-due {
+      border-color: #ffccbc; }
+      .appointment-thumbnail-component.labeled.tomorrow-due:before {
+        content: "TOMORROW";
+        background: #ffccbc; }
+    .appointment-thumbnail-component.labeled.missed {
+      background: #f5f5f5; }
+      .appointment-thumbnail-component.labeled.missed:before {
+        content: "MISSED";
+        background: #f5f5f5; }
+    .appointment-thumbnail-component.labeled.to-be-paid {
+      border-color: #ef9a99; }
+      .appointment-thumbnail-component.labeled.to-be-paid:before {
+        content: "OUTSTANDING";
+        background: #ef9a99; }
+    .appointment-thumbnail-component.labeled.future {
+      border-color: #dcedc8; }
+      .appointment-thumbnail-component.labeled.future:before {
+        content: "FUTURE";
+        background: #dcedc8; }
+  .appointment-thumbnail-component .appointment-patient-link {
+    display: inline-block;
+    margin-bottom: 7px;
+    font-size: 12px;
+    padding: 5px;
+    background: #eee;
+    transition: 0.4s all;
+    position: relative;
+    top: 1px; }
+    .appointment-thumbnail-component .appointment-patient-link:before {
+      content: 'Patient';
+      background: #e0e0e0;
+      color: #3f3f3f;
+      padding: 3px 10px 4px;
+      margin-left: -5px;
+      margin-right: 5px; }
+    .appointment-thumbnail-component .appointment-patient-link:hover {
+      background: #fff;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+    .appointment-thumbnail-component .appointment-patient-link i {
+      display: none; }
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
 /* stylelint-disable no-duplicate-selectors */
 /* stylelint-disable declaration-bang-space-before,no-duplicate-selectors */
@@ -6029,6 +6116,369 @@ mark {
     -webkit-order: 0;
     -ms-flex-order: 0;
     order: 0; } }
+.menu .ms-Nav ul {
+  padding-top: 5px; }
+  .menu .ms-Nav ul .is-selected {
+    background: #e1f5fe; }
+  .menu .ms-Nav ul .ms-Nav-link {
+    padding-left: 0 !important;
+    text-transform: capitalize; }
+
+@media (min-width: 992px) {
+  #router-outlet {
+    margin-left: 117px; }
+  .icon-list {
+    position: fixed;
+    top: 52px;
+    left: 0;
+    margin-top: 15px;
+    margin-left: 15px;
+    cursor: pointer; }
+    .icon-list .item {
+      transition: 0.4s all;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      background: #fff;
+      padding: 13px 10px;
+      margin-bottom: 8px;
+      font-size: 17px;
+      text-align: center;
+      border-radius: 3px; }
+      .icon-list .item:hover {
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        background: #757575;
+        color: #fff; }
+      .icon-list .item.selected {
+        background: #00bcd4;
+        color: #fff;
+        cursor: initial;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+      .icon-list .item .text {
+        margin-top: 5px;
+        font-size: 11px;
+        position: relative;
+        bottom: 3px;
+        display: block;
+        text-transform: capitalize; } }
+.header-component {
+  padding-left: 10px;
+  padding-right: 10px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  background: #fff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
+  .header-component section {
+    float: left;
+    padding: 10px 10px 0px;
+    width: 100%;
+    position: relative; }
+  .header-component .notification .title,
+  .header-component .notification .details {
+    padding: 7px; }
+  .header-component .title {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    text-transform: capitalize; }
+  .header-component .issue-bubble {
+    background: #e91e63;
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    position: absolute;
+    right: 47px;
+    top: 12px;
+    border-radius: 20px;
+    cursor: pointer; }
+  .header-component .ms-OverflowSet {
+    display: inline-block;
+    margin-top: 9px; }
+    .header-component .ms-OverflowSet .ms-Button-menuIcon {
+      font-size: 15px; }
+.home {
+  padding-top: 15px; }
+  .home .item {
+    cursor: pointer;
+    transition: 0.4s all;
+    margin-bottom: 20px;
+    padding: 25px;
+    text-align: center;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
+    .home .item:hover {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); }
+    .home .item i {
+      font-size: 50px; }
+    .home .item .title {
+      text-transform: capitalize; }
+.prompts-component {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 15px; }
+  .prompts-component .prompt {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    transition: 0.4s all;
+    display: table;
+    background: #fff;
+    color: #000;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 2px;
+    margin-top: 15px; }
+    .prompts-component .prompt i {
+      margin-right: 5px; }
+    .prompts-component .prompt > i {
+      padding: 5px;
+      border-radius: 50px;
+      font-weight: bold; }
+    .prompts-component .prompt .message {
+      margin-right: 10px; }
+    .prompts-component .prompt .button {
+      border-radius: 2px;
+      transition: 0.4s all;
+      border-left: 1px solid #fafafa;
+      padding: 15px 15px 12px;
+      margin-left: 10px;
+      cursor: pointer; }
+      .prompts-component .prompt .button:hover {
+        background: #f5f5f5; }
+      .prompts-component .prompt .button:last-child {
+        margin-right: -11px;
+        margin-left: 0; }
+      .prompts-component .prompt .button i {
+        font-size: 11px; }
+.user-component .persona {
+  padding: 10px 25px 0; }
+.confirmation-modal .ms-Panel-main {
+  box-shadow: 0px -20px 50px rgba(0, 0, 0, 0.14) !important;
+  height: 100px;
+  bottom: 0;
+  top: initial; }
+  .confirmation-modal .ms-Panel-main .ms-Panel-content {
+    padding-bottom: 0; }
+    .confirmation-modal .ms-Panel-main .ms-Panel-content p {
+      margin-top: 20px;
+      margin-bottom: 15px; }
+    .confirmation-modal .ms-Panel-main .ms-Panel-content .ms-Button {
+      margin-right: 10px; }
+.label {
+  background: #212121;
+  padding: 5px 10px 7px;
+  color: #fff;
+  border-radius: 2px;
+  font-size: 13px;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  display: inline-block;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); }
+  .label.clickable {
+    cursor: pointer; }
+  .label.warning {
+    background: #fb8c00; }
+  .label.primary {
+    background: #3f51b5; }
+  .label.danger {
+    background: #f44336; }
+  .label.success {
+    background: #4caf50; }
+  .label.info {
+    background: #212121; }
+@media screen and (max-width: 800px) {
+  .doctors-component {
+    padding: 10px; } }
+
+.doctor-editor .doctor-input {
+  margin-bottom: 15px; }
+  .doctor-editor .doctor-input label {
+    padding-bottom: 5px;
+    display: block; }
+
+.duty-table tr {
+  border: 1px solid #eeeeee; }
+
+.appointments-listing {
+  padding-top: 13px;
+  padding-bottom: 20px; }
+
+@media (max-width: 1200px) {
+  .duty-table {
+    margin-top: 15px; } }
+
+@media (max-width: 435px) {
+  .duty-table {
+    display: none; } }
+.calendar-component {
+  background: #fff;
+  min-height: 500px;
+  padding: 15px;
+  padding-bottom: 0;
+  font-size: 13px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+  .calendar-component .selector {
+    padding-bottom: 10px;
+    margin-bottom: 10px; }
+    .calendar-component .selector a.current {
+      border: 1px solid #00bcd4; }
+    .calendar-component .selector a {
+      cursor: pointer;
+      transition: 0.4s all;
+      border-radius: 4px;
+      border: 1px solid transparent; }
+    .calendar-component .selector a:hover {
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      background: #c5cae9;
+      color: #fff; }
+    .calendar-component .selector a.selected {
+      background: #3f51b5;
+      color: #fff;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+  .calendar-component .year-selector,
+  .calendar-component .month-selector {
+    border-bottom: 1px dotted #e0e0e0; }
+    .calendar-component .year-selector a,
+    .calendar-component .month-selector a {
+      display: inline-block;
+      margin-right: 5px;
+      padding: 5px; }
+  .calendar-component .day-selector {
+    overflow-x: auto; }
+    .calendar-component .day-selector .day-selector-wrapper {
+      margin: 0 auto;
+      width: 974px;
+      border-bottom: 1px dotted #e0e0e0;
+      padding-bottom: 10px;
+      text-align: center; }
+      .calendar-component .day-selector .day-selector-wrapper .day-col {
+        cursor: pointer;
+        vertical-align: text-top;
+        display: inline-block;
+        padding: 3px;
+        text-align: center;
+        font-size: 12px; }
+        .calendar-component .day-selector .day-selector-wrapper .day-col .day-name {
+          font-size: 10px;
+          margin-bottom: 10px;
+          color: #9e9e9e; }
+        .calendar-component .day-selector .day-selector-wrapper .day-col .info-row {
+          padding: 5px 0;
+          width: 22px;
+          display: block;
+          border-radius: 4px; }
+        .calendar-component .day-selector .day-selector-wrapper .day-col:hover .day-number {
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+          background: #c5cae9;
+          color: #fff;
+          border-radius: 4px; }
+        .calendar-component .day-selector .day-selector-wrapper .day-col.selected .day-number {
+          background: #3f51b5;
+          color: #fff;
+          border-radius: 4px;
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+        .calendar-component .day-selector .day-selector-wrapper .day-col.weekend:not(:last-child) {
+          border-right: 1px dotted #e0e0e0;
+          padding-right: 13px;
+          margin-right: 10px; }
+        .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num {
+          border-radius: 200px;
+          font-size: 10px;
+          color: #fff;
+          background: #b71c1c; }
+          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-0 {
+            color: #262626;
+            background: transparent; }
+          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-1 {
+            background: #ffebee; }
+          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-2 {
+            background: #ffcdd2; }
+          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-3 {
+            background: #ef9a9a; }
+          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-4 {
+            background: #e57373; }
+          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-5 {
+            background: #ef5350; }
+          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-6 {
+            background: #f44336; }
+          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-7 {
+            background: #e53935; }
+          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-8 {
+            background: #d32f2f; }
+          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-9 {
+            background: #c62828; }
+        .calendar-component .day-selector .day-selector-wrapper .day-col.holiday .info-row {
+          background: transparent;
+          color: #e3e3e3; }
+        .calendar-component .day-selector .day-selector-wrapper .day-col.holiday .day-number {
+          background: transparent;
+          color: #e3e3e3; }
+  .calendar-component .week-view .filters {
+    border-bottom: 1px dotted #e3e3e3; }
+    .calendar-component .week-view .filters .ms-TextField-wrapper div {
+      border: none; }
+      .calendar-component .week-view .filters .ms-TextField-wrapper div input {
+        font-size: 13px;
+        color: #262626;
+        font-weight: 100; }
+    .calendar-component .week-view .filters .ms-Toggle-stateText {
+      font-size: 12px;
+      line-height: 14px; }
+  .calendar-component .full-day-col {
+    width: 14.285%;
+    float: left;
+    padding: 3px 10px;
+    min-height: 300px; }
+    .calendar-component .full-day-col h4 {
+      margin-top: 10px;
+      border-bottom: 1px dotted #e3e3e3;
+      padding-bottom: 10px;
+      margin-bottom: 10px; }
+    .calendar-component .full-day-col:not(:last-child) {
+      border-right: 1px dotted #e3e3e3; }
+    .calendar-component .full-day-col.holiday {
+      background: #fafaf7; }
+    .calendar-component .full-day-col.selected {
+      background: #fef8e7; }
+      .calendar-component .full-day-col.selected h4 {
+        border-bottom-color: #9e9e9e; }
+      .calendar-component .full-day-col.selected .appointment {
+        border-bottom-color: #9e9e9e; }
+    .calendar-component .full-day-col .appointment {
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      border-bottom: 1px dotted #e3e3e3;
+      cursor: pointer; }
+      .calendar-component .full-day-col .appointment a {
+        display: inline-block;
+        color: #2196f3;
+        font-size: 12px;
+        cursor: pointer;
+        transition: 0.4s all; }
+        .calendar-component .full-day-col .appointment a:hover {
+          color: #0d47a1; }
+      .calendar-component .full-day-col .appointment:hover {
+        border-bottom-color: #262626; }
+
+@media screen and (min-width: 992px) {
+  .calendar-component {
+    margin-top: 67px;
+    margin-right: 15px;
+    border-radius: 3px; } }
+
+@media screen and (max-width: 1250px) {
+  .calendar-component .full-day-col {
+    width: 33.33% !important;
+    min-height: 200px; } }
+
+@media screen and (max-width: 800px) {
+  .calendar-component .full-day-col {
+    width: 50% !important;
+    min-height: 150px; } }
+
+@media screen and (max-width: 400px) {
+  .calendar-component .full-day-col {
+    width: 100% !important;
+    min-height: 50px; } }
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 /* Document
    ========================================================================== */
@@ -8106,309 +8556,22 @@ hr {
   border: none;
   margin-bottom: 20px;
   border-top: 1px dotted #e0e0e0; }
-.label {
-  background: #212121;
-  padding: 5px 10px 7px;
-  color: #fff;
-  border-radius: 2px;
-  font-size: 13px;
-  margin-right: 3px;
-  margin-bottom: 3px;
-  display: inline-block;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); }
-  .label.clickable {
+.treatment-link {
+  margin-bottom: 7px !important;
+  background: #fafafa;
+  display: inline-flex !important; }
+  .treatment-link .ms-Persona-imageArea {
+    border-radius: 0 !important; }
+  .treatment-link:hover {
     cursor: pointer; }
-  .label.warning {
-    background: #fb8c00; }
-  .label.primary {
-    background: #3f51b5; }
-  .label.danger {
-    background: #f44336; }
-  .label.success {
-    background: #4caf50; }
-  .label.info {
-    background: #212121; }
-.calendar-component {
-  background: #fff;
-  min-height: 500px;
-  padding: 15px;
-  padding-bottom: 0;
-  font-size: 13px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-  .calendar-component .selector {
-    padding-bottom: 10px;
-    margin-bottom: 10px; }
-    .calendar-component .selector a.current {
-      border: 1px solid #00bcd4; }
-    .calendar-component .selector a {
-      cursor: pointer;
-      transition: 0.4s all;
-      border-radius: 4px;
-      border: 1px solid transparent; }
-    .calendar-component .selector a:hover {
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      background: #c5cae9;
-      color: #fff; }
-    .calendar-component .selector a.selected {
-      background: #3f51b5;
-      color: #fff;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-  .calendar-component .year-selector,
-  .calendar-component .month-selector {
-    border-bottom: 1px dotted #e0e0e0; }
-    .calendar-component .year-selector a,
-    .calendar-component .month-selector a {
-      display: inline-block;
-      margin-right: 5px;
-      padding: 5px; }
-  .calendar-component .day-selector {
-    overflow-x: auto; }
-    .calendar-component .day-selector .day-selector-wrapper {
-      margin: 0 auto;
-      width: 974px;
-      border-bottom: 1px dotted #e0e0e0;
-      padding-bottom: 10px;
-      text-align: center; }
-      .calendar-component .day-selector .day-selector-wrapper .day-col {
-        cursor: pointer;
-        vertical-align: text-top;
-        display: inline-block;
-        padding: 3px;
-        text-align: center;
-        font-size: 12px; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col .day-name {
-          font-size: 10px;
-          margin-bottom: 10px;
-          color: #9e9e9e; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col .info-row {
-          padding: 5px 0;
-          width: 22px;
-          display: block;
-          border-radius: 4px; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col:hover .day-number {
-          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-          background: #c5cae9;
-          color: #fff;
-          border-radius: 4px; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col.selected .day-number {
-          background: #3f51b5;
-          color: #fff;
-          border-radius: 4px;
-          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-        .calendar-component .day-selector .day-selector-wrapper .day-col.weekend:not(:last-child) {
-          border-right: 1px dotted #e0e0e0;
-          padding-right: 13px;
-          margin-right: 10px; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num {
-          border-radius: 200px;
-          font-size: 10px;
-          color: #fff;
-          background: #b71c1c; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-0 {
-            color: #262626;
-            background: transparent; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-1 {
-            background: #ffebee; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-2 {
-            background: #ffcdd2; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-3 {
-            background: #ef9a9a; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-4 {
-            background: #e57373; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-5 {
-            background: #ef5350; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-6 {
-            background: #f44336; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-7 {
-            background: #e53935; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-8 {
-            background: #d32f2f; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-9 {
-            background: #c62828; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col.holiday .info-row {
-          background: transparent;
-          color: #e3e3e3; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col.holiday .day-number {
-          background: transparent;
-          color: #e3e3e3; }
-  .calendar-component .week-view .filters {
-    border-bottom: 1px dotted #e3e3e3; }
-    .calendar-component .week-view .filters .ms-TextField-wrapper div {
-      border: none; }
-      .calendar-component .week-view .filters .ms-TextField-wrapper div input {
-        font-size: 13px;
-        color: #262626;
-        font-weight: 100; }
-    .calendar-component .week-view .filters .ms-Toggle-stateText {
-      font-size: 12px;
-      line-height: 14px; }
-  .calendar-component .full-day-col {
-    width: 14.285%;
-    float: left;
-    padding: 3px 10px;
-    min-height: 300px; }
-    .calendar-component .full-day-col h4 {
-      margin-top: 10px;
-      border-bottom: 1px dotted #e3e3e3;
-      padding-bottom: 10px;
-      margin-bottom: 10px; }
-    .calendar-component .full-day-col:not(:last-child) {
-      border-right: 1px dotted #e3e3e3; }
-    .calendar-component .full-day-col.holiday {
-      background: #fafaf7; }
-    .calendar-component .full-day-col.selected {
-      background: #fef8e7; }
-      .calendar-component .full-day-col.selected h4 {
-        border-bottom-color: #9e9e9e; }
-      .calendar-component .full-day-col.selected .appointment {
-        border-bottom-color: #9e9e9e; }
-    .calendar-component .full-day-col .appointment {
-      padding-bottom: 10px;
-      margin-bottom: 10px;
-      border-bottom: 1px dotted #e3e3e3;
-      cursor: pointer; }
-      .calendar-component .full-day-col .appointment a {
-        display: inline-block;
-        color: #2196f3;
-        font-size: 12px;
-        cursor: pointer;
-        transition: 0.4s all; }
-        .calendar-component .full-day-col .appointment a:hover {
-          color: #0d47a1; }
-      .calendar-component .full-day-col .appointment:hover {
-        border-bottom-color: #262626; }
+    .treatment-link:hover .ms-Persona-primaryText {
+      color: #2196f3; }
+  .treatment-link .ms-Persona-initials {
+    border-radius: 0;
+    font-size: 14px; }
 
-@media screen and (min-width: 992px) {
-  .calendar-component {
-    margin-top: 67px;
-    margin-right: 15px;
-    border-radius: 3px; } }
-
-@media screen and (max-width: 1250px) {
-  .calendar-component .full-day-col {
-    width: 33.33% !important;
-    min-height: 200px; } }
-
-@media screen and (max-width: 800px) {
-  .calendar-component .full-day-col {
-    width: 50% !important;
-    min-height: 150px; } }
-
-@media screen and (max-width: 400px) {
-  .calendar-component .full-day-col {
-    width: 100% !important;
-    min-height: 50px; } }
-@media screen and (max-width: 800px) {
-  .doctors-component {
-    padding: 10px; } }
-
-.doctor-editor .doctor-input {
-  margin-bottom: 15px; }
-  .doctor-editor .doctor-input label {
-    padding-bottom: 5px;
-    display: block; }
-
-.duty-table tr {
-  border: 1px solid #eeeeee; }
-
-.appointments-listing {
-  padding-top: 13px;
-  padding-bottom: 20px; }
-
-@media (max-width: 1200px) {
-  .duty-table {
-    margin-top: 15px; } }
-
-@media (max-width: 435px) {
-  .duty-table {
-    display: none; } }
-.appointment-thumbnail-component {
-  position: relative;
-  transition: 0.4s all; }
-  .appointment-thumbnail-component .ms-Persona {
-    transition: 0.4s all; }
-  .appointment-thumbnail-component .ms-Persona:hover {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); }
-  .appointment-thumbnail-component .delete {
-    cursor: pointer;
-    position: absolute;
-    right: 12px;
-    top: 12px;
-    font-size: 13px;
-    color: #262626; }
-    .appointment-thumbnail-component .delete:hover {
-      color: #f44336; }
-  .appointment-thumbnail-component.to-delete {
-    border-color: #f44336 !important; }
-  .appointment-thumbnail-component.clickable {
-    cursor: pointer; }
-    .appointment-thumbnail-component.clickable:hover {
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      border-color: #0078d7; }
-  .appointment-thumbnail-component.labeled {
-    border: 1px solid #e0e0e0;
-    border-radius: 2px;
-    padding: 6px 6px 0;
-    margin-bottom: 5px; }
-    .appointment-thumbnail-component.labeled .date-link {
-      display: inline-block;
-      margin-left: 20px; }
-      .appointment-thumbnail-component.labeled .date-link a {
-        border: none; }
-    .appointment-thumbnail-component.labeled:before {
-      content: "PAST";
-      background: #e0e0e0;
-      display: inline-block;
-      margin-right: 6px;
-      padding: 6px 5px 7px;
-      border-radius: 0;
-      font-size: 10px; }
-    .appointment-thumbnail-component.labeled.today-due {
-      border-color: #b2ebf2; }
-      .appointment-thumbnail-component.labeled.today-due:before {
-        content: "TODAY";
-        background: #b2ebf2; }
-    .appointment-thumbnail-component.labeled.tomorrow-due {
-      border-color: #ffccbc; }
-      .appointment-thumbnail-component.labeled.tomorrow-due:before {
-        content: "TOMORROW";
-        background: #ffccbc; }
-    .appointment-thumbnail-component.labeled.missed {
-      background: #f5f5f5; }
-      .appointment-thumbnail-component.labeled.missed:before {
-        content: "MISSED";
-        background: #f5f5f5; }
-    .appointment-thumbnail-component.labeled.to-be-paid {
-      border-color: #ef9a99; }
-      .appointment-thumbnail-component.labeled.to-be-paid:before {
-        content: "OUTSTANDING";
-        background: #ef9a99; }
-    .appointment-thumbnail-component.labeled.future {
-      border-color: #dcedc8; }
-      .appointment-thumbnail-component.labeled.future:before {
-        content: "FUTURE";
-        background: #dcedc8; }
-  .appointment-thumbnail-component .appointment-patient-link {
-    display: inline-block;
-    margin-bottom: 7px;
-    font-size: 12px;
-    padding: 5px;
-    background: #eee;
-    transition: 0.4s all;
-    position: relative;
-    top: 1px; }
-    .appointment-thumbnail-component .appointment-patient-link:before {
-      content: 'Patient';
-      background: #e0e0e0;
-      color: #3f3f3f;
-      padding: 3px 10px 4px;
-      margin-left: -5px;
-      margin-right: 5px; }
-    .appointment-thumbnail-component .appointment-patient-link:hover {
-      background: #fff;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-    .appointment-thumbnail-component .appointment-patient-link i {
-      display: none; }
+.ms-Persona-details {
+  line-height: 1.5; }
 .treatments-component {
   overflow-x: hidden;
   background: #fff;
@@ -8453,25 +8616,6 @@ hr {
     margin-top: 67px;
     margin-right: 15px;
     border-radius: 3px; } }
-.treatment-link {
-  margin-bottom: 7px !important;
-  background: #fafafa;
-  display: inline-flex !important; }
-  .treatment-link .ms-Persona-imageArea {
-    border-radius: 0 !important; }
-  .treatment-link:hover {
-    cursor: pointer; }
-    .treatment-link:hover .ms-Persona-primaryText {
-      color: #2196f3; }
-  .treatment-link .ms-Persona-initials {
-    border-radius: 0;
-    font-size: 14px; }
-
-.ms-Persona-details {
-  line-height: 1.5; }
-@media screen and (max-width: 800px) {
-  .patients-component {
-    padding: 10px; } }
 .data-table .ms-table td.clickable {
   transition: 0.3s all;
   cursor: pointer; }
@@ -8541,6 +8685,60 @@ hr {
       border-top: 1px solid #e0e0e0; }
       .tag-input-component .options-menu .options-item:hover, .tag-input-component .options-menu .options-item.selected {
         background: #e3e3e3; }
+.editable-list-component {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1; }
+  .editable-list-component .editable-list {
+    border: 1px solid #a6a6a6; }
+  .editable-list-component .input {
+    transition: 0.3s all;
+    background: #fff;
+    border-bottom: 1px solid #c8c8c8; }
+    .editable-list-component .input:hover {
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      border-bottom-color: #4aa9f5; }
+    .editable-list-component .input .input-field,
+    .editable-list-component .input .input-icon {
+      padding: 10px; }
+    .editable-list-component .input .input-icon {
+      padding: 10px;
+      color: #2196f3;
+      cursor: pointer; }
+    .editable-list-component .input .input-image {
+      color: #2196f3;
+      font-size: 20px;
+      padding: 6px 8px;
+      cursor: pointer; }
+    .editable-list-component .input .input-field {
+      border: none;
+      display: block;
+      width: 100%; }
+  .editable-list-component .items .item {
+    transition: 0.3s all;
+    border-bottom: 1px dotted #c8c8c8;
+    background: #fff;
+    display: block; }
+    .editable-list-component .items .item:last-child {
+      border-bottom: none; }
+    .editable-list-component .items .item:hover {
+      border-color: #2196f3;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+    .editable-list-component .items .item.toBeDeleted {
+      border-color: red; }
+    .editable-list-component .items .item .editViewItem {
+      background: transparent;
+      border: 0;
+      padding: 10px;
+      width: 100%; }
+    .editable-list-component .items .item .delete {
+      transition: 0.4s all;
+      font-size: 10px;
+      cursor: pointer;
+      padding: 12px 12px 12px 5px;
+      color: #000; }
+      .editable-list-component .items .item .delete:hover {
+        color: red; }
 .ortho-single-component {
   font-size: 13px; }
   .ortho-single-component section {
@@ -8598,209 +8796,6 @@ hr {
     display: block; }
   .ortho-single-component .has-error .ms-TextField-fieldGroup {
     border-color: #a80000; }
-.editable-list-component {
-  margin-top: 10px;
-  font-size: 13px;
-  line-height: 1; }
-  .editable-list-component .editable-list {
-    border: 1px solid #a6a6a6; }
-  .editable-list-component .input {
-    transition: 0.3s all;
-    background: #fff;
-    border-bottom: 1px solid #c8c8c8; }
-    .editable-list-component .input:hover {
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      border-bottom-color: #4aa9f5; }
-    .editable-list-component .input .input-field,
-    .editable-list-component .input .input-icon {
-      padding: 10px; }
-    .editable-list-component .input .input-icon {
-      padding: 10px;
-      color: #2196f3;
-      cursor: pointer; }
-    .editable-list-component .input .input-image {
-      color: #2196f3;
-      font-size: 20px;
-      padding: 6px 8px;
-      cursor: pointer; }
-    .editable-list-component .input .input-field {
-      border: none;
-      display: block;
-      width: 100%; }
-  .editable-list-component .items .item {
-    transition: 0.3s all;
-    border-bottom: 1px dotted #c8c8c8;
-    background: #fff;
-    display: block; }
-    .editable-list-component .items .item:last-child {
-      border-bottom: none; }
-    .editable-list-component .items .item:hover {
-      border-color: #2196f3;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-    .editable-list-component .items .item.toBeDeleted {
-      border-color: red; }
-    .editable-list-component .items .item .editViewItem {
-      background: transparent;
-      border: 0;
-      padding: 10px;
-      width: 100%; }
-    .editable-list-component .items .item .delete {
-      transition: 0.4s all;
-      font-size: 10px;
-      cursor: pointer;
-      padding: 12px 12px 12px 5px;
-      color: #000; }
-      .editable-list-component .items .item .delete:hover {
-        color: red; }
-.settings-component {
-  font-size: 13px;
-  background: #fff;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  padding: 20px; }
-  .settings-component .form .ms-TextField-prefix {
-    font-size: 11px;
-    width: 90px; }
-  .settings-component hr {
-    border: none;
-    border-bottom: 1px solid #e3e3e3;
-    margin-bottom: 20px;
-    margin-top: 20px; }
-  .settings-component .hint {
-    margin-top: 17px;
-    font-size: 12px;
-    color: #424242;
-    line-height: 20px;
-    margin-bottom: 30px; }
-
-@media screen and (min-width: 992px) {
-  .settings-component {
-    margin-top: 67px;
-    margin-right: 15px;
-    border-radius: 3px; } }
-.single-patient-component {
-  font-size: 13px; }
-  .single-patient-component section {
-    background: #fff;
-    margin-top: 10px;
-    padding: 15px;
-    border-radius: 3px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-    .single-patient-component section h3 {
-      margin-bottom: 12px;
-      padding-bottom: 12px;
-      border-bottom: 1px dotted #e0e0e0; }
-.dental-history table {
-  margin-bottom: 20px;
-  width: 100%;
-  border-collapse: collapse; }
-  .dental-history table.permanent tr td:nth-child(8) {
-    border-right: 2px solid #000; }
-  .dental-history table.permanent tr td:nth-child(9) {
-    border-left: 2px solid #000; }
-  .dental-history table.deciduous tr td:nth-child(5) {
-    border-right: 2px solid #000; }
-  .dental-history table.deciduous tr td:nth-child(6) {
-    border-left: 2px solid #000; }
-  .dental-history table tr td {
-    position: relative;
-    background: #fff;
-    transition: 0.4s all;
-    cursor: pointer;
-    text-align: center;
-    padding: 10px;
-    color: #000;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
-    .dental-history table tr td .has-notes {
-      transition: 0.4s all;
-      background: #2196f3;
-      height: 10px;
-      width: 10px;
-      display: inline-block;
-      position: absolute;
-      top: 5px;
-      left: 5px;
-      border-radius: 5px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
-    .dental-history table tr td:hover {
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
-    .dental-history table tr td.filled {
-      background: #ffc107;
-      color: #fff; }
-      .dental-history table tr td.filled .has-notes {
-        background: #ff6f00; }
-    .dental-history table tr td.compromised {
-      background: #f44336;
-      color: #fff; }
-      .dental-history table tr td.compromised .has-notes {
-        background: #b71c1c; }
-    .dental-history table tr td.endo {
-      background: #673ab7;
-      color: #fff; }
-      .dental-history table tr td.endo .has-notes {
-        background: #9575cd; }
-    .dental-history table tr td.missing {
-      color: #eee;
-      background: #bdbdbd; }
-      .dental-history table tr td.missing .has-notes {
-        background: #757575; }
-
-.dental-history .tooth-details {
-  background: #fff;
-  border-radius: 3px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  padding: 30px; }
-  .dental-history .tooth-details h4 {
-    color: #616161; }
-  .dental-history .tooth-details .tooth-name {
-    font-size: 17px;
-    text-transform: capitalize;
-    margin-bottom: 25px; }
-  .dental-history .tooth-details .close-details {
-    position: absolute;
-    top: 0px;
-    right: 10px;
-    padding: 5px 5px 3px;
-    border-radius: 2px;
-    font-size: 10px;
-    cursor: pointer;
-    transition: 0.4s all; }
-    .dental-history .tooth-details .close-details:hover {
-      background: #3e50b3;
-      color: #fff;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-.single-patient-details .gender {
-  margin-bottom: 12px; }
-
-.single-patient-details .ms-TextField-wrapper .ms-TextField-field {
-  background: #fff; }
-
-.single-patient-details .ms-TextField-wrapper div:nth-child(1) {
-  transition: 0.3s all;
-  border-color: #c8c8c8; }
-  .single-patient-details .ms-TextField-wrapper div:nth-child(1):hover {
-    border-color: #0078d7; }
-  .single-patient-details .ms-TextField-wrapper div:nth-child(1) div {
-    background: #f5f5f5;
-    min-width: 70px; }
-
-.single-patient-details .patient-tags {
-  border: 1px solid #c8c8c8;
-  transition: 0.3s all; }
-  .single-patient-details .patient-tags:hover {
-    border-color: #0078d7; }
-
-.single-patient-details .avatar {
-  text-align: center;
-  font-size: 100px;
-  color: #0078d7;
-  border: 1px; }
-
-.single-patient-details .buttons {
-  margin-top: 20px; }
-  .single-patient-details .buttons button {
-    width: 100%; }
-  .single-patient-details .buttons .delete {
-    position: static !important; }
 .gallery-component {
   margin-top: 10px; }
   .gallery-component .gallery-label {
@@ -8827,29 +8822,31 @@ hr {
       display: block;
       margin-top: 7px;
       text-transform: uppercase; }
-.single-patient-appointments {
-  position: relative; }
-  .single-patient-appointments .add-new {
-    position: absolute;
-    top: -4px;
-    right: 0;
-    background: #0078d7;
-    border-radius: 2px;
-    color: #fff;
-    padding: 7px 10px;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: 0.4s all; }
-    .single-patient-appointments .add-new:hover {
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      background: #005a9e; }
-    .single-patient-appointments .add-new .icon {
-      display: inline-block;
-      margin-right: 10px;
-      position: relative;
-      top: 1px; }
-.patient-link-component {
-  cursor: pointer; }
+.settings-component {
+  font-size: 13px;
+  background: #fff;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px; }
+  .settings-component .form .ms-TextField-prefix {
+    font-size: 11px;
+    width: 90px; }
+  .settings-component hr {
+    border: none;
+    border-bottom: 1px solid #e3e3e3;
+    margin-bottom: 20px;
+    margin-top: 20px; }
+  .settings-component .hint {
+    margin-top: 17px;
+    font-size: 12px;
+    color: #424242;
+    line-height: 20px;
+    margin-bottom: 30px; }
+
+@media screen and (min-width: 992px) {
+  .settings-component {
+    margin-top: 67px;
+    margin-right: 15px;
+    border-radius: 3px; } }
 .appointment-hr {
   border: none;
   margin-bottom: 20px;
@@ -8978,47 +8975,9 @@ hr {
     margin-right: 5px;
     position: relative;
     top: 1px; }
-.statistics-component .controls {
-  padding: 10px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  background: #fff; }
-
-.statistics-component .quick label {
-  font-size: 13px;
-  margin-bottom: 5px;
-  color: #757575;
-  display: block;
-  text-align: center; }
-
-.statistics-component .charts {
-  margin-top: 15px; }
-  .statistics-component .charts .chart-wrapper {
-    margin-bottom: 15px; }
-    .statistics-component .charts .chart-wrapper .chart {
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
-      background: #fff; }
-      .statistics-component .charts .chart-wrapper .chart .graph {
-        padding-top: 10px;
-        border-radius: 5px 5px 0 0;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
-      .statistics-component .charts .chart-wrapper .chart .name {
-        padding: 15px;
-        padding-bottom: 0;
-        border-top: 1px solid whitesmoke; }
-      .statistics-component .charts .chart-wrapper .chart .description {
-        color: #9e9e9e;
-        font-size: 12px;
-        display: inline-block;
-        margin-top: 10px;
-        padding: 15px;
-        padding-top: 0; }
-
-@media screen and (min-width: 992px) {
-  .statistics-component {
-    margin-top: 67px;
-    margin-right: 15px;
-    border-radius: 3px; } }
+@media screen and (max-width: 800px) {
+  .patients-component {
+    padding: 10px; } }
 /* nvd3 version 1.8.5 (https://github.com/novus/nvd3) 2016-12-01 */
 .nvd3 .nv-axis {
   pointer-events: none;
@@ -9562,150 +9521,191 @@ Interactive Layer
 
 .nvd3 line.nv-guideline {
   stroke: #ccc; }
-.header-component {
-  padding-left: 10px;
-  padding-right: 10px;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  background: #fff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
-  .header-component section {
-    float: left;
-    padding: 10px 10px 0px;
-    width: 100%;
-    position: relative; }
-  .header-component .notification .title,
-  .header-component .notification .details {
-    padding: 7px; }
-  .header-component .title {
-    position: relative;
+.single-patient-component {
+  font-size: 13px; }
+  .single-patient-component section {
+    background: #fff;
     margin-top: 10px;
-    margin-bottom: 15px;
-    text-align: center;
-    text-transform: capitalize; }
-  .header-component .issue-bubble {
-    background: #e91e63;
-    width: 12px;
-    height: 12px;
-    display: inline-block;
-    position: absolute;
-    right: 47px;
-    top: 12px;
-    border-radius: 20px;
-    cursor: pointer; }
-  .header-component .ms-OverflowSet {
-    display: inline-block;
-    margin-top: 9px; }
-    .header-component .ms-OverflowSet .ms-Button-menuIcon {
-      font-size: 15px; }
-.menu .ms-Nav ul {
-  padding-top: 5px; }
-  .menu .ms-Nav ul .is-selected {
-    background: #e1f5fe; }
-  .menu .ms-Nav ul .ms-Nav-link {
-    padding-left: 0 !important;
-    text-transform: capitalize; }
+    padding: 15px;
+    border-radius: 3px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+    .single-patient-component section h3 {
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px dotted #e0e0e0; }
+.statistics-component .controls {
+  padding: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  background: #fff; }
 
-@media (min-width: 992px) {
-  #router-outlet {
-    margin-left: 117px; }
-  .icon-list {
-    position: fixed;
-    top: 52px;
-    left: 0;
-    margin-top: 15px;
-    margin-left: 15px;
-    cursor: pointer; }
-    .icon-list .item {
-      transition: 0.4s all;
+.statistics-component .quick label {
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: #757575;
+  display: block;
+  text-align: center; }
+
+.statistics-component .charts {
+  margin-top: 15px; }
+  .statistics-component .charts .chart-wrapper {
+    margin-bottom: 15px; }
+    .statistics-component .charts .chart-wrapper .chart {
       box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      background: #fff;
-      padding: 13px 10px;
-      margin-bottom: 8px;
-      font-size: 17px;
-      text-align: center;
-      border-radius: 3px; }
-      .icon-list .item:hover {
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-        background: #757575;
-        color: #fff; }
-      .icon-list .item.selected {
-        background: #00bcd4;
-        color: #fff;
-        cursor: initial;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-      .icon-list .item .text {
-        margin-top: 5px;
-        font-size: 11px;
-        position: relative;
-        bottom: 3px;
-        display: block;
-        text-transform: capitalize; } }
-.prompts-component {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  padding: 15px; }
-  .prompts-component .prompt {
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-    transition: 0.4s all;
-    display: table;
+      border-radius: 5px;
+      background: #fff; }
+      .statistics-component .charts .chart-wrapper .chart .graph {
+        padding-top: 10px;
+        border-radius: 5px 5px 0 0;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
+      .statistics-component .charts .chart-wrapper .chart .name {
+        padding: 15px;
+        padding-bottom: 0;
+        border-top: 1px solid whitesmoke; }
+      .statistics-component .charts .chart-wrapper .chart .description {
+        color: #9e9e9e;
+        font-size: 12px;
+        display: inline-block;
+        margin-top: 10px;
+        padding: 15px;
+        padding-top: 0; }
+
+@media screen and (min-width: 992px) {
+  .statistics-component {
+    margin-top: 67px;
+    margin-right: 15px;
+    border-radius: 3px; } }
+.dental-history table {
+  margin-bottom: 20px;
+  width: 100%;
+  border-collapse: collapse; }
+  .dental-history table.permanent tr td:nth-child(8) {
+    border-right: 2px solid #000; }
+  .dental-history table.permanent tr td:nth-child(9) {
+    border-left: 2px solid #000; }
+  .dental-history table.deciduous tr td:nth-child(5) {
+    border-right: 2px solid #000; }
+  .dental-history table.deciduous tr td:nth-child(6) {
+    border-left: 2px solid #000; }
+  .dental-history table tr td {
+    position: relative;
     background: #fff;
-    color: #000;
-    font-size: 14px;
-    padding: 10px;
-    border-radius: 2px;
-    margin-top: 15px; }
-    .prompts-component .prompt i {
-      margin-right: 5px; }
-    .prompts-component .prompt > i {
-      padding: 5px;
-      border-radius: 50px;
-      font-weight: bold; }
-    .prompts-component .prompt .message {
-      margin-right: 10px; }
-    .prompts-component .prompt .button {
-      border-radius: 2px;
-      transition: 0.4s all;
-      border-left: 1px solid #fafafa;
-      padding: 15px 15px 12px;
-      margin-left: 10px;
-      cursor: pointer; }
-      .prompts-component .prompt .button:hover {
-        background: #f5f5f5; }
-      .prompts-component .prompt .button:last-child {
-        margin-right: -11px;
-        margin-left: 0; }
-      .prompts-component .prompt .button i {
-        font-size: 11px; }
-.home {
-  padding-top: 15px; }
-  .home .item {
+    transition: 0.4s all;
     cursor: pointer;
-    transition: 0.4s all;
-    margin-bottom: 20px;
-    padding: 25px;
     text-align: center;
-    background: #fff;
+    padding: 10px;
+    color: #000;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
-    .home .item:hover {
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); }
-    .home .item i {
-      font-size: 50px; }
-    .home .item .title {
-      text-transform: capitalize; }
-.user-component .persona {
-  padding: 10px 25px 0; }
-.confirmation-modal .ms-Panel-main {
-  box-shadow: 0px -20px 50px rgba(0, 0, 0, 0.14) !important;
-  height: 100px;
-  bottom: 0;
-  top: initial; }
-  .confirmation-modal .ms-Panel-main .ms-Panel-content {
-    padding-bottom: 0; }
-    .confirmation-modal .ms-Panel-main .ms-Panel-content p {
-      margin-top: 20px;
-      margin-bottom: 15px; }
-    .confirmation-modal .ms-Panel-main .ms-Panel-content .ms-Button {
-      margin-right: 10px; }
+    .dental-history table tr td .has-notes {
+      transition: 0.4s all;
+      background: #2196f3;
+      height: 10px;
+      width: 10px;
+      display: inline-block;
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      border-radius: 5px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
+    .dental-history table tr td:hover {
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
+    .dental-history table tr td.filled {
+      background: #ffc107;
+      color: #fff; }
+      .dental-history table tr td.filled .has-notes {
+        background: #ff6f00; }
+    .dental-history table tr td.compromised {
+      background: #f44336;
+      color: #fff; }
+      .dental-history table tr td.compromised .has-notes {
+        background: #b71c1c; }
+    .dental-history table tr td.endo {
+      background: #673ab7;
+      color: #fff; }
+      .dental-history table tr td.endo .has-notes {
+        background: #9575cd; }
+    .dental-history table tr td.missing {
+      color: #eee;
+      background: #bdbdbd; }
+      .dental-history table tr td.missing .has-notes {
+        background: #757575; }
+
+.dental-history .tooth-details {
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px; }
+  .dental-history .tooth-details h4 {
+    color: #616161; }
+  .dental-history .tooth-details .tooth-name {
+    font-size: 17px;
+    text-transform: capitalize;
+    margin-bottom: 25px; }
+  .dental-history .tooth-details .close-details {
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    padding: 5px 5px 3px;
+    border-radius: 2px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: 0.4s all; }
+    .dental-history .tooth-details .close-details:hover {
+      background: #3e50b3;
+      color: #fff;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+.patient-link-component {
+  cursor: pointer; }
+.single-patient-details .gender {
+  margin-bottom: 12px; }
+
+.single-patient-details .ms-TextField-wrapper .ms-TextField-field {
+  background: #fff; }
+
+.single-patient-details .ms-TextField-wrapper div:nth-child(1) {
+  transition: 0.3s all;
+  border-color: #c8c8c8; }
+  .single-patient-details .ms-TextField-wrapper div:nth-child(1):hover {
+    border-color: #0078d7; }
+  .single-patient-details .ms-TextField-wrapper div:nth-child(1) div {
+    background: #f5f5f5;
+    min-width: 70px; }
+
+.single-patient-details .patient-tags {
+  border: 1px solid #c8c8c8;
+  transition: 0.3s all; }
+  .single-patient-details .patient-tags:hover {
+    border-color: #0078d7; }
+
+.single-patient-details .avatar {
+  text-align: center;
+  font-size: 100px;
+  color: #0078d7;
+  border: 1px; }
+
+.single-patient-details .buttons {
+  margin-top: 20px; }
+  .single-patient-details .buttons button {
+    width: 100%; }
+  .single-patient-details .buttons .delete {
+    position: static !important; }
+.single-patient-appointments {
+  position: relative; }
+  .single-patient-appointments .add-new {
+    position: absolute;
+    top: -4px;
+    right: 0;
+    background: #0078d7;
+    border-radius: 2px;
+    color: #fff;
+    padding: 7px 10px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: 0.4s all; }
+    .single-patient-appointments .add-new:hover {
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      background: #005a9e; }
+    .single-patient-appointments .add-new .icon {
+      display: inline-block;
+      margin-right: 10px;
+      position: relative;
+      top: 1px; }

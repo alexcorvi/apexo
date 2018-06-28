@@ -96,7 +96,7 @@ export class AppointmentThumb extends React.Component<
 	 * @type {HTMLElement}
 	 * @memberof AppointmentThumb
 	 */
-	el: HTMLElement;
+	el: HTMLElement | undefined;
 	render() {
 		const treatmentID = this.props.appointment.treatmentID;
 		return (
@@ -132,9 +132,15 @@ export class AppointmentThumb extends React.Component<
 						iconName="trash"
 						className="delete"
 						onMouseEnter={() => {
+							if (!this.el) {
+								return;
+							}
 							this.el.className = this.el.className + ' to-delete';
 						}}
 						onMouseLeave={() => {
+							if (!this.el) {
+								return;
+							}
 							this.el.className = this.el.className.split(' to-delete').join('');
 						}}
 						onClick={(ev) => {

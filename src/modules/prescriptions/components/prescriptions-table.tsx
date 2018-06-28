@@ -52,8 +52,11 @@ export class ItemInput extends React.Component<
 
 @observer
 export class PrescriptionsTable extends React.Component<{}, {}> {
-	dataTable: DataTable;
+	dataTable: DataTable | undefined;
 	componentDidMount() {
+		if (!this.dataTable) {
+			return;
+		}
 		// by default data table here should not be sorted
 		this.dataTable.currentColIndex = 4;
 	}

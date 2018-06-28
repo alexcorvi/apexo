@@ -49,7 +49,7 @@ export class PieChart extends React.Component<
 				.x((d) => d.label)
 				.y((d) => d.value);
 
-			d3.select('#' + this.id).datum(this.props.data).call(chart);
+			d3.select('#' + this.id).datum(this.props.data).call(chart as any);
 			nv.utils.windowResize(chart.update);
 			return chart;
 		});

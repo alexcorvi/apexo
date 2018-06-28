@@ -1,5 +1,4 @@
 import { computed, observable, observe } from 'mobx';
-import axios from 'axios';
 import { observer } from 'mobx-react';
 import { registerModules } from '../../modules';
 
