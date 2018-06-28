@@ -15,6 +15,8 @@ import { settingsData } from '../../settings';
 import { Row, Col } from 'antd';
 import { sortArrByProp } from '../../../assets/utils/sort-arr';
 import { TreatmentLink } from './link';
+import { appointmentsData } from '../../appointments';
+import { AppointmentThumb } from '../../../assets/components/appointment-thumb/appointment-thumb';
 
 @observer
 export class Treatments extends React.Component<{}, {}> {
@@ -38,6 +40,13 @@ export class Treatments extends React.Component<{}, {}> {
 	@computed
 	get selectedTreatment() {
 		return treatments.list[this.selectedIndex];
+	}
+
+	@computed
+	get selectedAppointments() {
+		return appointmentsData.appointments.list
+			.filter((appointment) => appointment.treatmentID === this.selectedID)
+			.sort((a, b) => b.date - a.date);
 	}
 
 	render() {
@@ -103,37 +112,55 @@ export class Treatments extends React.Component<{}, {}> {
 					</Col>
 					<Col sm={18} lg={20}>
 						{this.selectedTreatment ? (
-							<div className={'treatment-edit' + (this.showMenu ? ' hidden-xs' : '')}>
-								<TreatmentLink id={this.selectedID} notClickable />
-								<section>
-									<label>Treatment Title</label>
-									<TextField
-										value={this.selectedTreatment.type}
-										onChanged={(newVal) => {
-											treatments.list[this.selectedIndex].type = newVal;
-										}}
-									/>
-								</section>
-								<section>
-									<label>Expected Expenses</label>
-									<TextField
-										type="number"
-										value={this.selectedTreatment.expenses.toString()}
-										onChanged={(newVal) => {
-											treatments.list[this.selectedIndex].expenses = Number(newVal);
-										}}
-									/>
-								</section>
-								<PrimaryButton
-									text="Delete"
-									className="delete m-t-5"
-									iconProps={{ iconName: 'trash' }}
-									onClick={() => {
-										this.showMenu = true;
-										treatments.deleteModal(this.selectedID);
-									}}
-								/>
-							</div>
+							<Row gutter={12}>
+								<Col md={8}>
+									<div className={'treatment-edit' + (this.showMenu ? ' hidden-xs' : '')}>
+										<TreatmentLink id={this.selectedID} notClickable />
+										<section>
+											<label>Treatment Title</label>
+											<TextField
+												value={this.selectedTreatment.type}
+												onChanged={(newVal) => {
+													treatments.list[this.selectedIndex].type = newVal;
+												}}
+											/>
+										</section>
+										<section>
+											<label>Expected Expenses</label>
+											<TextField
+												type="number"
+												value={this.selectedTreatment.expenses.toString()}
+												onChanged={(newVal) => {
+													treatments.list[this.selectedIndex].expenses = Number(newVal);
+												}}
+											/>
+										</section>
+										<PrimaryButton
+											text="Delete"
+											className="delete m-t-5"
+											iconProps={{ iconName: 'trash' }}
+											onClick={() => {
+												this.showMenu = true;
+												treatments.deleteModal(this.selectedID);
+											}}
+										/>
+									</div>
+								</Col>
+								<Col md={16}>
+									<div style={{ padding: '20px' }}>
+										{this.selectedAppointments.map((appointment) => (
+											<AppointmentThumb
+												key={appointment._id}
+												appointment={appointment}
+												showPatient
+												labeled
+												small
+												hideTreatment
+											/>
+										))}
+									</div>
+								</Col>
+							</Row>
 						) : (
 							''
 						)}
