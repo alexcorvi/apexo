@@ -1,5 +1,4 @@
 # build current code
-bash scripts/lint.sh &
-node_modules/.bin/webpack -p &&
+node_modules/.bin/webpack -p --env.production --mode production &&
 echo "WebPack completed successfully"
 # ------
