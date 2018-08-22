@@ -1,6 +1,6 @@
 import './index.html';
-import 'antd/lib/grid/style/css';
 import './style.scss';
+import 'antd/lib/grid/style/index.css';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
