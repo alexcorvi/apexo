@@ -12,6 +12,7 @@ import { IClassCreator } from './interface.class-creator';
 import { IMobXStore } from './interface.mobx-store';
 import { observeItem } from './observe-item';
 import { singleItemUpdateQue } from './single-item-update-que';
+import { Md5 } from 'ts-md5';
 
 export const resync: { resyncMethods: Array<() => Promise<void>>; resync: () => Promise<boolean> } = {
 	resyncMethods: [],
@@ -33,6 +34,9 @@ export const resync: { resyncMethods: Array<() => Promise<void>>; resync: () => 
 };
 
 export function connectToDB(name: string, shouldLog: boolean = false, config?: PouchDB.AdapterWebSql.Configuration) {
+	// prefixing DB name
+	name = name + '_' + Md5.hashStr(API.login.server);
+
 	/**
 	 * Connection object
 	 */
