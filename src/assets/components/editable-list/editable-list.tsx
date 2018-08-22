@@ -114,7 +114,7 @@ export class EditableList extends React.Component<
 										<Col xs={4} sm={3} style={{ textAlign: 'right' }}>
 											<Icon
 												className="delete"
-												iconName="chromeClose"
+												iconName="delete"
 												onClick={async () => {
 													this.props.value.splice(key, 1);
 													(this.props.onChange || (() => {}))(this.props.value);

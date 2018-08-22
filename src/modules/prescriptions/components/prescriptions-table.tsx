@@ -105,7 +105,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 							dataValue: 0,
 							component: (
 								<Icon
-									iconName={'trash'}
+									iconName={'delete'}
 									className="delete-item"
 									onMouseEnter={(event) =>
 										((event.target as any).parentNode.parentNode.className = 'to-be-deleted')}

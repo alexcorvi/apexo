@@ -544,7 +544,7 @@ export class OrthoSingle extends React.Component<{}, {}> {
 												<Col sm={1} xs={2}>
 													<IconButton
 														style={{ paddingLeft: 0 }}
-														iconProps={{ iconName: 'trash' }}
+														iconProps={{ iconName: 'delete' }}
 														onClick={() => {
 															if (this.orthoCase) {
 																this.orthoCase.treatmentPlan_appliance.splice(index, 1);

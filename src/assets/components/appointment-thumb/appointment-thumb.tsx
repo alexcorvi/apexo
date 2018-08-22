@@ -129,7 +129,7 @@ export class AppointmentThumb extends React.Component<
 				)}
 				{this.props.canDelete ? (
 					<Icon
-						iconName="trash"
+						iconName="delete"
 						className="delete"
 						onMouseEnter={() => {
 							if (!this.el) {

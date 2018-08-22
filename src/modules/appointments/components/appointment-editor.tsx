@@ -418,7 +418,7 @@ export class AppointmentEditor extends React.Component<
 								<PrimaryButton
 									className="delete"
 									iconProps={{
-										iconName: 'trash'
+										iconName: 'delete'
 									}}
 									text="Delete"
 									onClick={() => {

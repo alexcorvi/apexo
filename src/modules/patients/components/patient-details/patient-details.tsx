@@ -132,7 +132,7 @@ export class PatientDetails extends React.Component<
 						<PrimaryButton
 							className="delete"
 							text="Delete Patient"
-							iconProps={{ iconName: 'trash' }}
+							iconProps={{ iconName: 'delete' }}
 							onClick={() => {
 								patients.deleteModal(this.props.patient._id);
 								API.router.history(-1);

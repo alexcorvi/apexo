@@ -241,7 +241,7 @@ export class DoctorsListing extends React.Component<{}, {}> {
 									doctors.deleteModal(this.doctor._id);
 									this.selectedDoctorIndex = -1;
 								}}
-								iconProps={{ iconName: 'trash' }}
+								iconProps={{ iconName: 'delete' }}
 								text="Delete Doctor"
 							/>
 						</div>

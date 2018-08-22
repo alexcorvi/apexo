@@ -138,7 +138,7 @@ export class Treatments extends React.Component<{}, {}> {
 										<PrimaryButton
 											text="Delete"
 											className="delete m-t-5"
-											iconProps={{ iconName: 'trash' }}
+											iconProps={{ iconName: 'delete' }}
 											onClick={() => {
 												this.showMenu = true;
 												treatments.deleteModal(this.selectedID);
