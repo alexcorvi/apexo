@@ -16,23 +16,24 @@ export class ChooseDoctor extends React.Component<{}, {}> {
 	newDocNameTextField: TextField | undefined;
 	render() {
 		return (
-			<div className="container m-t-50" style={{ maxWidth: '400px' }}>
+			<div className="container m-t-50" style={{ maxWidth: '400px', margin: '30px auto' }}>
 				<div className="pivot m-b-10">
 					{data.doctorsData.doctors.list.length > 0 ? (
-						<Label
-							text="Already registered"
-							type={!this.newDoc ? LabelType.primary : LabelType.info}
-							onClick={() => (this.newDoc = false)}
-						/>
+						<div>
+							<Label
+								text="Already registered"
+								type={!this.newDoc ? LabelType.primary : LabelType.info}
+								onClick={() => (this.newDoc = false)}
+							/>
+							<Label
+								text="New Doctor"
+								type={this.newDoc ? LabelType.primary : LabelType.info}
+								onClick={() => (this.newDoc = true)}
+							/>
+						</div>
 					) : (
 						''
 					)}
-
-					<Label
-						text="New Doctor"
-						type={this.newDoc ? LabelType.primary : LabelType.info}
-						onClick={() => (this.newDoc = true)}
-					/>
 				</div>
 				{this.newDoc || data.doctorsData.doctors.list.length === 0 ? (
 					<div>

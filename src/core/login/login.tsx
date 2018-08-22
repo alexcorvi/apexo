@@ -17,7 +17,8 @@ export class LoginComponent extends React.Component<{}, {}> {
 	passwordField: TextField | undefined;
 	serverField: TextField | undefined;
 
-	couchDBDefaultServer: string = localStorage.getItem('server_location') ||
+	couchDBDefaultServer: string = (window as any).couchDBServer ||
+		localStorage.getItem('server_location') ||
 		location.origin.replace(/:\d+$/g, ':5984');
 
 	@observable errorMessage: string = '';
@@ -30,9 +31,9 @@ export class LoginComponent extends React.Component<{}, {}> {
 
 	render() {
 		return (
-			<div className="container m-t-50" style={{ maxWidth: '400px' }}>
+			<div className="container m-t-50" style={{ maxWidth: '400px', margin: '30px auto' }}>
 				<div className="login-step">
-					{this.editServerLocation ? (
+					{navigator.onLine ? this.editServerLocation ? (
 						''
 					) : (
 						<Label>
@@ -57,6 +58,15 @@ export class LoginComponent extends React.Component<{}, {}> {
 								change
 							</a>
 						</Label>
+					) : (
+						<MessageBar messageBarType={MessageBarType.warning}>
+							{`
+								You're offline.
+								Use the latest username/password you've successfully
+								used on this machine to login to this server:
+								${(this.couchDBDefaultServer || '').replace(/([^\/])\/[^\/].+/, '$1')}.
+							`}
+						</MessageBar>
 					)}
 
 					<TextField
@@ -67,6 +77,7 @@ export class LoginComponent extends React.Component<{}, {}> {
 						defaultValue={this.couchDBDefaultServer}
 						className={this.editServerLocation ? '' : 'hidden'}
 					/>
+
 					<br />
 					<br />
 					<hr />
