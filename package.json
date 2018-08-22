@@ -31,6 +31,7 @@
 		"react-dom": "^16.4.1",
 		"request": "^2.87.0",
 		"t4mat": "0.0.6",
+		"ts-md5": "^1.2.4",
 		"tslint": "^5.10.0"
 	},
 	"devDependencies": {
@@ -64,6 +65,7 @@
 		"prod": "bash scripts/build-production.sh",
 		"lint": "bash scripts/lint.sh",
 		"serve": "bash scripts/serve.sh",
-		"dev": "bash scripts/build-development.sh"
+		"dev": "bash scripts/build-development.sh",
+		"deploy": "bash scripts/deploy.sh"
 	}
 }
