@@ -17,6 +17,19 @@ initializeIcons('./fonts/');
 ReactDOM.render(
 	<Fabric>
 		<components.MainComponent />
+		<p
+			style={{
+				fontSize: '12px',
+				position: 'absolute',
+				color: '#e3e3e3',
+				bottom: '5px',
+				right: '12px',
+				zIndex: -1
+			}}
+		>
+			{' '}
+			version 1.1.0{' '}
+		</p>
 	</Fabric>,
 	document.getElementById('root')
 );
