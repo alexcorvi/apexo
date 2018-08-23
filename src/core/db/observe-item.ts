@@ -7,7 +7,7 @@ import { diff } from 'fast-array-diff';
 import { log } from './log';
 import { singleItemUpdateQue } from './single-item-update-que';
 
-export function observeItem(dbName: string, item: IClassStatic, data: IMobXStore, methods: InteractionMethods<any>) {
+export function observeItem(item: IClassStatic, data: IMobXStore, methods: InteractionMethods<any>) {
 	observe(item, (change) => {
 		if (change.type !== 'update') {
 			return;

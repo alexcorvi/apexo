@@ -34,13 +34,13 @@ export const resync: { resyncMethods: Array<() => Promise<void>>; resync: () => 
 };
 
 export function connectToDB(name: string, shouldLog: boolean = false, config?: PouchDB.AdapterWebSql.Configuration) {
-	// prefixing DB name
-	name = name + '_' + Md5.hashStr(API.login.server);
+	// prefixing local DB name
+	const localName = name + '_' + Md5.hashStr(API.login.server);
 
 	/**
 	 * Connection object
 	 */
-	const localDatabase = new PouchDB(name);
+	const localDatabase = new PouchDB(localName);
 	const remoteDatabase = new PouchDB(`${API.login.server}/${name}`, {
 		auth: { username: API.login.username, password: API.login.password }
 	});
@@ -51,7 +51,7 @@ export function connectToDB(name: string, shouldLog: boolean = false, config?: P
 
 	return async function(Class: IClassCreator, data: IMobXStore) {
 		// start with the basics
-		const methods = generateMethods(name, localDatabase, data, Class);
+		const methods = generateMethods(localDatabase, data, Class);
 
 		/**
 		 * First of all we have three places to store data
@@ -89,7 +89,7 @@ export function connectToDB(name: string, shouldLog: boolean = false, config?: P
 		});
 
 		// Watch document by document
-		data.list.forEach((item, index) => observeItem(name, item, data, methods));
+		data.list.forEach((item, index) => observeItem(item, data, methods));
 		data.ignoreObserver = false;
 
 		// watch the local database for changes
@@ -128,7 +128,7 @@ export function connectToDB(name: string, shouldLog: boolean = false, config?: P
 					if (singleItemUpdateQue.find((x) => x.id === id)) {
 					} else {
 						data.list[mobxIndex].fromJSON(newDoc);
-						observeItem(name, data.list[mobxIndex], data, methods);
+						observeItem(data.list[mobxIndex], data, methods);
 					}
 				}
 				data.ignoreObserver = false;

@@ -9,7 +9,7 @@ import { diff } from 'fast-array-diff';
 import { observe } from 'mobx';
 import { observeItem } from './observe-item';
 
-export function generateMethods(dbName: string, db: PouchDB.Database, data: IMobXStore, Class: IClassCreator) {
+export function generateMethods(db: PouchDB.Database, data: IMobXStore, Class: IClassCreator) {
 	const methods: InteractionMethods<IClassStatic> = {
 		/**
          * Put the MobX store list into the database by diffing the new store with the cache
@@ -32,7 +32,7 @@ export function generateMethods(dbName: string, db: PouchDB.Database, data: IMob
 				if (!document) {
 					return;
 				}
-				observeItem(dbName, document, data, methods);
+				observeItem(document, data, methods);
 				methods.add(document);
 			});
 		},
