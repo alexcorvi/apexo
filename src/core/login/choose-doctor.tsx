@@ -67,8 +67,7 @@ export class ChooseDoctor extends React.Component<{}, {}> {
 							};
 						})}
 						onChanged={(doctor) => {
-							login.currentDoctorID = doctor.key.toString();
-							login.step = LoginStep.allDone;
+							login.setDoctor(doctor.key.toString());
 							API.router.go([ '' ]);
 						}}
 					/>

@@ -16,14 +16,27 @@ export enum LoginStep {
 }
 
 class Login {
-	@observable username: string = '';
-	@observable password: string = '';
 	@observable server: string = '';
 	@observable currentDoctorID: string = '';
 
 	@observable step: LoginStep = LoginStep.initial;
 
-	async login({ user, pass, server }: { user: string; pass: string; server: string }): Promise<true | string> {
+	async initialCheck(server: string) {
+		if (!navigator.onLine) {
+			return;
+		}
+		const user = (await new PouchDB(server).getSession()).userCtx.name;
+		if (!user) {
+			return;
+		}
+		await this.authenticate({ user, server, pass: '' });
+		const doctorID = localStorage.getItem('doctor_id');
+		if (!doctorID) {
+			return;
+		}
+		this.setDoctor(doctorID);
+	}
+	async login({ user, pass, server }: { user: string; pass: string; server: string }) {
 		// login
 		try {
 			if (navigator.onLine) {
@@ -45,21 +58,34 @@ class Login {
 				return 'Incorrect username/password combination';
 			}
 		}
-
-		this.username = user;
-		this.password = pass;
+		this.authenticate({ user, pass, server });
+	}
+	async authenticate({ user, pass, server }: { user: string; pass: string; server: string }) {
 		this.server = server;
 		localStorage.setItem('server_location', server);
-		localStorage.setItem(
-			'LSL',
-			Md5.hashStr(this.username + this.password + this.server).toString() + '__' + new Date().getTime()
-		);
+		if (pass.length) {
+			localStorage.setItem('LSL', Md5.hashStr(user + pass + server).toString() + '__' + new Date().getTime());
+		}
 		this.step = LoginStep.loadingData;
 		try {
 			await registerModules();
 		} catch (e) {}
 		this.step = LoginStep.chooseDoctor;
-		return true;
+	}
+	async logout() {
+		if (navigator.onLine) {
+			await new PouchDB(this.server).logOut();
+		}
+		location.reload();
+	}
+	resetDoctor() {
+		this.step = LoginStep.chooseDoctor;
+		this.currentDoctorID = '';
+	}
+	setDoctor(id: string) {
+		this.currentDoctorID = id;
+		this.step = LoginStep.allDone;
+		localStorage.setItem('doctor_id', id);
 	}
 }
 

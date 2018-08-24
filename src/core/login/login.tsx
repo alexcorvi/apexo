@@ -29,95 +29,105 @@ export class LoginComponent extends React.Component<{}, {}> {
 
 	@observable editServerLocation: boolean = false;
 
+	@observable initiallyChecked: boolean = false;
+
+	componentWillMount() {
+		login.initialCheck(this.couchDBDefaultServer).then(() => (this.initiallyChecked = true));
+	}
+
 	render() {
 		return (
 			<div className="container m-t-50" style={{ maxWidth: '400px', margin: '30px auto' }}>
-				<div className="login-step">
-					{navigator.onLine ? this.editServerLocation ? (
-						''
-					) : (
-						<Label>
-							<LabelC text={this.couchDBDefaultServer} type={LabelType.info} />
-							<LabelC
-								text={
-									this.serverLabelColor === LabelType.danger ? (
-										'OFFLINE'
-									) : this.serverLabelColor === LabelType.success ? (
-										'ONLINE'
-									) : (
-										'CHECKING'
-									)
-								}
-								type={this.serverLabelColor}
-							/>
-							<a
-								onClick={() => {
-									this.editServerLocation = true;
-								}}
-							>
-								change
-							</a>
-						</Label>
-					) : (
-						<MessageBar messageBarType={MessageBarType.warning}>
-							{`
+				{this.initiallyChecked ? (
+					<div className="login-step">
+						{navigator.onLine ? this.editServerLocation ? (
+							''
+						) : (
+							<Label>
+								<LabelC text={this.couchDBDefaultServer} type={LabelType.info} />
+								<LabelC
+									text={
+										this.serverLabelColor === LabelType.danger ? (
+											'OFFLINE'
+										) : this.serverLabelColor === LabelType.success ? (
+											'ONLINE'
+										) : (
+											'CHECKING'
+										)
+									}
+									type={this.serverLabelColor}
+								/>
+								<a
+									onClick={() => {
+										this.editServerLocation = true;
+									}}
+								>
+									change
+								</a>
+							</Label>
+						) : (
+							<MessageBar messageBarType={MessageBarType.warning}>
+								{`
 								You're offline.
 								Use the latest username/password you've successfully
 								used on this machine to login to this server:
 								${(this.couchDBDefaultServer || '').replace(/([^\/])\/[^\/].+/, '$1')}.
 							`}
-						</MessageBar>
-					)}
+							</MessageBar>
+						)}
 
-					<TextField
-						name="server"
-						label="CouchDB Server location"
-						ref={(el) => (el ? (this.serverField = el) : '')}
-						disabled={this.disableInputs}
-						defaultValue={this.couchDBDefaultServer}
-						className={this.editServerLocation ? '' : 'hidden'}
-					/>
+						<TextField
+							name="server"
+							label="CouchDB Server location"
+							ref={(el) => (el ? (this.serverField = el) : '')}
+							disabled={this.disableInputs}
+							defaultValue={this.couchDBDefaultServer}
+							className={this.editServerLocation ? '' : 'hidden'}
+						/>
 
-					<br />
-					<br />
-					<hr />
-					<TextField
-						name="identification"
-						label="Username"
-						ref={(el) => (el ? (this.usernameField = el) : '')}
-						disabled={this.disableInputs}
-					/>
-					<TextField
-						name="password"
-						type="Password"
-						label="Password"
-						ref={(el) => (el ? (this.passwordField = el) : '')}
-						disabled={this.disableInputs}
-					/>
-					<PrimaryButton
-						text="login"
-						disabled={this.disableInputs}
-						className="m-t-15 m-b-15"
-						onClick={async () => {
-							if (!(this.passwordField && this.usernameField && this.serverField)) {
-								return;
-							}
-							if (!(this.usernameField.value && this.passwordField.value && this.serverField.value)) {
-								this.errorMessage = 'All fields are necessary';
-								return;
-							}
-							this.errorMessage = '';
-							const result = await login.login({
-								user: this.usernameField.value,
-								pass: this.passwordField.value,
-								server: this.serverField.value.replace(/([^\/])\/[^\/].+/, '$1')
-							});
-							if (result !== true) {
-								this.errorMessage = result;
-							}
-						}}
-					/>
-				</div>
+						<br />
+						<br />
+						<hr />
+						<TextField
+							name="identification"
+							label="Username"
+							ref={(el) => (el ? (this.usernameField = el) : '')}
+							disabled={this.disableInputs}
+						/>
+						<TextField
+							name="password"
+							type="Password"
+							label="Password"
+							ref={(el) => (el ? (this.passwordField = el) : '')}
+							disabled={this.disableInputs}
+						/>
+						<PrimaryButton
+							text="login"
+							disabled={this.disableInputs}
+							className="m-t-15 m-b-15"
+							onClick={async () => {
+								if (!(this.passwordField && this.usernameField && this.serverField)) {
+									return;
+								}
+								if (!(this.usernameField.value && this.passwordField.value && this.serverField.value)) {
+									this.errorMessage = 'All fields are necessary';
+									return;
+								}
+								this.errorMessage = '';
+								const result = await login.login({
+									user: this.usernameField.value,
+									pass: this.passwordField.value,
+									server: this.serverField.value.replace(/([^\/])\/[^\/].+/, '$1')
+								});
+								if (result !== true) {
+									this.errorMessage = result;
+								}
+							}}
+						/>
+					</div>
+				) : (
+					''
+				)}
 				{this.errorMessage ? (
 					<MessageBar messageBarType={MessageBarType.error}>{this.errorMessage}</MessageBar>
 				) : (

@@ -18,9 +18,6 @@ class UserData {
 			return this.currentDoctor.weeksAppointments[new Date().getDay()];
 		}
 	}
-	logout() {
-		location.reload();
-	}
 }
 
 export const user = new UserData();

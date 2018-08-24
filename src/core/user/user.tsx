@@ -41,13 +41,23 @@ export class UserComponent extends React.Component<{}, {}> {
 							<Profile
 								name={user.currentDoctor.name}
 								secondaryElement={
-									<Link
-										onClick={() => {
-											user.logout();
-										}}
-									>
-										Logout
-									</Link>
+									<div>
+										<Link
+											onClick={() => {
+												API.login.logout();
+											}}
+										>
+											Logout
+										</Link>{' '}
+										<Link
+											style={{ marginLeft: '10px' }}
+											onClick={() => {
+												API.login.resetDoctor();
+											}}
+										>
+											Switch Doctor
+										</Link>
+									</div>
 								}
 							/>
 						</div>
