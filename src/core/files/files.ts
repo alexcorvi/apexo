@@ -5,9 +5,7 @@ import { base64StringToBlob, blobToBase64String } from 'blob-util';
 
 export const files = {
 	db() {
-		return new PouchDB(`${API.login.server}/files`, {
-			auth: { username: API.login.username, password: API.login.password }
-		});
+		return new PouchDB(`${API.login.server}/files`);
 	},
 
 	async save(fileB64: string) {

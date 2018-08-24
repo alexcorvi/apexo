@@ -41,9 +41,7 @@ export function connectToDB(name: string, shouldLog: boolean = false, config?: P
 	 * Connection object
 	 */
 	const localDatabase = new PouchDB(localName);
-	const remoteDatabase = new PouchDB(`${API.login.server}/${name}`, {
-		auth: { username: API.login.username, password: API.login.password }
-	});
+	const remoteDatabase = new PouchDB(`${API.login.server}/${name}`);
 
 	configs[name] = {
 		shouldLog: shouldLog
