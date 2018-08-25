@@ -2,8 +2,8 @@ import './data-table.component.scss';
 
 import * as React from 'react';
 
-import { Icon, SearchBox, CommandBar, ICommandBarItemProps } from 'office-ui-fabric-react';
-import { observable } from 'mobx';
+import { Icon, SearchBox, CommandBar, ICommandBarItemProps, Checkbox, IconButton } from 'office-ui-fabric-react';
+import { observable, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { escapeRegExp } from '../../utils/escape-regex';
 
@@ -15,25 +15,45 @@ interface Cell {
 	visibleOnSize?: string;
 }
 
-type Row = Cell[];
+interface Row {
+	id: string;
+	cells: Cell[];
+}
 
 interface Props {
 	heads: string[];
 	rows: Row[];
 	className?: string;
 	commands?: ICommandBarItemProps[];
+	onDelete?: (id: string) => void;
 }
 
 @observer
 export class DataTable extends React.Component<Props, {}> {
 	get sortableValues() {
 		return this.props.rows.map((row) => {
-			return row[this.currentColIndex].dataValue;
+			return row.cells[this.currentColIndex].dataValue;
 		});
 	}
 	@observable currentColIndex: number = 0;
 	@observable sortDirection: number = 1;
 	@observable filterString: string = '';
+
+	@computed
+	get filteredRows() {
+		return this.props.rows.filter((row) => {
+			if (!this.filterString) {
+				return true;
+			}
+
+			const filters = this.filterString
+				.split(' ')
+				.map((filterString) => new RegExp(escapeRegExp(filterString), 'gim'));
+
+			return row.cells.some((cell) => filters.every((filter) => filter.test(cell.dataValue.toString())));
+		});
+	}
+
 	render() {
 		return (
 			<div className="data-table">
@@ -90,20 +110,7 @@ export class DataTable extends React.Component<Props, {}> {
 						</tr>
 					</thead>
 					<tbody>
-						{this.props.rows
-							.filter((row) => {
-								if (!this.filterString) {
-									return true;
-								}
-
-								const filters = this.filterString
-									.split(' ')
-									.map((filterString) => new RegExp(escapeRegExp(filterString), 'gim'));
-
-								return row.some((cell) =>
-									filters.every((filter) => filter.test(cell.dataValue.toString()))
-								);
-							})
+						{this.filteredRows
 							.map((row, index) => {
 								return {
 									row,
@@ -116,10 +123,10 @@ export class DataTable extends React.Component<Props, {}> {
 									: this.compare(this.sortableValues[bVal.index], this.sortableValues[aVal.index]);
 							})
 							.map((x) => x.row)
-							.map((cells, index) => {
+							.map((row, index) => {
 								return (
 									<tr key={index}>
-										{cells.map((cell, index2) => {
+										{row.cells.map((cell, index2) => {
 											return (
 												<td
 													className={
@@ -138,11 +145,36 @@ export class DataTable extends React.Component<Props, {}> {
 												</td>
 											);
 										})}
+										<td style={{ textAlign: 'right', paddingRight: '12px' }}>
+											{this.props.onDelete ? (
+												<div>
+													<IconButton
+														className="delete-button"
+														iconProps={{ iconName: 'delete' }}
+														onClick={() => {
+															if (this.props.onDelete) {
+																this.props.onDelete(row.id);
+															}
+														}}
+													/>
+												</div>
+											) : (
+												''
+											)}
+										</td>
 									</tr>
 								);
 							})}
 					</tbody>
 				</table>
+
+				{this.props.rows.length === 0 ? (
+					<p className="no-data">There's no data at this section yet.</p>
+				) : this.filteredRows.length === 0 ? (
+					<p className="no-data">Didn't find anything that matches your search criteria</p>
+				) : (
+					''
+				)}
 			</div>
 		);
 	}

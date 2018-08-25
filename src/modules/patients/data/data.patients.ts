@@ -28,7 +28,7 @@ class PatientsData {
 		return this.list.findIndex((x) => x._id === id);
 	}
 
-	deleteByID(id: string) {
+	private deleteByID(id: string) {
 		const i = this.findIndexByID(id);
 		// delete from list
 		const patient = this.list.splice(i, 1)[0];

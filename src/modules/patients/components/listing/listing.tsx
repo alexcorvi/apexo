@@ -28,53 +28,59 @@ export class PatientsListing extends React.Component<{}, {}> {
 		return (
 			<div className="patients-component p-15 p-l-10 p-r-10">
 				<DataTable
+					onDelete={(id) => {
+						patients.deleteModal(id);
+					}}
 					className={'patients-data-table'}
 					heads={[ 'Profile', 'Last Appointment', 'Next Appointment', 'Label' ]}
-					rows={patients.list.map((patient) => [
-						{
-							dataValue: patient.name + ' ' + patient.age + ' ' + genderToString(patient.gender),
-							component: (
-								<Profile
-									name={patient.name}
-									secondaryElement={<span>{genderToString(patient.gender)}</span>}
-									tertiaryText={`${patient.age} years old`}
-								/>
-							),
-							onClick: () => {
-								API.router.go([ 'patients', patient._id ]);
+					rows={patients.list.map((patient) => ({
+						id: patient._id,
+						cells: [
+							{
+								dataValue: patient.name + ' ' + patient.age + ' ' + genderToString(patient.gender),
+								component: (
+									<Profile
+										name={patient.name}
+										secondaryElement={<span>{genderToString(patient.gender)}</span>}
+										tertiaryText={`${patient.age} years old`}
+									/>
+								),
+								onClick: () => {
+									API.router.go([ 'patients', patient._id ]);
+								},
+								className: 'no-label'
 							},
-							className: 'no-label'
-						},
-						{
-							dataValue: (patient.lastAppointment || { date: 0 }).date,
-							component: patient.lastAppointment ? (
-								<AppointmentThumb appointment={patient.lastAppointment} />
-							) : (
-								'Not registered'
-							),
-							className: 'hidden-xs'
-						},
-						{
-							dataValue: (patient.nextAppointment || { date: Infinity }).date,
-							component: patient.nextAppointment ? (
-								<AppointmentThumb appointment={patient.nextAppointment} />
-							) : (
-								'Not registered'
-							),
-							className: 'hidden-xs'
-						},
-						{
-							dataValue: patient.name,
-							component: (
-								<div>
-									{patient.labels.map((label, index) => {
-										return <Label key={index} text={label.text} type={label.type} />;
-									})}
-								</div>
-							),
-							className: 'hidden-xs'
-						}
-					])}
+							{
+								dataValue: (patient.lastAppointment || { date: 0 }).date,
+								component: patient.lastAppointment ? (
+									<AppointmentThumb appointment={patient.lastAppointment} />
+								) : (
+									'Not registered'
+								),
+								className: 'hidden-xs'
+							},
+							{
+								dataValue: (patient.nextAppointment || { date: Infinity }).date,
+								component: patient.nextAppointment ? (
+									<AppointmentThumb appointment={patient.nextAppointment} />
+								) : (
+									'Not registered'
+								),
+								className: 'hidden-xs'
+							},
+							{
+								dataValue: patient.name,
+								component: (
+									<div>
+										{patient.labels.map((label, index) => {
+											return <Label key={index} text={label.text} type={label.type} />;
+										})}
+									</div>
+								),
+								className: 'hidden-xs'
+							}
+						]
+					}))}
 					commands={commands}
 				/>
 			</div>

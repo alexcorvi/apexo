@@ -1,5 +1,6 @@
 .data-table {
 	.ms-table {
+		background: #fafafa;
 		td.clickable {
 			transition: 0.3s all;
 			cursor: pointer;
@@ -22,5 +23,23 @@
 
 	.ms-CommandBarItem-link:hover {
 		background: #eeeeee !important;
+	}
+
+	.no-data {
+		text-align: center;
+		background: #424242;
+		padding: 15px;
+		color: #fff;
+		font-size: 13px;
+	}
+
+	.delete-button {
+		background: #e3e3e3;
+		color: #212121;
+		border-radius: 3px;
+		&:hover {
+			color: #fff;
+			background: #f44336;
+		}
 	}
 }

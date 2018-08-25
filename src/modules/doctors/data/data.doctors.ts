@@ -42,7 +42,7 @@ class DoctorsData {
 		});
 	}
 
-	deleteByID(id: string) {
+	private deleteByID(id: string) {
 		const currentID = API.user.currentDoctor._id;
 		const i = this.getIndexByID(id);
 
@@ -58,7 +58,7 @@ class DoctorsData {
 
 		// logout if it's the same doctor
 		if (currentID === id) {
-			API.user.logout();
+			API.login.resetDoctor();
 		}
 	}
 }

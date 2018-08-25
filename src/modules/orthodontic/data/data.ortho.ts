@@ -45,7 +45,7 @@ class OrthoCases {
 		}
 	}
 
-	deleteByID(id: string) {
+	private deleteByID(id: string) {
 		const i = this.getIndexByID(id);
 		const orthoCase = this.list.splice(i, 1)[0];
 	}

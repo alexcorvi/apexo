@@ -36,7 +36,7 @@ export class ItemInput extends React.Component<
 				type={this.props.type === ValType.number ? 'number' : 'text'}
 				value={typeof view !== 'function' ? view : ''}
 				onChanged={(newValue: string) => {
-					const index = data.prescriptions.getIndexByID(this.props.item._id);
+					const index = data.prescriptions.findIndexByID(this.props.item._id);
 					let casted: any = newValue;
 					if (this.props.item.type === ValType.number) {
 						casted = Number(newValue);
@@ -65,58 +65,49 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 		return (
 			<div className="prescriptions-component p-15 p-l-10 p-r-10">
 				<DataTable
+					onDelete={(id) => {
+						data.prescriptions.deleteModal(id);
+					}}
 					ref={(c) => (c ? (this.dataTable = c) : '')}
 					className={'prescriptions-data-table'}
 					heads={[ 'Item Name', 'Dose in mg.', 'Form', 'Times Per Day', '' ]}
-					rows={data.prescriptions.list.map((item) => [
-						{
-							dataValue: item.name,
-							component: <ItemInput item={item} valueKey={'name'} type={ValType.string} />
-						},
-						{
-							dataValue: item.doseInMg,
-							component: <ItemInput item={item} valueKey={'doseInMg'} type={ValType.number} />
-						},
-						{
-							dataValue: item.form,
-							component: (
-								<Dropdown
-									className="form-picker"
-									selectedKey={data.itemFormToString(item.form)}
-									options={data.prescriptionItemForms.map((form) => {
-										return {
-											key: form,
-											text: form
-										};
-									})}
-									onChanged={(newValue) => {
-										data.prescriptions.list[
-											data.prescriptions.getIndexByID(item._id)
-										].form = data.stringToItemForm(newValue.text);
-									}}
-								/>
-							)
-						},
-						{
-							dataValue: item.timesPerDay,
-							component: <ItemInput item={item} valueKey={'timesPerDay'} type={ValType.number} />
-						},
-						{
-							dataValue: 0,
-							component: (
-								<Icon
-									iconName={'delete'}
-									className="delete-item"
-									onMouseEnter={(event) =>
-										((event.target as any).parentNode.parentNode.className = 'to-be-deleted')}
-									onMouseLeave={(event) =>
-										((event.target as any).parentNode.parentNode.className = '')}
-									onClick={() => data.prescriptions.deleteByID(item._id)}
-								/>
-							),
-							className: 'no-label'
-						}
-					])}
+					rows={data.prescriptions.list.map((item) => ({
+						id: item._id,
+						cells: [
+							{
+								dataValue: item.name,
+								component: <ItemInput item={item} valueKey={'name'} type={ValType.string} />
+							},
+							{
+								dataValue: item.doseInMg,
+								component: <ItemInput item={item} valueKey={'doseInMg'} type={ValType.number} />
+							},
+							{
+								dataValue: item.form,
+								component: (
+									<Dropdown
+										className="form-picker"
+										selectedKey={data.itemFormToString(item.form)}
+										options={data.prescriptionItemForms.map((form) => {
+											return {
+												key: form,
+												text: form
+											};
+										})}
+										onChanged={(newValue) => {
+											data.prescriptions.list[
+												data.prescriptions.findIndexByID(item._id)
+											].form = data.stringToItemForm(newValue.text);
+										}}
+									/>
+								)
+							},
+							{
+								dataValue: item.timesPerDay,
+								component: <ItemInput item={item} valueKey={'timesPerDay'} type={ValType.number} />
+							}
+						]
+					}))}
 					commands={commands}
 				/>
 			</div>

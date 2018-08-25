@@ -37,40 +37,46 @@ export class OrthoList extends React.Component<{}, {}> {
 		return (
 			<div className="orthodontic-cases-component p-15 p-l-10 p-r-10">
 				<DataTable
+					onDelete={(id) => {
+						cases.deleteModal(id);
+					}}
 					className={'orthodontic-cases-data-table'}
 					heads={[ 'Patient', 'Started', 'Next Appointment' ]}
 					rows={cases.filtered.filter((orthoCase) => orthoCase.patient).map((orthoCase) => {
 						const patient = orthoCase.patient || new patientsData.Patient();
-						return [
-							{
-								dataValue: patient.name,
-								component: (
-									<Profile
-										name={patient.name}
-										secondaryElement={<span>{genderToString(patient.gender)}</span>}
-										tertiaryText={`${patient.age} years old`}
-									/>
-								),
-								className: 'no-label',
-								onClick: () => {
-									API.router.go([ 'orthodontic', orthoCase._id ]);
+						return {
+							id: orthoCase._id,
+							cells: [
+								{
+									dataValue: patient.name,
+									component: (
+										<Profile
+											name={patient.name}
+											secondaryElement={<span>{genderToString(patient.gender)}</span>}
+											tertiaryText={`${patient.age} years old`}
+										/>
+									),
+									className: 'no-label',
+									onClick: () => {
+										API.router.go([ 'orthodontic', orthoCase._id ]);
+									}
+								},
+								{
+									dataValue: orthoCase.started,
+									component: t4mat({ time: orthoCase.started }),
+									className: 'hidden-xs'
+								},
+								{
+									dataValue: (patient.nextAppointment || { date: 0 }).date,
+									component: patient.nextAppointment ? (
+										<AppointmentThumb appointment={patient.nextAppointment} />
+									) : (
+										'Not registered'
+									),
+									className: 'hidden-xs'
 								}
-							},
-							{
-								dataValue: orthoCase.started,
-								component: t4mat({ time: orthoCase.started }),
-								className: 'hidden-xs'
-							},
-							{
-								dataValue: (patient.nextAppointment || { date: 0 }).date,
-								component: patient.nextAppointment ? (
-									<AppointmentThumb appointment={patient.nextAppointment} />
-								) : (
-									'Not registered'
-								),
-								className: 'hidden-xs'
-							}
-						];
+							]
+						};
 					})}
 					commands={[
 						{

@@ -67,45 +67,51 @@ export class DoctorsListing extends React.Component<{}, {}> {
 				<Row gutter={16}>
 					<Col lg={16}>
 						<DataTable
+							onDelete={(id) => {
+								doctors.deleteModal(id);
+							}}
 							className={'doctors-data-table'}
 							heads={[ 'Profile', 'Last Appointment', 'Next Appointment' ]}
-							rows={doctors.list.map((doctor) => [
-								{
-									dataValue: doctor.name,
-									component: (
-										<Profile
-											name={doctor.name}
-											secondaryText={doctor.email}
-											tertiaryText={`${doctor.nextAppointments.length} Upcoming appointments`}
-											onClick={() => {
-												this.selectedDoctorIndex = doctors.getIndexByID(doctor._id);
-											}}
-										/>
-									),
-									onClick: () => {
-										this.selectedDoctorIndex = doctors.getIndexByID(doctor._id);
+							rows={doctors.list.map((doctor) => ({
+								id: doctor._id,
+								cells: [
+									{
+										dataValue: doctor.name,
+										component: (
+											<Profile
+												name={doctor.name}
+												secondaryText={doctor.email}
+												tertiaryText={`${doctor.nextAppointments.length} Upcoming appointments`}
+												onClick={() => {
+													this.selectedDoctorIndex = doctors.getIndexByID(doctor._id);
+												}}
+											/>
+										),
+										onClick: () => {
+											this.selectedDoctorIndex = doctors.getIndexByID(doctor._id);
+										},
+										className: 'no-label'
 									},
-									className: 'no-label'
-								},
-								{
-									dataValue: (doctor.lastAppointment || { date: 0 }).date,
-									component: doctor.lastAppointment ? (
-										<AppointmentThumb appointment={doctor.lastAppointment} />
-									) : (
-										'Not registered'
-									),
-									className: 'hidden-xs'
-								},
-								{
-									dataValue: (doctor.nextAppointment || { date: Infinity }).date,
-									component: doctor.nextAppointment ? (
-										<AppointmentThumb appointment={doctor.nextAppointment} />
-									) : (
-										'Not registered'
-									),
-									className: 'hidden-xs'
-								}
-							])}
+									{
+										dataValue: (doctor.lastAppointment || { date: 0 }).date,
+										component: doctor.lastAppointment ? (
+											<AppointmentThumb appointment={doctor.lastAppointment} />
+										) : (
+											'Not registered'
+										),
+										className: 'hidden-xs'
+									},
+									{
+										dataValue: (doctor.nextAppointment || { date: Infinity }).date,
+										component: doctor.nextAppointment ? (
+											<AppointmentThumb appointment={doctor.nextAppointment} />
+										) : (
+											'Not registered'
+										),
+										className: 'hidden-xs'
+									}
+								]
+							}))}
 							commands={[
 								{
 									key: 'addNew',
@@ -247,7 +253,6 @@ export class DoctorsListing extends React.Component<{}, {}> {
 						</div>
 
 						<h3>Appointments</h3>
-						<br />
 						<hr className="appointment-hr" />
 
 						<Label
