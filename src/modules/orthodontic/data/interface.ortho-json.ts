@@ -22,4 +22,5 @@ export interface CaseJSON {
 	treatmentPlan_fill: number[];
 	treatmentPlan_appliance: TreatmentPlanAppliance[];
 	crossScissorBite: number[];
+	orthoGallery: string[];
 }

@@ -33,6 +33,7 @@ import { TagInput } from '../../../assets/components/tag-input/tag-input';
 import { patientsData } from '../../patients';
 import { convert } from '../../../assets/utils/teeth-numbering-systems';
 import { EditableList } from '../../../assets/components/editable-list/editable-list';
+import { Gallery } from '../../../assets/components/gallery/gallery';
 
 @observer
 export class Section extends React.Component<{ title: string; showByDefault?: boolean; zIndex?: number }> {
@@ -446,6 +447,17 @@ export class OrthoSingle extends React.Component<{}, {}> {
 											if (this.orthoCase) {
 												this.orthoCase.problemsList = v;
 												this.orthoCase.triggerUpdate++;
+											}
+										}}
+									/>
+								</Section>
+
+								<Section title="Progress gallery" showByDefault>
+									<Gallery
+										gallery={this.orthoCase.orthoGallery}
+										onChange={(list) => {
+											if (this.orthoCase) {
+												this.orthoCase.orthoGallery = list;
 											}
 										}}
 									/>

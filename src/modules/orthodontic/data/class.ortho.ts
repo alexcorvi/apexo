@@ -1,4 +1,4 @@
-import { computed, observable } from 'mobx';
+import { computed, observable, observe } from 'mobx';
 import { generateID } from '../../../assets/utils/generate-id';
 import { patientsData } from '../../patients/index';
 import { CaseJSON } from './interface.ortho-json';
@@ -101,9 +101,18 @@ export class OrthoCase {
 	@observable treatmentPlan_fill: number[] = [];
 	@observable treatmentPlan_appliance: TreatmentPlanAppliance[] = [];
 
+	@observable orthoGallery: string[] = [];
+
 	constructor(json?: CaseJSON) {
 		if (json) {
 			this.fromJSON(json);
+		} else {
+			observe(this.crossScissorBite, () => this.triggerUpdate++);
+			observe(this.problemsList, () => this.triggerUpdate++);
+			observe(this.treatmentPlan_extraction, () => this.triggerUpdate++);
+			observe(this.treatmentPlan_fill, () => this.triggerUpdate++);
+			observe(this.treatmentPlan_appliance, () => this.triggerUpdate++);
+			observe(this.orthoGallery, () => this.triggerUpdate++);
 		}
 	}
 
@@ -129,7 +138,8 @@ export class OrthoCase {
 			treatmentPlan_fill: Array.from(this.treatmentPlan_fill),
 			u_spaceAvailable: this.u_spaceAvailable,
 			u_spaceNeeded: this.u_spaceNeeded,
-			crossScissorBite: Array.from(this.crossScissorBite)
+			crossScissorBite: Array.from(this.crossScissorBite),
+			orthoGallery: Array.from(this.orthoGallery)
 		};
 	}
 
@@ -155,5 +165,8 @@ export class OrthoCase {
 		this.u_spaceAvailable = json.u_spaceAvailable;
 		this.u_spaceNeeded = json.u_spaceNeeded;
 		this.crossScissorBite = json.crossScissorBite;
+		this.orthoGallery = json.orthoGallery || [];
+
+		observe(this.orthoGallery, () => this.triggerUpdate++);
 	}
 }
