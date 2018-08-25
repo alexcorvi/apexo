@@ -35,7 +35,7 @@ export class Gallery extends React.Component<
 	render() {
 		return (
 			<div className="gallery-component">
-				{navigator.onLine ? (
+				{API.login.online ? (
 					<div>
 						<div className="gallery-label"> {this.props.label} </div>
 						{this.gallery.map(

@@ -1,7 +1,7 @@
 import { computed, observable, observe } from 'mobx';
 import { observer } from 'mobx-react';
 import { registerModules } from '../../modules';
-
+import { isOnline } from '../../assets/utils/is-online';
 import PouchDB from 'pouchdb-browser';
 import auth from 'pouchdb-authentication';
 import { Md5 } from 'ts-md5';
@@ -21,33 +21,43 @@ class Login {
 
 	@observable step: LoginStep = LoginStep.initial;
 
-	async initialCheck(server: string) {
-		if (!navigator.onLine) {
-			return;
-		}
-		const user = (await new PouchDB(server).getSession()).userCtx.name;
-		if (!user) {
-			return;
-		}
-		await this.authenticate({ user, server, pass: '' });
-		const doctorID = localStorage.getItem('doctor_id');
-		if (!doctorID) {
-			return;
-		}
-		this.setDoctor(doctorID);
+	@observable online: boolean = false;
+
+	constructor() {
+		setInterval(() => {
+			isOnline(this.server).then((online) => {
+				if (online && !this.online) {
+					console.log('getting back online');
+					resync.resync();
+				}
+				this.online = online;
+			});
+		}, 2000);
 	}
+
+	async initialCheck(server: string) {
+		this.server = server;
+		if (navigator.onLine && (await isOnline(server))) {
+			this.online = true;
+			const username = (await new PouchDB(server).getSession()).userCtx.name;
+			if (username) {
+				await this.authenticate({ server, username });
+			}
+		}
+	}
+
 	async login({ user, pass, server }: { user: string; pass: string; server: string }) {
 		// login
 		try {
-			if (navigator.onLine) {
+			if (await isOnline(server)) {
 				const res = await new PouchDB(server).logIn(user, pass);
 			} else {
-				const LSL = localStorage.getItem('LSL') || '';
-				const LSL_hash = LSL.split('__')[0];
-				if (LSL_hash !== Md5.hashStr(user + pass + server)) {
-					throw new Error('Incorrect username or password');
+				const LSL_hash = localStorage.getItem('LSL_hash') || '';
+				if (LSL_hash !== Md5.hashStr(server + user + pass).toString()) {
+					throw new Error('...');
 				}
 			}
+			this.authenticate({ server, username: user, password: pass });
 		} catch (e) {
 			if (navigator.onLine) {
 				return (
@@ -55,28 +65,42 @@ class Login {
 					'An error occured, please make sure that the server is online and it\'s accessible. Click "change" to change into another server'
 				);
 			} else {
-				return 'Incorrect username/password combination';
+				return 'This was not the last username/password combination you used!';
 			}
 		}
-		this.authenticate({ user, pass, server });
 	}
-	async authenticate({ user, pass, server }: { user: string; pass: string; server: string }) {
+
+	async authenticate({ server, username, password }: { server: string; username: string; password?: string }) {
 		this.server = server;
 		localStorage.setItem('server_location', server);
-		if (pass.length) {
-			localStorage.setItem('LSL', Md5.hashStr(user + pass + server).toString() + '__' + new Date().getTime());
+		if (password) {
+			localStorage.setItem('LSL_hash', Md5.hashStr(server + username + password).toString());
 		}
 		this.step = LoginStep.loadingData;
 		try {
 			await registerModules();
 		} catch (e) {}
-		this.step = LoginStep.chooseDoctor;
+		if (!this.checkDoctorID()) {
+			this.step = LoginStep.chooseDoctor;
+		}
 	}
 	async logout() {
 		if (navigator.onLine) {
 			await new PouchDB(this.server).logOut();
 		}
+		localStorage.removeItem('LSI');
+		localStorage.removeItem('doctor_id');
 		location.reload();
+	}
+
+	checkDoctorID() {
+		const doctorID = localStorage.getItem('doctor_id');
+		if (doctorID) {
+			this.setDoctor(doctorID);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	resetDoctor() {
 		this.step = LoginStep.chooseDoctor;

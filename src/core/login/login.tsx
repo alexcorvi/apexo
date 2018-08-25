@@ -3,7 +3,7 @@ import './login.scss';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { MessageBar, MessageBarType, PrimaryButton, TextField, Label } from 'office-ui-fabric-react';
+import { MessageBar, MessageBarType, PrimaryButton, TextField, Label, DefaultButton } from 'office-ui-fabric-react';
 import { API } from '../';
 import { login } from './data.login';
 import { observable } from 'mobx';
@@ -25,8 +25,6 @@ export class LoginComponent extends React.Component<{}, {}> {
 	@observable disableInputs: boolean = false;
 	@observable step: number = 1;
 
-	@observable serverLabelColor: LabelType = LabelType.primary;
-
 	@observable editServerLocation: boolean = false;
 
 	@observable initiallyChecked: boolean = false;
@@ -40,32 +38,7 @@ export class LoginComponent extends React.Component<{}, {}> {
 			<div className="container m-t-50" style={{ maxWidth: '400px', margin: '30px auto' }}>
 				{this.initiallyChecked ? (
 					<div className="login-step">
-						{navigator.onLine ? this.editServerLocation ? (
-							''
-						) : (
-							<Label>
-								<LabelC text={this.couchDBDefaultServer} type={LabelType.info} />
-								<LabelC
-									text={
-										this.serverLabelColor === LabelType.danger ? (
-											'OFFLINE'
-										) : this.serverLabelColor === LabelType.success ? (
-											'ONLINE'
-										) : (
-											'CHECKING'
-										)
-									}
-									type={this.serverLabelColor}
-								/>
-								<a
-									onClick={() => {
-										this.editServerLocation = true;
-									}}
-								>
-									change
-								</a>
-							</Label>
-						) : (
+						<div className={login.online ? 'hidden' : ''}>
 							<MessageBar messageBarType={MessageBarType.warning}>
 								{`
 								You're offline.
@@ -74,16 +47,39 @@ export class LoginComponent extends React.Component<{}, {}> {
 								${(this.couchDBDefaultServer || '').replace(/([^\/])\/[^\/].+/, '$1')}.
 							`}
 							</MessageBar>
-						)}
+						</div>
 
-						<TextField
-							name="server"
-							label="CouchDB Server location"
-							ref={(el) => (el ? (this.serverField = el) : '')}
-							disabled={this.disableInputs}
-							defaultValue={this.couchDBDefaultServer}
-							className={this.editServerLocation ? '' : 'hidden'}
-						/>
+						<br />
+						<hr />
+
+						<div className={login.online ? '' : 'hidden'}>
+							<div
+								style={{
+									display: 'inline-block',
+									width: '75%'
+								}}
+							>
+								<TextField
+									name="server"
+									label="Server location"
+									ref={(el) => (el ? (this.serverField = el) : '')}
+									disabled={this.disableInputs || !this.editServerLocation}
+									defaultValue={this.couchDBDefaultServer}
+								/>
+							</div>
+
+							<DefaultButton
+								style={{
+									display: 'inline-block',
+									marginTop: '23px'
+								}}
+								onClick={() => {
+									this.editServerLocation = true;
+								}}
+							>
+								Change
+							</DefaultButton>
+						</div>
 
 						<br />
 						<br />
@@ -135,14 +131,5 @@ export class LoginComponent extends React.Component<{}, {}> {
 				)}
 			</div>
 		);
-	}
-
-	async componentDidMount() {
-		const alive = await checkServer(this.couchDBDefaultServer);
-		if (alive) {
-			this.serverLabelColor = LabelType.success;
-		} else {
-			this.serverLabelColor = LabelType.danger;
-		}
 	}
 }

@@ -16,11 +16,10 @@ import {
 	IOverflowSetItemProps,
 	IOverflowSet
 } from 'office-ui-fabric-react';
+import { isOnline } from '../../assets/utils/is-online';
 
 @observer
 export class HeaderComponent extends React.Component<{}, {}> {
-	@observable reSyncing = false;
-
 	render() {
 		return (
 			<div className="header-component">
@@ -43,17 +42,31 @@ export class HeaderComponent extends React.Component<{}, {}> {
 					</Col>
 					<Col span={8} style={{ textAlign: 'right' }}>
 						<section className="notifications-button">
-							<IconButton
-								onClick={async () => {
-									API.router.reSyncing = true;
-									await resync.resync();
-									API.router.reSyncing = false;
-								}}
-								disabled={false}
-								iconProps={{ iconName: 'Sync' }}
-								className={API.router.reSyncing ? 'rotate' : ''}
-								title="Re-Sync"
-							/>
+							{API.login.online ? (
+								<IconButton
+									onClick={async () => {
+										API.router.reSyncing = true;
+										await resync.resync();
+										API.router.reSyncing = false;
+									}}
+									iconProps={{ iconName: 'Sync' }}
+									className={API.router.reSyncing ? 'rotate' : ''}
+									title="Re-Sync"
+								/>
+							) : (
+								<span
+									style={{
+										display: 'inline-block',
+										background: '#FF5722',
+										color: '#fff',
+										marginRight: '12px',
+										padding: '8px'
+									}}
+								>
+									Offline
+								</span>
+							)}
+
 							<IconButton
 								onClick={() => (API.user.visible = true)}
 								disabled={false}
