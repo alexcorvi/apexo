@@ -33,7 +33,7 @@ export class Home extends React.Component<{}, {}> {
 				<div className="container">
 					<Row gutter={12}>
 						<Col xl={10} md={9} sm={6} xs={4}>
-							<Profile name={user.currentDoctor.name} />
+							<Profile name={user.currentDoctor ? user.currentDoctor.name : ''} />
 						</Col>
 						<Col xl={4} md={6} sm={12} xs={16} style={{ marginTop: '10px' }}>
 							<Row gutter={12}>
