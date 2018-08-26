@@ -66,7 +66,7 @@
 		"lint": "bash scripts/lint.sh",
 		"serve": "bash scripts/serve.sh",
 		"dev": "bash scripts/build-development.sh",
-		"upload": "bash scripts/deploy.sh",
+		"upload": "bash scripts/upload.sh",
 		"deploy": "yarn run prod && yarn run upload",
 		"build-desktop": "bash scripts/build-desktop.sh"
 	}
