@@ -4,8 +4,8 @@ A web/desktop application to manage your dental clinic practice.
 
 - [More Info](https://apexo.app)
 - [Documentation](https://docs.apexo.app)
-- [Web Application](https://web.apexo.app)
 - [Demo Application](https://demo.apexo.app)
+- [Web Application](https://web.apexo.app)
 - [Download](https://github.com/alexcorvi/apexo/releases/)
 
 ## License
