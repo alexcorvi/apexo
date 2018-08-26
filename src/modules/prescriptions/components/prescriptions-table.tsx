@@ -70,7 +70,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 					}}
 					ref={(c) => (c ? (this.dataTable = c) : '')}
 					className={'prescriptions-data-table'}
-					heads={[ 'Item Name', 'Dose in mg.', 'Form', 'Times Per Day', '' ]}
+					heads={[ 'Item Name', 'Dose in mg.', 'Form', 'Times Per Day' ]}
 					rows={data.prescriptions.list.map((item) => ({
 						id: item._id,
 						cells: [
@@ -105,6 +105,10 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 							{
 								dataValue: item.timesPerDay,
 								component: <ItemInput item={item} valueKey={'timesPerDay'} type={ValType.number} />
+							},
+							{
+								dataValue: 0,
+								component: <span />
 							}
 						]
 					}))}
