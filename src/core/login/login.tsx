@@ -38,7 +38,7 @@ export class LoginComponent extends React.Component<{}, {}> {
 			<div className="container m-t-50" style={{ maxWidth: '400px', margin: '30px auto' }}>
 				{this.initiallyChecked ? (
 					<div className="login-step">
-						<div className={login.online ? 'hidden' : ''}>
+						<div className={navigator.onLine ? 'hidden' : ''}>
 							<MessageBar messageBarType={MessageBarType.warning}>
 								{`
 								You're offline.
@@ -52,7 +52,7 @@ export class LoginComponent extends React.Component<{}, {}> {
 						<br />
 						<hr />
 
-						<div className={login.online ? '' : 'hidden'}>
+						<div className={navigator.onLine ? '' : 'hidden'}>
 							<div
 								style={{
 									display: 'inline-block',
