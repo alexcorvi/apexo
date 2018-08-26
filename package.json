@@ -68,6 +68,6 @@
 		"dev": "bash scripts/build-development.sh",
 		"upload": "bash scripts/deploy.sh",
 		"deploy": "yarn run prod && yarn run upload",
-		"build-desktop": "bash scripts/build.sh"
+		"build-desktop": "bash scripts/build-desktop.sh"
 	}
 }
