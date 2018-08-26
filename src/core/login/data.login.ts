@@ -6,7 +6,12 @@ import PouchDB from 'pouchdb-browser';
 import auth from 'pouchdb-authentication';
 import { Md5 } from 'ts-md5';
 import { resync } from '../db';
+import { doctorsData } from '../../modules/doctors';
+import { loadDemoData } from '../demo/load-demo-data';
+
 PouchDB.plugin(auth);
+
+const demoHost = 'demo.apexo.app';
 
 export enum LoginStep {
 	loadingData,
@@ -25,6 +30,9 @@ class Login {
 
 	constructor() {
 		setInterval(() => {
+			if (location.host === demoHost) {
+				return;
+			}
 			isOnline(this.server).then((online) => {
 				if (online && !this.online) {
 					console.log('getting back online');
@@ -43,6 +51,15 @@ class Login {
 			if (username) {
 				await this.authenticate({ server, username });
 			}
+		}
+
+		// demo specific code
+		if (location.host === demoHost) {
+			this.online = false;
+			await this.authenticate({
+				server: 'https://fake_server.apexo.app',
+				username: ''
+			});
 		}
 	}
 
@@ -80,6 +97,11 @@ class Login {
 		try {
 			await registerModules();
 		} catch (e) {}
+
+		if (location.host === demoHost) {
+			await loadDemoData();
+		}
+
 		if (!this.checkDoctorID()) {
 			this.step = LoginStep.chooseDoctor;
 		}
@@ -95,7 +117,7 @@ class Login {
 
 	checkDoctorID() {
 		const doctorID = localStorage.getItem('doctor_id');
-		if (doctorID) {
+		if (doctorID && doctorsData.doctors.getIndexByID(doctorID) !== -1) {
 			this.setDoctor(doctorID);
 			return true;
 		} else {
