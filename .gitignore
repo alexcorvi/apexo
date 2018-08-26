@@ -8,6 +8,4 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-/dist/electron
-/dist/phonegap
-/dist/phonegap.zip
+/dist/desktop-builds
