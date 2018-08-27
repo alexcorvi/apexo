@@ -24,13 +24,15 @@ class Login {
 	@observable server: string = '';
 	@observable currentDoctorID: string = '';
 
+	@observable keepOffline = false;
+
 	@observable step: LoginStep = LoginStep.initial;
 
 	@observable online: boolean = false;
 
 	constructor() {
 		setInterval(() => {
-			if (location.host === demoHost) {
+			if (this.keepOffline) {
 				return;
 			}
 			isOnline(this.server).then((online) => {
@@ -44,6 +46,9 @@ class Login {
 	}
 
 	async initialCheck(server: string) {
+		if (localStorage.getItem('no-server-mode') === 'true') {
+			this.noServerMode();
+		}
 		this.server = server;
 		if (navigator.onLine && (await isOnline(server))) {
 			this.online = true;
@@ -56,11 +61,22 @@ class Login {
 		// demo specific code
 		if (location.host === demoHost) {
 			this.online = false;
+			this.keepOffline = true;
 			await this.authenticate({
 				server: 'https://fake_server.apexo.app',
 				username: ''
 			});
 		}
+	}
+
+	async noServerMode() {
+		this.online = false;
+		this.keepOffline = true;
+		await this.authenticate({
+			server: 'http://apexo-no-server-mode',
+			username: ''
+		});
+		localStorage.setItem('no-server-mode', 'true');
 	}
 
 	async login({ user, pass, server }: { user: string; pass: string; server: string }) {
@@ -107,11 +123,14 @@ class Login {
 		}
 	}
 	async logout() {
-		if (navigator.onLine) {
-			await new PouchDB(this.server).logOut();
+		if (navigator.onLine && !this.keepOffline) {
+			try {
+				await new PouchDB(this.server).logOut();
+			} catch (e) {}
 		}
 		localStorage.removeItem('LSI');
 		localStorage.removeItem('doctor_id');
+		localStorage.removeItem('no-server-mode');
 		location.reload();
 	}
 

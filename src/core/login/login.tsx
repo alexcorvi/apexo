@@ -120,6 +120,14 @@ export class LoginComponent extends React.Component<{}, {}> {
 								}
 							}}
 						/>
+						<DefaultButton
+							onClick={() => {
+								login.noServerMode();
+							}}
+							style={{ position: 'absolute', bottom: '10px', left: '10px' }}
+						>
+							no-server mode
+						</DefaultButton>
 					</div>
 				) : (
 					''
