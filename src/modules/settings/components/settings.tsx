@@ -4,15 +4,18 @@ import * as React from 'react';
 import * as data from '../data';
 
 import { TagInput } from '../../../assets/components/tag-input/tag-input';
-import { TextField, Toggle } from 'office-ui-fabric-react';
+import { TextField, Toggle, PrimaryButton } from 'office-ui-fabric-react';
 import { observer } from 'mobx-react';
 import { settings } from '../data';
 import { observable } from 'mobx';
 import { Row, Col } from 'antd';
+import * as backup from '../../../assets/utils/backup';
 
 @observer
 export class SettingsComponent extends React.Component<{}, {}> {
 	@observable triggerUpdate: number = 0;
+
+	@observable restoreText: string = '';
 
 	render() {
 		return (
@@ -101,6 +104,42 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						}}
 					/>
 				</div>
+
+				<br />
+				<br />
+				<h3>Backup and restore</h3>
+				<hr />
+
+				<p className="hint">
+					The following text is an encoded representation of your current data, copy this text and keep it
+					somewhere safe to backup.
+				</p>
+				<TextField multiline value={backup.backup2Base64()} disabled />
+
+				<p className="hint">
+					To restore your data from an encoded representation (similar to the one above) paste it down below
+					and click "restore"
+				</p>
+				<TextField
+					multiline
+					value={this.restoreText}
+					onChanged={(v) => {
+						this.restoreText = v;
+					}}
+				/>
+				<PrimaryButton
+					disabled={this.restoreText.length === 0}
+					onClick={() => {
+						try {
+							backup.restoreFromBase64(this.restoreText);
+						} catch (e) {
+							console.log(e);
+							alert('Could not restore. The encoded representation you entered seems corrupted!');
+						}
+					}}
+				>
+					Restore
+				</PrimaryButton>
 			</div>
 		);
 	}
