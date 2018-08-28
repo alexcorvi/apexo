@@ -14,7 +14,8 @@ import {
 	IconButton,
 	CommandBarButton,
 	IOverflowSetItemProps,
-	IOverflowSet
+	IOverflowSet,
+	Icon
 } from 'office-ui-fabric-react';
 import { isOnline } from '../../assets/utils/is-online';
 
@@ -63,7 +64,7 @@ export class HeaderComponent extends React.Component<{}, {}> {
 										padding: '8px'
 									}}
 								>
-									Offline
+									<Icon iconName="WifiWarning4" />
 								</span>
 							)}
 

@@ -11,8 +11,10 @@ import { Fabric } from 'office-ui-fabric-react';
 // 1. Download the subset
 // 2. put the font file in the dist/application/fonts/
 // 3. put the contents of src dir in './core/icons-subset/'
-import { initializeIcons } from './core/icons-subset';
-initializeIcons('./fonts/');
+import { initializeIcons as initializeIconsA } from './core/icons-subset/subset-a';
+import { initializeIcons as initializeIconsB } from './core/icons-subset/subset-b';
+initializeIconsA('./fonts/');
+initializeIconsB('./fonts/');
 
 ReactDOM.render(
 	<Fabric>
