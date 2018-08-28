@@ -10,6 +10,9 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+### 1.4.1
+- added missing icons
+
 ### 1.4.0
 - multiple demo hosts
 - fixed safari date issues (statistics & calendar modules)
