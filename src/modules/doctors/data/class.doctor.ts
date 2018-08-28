@@ -159,7 +159,7 @@ export class Doctor {
 
 	getDayStartingPoint(t: number) {
 		const d = new Date(t);
-		return new Date(`${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`).getTime();
+		return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
 	}
 
 	/**

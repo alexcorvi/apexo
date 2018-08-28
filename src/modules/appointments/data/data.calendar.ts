@@ -46,7 +46,7 @@ export class Calendar {
 		for (let date = 0; date < numberOfDays; date++) {
 			days.push({
 				date,
-				weekDay: this.getDayOfTheWeek(this.selectedYear, this.selectedMonth, date)
+				weekDay: this.getDayOfTheWeek(this.selectedYear, this.selectedMonth, date + 1)
 			});
 		}
 		return days;
@@ -89,7 +89,7 @@ export class Calendar {
 	numberOfDays(month: number, year: number): number {
 		let numberOfDays = 28;
 		for (; numberOfDays < 32; numberOfDays++) {
-			if (new Date(`${year}-${month + 1}-${numberOfDays + 1}`).getMonth() !== month) {
+			if (new Date(year, month, numberOfDays + 1).getMonth() !== month) {
 				return numberOfDays;
 			}
 		}
@@ -105,7 +105,7 @@ export class Calendar {
      * @memberof Calendar
      */
 	getDayOfTheWeek(year: number, month: number, day: number): WeekDayInfo {
-		const index = new Date(`${year}-${month + 1}-${day + 1}`).getDay();
+		const index = new Date(year, month, day).getDay();
 		return {
 			index,
 			day: this.days[index],
