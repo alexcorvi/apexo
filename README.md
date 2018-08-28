@@ -8,6 +8,13 @@ A web/desktop application to manage your dental clinic practice.
 - [Web Application](https://web.apexo.app)
 - [Download](https://github.com/alexcorvi/apexo/releases/)
 
+## Changelog
+
+### 1.4.0
+- multiple demo hosts
+- fixed safari date issues (statistics & calendar modules)
+- added backup / restore feature
+
 ## License
 
 The MIT License (MIT)
