@@ -11,7 +11,7 @@ import { loadDemoData } from '../demo/load-demo-data';
 
 PouchDB.plugin(auth);
 
-const demoHost = 'demo.apexo.app';
+const demoHosts = [ 'localhost:8000', 'demo.apexo.app' ];
 
 export enum LoginStep {
 	loadingData,
@@ -59,7 +59,7 @@ class Login {
 		}
 
 		// demo specific code
-		if (location.host === demoHost) {
+		if (demoHosts.indexOf(location.host) !== -1) {
 			this.online = false;
 			this.keepOffline = true;
 			await this.authenticate({
@@ -114,7 +114,7 @@ class Login {
 			await registerModules();
 		} catch (e) {}
 
-		if (location.host === demoHost) {
+		if (demoHosts.indexOf(location.host) !== -1) {
 			await loadDemoData();
 		}
 
