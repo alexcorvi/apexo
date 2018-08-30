@@ -23,7 +23,6 @@ export const resync: { resyncMethods: Array<() => Promise<void>>; resync: () => 
 				resyncMethod().then(() => done++).catch(() => done++);
 			});
 			const checkInterval = setInterval(() => {
-				// console.log(done, this.resyncMethods.length);
 				if (done === this.resyncMethods.length) {
 					resolve(true);
 					clearInterval(checkInterval);
