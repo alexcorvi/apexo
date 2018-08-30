@@ -11,7 +11,7 @@ import { loadDemoData } from '../demo/load-demo-data';
 
 PouchDB.plugin(auth);
 
-const demoHosts = [ 'localhost:8000', 'demo.apexo.app' ];
+const demoHosts = [ 'localhost:8000', 'demo.apexo.app', '192.168.0.101:8000' ];
 
 export enum LoginStep {
 	loadingData,
