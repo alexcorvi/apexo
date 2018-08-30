@@ -10,6 +10,9 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+### 1.4.2
+- updated pouchdb-browser to latest release (7.0.0) and thus fixed the iOS idb issue
+
 ### 1.4.1
 - added missing icons
 
