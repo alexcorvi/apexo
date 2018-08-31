@@ -49,6 +49,7 @@
 		"dev": "bash scripts/build-development.sh",
 		"upload": "bash scripts/upload.sh",
 		"deploy": "yarn run prod && yarn run upload",
-		"build-desktop": "bash scripts/build-desktop.sh"
+		"build-desktop": "bash scripts/build-desktop.sh",
+		"analyze": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json"
 	}
 }
