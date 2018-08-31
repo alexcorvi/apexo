@@ -10,6 +10,14 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+### 1.5.0
+- scroll to day when selecting it on the appointments page
+- moved inline styles to their respective SCSS file when applicable
+- fixed issue where tomorrow's appointments won't be viewed if it's the last day of the month
+- replaced NVD3 with chart.js for better bundle size and performance
+- loading demo data using restore functionality
+- fixed an issue where authentication occurring multiple times.
+
 ### 1.4.2
 - updated pouchdb-browser to latest release (7.0.0) and thus fixed the iOS idb issue
 
