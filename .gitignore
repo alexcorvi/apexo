@@ -9,3 +9,4 @@ yarn-debug.log*
 yarn-error.log*
 
 /dist/desktop-builds
+stats.json
