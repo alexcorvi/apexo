@@ -37,10 +37,7 @@ export class AppointmentEditor extends React.Component<
 		if (appointment === null) {
 			return [].length - 1;
 		}
-		const date = new Date(appointment.date);
-		return appointments
-			.appointmentsForDay(date.getFullYear(), date.getMonth() + 1, date.getDate())
-			.filter((a) => a._id !== appointment._id).length;
+		return appointments.appointmentsForDay(appointment.date, 0, 0).filter((a) => a._id !== appointment._id).length;
 	}
 
 	@computed
