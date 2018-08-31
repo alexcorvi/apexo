@@ -103,7 +103,7 @@ export class Home extends React.Component<{}, {}> {
 								</thead>
 								<tbody>
 									{appointmentsData.appointments
-										.appointmentsForDay(this.time.year, this.time.month + 1, this.time.day + 1)
+										.appointmentsForDay(new Date().getTime() + 86400000, 0, 0)
 										.map((appointment) => (
 											<tr key={appointment._id} className="home-td">
 												<td>{<PatientLink id={appointment.patientID} />}</td>
