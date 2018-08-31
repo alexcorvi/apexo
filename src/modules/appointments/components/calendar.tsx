@@ -68,7 +68,7 @@ export class Calendar extends React.Component<{}, {}> {
 							this.c.currentYear + 1
 						].map((year) => {
 							return (
-								<Col key={year} span={6} style={{ textAlign: 'center' }}>
+								<Col key={year} span={6} className="centered">
 									<a
 										onClick={() => {
 											this.c.selectedYear = year;
@@ -91,7 +91,7 @@ export class Calendar extends React.Component<{}, {}> {
 					<Row>
 						{this.c.monthsShort.map((monthShort, index) => {
 							return (
-								<Col key={monthShort} sm={2} xs={4} style={{ textAlign: 'center' }}>
+								<Col key={monthShort} sm={2} xs={4} className="centered">
 									<a
 										onClick={() => {
 											this.c.selectedMonth = index;
@@ -190,7 +190,7 @@ export class Calendar extends React.Component<{}, {}> {
 									}}
 								/>
 							</Col>
-							<Col sm={12} md={18} xs={0} style={{ borderLeft: '1px dotted #e3e3e3' }}>
+							<Col sm={12} md={18} xs={0} className="filter">
 								<TextField
 									placeholder="Type to filter"
 									onChanged={(newVal) => (this.filter = newVal)}
@@ -220,7 +220,7 @@ export class Calendar extends React.Component<{}, {}> {
 									<h4>
 										<b>{day.date + 1}</b>
 										&nbsp;&nbsp;&nbsp;
-										<span style={{ color: '#616161' }}>{day.weekDay.day}</span>
+										<span className="day-name">{day.weekDay.day}</span>
 									</h4>
 									{appointments
 										.appointmentsForDay(

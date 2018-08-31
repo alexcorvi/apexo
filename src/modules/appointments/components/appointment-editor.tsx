@@ -252,8 +252,7 @@ export class AppointmentEditor extends React.Component<
 										{this.props.appointment.timer ? (
 											<PrimaryButton
 												iconProps={{ iconName: 'Timer' }}
-												className="appendage"
-												style={{ background: '#ff9800' }}
+												className="appendage stop"
 												text="Stop"
 												onClick={() => {
 													if (!this.props.appointment) {

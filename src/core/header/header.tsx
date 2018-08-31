@@ -41,8 +41,8 @@ export class HeaderComponent extends React.Component<{}, {}> {
 					<Col span={8}>
 						<section className="title">{API.router.currentNamespace || 'Home'}</section>
 					</Col>
-					<Col span={8} style={{ textAlign: 'right' }}>
-						<section className="notifications-button">
+					<Col span={8}>
+						<section className="right-buttons">
 							{API.login.online ? (
 								<IconButton
 									onClick={async () => {
@@ -55,15 +55,7 @@ export class HeaderComponent extends React.Component<{}, {}> {
 									title="Re-Sync"
 								/>
 							) : (
-								<span
-									style={{
-										display: 'inline-block',
-										background: '#FF5722',
-										color: '#fff',
-										marginRight: '12px',
-										padding: '8px'
-									}}
-								>
+								<span className="offline">
 									<Icon iconName="WifiWarning4" />
 								</span>
 							)}

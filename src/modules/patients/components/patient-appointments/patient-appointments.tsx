@@ -60,9 +60,7 @@ export class PatientAppointments extends React.Component<{ patient: Patient; hid
 						);
 					})
 				) : (
-					<p style={{ color: '#757575', margin: '15px 0 7px' }}>
-						This patient does not have any appointment.
-					</p>
+					<p className="no-appointments">This patient does not have any appointment.</p>
 				)}
 				<br />
 				<PrimaryButton

@@ -27,7 +27,7 @@ export class MainComponent extends React.Component<{}, {}> {
 			return <components.LoginComponent />;
 		} else {
 			return (
-				<div style={{ marginTop: 300 }}>
+				<div className="spinner-container">
 					<Spinner size={SpinnerSize.large} label="Please Wait" />
 				</div>
 			);

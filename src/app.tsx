@@ -19,19 +19,7 @@ initializeIconsB('./fonts/');
 ReactDOM.render(
 	<Fabric>
 		<components.MainComponent />
-		<p
-			style={{
-				fontSize: '12px',
-				position: 'absolute',
-				color: '#e3e3e3',
-				bottom: '5px',
-				right: '12px',
-				zIndex: -1
-			}}
-		>
-			{' '}
-			version 1.4.2{' '}
-		</p>
+		<p className="version-num">version 1.4.2 </p>
 	</Fabric>,
 	document.getElementById('root')
 );

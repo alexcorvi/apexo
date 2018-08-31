@@ -120,9 +120,6 @@ export class DentalHistory extends React.Component<{ patient: Patient; hideTitle
 								}}
 								defaultSelectedKey={this.props.patient.teeth[this.viewToothISO].condition}
 								className="single-tooth-condition"
-								style={{
-									marginTop: '10px'
-								}}
 								options={Object.keys(ToothCondition).map((c) => ({
 									key: c,
 									text: c

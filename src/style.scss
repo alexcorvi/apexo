@@ -23,3 +23,12 @@ hr {
 .hidden {
 	display: none;
 }
+
+.version-num {
+	font-size: 12px;
+	position: absolute;
+	color: rgb(227, 227, 227);
+	bottom: 5px;
+	right: 12px;
+	z-index: -1;
+}

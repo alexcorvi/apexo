@@ -58,7 +58,7 @@ export class Treatments extends React.Component<{}, {}> {
 							<div className="p-10 visible-xs">
 								<PrimaryButton
 									text="Treatments List"
-									style={{ width: '100%' }}
+									className="show-menu"
 									iconProps={{ iconName: 'CollapseMenu' }}
 									onClick={() => {
 										this.showMenu = true;
@@ -147,7 +147,7 @@ export class Treatments extends React.Component<{}, {}> {
 									</div>
 								</Col>
 								<Col md={16}>
-									<div style={{ padding: '20px' }}>
+									<div className="samples">
 										{this.selectedAppointments.map((appointment) => (
 											<AppointmentThumb
 												key={appointment._id}

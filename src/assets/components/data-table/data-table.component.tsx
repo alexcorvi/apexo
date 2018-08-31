@@ -145,7 +145,7 @@ export class DataTable extends React.Component<Props, {}> {
 												</td>
 											);
 										})}
-										<td style={{ textAlign: 'right', paddingRight: '12px' }}>
+										<td className="delete-td">
 											{this.props.onDelete ? (
 												<div>
 													<IconButton

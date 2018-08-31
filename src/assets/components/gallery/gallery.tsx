@@ -48,7 +48,7 @@ export class Gallery extends React.Component<
 										style={{ backgroundImage: `url(${this.galleryResolved[image]})` }}
 									/>
 								) : (
-									<div key={image} className="image" style={{ padding: '20px' }}>
+									<div key={image} className="image">
 										<Spinner size={SpinnerSize.large} />
 									</div>
 								)
@@ -107,7 +107,7 @@ export class Gallery extends React.Component<
 							)}
 						>
 							{this.galleryResolved[this.show] ? (
-								<img src={this.galleryResolved[this.show]} style={{ maxWidth: '100%' }} />
+								<img src={this.galleryResolved[this.show]} className="gallery-view" />
 							) : (
 								<Spinner size={SpinnerSize.large} />
 							)}

@@ -35,28 +35,19 @@ export class Home extends React.Component<{}, {}> {
 						<Col xl={10} md={9} sm={6} xs={4}>
 							<Profile name={user.currentDoctor ? user.currentDoctor.name : ''} />
 						</Col>
-						<Col xl={4} md={6} sm={12} xs={16} style={{ marginTop: '10px' }}>
+						<Col xl={4} md={6} sm={12} xs={16} className="date-container">
 							<Row gutter={12}>
-								<div style={{ float: 'left', fontSize: '48px' }}>
+								<div className="home-date">
 									<p>{this.time.day}</p>
 								</div>
-								<div style={{ float: 'left', textAlign: 'center' }}>
-									<p style={{ fontSize: '22px', marginTop: '6px' }}>{this.time.dayName}</p>
+								<div className="textual">
+									<p className="day-name">{this.time.dayName}</p>
 									<p>{this.time.monthName}</p>
 								</div>
 							</Row>
 						</Col>
 						<Col xl={10} md={9} sm={6} xs={4}>
-							<div
-								style={{
-									textAlign: 'right',
-									fontSize: '20px',
-									marginTop: '30px',
-									letterSpacing: '6px'
-								}}
-							>
-								<p>{this.time.time}</p>
-							</div>
+							<p className="home-time">{this.time.time}</p>
 						</Col>
 					</Row>
 					<br />
@@ -81,7 +72,7 @@ export class Home extends React.Component<{}, {}> {
 									{appointmentsData.appointments
 										.appointmentsForDay(this.time.year, this.time.month + 1, this.time.day)
 										.map((appointment) => (
-											<tr key={appointment._id} style={{ borderBottom: '1px solid #f5f5f5' }}>
+											<tr key={appointment._id} className="home-td">
 												<td>{<PatientLink id={appointment.patientID} />}</td>
 												<td>{<TreatmentLink id={appointment.treatmentID} />}</td>
 												<td>
@@ -114,7 +105,7 @@ export class Home extends React.Component<{}, {}> {
 									{appointmentsData.appointments
 										.appointmentsForDay(this.time.year, this.time.month + 1, this.time.day + 1)
 										.map((appointment) => (
-											<tr key={appointment._id} style={{ borderBottom: '1px solid #f5f5f5' }}>
+											<tr key={appointment._id} className="home-td">
 												<td>{<PatientLink id={appointment.patientID} />}</td>
 												<td>{<TreatmentLink id={appointment.treatmentID} />}</td>
 												<td>

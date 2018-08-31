@@ -39,7 +39,7 @@ export class PatientLink extends React.Component<
 					}
 				}}
 			>
-				<Icon iconName="ContactCard" style={{ position: 'relative', top: '2px' }} />
+				<Icon iconName="ContactCard" className="icon" />
 				&nbsp;
 				{patient.name}
 			</a>

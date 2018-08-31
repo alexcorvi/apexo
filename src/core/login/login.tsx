@@ -35,7 +35,7 @@ export class LoginComponent extends React.Component<{}, {}> {
 
 	render() {
 		return (
-			<div className="container m-t-50" style={{ maxWidth: '400px', margin: '30px auto' }}>
+			<div className="login-component">
 				{this.initiallyChecked ? (
 					<div className="login-step">
 						<div className={navigator.onLine ? 'hidden' : ''}>
@@ -69,10 +69,7 @@ export class LoginComponent extends React.Component<{}, {}> {
 							</div>
 
 							<DefaultButton
-								style={{
-									display: 'inline-block',
-									marginTop: '23px'
-								}}
+								className="edit-server-location"
 								onClick={() => {
 									this.editServerLocation = true;
 								}}
@@ -124,7 +121,7 @@ export class LoginComponent extends React.Component<{}, {}> {
 							onClick={() => {
 								login.noServerMode();
 							}}
-							style={{ position: 'absolute', bottom: '10px', left: '10px' }}
+							className="no-server-mode"
 						>
 							no-server mode
 						</DefaultButton>

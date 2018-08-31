@@ -150,10 +150,6 @@ export class DoctorsListing extends React.Component<{}, {}> {
 													.map((doctor) => {
 														return (
 															<Profile
-																style={{
-																	marginBottom: '2px',
-																	marginTop: '2px'
-																}}
 																className=""
 																size={PersonaSize.large}
 																key={doctor._id}

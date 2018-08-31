@@ -16,7 +16,7 @@ export class ChooseDoctor extends React.Component<{}, {}> {
 	newDocNameTextField: TextField | undefined;
 	render() {
 		return (
-			<div className="container m-t-50" style={{ maxWidth: '400px', margin: '30px auto' }}>
+			<div className="login-component">
 				<div className="pivot m-b-10">
 					{data.doctorsData.doctors.list.length > 0 ? (
 						<div>

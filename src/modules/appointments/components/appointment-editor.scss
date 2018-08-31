@@ -29,6 +29,9 @@
 	.appendage {
 		position: absolute;
 		right: 0;
+		&.stop {
+			background: #ff9800;
+		}
 	}
 	label {
 		display: block;

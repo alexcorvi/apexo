@@ -20,4 +20,39 @@
 			text-transform: capitalize;
 		}
 	}
+
+	.date-container {
+		margin-top: 10px;
+		.home-date {
+			float: left;
+			font-size: 48px;
+			p {
+				margin-top: 15px;
+				margin-right: 15px;
+			}
+		}
+		.textual {
+			text-align: center;
+			float: left;
+		}
+		.day-name {
+			font-size: 22px;
+			margin-top: 6px;
+		}
+	}
+
+	.home-time {
+		text-align: right;
+		font-size: 20px;
+		margin-top: 30px;
+		letter-spacing: 6px;
+	}
+	.home-td {
+		border-bottom: 1px solid rgb(245, 245, 245);
+	}
+}
+
+#router-outlet {
+	margin-top: 50px;
+	padding-bottom: 20px;
 }

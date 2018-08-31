@@ -11,6 +11,7 @@
 		display: inline-block;
 		background-size: cover;
 		background-position: center;
+		padding: 20px;
 	}
 	.input-image {
 		font-size: 22px;
@@ -31,4 +32,8 @@
 			text-transform: uppercase;
 		}
 	}
+}
+
+.gallery-view {
+	max-width: 100%;
 }

@@ -50,7 +50,7 @@ export class UserComponent extends React.Component<{}, {}> {
 											Logout
 										</Link>{' '}
 										<Link
-											style={{ marginLeft: '10px' }}
+											className="reset-doctor"
 											onClick={() => {
 												API.login.resetDoctor();
 											}}

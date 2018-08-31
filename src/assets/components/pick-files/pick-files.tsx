@@ -25,7 +25,7 @@ export class PickFile extends React.Component<
 					type="file"
 					multiple={this.props.multiple}
 					ref={(el) => (el ? (this.pickFileEl = el) : '')}
-					style={{ display: 'none' }}
+					className="hidden"
 					accept={this.props.accept.join(',')}
 					onChange={() => {
 						if (!this.pickFileEl) {

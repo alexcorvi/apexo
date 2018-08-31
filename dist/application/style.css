@@ -2078,6 +2078,14 @@ hr {
 
 .hidden {
   display: none; }
+
+.version-num {
+  font-size: 12px;
+  position: absolute;
+  color: #e3e3e3;
+  bottom: 5px;
+  right: 12px;
+  z-index: -1; }
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
 /* stylelint-disable no-duplicate-selectors */
 /* stylelint-disable declaration-bang-space-before,no-duplicate-selectors */
@@ -5289,6 +5297,18 @@ hr {
     -webkit-order: 0;
     -ms-flex-order: 0;
     order: 0; } }
+.login-component {
+  margin: 50px auto;
+  max-width: 400px; }
+
+.no-server-mode {
+  position: absolute;
+  bottom: 10px;
+  left: 10px; }
+
+.edit-server-location {
+  display: inline-block;
+  margin-top: 23px; }
 .label {
   background: #212121;
   padding: 5px 10px 7px;
@@ -5460,6 +5480,12 @@ hr {
           color: #0d47a1; }
       .calendar-component .full-day-col .appointment:hover {
         border-bottom-color: #262626; }
+  .calendar-component .centered {
+    text-align: center; }
+  .calendar-component .filter {
+    border-left: 1px dotted #e3e3e3; }
+  .calendar-component .day-name {
+    color: '#616161'; }
 
 @media screen and (min-width: 992px) {
   .calendar-component {
@@ -5630,6 +5656,10 @@ hr {
       font-size: 14px; }
     .treatments-component .treatment-edit section .item-quantity {
       margin-bottom: 0; }
+  .treatments-component .show-menu {
+    width: 100%; }
+  .treatments-component .samples {
+    padding: 20px; }
 
 @media screen and (min-width: 992px) {
   .treatments-component {
@@ -5691,6 +5721,10 @@ hr {
   .data-table .delete-button:hover {
     color: #fff;
     background: #f44336; }
+
+.data-table .delete-td {
+  text-align: right;
+  padding-right: 12px; }
 .tag-input-component {
   position: relative;
   background: #fff;
@@ -5862,7 +5896,8 @@ hr {
     width: 73px;
     display: inline-block;
     background-size: cover;
-    background-position: center; }
+    background-position: center;
+    padding: 20px; }
   .gallery-component .input-image {
     font-size: 22px;
     padding: 16px 10px;
@@ -5879,6 +5914,9 @@ hr {
       display: block;
       margin-top: 7px;
       text-transform: uppercase; }
+
+.gallery-view {
+  max-width: 100%; }
 .settings-component {
   font-size: 13px;
   background: #fff;
@@ -6031,6 +6069,9 @@ hr {
       background: #3e50b3;
       color: #fff;
       box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+
+.single-tooth-condition {
+  margin-top: 10px; }
 .single-patient-details .gender {
   margin-bottom: 12px; }
 
@@ -6064,6 +6105,9 @@ hr {
     width: 100%; }
   .single-patient-details .buttons .delete {
     position: static !important; }
+
+.single-patient-details .mh-label {
+  margin-top: 10px; }
 .single-patient-appointments {
   position: relative; }
   .single-patient-appointments .add-new {
@@ -6085,8 +6129,14 @@ hr {
       margin-right: 10px;
       position: relative;
       top: 1px; }
+  .single-patient-appointments .no-appointments {
+    color: #757575;
+    margin: 15px 0px 7px; }
 .patient-link-component {
   cursor: pointer; }
+  .patient-link-component .icon {
+    position: relative;
+    top: 2px; }
 .appointment-hr {
   border: none;
   margin-bottom: 20px;
@@ -6111,6 +6161,8 @@ hr {
   .appointment-input .appendage {
     position: absolute;
     right: 0; }
+    .appointment-input .appendage.stop {
+      background: #ff9800; }
   .appointment-input label {
     display: block;
     margin-bottom: 10px; }
@@ -6800,6 +6852,16 @@ Interactive Layer
     margin-top: 9px; }
     .header-component .ms-OverflowSet .ms-Button-menuIcon {
       font-size: 15px; }
+  .header-component .right-buttons {
+    text-align: right; }
+  .header-component .offline {
+    display: inline-block;
+    background: #ff5722;
+    color: #fff;
+    margin-right: 12px;
+    padding: 8px; }
+.spinner-container {
+  margin-top: 300px; }
 .menu .ms-Nav ul {
   padding-top: 5px; }
   .menu .ms-Nav ul .is-selected {
@@ -6896,8 +6958,36 @@ Interactive Layer
       font-size: 50px; }
     .home .item .title {
       text-transform: capitalize; }
+  .home .date-container {
+    margin-top: 10px; }
+    .home .date-container .home-date {
+      float: left;
+      font-size: 48px; }
+      .home .date-container .home-date p {
+        margin-top: 15px;
+        margin-right: 15px; }
+    .home .date-container .textual {
+      text-align: center;
+      float: left; }
+    .home .date-container .day-name {
+      font-size: 22px;
+      margin-top: 6px; }
+  .home .home-time {
+    text-align: right;
+    font-size: 20px;
+    margin-top: 30px;
+    letter-spacing: 6px; }
+  .home .home-td {
+    border-bottom: 1px solid whitesmoke; }
+
+#router-outlet {
+  margin-top: 50px;
+  padding-bottom: 20px; }
 .user-component .persona {
   padding: 10px 25px 0; }
+
+.reset-doctor {
+  margin-left: 10px; }
 .confirmation-modal .ms-Panel-main {
   box-shadow: 0px -20px 50px rgba(0, 0, 0, 0.14) !important;
   height: 100px;
