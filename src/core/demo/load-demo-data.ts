@@ -13,6 +13,7 @@ import { orthoData } from '../../modules/orthodontic';
 import { settingsData } from '../../modules/settings';
 import { prescriptionsData } from '../../modules/prescriptions';
 import { treatmentsData } from '../../modules/treatments';
+import { restoreFromBase64 } from '../../assets/utils/backup';
 
 function randomDate() {
 	const now = new Date().getTime();
@@ -27,46 +28,14 @@ function randomDoctorIndex() {
 export function loadDemoData() {
 	return new Promise((resolve, reject) => {
 		const Http = new XMLHttpRequest();
-		const url = './demo-data.json';
+		const url = './demo-data';
 		Http.open('GET', url);
 		Http.send();
 		Http.onreadystatechange = function(e) {
 			if (this.readyState === 4) {
-				const demoData: {
-					appointments: AppointmentJSON[];
-					doctors: DoctorJSON[];
-					orthoCases: CaseJSON[];
-					patients: PatientJSON[];
-					prescriptions: PrescriptionItemJSON[];
-					settings: SettingItemJSON[];
-					treatments: TreatmentJSON[];
-				} = JSON.parse(Http.responseText);
-
-				appointmentsData.appointments.list = [];
-				orthoData.cases.list = [];
-				patientsData.patients.list = [];
-				prescriptionsData.prescriptions.list = [];
-				treatmentsData.treatments.list = [];
-				doctorsData.doctors.list = [];
-				settingsData.settings.list = [];
-
-				settingsData.settings.list = demoData.settings.map((item) => new SettingsItem(item));
-				doctorsData.doctors.list = demoData.doctors.map((item) => new Doctor(item));
-				treatmentsData.treatments.list = demoData.treatments.map((item) => new Treatment(item));
-				prescriptionsData.prescriptions.list = demoData.prescriptions.map((item) => new PrescriptionItem(item));
-				patientsData.patients.list = demoData.patients.map((item) => new Patient(item));
-				orthoData.cases.list = demoData.orthoCases.map((item) => new OrthoCase(item));
-				appointmentsData.appointments.list = demoData.appointments.map((item) => new Appointment(item));
-
-				appointmentsData.appointments.list.forEach((appointment, i) => {
-					appointmentsData.appointments.list[i].date = randomDate();
-					appointmentsData.appointments.list[i].doctorsID = [
-						doctorsData.doctors.list[randomDoctorIndex()]._id
-					];
-				});
-
+				const demoData = Http.responseText;
+				restoreFromBase64(demoData);
 				localStorage.setItem('doctor_id', '89ab37f032d6f1b11512');
-
 				resolve();
 			}
 		};
