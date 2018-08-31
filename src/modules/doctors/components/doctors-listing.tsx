@@ -17,7 +17,7 @@ import { Doctor, doctors } from '../data';
 import { Label, LabelType, getRandomLabelType } from '../../../assets/components/label/label.component';
 import { appointmentsComponents, appointmentsData } from '../../appointments';
 import { computed, observable } from 'mobx';
-import { Col, Row } from 'antd';
+import { Row, Col } from '../../../assets/components/grid/index';
 import { API } from '../../../core';
 import { AppointmentThumb } from '../../../assets/components/appointment-thumb/appointment-thumb';
 import { DataTable } from '../../../assets/components/data-table/data-table.component';

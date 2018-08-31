@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { API } from '../';
 import { Icon } from 'office-ui-fabric-react';
-import { Row, Col } from 'antd';
+import { Row, Col } from '../../assets/components/grid/index';
 import { observer } from 'mobx-react';
 import { observable, computed } from 'mobx';
 import { PatientLink } from '../../modules/patients/components';

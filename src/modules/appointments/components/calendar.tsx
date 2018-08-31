@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Appointment, Calendar as CalendarClass, appointments } from '../data';
 import { Icon, TextField, Toggle } from 'office-ui-fabric-react';
 import { computed, observable } from 'mobx';
-import { Row, Col } from 'antd';
+import { Row, Col } from '../../../assets/components/grid/index';
 import { API } from '../../../core';
 import { AppointmentEditor } from './appointment-editor';
 import { observer } from 'mobx-react';

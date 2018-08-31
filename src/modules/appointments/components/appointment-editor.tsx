@@ -6,7 +6,7 @@ import { Appointment, appointments } from '../data';
 import { DatePicker, Dropdown, Icon, Panel, PanelType, PrimaryButton, TextField, Toggle } from 'office-ui-fabric-react';
 import { Label, LabelType } from '../../../assets/components/label/label.component';
 import { computed, observable, toJS } from 'mobx';
-import { Row, Col } from 'antd';
+import { Row, Col } from '../../../assets/components/grid/index';
 import { API } from '../../../core';
 import { Profile } from '../../../assets/components/profile/profile';
 import { TagInput } from '../../../assets/components/tag-input/tag-input';

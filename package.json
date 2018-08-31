@@ -5,9 +5,11 @@
 	"author": "Ali Saleem",
 	"dependencies": {
 		"@types/chart.js": "^2.7.31",
-		"antd": "^3.6.3",
+		"@types/classnames": "^2.2.6",
 		"blob-util": "^2.0.2",
 		"chart.js": "^2.7.2",
+		"classnames": "^2.2.6",
+		"enquire.js": "^2.1.6",
 		"fast-array-diff": "^0.2.0",
 		"mobx": "^5.0.3",
 		"mobx-react": "^5.2.3",

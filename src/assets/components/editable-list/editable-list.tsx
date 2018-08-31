@@ -3,7 +3,7 @@ import './editable-list.scss';
 import * as React from 'react';
 
 import { PickFile, fileTypes } from '../../../assets/components/pick-files/pick-files';
-import { Row, Col } from 'antd';
+import { Row, Col } from '../../../assets/components/grid/index';
 import { Icon } from 'office-ui-fabric-react';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';

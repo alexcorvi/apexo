@@ -12,7 +12,7 @@ import { escapeRegExp } from '../../../assets/utils/escape-regex';
 import { observer } from 'mobx-react';
 import { round } from '../../../assets/utils/round';
 import { settingsData } from '../../settings';
-import { Row, Col } from 'antd';
+import { Row, Col } from '../../../assets/components/grid/index';
 import { sortArrByProp } from '../../../assets/utils/sort-arr';
 import { TreatmentLink } from './link';
 import { appointmentsData } from '../../appointments';

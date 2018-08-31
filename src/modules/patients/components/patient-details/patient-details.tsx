@@ -27,7 +27,7 @@ import { appointmentsData } from '../../../appointments';
 import { convert } from '../../../../assets/utils/teeth-numbering-systems';
 import { observer } from 'mobx-react';
 import { treatmentsData } from '../../../treatments';
-import { Row, Col } from 'antd';
+import { Row, Col } from '../../../../assets/components/grid/index';
 import { Gallery } from '../../../../assets/components/gallery/gallery';
 
 @observer

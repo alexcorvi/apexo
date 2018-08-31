@@ -8,7 +8,7 @@ import { TextField, Toggle, PrimaryButton } from 'office-ui-fabric-react';
 import { observer } from 'mobx-react';
 import { settings } from '../data';
 import { observable } from 'mobx';
-import { Row, Col } from 'antd';
+import { Row, Col } from '../../../assets/components/grid/index';
 import * as backup from '../../../assets/utils/backup';
 
 @observer

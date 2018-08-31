@@ -19,7 +19,7 @@ import { computed, observable } from 'mobx';
 import { DentalHistory, PatientAppointments, PatientDetails } from '../../patients/components';
 import { API } from '../../../core';
 import { observer } from 'mobx-react';
-import { Row, Col } from 'antd';
+import { Row, Col } from '../../../assets/components/grid/index';
 import { orthoData } from '../index';
 import {
 	ApplianceType,
