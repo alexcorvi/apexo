@@ -10,6 +10,9 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+### 1.5.1
+- removed ant.design dependency
+
 ### 1.5.0
 - scroll to day when selecting it on the appointments page
 - moved inline styles to their respective SCSS file when applicable
