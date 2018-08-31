@@ -46,20 +46,17 @@ class Login {
 	}
 
 	async initialCheck(server: string) {
+		this.server = server;
+
 		if (localStorage.getItem('no-server-mode') === 'true') {
 			this.noServerMode();
-		}
-		this.server = server;
-		if (navigator.onLine && (await isOnline(server))) {
+		} else if (navigator.onLine && (await isOnline(server))) {
 			this.online = true;
 			const username = (await new PouchDB(server).getSession()).userCtx.name;
 			if (username) {
 				await this.authenticate({ server, username });
 			}
-		}
-
-		// demo specific code
-		if (demoHosts.indexOf(location.host) !== -1) {
+		} else if (demoHosts.indexOf(location.host) !== -1) {
 			this.online = false;
 			this.keepOffline = true;
 			await this.authenticate({
