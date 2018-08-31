@@ -37,51 +37,26 @@ class Component extends React.Component<{}, {}> {
 			totalPayments = round(totalPayments);
 			totalProfits = round(totalProfits);
 			return {
-				timestamp,
+				label: t4mat({ time: timestamp, format: '{d} {M}' }),
 				totalPayments,
 				totalExpenses,
 				totalProfits
 			};
 		});
 	}
-	@computed
-	get expensesValues() {
-		return this._unsortedValues.map((x) => ({ x: x.timestamp, y: x.totalExpenses }));
-	}
-	@computed
-	get profitValues() {
-		return this._unsortedValues.map((x) => ({ x: x.timestamp, y: x.totalProfits }));
-	}
-	@computed
-	get paymentsValues() {
-		return this._unsortedValues.map((x) => ({ x: x.timestamp, y: x.totalPayments }));
-	}
 	render() {
 		return (
 			<LineChart
-				height={'400px'}
-				xLabelsFormatter={(x) => t4mat({ time: x, format: '{d} {M}' })}
-				yLabelsFormatter={(y) => settingsData.settings.getSetting('currencySymbol') + y}
-				showLegend={true}
 				{...{
-					area: true,
-					data: [
-						{
-							key: 'Expenses',
-							color: colors.yellow[0],
-							values: this.expensesValues
-						},
-						{
-							key: 'Payments',
-							color: colors.purple[0],
-							values: this.paymentsValues
-						},
-						{
-							key: 'Profits',
-							color: colors.blue[0],
-							values: this.profitValues
-						}
-					]
+					height: 300,
+					data: {
+						xLabels: this._unsortedValues.map((x) => x.label),
+						lines: [
+							{ label: 'Payments', data: this._unsortedValues.map((x) => x.totalPayments) },
+							{ label: 'Expenses', data: this._unsortedValues.map((x) => x.totalExpenses) },
+							{ label: 'Profits', data: this._unsortedValues.map((x) => x.totalProfits) }
+						]
+					}
 				}}
 			/>
 		);

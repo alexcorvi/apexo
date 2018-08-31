@@ -3,10 +3,8 @@ import {
 	appointmentsByDate,
 	financesByDate,
 	genderPie,
-	missedAppointments,
 	mostAppliedTreatments,
 	mostInvolvedTeeth,
-	outstandingAppointments,
 	treatments,
 	treatmentsByGender
 } from '../components/charts';
@@ -50,14 +48,12 @@ class Statistics {
 	charts: Chart[] = [
 		appointmentsByDate,
 		financesByDate,
-		treatmentsByGender,
 		treatments,
+		mostAppliedTreatments,
 		genderPie,
 		ageBar,
-		mostInvolvedTeeth,
-		mostAppliedTreatments,
-		missedAppointments,
-		outstandingAppointments
+		treatmentsByGender,
+		mostInvolvedTeeth
 	];
 	/**
 	 * Selected starting date

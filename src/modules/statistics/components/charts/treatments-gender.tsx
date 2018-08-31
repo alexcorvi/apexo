@@ -44,46 +44,31 @@ class Component extends React.Component<{}, {}> {
 		});
 		return selectedTreatments;
 	}
-	@computed
-	get male() {
-		return this.selectedTreatments.map((treatment) => {
-			return {
-				x: treatmentsData.treatments.getIndexByID(treatment.treatment._id),
-				y: treatment.male
-			};
-		});
-	}
-	@computed
-	get female() {
-		return this.selectedTreatments.map((treatment) => ({
-			x: treatmentsData.treatments.getIndexByID(treatment.treatment._id),
-			y: treatment.female * -1
-		}));
-	}
+
 	render() {
 		return (
-			<BarChart
-				height={'400px'}
-				xLabelsFormatter={(x) => treatmentsData.treatments.list[x].type}
-				yLabelsFormatter={(y) => Math.abs(y)}
-				horizontal={true}
-				showLegend={true}
-				hideXAxis={true}
-				{...{
-					data: [
-						{
-							key: 'Male',
-							color: colors.blue[0],
-							values: this.male
-						},
-						{
-							key: 'Female',
-							color: colors.purple[0],
-							values: this.female
+			<div>
+				<BarChart
+					{...{
+						horizontal: true,
+						height: 400,
+						notStacked: true,
+						data: {
+							xLabels: this.selectedTreatments.map((x) => x.treatment.type),
+							bars: [
+								{
+									label: 'Male',
+									data: this.selectedTreatments.map((x) => x.male)
+								},
+								{
+									label: 'Female',
+									data: this.selectedTreatments.map((x) => x.female * -1)
+								}
+							]
 						}
-					]
-				}}
-			/>
+					}}
+				/>
+			</div>
 		);
 	}
 }

@@ -1,69 +1,51 @@
-import './styles.scss';
-
 import * as React from 'react';
-import * as d3 from 'd3';
-import * as nv from 'nvd3';
+
+import { Chart } from 'chart.js';
 
 import { removeToolTips } from './remove-tooltips';
+import { colors } from './colors';
 
 export class PieChart extends React.Component<
 	{
-		margins?: number[];
-		showLegend?: boolean;
-		height?: string;
-		width?: string;
-		labelsOutside?: boolean;
-		labelType?: 'key' | 'value' | 'percent';
-		showLabels?: boolean;
-		pieLabelsOutside?: boolean;
-		donut?: boolean;
-		donutRatio?: number;
+		height: number;
 		data: {
 			label: string;
 			value: number;
-			color: string;
 		}[];
 	},
 	{}
 > {
 	private id: string = 'id' + Math.random().toString(32).substr(4);
 	private graph() {
-		removeToolTips();
-		nv.addGraph(() => {
-			const margins = this.props.margins || [];
-			const chart = nv.models
-				.pieChart()
-				.margin({
-					top: margins[0],
-					right: margins[1],
-					bottom: margins[2],
-					left: margins[3]
-				})
-				.showLegend(!!this.props.showLegend)
-				.labelsOutside(!!this.props.labelsOutside)
-				.labelType(this.props.labelType || 'value')
-				.showLabels(!!this.props.showLabels)
-				.labelsOutside(!!this.props.pieLabelsOutside)
-				.donut(!!this.props.donut)
-				.donutRatio(this.props.donutRatio || 0.3)
-				.x((d) => d.label)
-				.y((d) => d.value);
-
-			d3.select('#' + this.id).datum(this.props.data).call(chart as any);
-			nv.utils.windowResize(chart.update);
-			return chart;
+		const ctx = (document.getElementById(this.id) as HTMLCanvasElement).getContext(
+			'2d'
+		) as CanvasRenderingContext2D;
+		const chart = new Chart(ctx, {
+			type: 'pie',
+			data: {
+				datasets: [
+					{
+						data: this.props.data.map((x) => x.value),
+						backgroundColor: this.props.data.map((x, i) => colors[i])
+					}
+				],
+				labels: this.props.data.map((x) => x.label)
+			},
+			options: {
+				responsive: true
+			}
 		});
 	}
 	render() {
 		return (
-			<svg
-				style={{
-					height: this.props.height,
-					width: this.props.width
-				}}
-				id={this.id}
-			/>
+			<div id={this.id + '_container'} style={{ height: this.props.height }}>
+				<canvas id={this.id} style={{ height: '100%', width: '100%' }} />
+			</div>
 		);
+	}
+	componentWillUpdate() {
+		(document.getElementById(this.id + '_container') as HTMLDivElement).innerHTML = `<canvas id="${this
+			.id}" style="height: 100%; width: 100%" />`;
 	}
 	componentDidUpdate() {
 		this.graph();

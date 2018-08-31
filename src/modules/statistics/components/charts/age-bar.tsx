@@ -36,18 +36,22 @@ class Component extends React.Component<{}, {}> {
 	}
 	render() {
 		return (
-			<BarChart
-				height={'400px'}
-				{...{
-					data: [
-						{
-							key: 'Patients: ',
-							color: '#262626',
-							values: this.values
+			<div>
+				<BarChart
+					{...{
+						height: 400,
+						data: {
+							xLabels: this.values.map((x) => x.x.toString()),
+							bars: [
+								{
+									data: this.values.map((x) => x.y),
+									label: 'Age'
+								}
+							]
 						}
-					]
-				}}
-			/>
+					}}
+				/>
+			</div>
 		);
 	}
 }
@@ -56,5 +60,6 @@ export const ageBar: Chart = {
 	Component,
 	name: "Patients' Age",
 	description: 'Comparing patients age',
-	tags: 'patient age patients'
+	tags: 'patient age patients',
+	className: 'col-xs-12 col-lg-6'
 };

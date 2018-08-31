@@ -69,16 +69,7 @@ class Component extends React.Component<{}, {}> {
 			});
 	}
 	render() {
-		return (
-			<PieChart
-				donut={true}
-				labelType={'key'}
-				showLabels={true}
-				showLegend={true}
-				height={'400px'}
-				data={this.data}
-			/>
-		);
+		return <PieChart height={400} data={this.data} />;
 	}
 }
 
@@ -86,5 +77,6 @@ export const mostAppliedTreatments: Chart = {
 	Component,
 	name: 'Most Applied Treatments',
 	description: 'Top 5 most applied treatments',
-	tags: 'most applied used administered treatments'
+	tags: 'most applied used administered treatments',
+	className: 'col-xs-12 col-lg-6'
 };

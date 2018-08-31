@@ -11,7 +11,6 @@ import { appointmentsData } from '../../modules/appointments';
 import { AppointmentThumb } from '../../assets/components/appointment-thumb/appointment-thumb';
 import { user } from '../user/data.user';
 import { appointmentsByDate } from '../../modules/statistics/components/charts/appointments-by-day';
-import { LineChart } from '../../assets/components/charts/line';
 import { checkServer } from '../../assets/utils/check-server';
 @observer
 export class Home extends React.Component<{}, {}> {

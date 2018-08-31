@@ -51,21 +51,27 @@ class Component extends React.Component<{}, {}> {
 	}
 	render() {
 		return (
-			<BarChart
-				height={'400px'}
-				xLabelsFormatter={(x) => `${this.values[x].title} (${this.values[x].times})`}
-				yLabelsFormatter={(y) => round(y) + settingsData.settings.getSetting('currencySymbol')}
-				staggerLabels
-				{...{
-					data: [
-						{
-							key: 'Profit',
-							color: colors.blue[0],
-							values: this.values
+			<div>
+				<BarChart
+					{...{
+						height: 400,
+						notStacked: true,
+						data: {
+							xLabels: this.values.map((x) => x.title),
+							bars: [
+								{
+									label: 'Profits',
+									data: this.values.map((x) => x.y)
+								},
+								{
+									label: 'Applied times',
+									data: this.values.map((x) => x.times)
+								}
+							]
 						}
-					]
-				}}
-			/>
+					}}
+				/>
+			</div>
 		);
 	}
 }

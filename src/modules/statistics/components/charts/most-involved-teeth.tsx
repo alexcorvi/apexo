@@ -66,16 +66,7 @@ class Component extends React.Component<{}, {}> {
 			});
 	}
 	render() {
-		return (
-			<PieChart
-				donut={true}
-				labelType={'key'}
-				showLabels={true}
-				showLegend={true}
-				height={'400px'}
-				data={this.data}
-			/>
-		);
+		return <PieChart height={400} data={this.data} />;
 	}
 	getToothName(n: number) {
 		return convert(Number(`1${n.toString()}`)).Name.replace(/(permanent|deciduous|upper|lower|left|right)/gi, '');
@@ -86,5 +77,6 @@ export const mostInvolvedTeeth: Chart = {
 	Component,
 	name: 'Most Involved Teeth',
 	description: 'Top 5 most treated teeth',
-	tags: 'teeth most involved tooth treated'
+	tags: 'teeth most involved tooth treated',
+	className: 'col-xs-12 col-lg-6'
 };

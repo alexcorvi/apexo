@@ -23,15 +23,11 @@ class Component extends React.Component<{}, {}> {
 	render() {
 		return (
 			<PieChart
-				showLabels={true}
-				showLegend={true}
-				height={'400px'}
-				labelType={'key'}
-				labelsOutside={true}
+				height={400}
 				{...{
 					data: [
-						{ label: 'male', value: this.malePercentile, color: '#262626' },
-						{ label: 'female', value: this.femalePercentile, color: colors.purple[1] }
+						{ label: 'male', value: this.malePercentile },
+						{ label: 'female', value: this.femalePercentile }
 					]
 				}}
 			/>
@@ -53,5 +49,6 @@ export const genderPie: Chart = {
 	Component,
 	name: "Patients' Gender",
 	description: 'treated patients gender',
-	tags: 'gender patients pie chart'
+	tags: 'gender patients pie chart',
+	className: 'col-xs-12 col-lg-6'
 };

@@ -1,97 +1,62 @@
-import './styles.scss';
-
 import * as React from 'react';
-import * as d3 from 'd3';
-import * as nv from 'nvd3';
+
+import { Chart } from 'chart.js';
 
 import { removeToolTips } from './remove-tooltips';
+import { colors } from './colors';
 
 export class BarChart extends React.Component<
 	{
-		margins?: number[];
-		showLegend?: boolean;
-		hideYAxis?: boolean;
-		hideXAxis?: boolean;
-		yAxisLabel?: string;
-		xAxisLabel?: string;
-		xLabelsFormatter?: (x: number) => any;
-		yLabelsFormatter?: (y: number) => any;
-		height?: string;
-		width?: string;
-		reduceXTicks?: boolean;
-		showControls?: boolean;
-		staggerLabels?: boolean;
-		stacked?: boolean;
-		horizontal?: boolean;
+		height: number;
 		data: {
-			key: string;
-			color: string;
-			values?: {
-				x: number;
-				y: number;
+			xLabels: string[];
+			bars: {
+				label: string;
+				data: number[];
 			}[];
-			singleValues?: number[];
-		}[];
+		};
+		notStacked?: boolean;
+		horizontal?: boolean;
 	},
 	{}
 > {
 	private id: string = 'id' + Math.random().toString(32).substr(4);
 	private graph() {
-		removeToolTips();
-		nv.addGraph(() => {
-			const margins = this.props.margins || [];
-			const chart = (this.props.horizontal ? nv.models.multiBarHorizontalChart() : nv.models.multiBarChart())
-				.margin({
-					top: margins[0],
-					right: margins[1],
-					bottom: margins[2],
-					left: margins[3]
-				})
-				.showLegend(!!this.props.showLegend)
-				.showControls(!!this.props.showControls)
-				.showYAxis(!this.props.hideYAxis)
-				.stacked(!!this.props.stacked)
-				.showXAxis(!this.props.hideXAxis);
-
-			if (!this.props.horizontal) {
-				(chart as nv.MultiBarChart)
-					.reduceXTicks(!!this.props.reduceXTicks)
-					.staggerLabels(!!this.props.staggerLabels);
+		const ctx = (document.getElementById(this.id) as HTMLCanvasElement).getContext(
+			'2d'
+		) as CanvasRenderingContext2D;
+		const chart = new Chart(ctx, {
+			type: this.props.horizontal ? 'horizontalBar' : 'bar',
+			data: {
+				labels: this.props.data.xLabels,
+				datasets: this.props.data.bars.map((x, i) => ({
+					label: x.label,
+					data: x.data,
+					borderColor: colors[i],
+					backgroundColor: colors[i],
+					fill: false,
+					stack: this.props.notStacked ? 'stack ' + i : 'stack 0'
+				}))
+			},
+			options: {
+				hover: {
+					mode: 'nearest',
+					intersect: true
+				},
+				legend: { fullWidth: true }
 			}
-
-			chart.xAxis.axisLabel(this.props.xAxisLabel || '');
-			chart.yAxis.axisLabel(this.props.yAxisLabel || '');
-
-			if (this.props.xLabelsFormatter) {
-				chart.xAxis.tickFormat(this.props.xLabelsFormatter);
-			}
-			if (this.props.yLabelsFormatter) {
-				chart.yAxis.tickFormat(this.props.yLabelsFormatter);
-			}
-
-			for (let index = 0; index < this.props.data.length; index++) {
-				const singleValues = this.props.data[index].singleValues;
-				if (singleValues) {
-					this.props.data[index].values = singleValues.map((v, i) => {
-						return { x: i + 1, y: v };
-					});
-				}
-			}
-			d3.select('#' + this.id).datum(this.props.data).call(chart as any);
-			nv.utils.windowResize(chart.update);
-			return chart;
 		});
 	}
 	render() {
 		return (
-			<svg
-				style={{
-					height: this.props.height,
-					width: this.props.width
-				}}
-				id={this.id}
-			/>
+			<div id={this.id + '_container'} style={{ height: this.props.height }}>
+				<canvas id={this.id} style={{ height: '100%', width: '100%' }} />
+			</div>
 		);
+	}
+	componentWillUpdate() {
+		(document.getElementById(this.id + '_container') as HTMLDivElement).innerHTML = `<canvas id="${this
+			.id}" style="height: 100%; width: 100%" />`;
 	}
 	componentDidUpdate() {
 		this.graph();
