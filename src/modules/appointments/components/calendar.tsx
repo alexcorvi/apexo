@@ -120,6 +120,9 @@ export class Calendar extends React.Component<{}, {}> {
 										key={day.date}
 										onClick={() => {
 											this.c.selectedDay = day.date;
+											setTimeout(() => {
+												scroll(0, this.findPos(document.getElementById('day_' + day.date)));
+											}, 0);
 										}}
 										className={
 											'day-col' +
@@ -203,6 +206,7 @@ export class Calendar extends React.Component<{}, {}> {
 							return (
 								<div
 									key={day.date}
+									id={'day' + '_' + day.date}
 									className={
 										'full-day-col' +
 										(API.user.currentDoctor.holidays.indexOf(day.weekDay.index) > -1
@@ -274,5 +278,15 @@ export class Calendar extends React.Component<{}, {}> {
 				/>
 			</div>
 		);
+	}
+
+	findPos(obj: HTMLElement | null) {
+		let curtop = 0;
+		if (obj && obj.offsetParent) {
+			do {
+				curtop += obj.offsetTop;
+			} while ((obj = obj.offsetParent as HTMLElement));
+			return curtop - 70;
+		}
 	}
 }
