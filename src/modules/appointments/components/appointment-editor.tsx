@@ -76,33 +76,38 @@ export class AppointmentEditor extends React.Component<
 				closeButtonAriaLabel="Close"
 				isLightDismiss={true}
 				onDismiss={this.props.onDismiss}
-				onRenderNavigation={() => (
-					<Row className="panel-heading">
-						<Col span={22}>
-							<Profile
-								secondaryElement={
-									<span>
-										{t4mat({
-											time: (this.props.appointment || new Appointment()).date,
-											format: `{r} / ${(this.props.appointment || new Appointment()).treatment
-												.type}`
-										})}
-									</span>
-								}
-								name={(this.props.appointment || new Appointment()).patient.name}
-								size={3}
-							/>
-						</Col>
-						<Col span={2} className="close">
-							<IconButton
-								iconProps={{ iconName: 'cancel' }}
-								onClick={() => {
-									this.props.onDismiss();
-								}}
-							/>
-						</Col>
-					</Row>
-				)}
+				onRenderNavigation={() => {
+					if (this.props.appointment === null) {
+						return <div />;
+					} else {
+						return (
+							<Row className="panel-heading">
+								<Col span={22}>
+									<Profile
+										secondaryElement={
+											<span>
+												{t4mat({
+													time: this.props.appointment.date,
+													format: `{r} / ${this.props.appointment.treatment.type}`
+												})}
+											</span>
+										}
+										name={this.props.appointment.patient.name}
+										size={3}
+									/>
+								</Col>
+								<Col span={2} className="close">
+									<IconButton
+										iconProps={{ iconName: 'cancel' }}
+										onClick={() => {
+											this.props.onDismiss();
+										}}
+									/>
+								</Col>
+							</Row>
+						);
+					}
+				}}
 			>
 				{this.props.appointment ? (
 					<div className="appointment-editor">
