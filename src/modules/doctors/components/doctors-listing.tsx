@@ -209,7 +209,6 @@ export class DoctorsListing extends React.Component<{}, {}> {
 						)}
 					>
 						<br />
-						<hr className="appointment-hr" />
 						<div className="doctor-editor m-t-20">
 							<div className="doctor-input">
 								<TextField
@@ -254,51 +253,7 @@ export class DoctorsListing extends React.Component<{}, {}> {
 								/>
 							</div>
 						</div>
-
-						<h3>Appointments</h3>
-						<hr className="appointment-hr" />
-
-						<Label
-							type={this.viewingPastAppointments ? LabelType.info : LabelType.primary}
-							text="Upcoming"
-							onClick={() => (this.viewingPastAppointments = false)}
-						/>
-						<Label
-							type={this.viewingPastAppointments ? LabelType.primary : LabelType.info}
-							text="Past"
-							onClick={() => (this.viewingPastAppointments = true)}
-						/>
-
-						<div className="appointments-listing">
-							{this.listAppointments.length ? (
-								this.listAppointments.map((appointment) => {
-									return (
-										<AppointmentThumb
-											key={appointment._id}
-											appointment={appointment}
-											canDelete={true}
-											labeled={true}
-											small={true}
-											onClick={() => {
-												this.selectedAppointmentID = appointment._id;
-											}}
-										/>
-									);
-								})
-							) : (
-								<p>Nothing found...</p>
-							)}
-						</div>
 					</Panel>
-				) : (
-					''
-				)}
-				{this.appointment ? (
-					<appointmentsComponents.AppointmentEditor
-						onDismiss={() => (this.selectedAppointmentID = '')}
-						onDelete={() => (this.selectedAppointmentID = '')}
-						appointment={this.appointment}
-					/>
 				) : (
 					''
 				)}
