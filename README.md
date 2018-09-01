@@ -10,7 +10,7 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
-### 1.5.3
+### 1.5.4
 - Fixed few bugs
 
 ### 1.5.2
