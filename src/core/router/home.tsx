@@ -24,17 +24,25 @@ export class Home extends React.Component<{}, {}> {
 		time: new Date().toLocaleTimeString('en-EN', {})
 	};
 
-	@observable serverLatencyValues: number[] = [ 0, 0, 0, 0 ];
+	@computed
+	get todayAppointments() {
+		return appointmentsData.appointments.appointmentsForDay(this.time.year, this.time.month + 1, this.time.day);
+	}
+
+	@computed
+	get tomorrowAppointments() {
+		return appointmentsData.appointments.appointmentsForDay(new Date().getTime() + 86400000, 0, 0);
+	}
 
 	render() {
 		return (
 			<div className="home  p-15 p-l-10 p-r-10">
 				<div className="container">
 					<Row gutter={12}>
-						<Col xl={10} md={9} sm={6} xs={4}>
+						<Col xl={10} md={9} sm={24} xs={24}>
 							<Profile name={user.currentDoctor ? user.currentDoctor.name : ''} />
 						</Col>
-						<Col xl={4} md={6} sm={12} xs={16} className="date-container">
+						<Col xl={4} md={6} sm={0} xs={0} className="date-container">
 							<Row gutter={12}>
 								<div className="home-date">
 									<p>{this.time.day}</p>
@@ -45,7 +53,7 @@ export class Home extends React.Component<{}, {}> {
 								</div>
 							</Row>
 						</Col>
-						<Col xl={10} md={9} sm={6} xs={4}>
+						<Col xl={10} md={9} sm={0} xs={0}>
 							<p className="home-time">{this.time.time}</p>
 						</Col>
 					</Row>
@@ -62,32 +70,37 @@ export class Home extends React.Component<{}, {}> {
 							<table className="ms-table">
 								<thead>
 									<tr>
-										<th>Patient</th>
-										<th>Treatment</th>
+										<th>Appointment</th>
 										<th>Operators</th>
 									</tr>
 								</thead>
 								<tbody>
-									{appointmentsData.appointments
-										.appointmentsForDay(this.time.year, this.time.month + 1, this.time.day)
-										.map((appointment) => (
-											<tr key={appointment._id} className="home-td">
-												<td>{<PatientLink id={appointment.patientID} />}</td>
-												<td>{<TreatmentLink id={appointment.treatmentID} />}</td>
-												<td>
-													{appointment.doctors.map((operator) => (
-														<Profile
-															key={operator._id}
-															name={operator.name}
-															size={3}
-															onClick={() => {}}
-														/>
-													))}
-												</td>
-											</tr>
-										))}
+									{this.todayAppointments.map((appointment) => (
+										<tr key={appointment._id} className="home-td">
+											<td>
+												{<TreatmentLink id={appointment.treatmentID} />}
+												{<PatientLink id={appointment.patientID} />}
+											</td>
+											<td>
+												{appointment.doctors.map((operator) => (
+													<Profile
+														key={operator._id}
+														name={operator.name}
+														size={3}
+														onClick={() => {}}
+													/>
+												))}
+											</td>
+										</tr>
+									))}
 								</tbody>
 							</table>
+
+							{this.todayAppointments.length === 0 ? (
+								<p className="no-appointments">There are no appointments for today</p>
+							) : (
+								''
+							)}
 						</Col>
 						<Col md={12}>
 							<h3>Tomorrow's Appointments</h3>
@@ -95,32 +108,46 @@ export class Home extends React.Component<{}, {}> {
 							<table className="ms-table">
 								<thead>
 									<tr>
-										<th>Patient</th>
-										<th>Treatment</th>
+										<th>Appointment</th>
 										<th>Operators</th>
 									</tr>
 								</thead>
 								<tbody>
-									{appointmentsData.appointments
-										.appointmentsForDay(new Date().getTime() + 86400000, 0, 0)
-										.map((appointment) => (
-											<tr key={appointment._id} className="home-td">
-												<td>{<PatientLink id={appointment.patientID} />}</td>
-												<td>{<TreatmentLink id={appointment.treatmentID} />}</td>
-												<td>
-													{appointment.doctors.map((operator) => (
-														<Profile
-															key={operator._id}
-															name={operator.name}
-															size={3}
-															onClick={() => {}}
-														/>
-													))}
-												</td>
-											</tr>
-										))}
+									{this.tomorrowAppointments.map((appointment) => (
+										<tr key={appointment._id} className="home-td">
+											<td>
+												{<TreatmentLink id={appointment.treatmentID} />}
+												<br />
+												{<PatientLink id={appointment.patientID} />}
+											</td>
+											<td>
+												{appointment.doctors.map((operator) => (
+													<div>
+														<Col xxl={0} xl={0} lg={0} md={0} sm={0} xs={24}>
+															<div key={operator._id} className="m-t-5 fs-11">
+																<Icon iconName="Contact" /> Dr. {operator.name}
+															</div>
+														</Col>
+														<Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={0}>
+															<Profile
+																key={operator._id}
+																name={operator.name}
+																size={3}
+																onClick={() => {}}
+															/>
+														</Col>
+													</div>
+												))}
+											</td>
+										</tr>
+									))}
 								</tbody>
 							</table>
+							{this.tomorrowAppointments.length === 0 ? (
+								<p className="no-appointments">There are no appointments for tomorrow</p>
+							) : (
+								''
+							)}
 						</Col>
 					</Row>
 				</div>
