@@ -34,6 +34,7 @@ import { AppointmentThumb } from '../../../assets/components/appointment-thumb/a
 import { TreatmentLink } from '../../treatments/components';
 import { PatientLink } from '../../patients/components';
 import { DateLink } from '.';
+import t4mat from 't4mat';
 
 @observer
 export class AppointmentEditor extends React.Component<
@@ -77,19 +78,22 @@ export class AppointmentEditor extends React.Component<
 				onDismiss={this.props.onDismiss}
 				onRenderNavigation={() => (
 					<Row className="panel-heading">
-						<Col span={20}>
-							<Row>
-								<Col span={12}>
-									<TreatmentLink id={(this.props.appointment || new Appointment()).treatment._id} />
-								</Col>
-
-								<Col span={12}>
-									<PatientLink id={(this.props.appointment || new Appointment()).patientID} />
-									<DateLink time={(this.props.appointment || new Appointment()).date} format="{RR}" />
-								</Col>
-							</Row>
+						<Col span={22}>
+							<Profile
+								secondaryElement={
+									<span>
+										{t4mat({
+											time: (this.props.appointment || new Appointment()).date,
+											format: `{r} / ${(this.props.appointment || new Appointment()).treatment
+												.type}`
+										})}
+									</span>
+								}
+								name={(this.props.appointment || new Appointment()).patient.name}
+								size={3}
+							/>
 						</Col>
-						<Col span={4} className="close">
+						<Col span={2} className="close">
 							<IconButton
 								iconProps={{ iconName: 'cancel' }}
 								onClick={() => {
@@ -102,6 +106,7 @@ export class AppointmentEditor extends React.Component<
 			>
 				{this.props.appointment ? (
 					<div className="appointment-editor">
+						<br />
 						<br />
 						<br />
 						<Row gutter={6}>
