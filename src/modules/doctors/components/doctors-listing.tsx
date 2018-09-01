@@ -11,7 +11,8 @@ import {
 	Pivot,
 	PivotItem,
 	PrimaryButton,
-	TextField
+	TextField,
+	IconButton
 } from 'office-ui-fabric-react';
 import { Doctor, doctors } from '../data';
 import { Label, LabelType, getRandomLabelType } from '../../../assets/components/label/label.component';
@@ -182,16 +183,31 @@ export class DoctorsListing extends React.Component<{}, {}> {
 						onDismiss={() => {
 							this.selectedDoctorIndex = -1;
 						}}
-					>
-						{this.doctor.name ? (
-							<Profile
-								name={this.doctor.name}
-								secondaryText={this.doctor.email}
-								tertiaryText={this.doctor.phone}
-							/>
-						) : (
-							''
+						onRenderNavigation={() => (
+							<Row className="panel-heading">
+								<Col span={20}>
+									{this.doctor.name ? (
+										<Profile
+											name={this.doctor.name}
+											secondaryText={this.doctor.email}
+											tertiaryText={this.doctor.phone}
+											size={2}
+										/>
+									) : (
+										<p />
+									)}
+								</Col>
+								<Col span={4} className="close">
+									<IconButton
+										iconProps={{ iconName: 'cancel' }}
+										onClick={() => {
+											this.selectedDoctorIndex = -1;
+										}}
+									/>
+								</Col>
+							</Row>
 						)}
+					>
 						<br />
 						<hr className="appointment-hr" />
 						<div className="doctor-editor m-t-20">
@@ -237,15 +253,6 @@ export class DoctorsListing extends React.Component<{}, {}> {
 										this.doctor.days.indexOf(a.text) - this.doctor.days.indexOf(b.text)}
 								/>
 							</div>
-							<PrimaryButton
-								className="delete m-b-30"
-								onClick={() => {
-									doctors.deleteModal(this.doctor._id);
-									this.selectedDoctorIndex = -1;
-								}}
-								iconProps={{ iconName: 'delete' }}
-								text="Delete Doctor"
-							/>
 						</div>
 
 						<h3>Appointments</h3>

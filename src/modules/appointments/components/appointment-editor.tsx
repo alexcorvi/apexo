@@ -3,7 +3,17 @@ import './appointment-editor.scss';
 import * as React from 'react';
 
 import { Appointment, appointments } from '../data';
-import { DatePicker, Dropdown, Icon, Panel, PanelType, PrimaryButton, TextField, Toggle } from 'office-ui-fabric-react';
+import {
+	DatePicker,
+	Dropdown,
+	Icon,
+	Panel,
+	PanelType,
+	PrimaryButton,
+	TextField,
+	Toggle,
+	IconButton
+} from 'office-ui-fabric-react';
 import { Label, LabelType } from '../../../assets/components/label/label.component';
 import { computed, observable, toJS } from 'mobx';
 import { Row, Col } from '../../../assets/components/grid/index';
@@ -20,6 +30,10 @@ import { settingsData } from '../../settings';
 import { treatmentsData } from '../../treatments';
 import { Gallery } from '../../../assets/components/gallery/gallery';
 import { Treatment } from '../../treatments/data/class.treatment';
+import { AppointmentThumb } from '../../../assets/components/appointment-thumb/appointment-thumb';
+import { TreatmentLink } from '../../treatments/components';
+import { PatientLink } from '../../patients/components';
+import { DateLink } from '.';
 
 @observer
 export class AppointmentEditor extends React.Component<
@@ -61,21 +75,35 @@ export class AppointmentEditor extends React.Component<
 				closeButtonAriaLabel="Close"
 				isLightDismiss={true}
 				onDismiss={this.props.onDismiss}
+				onRenderNavigation={() => (
+					<Row className="panel-heading">
+						<Col span={20}>
+							<Row>
+								<Col span={12}>
+									<TreatmentLink id={(this.props.appointment || new Appointment()).treatment._id} />
+								</Col>
+
+								<Col span={12}>
+									<PatientLink id={(this.props.appointment || new Appointment()).patientID} />
+									<DateLink time={(this.props.appointment || new Appointment()).date} format="{RR}" />
+								</Col>
+							</Row>
+						</Col>
+						<Col span={4} className="close">
+							<IconButton
+								iconProps={{ iconName: 'cancel' }}
+								onClick={() => {
+									this.props.onDismiss();
+								}}
+							/>
+						</Col>
+					</Row>
+				)}
 			>
 				{this.props.appointment ? (
 					<div className="appointment-editor">
-						<div className="m-b-15 appointment-top">
-							<Profile
-								name={this.props.appointment.patient.name}
-								secondaryText={patientsData.genderToString(this.props.appointment.patient.gender)}
-								tertiaryText={`${this.props.appointment.patient.age} years old`}
-								onClick={() =>
-									this.props.appointment
-										? API.router.go([ 'patients', this.props.appointment.patient._id ])
-										: ''}
-							/>
-						</div>
-						<hr className="appointment-hr" />
+						<br />
+						<br />
 						<Row gutter={6}>
 							<Col sm={12}>
 								<div className="appointment-input date">

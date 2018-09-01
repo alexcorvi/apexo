@@ -3,7 +3,7 @@ import './user.scss';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { CompoundButton, Link, Panel, PanelType } from 'office-ui-fabric-react';
+import { CompoundButton, Link, Panel, PanelType, IconButton } from 'office-ui-fabric-react';
 
 import { API } from '../';
 import { AppointmentThumb } from '../../assets/components/appointment-thumb/appointment-thumb';
@@ -12,6 +12,7 @@ import { computed } from 'mobx';
 import { components as modulesComponents } from '../../modules';
 import { observer } from 'mobx-react';
 import { user } from './data.user';
+import { Row, Col } from '../../assets/components/grid';
 
 @observer
 export class UserComponent extends React.Component<{}, {}> {
@@ -34,36 +35,38 @@ export class UserComponent extends React.Component<{}, {}> {
 				isLightDismiss
 				isOpen={user.visible}
 				onDismiss={() => (user.visible = false)}
-				headerText="Your account"
-				onRenderHeader={() => {
-					return (
-						<div className="persona">
-							<Profile
-								name={user.currentDoctor.name}
-								secondaryElement={
-									<div>
-										<Link
-											onClick={() => {
-												API.login.logout();
-											}}
-										>
-											Logout
-										</Link>{' '}
-										<Link
-											className="reset-doctor"
-											onClick={() => {
-												API.login.resetDoctor();
-											}}
-										>
-											Switch Doctor
-										</Link>
-									</div>
-								}
+				onRenderNavigation={() => (
+					<Row className="panel-heading">
+						<Col span={20}>
+							<Profile name={user.currentDoctor.name} size={2} />
+							<Link
+								onClick={() => {
+									API.login.logout();
+								}}
+							>
+								Logout
+							</Link>{' '}
+							<Link
+								className="reset-doctor"
+								onClick={() => {
+									API.login.resetDoctor();
+								}}
+							>
+								Switch Doctor
+							</Link>
+						</Col>
+						<Col span={4} className="close">
+							<IconButton
+								iconProps={{ iconName: 'cancel' }}
+								onClick={() => {
+									user.visible = false;
+								}}
 							/>
-						</div>
-					);
-				}}
+						</Col>
+					</Row>
+				)}
 			>
+				<br />
 				<br />
 				<h3>{this.todayAppointments.length ? `Today's appointments` : 'No Appointments today'}</h3>
 				<div className="appointments-listing">

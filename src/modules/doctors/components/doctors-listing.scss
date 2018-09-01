@@ -1,3 +1,5 @@
+@import "../../../global-styles/shadows.scss";
+
 @media screen and (max-width: 800px) {
 	.doctors-component {
 		padding: 10px;
@@ -23,6 +25,16 @@
 .appointments-listing {
 	padding-top: 13px;
 	padding-bottom: 20px;
+}
+
+.panel-heading {
+	padding: 15px 25px;
+	background: #fff;
+	z-index: 9999;
+	@include box_shadow(2);
+	.close {
+		text-align: right;
+	}
 }
 
 @media (max-width: 1200px) {
