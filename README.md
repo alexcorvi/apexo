@@ -10,6 +10,9 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+### 1.5.2
+- Minor improvements concerning responsiveness
+
 ### 1.5.1
 - removed ant.design dependency
 
