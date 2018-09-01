@@ -35,6 +35,14 @@ export function loadDemoData() {
 			if (this.readyState === 4) {
 				const demoData = Http.responseText;
 				restoreFromBase64(demoData);
+
+				appointmentsData.appointments.list.forEach((appointment, i) => {
+					appointmentsData.appointments.list[i].date = randomDate();
+					appointmentsData.appointments.list[i].doctorsID = [
+						doctorsData.doctors.list[randomDoctorIndex()]._id
+					];
+				});
+
 				localStorage.setItem('doctor_id', '89ab37f032d6f1b11512');
 				resolve();
 			}

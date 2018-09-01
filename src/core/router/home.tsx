@@ -65,7 +65,7 @@ export class Home extends React.Component<{}, {}> {
 					</div>
 					<Row gutter={12}>
 						<Col md={12}>
-							<h3>Today's Appointments</h3>
+							<h3 className="appointments-table-heading">Today's Appointments</h3>
 							<br />
 							<table className="ms-table">
 								<thead>
@@ -78,17 +78,26 @@ export class Home extends React.Component<{}, {}> {
 									{this.todayAppointments.map((appointment) => (
 										<tr key={appointment._id} className="home-td">
 											<td>
-												{<TreatmentLink id={appointment.treatmentID} />}
+												{<TreatmentLink id={appointment.treatmentID} />} <br />
 												{<PatientLink id={appointment.patientID} />}
 											</td>
 											<td>
 												{appointment.doctors.map((operator) => (
-													<Profile
-														key={operator._id}
-														name={operator.name}
-														size={3}
-														onClick={() => {}}
-													/>
+													<div>
+														<Col xxl={0} xl={0} lg={0} md={0} sm={0} xs={24}>
+															<div key={operator._id} className="m-t-5 fs-11">
+																<Icon iconName="Contact" /> Dr. {operator.name}
+															</div>
+														</Col>
+														<Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={0}>
+															<Profile
+																key={operator._id}
+																name={operator.name}
+																size={3}
+																onClick={() => {}}
+															/>
+														</Col>
+													</div>
 												))}
 											</td>
 										</tr>
@@ -103,7 +112,7 @@ export class Home extends React.Component<{}, {}> {
 							)}
 						</Col>
 						<Col md={12}>
-							<h3>Tomorrow's Appointments</h3>
+							<h3 className="appointments-table-heading">Tomorrow's Appointments</h3>
 							<br />
 							<table className="ms-table">
 								<thead>

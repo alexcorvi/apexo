@@ -191,7 +191,7 @@ export class DoctorsListing extends React.Component<{}, {}> {
 											name={this.doctor.name}
 											secondaryText={this.doctor.email}
 											tertiaryText={this.doctor.phone}
-											size={2}
+											size={3}
 										/>
 									) : (
 										<p />

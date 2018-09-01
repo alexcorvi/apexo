@@ -77,7 +77,7 @@ export class AppointmentEditor extends React.Component<
 				isLightDismiss={true}
 				onDismiss={this.props.onDismiss}
 				onRenderNavigation={() => {
-					if (this.props.appointment === null) {
+					if (!this.props.appointment) {
 						return <div />;
 					} else {
 						return (

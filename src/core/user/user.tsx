@@ -38,22 +38,29 @@ export class UserComponent extends React.Component<{}, {}> {
 				onRenderNavigation={() => (
 					<Row className="panel-heading">
 						<Col span={20}>
-							<Profile name={user.currentDoctor.name} size={2} />
-							<Link
-								onClick={() => {
-									API.login.logout();
-								}}
-							>
-								Logout
-							</Link>{' '}
-							<Link
-								className="reset-doctor"
-								onClick={() => {
-									API.login.resetDoctor();
-								}}
-							>
-								Switch Doctor
-							</Link>
+							<Profile
+								name={user.currentDoctor.name}
+								size={3}
+								secondaryElement={
+									<div>
+										<Link
+											onClick={() => {
+												API.login.logout();
+											}}
+										>
+											Logout
+										</Link>{' '}
+										<Link
+											className="reset-doctor"
+											onClick={() => {
+												API.login.resetDoctor();
+											}}
+										>
+											Switch Doctor
+										</Link>
+									</div>
+								}
+							/>
 						</Col>
 						<Col span={4} className="close">
 							<IconButton

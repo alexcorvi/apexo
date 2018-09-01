@@ -10,6 +10,12 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+### 1.5.5
+- Consistencies with panel headings
+- Solved few responsiveness issues
+- Random dates for appointments on demo
+- Fixed minor bugs
+
 ### 1.5.4
 - Fixed few bugs
 
