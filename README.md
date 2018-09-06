@@ -10,6 +10,16 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+### 1.6.0
+- Consistent and responsive experience across all small screens
+- Consistent experience across modules
+- Consistent data manipulation experience
+- Fixed bug: labeled appointments in safari
+- Fixed bug: profit percentage calculation
+- New feature: Expenses per unit
+- New feature: hide/show doctor contact details
+- New feature: prescriptions units per time
+
 ### 1.5.5
 - Consistencies with panel headings
 - Solved few responsiveness issues
