@@ -27,11 +27,14 @@ import { observer } from 'mobx-react';
 import t4mat from 't4mat';
 import { patientsData, patientsComponents } from '../../patients';
 import { genderToString } from '../../patients/data/enum.gender';
+import { OrthoSingle } from '.';
 
 @observer
 export class OrthoList extends React.Component<{}, {}> {
 	@observable showAdditionPanel: boolean = false;
 	@observable newPatientName: string = '';
+
+	@observable selectedCaseID: string = '';
 
 	render() {
 		return (
@@ -54,11 +57,12 @@ export class OrthoList extends React.Component<{}, {}> {
 											name={patient.name}
 											secondaryElement={<span>{genderToString(patient.gender)}</span>}
 											tertiaryText={`${patient.age} years old`}
+											size={matchMedia('(max-width: 767px)').matches ? 3 : undefined}
 										/>
 									),
 									className: 'no-label',
 									onClick: () => {
-										API.router.go([ 'orthodontic', orthoCase._id ]);
+										this.selectedCaseID = orthoCase._id;
 									}
 								},
 								{
@@ -69,7 +73,7 @@ export class OrthoList extends React.Component<{}, {}> {
 								{
 									dataValue: (patient.nextAppointment || { date: 0 }).date,
 									component: patient.nextAppointment ? (
-										<AppointmentThumb appointment={patient.nextAppointment} />
+										<AppointmentThumb small appointment={patient.nextAppointment} />
 									) : (
 										'Not registered'
 									),
@@ -137,6 +141,7 @@ export class OrthoList extends React.Component<{}, {}> {
 						Add New
 					</PrimaryButton>
 				</Panel>
+				<OrthoSingle id={this.selectedCaseID} onDismiss={() => (this.selectedCaseID = '')} />
 			</div>
 		);
 	}

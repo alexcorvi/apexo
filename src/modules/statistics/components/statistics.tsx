@@ -10,6 +10,7 @@ import { observer } from 'mobx-react';
 import { round } from '../../../assets/utils/round';
 import { statistics } from '../data';
 import { data } from '../../';
+import { Section } from '../../../assets/components/section/section';
 
 @observer
 export class StatisticsComponent extends React.Component<{}, {}> {
@@ -62,53 +63,55 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 					</div>
 				</div>
 				<div className="container-fluid m-t-20 quick">
-					<Row>
-						<Col sm={6} xs={12}>
-							<label>
-								Appointments:{' '}
-								<ColoredLabel
-									text={round(statistics.selectedAppointments.length).toString()}
-									type={LabelType.primary}
-								/>
-							</label>
-						</Col>
-						<Col sm={6} xs={12}>
-							<label>
-								Payments:{' '}
-								<ColoredLabel
-									text={
-										data.settingsData.settings.getSetting('currencySymbol') +
-										round(statistics.totalPayments).toString()
-									}
-									type={LabelType.warning}
-								/>
-							</label>
-						</Col>
-						<Col sm={6} xs={12}>
-							<label>
-								Expenses:{' '}
-								<ColoredLabel
-									text={
-										data.settingsData.settings.getSetting('currencySymbol') +
-										round(statistics.totalExpenses).toString()
-									}
-									type={LabelType.danger}
-								/>
-							</label>
-						</Col>
-						<Col sm={6} xs={12}>
-							<label>
-								Profits:{' '}
-								<ColoredLabel
-									text={
-										data.settingsData.settings.getSetting('currencySymbol') +
-										round(statistics.totalProfits).toString()
-									}
-									type={LabelType.success}
-								/>
-							</label>
-						</Col>
-					</Row>
+					<Section title="Quick stats" showByDefault>
+						<Row>
+							<Col sm={6} xs={12}>
+								<label>
+									Appointments:{' '}
+									<ColoredLabel
+										text={round(statistics.selectedAppointments.length).toString()}
+										type={LabelType.primary}
+									/>
+								</label>
+							</Col>
+							<Col sm={6} xs={12}>
+								<label>
+									Payments:{' '}
+									<ColoredLabel
+										text={
+											data.settingsData.settings.getSetting('currencySymbol') +
+											round(statistics.totalPayments).toString()
+										}
+										type={LabelType.warning}
+									/>
+								</label>
+							</Col>
+							<Col sm={6} xs={12}>
+								<label>
+									Expenses:{' '}
+									<ColoredLabel
+										text={
+											data.settingsData.settings.getSetting('currencySymbol') +
+											round(statistics.totalExpenses).toString()
+										}
+										type={LabelType.danger}
+									/>
+								</label>
+							</Col>
+							<Col sm={6} xs={12}>
+								<label>
+									Profits:{' '}
+									<ColoredLabel
+										text={
+											data.settingsData.settings.getSetting('currencySymbol') +
+											round(statistics.totalProfits).toString()
+										}
+										type={LabelType.success}
+									/>
+								</label>
+							</Col>
+						</Row>
+					</Section>
 				</div>
 				<div className="charts container-fluid">
 					<div className="row">
@@ -118,11 +121,9 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 									key={index + chart.name}
 									className={'chart-wrapper ' + (chart.className || 'col-xs-12 col-md-5 col-lg-4')}
 								>
-									<div className="chart">
-										<div className="graph">{<chart.Component />}</div>
-										<div className="name">{chart.name}</div>
-										<div className="description">{chart.description}</div>
-									</div>
+									<Section title={chart.name} showByDefault>
+										<chart.Component />
+									</Section>
 								</div>
 							);
 						})}

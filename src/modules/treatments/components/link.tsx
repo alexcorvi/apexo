@@ -2,17 +2,19 @@ import './link.scss';
 
 import * as React from 'react';
 
-import { Persona, PersonaSize } from 'office-ui-fabric-react/lib/Persona';
+import { Persona, PersonaSize, Icon } from 'office-ui-fabric-react';
 
 import { API } from '../../../core';
 import { treatmentsData } from '../../../modules/treatments';
 import { generateID } from '../../../assets/utils/generate-id';
 import { computed, observable } from 'mobx';
+import { settingsData } from '../../settings';
 
 interface Props {
 	id: string;
 	small?: boolean;
 	notClickable?: boolean;
+	showExpenses?: boolean;
 }
 
 export class TreatmentLink extends React.Component<Props, {}> {
@@ -33,11 +35,24 @@ export class TreatmentLink extends React.Component<Props, {}> {
 	}
 
 	render() {
+		if (!this.found) {
+			return <span />;
+		}
 		return (
 			<Persona
 				className={'treatment-link'}
 				text={this.type}
-				size={this.props.small ? PersonaSize.extraExtraSmall : PersonaSize.extraSmall}
+				size={this.props.small ? PersonaSize.extraExtraSmall : 3}
+				onRenderInitials={() => <Icon iconName="Cricket" />}
+				secondaryText={
+					this.props.showExpenses ? (
+						`Expenses: ${settingsData.settings.getSetting(
+							'currencySymbol'
+						)}${this.found.expenses.toString()} per unit`
+					) : (
+						''
+					)
+				}
 				onClick={() => {
 					if (!this.props.notClickable && this.found) {
 						API.router.go([ 'treatments', this.props.id ]);

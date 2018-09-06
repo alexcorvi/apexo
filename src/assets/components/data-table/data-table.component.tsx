@@ -32,7 +32,9 @@ interface Props {
 export class DataTable extends React.Component<Props, {}> {
 	get sortableValues() {
 		return this.props.rows.map((row) => {
-			return row.cells[this.currentColIndex].dataValue;
+			return isNaN(Number(row.cells[this.currentColIndex].dataValue))
+				? row.cells[this.currentColIndex].dataValue
+				: Number(row.cells[this.currentColIndex].dataValue);
 		});
 	}
 	@observable currentColIndex: number = 0;

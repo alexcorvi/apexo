@@ -2,8 +2,18 @@ import './single.scss';
 
 import * as React from 'react';
 
-import { DatePicker, Dropdown, Icon, Panel, PanelType, PrimaryButton, TextField, Toggle } from 'office-ui-fabric-react';
-import { Gender, ISOTeethArr, Patient, ToothCondition, patients } from '../../data';
+import {
+	DatePicker,
+	Dropdown,
+	Icon,
+	Panel,
+	PanelType,
+	PrimaryButton,
+	TextField,
+	Toggle,
+	IconButton
+} from 'office-ui-fabric-react';
+import { Gender, ISOTeethArr, Patient, ToothCondition, patients, genderToString } from '../../data';
 import { Label, LabelType, getRandomLabelType } from '../../../../assets/components/label/label.component';
 import { TeethDeciduousChart, TeethPermanentChart } from '../index';
 import { computed, observable } from 'mobx';
@@ -21,17 +31,11 @@ import { Row, Col } from '../../../../assets/components/grid/index';
 import { DentalHistory } from '../dental-history/dental-history';
 import { PatientDetails } from '../patient-details/patient-details';
 import { PatientAppointments } from '../patient-appointments/patient-appointments';
+import { Profile } from '../../../../assets/components/profile/profile';
+import { Section } from '../../../../assets/components/section/section';
 
 @observer
-export class SinglePatient extends React.Component<{}, {}> {
-	/**
-	 * requested ID of the patient
-	 * 
-	 * @type {string}
-	 * @memberof SinglePatient
-	 */
-	@observable requestedID: string = '';
-
+export class SinglePatient extends React.Component<{ id: string; onDismiss: () => void }, {}> {
 	/**
 	 * patient index
 	 * 
@@ -40,7 +44,7 @@ export class SinglePatient extends React.Component<{}, {}> {
 	 */
 	@computed
 	get patientIndex() {
-		return patients.findIndexByID(this.requestedID);
+		return patients.findIndexByID(this.props.id);
 	}
 
 	/**
@@ -54,33 +58,52 @@ export class SinglePatient extends React.Component<{}, {}> {
 		return patients.list[this.patientIndex] || new Patient();
 	}
 
-	/**
-	 * When the component mounts make the requested ID by current location
-	 * 
-	 * @memberof SinglePatient
-	 */
-	componentWillMount() {
-		this.requestedID = API.router.currentLocation.split('/')[1];
-	}
-
 	render() {
 		return (
-			<div className="single-patient-component p-15 p-l-10 p-r-10 p-t-5">
-				<Row gutter={8}>
-					<Col md={8}>
-						<section>
-							<PatientDetails patient={this.patient} />
-						</section>
-					</Col>
-					<Col md={16}>
-						<section>
-							<DentalHistory patient={this.patient} />
-						</section>
-						<section>
-							<PatientAppointments patient={this.patient} />
-						</section>
-					</Col>
-				</Row>
+			<div className="single-patient-component">
+				<Panel
+					isOpen={this.patientIndex !== -1}
+					type={PanelType.medium}
+					closeButtonAriaLabel="Close"
+					isLightDismiss={true}
+					onDismiss={this.props.onDismiss}
+					onRenderNavigation={() => {
+						return (
+							<Row className="panel-heading">
+								<Col span={22}>
+									<Profile
+										name={this.patient.name}
+										secondaryElement={
+											<span>
+												Patient, {genderToString(this.patient.gender)} - {this.patient.age}{' '}
+												years old
+											</span>
+										}
+										size={3}
+									/>
+								</Col>
+								<Col span={2} className="close">
+									<IconButton
+										iconProps={{ iconName: 'cancel' }}
+										onClick={() => {
+											this.props.onDismiss();
+										}}
+									/>
+								</Col>
+							</Row>
+						);
+					}}
+				>
+					<Section title="Patient Details" showByDefault>
+						<PatientDetails hideTitle patient={this.patient} />
+					</Section>
+					<Section title="Dental History" showByDefault>
+						<DentalHistory hideTitle patient={this.patient} />
+					</Section>
+					<Section title="Appointments" showByDefault>
+						<PatientAppointments hideTitle patient={this.patient} />
+					</Section>
+				</Panel>
 			</div>
 		);
 	}

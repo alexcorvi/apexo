@@ -1,52 +1,6 @@
 @import "../../global-styles/shadows.scss";
 
 .home {
-	padding-top: 15px;
-	.item {
-		cursor: pointer;
-		transition: 0.4s all;
-		margin-bottom: 20px;
-		padding: 25px;
-		text-align: center;
-		background: #fff;
-		@include box_shadow(1);
-		&:hover {
-			@include box_shadow(3);
-		}
-		i {
-			font-size: 50px;
-		}
-		.title {
-			text-transform: capitalize;
-		}
-	}
-
-	.date-container {
-		margin-top: 10px;
-		.home-date {
-			float: left;
-			font-size: 48px;
-			p {
-				margin-top: 15px;
-				margin-right: 15px;
-			}
-		}
-		.textual {
-			text-align: center;
-			float: left;
-		}
-		.day-name {
-			font-size: 22px;
-			margin-top: 6px;
-		}
-	}
-
-	.home-time {
-		text-align: right;
-		font-size: 20px;
-		margin-top: 30px;
-		letter-spacing: 6px;
-	}
 	.home-td {
 		border-bottom: 1px solid rgb(245, 245, 245);
 	}
@@ -60,7 +14,6 @@
 		z-index: -10;
 		font-style: italic;
 	}
-
 	.appointments-table-heading {
 		background: #fff;
 		margin: 0;

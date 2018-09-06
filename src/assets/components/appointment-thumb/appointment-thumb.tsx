@@ -116,12 +116,15 @@ export class AppointmentThumb extends React.Component<
 				{this.props.hideTreatment ? (
 					''
 				) : (
-					<treatmentsComponents.TreatmentLink small={this.props.small} id={treatmentID} />
+					<div className="m-b-5">
+						<treatmentsComponents.TreatmentLink notClickable small={this.props.small} id={treatmentID} />
+					</div>
 				)}
 				{this.props.hideDate ? (
 					''
 				) : (
 					<appointmentsComponents.DateLink
+						notClickable
 						className="hidden-xs"
 						time={this.props.appointment.date}
 						format="{d}/{m}/{yyyy} ({RR})"

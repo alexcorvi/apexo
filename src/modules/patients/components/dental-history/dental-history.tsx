@@ -2,7 +2,17 @@ import './dental-history.scss';
 
 import * as React from 'react';
 
-import { DatePicker, Dropdown, Icon, Panel, PanelType, PrimaryButton, TextField, Toggle } from 'office-ui-fabric-react';
+import {
+	DatePicker,
+	Dropdown,
+	Icon,
+	Panel,
+	PanelType,
+	PrimaryButton,
+	TextField,
+	Toggle,
+	IconButton
+} from 'office-ui-fabric-react';
 import { Gender, ISOTeethArr, Patient, ToothCondition, patients, conditionToColor } from '../../data';
 import { Label, LabelType, getRandomLabelType } from '../../../../assets/components/label/label.component';
 import { TeethDeciduousChart, TeethPermanentChart } from '../index';
@@ -18,6 +28,7 @@ import { convert } from '../../../../assets/utils/teeth-numbering-systems';
 import { observer } from 'mobx-react';
 import { treatmentsData } from '../../../treatments';
 import { Row, Col } from '../../../../assets/components/grid/index';
+import { Profile } from '../../../../assets/components/profile/profile';
 
 @observer
 export class DentalHistory extends React.Component<{ patient: Patient; hideTitle?: boolean }, {}> {
@@ -80,37 +91,46 @@ export class DentalHistory extends React.Component<{ patient: Patient; hideTitle
 				<Panel
 					isOpen={!!this.props.patient.teeth[this.viewToothISO]}
 					type={PanelType.smallFixedFar}
-					headerText={
-						this.props.patient.teeth[this.viewToothISO] ? (
-							this.props.patient.teeth[this.viewToothISO].Name.toUpperCase()
-						) : (
-							''
-						)
-					}
 					closeButtonAriaLabel="Close"
 					isLightDismiss={true}
 					onDismiss={() => (this.viewToothISO = 0)}
+					onRenderNavigation={() => {
+						const tooth = this.props.patient.teeth[this.viewToothISO];
+
+						return (
+							<Row className="panel-heading">
+								<Col span={22}>
+									<Profile
+										name={`ISO: ${tooth ? tooth.ISO : ''} - Universal: ${tooth
+											? tooth.Universal
+											: ''}`}
+										secondaryElement={
+											<span>
+												{tooth ? tooth.Name.split(' ').filter((x, i) => i).join(' ') : ''}
+											</span>
+										}
+										onRenderInitials={() => (
+											<span className="palmer">{tooth ? tooth.Palmer : ''}</span>
+										)}
+										size={3}
+									/>
+								</Col>
+								<Col span={2} className="close">
+									<IconButton
+										iconProps={{ iconName: 'cancel' }}
+										onClick={() => {
+											this.viewToothISO = 0;
+										}}
+									/>
+								</Col>
+							</Row>
+						);
+					}}
 				>
+					<br />
+					<br />
 					{this.props.patient.teeth[this.viewToothISO] ? (
 						<div className="tooth-details">
-							<Label type={LabelType.primary} text="WHO ISO Notation System" />
-							<Label
-								type={LabelType.info}
-								text={this.props.patient.teeth[this.viewToothISO].ISO.toString()}
-							/>
-							<br />
-							<Label type={LabelType.primary} text="Universal Notation System" />
-							<Label
-								type={LabelType.info}
-								text={this.props.patient.teeth[this.viewToothISO].Universal.toString()}
-							/>
-							<br />
-							<Label type={LabelType.primary} text="Palmer Notation System" />
-							<Label
-								type={LabelType.info}
-								text={this.props.patient.teeth[this.viewToothISO].Palmer.toString()}
-							/>
-							<br />
 							<Dropdown
 								placeHolder="Condition"
 								onChanged={(newVal: any) => {

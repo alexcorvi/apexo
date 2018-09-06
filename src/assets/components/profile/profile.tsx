@@ -1,6 +1,13 @@
 import * as React from 'react';
 
-import { CommandBar, Persona, PersonaPresence, PersonaSize } from 'office-ui-fabric-react';
+import {
+	CommandBar,
+	Persona,
+	PersonaPresence,
+	PersonaSize,
+	IRenderFunction,
+	IPersonaSharedProps
+} from 'office-ui-fabric-react';
 
 import { observer } from 'mobx-react';
 
@@ -15,6 +22,7 @@ export class Profile extends React.Component<
 		className?: string;
 		style?: React.CSSProperties;
 		secondaryElement?: JSX.Element;
+		onRenderInitials?: IRenderFunction<IPersonaSharedProps>;
 	},
 	{}
 > {
@@ -38,6 +46,7 @@ export class Profile extends React.Component<
 				text={this.props.name}
 				secondaryText={this.props.secondaryText}
 				tertiaryText={this.props.tertiaryText}
+				onRenderInitials={this.props.onRenderInitials}
 			/>
 		);
 	}

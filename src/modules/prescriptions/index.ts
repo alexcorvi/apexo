@@ -8,7 +8,7 @@ export const register = {
 	async register() {
 		API.router.register(
 			prescriptionsData.namespace,
-			/^prescriptions\/?$/,
+			/^prescriptions/,
 			prescriptionsComponents.PrescriptionsTable,
 			() => !!settingsData.settings.getSetting('module_prescriptions')
 		);

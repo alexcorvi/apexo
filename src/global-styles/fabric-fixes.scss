@@ -115,19 +115,6 @@ h5 {
 				display: block;
 				margin: 0 auto;
 				margin-top: 15px;
-				@include box_shadow(2);
-				td:not(.no-label):before {
-					content: attr(data-head);
-					float: left;
-					font-size: 12px;
-					text-transform: uppercase;
-					font-weight: bold;
-					padding: 13px;
-					clear: both;
-					background: #f5f5f5;
-					min-width: 130px;
-					text-align: left;
-				}
 				td {
 					display: block;
 					text-align: right;
@@ -144,16 +131,6 @@ h5 {
 	.ms-BasePicker-input {
 		height: auto;
 	}
-}
-
-.ms-Persona.treatment-link {
-	background: #eeeeee;
-	transition: 0.4s all;
-}
-
-.ms-Persona.treatment-link:hover {
-	@include box_shadow(4);
-	background: #fff;
 }
 
 .ms-Persona.treatment-link.ms-Persona--xxs {
@@ -192,4 +169,8 @@ h5 {
 
 .ms-TextField {
 	margin-bottom: 10px !important;
+}
+
+.ms-Panel-content {
+	padding-top: 35px;
 }

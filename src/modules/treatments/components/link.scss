@@ -1,16 +1,7 @@
-@import "../../../global-styles/shadows.scss";
 .treatment-link {
-	margin-bottom: 7px !important;
-	background: #fafafa;
 	display: inline-flex !important;
 	.ms-Persona-imageArea {
 		border-radius: 0 !important;
-	}
-	&:hover {
-		cursor: pointer;
-		.ms-Persona-primaryText {
-			color: #2196f3;
-		}
 	}
 	.ms-Persona-initials {
 		border-radius: 0;

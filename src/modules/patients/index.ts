@@ -5,8 +5,7 @@ import { API } from '../../core';
 
 export const register = {
 	async register() {
-		API.router.register(patientsData.namespace, /^patients\/?$/, patientsComponents.PatientsListing);
-		API.router.register(patientsData.namespace, /^patients\/\w+\/?$/, patientsComponents.SinglePatient);
+		API.router.register(patientsData.namespace, /^patients\/?/, patientsComponents.PatientsListing);
 		API.menu.items.push({
 			icon: 'ContactCard',
 			name: patientsData.namespace,

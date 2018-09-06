@@ -1,4 +1,4 @@
-import { TreatmentPlanAppliance, FacialProfile, Lips, OralHygiene } from './class.ortho';
+import { FacialProfile, Lips, OralHygiene } from './class.ortho';
 
 export interface CaseJSON {
 	_id: string;
@@ -20,7 +20,7 @@ export interface CaseJSON {
 	problemsList: string[];
 	treatmentPlan_extraction: number[];
 	treatmentPlan_fill: number[];
-	treatmentPlan_appliance: TreatmentPlanAppliance[];
+	treatmentPlan_appliance: string[];
 	crossScissorBite: number[];
 	orthoGallery: string[];
 }

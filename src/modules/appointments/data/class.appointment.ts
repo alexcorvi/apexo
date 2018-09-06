@@ -51,6 +51,8 @@ export class Appointment {
 	 */
 	@observable treatmentID: string = (treatmentsData.treatments.list[0] || { _id: '' })._id;
 
+	@observable units: number = 1;
+
 	/**
 	 * Patient ID
 	 * 
@@ -173,7 +175,7 @@ export class Appointment {
 				return 0;
 			}
 		}
-		return this.treatment.expenses;
+		return this.treatment.expenses * this.units;
 	}
 
 	/**
@@ -206,7 +208,7 @@ export class Appointment {
 	 */
 	@computed
 	get profitPercentage() {
-		return this.profit / this.totalExpenses;
+		return this.profit / this.paidAmount;
 	}
 
 	/**
@@ -228,7 +230,7 @@ export class Appointment {
 	 */
 	@computed
 	get dueToday() {
-		return this.sameDay(new Date(this.todayDate()), new Date(this.date)) && !this.done;
+		return this.sameDay(new Date(this.todayTimestamp()), new Date(this.date)) && !this.done;
 	}
 
 	/**
@@ -239,7 +241,10 @@ export class Appointment {
 	 */
 	@computed
 	get dueTomorrow() {
-		return this.sameDay(new Date(new Date(this.todayDate()).getTime() + 1000 * 60 * 60 * 24), new Date(this.date));
+		return this.sameDay(
+			new Date(new Date(this.todayTimestamp()).getTime() + 1000 * 60 * 60 * 24),
+			new Date(this.date)
+		);
 	}
 
 	/**
@@ -250,7 +255,7 @@ export class Appointment {
 	 */
 	@computed
 	get missed() {
-		return new Date(this.todayDate()).getTime() - new Date(this.date).getTime() > 0 && !this.done;
+		return this.todayTimestamp() - new Date(this.date).getTime() > 0 && !this.done && !this.dueToday;
 	}
 
 	/**
@@ -301,6 +306,7 @@ export class Appointment {
 		this.complaint = json.complaint;
 		this.doctorsID = json.doctorsID;
 		this.records = json.records;
+		this.units = json.units || 1;
 	}
 
 	/**
@@ -324,7 +330,8 @@ export class Appointment {
 			diagnosis: this.diagnosis,
 			complaint: this.complaint,
 			doctorsID: Array.from(this.doctorsID),
-			records: Array.from(this.records)
+			records: Array.from(this.records),
+			units: this.units
 		};
 	}
 
@@ -366,8 +373,7 @@ export class Appointment {
 	 * @returns 
 	 * @memberof Appointment
 	 */
-	private todayDate() {
-		const d = new Date();
-		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+	private todayTimestamp() {
+		return new Date().getTime();
 	}
 }

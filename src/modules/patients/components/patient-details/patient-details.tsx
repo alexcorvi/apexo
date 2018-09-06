@@ -43,103 +43,116 @@ export class PatientDetails extends React.Component<
 			<div className="single-patient-details">
 				{this.props.hideTitle ? '' : <h3>Patient Details</h3>}
 				<div className="basic-info">
-					<div className="">
-						<div className="name">
-							<TextField
-								label="Name"
-								value={this.props.patient.name}
-								onChanged={(name) => (this.props.patient.name = name)}
-							/>
-						</div>
-						<div className="birth">
-							<TextField
-								label="Birth"
-								value={this.props.patient.birthYear.toString()}
-								onChanged={(year) => (this.props.patient.birthYear = Number(year))}
-								type="number"
-							/>
-						</div>
-						<div className="gender">
-							<Dropdown
-								label="Gender"
-								placeHolder="Gender"
-								selectedKey={this.props.patient.gender === Gender.male ? 'male' : 'female'}
-								options={[ { key: 'male', text: 'Male' }, { key: 'female', text: 'Female' } ]}
-								onChanged={(val) => {
-									if (val.key === 'male') {
-										this.props.patient.gender = Gender.male;
-									} else {
-										this.props.patient.gender = Gender.female;
-									}
-								}}
-							/>
-						</div>
-					</div>
-					<TextField
-						label="Email"
-						value={this.props.patient.email}
-						onChanged={(email) => (this.props.patient.email = email)}
-					/>
-					<TextField
-						label="Phone"
-						value={this.props.patient.phone}
-						onChanged={(phone) => (this.props.patient.phone = phone)}
-						type="number"
-					/>
-					<TextField
-						label="Address"
-						value={this.props.patient.address}
-						onChanged={(address) => (this.props.patient.address = address)}
-					/>
-					<MSLabel>Labels</MSLabel>
-					<TagInput
-						className="patient-tags"
-						placeholder="Labels"
-						options={[ '' ]
-							.concat(...patients.list.map((patient) => patient.labels.map((label) => label.text)))
-							.map((x) => ({ key: x, text: x }))}
-						onChange={(newVal) => {
-							this.props.patient.labels = newVal.map((item) => {
-								return {
-									text: item.text,
-									type: getRandomLabelType(item.text)
-								};
-							});
-						}}
-						value={this.props.patient.labels.map((label) => ({
-							key: label.text,
-							text: label.text
-						}))}
-					/>
-					<MSLabel className="mh-label">Notes and medical history</MSLabel>
-					<div className="medical-history">
-						<EditableList
-							label="Notes"
-							value={this.props.patient.medicalHistory}
-							onChange={(newVal) => {
-								this.props.patient.medicalHistory = newVal;
-							}}
-							style={{ marginTop: '0' }}
+					<div className="name">
+						<TextField
+							label="Name"
+							value={this.props.patient.name}
+							onChanged={(name) => (this.props.patient.name = name)}
 						/>
 					</div>
+					<Row gutter={6}>
+						<Col sm={12}>
+							<div className="birth">
+								<TextField
+									label="Birth"
+									value={this.props.patient.birthYear.toString()}
+									onChanged={(year) => (this.props.patient.birthYear = Number(year))}
+									type="number"
+								/>
+							</div>
+						</Col>
+						<Col sm={12}>
+							<div className="gender">
+								<Dropdown
+									label="Gender"
+									placeHolder="Gender"
+									selectedKey={this.props.patient.gender === Gender.male ? 'male' : 'female'}
+									options={[ { key: 'male', text: 'Male' }, { key: 'female', text: 'Female' } ]}
+									onChanged={(val) => {
+										if (val.key === 'male') {
+											this.props.patient.gender = Gender.male;
+										} else {
+											this.props.patient.gender = Gender.female;
+										}
+									}}
+								/>
+							</div>
+						</Col>
+					</Row>
+
+					<Row gutter={6}>
+						<Col md={8}>
+							<TextField
+								label="Email"
+								value={this.props.patient.email}
+								onChanged={(email) => (this.props.patient.email = email)}
+							/>
+						</Col>
+						<Col md={8}>
+							<TextField
+								label="Phone"
+								value={this.props.patient.phone}
+								onChanged={(phone) => (this.props.patient.phone = phone)}
+								type="number"
+							/>
+						</Col>
+						<Col md={8}>
+							<TextField
+								label="Address"
+								value={this.props.patient.address}
+								onChanged={(address) => (this.props.patient.address = address)}
+							/>
+						</Col>
+					</Row>
+
+					<Row gutter={6}>
+						<Col md={12}>
+							{' '}
+							<MSLabel>Labels</MSLabel>
+							<TagInput
+								className="patient-tags"
+								placeholder="Labels"
+								options={[ '' ]
+									.concat(
+										...patients.list.map((patient) => patient.labels.map((label) => label.text))
+									)
+									.map((x) => ({ key: x, text: x }))}
+								onChange={(newVal) => {
+									this.props.patient.labels = newVal.map((item) => {
+										return {
+											text: item.text,
+											type: getRandomLabelType(item.text)
+										};
+									});
+								}}
+								value={this.props.patient.labels.map((label) => ({
+									key: label.text,
+									text: label.text
+								}))}
+							/>
+						</Col>
+						<Col md={12}>
+							{' '}
+							<MSLabel className="mh-label">Notes and medical history</MSLabel>
+							<div className="medical-history">
+								<EditableList
+									label="Notes"
+									value={this.props.patient.medicalHistory}
+									onChange={(newVal) => {
+										this.props.patient.medicalHistory = newVal;
+									}}
+									style={{ marginTop: '0' }}
+								/>
+							</div>
+						</Col>
+					</Row>
+
 					<Gallery
 						gallery={this.props.patient.gallery}
 						onChange={(list) => {
 							this.props.patient.gallery = list;
 						}}
 					/>
-					<div className="buttons">
-						<PrimaryButton
-							className="delete"
-							text="Delete Patient"
-							iconProps={{ iconName: 'delete' }}
-							onClick={() => {
-								patients.deleteModal(this.props.patient._id);
-								API.router.history(-1);
-							}}
-							key="delete"
-						/>
-					</div>
 				</div>
 			</div>
 		);

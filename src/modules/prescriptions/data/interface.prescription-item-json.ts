@@ -4,4 +4,5 @@ export interface PrescriptionItemJSON {
 	doseInMg: number;
 	timesPerDay: number;
 	form: string;
+	unitsPerTime: number;
 }

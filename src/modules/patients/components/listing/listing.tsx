@@ -12,7 +12,7 @@ import {
 	SearchBox
 } from 'office-ui-fabric-react';
 import { Gender, genderToString, patients } from '../../data';
-
+import { observable, computed } from 'mobx';
 import { API } from '../../../../core';
 import { AppointmentThumb } from '../../../../assets/components/appointment-thumb/appointment-thumb';
 import { DataTable } from '../../../../assets/components/data-table/data-table.component';
@@ -21,12 +21,25 @@ import { Patient } from '../../data';
 import { Profile } from '../../../../assets/components/profile/profile';
 import { commands } from './commands';
 import { observer } from 'mobx-react';
+import { SinglePatient } from '../single/single';
 
 @observer
 export class PatientsListing extends React.Component<{}, {}> {
+	@observable selectedId: string = API.router.currentLocation.split('/')[1];
+
+	@computed
+	get patientIsSelected() {
+		return patients.findIndexByID(this.selectedId) > -1;
+	}
+
 	render() {
 		return (
 			<div className="patients-component p-15 p-l-10 p-r-10">
+				{this.patientIsSelected ? (
+					<SinglePatient id={this.selectedId} onDismiss={() => (this.selectedId = '')} />
+				) : (
+					''
+				)}
 				<DataTable
 					onDelete={(id) => {
 						patients.deleteModal(id);
@@ -43,17 +56,18 @@ export class PatientsListing extends React.Component<{}, {}> {
 										name={patient.name}
 										secondaryElement={<span>{genderToString(patient.gender)}</span>}
 										tertiaryText={`${patient.age} years old`}
+										size={matchMedia('(max-width: 767px)').matches ? 3 : undefined}
 									/>
 								),
 								onClick: () => {
-									API.router.go([ 'patients', patient._id ]);
+									this.selectedId = patient._id;
 								},
 								className: 'no-label'
 							},
 							{
 								dataValue: (patient.lastAppointment || { date: 0 }).date,
 								component: patient.lastAppointment ? (
-									<AppointmentThumb appointment={patient.lastAppointment} />
+									<AppointmentThumb small appointment={patient.lastAppointment} />
 								) : (
 									'Not registered'
 								),
@@ -62,7 +76,7 @@ export class PatientsListing extends React.Component<{}, {}> {
 							{
 								dataValue: (patient.nextAppointment || { date: Infinity }).date,
 								component: patient.nextAppointment ? (
-									<AppointmentThumb appointment={patient.nextAppointment} />
+									<AppointmentThumb small appointment={patient.nextAppointment} />
 								) : (
 									'Not registered'
 								),

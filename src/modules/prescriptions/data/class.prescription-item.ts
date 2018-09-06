@@ -10,9 +10,11 @@ export class PrescriptionItem {
 
 	@observable name: string = '';
 
-	@observable doseInMg: number = 0;
+	@observable unitsPerTime: number = 1;
 
-	@observable timesPerDay: number = 0;
+	@observable doseInMg: number = 500;
+
+	@observable timesPerDay: number = 3;
 
 	@observable form: PrescriptionItemForm = PrescriptionItemForm.capsule;
 
@@ -28,7 +30,8 @@ export class PrescriptionItem {
 			name: this.name,
 			doseInMg: this.doseInMg,
 			timesPerDay: this.timesPerDay,
-			form: itemFormToString(this.form)
+			form: itemFormToString(this.form),
+			unitsPerTime: this.unitsPerTime
 		};
 	}
 
@@ -55,5 +58,6 @@ export class PrescriptionItem {
 		this.doseInMg = json.doseInMg;
 		this.timesPerDay = json.timesPerDay;
 		this.form = stringToItemForm(json.form);
+		this.unitsPerTime = json.unitsPerTime || 1;
 	}
 }

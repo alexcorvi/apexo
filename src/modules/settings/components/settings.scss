@@ -3,7 +3,6 @@
 .settings-component {
 	font-size: 13px;
 	background: #fff;
-	@include box_shadow(2);
 	padding: 20px;
 	.form {
 		.ms-TextField-prefix {

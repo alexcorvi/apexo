@@ -36,29 +36,9 @@ export class Home extends React.Component<{}, {}> {
 
 	render() {
 		return (
-			<div className="home  p-15 p-l-10 p-r-10">
+			<div className="home p-l-10 p-r-10">
 				<div className="container">
-					<Row gutter={12}>
-						<Col xl={10} md={9} sm={24} xs={24}>
-							<Profile name={user.currentDoctor ? user.currentDoctor.name : ''} />
-						</Col>
-						<Col xl={4} md={6} sm={0} xs={0} className="date-container">
-							<Row gutter={12}>
-								<div className="home-date">
-									<p>{this.time.day}</p>
-								</div>
-								<div className="textual">
-									<p className="day-name">{this.time.dayName}</p>
-									<p>{this.time.monthName}</p>
-								</div>
-							</Row>
-						</Col>
-						<Col xl={10} md={9} sm={0} xs={0}>
-							<p className="home-time">{this.time.time}</p>
-						</Col>
-					</Row>
-					<br />
-					<br />
+					<h2 className="m-b-20">Welcome, Dr. {user.currentDoctor.name}</h2>
 					<hr />
 					<div>
 						<appointmentsByDate.Component />
@@ -78,23 +58,29 @@ export class Home extends React.Component<{}, {}> {
 									{this.todayAppointments.map((appointment) => (
 										<tr key={appointment._id} className="home-td">
 											<td>
-												{<TreatmentLink id={appointment.treatmentID} />} <br />
+												<div className="m-b-5">
+													{<TreatmentLink small id={appointment.treatmentID} notClickable />}
+												</div>
 												{<PatientLink id={appointment.patientID} />}
 											</td>
 											<td>
 												{appointment.doctors.map((operator) => (
-													<div>
+													<div key={operator._id}>
 														<Col xxl={0} xl={0} lg={0} md={0} sm={0} xs={24}>
 															<div key={operator._id} className="m-t-5 fs-11">
-																<Icon iconName="Contact" /> Dr. {operator.name}
+																Dr. {operator.name}
 															</div>
 														</Col>
 														<Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={0}>
 															<Profile
 																key={operator._id}
-																name={operator.name}
+																name={'Dr. ' + operator.name}
+																onRenderInitials={() => <span>{operator.name[0]}</span>}
 																size={3}
-																onClick={() => {}}
+																onClick={() => {
+																	API.router.go([ 'doctors', operator._id ]);
+																}}
+																className="pointer"
 															/>
 														</Col>
 													</div>
@@ -125,24 +111,28 @@ export class Home extends React.Component<{}, {}> {
 									{this.tomorrowAppointments.map((appointment) => (
 										<tr key={appointment._id} className="home-td">
 											<td>
-												{<TreatmentLink id={appointment.treatmentID} />}
-												<br />
+												<div className="m-b-5">
+													{<TreatmentLink small id={appointment.treatmentID} notClickable />}
+												</div>
 												{<PatientLink id={appointment.patientID} />}
 											</td>
 											<td>
 												{appointment.doctors.map((operator) => (
-													<div>
+													<div key={operator._id}>
 														<Col xxl={0} xl={0} lg={0} md={0} sm={0} xs={24}>
 															<div key={operator._id} className="m-t-5 fs-11">
-																<Icon iconName="Contact" /> Dr. {operator.name}
+																Dr. {operator.name}
 															</div>
 														</Col>
 														<Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={0}>
 															<Profile
 																key={operator._id}
-																name={operator.name}
+																name={'Dr. ' + operator.name}
 																size={3}
-																onClick={() => {}}
+																onRenderInitials={() => <span>{operator.name[0]}</span>}
+																onClick={() => {
+																	API.router.go([ 'doctors', operator._id ]);
+																}}
 															/>
 														</Col>
 													</div>

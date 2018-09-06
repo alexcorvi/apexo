@@ -12,6 +12,7 @@ interface Props {
 	time: number;
 	format: string;
 	className?: string;
+	notClickable: boolean;
 }
 
 export class DateLink extends React.Component<Props, {}> {
@@ -24,6 +25,9 @@ export class DateLink extends React.Component<Props, {}> {
 			<div className={'date-link ' + this.props.className || ''}>
 				<a
 					onClick={() => {
+						if (this.props.notClickable) {
+							return;
+						}
 						API.router.go([ 'appointments', `${y}-${m}-${d}` ]);
 					}}
 				>

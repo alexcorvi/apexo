@@ -103,6 +103,14 @@ export class SettingsComponent extends React.Component<{}, {}> {
 							settings.setSetting('time_tracking', val ? 'enable' : '');
 						}}
 					/>
+					<Toggle
+						onText="Have doctors contact details"
+						offText="Don't have doctors contact details"
+						defaultChecked={!!settings.getSetting('doctor_contact')}
+						onChanged={(val) => {
+							settings.setSetting('doctor_contact', val ? 'enable' : '');
+						}}
+					/>
 				</div>
 
 				<br />

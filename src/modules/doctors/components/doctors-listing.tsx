@@ -25,41 +25,21 @@ import { DataTable } from '../../../assets/components/data-table/data-table.comp
 import { Profile } from '../../../assets/components/profile/profile';
 import { TagInput } from '../../../assets/components/tag-input/tag-input';
 import { observer } from 'mobx-react';
+import { settings } from '../../../modules/settings/data';
+import { Section } from '../../../assets/components/section/section';
 
 @observer
 export class DoctorsListing extends React.Component<{}, {}> {
-	/**
-	 * Selected doctor index to be viewed or edited
-	 * 
-	 * @memberof DoctorsListing
-	* */
-	@observable selectedDoctorIndex = -1;
+	@observable selectedId: string = API.router.currentLocation.split('/')[1];
 
-	@observable selectedAppointmentID = '';
+	@computed
+	get selectedDoctorIndex() {
+		return doctors.getIndexByID(this.selectedId);
+	}
 
-	@observable viewingPastAppointments = false;
-
-	/**
-	 * Selected doctor (MIGHT BE UNDEFINED)
-	 * 
-	 * @readonly
-	 * @memberof DoctorsListing
-	 */
 	@computed
 	get doctor() {
 		return doctors.list[this.selectedDoctorIndex];
-	}
-
-	@computed
-	get appointment() {
-		return appointmentsData.appointments.list[
-			appointmentsData.appointments.getIndexByID(this.selectedAppointmentID)
-		];
-	}
-
-	@computed
-	get listAppointments() {
-		return this.viewingPastAppointments ? this.doctor.pastAppointments : this.doctor.nextAppointments;
 	}
 
 	render() {
@@ -84,19 +64,20 @@ export class DoctorsListing extends React.Component<{}, {}> {
 												secondaryText={doctor.email}
 												tertiaryText={`${doctor.nextAppointments.length} Upcoming appointments`}
 												onClick={() => {
-													this.selectedDoctorIndex = doctors.getIndexByID(doctor._id);
+													this.selectedId = doctor._id;
 												}}
+												size={matchMedia('(max-width: 767px)').matches ? 3 : undefined}
 											/>
 										),
 										onClick: () => {
-											this.selectedDoctorIndex = doctors.getIndexByID(doctor._id);
+											this.selectedId = doctor._id;
 										},
 										className: 'no-label'
 									},
 									{
 										dataValue: (doctor.lastAppointment || { date: 0 }).date,
 										component: doctor.lastAppointment ? (
-											<AppointmentThumb appointment={doctor.lastAppointment} />
+											<AppointmentThumb appointment={doctor.lastAppointment} small />
 										) : (
 											'Not registered'
 										),
@@ -105,7 +86,7 @@ export class DoctorsListing extends React.Component<{}, {}> {
 									{
 										dataValue: (doctor.nextAppointment || { date: Infinity }).date,
 										component: doctor.nextAppointment ? (
-											<AppointmentThumb appointment={doctor.nextAppointment} />
+											<AppointmentThumb appointment={doctor.nextAppointment} small />
 										) : (
 											'Not registered'
 										),
@@ -119,9 +100,9 @@ export class DoctorsListing extends React.Component<{}, {}> {
 									title: 'Add new',
 									name: 'Add New',
 									onClick: () => {
-										const patient = new Doctor();
-										doctors.list.push(patient);
-										this.selectedDoctorIndex = doctors.list.length - 1;
+										const doctor = new Doctor();
+										doctors.list.push(doctor);
+										this.selectedId = doctor._id;
 									},
 									iconProps: {
 										iconName: 'Add'
@@ -158,9 +139,7 @@ export class DoctorsListing extends React.Component<{}, {}> {
 																tertiaryText={`${(doctor.weeksAppointments[index] || [])
 																	.length} appointments for ${dayName.toLowerCase()}`}
 																onClick={() => {
-																	this.selectedDoctorIndex = doctors.getIndexByID(
-																		doctor._id
-																	);
+																	this.selectedId = doctor._id;
 																}}
 															/>
 														);
@@ -181,7 +160,7 @@ export class DoctorsListing extends React.Component<{}, {}> {
 						closeButtonAriaLabel="Close"
 						isLightDismiss={true}
 						onDismiss={() => {
-							this.selectedDoctorIndex = -1;
+							this.selectedId = '';
 						}}
 						onRenderNavigation={() => (
 							<Row className="panel-heading">
@@ -189,7 +168,7 @@ export class DoctorsListing extends React.Component<{}, {}> {
 									{this.doctor.name ? (
 										<Profile
 											name={this.doctor.name}
-											secondaryText={this.doctor.email}
+											secondaryElement={<span>Operating Doctor</span>}
 											tertiaryText={this.doctor.phone}
 											size={3}
 										/>
@@ -201,57 +180,66 @@ export class DoctorsListing extends React.Component<{}, {}> {
 									<IconButton
 										iconProps={{ iconName: 'cancel' }}
 										onClick={() => {
-											this.selectedDoctorIndex = -1;
+											this.selectedId = '';
 										}}
 									/>
 								</Col>
 							</Row>
 						)}
 					>
-						<br />
-						<div className="doctor-editor m-t-20">
-							<div className="doctor-input">
-								<TextField
-									label="Name: "
-									prefix="Dr."
-									value={this.doctor.name}
-									onChanged={(val) => (this.doctor.name = val)}
-								/>
-							</div>
-							<Row gutter={12}>
-								<Col sm={12}>
-									<div className="doctor-input">
-										<TextField
-											label="Phone Number: "
-											value={this.doctor.phone}
-											onChanged={(val) => (this.doctor.phone = val)}
-										/>
-									</div>
-								</Col>
-								<Col sm={12}>
-									<div className="doctor-input">
-										<TextField
-											label="Email: "
-											value={this.doctor.email}
-											onChanged={(val) => (this.doctor.email = val)}
-										/>
-									</div>
-								</Col>
-							</Row>
-							<div className="doctor-input">
-								<label>Days on duty: </label>
-								<TagInput
-									strict={true}
-									placeholder={'Enter day name...'}
-									options={this.doctor.days.map((x) => ({ key: x, text: x }))}
-									onChange={(newVal) => {
-										this.doctor.onDutyDays = newVal.map((x) => x.text);
-									}}
-									value={this.doctor.onDutyDays.map((x) => ({ text: x, key: x }))}
-									sortFunction={(a, b) =>
-										this.doctor.days.indexOf(a.text) - this.doctor.days.indexOf(b.text)}
-								/>
-							</div>
+						<div className="doctor-editor">
+							<Section title="Doctor information" showByDefault>
+								<div className="doctor-input">
+									<TextField
+										label="Name: "
+										prefix="Dr."
+										value={this.doctor.name}
+										onChanged={(val) => (this.doctor.name = val)}
+									/>
+								</div>
+
+								<div className="doctor-input">
+									<label>Days on duty: </label>
+									<TagInput
+										strict={true}
+										placeholder={'Enter day name...'}
+										options={this.doctor.days.map((x) => ({ key: x, text: x }))}
+										onChange={(newVal) => {
+											this.doctor.onDutyDays = newVal.map((x) => x.text);
+										}}
+										value={this.doctor.onDutyDays.map((x) => ({ text: x, key: x }))}
+										sortFunction={(a, b) =>
+											this.doctor.days.indexOf(a.text) - this.doctor.days.indexOf(b.text)}
+									/>
+								</div>
+							</Section>
+
+							{settings.getSetting('doctor_contact') ? (
+								<Section title="Contact Details" showByDefault>
+									<Row gutter={12}>
+										<Col sm={12}>
+											<div className="doctor-input">
+												<TextField
+													label="Phone Number: "
+													value={this.doctor.phone}
+													onChanged={(val) => (this.doctor.phone = val)}
+												/>
+											</div>
+										</Col>
+										<Col sm={12}>
+											<div className="doctor-input">
+												<TextField
+													label="Email: "
+													value={this.doctor.email}
+													onChanged={(val) => (this.doctor.email = val)}
+												/>
+											</div>
+										</Col>
+									</Row>
+								</Section>
+							) : (
+								''
+							)}
 						</div>
 					</Panel>
 				) : (

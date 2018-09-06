@@ -3,11 +3,6 @@ import { generateID } from '../../../assets/utils/generate-id';
 import { patientsData } from '../../patients/index';
 import { CaseJSON } from './interface.ortho-json';
 
-export const ApplianceType = {
-	fixed: 'fixed',
-	removable: 'removable'
-};
-
 export const Lips = {
 	competent: 'competent',
 	incompetent: 'incompetent',
@@ -25,11 +20,6 @@ export const OralHygiene = {
 	bad: 'bad',
 	moderate: 'moderate'
 };
-
-export interface TreatmentPlanAppliance {
-	type: keyof typeof ApplianceType;
-	description: string;
-}
 
 export class OrthoCase {
 	_id: string = generateID();
@@ -99,7 +89,7 @@ export class OrthoCase {
 	@observable problemsList: string[] = [];
 	@observable treatmentPlan_extraction: number[] = [];
 	@observable treatmentPlan_fill: number[] = [];
-	@observable treatmentPlan_appliance: TreatmentPlanAppliance[] = [];
+	@observable treatmentPlan_appliance: string[] = [];
 
 	@observable orthoGallery: string[] = [];
 

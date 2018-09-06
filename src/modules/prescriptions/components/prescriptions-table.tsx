@@ -1,64 +1,46 @@
 import './prescription-table.scss';
 
 import * as React from 'react';
-import * as data from '../data';
 
-import { CommandBar, Dropdown, Icon, TextField } from 'office-ui-fabric-react';
-import { Label, LabelType } from '../../../assets/components/label/label.component';
-
-import { DataTable } from '../../../assets/components/data-table/data-table.component';
-import { commands } from './prescriptions-table.commands';
+import {
+	PrescriptionItem,
+	namespace,
+	prescriptions,
+	itemFormToString,
+	prescriptionItemForms,
+	stringToItemForm
+} from '../data';
+import { Icon, Nav, PrimaryButton, TextField, Panel, PanelType, IconButton, Dropdown } from 'office-ui-fabric-react';
+import { computed, observable } from 'mobx';
+import { API } from '../../../core';
+import { TagInput } from '../../../assets/components/tag-input/tag-input';
+import { escapeRegExp } from '../../../assets/utils/escape-regex';
 import { observer } from 'mobx-react';
-
-enum ValType {
-	number,
-	string
-}
-
-@observer
-export class ItemInput extends React.Component<
-	{
-		item: data.PrescriptionItem;
-		valueKey: string;
-		type: ValType;
-		disabled?: boolean;
-	},
-	{}
-> {
-	render() {
-		let view = this.props.item[this.props.valueKey];
-		if (typeof view === 'number') {
-			view = view.toString();
-		}
-		return (
-			<TextField
-				disabled={this.props.disabled}
-				type={this.props.type === ValType.number ? 'number' : 'text'}
-				value={typeof view !== 'function' ? view : ''}
-				onChanged={(newValue: string) => {
-					const index = data.prescriptions.findIndexByID(this.props.item._id);
-					let casted: any = newValue;
-					if (this.props.item.type === ValType.number) {
-						casted = Number(newValue);
-					} else {
-						casted = newValue.toString();
-					}
-					data.prescriptions.list[index][this.props.valueKey] = casted;
-				}}
-			/>
-		);
-	}
-}
+import { round } from '../../../assets/utils/round';
+import { settingsData } from '../../settings';
+import { Row, Col } from '../../../assets/components/grid/index';
+import { sortArrByProp } from '../../../assets/utils/sort-arr';
+import { PrescriptionLink } from './prescription-link';
+import { appointmentsData } from '../../appointments';
+import { AppointmentThumb } from '../../../assets/components/appointment-thumb/appointment-thumb';
+import { DataTable } from '../../../assets/components/data-table/data-table.component';
+import { Profile } from '../../../assets/components/profile/profile';
+import { Section } from '../../../assets/components/section/section';
 
 @observer
 export class PrescriptionsTable extends React.Component<{}, {}> {
-	dataTable: DataTable | undefined;
-	componentDidMount() {
-		if (!this.dataTable) {
-			return;
-		}
-		// by default data table here should not be sorted
-		this.dataTable.currentColIndex = 4;
+	@observable showMenu: boolean = true;
+
+	@observable selectedID: string = API.router.currentLocation.split('/')[1];
+
+	@computed
+	get selectedIndex() {
+		return prescriptions.list.findIndex((x) => x._id === this.selectedID);
+	}
+
+	@computed
+	get selectedPrescription() {
+		return prescriptions.list[this.selectedIndex];
 	}
 
 	render() {
@@ -66,54 +48,142 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 			<div className="prescriptions-component p-15 p-l-10 p-r-10">
 				<DataTable
 					onDelete={(id) => {
-						data.prescriptions.deleteModal(id);
+						prescriptions.deleteModal(id);
 					}}
-					ref={(c) => (c ? (this.dataTable = c) : '')}
-					className={'prescriptions-data-table'}
-					heads={[ 'Item Name', 'Dose in mg.', 'Form', 'Times Per Day' ]}
-					rows={data.prescriptions.list.map((item) => ({
-						id: item._id,
-						cells: [
-							{
-								dataValue: item.name,
-								component: <ItemInput item={item} valueKey={'name'} type={ValType.string} />
+					commands={[
+						{
+							key: 'addNew',
+							title: 'Add new',
+							name: 'Add New',
+							onClick: () => {
+								const prescription = new PrescriptionItem();
+								prescriptions.list.push(prescription);
+								this.selectedID = prescription._id;
 							},
-							{
-								dataValue: item.doseInMg,
-								component: <ItemInput item={item} valueKey={'doseInMg'} type={ValType.number} />
-							},
-							{
-								dataValue: item.form,
-								component: (
-									<Dropdown
-										className="form-picker"
-										selectedKey={data.itemFormToString(item.form)}
-										options={data.prescriptionItemForms.map((form) => {
-											return {
-												key: form,
-												text: form
-											};
-										})}
-										onChanged={(newValue) => {
-											data.prescriptions.list[
-												data.prescriptions.findIndexByID(item._id)
-											].form = data.stringToItemForm(newValue.text);
+							iconProps: {
+								iconName: 'Add'
+							}
+						}
+					]}
+					heads={[ 'Item name', 'Dose', 'Frequency', 'Form' ]}
+					rows={prescriptions.list.map((prescription) => {
+						return {
+							id: prescription._id,
+							cells: [
+								{
+									dataValue: prescription.name,
+									component: <PrescriptionLink id={prescription._id} />,
+									onClick: () => {
+										this.selectedID = prescription._id;
+									},
+									className: 'no-label'
+								},
+								{
+									dataValue: prescription.doseInMg,
+									component: <span>{prescription.doseInMg} mg</span>,
+									className: 'hidden-xs'
+								},
+								{
+									dataValue: prescription.timesPerDay,
+									component: (
+										<span>
+											{prescription.timesPerDay} X {prescription.unitsPerTime}
+										</span>
+									),
+									className: 'hidden-xs'
+								},
+								{
+									dataValue: prescription.form,
+									component: <span>{itemFormToString(prescription.form)}</span>,
+									className: 'hidden-xs'
+								}
+							]
+						};
+					})}
+				/>
+
+				{this.selectedPrescription ? (
+					<Panel
+						isOpen={!!this.selectedPrescription}
+						type={PanelType.medium}
+						closeButtonAriaLabel="Close"
+						isLightDismiss={true}
+						onDismiss={() => {
+							this.selectedID = '';
+						}}
+						onRenderNavigation={() => (
+							<Row className="panel-heading">
+								<Col span={20}>
+									{this.selectedPrescription ? <PrescriptionLink id={this.selectedID} /> : <p />}
+								</Col>
+								<Col span={4} className="close">
+									<IconButton
+										iconProps={{ iconName: 'cancel' }}
+										onClick={() => {
+											this.selectedID = '';
 										}}
 									/>
-								)
-							},
-							{
-								dataValue: item.timesPerDay,
-								component: <ItemInput item={item} valueKey={'timesPerDay'} type={ValType.number} />
-							},
-							{
-								dataValue: 0,
-								component: <span />
-							}
-						]
-					}))}
-					commands={commands}
-				/>
+								</Col>
+							</Row>
+						)}
+					>
+						<div className="prescription-editor">
+							<Section title="Prescription details" showByDefault>
+								<TextField
+									label="Item name"
+									value={this.selectedPrescription.name}
+									onChanged={(val) => (prescriptions.list[this.selectedIndex].name = val)}
+								/>
+
+								<Row gutter={6}>
+									<Col md={8}>
+										<TextField
+											label="Dosage in mg"
+											type="number"
+											value={this.selectedPrescription.doseInMg.toString()}
+											onChanged={(val) =>
+												(prescriptions.list[this.selectedIndex].doseInMg = Number(val))}
+										/>
+									</Col>
+									<Col md={8}>
+										<TextField
+											label="Times per day"
+											type="number"
+											value={this.selectedPrescription.timesPerDay.toString()}
+											onChanged={(val) =>
+												(prescriptions.list[this.selectedIndex].timesPerDay = Number(val))}
+										/>
+									</Col>
+									<Col md={8}>
+										<TextField
+											label="Units per time"
+											type="number"
+											value={this.selectedPrescription.unitsPerTime.toString()}
+											onChanged={(val) =>
+												(prescriptions.list[this.selectedIndex].unitsPerTime = Number(val))}
+										/>
+									</Col>
+								</Row>
+								<Dropdown
+									label="Item form"
+									className="form-picker"
+									selectedKey={itemFormToString(this.selectedPrescription.form)}
+									options={prescriptionItemForms.map((form) => {
+										return {
+											key: form,
+											text: form
+										};
+									})}
+									onChanged={(newValue) => {
+										prescriptions.list[this.selectedIndex].form = stringToItemForm(newValue.text);
+									}}
+								/>
+							</Section>
+						</div>
+					</Panel>
+				) : (
+					''
+				)}
 			</div>
 		);
 	}

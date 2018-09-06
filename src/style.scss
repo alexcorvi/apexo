@@ -5,11 +5,17 @@
 @import "./global-styles/text-helpers.scss";
 @import "./global-styles/grid-system.scss";
 @import "./global-styles/animations.scss";
+@import "./global-styles/mobile.scss";
+
+html,
+body {
+	overflow-x: hidden !important;
+}
 
 body {
 	background: #f5f5f5 !important;
 	font-family: "Segoe UI WestEuropean";
-	overflow-x: hidden;
+
 	line-height: 1;
 	height: auto;
 }

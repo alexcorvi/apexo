@@ -3,7 +3,7 @@ import './treatments.scss';
 import * as React from 'react';
 
 import { Treatment, namespace, treatments } from '../data';
-import { Icon, Nav, PrimaryButton, TextField } from 'office-ui-fabric-react';
+import { Icon, Nav, PrimaryButton, TextField, Panel, PanelType, IconButton } from 'office-ui-fabric-react';
 import { computed, observable } from 'mobx';
 
 import { API } from '../../../core';
@@ -17,20 +17,13 @@ import { sortArrByProp } from '../../../assets/utils/sort-arr';
 import { TreatmentLink } from './link';
 import { appointmentsData } from '../../appointments';
 import { AppointmentThumb } from '../../../assets/components/appointment-thumb/appointment-thumb';
+import { DataTable } from '../../../assets/components/data-table/data-table.component';
+import { Profile } from '../../../assets/components/profile/profile';
+import { Section } from '../../../assets/components/section/section';
 
 @observer
 export class Treatments extends React.Component<{}, {}> {
-	@observable showMenu: boolean = true;
-
-	@computed
-	get hideMenu() {
-		return !this.showMenu;
-	}
-
-	@computed
-	get selectedID() {
-		return API.router.currentLocation.split('/')[1];
-	}
+	@observable selectedID: string = API.router.currentLocation.split('/')[1];
 
 	@computed
 	get selectedIndex() {
@@ -42,130 +35,137 @@ export class Treatments extends React.Component<{}, {}> {
 		return treatments.list[this.selectedIndex];
 	}
 
-	@computed
-	get selectedAppointments() {
-		return appointmentsData.appointments.list
-			.filter((appointment) => appointment.treatmentID === this.selectedID)
-			.sort((a, b) => b.date - a.date);
-	}
-
 	render() {
 		return (
-			<div className="treatments-component">
-				<Row>
-					<Col sm={6} lg={4}>
-						{!this.showMenu ? (
-							<div className="p-10 visible-xs">
-								<PrimaryButton
-									text="Treatments List"
-									className="show-menu"
-									iconProps={{ iconName: 'CollapseMenu' }}
-									onClick={() => {
-										this.showMenu = true;
-									}}
-								/>
-							</div>
-						) : (
-							''
-						)}
-						<Nav
-							className={'treatments-nav' + (this.hideMenu ? ' hidden-xs' : '')}
-							groups={[
+			<div className="treatments-component p-15 p-l-10 p-r-10">
+				<DataTable
+					onDelete={(id) => {
+						treatments.deleteModal(id);
+					}}
+					commands={[
+						{
+							key: 'addNew',
+							title: 'Add new',
+							name: 'Add New',
+							onClick: () => {
+								const treatment = new Treatment();
+								treatments.list.push(treatment);
+								this.selectedID = treatment._id;
+							},
+							iconProps: {
+								iconName: 'Add'
+							}
+						}
+					]}
+					heads={[ 'Treatment', 'Expenses/unit', 'Done appointments', 'Upcoming appointments' ]}
+					rows={treatments.list.map((treatment) => {
+						const now = new Date().getTime();
+						let done = 0;
+						let upcoming = 0;
+
+						const appointments = appointmentsData.appointments.list;
+
+						for (let index = 0; index < appointments.length; index++) {
+							const appointment = appointments[index];
+							if (appointment.treatmentID !== treatment._id) {
+								continue;
+							}
+							if (appointment.date > now) {
+								upcoming++;
+							}
+							if (appointment.done) {
+								done++;
+							}
+						}
+
+						return {
+							id: treatment._id,
+							cells: [
 								{
-									links: [
-										{
-											name: 'Add New',
-											icon: 'Add',
-											onClick: (event) => {
-												this.showMenu = false;
-												const newTreatment = new Treatment();
-												newTreatment.type = 'New Treatment';
-												treatments.list.push(newTreatment);
-												API.router.go([ 'treatments', newTreatment._id ]);
-												if (event) {
-													event.stopPropagation();
-												}
-											},
-											url: '',
-											key: 'addNew'
-										}
-									]
+									dataValue: treatment.type,
+									component: <TreatmentLink id={treatment._id} showExpenses />,
+									onClick: () => {
+										this.selectedID = treatment._id;
+									},
+									className: 'no-label'
 								},
 								{
-									links: sortArrByProp(
-										treatments.list.map((treatment, index) => {
-											return {
-												name: treatment.type,
-												url: '',
-												key: treatment.type + index,
-												onClick: () => {
-													this.showMenu = false;
-													API.router.go([ 'treatments', treatment._id ]);
-												}
-											};
-										}),
-										'key'
-									)
+									dataValue: treatment.expenses,
+									component: (
+										<span>
+											{settingsData.settings.getSetting('currencySymbol')}
+											{treatment.expenses}
+										</span>
+									),
+									className: 'hidden-xs'
+								},
+								{
+									dataValue: done,
+									component: <span>{done} done</span>,
+									className: 'hidden-xs'
+								},
+								{
+									dataValue: upcoming,
+									component: <span>{upcoming} upcoming</span>,
+									className: 'hidden-xs'
 								}
-							]}
-						/>
-					</Col>
-					<Col sm={18} lg={20}>
-						{this.selectedTreatment ? (
-							<Row gutter={12}>
-								<Col md={8}>
-									<div className={'treatment-edit' + (this.showMenu ? ' hidden-xs' : '')}>
-										<TreatmentLink id={this.selectedID} notClickable />
-										<section>
-											<label>Treatment Title</label>
-											<TextField
-												value={this.selectedTreatment.type}
-												onChanged={(newVal) => {
-													treatments.list[this.selectedIndex].type = newVal;
-												}}
-											/>
-										</section>
-										<section>
-											<label>Expected Expenses</label>
-											<TextField
-												type="number"
-												value={this.selectedTreatment.expenses.toString()}
-												onChanged={(newVal) => {
-													treatments.list[this.selectedIndex].expenses = Number(newVal);
-												}}
-											/>
-										</section>
-										<PrimaryButton
-											text="Delete"
-											className="delete m-t-5"
-											iconProps={{ iconName: 'delete' }}
-											onClick={() => {
-												this.showMenu = true;
-												treatments.deleteModal(this.selectedID);
-											}}
-										/>
-									</div>
+							]
+						};
+					})}
+				/>
+
+				{this.selectedTreatment ? (
+					<Panel
+						isOpen={!!this.selectedTreatment}
+						type={PanelType.medium}
+						closeButtonAriaLabel="Close"
+						isLightDismiss={true}
+						onDismiss={() => {
+							this.selectedID = '';
+						}}
+						onRenderNavigation={() => (
+							<Row className="panel-heading">
+								<Col span={20}>
+									{this.selectedTreatment ? (
+										<TreatmentLink id={this.selectedID} showExpenses />
+									) : (
+										<p />
+									)}
 								</Col>
-								<Col md={16}>
-									<div className="samples">
-										{this.selectedAppointments.map((appointment) => (
-											<AppointmentThumb
-												key={appointment._id}
-												appointment={appointment}
-												showPatient
-												labeled
-												small
-												hideTreatment
-											/>
-										))}
-									</div>
+								<Col span={4} className="close">
+									<IconButton
+										iconProps={{ iconName: 'cancel' }}
+										onClick={() => {
+											this.selectedID = '';
+										}}
+									/>
 								</Col>
 							</Row>
-						) : (
-							''
 						)}
-					</Col>
-				</Row>
+					>
+						<div className="treatment-editor">
+							<Section title="Treatment details" showByDefault>
+								<div className="treatment-input">
+									<TextField
+										label="Treatment title"
+										value={this.selectedTreatment.type}
+										onChanged={(val) => (treatments.list[this.selectedIndex].type = val)}
+									/>
+									<TextField
+										label="Treatment expenses (per unit)"
+										type="number"
+										value={this.selectedTreatment.expenses.toString()}
+										onChanged={(val) =>
+											(treatments.list[this.selectedIndex].expenses = Number(val))}
+										prefix={settingsData.settings.getSetting('currencySymbol')}
+									/>
+								</div>
+							</Section>
+						</div>
+					</Panel>
+				) : (
+					''
+				)}
 			</div>
 		);
 	}

@@ -8,11 +8,10 @@ export const register = {
 	async register() {
 		API.router.register(
 			orthoData.namespace,
-			/^orthodontic$/,
+			/^orthodontic/,
 			orthoComponents.OrthoList,
 			() => !!settingsData.settings.getSetting('module_orthodontics')
 		);
-		API.router.register(orthoData.namespace, /^orthodontic\/.*/, orthoComponents.OrthoSingle);
 		API.menu.items.push({
 			icon: 'DietPlanNotebook',
 			name: orthoData.namespace,
