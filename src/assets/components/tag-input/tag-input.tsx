@@ -1,12 +1,12 @@
+import * as React from 'react';
+import { computed, observable } from 'mobx';
+import { generateID } from '../../../assets/utils/generate-id';
+import { Icon, Label } from 'office-ui-fabric-react';
+import { observer } from 'mobx-react';
 import './tag-input.scss';
 
-import * as React from 'react';
 
-import { computed, observable } from 'mobx';
 
-import { Icon, Label } from 'office-ui-fabric-react';
-import { generateID } from '../../../assets/utils/generate-id';
-import { observer } from 'mobx-react';
 
 export interface TagInputItem {
 	key: string;

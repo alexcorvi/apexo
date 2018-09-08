@@ -1,11 +1,11 @@
+import PouchDB from 'pouchdb-browser';
 import { API } from '../';
+import { diff } from 'fast-array-diff';
 import { IClassCreator } from './interface.class-creator';
 import { IClassStatic } from './interface.class-static';
 import { IDocumentJSON } from './interface.document-json';
 import { IMobXStore } from './interface.mobx-store';
 import { InteractionMethods } from './interface.interaction-methods';
-import PouchDB from 'pouchdb-browser';
-import { diff } from 'fast-array-diff';
 import { observe } from 'mobx';
 import { observeItem } from './observe-item';
 

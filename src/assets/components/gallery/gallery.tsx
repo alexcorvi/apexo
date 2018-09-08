@@ -1,20 +1,20 @@
-import './gallery.scss';
 import * as React from 'react';
-import { PickFile, fileTypes } from '../../../assets/components/pick-files/pick-files';
+import { API } from '../../../core/index';
+import { fileTypes, PickFile } from '../../../assets/components/pick-files/pick-files';
 import {
 	Icon,
+	MessageBar,
+	MessageBarType,
 	Panel,
 	PanelType,
 	PrimaryButton,
 	Spinner,
-	SpinnerSize,
-	MessageBar,
-	MessageBarType
-} from 'office-ui-fabric-react';
+	SpinnerSize
+	} from 'office-ui-fabric-react';
 import { observable, observe } from 'mobx';
 import { observer } from 'mobx-react';
-import { API } from '../../../core/index';
 import { toJS } from 'mobx';
+import './gallery.scss';
 
 @observer
 export class Gallery extends React.Component<

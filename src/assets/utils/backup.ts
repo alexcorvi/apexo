@@ -1,17 +1,17 @@
-import { data } from '../../modules';
-import { AppointmentJSON, Appointment } from '../../modules/appointments/data';
-import { DoctorJSON, Doctor } from '../../modules/doctors/data';
-import { CaseJSON, OrthoCase } from '../../modules/orthodontic/data';
-import { PatientJSON, Patient } from '../../modules/patients/data';
-import { PrescriptionItemJSON, PrescriptionItem } from '../../modules/prescriptions/data';
-import { SettingItemJSON, SettingsItem } from '../../modules/settings/data';
-import { TreatmentJSON, Treatment } from '../../modules/treatments/data';
-import { doctorsData } from '../../modules/doctors';
+import { Appointment, AppointmentJSON } from '../../modules/appointments/data';
 import { appointmentsData } from '../../modules/appointments';
-import { patientsData } from '../../modules/patients';
+import { CaseJSON, OrthoCase } from '../../modules/orthodontic/data';
+import { data } from '../../modules';
+import { Doctor, DoctorJSON } from '../../modules/doctors/data';
+import { doctorsData } from '../../modules/doctors';
 import { orthoData } from '../../modules/orthodontic';
-import { settingsData } from '../../modules/settings';
+import { Patient, PatientJSON } from '../../modules/patients/data';
+import { patientsData } from '../../modules/patients';
+import { PrescriptionItem, PrescriptionItemJSON } from '../../modules/prescriptions/data';
 import { prescriptionsData } from '../../modules/prescriptions';
+import { SettingItemJSON, SettingsItem } from '../../modules/settings/data';
+import { settingsData } from '../../modules/settings';
+import { Treatment, TreatmentJSON } from '../../modules/treatments/data';
 import { treatmentsData } from '../../modules/treatments';
 
 interface BackupJSON {

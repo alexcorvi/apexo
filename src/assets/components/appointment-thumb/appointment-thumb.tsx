@@ -1,14 +1,13 @@
-import './appointment-thumb.scss';
-
+import * as dateUtils from '../../../assets/utils/date';
 import * as React from 'react';
-
 import { appointmentsComponents, appointmentsData } from '../../../modules/appointments';
-import { treatmentsComponents, treatmentsData } from '../../../modules/treatments';
-
-import { Icon } from 'office-ui-fabric-react';
 import { computed } from 'mobx';
+import { Icon } from 'office-ui-fabric-react';
 import { observer } from 'mobx-react';
 import { patientsComponents } from '../../../modules/patients';
+import { ProfileSquared } from '../profile/profile-squared';
+import { treatmentsComponents, treatmentsData } from '../../../modules/treatments';
+import './appointment-thumb.scss';
 
 @observer
 export class AppointmentThumb extends React.Component<
@@ -20,21 +19,15 @@ export class AppointmentThumb extends React.Component<
 	 */
 		appointment: appointmentsData.Appointment;
 		/**
-	 * Callback for click
-	 * 
-	 */
+		 * Callback for click
+		 * 
+		 */
 		onClick?: () => void;
 		/**
-	 * Small view
-	 * 
-	 * @type {boolean}
-	 */
-		small?: boolean;
-		/**
-	 * View a delete button
-	 * 
-	 * @type {boolean}
-	 */
+		 * View a delete button
+		 * 
+		 * @type {boolean}
+		 */
 		canDelete?: boolean;
 		/**
 		 * Add custom className
@@ -90,12 +83,6 @@ export class AppointmentThumb extends React.Component<
 		return className;
 	}
 
-	/**
-	 * A reference to parent element for className insertion
-	 * 
-	 * @type {HTMLElement}
-	 * @memberof AppointmentThumb
-	 */
 	el: HTMLElement | undefined;
 	render() {
 		const treatmentID = this.props.appointment.treatmentID;
@@ -113,22 +100,35 @@ export class AppointmentThumb extends React.Component<
 				) : (
 					''
 				)}{' '}
-				{this.props.hideTreatment ? (
-					''
-				) : (
+				{this.props.labeled ? (
 					<div className="m-b-5">
-						<treatmentsComponents.TreatmentLink notClickable small={this.props.small} id={treatmentID} />
+						<ProfileSquared
+							text={this.props.appointment.treatment.type}
+							subText={dateUtils.relativeFormat(this.props.appointment.date)}
+							size={3}
+						/>
 					</div>
-				)}
-				{this.props.hideDate ? (
-					''
 				) : (
-					<appointmentsComponents.DateLink
-						notClickable
-						className="hidden-xs"
-						time={this.props.appointment.date}
-						format="{d}/{m}/{yyyy} ({RR})"
-					/>
+					<div>
+						{' '}
+						{this.props.hideTreatment ? (
+							''
+						) : (
+							<div className="m-b-5">
+								<treatmentsComponents.TreatmentLink notClickable small id={treatmentID} />
+							</div>
+						)}
+						{this.props.hideDate ? (
+							''
+						) : (
+							<appointmentsComponents.DateLink
+								notClickable
+								className="hidden-xs"
+								time={this.props.appointment.date}
+								format="{d}/{m}/{yyyy} ({RR})"
+							/>
+						)}
+					</div>
 				)}
 				{this.props.canDelete ? (
 					<Icon

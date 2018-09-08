@@ -1,11 +1,8 @@
-// matchMedia polyfill for
-// https://github.com/WickyNilliams/enquire.js/issues/82
-const enquire = require('enquire.js');
-
-import * as React from 'react';
-import { Children, cloneElement } from 'react';
-import classNames from 'classnames';
 import * as PropTypes from 'prop-types';
+import * as React from 'react';
+import classNames from 'classnames';
+import { Children, cloneElement } from 'react';
+const enquire = require('enquire.js');
 
 export type Breakpoint = 'xxl' | 'xl' | 'lg' | 'md' | 'sm' | 'xs';
 export type BreakpointMap = Partial<Record<Breakpoint, string>>;

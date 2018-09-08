@@ -5,8 +5,8 @@ import { Appointment } from './class.appointment';
 import { generateID } from '../../../assets/utils/generate-id';
 import { patientsData } from '../../patients';
 import prompts from '../../../core/prompts/data.prompts';
-import t4mat from 't4mat';
 import { treatmentsData } from '../../treatments';
+import { textualFilter } from '../../../assets/utils/textual-filter';
 
 class AppointmentsData {
 	ignoreObserver: boolean = false;
@@ -27,16 +27,7 @@ class AppointmentsData {
 		});
 
 		if (filter) {
-			list = list.filter((appointment) => {
-				const data = `
-				${appointment.involvedTeeth.join(' ')}
-				${appointment.patient.name}
-				${appointment.treatment.type}
-				${appointment.doctors.map((doc) => doc.name).join(' ')}
-			`.toLowerCase();
-				const filters = filter.toLowerCase().split(/\W/);
-				return filters.every((keyword) => data.indexOf(keyword) > -1);
-			});
+			list = textualFilter(list, filter);
 		}
 
 		if (doctorID) {

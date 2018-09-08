@@ -22,7 +22,6 @@ import { Row, Col } from '../../../assets/components/grid/index';
 import { sortArrByProp } from '../../../assets/utils/sort-arr';
 import { PrescriptionLink } from './prescription-link';
 import { appointmentsData } from '../../appointments';
-import { AppointmentThumb } from '../../../assets/components/appointment-thumb/appointment-thumb';
 import { DataTable } from '../../../assets/components/data-table/data-table.component';
 import { Profile } from '../../../assets/components/profile/profile';
 import { Section } from '../../../assets/components/section/section';

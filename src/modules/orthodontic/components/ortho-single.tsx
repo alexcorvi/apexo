@@ -1,7 +1,6 @@
 import './ortho-single.scss';
 
 import * as React from 'react';
-import t4mat from 't4mat';
 import {
 	DatePicker,
 	Dropdown,
@@ -29,6 +28,7 @@ import { EditableList } from '../../../assets/components/editable-list/editable-
 import { Gallery } from '../../../assets/components/gallery/gallery';
 import { Profile } from '../../../assets/components/profile/profile';
 import { Section } from '../../../assets/components/section/section';
+import * as dateUtils from '../../../assets/utils/date';
 
 @observer
 export class OrthoSingle extends React.Component<{ id: string; onDismiss: () => void }, {}> {
@@ -73,12 +73,7 @@ export class OrthoSingle extends React.Component<{ id: string; onDismiss: () => 
 									<Profile
 										name={this.orthoCase.patient.name}
 										secondaryElement={
-											<span>
-												{t4mat({
-													time: this.orthoCase.started,
-													format: `started ortho. treatment {RR}`
-												})}
-											</span>
+											<span>Started: {dateUtils.relativeFormat(this.orthoCase.started)}</span>
 										}
 										size={3}
 									/>

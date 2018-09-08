@@ -9,7 +9,8 @@ import {
 	PersonaSize,
 	ICommandBarItemProps,
 	TextField,
-	SearchBox
+	SearchBox,
+	Icon
 } from 'office-ui-fabric-react';
 import { Gender, genderToString, patients } from '../../data';
 import { observable, computed } from 'mobx';
@@ -22,6 +23,8 @@ import { Profile } from '../../../../assets/components/profile/profile';
 import { commands } from './commands';
 import { observer } from 'mobx-react';
 import { SinglePatient } from '../single/single';
+import { ProfileSquared } from '../../../../assets/components/profile/profile-squared';
+import * as dateUtils from '../../../../assets/utils/date';
 
 @observer
 export class PatientsListing extends React.Component<{}, {}> {
@@ -45,7 +48,7 @@ export class PatientsListing extends React.Component<{}, {}> {
 						patients.deleteModal(id);
 					}}
 					className={'patients-data-table'}
-					heads={[ 'Profile', 'Last Appointment', 'Next Appointment', 'Label' ]}
+					heads={[ 'Patient', 'Last Appointment', 'Next Appointment', 'Label' ]}
 					rows={patients.list.map((patient) => ({
 						id: patient._id,
 						cells: [
@@ -54,9 +57,12 @@ export class PatientsListing extends React.Component<{}, {}> {
 								component: (
 									<Profile
 										name={patient.name}
-										secondaryElement={<span>{genderToString(patient.gender)}</span>}
-										tertiaryText={`${patient.age} years old`}
-										size={matchMedia('(max-width: 767px)').matches ? 3 : undefined}
+										secondaryElement={
+											<span>
+												Patient, {genderToString(patient.gender)} - {patient.age} years old
+											</span>
+										}
+										size={3}
 									/>
 								),
 								onClick: () => {
@@ -67,7 +73,12 @@ export class PatientsListing extends React.Component<{}, {}> {
 							{
 								dataValue: (patient.lastAppointment || { date: 0 }).date,
 								component: patient.lastAppointment ? (
-									<AppointmentThumb small appointment={patient.lastAppointment} />
+									<ProfileSquared
+										text={patient.lastAppointment.treatment.type}
+										subText={dateUtils.relativeFormat(patient.lastAppointment.date)}
+										size={3}
+										onClick={() => {}}
+									/>
 								) : (
 									'Not registered'
 								),
@@ -76,7 +87,12 @@ export class PatientsListing extends React.Component<{}, {}> {
 							{
 								dataValue: (patient.nextAppointment || { date: Infinity }).date,
 								component: patient.nextAppointment ? (
-									<AppointmentThumb small appointment={patient.nextAppointment} />
+									<ProfileSquared
+										text={patient.nextAppointment.treatment.type}
+										subText={dateUtils.relativeFormat(patient.nextAppointment.date)}
+										size={3}
+										onClick={() => {}}
+									/>
 								) : (
 									'Not registered'
 								),

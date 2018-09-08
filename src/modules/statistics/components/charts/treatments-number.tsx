@@ -10,7 +10,6 @@ import { observer } from 'mobx-react';
 import { patientsData } from '../../../patients';
 import { round } from '../../../../assets/utils/round';
 import { settingsData } from '../../../settings';
-import t4mat from 't4mat';
 import { treatmentsData } from '../../../treatments';
 
 @observer

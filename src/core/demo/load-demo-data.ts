@@ -17,7 +17,7 @@ import { restoreFromBase64 } from '../../assets/utils/backup';
 
 function randomDate() {
 	const now = new Date().getTime();
-	const fifteenDays = 21600 * 60 * 1000;
+	const fifteenDays = 86400000 * 15;
 	return Math.floor(Math.random() * (now + fifteenDays - (now - fifteenDays)) + (now - fifteenDays));
 }
 

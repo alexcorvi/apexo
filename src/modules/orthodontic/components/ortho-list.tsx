@@ -24,10 +24,11 @@ import { DataTable } from '../../../assets/components/data-table/data-table.comp
 import { Profile } from '../../../assets/components/profile/profile';
 import { TagInput } from '../../../assets/components/tag-input/tag-input';
 import { observer } from 'mobx-react';
-import t4mat from 't4mat';
 import { patientsData, patientsComponents } from '../../patients';
 import { genderToString } from '../../patients/data/enum.gender';
 import { OrthoSingle } from '.';
+import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
+import * as dateUtils from '../../../assets/utils/date';
 
 @observer
 export class OrthoList extends React.Component<{}, {}> {
@@ -55,9 +56,12 @@ export class OrthoList extends React.Component<{}, {}> {
 									component: (
 										<Profile
 											name={patient.name}
-											secondaryElement={<span>{genderToString(patient.gender)}</span>}
-											tertiaryText={`${patient.age} years old`}
-											size={matchMedia('(max-width: 767px)').matches ? 3 : undefined}
+											secondaryElement={
+												<span>
+													Patient, {genderToString(patient.gender)} - {patient.age} years old
+												</span>
+											}
+											size={3}
 										/>
 									),
 									className: 'no-label',
@@ -67,13 +71,18 @@ export class OrthoList extends React.Component<{}, {}> {
 								},
 								{
 									dataValue: orthoCase.started,
-									component: t4mat({ time: orthoCase.started }),
+									component: dateUtils.relativeFormat(orthoCase.started),
 									className: 'hidden-xs'
 								},
 								{
 									dataValue: (patient.nextAppointment || { date: 0 }).date,
 									component: patient.nextAppointment ? (
-										<AppointmentThumb small appointment={patient.nextAppointment} />
+										<ProfileSquared
+											text={patient.nextAppointment.treatment.type}
+											subText={dateUtils.relativeFormat(patient.nextAppointment.date)}
+											size={3}
+											onClick={() => {}}
+										/>
 									) : (
 										'Not registered'
 									),

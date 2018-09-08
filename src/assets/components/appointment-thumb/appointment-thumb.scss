@@ -56,6 +56,7 @@
 			border-radius: 0;
 			font-size: 10px;
 			margin-bottom: 5px;
+			min-width: 80px;
 		}
 		&.today-due {
 			border-color: #b2ebf2;
@@ -72,10 +73,10 @@
 			}
 		}
 		&.missed {
-			background: #f5f5f5;
+			border-color: #d1c4e9;
 			&:before {
 				content: "MISSED";
-				background: #f5f5f5;
+				background: #d1c4e9;
 			}
 		}
 		&.to-be-paid {

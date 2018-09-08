@@ -19,7 +19,6 @@ import { TeethDeciduousChart, TeethPermanentChart } from '../index';
 import { computed, observable } from 'mobx';
 
 import { API } from '../../../../core';
-import { AppointmentThumb } from '../../../../assets/components/appointment-thumb/appointment-thumb';
 import { EditableList } from '../../../../assets/components/editable-list/editable-list';
 import { TagInput } from '../../../../assets/components/tag-input/tag-input';
 import { appointmentsComponents } from '../../../appointments';

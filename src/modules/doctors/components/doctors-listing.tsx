@@ -12,7 +12,8 @@ import {
 	PivotItem,
 	PrimaryButton,
 	TextField,
-	IconButton
+	IconButton,
+	Icon
 } from 'office-ui-fabric-react';
 import { Doctor, doctors } from '../data';
 import { Label, LabelType, getRandomLabelType } from '../../../assets/components/label/label.component';
@@ -27,6 +28,9 @@ import { TagInput } from '../../../assets/components/tag-input/tag-input';
 import { observer } from 'mobx-react';
 import { settings } from '../../../modules/settings/data';
 import { Section } from '../../../assets/components/section/section';
+import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
+import { AppointmentsList } from '../../../assets/components/appointments-list/appointments-list';
+import * as dateUtils from '../../../assets/utils/date';
 
 @observer
 export class DoctorsListing extends React.Component<{}, {}> {
@@ -52,7 +56,7 @@ export class DoctorsListing extends React.Component<{}, {}> {
 								doctors.deleteModal(id);
 							}}
 							className={'doctors-data-table'}
-							heads={[ 'Profile', 'Last Appointment', 'Next Appointment' ]}
+							heads={[ 'Doctor', 'Last Appointment', 'Next Appointment' ]}
 							rows={doctors.list.map((doctor) => ({
 								id: doctor._id,
 								cells: [
@@ -61,12 +65,13 @@ export class DoctorsListing extends React.Component<{}, {}> {
 										component: (
 											<Profile
 												name={doctor.name}
-												secondaryText={doctor.email}
-												tertiaryText={`${doctor.nextAppointments.length} Upcoming appointments`}
+												secondaryElement={
+													<span>{doctor.nextAppointments.length} upcoming appointments</span>
+												}
 												onClick={() => {
 													this.selectedId = doctor._id;
 												}}
-												size={matchMedia('(max-width: 767px)').matches ? 3 : undefined}
+												size={3}
 											/>
 										),
 										onClick: () => {
@@ -77,7 +82,12 @@ export class DoctorsListing extends React.Component<{}, {}> {
 									{
 										dataValue: (doctor.lastAppointment || { date: 0 }).date,
 										component: doctor.lastAppointment ? (
-											<AppointmentThumb appointment={doctor.lastAppointment} small />
+											<ProfileSquared
+												text={doctor.lastAppointment.treatment.type}
+												subText={dateUtils.relativeFormat(doctor.lastAppointment.date)}
+												size={3}
+												onClick={() => {}}
+											/>
 										) : (
 											'Not registered'
 										),
@@ -86,7 +96,12 @@ export class DoctorsListing extends React.Component<{}, {}> {
 									{
 										dataValue: (doctor.nextAppointment || { date: Infinity }).date,
 										component: doctor.nextAppointment ? (
-											<AppointmentThumb appointment={doctor.nextAppointment} small />
+											<ProfileSquared
+												text={doctor.nextAppointment.treatment.type}
+												subText={dateUtils.relativeFormat(doctor.nextAppointment.date)}
+												size={3}
+												onClick={() => {}}
+											/>
 										) : (
 											'Not registered'
 										),
@@ -132,12 +147,16 @@ export class DoctorsListing extends React.Component<{}, {}> {
 													.map((doctor) => {
 														return (
 															<Profile
-																className=""
-																size={PersonaSize.large}
+																className="m-b-5"
+																size={3}
 																key={doctor._id}
 																name={doctor.name}
-																tertiaryText={`${(doctor.weeksAppointments[index] || [])
-																	.length} appointments for ${dayName.toLowerCase()}`}
+																secondaryElement={
+																	<span>
+																		{(doctor.weeksAppointments[index] || []).length}{' '}
+																		appointments for {dayName.toLowerCase()}
+																	</span>
+																}
 																onClick={() => {
 																	this.selectedId = doctor._id;
 																}}
@@ -240,6 +259,14 @@ export class DoctorsListing extends React.Component<{}, {}> {
 							) : (
 								''
 							)}
+
+							<Section title="Appointments" showByDefault>
+								<AppointmentsList
+									list={appointmentsData.appointments.list.filter(
+										(x) => x.doctorsID.indexOf(this.selectedId) > -1
+									)}
+								/>
+							</Section>
 						</div>
 					</Panel>
 				) : (

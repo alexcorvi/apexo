@@ -1,6 +1,6 @@
+import * as React from 'react';
 import './label.scss';
 
-import * as React from 'react';
 
 export enum LabelType {
 	warning,

@@ -4,9 +4,9 @@ import * as React from 'react';
 
 import { API } from '../../../core';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
-import formatter from 't4mat';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
+import formatter from 't4mat';
 
 interface Props {
 	time: number;

@@ -43,7 +43,6 @@ export class TreatmentLink extends React.Component<Props, {}> {
 				className={'treatment-link'}
 				text={this.type}
 				size={this.props.small ? PersonaSize.extraExtraSmall : 3}
-				onRenderInitials={() => <Icon iconName="Cricket" />}
 				secondaryText={
 					this.props.showExpenses ? (
 						`Expenses: ${settingsData.settings.getSetting(

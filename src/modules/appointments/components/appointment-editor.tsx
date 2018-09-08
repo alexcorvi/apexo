@@ -30,17 +30,17 @@ import { settingsData } from '../../settings';
 import { treatmentsData } from '../../treatments';
 import { Gallery } from '../../../assets/components/gallery/gallery';
 import { Treatment } from '../../treatments/data/class.treatment';
-import { AppointmentThumb } from '../../../assets/components/appointment-thumb/appointment-thumb';
 import { TreatmentLink } from '../../treatments/components';
 import { PatientLink } from '../../patients/components';
 import { DateLink } from '.';
-import t4mat from 't4mat';
 import { Section } from '../../../assets/components/section/section';
+import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
+import * as dateUtils from '../../../assets/utils/date';
 
 @observer
 export class AppointmentEditor extends React.Component<
 	{
-		appointment: Appointment | null;
+		appointment: Appointment | undefined | null;
 		onDismiss: () => void;
 		onDelete: () => void;
 	},
@@ -50,7 +50,7 @@ export class AppointmentEditor extends React.Component<
 	@computed
 	get otherAppointmentsNumber() {
 		const appointment = this.props.appointment;
-		if (appointment === null) {
+		if (!appointment) {
 			return [].length - 1;
 		}
 		return appointments.appointmentsForDay(appointment.date, 0, 0).filter((a) => a._id !== appointment._id).length;
@@ -87,10 +87,8 @@ export class AppointmentEditor extends React.Component<
 									<Profile
 										secondaryElement={
 											<span>
-												{t4mat({
-													time: this.props.appointment.date,
-													format: `{r} / ${this.props.appointment.treatment.type}`
-												})}
+												{dateUtils.relativeFormat(this.props.appointment.date)} /{' '}
+												{this.props.appointment.treatment.type}
 											</span>
 										}
 										name={this.props.appointment.patient.name}
@@ -123,7 +121,7 @@ export class AppointmentEditor extends React.Component<
 											value={new Date(this.props.appointment.date)}
 											onSelectDate={(date) => {
 												if (date) {
-													if (this.props.appointment === null) {
+													if (!this.props.appointment) {
 														return;
 													}
 													this.props.appointment.setDate(date.getTime());
@@ -299,6 +297,57 @@ export class AppointmentEditor extends React.Component<
 											placeholder="Enter prescription..."
 										/>
 									</div>
+
+									<div id="prescription-items">
+										<div className="print-heading">
+											<h2>Dr. {API.user.currentDoctor.name}</h2>
+											<hr />
+											<h3>Patient: {this.props.appointment.patient.name}</h3>
+											<Row>
+												<Col span={12}>
+													<h4>Age: {this.props.appointment.patient.age}</h4>
+												</Col>
+												<Col span={12}>
+													<h4>
+														Gender:{' '}
+														{this.props.appointment.patient.gender ? 'Female' : 'Male'}
+													</h4>
+												</Col>
+											</Row>
+											<hr />
+										</div>
+										{this.props.appointment.prescriptions.map((item) => {
+											return (
+												<Row key={item.id}>
+													<Col span={20} className="m-b-5">
+														<ProfileSquared
+															text={item.prescription.split(':')[0]}
+															onRenderInitials={() => <Icon iconName="pill" />}
+															subText={item.prescription.split(':')[1]}
+														/>
+													</Col>
+													<Col span={4} style={{ textAlign: 'right' }}>
+														<IconButton
+															iconProps={{ iconName: 'delete' }}
+															onClick={() => {
+																if (this.props.appointment) {
+																	this.props.appointment.prescriptions = this.props.appointment.prescriptions.filter(
+																		(x) => x.id !== item.id
+																	);
+																}
+															}}
+														/>
+													</Col>
+												</Row>
+											);
+										})}
+									</div>
+
+									{this.props.appointment.prescriptions.length ? (
+										<PrimaryButton onClick={print}>Print Prescription</PrimaryButton>
+									) : (
+										''
+									)}
 								</div>
 							) : (
 								''
@@ -412,7 +461,7 @@ export class AppointmentEditor extends React.Component<
 											type="number"
 											value={this.props.appointment.paidAmount.toString()}
 											onChanged={(newVal) => {
-												if (this.props.appointment === null) {
+												if (!this.props.appointment) {
 													return;
 												}
 												this.props.appointment.paidAmount = Number(newVal);
@@ -448,7 +497,7 @@ export class AppointmentEditor extends React.Component<
 										onText="Paid"
 										offText="Unpaid"
 										onChanged={(newVal) => {
-											if (this.props.appointment === null) {
+											if (!this.props.appointment) {
 												return;
 											}
 											this.props.appointment.paid = newVal;
@@ -461,7 +510,7 @@ export class AppointmentEditor extends React.Component<
 										onText="Done"
 										offText="Not Done"
 										onChanged={(newVal) => {
-											if (this.props.appointment === null) {
+											if (!this.props.appointment) {
 												return;
 											}
 											this.props.appointment.done = newVal;
@@ -533,7 +582,9 @@ export class AppointmentEditor extends React.Component<
 	prescriptionToTagInput(p: prescriptionsData.PrescriptionItem) {
 		return {
 			key: p._id,
-			text: `${p.name}: ${p.doseInMg}mg	${prescriptionsData.itemFormToString(p.form)}	${p.timesPerDay}X1`
+			text: `${p.name}: ${p.doseInMg}mg ${p.timesPerDay}X${p.unitsPerTime} ${prescriptionsData.itemFormToString(
+				p.form
+			)}`
 		};
 	}
 }

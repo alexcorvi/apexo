@@ -1,9 +1,9 @@
 import * as React from 'react';
-
 import { Chart } from 'chart.js';
-
-import { removeToolTips } from './remove-tooltips';
 import { colors } from './colors';
+import { removeToolTips } from './remove-tooltips';
+
+
 
 export class PieChart extends React.Component<
 	{

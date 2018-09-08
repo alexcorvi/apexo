@@ -84,7 +84,6 @@ export class UserComponent extends React.Component<{}, {}> {
 							<AppointmentThumb
 								key={appointment._id}
 								appointment={appointment}
-								small={true}
 								hideDate={true}
 								showPatient={true}
 								labeled={true}

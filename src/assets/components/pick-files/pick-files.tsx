@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { API } from '../../../core';
 
 export const fileTypes = {
 	image: [ 'png', 'jpg', 'jpeg', 'gif', 'image/png', 'image/gif', 'image/jpeg' ]
 };
 
-import { API } from '../../../core';
 
 export class PickFile extends React.Component<
 	{

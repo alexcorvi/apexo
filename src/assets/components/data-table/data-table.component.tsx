@@ -1,11 +1,18 @@
+import * as React from 'react';
+import {
+	Checkbox,
+	CommandBar,
+	ICommandBarItemProps,
+	Icon,
+	IconButton,
+	SearchBox
+	} from 'office-ui-fabric-react';
+import { computed, observable } from 'mobx';
+import { escapeRegExp } from '../../utils/escape-regex';
+import { observer } from 'mobx-react';
 import './data-table.component.scss';
 
-import * as React from 'react';
 
-import { Icon, SearchBox, CommandBar, ICommandBarItemProps, Checkbox, IconButton } from 'office-ui-fabric-react';
-import { observable, computed } from 'mobx';
-import { observer } from 'mobx-react';
-import { escapeRegExp } from '../../utils/escape-regex';
 
 interface Cell {
 	component: string | React.ReactElement<any>;

@@ -7,6 +7,7 @@ import { patientsData } from '../../patients';
 import { prescriptionsData } from '../../prescriptions';
 import { settingsData } from '../../settings';
 import { treatmentsData } from '../../treatments';
+import * as dateUtils from '../../../assets/utils/date';
 
 export class Appointment {
 	/**
@@ -230,7 +231,7 @@ export class Appointment {
 	 */
 	@computed
 	get dueToday() {
-		return this.sameDay(new Date(this.todayTimestamp()), new Date(this.date)) && !this.done;
+		return dateUtils.isToday(this.date) && !this.done;
 	}
 
 	/**
@@ -241,10 +242,12 @@ export class Appointment {
 	 */
 	@computed
 	get dueTomorrow() {
-		return this.sameDay(
-			new Date(new Date(this.todayTimestamp()).getTime() + 1000 * 60 * 60 * 24),
-			new Date(this.date)
-		);
+		return dateUtils.isTomorrow(this.date);
+	}
+
+	@computed
+	get dueYesterday() {
+		return dateUtils.isYesterday(this.date);
 	}
 
 	/**
@@ -255,7 +258,7 @@ export class Appointment {
 	 */
 	@computed
 	get missed() {
-		return this.todayTimestamp() - new Date(this.date).getTime() > 0 && !this.done && !this.dueToday;
+		return new Date().getTime() - new Date(this.date).getTime() > 0 && !this.done && !this.dueToday;
 	}
 
 	/**
@@ -272,6 +275,25 @@ export class Appointment {
 	@computed
 	get spentTimeValue() {
 		return Number(settingsData.settings.getSetting('hourlyRate')) * (this.time / (1000 * 60 * 60));
+	}
+
+	@computed
+	get searchableString() {
+		return `
+				${this.complaint}
+                ${this.diagnosis}
+                ${new Date(this.date).toDateString()}
+                ${this.treatment.type}
+                ${this.treatment.expenses}
+                ${this.paid ? 'paid' : ''}
+                ${this.outstanding ? 'outstanding' : ''}
+                ${this.missed ? 'missed' : ''}
+                ${this.dueToday ? 'today' : ''}
+				${this.dueTomorrow ? 'tomorrow' : ''}
+				${this.future ? 'future' : ''}
+				${this.patient.name}
+				${this.doctors.map((x) => x.name).join(' ')}
+		`.toLowerCase();
 	}
 
 	/**
@@ -344,36 +366,5 @@ export class Appointment {
 	setDate(value: number) {
 		this.date = value;
 		this.doctorsID = [];
-	}
-
-	/**
-	 * Utility function to find Whether two dates are on the same day
-	 * 
-	 * @private
-	 * @param {Date} date1 
-	 * @param {Date} date2 
-	 * @returns 
-	 * @memberof Appointment
-	 */
-	private sameDay(date1: Date, date2: Date) {
-		function comparableTime(date: Date) {
-			return {
-				y: date.getFullYear(),
-				m: date.getMonth(),
-				d: date.getDate()
-			};
-		}
-		return JSON.stringify(comparableTime(date1)) === JSON.stringify(comparableTime(date2));
-	}
-
-	/**
-	 * Utility function to get the Date object of today
-	 * 
-	 * @private
-	 * @returns 
-	 * @memberof Appointment
-	 */
-	private todayTimestamp() {
-		return new Date().getTime();
 	}
 }

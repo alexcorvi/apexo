@@ -1,17 +1,16 @@
 import * as React from 'react';
 import { API } from '../';
-import { Icon } from 'office-ui-fabric-react';
-import { Row, Col } from '../../assets/components/grid/index';
-import { observer } from 'mobx-react';
-import { observable, computed } from 'mobx';
-import { PatientLink } from '../../modules/patients/components';
-import { TreatmentLink } from '../../modules/treatments/components';
-import { Profile } from '../../assets/components/profile/profile';
-import { appointmentsData } from '../../modules/appointments';
-import { AppointmentThumb } from '../../assets/components/appointment-thumb/appointment-thumb';
-import { user } from '../user/data.user';
 import { appointmentsByDate } from '../../modules/statistics/components/charts/appointments-by-day';
+import { appointmentsData } from '../../modules/appointments';
 import { checkServer } from '../../assets/utils/check-server';
+import { Col, Row } from '../../assets/components/grid/index';
+import { computed, observable } from 'mobx';
+import { Icon } from 'office-ui-fabric-react';
+import { observer } from 'mobx-react';
+import { PatientLink } from '../../modules/patients/components';
+import { Profile } from '../../assets/components/profile/profile';
+import { TreatmentLink } from '../../modules/treatments/components';
+import { user } from '../user/data.user';
 @observer
 export class Home extends React.Component<{}, {}> {
 	@observable

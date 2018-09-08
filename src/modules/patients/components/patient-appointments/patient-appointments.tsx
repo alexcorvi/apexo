@@ -18,6 +18,7 @@ import { convert } from '../../../../assets/utils/teeth-numbering-systems';
 import { observer } from 'mobx-react';
 import { treatmentsData } from '../../../treatments';
 import { Row, Col } from '../../../../assets/components/grid/index';
+import { AppointmentsList } from '../../../../assets/components/appointments-list/appointments-list';
 
 @observer
 export class PatientAppointments extends React.Component<{ patient: Patient; hideTitle?: boolean }, {}> {
@@ -47,18 +48,7 @@ export class PatientAppointments extends React.Component<{ patient: Patient; hid
 			<div className="single-patient-appointments appointments">
 				{this.props.hideTitle ? '' : <h3>Appointments</h3>}
 				{this.appointments.length ? (
-					this.appointments.sort((a, b) => a.date - b.date).map((appointment) => {
-						return (
-							<AppointmentThumb
-								key={appointment._id}
-								onClick={() => (this.selectedAppointment = appointment)}
-								appointment={appointment}
-								small={true}
-								canDelete={true}
-								labeled={true}
-							/>
-						);
-					})
+					<AppointmentsList list={this.appointments} />
 				) : (
 					<p className="no-appointments">This patient does not have any appointment.</p>
 				)}
@@ -75,25 +65,7 @@ export class PatientAppointments extends React.Component<{ patient: Patient; hid
 				>
 					Book New Appointment
 				</PrimaryButton>
-				<appointmentsComponents.AppointmentEditor
-					onDismiss={() => (this.selectedAppointment = null)}
-					appointment={this.getAppointmentToEdit()}
-					onDelete={() => (this.selectedAppointment = null)}
-				/>
 			</div>
 		);
-	}
-
-	/**
-	 * Utility function to get the appointment we're about to edit
-	 * 
-	 * @returns 
-	 * @memberof SinglePatient
-	 */
-	getAppointmentToEdit() {
-		const index = appointmentsData.appointments.list.findIndex(
-			(appointment) => appointment._id === (this.selectedAppointment || new appointmentsData.Appointment())._id
-		);
-		return appointmentsData.appointments.list[index];
 	}
 }

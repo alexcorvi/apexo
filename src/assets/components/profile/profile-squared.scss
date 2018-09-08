@@ -1,0 +1,16 @@
+.profile-squared {
+	display: inline-flex !important;
+	.ms-Persona-initials {
+		border-radius: 0;
+		font-size: 14px;
+	}
+	.ms-Persona-details {
+		line-height: 1.5;
+	}
+
+	&.size-3 {
+		.ms-Persona-initials {
+			font-size: 16px;
+		}
+	}
+}

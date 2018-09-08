@@ -1,13 +1,13 @@
-import './editable-list.scss';
-
 import * as React from 'react';
-
-import { PickFile, fileTypes } from '../../../assets/components/pick-files/pick-files';
-import { Row, Col } from '../../../assets/components/grid/index';
+import { API } from '../../../core';
+import { Col, Row } from '../../../assets/components/grid/index';
+import { fileTypes, PickFile } from '../../../assets/components/pick-files/pick-files';
 import { Icon } from 'office-ui-fabric-react';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { API } from '../../../core';
+import './editable-list.scss';
+
+
 
 @observer
 export class ViewTextual extends React.Component<

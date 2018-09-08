@@ -30,7 +30,6 @@ export class PrescriptionLink extends React.Component<Props, {}> {
 				className={'prescription-link'}
 				text={this.found.name}
 				size={3}
-				onRenderInitials={() => <Icon iconName="pill" />}
 				secondaryText={`${this.found.doseInMg}mg ${this.found.timesPerDay}X${this.found
 					.unitsPerTime} ${itemFormToString(this.found.form)}`}
 				onClick={() => {

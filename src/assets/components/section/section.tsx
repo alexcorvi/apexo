@@ -1,8 +1,8 @@
-import './section.scss';
 import * as React from 'react';
-import { observer } from 'mobx-react';
-import { observable } from 'mobx';
 import { IconButton } from 'office-ui-fabric-react';
+import { observable } from 'mobx';
+import { observer } from 'mobx-react';
+import './section.scss';
 
 @observer
 export class Section extends React.Component<{ title: string; showByDefault?: boolean; zIndex?: number }> {

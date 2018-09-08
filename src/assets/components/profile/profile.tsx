@@ -1,21 +1,20 @@
 import * as React from 'react';
-
 import {
 	CommandBar,
+	IPersonaSharedProps,
+	IRenderFunction,
 	Persona,
 	PersonaPresence,
-	PersonaSize,
-	IRenderFunction,
-	IPersonaSharedProps
-} from 'office-ui-fabric-react';
-
+	PersonaSize
+	} from 'office-ui-fabric-react';
 import { observer } from 'mobx-react';
+
+
 
 @observer
 export class Profile extends React.Component<
 	{
 		name: string;
-		secondaryText?: string;
 		tertiaryText?: string;
 		onClick?: () => void;
 		size?: PersonaSize;
@@ -44,7 +43,6 @@ export class Profile extends React.Component<
 				size={this.props.size || PersonaSize.large}
 				presence={PersonaPresence.none}
 				text={this.props.name}
-				secondaryText={this.props.secondaryText}
 				tertiaryText={this.props.tertiaryText}
 				onRenderInitials={this.props.onRenderInitials}
 			/>

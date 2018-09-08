@@ -52,6 +52,16 @@
 			color: #fff;
 		}
 	}
+
+	.prescription {
+		.item {
+			display: none;
+		}
+		.input {
+			border-bottom: none;
+		}
+	}
+
 	.insight {
 		span {
 			padding: 2px 7px 3px;
@@ -94,22 +104,68 @@
 	}
 }
 
-.appointment-editor a.delete {
-	font-size: 13px;
-	background: #f44336;
-	color: #fff;
-	padding: 5px 8px;
-	display: inline-block;
-	margin-bottom: 30px;
-	border-radius: 2px;
-	cursor: pointer;
-	transition: 0.4s all;
-	i {
-		font-size: 9px;
-		margin-right: 5px;
+.print-heading {
+	display: none;
+}
+
+@media print {
+	html,
+	body {
+		overflow: hidden;
 	}
-	&:hover {
-		background: #c62828;
-		@include box_shadow(2);
+
+	.print-heading {
+		display: block;
+	}
+
+	.ms-Panel-main {
+		width: 100% !important;
+	}
+
+	.ms-Panel-commands {
+		display: none;
+	}
+	#prescription-items {
+		background-color: white;
+		height: 100%;
+		width: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		margin: 0;
+		padding: 30px;
+		font-size: 14px;
+		line-height: 18px;
+		z-index: 9999999;
+	}
+
+	.ms-Persona-primaryText {
+		font-size: 17px;
+	}
+
+	.ms-Persona-secondaryText {
+		font-size: 14px;
+		color: #000;
+	}
+
+	.m-b-5 {
+		width: 100%;
+		padding-bottom: 15px;
+		margin-bottom: 15px;
+		border-bottom: 1px solid #000;
+	}
+
+	.ant-col-4 {
+		display: none;
+	}
+	.ms-Panel-main {
+		width: 100%;
+	}
+	@page {
+		size: auto; /* auto is the initial value */
+		margin: 0mm; /* this affects the margin in the printer settings */
+	}
+	.ms-Button-icon {
+		display: none;
 	}
 }
