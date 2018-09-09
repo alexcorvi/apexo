@@ -1,15 +1,20 @@
-import './login.scss';
-
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-
-import { MessageBar, MessageBarType, PrimaryButton, TextField, Label, DefaultButton } from 'office-ui-fabric-react';
 import { API } from '../';
+import { checkServer } from '../../assets/utils/check-server';
+import {
+	DefaultButton,
+	Label,
+	MessageBar,
+	MessageBarType,
+	PrimaryButton,
+	TextField
+	} from 'office-ui-fabric-react';
+import { Label as LabelC, LabelType } from '../../assets/components/label/label.component';
 import { login } from './data.login';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Label as LabelC, LabelType } from '../../assets/components/label/label.component';
-import { checkServer } from '../../assets/utils/check-server';
+import './login.scss';
 
 @observer
 export class LoginComponent extends React.Component<{}, {}> {
