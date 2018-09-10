@@ -2,6 +2,7 @@ import { Appointment, AppointmentJSON } from '../../modules/appointments/data';
 import { appointmentsData } from '../../modules/appointments';
 import { CaseJSON, OrthoCase } from '../../modules/orthodontic/data';
 import { data } from '../../modules';
+import { decode, encode } from './base64';
 import { Doctor, DoctorJSON } from '../../modules/doctors/data';
 import { doctorsData } from '../../modules/doctors';
 import { orthoData } from '../../modules/orthodontic';
@@ -37,7 +38,7 @@ export function backup2JSON(): BackupJSON {
 }
 
 export function backup2Base64() {
-	return btoa(JSON.stringify(backup2JSON()));
+	return encode(JSON.stringify(backup2JSON()));
 }
 
 export function restoreFromJSON(json: BackupJSON) {
@@ -58,5 +59,5 @@ export function restoreFromJSON(json: BackupJSON) {
 }
 
 export function restoreFromBase64(base64Data: string) {
-	restoreFromJSON(JSON.parse(atob(base64Data)));
+	restoreFromJSON(JSON.parse(decode(base64Data)));
 }
