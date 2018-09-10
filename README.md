@@ -10,6 +10,12 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+### 1.6.1
+- Performance improvements
+- improved searching capabilities
+- Fixed bug: calendar day height unification
+- Fixed bug: sorting by numerical columns
+
 ### 1.6.0
 - Consistent and responsive experience across all small screens
 - Consistent experience across modules
