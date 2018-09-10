@@ -84,6 +84,7 @@ export class Treatments extends React.Component<{}, {}> {
 
 						return {
 							id: treatment._id,
+							searchableString: treatment.searchableString,
 							cells: [
 								{
 									dataValue: treatment.type,

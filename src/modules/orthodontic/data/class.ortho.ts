@@ -1,7 +1,8 @@
+import t4mat from 't4mat';
+import { CaseJSON } from './interface.ortho-json';
 import { computed, observable, observe } from 'mobx';
 import { generateID } from '../../../assets/utils/generate-id';
 import { patientsData } from '../../patients/index';
-import { CaseJSON } from './interface.ortho-json';
 
 export const Lips = {
 	competent: 'competent',
@@ -92,6 +93,14 @@ export class OrthoCase {
 	@observable treatmentPlan_appliance: string[] = [];
 
 	@observable orthoGallery: string[] = [];
+
+	@computed
+	get searchableString() {
+		return `
+			${this.patient ? this.patient.searchableString : ''}
+			${t4mat({ time: this.started, format: '{R}' })}
+		`.toLowerCase();
+	}
 
 	constructor(json?: CaseJSON) {
 		if (json) {

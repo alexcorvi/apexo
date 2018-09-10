@@ -1,7 +1,6 @@
-import { computed, observable, observe } from 'mobx';
-
-import { DoctorJSON } from './interface.doctor-json';
 import { appointmentsData } from '../../appointments';
+import { computed, observable, observe } from 'mobx';
+import { DoctorJSON } from './interface.doctor-json';
 import { generateID } from '../../../assets/utils/generate-id';
 
 export class Doctor {
@@ -124,6 +123,15 @@ export class Doctor {
 	@computed
 	get lastAppointment() {
 		return this.pastAppointments[0];
+	}
+
+	@computed
+	get searchableString() {
+		return `
+			${this.name} ${this.onDutyDays.join(' ')}
+			${this.phone} ${this.email}
+			${this.nextAppointment.treatment.type} ${this.lastAppointment.treatment.type}
+		`.toLowerCase();
 	}
 
 	/**

@@ -1,7 +1,7 @@
 import { computed, observable } from 'mobx';
-import { TreatmentJSON } from './index';
 import { generateID } from '../../../assets/utils/generate-id';
 import { settingsData } from '../../settings';
+import { TreatmentJSON } from './index';
 
 export class Treatment {
 	// Observables
@@ -36,6 +36,14 @@ export class Treatment {
 	 * @returns {TreatmentJSON} 
 	 * @memberof Treatment
 	 */
+
+	@computed
+	get searchableString() {
+		return `
+			${this.type} expenses ${this.expenses}
+		`.toLowerCase();
+	}
+
 	public toJSON(): TreatmentJSON {
 		return {
 			_id: this._id,

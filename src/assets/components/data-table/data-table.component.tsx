@@ -10,9 +10,8 @@ import {
 import { computed, observable } from 'mobx';
 import { escapeRegExp } from '../../utils/escape-regex';
 import { observer } from 'mobx-react';
+import { textualFilter } from '../../utils/textual-filter';
 import './data-table.component.scss';
-
-
 
 interface Cell {
 	component: string | React.ReactElement<any>;
@@ -25,6 +24,7 @@ interface Cell {
 interface Row {
 	id: string;
 	cells: Cell[];
+	searchableString: string;
 }
 
 interface Props {
@@ -50,17 +50,7 @@ export class DataTable extends React.Component<Props, {}> {
 
 	@computed
 	get filteredRows() {
-		return this.props.rows.filter((row) => {
-			if (!this.filterString) {
-				return true;
-			}
-
-			const filters = this.filterString
-				.split(' ')
-				.map((filterString) => new RegExp(escapeRegExp(filterString), 'gim'));
-
-			return row.cells.some((cell) => filters.every((filter) => filter.test(cell.dataValue.toString())));
-		});
+		return textualFilter(this.props.rows, this.filterString);
 	}
 
 	render() {

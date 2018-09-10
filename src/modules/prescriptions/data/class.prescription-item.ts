@@ -1,7 +1,12 @@
-import { PrescriptionItemForm, PrescriptionItemJSON, itemFormToString, stringToItemForm } from './index';
 import { computed, observable } from 'mobx';
-
 import { generateID } from '../../../assets/utils/generate-id';
+import {
+	itemFormToString,
+	PrescriptionItemForm,
+	PrescriptionItemJSON,
+	stringToItemForm
+	} from './index';
+
 
 export class PrescriptionItem {
 	[key: string]: string | number | Function;
@@ -17,6 +22,15 @@ export class PrescriptionItem {
 	@observable timesPerDay: number = 3;
 
 	@observable form: PrescriptionItemForm = PrescriptionItemForm.capsule;
+
+	@computed
+	get searchableString() {
+		return `
+			${this.name} ${this.doseInMg}mg ${this.doseInMg}
+			${this.timesPerDay}X${this.unitsPerTime}
+			${itemFormToString(this.form)}
+		`.toLowerCase();
+	}
 
 	/**
 	 * Converts prescription's data to JSON

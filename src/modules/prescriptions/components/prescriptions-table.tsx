@@ -75,6 +75,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 					rows={prescriptions.list.map((prescription) => {
 						return {
 							id: prescription._id,
+							searchableString: prescription.searchableString,
 							cells: [
 								{
 									dataValue: prescription.name,

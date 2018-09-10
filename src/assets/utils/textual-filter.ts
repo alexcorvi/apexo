@@ -1,6 +1,10 @@
+import { escapeRegExp } from './escape-regex';
 export function textualFilter<T extends { searchableString: string }>(list: T[], text: string) {
-	const filters = text.toLowerCase().split(/\W/).filter((x) => x);
 	return list.filter((item) => {
-		return filters.every((keyword) => item.searchableString.indexOf(keyword) > -1);
+		const filters = text.split(' ').map((filterString) => new RegExp(escapeRegExp(filterString), 'gim'));
+		if (!text) {
+			return true;
+		}
+		return filters.every((filter) => filter.test(item.searchableString.toString()));
 	});
 }

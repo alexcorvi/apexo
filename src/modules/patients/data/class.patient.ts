@@ -1,9 +1,16 @@
-import { Gender, ISOTeeth, Label, PatientJSON, Tooth, genderToString, stringToGender } from './index';
-import { LabelTypeToString, stringToLabelType } from '../../../assets/components/label/label.component';
-import { computed, observable, observe } from 'mobx';
-
 import { appointmentsData } from '../../appointments';
+import { computed, observable, observe } from 'mobx';
+import {
+	Gender,
+	genderToString,
+	ISOTeeth,
+	Label,
+	PatientJSON,
+	stringToGender,
+	Tooth
+	} from './index';
 import { generateID } from '../../../assets/utils/generate-id';
+import { LabelTypeToString, stringToLabelType } from '../../../assets/components/label/label.component';
 
 /* 
 	------------------------------
@@ -180,6 +187,17 @@ export class Patient {
 	@computed
 	get hasPermanentTeeth() {
 		return this.age > 5;
+	}
+
+	@computed
+	get searchableString() {
+		return `
+			${this.age} ${this.birthYear}
+			${this.phone} ${this.email} ${this.address} ${genderToString(this.gender)}
+			${this.name} ${this.labels.map((x) => x.text).join(' ')} ${this.medicalHistory.join(' ')}
+			${this.teeth.map((x) => x.notes.join(' ')).join(' ')}
+			${this.nextAppointment.treatment.type} ${this.lastAppointment.treatment.type}
+		`.toLowerCase();
 	}
 
 	/**

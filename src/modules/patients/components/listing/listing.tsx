@@ -23,8 +23,6 @@ import { ProfileSquared } from '../../../../assets/components/profile/profile-sq
 import { SinglePatient } from '../single/single';
 import './listing.scss';
 
-
-
 @observer
 export class PatientsListing extends React.Component<{}, {}> {
 	@observable selectedId: string = API.router.currentLocation.split('/')[1];
@@ -50,6 +48,7 @@ export class PatientsListing extends React.Component<{}, {}> {
 					heads={[ 'Patient', 'Last Appointment', 'Next Appointment', 'Label' ]}
 					rows={patients.list.map((patient) => ({
 						id: patient._id,
+						searchableString: patient.searchableString,
 						cells: [
 							{
 								dataValue: patient.name + ' ' + patient.age + ' ' + genderToString(patient.gender),

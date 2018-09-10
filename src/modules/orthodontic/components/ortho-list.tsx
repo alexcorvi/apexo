@@ -27,8 +27,6 @@ import { ProfileSquared } from '../../../assets/components/profile/profile-squar
 import { TagInput } from '../../../assets/components/tag-input/tag-input';
 import './ortho-list.scss';
 
-
-
 @observer
 export class OrthoList extends React.Component<{}, {}> {
 	@observable showAdditionPanel: boolean = false;
@@ -49,6 +47,7 @@ export class OrthoList extends React.Component<{}, {}> {
 						const patient = orthoCase.patient || new patientsData.Patient();
 						return {
 							id: orthoCase._id,
+							searchableString: orthoCase.searchableString,
 							cells: [
 								{
 									dataValue: patient.name,

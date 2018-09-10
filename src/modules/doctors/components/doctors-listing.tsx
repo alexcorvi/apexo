@@ -29,8 +29,6 @@ import { settings } from '../../../modules/settings/data';
 import { TagInput } from '../../../assets/components/tag-input/tag-input';
 import './doctors-listing.scss';
 
-
-
 @observer
 export class DoctorsListing extends React.Component<{}, {}> {
 	@observable selectedId: string = API.router.currentLocation.split('/')[1];
@@ -58,6 +56,7 @@ export class DoctorsListing extends React.Component<{}, {}> {
 							heads={[ 'Doctor', 'Last Appointment', 'Next Appointment' ]}
 							rows={doctors.list.map((doctor) => ({
 								id: doctor._id,
+								searchableString: doctor.searchableString,
 								cells: [
 									{
 										dataValue: doctor.name,
