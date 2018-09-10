@@ -124,7 +124,7 @@ export class DataTable extends React.Component<Props, {}> {
 							.map((x) => x.row)
 							.map((row, index) => {
 								return (
-									<tr key={index}>
+									<tr key={row.id}>
 										{row.cells.map((cell, index2) => {
 											return (
 												<td
@@ -179,6 +179,6 @@ export class DataTable extends React.Component<Props, {}> {
 	}
 
 	private compare(a: string | number, b: string | number) {
-		return a.toString().localeCompare(b.toString());
+		return typeof a === 'number' && typeof b === 'number' ? a - b : a.toString().localeCompare(b.toString());
 	}
 }
