@@ -130,7 +130,8 @@ export class Doctor {
 		return `
 			${this.name} ${this.onDutyDays.join(' ')}
 			${this.phone} ${this.email}
-			${this.nextAppointment.treatment.type} ${this.lastAppointment.treatment.type}
+			${this.nextAppointment ? this.nextAppointment.treatment.type : ''}
+			${this.lastAppointment ? this.lastAppointment.treatment.type : ''}
 		`.toLowerCase();
 	}
 

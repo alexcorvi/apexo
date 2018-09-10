@@ -1,13 +1,18 @@
-import { computed, intercept, observable, observe } from 'mobx';
-
+import * as dateUtils from '../../../assets/utils/date';
 import { AppointmentJSON } from './index';
+import {
+	computed,
+	intercept,
+	observable,
+	observe
+	} from 'mobx';
 import { doctorsData } from '../../doctors';
 import { generateID } from '../../../assets/utils/generate-id';
 import { patientsData } from '../../patients';
 import { prescriptionsData } from '../../prescriptions';
 import { settingsData } from '../../settings';
 import { treatmentsData } from '../../treatments';
-import * as dateUtils from '../../../assets/utils/date';
+
 
 export class Appointment {
 	/**
@@ -283,8 +288,7 @@ export class Appointment {
 				${this.complaint}
                 ${this.diagnosis}
                 ${new Date(this.date).toDateString()}
-                ${this.treatment.type}
-                ${this.treatment.expenses}
+                ${this.treatment ? this.treatment.type : ''}
                 ${this.paid ? 'paid' : ''}
                 ${this.outstanding ? 'outstanding' : ''}
                 ${this.missed ? 'missed' : ''}
