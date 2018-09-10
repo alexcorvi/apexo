@@ -1,30 +1,37 @@
-import './prescription-table.scss';
-
 import * as React from 'react';
-
-import {
-	PrescriptionItem,
-	namespace,
-	prescriptions,
-	itemFormToString,
-	prescriptionItemForms,
-	stringToItemForm
-} from '../data';
-import { Icon, Nav, PrimaryButton, TextField, Panel, PanelType, IconButton, Dropdown } from 'office-ui-fabric-react';
-import { computed, observable } from 'mobx';
 import { API } from '../../../core';
-import { TagInput } from '../../../assets/components/tag-input/tag-input';
-import { escapeRegExp } from '../../../assets/utils/escape-regex';
-import { observer } from 'mobx-react';
-import { round } from '../../../assets/utils/round';
-import { settingsData } from '../../settings';
-import { Row, Col } from '../../../assets/components/grid/index';
-import { sortArrByProp } from '../../../assets/utils/sort-arr';
-import { PrescriptionLink } from './prescription-link';
 import { appointmentsData } from '../../appointments';
+import { Col, Row } from '../../../assets/components/grid/index';
+import { computed, observable } from 'mobx';
 import { DataTable } from '../../../assets/components/data-table/data-table.component';
+import {
+	Dropdown,
+	Icon,
+	IconButton,
+	Nav,
+	Panel,
+	PanelType,
+	PrimaryButton,
+	TextField
+	} from 'office-ui-fabric-react';
+import { escapeRegExp } from '../../../assets/utils/escape-regex';
+import {
+	itemFormToString,
+	namespace,
+	PrescriptionItem,
+	prescriptionItemForms,
+	prescriptions,
+	stringToItemForm
+	} from '../data';
+import { observer } from 'mobx-react';
 import { Profile } from '../../../assets/components/profile/profile';
+import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
+import { round } from '../../../assets/utils/round';
 import { Section } from '../../../assets/components/section/section';
+import { settingsData } from '../../settings';
+import { sortArrByProp } from '../../../assets/utils/sort-arr';
+import { TagInput } from '../../../assets/components/tag-input/tag-input';
+import './prescription-table.scss';
 
 @observer
 export class PrescriptionsTable extends React.Component<{}, {}> {
@@ -71,7 +78,14 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 							cells: [
 								{
 									dataValue: prescription.name,
-									component: <PrescriptionLink id={prescription._id} />,
+									component: (
+										<ProfileSquared
+											text={prescription.name}
+											subText={`${prescription.doseInMg}mg ${prescription.timesPerDay}X${prescription.unitsPerTime} ${itemFormToString(
+												prescription.form
+											)}`}
+										/>
+									),
 									onClick: () => {
 										this.selectedID = prescription._id;
 									},
@@ -113,7 +127,16 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 						onRenderNavigation={() => (
 							<Row className="panel-heading">
 								<Col span={20}>
-									{this.selectedPrescription ? <PrescriptionLink id={this.selectedID} /> : <p />}
+									{this.selectedPrescription ? (
+										<ProfileSquared
+											text={this.selectedPrescription.name}
+											subText={`${this.selectedPrescription.doseInMg}mg ${this
+												.selectedPrescription.timesPerDay}X${this.selectedPrescription
+												.unitsPerTime} ${itemFormToString(this.selectedPrescription.form)}`}
+										/>
+									) : (
+										<p />
+									)}
 								</Col>
 								<Col span={4} className="close">
 									<IconButton

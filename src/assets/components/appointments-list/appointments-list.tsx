@@ -5,18 +5,17 @@ import { AppointmentThumb } from '../appointment-thumb/appointment-thumb';
 import { Col, Row } from '../grid';
 import { computed, observable } from 'mobx';
 import {
-    DatePicker,
-    Dropdown,
-    Icon,
-    Panel,
-    PanelType,
-    PrimaryButton,
-    TextField,
-    Toggle
-    } from 'office-ui-fabric-react';
+	DatePicker,
+	Dropdown,
+	Icon,
+	Panel,
+	PanelType,
+	PrimaryButton,
+	TextField,
+	Toggle
+	} from 'office-ui-fabric-react';
 import { observer } from 'mobx-react';
 import { textualFilter } from '../../../assets/utils/textual-filter';
-
 
 @observer
 export class AppointmentsList extends React.Component<{ list: Appointment[] }, {}> {
@@ -86,7 +85,6 @@ export class AppointmentsList extends React.Component<{ list: Appointment[] }, {
 								onClick={() => (this.selectedAppointmentID = appointment._id)}
 								appointment={appointment}
 								canDelete={true}
-								labeled={true}
 							/>
 						);
 					})

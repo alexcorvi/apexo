@@ -1,41 +1,40 @@
-import './appointment-editor.scss';
-
+import * as dateUtils from '../../../assets/utils/date';
 import * as React from 'react';
-
+import { API } from '../../../core';
 import { Appointment, appointments } from '../data';
+import { Col, Row } from '../../../assets/components/grid/index';
+import { computed, observable, toJS } from 'mobx';
+import { convert } from '../../../assets/utils/teeth-numbering-systems';
+import { DateLink } from '.';
 import {
 	DatePicker,
 	Dropdown,
 	Icon,
+	IconButton,
 	Panel,
 	PanelType,
 	PrimaryButton,
 	TextField,
-	Toggle,
-	IconButton
-} from 'office-ui-fabric-react';
-import { Label, LabelType } from '../../../assets/components/label/label.component';
-import { computed, observable, toJS } from 'mobx';
-import { Row, Col } from '../../../assets/components/grid/index';
-import { API } from '../../../core';
-import { Profile } from '../../../assets/components/profile/profile';
-import { TagInput } from '../../../assets/components/tag-input/tag-input';
-import { convert } from '../../../assets/utils/teeth-numbering-systems';
+	Toggle
+	} from 'office-ui-fabric-react';
 import { doctorsData } from '../../doctors';
+import { Gallery } from '../../../assets/components/gallery/gallery';
+import { Label, LabelType } from '../../../assets/components/label/label.component';
 import { observer } from 'mobx-react';
+import { PatientLink } from '../../patients/components';
 import { patientsData } from '../../patients';
 import { prescriptionsData } from '../../prescriptions';
-import { round } from '../../../assets/utils/round';
-import { settingsData } from '../../settings';
-import { treatmentsData } from '../../treatments';
-import { Gallery } from '../../../assets/components/gallery/gallery';
-import { Treatment } from '../../treatments/data/class.treatment';
-import { TreatmentLink } from '../../treatments/components';
-import { PatientLink } from '../../patients/components';
-import { DateLink } from '.';
-import { Section } from '../../../assets/components/section/section';
+import { Profile } from '../../../assets/components/profile/profile';
 import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
-import * as dateUtils from '../../../assets/utils/date';
+import { round } from '../../../assets/utils/round';
+import { Section } from '../../../assets/components/section/section';
+import { settingsData } from '../../settings';
+import { TagInput } from '../../../assets/components/tag-input/tag-input';
+import { Treatment } from '../../treatments/data/class.treatment';
+import { treatmentsData } from '../../treatments';
+import './appointment-editor.scss';
+
+
 
 @observer
 export class AppointmentEditor extends React.Component<

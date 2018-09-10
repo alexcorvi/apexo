@@ -9,7 +9,7 @@ import { Icon } from 'office-ui-fabric-react';
 import { observer } from 'mobx-react';
 import { PatientLink } from '../../modules/patients/components';
 import { Profile } from '../../assets/components/profile/profile';
-import { TreatmentLink } from '../../modules/treatments/components';
+import { ProfileSquared } from '../../assets/components/profile/profile-squared';
 import { user } from '../user/data.user';
 @observer
 export class Home extends React.Component<{}, {}> {
@@ -57,10 +57,10 @@ export class Home extends React.Component<{}, {}> {
 									{this.todayAppointments.map((appointment) => (
 										<tr key={appointment._id} className="home-td">
 											<td>
-												<div className="m-b-5">
-													{<TreatmentLink small id={appointment.treatmentID} notClickable />}
-												</div>
-												{<PatientLink id={appointment.patientID} />}
+												<ProfileSquared
+													text={appointment.treatment.type}
+													subText={appointment.patient.name}
+												/>
 											</td>
 											<td>
 												{appointment.doctors.map((operator) => (
@@ -110,10 +110,10 @@ export class Home extends React.Component<{}, {}> {
 									{this.tomorrowAppointments.map((appointment) => (
 										<tr key={appointment._id} className="home-td">
 											<td>
-												<div className="m-b-5">
-													{<TreatmentLink small id={appointment.treatmentID} notClickable />}
-												</div>
-												{<PatientLink id={appointment.patientID} />}
+												<ProfileSquared
+													text={appointment.treatment.type}
+													subText={appointment.patient.name}
+												/>
 											</td>
 											<td>
 												{appointment.doctors.map((operator) => (

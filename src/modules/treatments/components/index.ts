@@ -1,2 +1,1 @@
-export { Treatments } from "./treatments";
-export { TreatmentLink } from "./link";
+export { Treatments } from './treatments';

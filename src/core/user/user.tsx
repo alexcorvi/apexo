@@ -1,18 +1,21 @@
-import './user.scss';
-
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-
-import { CompoundButton, Link, Panel, PanelType, IconButton } from 'office-ui-fabric-react';
-
 import { API } from '../';
 import { AppointmentThumb } from '../../assets/components/appointment-thumb/appointment-thumb';
-import { Profile } from '../../assets/components/profile/profile';
-import { computed } from 'mobx';
+import { Col, Row } from '../../assets/components/grid';
 import { components as modulesComponents } from '../../modules';
+import {
+	CompoundButton,
+	IconButton,
+	Link,
+	Panel,
+	PanelType
+	} from 'office-ui-fabric-react';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
+import { Profile } from '../../assets/components/profile/profile';
 import { user } from './data.user';
-import { Row, Col } from '../../assets/components/grid';
+import './user.scss';
 
 @observer
 export class UserComponent extends React.Component<{}, {}> {
@@ -86,7 +89,6 @@ export class UserComponent extends React.Component<{}, {}> {
 								appointment={appointment}
 								hideDate={true}
 								showPatient={true}
-								labeled={true}
 								onClick={() => {
 									API.router.go([ 'appointments', dateLink ]);
 									user.visible = false;

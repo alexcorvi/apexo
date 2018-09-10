@@ -1,9 +1,13 @@
-import './doctors-listing.scss';
-
+import * as dateUtils from '../../../assets/utils/date';
 import * as React from 'react';
-
+import { API } from '../../../core';
+import { appointmentsComponents, appointmentsData } from '../../appointments';
+import { AppointmentsList } from '../../../assets/components/appointments-list/appointments-list';
+import { Col, Row } from '../../../assets/components/grid/index';
 import {
 	CommandBar,
+	Icon,
+	IconButton,
 	IContextualMenuItem,
 	Panel,
 	PanelType,
@@ -11,26 +15,21 @@ import {
 	Pivot,
 	PivotItem,
 	PrimaryButton,
-	TextField,
-	IconButton,
-	Icon
-} from 'office-ui-fabric-react';
-import { Doctor, doctors } from '../data';
-import { Label, LabelType, getRandomLabelType } from '../../../assets/components/label/label.component';
-import { appointmentsComponents, appointmentsData } from '../../appointments';
+	TextField
+	} from 'office-ui-fabric-react';
 import { computed, observable } from 'mobx';
-import { Row, Col } from '../../../assets/components/grid/index';
-import { API } from '../../../core';
-import { AppointmentThumb } from '../../../assets/components/appointment-thumb/appointment-thumb';
 import { DataTable } from '../../../assets/components/data-table/data-table.component';
-import { Profile } from '../../../assets/components/profile/profile';
-import { TagInput } from '../../../assets/components/tag-input/tag-input';
+import { Doctor, doctors } from '../data';
+import { getRandomLabelType, Label, LabelType } from '../../../assets/components/label/label.component';
 import { observer } from 'mobx-react';
-import { settings } from '../../../modules/settings/data';
-import { Section } from '../../../assets/components/section/section';
+import { Profile } from '../../../assets/components/profile/profile';
 import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
-import { AppointmentsList } from '../../../assets/components/appointments-list/appointments-list';
-import * as dateUtils from '../../../assets/utils/date';
+import { Section } from '../../../assets/components/section/section';
+import { settings } from '../../../modules/settings/data';
+import { TagInput } from '../../../assets/components/tag-input/tag-input';
+import './doctors-listing.scss';
+
+
 
 @observer
 export class DoctorsListing extends React.Component<{}, {}> {

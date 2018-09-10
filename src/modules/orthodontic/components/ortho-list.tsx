@@ -1,7 +1,9 @@
-import './ortho-list.scss';
-
+import * as dateUtils from '../../../assets/utils/date';
 import * as React from 'react';
-
+import { API } from '../../../core';
+import { appointmentsComponents, appointmentsData } from '../../appointments';
+import { cases, OrthoCase } from '../data';
+import { Col, Row } from '../../../assets/components/grid/index';
 import {
 	CommandBar,
 	IContextualMenuItem,
@@ -12,23 +14,20 @@ import {
 	PivotItem,
 	PrimaryButton,
 	TextField
-} from 'office-ui-fabric-react';
-import { OrthoCase, cases } from '../data';
-import { Label, LabelType, getRandomLabelType } from '../../../assets/components/label/label.component';
-import { appointmentsComponents, appointmentsData } from '../../appointments';
+	} from 'office-ui-fabric-react';
 import { computed, observable } from 'mobx';
-import { Row, Col } from '../../../assets/components/grid/index';
-import { API } from '../../../core';
-import { AppointmentThumb } from '../../../assets/components/appointment-thumb/appointment-thumb';
 import { DataTable } from '../../../assets/components/data-table/data-table.component';
-import { Profile } from '../../../assets/components/profile/profile';
-import { TagInput } from '../../../assets/components/tag-input/tag-input';
-import { observer } from 'mobx-react';
-import { patientsData, patientsComponents } from '../../patients';
 import { genderToString } from '../../patients/data/enum.gender';
+import { getRandomLabelType, Label, LabelType } from '../../../assets/components/label/label.component';
+import { observer } from 'mobx-react';
 import { OrthoSingle } from '.';
+import { patientsComponents, patientsData } from '../../patients';
+import { Profile } from '../../../assets/components/profile/profile';
 import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
-import * as dateUtils from '../../../assets/utils/date';
+import { TagInput } from '../../../assets/components/tag-input/tag-input';
+import './ortho-list.scss';
+
+
 
 @observer
 export class OrthoList extends React.Component<{}, {}> {

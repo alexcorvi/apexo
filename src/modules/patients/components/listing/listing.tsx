@@ -1,30 +1,29 @@
-import './listing.scss';
-
+import * as dateUtils from '../../../../assets/utils/date';
 import * as React from 'react';
-
+import { API } from '../../../../core';
 import {
 	CommandBar,
+	ICommandBarItemProps,
+	Icon,
 	Persona,
 	PersonaPresence,
 	PersonaSize,
-	ICommandBarItemProps,
-	TextField,
 	SearchBox,
-	Icon
-} from 'office-ui-fabric-react';
-import { Gender, genderToString, patients } from '../../data';
-import { observable, computed } from 'mobx';
-import { API } from '../../../../core';
-import { AppointmentThumb } from '../../../../assets/components/appointment-thumb/appointment-thumb';
+	TextField
+	} from 'office-ui-fabric-react';
+import { commands } from './commands';
+import { computed, observable } from 'mobx';
 import { DataTable } from '../../../../assets/components/data-table/data-table.component';
+import { Gender, genderToString, patients } from '../../data';
 import { Label } from '../../../../assets/components/label/label.component';
+import { observer } from 'mobx-react';
 import { Patient } from '../../data';
 import { Profile } from '../../../../assets/components/profile/profile';
-import { commands } from './commands';
-import { observer } from 'mobx-react';
-import { SinglePatient } from '../single/single';
 import { ProfileSquared } from '../../../../assets/components/profile/profile-squared';
-import * as dateUtils from '../../../../assets/utils/date';
+import { SinglePatient } from '../single/single';
+import './listing.scss';
+
+
 
 @observer
 export class PatientsListing extends React.Component<{}, {}> {

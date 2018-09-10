@@ -36,17 +36,9 @@ export class AppointmentThumb extends React.Component<
 		 */
 		className?: string;
 		/**
-		 * add :before labels
-		 * 
-		 * @type {boolean}
-		 */
-		labeled?: boolean;
-
-		/**
 		 * show date thumb
 		*/
 		hideDate?: boolean;
-
 		/**
 		 * show patient
 		 */
@@ -59,23 +51,21 @@ export class AppointmentThumb extends React.Component<
 	@computed
 	get className() {
 		let className = 'appointment-thumbnail-component';
-		if (this.props.labeled) {
-			className = className + ' labeled';
-			if (this.props.appointment.dueToday) {
-				className = className + ' today-due';
-			}
-			if (this.props.appointment.dueTomorrow) {
-				className = className + ' tomorrow-due';
-			}
-			if (this.props.appointment.missed) {
-				className = className + ' missed';
-			}
-			if (this.props.appointment.outstanding) {
-				className = className + ' to-be-paid';
-			}
-			if (this.props.appointment.future) {
-				className = className + ' future';
-			}
+		className = className + ' labeled';
+		if (this.props.appointment.dueToday) {
+			className = className + ' today-due';
+		}
+		if (this.props.appointment.dueTomorrow) {
+			className = className + ' tomorrow-due';
+		}
+		if (this.props.appointment.missed) {
+			className = className + ' missed';
+		}
+		if (this.props.appointment.outstanding) {
+			className = className + ' to-be-paid';
+		}
+		if (this.props.appointment.future) {
+			className = className + ' future';
 		}
 		if (this.props.onClick) {
 			className = className + ' clickable';
@@ -100,7 +90,7 @@ export class AppointmentThumb extends React.Component<
 				) : (
 					''
 				)}{' '}
-				{this.props.labeled ? (
+				{
 					<div className="m-b-5">
 						<ProfileSquared
 							text={this.props.appointment.treatment.type}
@@ -108,28 +98,7 @@ export class AppointmentThumb extends React.Component<
 							size={3}
 						/>
 					</div>
-				) : (
-					<div>
-						{' '}
-						{this.props.hideTreatment ? (
-							''
-						) : (
-							<div className="m-b-5">
-								<treatmentsComponents.TreatmentLink notClickable small id={treatmentID} />
-							</div>
-						)}
-						{this.props.hideDate ? (
-							''
-						) : (
-							<appointmentsComponents.DateLink
-								notClickable
-								className="hidden-xs"
-								time={this.props.appointment.date}
-								format="{d}/{m}/{yyyy} ({RR})"
-							/>
-						)}
-					</div>
-				)}
+				}
 				{this.props.canDelete ? (
 					<Icon
 						iconName="delete"

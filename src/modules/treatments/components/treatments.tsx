@@ -1,25 +1,29 @@
-import './treatments.scss';
-
 import * as React from 'react';
-
-import { Treatment, namespace, treatments } from '../data';
-import { Icon, Nav, PrimaryButton, TextField, Panel, PanelType, IconButton } from 'office-ui-fabric-react';
-import { computed, observable } from 'mobx';
-
 import { API } from '../../../core';
-import { TagInput } from '../../../assets/components/tag-input/tag-input';
-import { escapeRegExp } from '../../../assets/utils/escape-regex';
-import { observer } from 'mobx-react';
-import { round } from '../../../assets/utils/round';
-import { settingsData } from '../../settings';
-import { Row, Col } from '../../../assets/components/grid/index';
-import { sortArrByProp } from '../../../assets/utils/sort-arr';
-import { TreatmentLink } from './link';
 import { appointmentsData } from '../../appointments';
-import { AppointmentThumb } from '../../../assets/components/appointment-thumb/appointment-thumb';
+import { Col, Row } from '../../../assets/components/grid/index';
+import { computed, observable } from 'mobx';
 import { DataTable } from '../../../assets/components/data-table/data-table.component';
+import { escapeRegExp } from '../../../assets/utils/escape-regex';
+import {
+	Icon,
+	IconButton,
+	Nav,
+	Panel,
+	PanelType,
+	PrimaryButton,
+	TextField
+	} from 'office-ui-fabric-react';
+import { namespace, Treatment, treatments } from '../data';
+import { observer } from 'mobx-react';
 import { Profile } from '../../../assets/components/profile/profile';
+import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
+import { round } from '../../../assets/utils/round';
 import { Section } from '../../../assets/components/section/section';
+import { settingsData } from '../../settings';
+import { sortArrByProp } from '../../../assets/utils/sort-arr';
+import { TagInput } from '../../../assets/components/tag-input/tag-input';
+import './treatments.scss';
 
 @observer
 export class Treatments extends React.Component<{}, {}> {
@@ -83,7 +87,14 @@ export class Treatments extends React.Component<{}, {}> {
 							cells: [
 								{
 									dataValue: treatment.type,
-									component: <TreatmentLink id={treatment._id} showExpenses />,
+									component: (
+										<ProfileSquared
+											text={treatment.type}
+											subText={`Expenses: ${settingsData.settings.getSetting(
+												'currencySymbol'
+											)}${treatment.expenses} per unit`}
+										/>
+									),
 									onClick: () => {
 										this.selectedID = treatment._id;
 									},
@@ -127,7 +138,12 @@ export class Treatments extends React.Component<{}, {}> {
 							<Row className="panel-heading">
 								<Col span={20}>
 									{this.selectedTreatment ? (
-										<TreatmentLink id={this.selectedID} showExpenses />
+										<ProfileSquared
+											text={this.selectedTreatment.type}
+											subText={`Expenses: ${settingsData.settings.getSetting(
+												'currencySymbol'
+											)}${this.selectedTreatment.expenses} per unit`}
+										/>
 									) : (
 										<p />
 									)}

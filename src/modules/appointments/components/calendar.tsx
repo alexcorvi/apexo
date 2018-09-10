@@ -1,18 +1,16 @@
-import './calendar.scss';
-
 import * as React from 'react';
-
-import { Appointment, Calendar as CalendarClass, appointments } from '../data';
-import { Icon, TextField, Toggle } from 'office-ui-fabric-react';
-import { computed, observable } from 'mobx';
-import { Row, Col } from '../../../assets/components/grid/index';
 import { API } from '../../../core';
+import { Appointment, appointments, Calendar as CalendarClass } from '../data';
 import { AppointmentEditor } from './appointment-editor';
+import { Col, Row } from '../../../assets/components/grid/index';
+import { computed, observable } from 'mobx';
+import { Icon, TextField, Toggle } from 'office-ui-fabric-react';
 import { observer } from 'mobx-react';
 import { patientsComponents } from '../../patients';
 import { patientsData } from '../../patients';
+import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
 import { settingsData } from '../../settings/index';
-import { treatmentsComponents } from '../../treatments';
+import './calendar.scss';
 
 @observer
 export class Calendar extends React.Component<{}, {}> {
@@ -246,12 +244,9 @@ export class Calendar extends React.Component<{}, {}> {
 															];
 													}}
 												>
-													<treatmentsComponents.TreatmentLink
-														id={appointment.treatmentID}
-														small={true}
-														notClickable
-													/>
-													<br />
+													<div className="m-b-5">
+														<ProfileSquared text={appointment.treatment.type} size={1} />
+													</div>
 													<patientsComponents.PatientLink
 														notClickable
 														id={appointment.patient._id}
