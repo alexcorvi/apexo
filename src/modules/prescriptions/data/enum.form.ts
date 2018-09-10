@@ -8,7 +8,8 @@ export enum PrescriptionItemForm {
 	syrup,
 	powder,
 	mouthWash,
-	suspension
+	suspension,
+	toothPaste
 }
 
 export const prescriptionItemForms = [
@@ -20,8 +21,9 @@ export const prescriptionItemForms = [
 	'lotion',
 	'syrup',
 	'powder',
-	'mouth wash',
-	'suspension'
+	'mouthwash',
+	'suspension',
+	'toothpaste'
 ];
 
 // conversion functions
@@ -44,10 +46,12 @@ export function stringToItemForm(itemForm: string) {
 		return PrescriptionItemForm.lotion;
 	} else if (itemForm === 'powder') {
 		return PrescriptionItemForm.powder;
-	} else if (itemForm === 'mouth wash') {
+	} else if (itemForm === 'mouthwash') {
 		return PrescriptionItemForm.mouthWash;
 	} else if (itemForm === 'suspension') {
 		return PrescriptionItemForm.suspension;
+	} else if (itemForm === 'toothpaste') {
+		return PrescriptionItemForm.toothPaste;
 	} else {
 		return PrescriptionItemForm.syrup;
 	}
