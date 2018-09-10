@@ -1,16 +1,157 @@
-.login-component {
-  margin: 50px auto;
-  max-width: 400px;
-  padding: 0 20px; }
+.gallery-component {
+  margin-top: 10px; }
+  .gallery-component .gallery-label {
+    margin-bottom: 5px; }
+  .gallery-component .image {
+    height: 73px;
+    width: 73px;
+    display: inline-block;
+    background-size: cover;
+    background-position: center;
+    padding: 20px; }
+  .gallery-component .input-image {
+    font-size: 22px;
+    padding: 16px 10px;
+    cursor: pointer;
+    vertical-align: top;
+    transition: 0.4s all;
+    display: inline-block;
+    text-align: center; }
+    .gallery-component .input-image:hover {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      color: #0078d7; }
+    .gallery-component .input-image span {
+      font-size: 10px;
+      display: block;
+      margin-top: 7px;
+      text-transform: uppercase; }
 
-.no-server-mode {
-  position: absolute;
-  bottom: 10px;
-  left: 10px; }
+.gallery-view {
+  max-width: 100%; }
+.spinner-container {
+  margin-top: 300px; }
+.menu .ms-Nav ul {
+  padding-top: 5px; }
+  .menu .ms-Nav ul .is-selected {
+    background: #e1f5fe; }
+  .menu .ms-Nav ul .ms-Nav-link {
+    padding-left: 0 !important;
+    text-transform: capitalize; }
 
-.edit-server-location {
-  display: inline-block;
-  margin-top: 23px; }
+@media (min-width: 992px) {
+  #router-outlet {
+    margin-left: 117px; }
+  .icon-list {
+    position: fixed;
+    top: 52px;
+    left: 0;
+    margin-top: 15px;
+    margin-left: 15px;
+    cursor: pointer; }
+    .icon-list .item {
+      transition: 0.4s all;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      background: #fff;
+      padding: 13px 10px;
+      margin-bottom: 8px;
+      font-size: 17px;
+      text-align: center;
+      border-radius: 3px; }
+      .icon-list .item:hover {
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        background: #757575;
+        color: #fff; }
+      .icon-list .item.selected {
+        background: #00bcd4;
+        color: #fff;
+        cursor: initial;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+      .icon-list .item .text {
+        margin-top: 5px;
+        font-size: 11px;
+        position: relative;
+        bottom: 3px;
+        display: block;
+        text-transform: capitalize; } }
+.prompts-component {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 15px; }
+  .prompts-component .prompt {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    transition: 0.4s all;
+    display: table;
+    background: #fff;
+    color: #000;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 2px;
+    margin-top: 15px; }
+    .prompts-component .prompt i {
+      margin-right: 5px; }
+    .prompts-component .prompt > i {
+      padding: 5px;
+      border-radius: 50px;
+      font-weight: bold; }
+    .prompts-component .prompt .message {
+      margin-right: 10px; }
+    .prompts-component .prompt .button {
+      border-radius: 2px;
+      transition: 0.4s all;
+      border-left: 1px solid #fafafa;
+      padding: 15px 15px 12px;
+      margin-left: 10px;
+      cursor: pointer; }
+      .prompts-component .prompt .button:hover {
+        background: #f5f5f5; }
+      .prompts-component .prompt .button:last-child {
+        margin-right: -11px;
+        margin-left: 0; }
+      .prompts-component .prompt .button i {
+        font-size: 11px; }
+.home .home-td {
+  border-bottom: 1px solid whitesmoke; }
+
+.home .no-appointments {
+  font-size: 13px;
+  text-align: center;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  background: #ffffff;
+  margin-top: 0px;
+  z-index: -10;
+  font-style: italic; }
+
+.home .appointments-table-heading {
+  background: #fff;
+  margin: 0;
+  margin-top: 15px;
+  padding: 12px; }
+
+#router-outlet {
+  margin-top: 50px;
+  padding-bottom: 20px; }
+.user-component .persona {
+  padding: 10px 25px 0; }
+
+.reset-doctor {
+  margin-left: 10px; }
+.confirmation-modal .ms-Panel-main {
+  box-shadow: 0px -20px 50px rgba(0, 0, 0, 0.14) !important;
+  height: 100px;
+  bottom: 0;
+  top: initial; }
+  .confirmation-modal .ms-Panel-main .ms-Panel-content {
+    padding-bottom: 0; }
+    .confirmation-modal .ms-Panel-main .ms-Panel-content p {
+      margin-top: 20px;
+      margin-bottom: 15px; }
+    .confirmation-modal .ms-Panel-main .ms-Panel-content .ms-Button {
+      margin-right: 10px; }
+
+.confirmation-modal .ms-Panel-content {
+  padding-top: 0; }
 .label {
   background: #212121;
   padding: 5px 10px 7px;
@@ -168,6 +309,105 @@
     display: block; }
   .ortho-single-component .has-error .ms-TextField-fieldGroup {
     border-color: #a80000; }
+.header-component {
+  padding-left: 10px;
+  padding-right: 10px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  background: #fff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
+  .header-component section {
+    float: left;
+    padding: 10px 10px 0px;
+    width: 100%;
+    position: relative; }
+  .header-component .notification .title,
+  .header-component .notification .details {
+    padding: 7px; }
+  .header-component .title {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    text-transform: capitalize; }
+  .header-component .issue-bubble {
+    background: #e91e63;
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    position: absolute;
+    right: 47px;
+    top: 12px;
+    border-radius: 20px;
+    cursor: pointer; }
+  .header-component .ms-OverflowSet {
+    display: inline-block;
+    margin-top: 9px; }
+    .header-component .ms-OverflowSet .ms-Button-menuIcon {
+      font-size: 15px; }
+  .header-component .right-buttons {
+    text-align: right; }
+  .header-component .offline {
+    display: inline-block;
+    background: #ff5722;
+    color: #fff;
+    margin-right: 12px;
+    padding: 8px; }
+.editable-list-component {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1; }
+  .editable-list-component .editable-list {
+    border: 1px solid #a6a6a6; }
+  .editable-list-component .input {
+    transition: 0.3s all;
+    background: #fff;
+    border-bottom: 1px solid #c8c8c8; }
+    .editable-list-component .input:hover {
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      border-bottom-color: #4aa9f5; }
+    .editable-list-component .input .input-field,
+    .editable-list-component .input .input-icon {
+      padding: 10px; }
+    .editable-list-component .input .input-icon {
+      padding: 10px;
+      color: #2196f3;
+      cursor: pointer; }
+    .editable-list-component .input .input-image {
+      color: #2196f3;
+      font-size: 20px;
+      padding: 6px 8px;
+      cursor: pointer; }
+    .editable-list-component .input .input-field {
+      border: none;
+      display: block;
+      width: 100%; }
+  .editable-list-component .items .item {
+    transition: 0.3s all;
+    border-bottom: 1px dotted #c8c8c8;
+    background: #fff;
+    display: block; }
+    .editable-list-component .items .item:last-child {
+      border-bottom: none; }
+    .editable-list-component .items .item:hover {
+      border-color: #2196f3;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+    .editable-list-component .items .item.toBeDeleted {
+      border-color: red; }
+    .editable-list-component .items .item .editViewItem {
+      background: transparent;
+      border: 0;
+      padding: 10px;
+      width: 100%; }
+    .editable-list-component .items .item .delete {
+      transition: 0.4s all;
+      font-size: 10px;
+      cursor: pointer;
+      padding: 12px 12px 12px 5px;
+      color: #000; }
+      .editable-list-component .items .item .delete:hover {
+        color: red; }
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
 /* stylelint-disable no-duplicate-selectors */
 /* stylelint-disable declaration-bang-space-before,no-duplicate-selectors */
@@ -3379,90 +3619,6 @@
     -webkit-order: 0;
     -ms-flex-order: 0;
     order: 0; } }
-.editable-list-component {
-  margin-top: 10px;
-  font-size: 13px;
-  line-height: 1; }
-  .editable-list-component .editable-list {
-    border: 1px solid #a6a6a6; }
-  .editable-list-component .input {
-    transition: 0.3s all;
-    background: #fff;
-    border-bottom: 1px solid #c8c8c8; }
-    .editable-list-component .input:hover {
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      border-bottom-color: #4aa9f5; }
-    .editable-list-component .input .input-field,
-    .editable-list-component .input .input-icon {
-      padding: 10px; }
-    .editable-list-component .input .input-icon {
-      padding: 10px;
-      color: #2196f3;
-      cursor: pointer; }
-    .editable-list-component .input .input-image {
-      color: #2196f3;
-      font-size: 20px;
-      padding: 6px 8px;
-      cursor: pointer; }
-    .editable-list-component .input .input-field {
-      border: none;
-      display: block;
-      width: 100%; }
-  .editable-list-component .items .item {
-    transition: 0.3s all;
-    border-bottom: 1px dotted #c8c8c8;
-    background: #fff;
-    display: block; }
-    .editable-list-component .items .item:last-child {
-      border-bottom: none; }
-    .editable-list-component .items .item:hover {
-      border-color: #2196f3;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-    .editable-list-component .items .item.toBeDeleted {
-      border-color: red; }
-    .editable-list-component .items .item .editViewItem {
-      background: transparent;
-      border: 0;
-      padding: 10px;
-      width: 100%; }
-    .editable-list-component .items .item .delete {
-      transition: 0.4s all;
-      font-size: 10px;
-      cursor: pointer;
-      padding: 12px 12px 12px 5px;
-      color: #000; }
-      .editable-list-component .items .item .delete:hover {
-        color: red; }
-.gallery-component {
-  margin-top: 10px; }
-  .gallery-component .gallery-label {
-    margin-bottom: 5px; }
-  .gallery-component .image {
-    height: 73px;
-    width: 73px;
-    display: inline-block;
-    background-size: cover;
-    background-position: center;
-    padding: 20px; }
-  .gallery-component .input-image {
-    font-size: 22px;
-    padding: 16px 10px;
-    cursor: pointer;
-    vertical-align: top;
-    transition: 0.4s all;
-    display: inline-block;
-    text-align: center; }
-    .gallery-component .input-image:hover {
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      color: #0078d7; }
-    .gallery-component .input-image span {
-      font-size: 10px;
-      display: block;
-      margin-top: 7px;
-      text-transform: uppercase; }
-
-.gallery-view {
-  max-width: 100%; }
 .cl-section {
   background: #fff;
   margin-top: 10px;
@@ -3487,6 +3643,24 @@
       margin-bottom: 0;
       padding: 0;
       border: none; }
+.login-component {
+  margin: 50px auto;
+  max-width: 400px;
+  padding: 0 20px; }
+
+.no-server-mode {
+  position: absolute;
+  bottom: 10px;
+  left: 10px; }
+
+.edit-server-location {
+  display: inline-block;
+  margin-top: 23px; }
+.prescriptions-component table.responsive tbody tr td:not(.no-label):before {
+  display: none; }
+
+.prescriptions-component table.responsive tbody tr td.no-label {
+  text-align: left; }
 .settings-component {
   font-size: 13px;
   background: #fff;
@@ -3511,175 +3685,11 @@
     margin-top: 67px;
     margin-right: 15px;
     border-radius: 3px; } }
-.prescriptions-component table.responsive tbody tr td:not(.no-label):before {
-  display: none; }
-
-.prescriptions-component table.responsive tbody tr td.no-label {
-  text-align: left; }
 .treatments-component table.responsive tbody tr td:not(.no-label):before {
   display: none; }
 
 .treatments-component table.responsive tbody tr td.no-label {
   text-align: left; }
-.single-patient-component {
-  font-size: 13px; }
-  .single-patient-component section {
-    background: #fff;
-    margin-top: 10px;
-    padding: 15px;
-    border-radius: 3px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-    .single-patient-component section h3 {
-      margin-bottom: 12px;
-      padding-bottom: 12px;
-      border-bottom: 1px dotted #e0e0e0; }
-.dental-history table {
-  margin-bottom: 20px;
-  width: 100%;
-  border-collapse: collapse; }
-  .dental-history table.permanent tr td:nth-child(8) {
-    border-right: 2px solid #000; }
-  .dental-history table.permanent tr td:nth-child(9) {
-    border-left: 2px solid #000; }
-  .dental-history table.deciduous tr td:nth-child(5) {
-    border-right: 2px solid #000; }
-  .dental-history table.deciduous tr td:nth-child(6) {
-    border-left: 2px solid #000; }
-  .dental-history table tr td {
-    position: relative;
-    background: #fff;
-    transition: 0.4s all;
-    cursor: pointer;
-    text-align: center;
-    padding: 10px;
-    color: #000;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
-    .dental-history table tr td .has-notes {
-      transition: 0.4s all;
-      background: #2196f3;
-      height: 10px;
-      width: 10px;
-      display: inline-block;
-      position: absolute;
-      top: 5px;
-      left: 5px;
-      border-radius: 5px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
-    .dental-history table tr td:hover {
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
-    .dental-history table tr td.filled {
-      background: #ffc107;
-      color: #fff; }
-      .dental-history table tr td.filled .has-notes {
-        background: #ff6f00; }
-    .dental-history table tr td.compromised {
-      background: #f44336;
-      color: #fff; }
-      .dental-history table tr td.compromised .has-notes {
-        background: #b71c1c; }
-    .dental-history table tr td.endo {
-      background: #673ab7;
-      color: #fff; }
-      .dental-history table tr td.endo .has-notes {
-        background: #9575cd; }
-    .dental-history table tr td.missing {
-      color: #eee;
-      background: #bdbdbd; }
-      .dental-history table tr td.missing .has-notes {
-        background: #757575; }
-
-.dental-history .tooth-details {
-  background: #fff;
-  border-radius: 3px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  padding: 30px; }
-  .dental-history .tooth-details h4 {
-    color: #616161; }
-  .dental-history .tooth-details .tooth-name {
-    font-size: 17px;
-    text-transform: capitalize;
-    margin-bottom: 25px; }
-  .dental-history .tooth-details .close-details {
-    position: absolute;
-    top: 0px;
-    right: 10px;
-    padding: 5px 5px 3px;
-    border-radius: 2px;
-    font-size: 10px;
-    cursor: pointer;
-    transition: 0.4s all; }
-    .dental-history .tooth-details .close-details:hover {
-      background: #3e50b3;
-      color: #fff;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-
-.single-tooth-condition {
-  margin-top: 10px; }
-.single-patient-details .gender {
-  margin-bottom: 12px; }
-
-.single-patient-details .ms-TextField-wrapper .ms-TextField-field {
-  background: #fff; }
-
-.single-patient-details .ms-TextField-wrapper div:nth-child(1) {
-  transition: 0.3s all;
-  border-color: #c8c8c8; }
-  .single-patient-details .ms-TextField-wrapper div:nth-child(1):hover {
-    border-color: #0078d7; }
-  .single-patient-details .ms-TextField-wrapper div:nth-child(1) div {
-    background: #f5f5f5;
-    min-width: 70px; }
-
-.single-patient-details .patient-tags {
-  border: 1px solid #c8c8c8;
-  transition: 0.3s all; }
-  .single-patient-details .patient-tags:hover {
-    border-color: #0078d7; }
-
-.single-patient-details .avatar {
-  text-align: center;
-  font-size: 100px;
-  color: #0078d7;
-  border: 1px; }
-
-.single-patient-details .buttons {
-  margin-top: 20px; }
-  .single-patient-details .buttons button {
-    width: 100%; }
-  .single-patient-details .buttons .delete {
-    position: static !important; }
-.single-patient-appointments {
-  position: relative; }
-  .single-patient-appointments .add-new {
-    position: absolute;
-    top: -4px;
-    right: 0;
-    background: #0078d7;
-    border-radius: 2px;
-    color: #fff;
-    padding: 7px 10px;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: 0.4s all; }
-    .single-patient-appointments .add-new:hover {
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      background: #005a9e; }
-    .single-patient-appointments .add-new .icon {
-      display: inline-block;
-      margin-right: 10px;
-      position: relative;
-      top: 1px; }
-  .single-patient-appointments .no-appointments {
-    color: #757575;
-    margin: 15px 0px 7px; }
-@media screen and (max-width: 800px) {
-  .patients-component {
-    padding: 10px; } }
-.patient-link-component {
-  cursor: pointer; }
-  .patient-link-component .icon {
-    position: relative;
-    top: 2px; }
 .appointment-thumbnail-component {
   position: relative;
   transition: 0.4s all; }
@@ -3923,6 +3933,16 @@
     /* this affects the margin in the printer settings */ }
   .ms-Button-icon {
     display: none; } }
+.date-link a {
+  font-size: 12px;
+  color: #2196F3;
+  cursor: pointer;
+  border-bottom: 1px dashed #2196F3;
+  padding-bottom: 3px; }
+  .date-link a .icon {
+    margin-right: 5px;
+    position: relative;
+    top: 1px; }
 .calendar-component {
   background: #fff;
   min-height: 500px;
@@ -4099,16 +4119,18 @@
   .calendar-component .full-day-col {
     width: 100% !important;
     min-height: 50px; } }
-.date-link a {
-  font-size: 12px;
-  color: #2196F3;
-  cursor: pointer;
-  border-bottom: 1px dashed #2196F3;
-  padding-bottom: 3px; }
-  .date-link a .icon {
-    margin-right: 5px;
-    position: relative;
-    top: 1px; }
+.single-patient-component {
+  font-size: 13px; }
+  .single-patient-component section {
+    background: #fff;
+    margin-top: 10px;
+    padding: 15px;
+    border-radius: 3px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+    .single-patient-component section h3 {
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px dotted #e0e0e0; }
 .statistics-component .controls {
   padding: 10px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
@@ -4150,175 +4172,153 @@
     margin-top: 67px;
     margin-right: 15px;
     border-radius: 3px; } }
-.header-component {
-  padding-left: 10px;
-  padding-right: 10px;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  background: #fff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
-  .header-component section {
-    float: left;
-    padding: 10px 10px 0px;
-    width: 100%;
-    position: relative; }
-  .header-component .notification .title,
-  .header-component .notification .details {
-    padding: 7px; }
-  .header-component .title {
-    position: relative;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    text-align: center;
-    text-transform: capitalize; }
-  .header-component .issue-bubble {
-    background: #e91e63;
-    width: 12px;
-    height: 12px;
-    display: inline-block;
-    position: absolute;
-    right: 47px;
-    top: 12px;
-    border-radius: 20px;
-    cursor: pointer; }
-  .header-component .ms-OverflowSet {
-    display: inline-block;
-    margin-top: 9px; }
-    .header-component .ms-OverflowSet .ms-Button-menuIcon {
-      font-size: 15px; }
-  .header-component .right-buttons {
-    text-align: right; }
-  .header-component .offline {
-    display: inline-block;
-    background: #ff5722;
-    color: #fff;
-    margin-right: 12px;
-    padding: 8px; }
-.spinner-container {
-  margin-top: 300px; }
-.menu .ms-Nav ul {
-  padding-top: 5px; }
-  .menu .ms-Nav ul .is-selected {
-    background: #e1f5fe; }
-  .menu .ms-Nav ul .ms-Nav-link {
-    padding-left: 0 !important;
-    text-transform: capitalize; }
+.single-patient-details .gender {
+  margin-bottom: 12px; }
 
-@media (min-width: 992px) {
-  #router-outlet {
-    margin-left: 117px; }
-  .icon-list {
-    position: fixed;
-    top: 52px;
-    left: 0;
-    margin-top: 15px;
-    margin-left: 15px;
-    cursor: pointer; }
-    .icon-list .item {
-      transition: 0.4s all;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      background: #fff;
-      padding: 13px 10px;
-      margin-bottom: 8px;
-      font-size: 17px;
-      text-align: center;
-      border-radius: 3px; }
-      .icon-list .item:hover {
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-        background: #757575;
-        color: #fff; }
-      .icon-list .item.selected {
-        background: #00bcd4;
-        color: #fff;
-        cursor: initial;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-      .icon-list .item .text {
-        margin-top: 5px;
-        font-size: 11px;
-        position: relative;
-        bottom: 3px;
-        display: block;
-        text-transform: capitalize; } }
-.prompts-component {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  padding: 15px; }
-  .prompts-component .prompt {
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-    transition: 0.4s all;
-    display: table;
-    background: #fff;
-    color: #000;
-    font-size: 14px;
-    padding: 10px;
-    border-radius: 2px;
-    margin-top: 15px; }
-    .prompts-component .prompt i {
-      margin-right: 5px; }
-    .prompts-component .prompt > i {
-      padding: 5px;
-      border-radius: 50px;
-      font-weight: bold; }
-    .prompts-component .prompt .message {
-      margin-right: 10px; }
-    .prompts-component .prompt .button {
-      border-radius: 2px;
-      transition: 0.4s all;
-      border-left: 1px solid #fafafa;
-      padding: 15px 15px 12px;
-      margin-left: 10px;
-      cursor: pointer; }
-      .prompts-component .prompt .button:hover {
-        background: #f5f5f5; }
-      .prompts-component .prompt .button:last-child {
-        margin-right: -11px;
-        margin-left: 0; }
-      .prompts-component .prompt .button i {
-        font-size: 11px; }
-.home .home-td {
-  border-bottom: 1px solid whitesmoke; }
+.single-patient-details .ms-TextField-wrapper .ms-TextField-field {
+  background: #fff; }
 
-.home .no-appointments {
-  font-size: 13px;
+.single-patient-details .ms-TextField-wrapper div:nth-child(1) {
+  transition: 0.3s all;
+  border-color: #c8c8c8; }
+  .single-patient-details .ms-TextField-wrapper div:nth-child(1):hover {
+    border-color: #0078d7; }
+  .single-patient-details .ms-TextField-wrapper div:nth-child(1) div {
+    background: #f5f5f5;
+    min-width: 70px; }
+
+.single-patient-details .patient-tags {
+  border: 1px solid #c8c8c8;
+  transition: 0.3s all; }
+  .single-patient-details .patient-tags:hover {
+    border-color: #0078d7; }
+
+.single-patient-details .avatar {
   text-align: center;
-  padding-bottom: 15px;
-  padding-top: 15px;
-  background: #ffffff;
-  margin-top: 0px;
-  z-index: -10;
-  font-style: italic; }
+  font-size: 100px;
+  color: #0078d7;
+  border: 1px; }
 
-.home .appointments-table-heading {
+.single-patient-details .buttons {
+  margin-top: 20px; }
+  .single-patient-details .buttons button {
+    width: 100%; }
+  .single-patient-details .buttons .delete {
+    position: static !important; }
+.dental-history table {
+  margin-bottom: 20px;
+  width: 100%;
+  border-collapse: collapse; }
+  .dental-history table.permanent tr td:nth-child(8) {
+    border-right: 2px solid #000; }
+  .dental-history table.permanent tr td:nth-child(9) {
+    border-left: 2px solid #000; }
+  .dental-history table.deciduous tr td:nth-child(5) {
+    border-right: 2px solid #000; }
+  .dental-history table.deciduous tr td:nth-child(6) {
+    border-left: 2px solid #000; }
+  .dental-history table tr td {
+    position: relative;
+    background: #fff;
+    transition: 0.4s all;
+    cursor: pointer;
+    text-align: center;
+    padding: 10px;
+    color: #000;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
+    .dental-history table tr td .has-notes {
+      transition: 0.4s all;
+      background: #2196f3;
+      height: 10px;
+      width: 10px;
+      display: inline-block;
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      border-radius: 5px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
+    .dental-history table tr td:hover {
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
+    .dental-history table tr td.filled {
+      background: #ffc107;
+      color: #fff; }
+      .dental-history table tr td.filled .has-notes {
+        background: #ff6f00; }
+    .dental-history table tr td.compromised {
+      background: #f44336;
+      color: #fff; }
+      .dental-history table tr td.compromised .has-notes {
+        background: #b71c1c; }
+    .dental-history table tr td.endo {
+      background: #673ab7;
+      color: #fff; }
+      .dental-history table tr td.endo .has-notes {
+        background: #9575cd; }
+    .dental-history table tr td.missing {
+      color: #eee;
+      background: #bdbdbd; }
+      .dental-history table tr td.missing .has-notes {
+        background: #757575; }
+
+.dental-history .tooth-details {
   background: #fff;
-  margin: 0;
-  margin-top: 15px;
-  padding: 12px; }
+  border-radius: 3px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px; }
+  .dental-history .tooth-details h4 {
+    color: #616161; }
+  .dental-history .tooth-details .tooth-name {
+    font-size: 17px;
+    text-transform: capitalize;
+    margin-bottom: 25px; }
+  .dental-history .tooth-details .close-details {
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    padding: 5px 5px 3px;
+    border-radius: 2px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: 0.4s all; }
+    .dental-history .tooth-details .close-details:hover {
+      background: #3e50b3;
+      color: #fff;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
 
-#router-outlet {
-  margin-top: 50px;
-  padding-bottom: 20px; }
-.user-component .persona {
-  padding: 10px 25px 0; }
-
-.reset-doctor {
-  margin-left: 10px; }
-.confirmation-modal .ms-Panel-main {
-  box-shadow: 0px -20px 50px rgba(0, 0, 0, 0.14) !important;
-  height: 100px;
-  bottom: 0;
-  top: initial; }
-  .confirmation-modal .ms-Panel-main .ms-Panel-content {
-    padding-bottom: 0; }
-    .confirmation-modal .ms-Panel-main .ms-Panel-content p {
-      margin-top: 20px;
-      margin-bottom: 15px; }
-    .confirmation-modal .ms-Panel-main .ms-Panel-content .ms-Button {
-      margin-right: 10px; }
-
-.confirmation-modal .ms-Panel-content {
-  padding-top: 0; }
+.single-tooth-condition {
+  margin-top: 10px; }
+@media screen and (max-width: 800px) {
+  .patients-component {
+    padding: 10px; } }
+.patient-link-component {
+  cursor: pointer; }
+  .patient-link-component .icon {
+    position: relative;
+    top: 2px; }
+.single-patient-appointments {
+  position: relative; }
+  .single-patient-appointments .add-new {
+    position: absolute;
+    top: -4px;
+    right: 0;
+    background: #0078d7;
+    border-radius: 2px;
+    color: #fff;
+    padding: 7px 10px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: 0.4s all; }
+    .single-patient-appointments .add-new:hover {
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      background: #005a9e; }
+    .single-patient-appointments .add-new .icon {
+      display: inline-block;
+      margin-right: 10px;
+      position: relative;
+      top: 1px; }
+  .single-patient-appointments .no-appointments {
+    color: #757575;
+    margin: 15px 0px 7px; }
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 /* Document
    ========================================================================== */
