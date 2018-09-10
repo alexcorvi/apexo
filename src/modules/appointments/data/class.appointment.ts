@@ -13,7 +13,6 @@ import { prescriptionsData } from '../../prescriptions';
 import { settingsData } from '../../settings';
 import { treatmentsData } from '../../treatments';
 
-
 export class Appointment {
 	/**
 	 * Unique ID for each appointment
@@ -214,7 +213,7 @@ export class Appointment {
 	 */
 	@computed
 	get profitPercentage() {
-		return this.profit / this.paidAmount;
+		return isNaN(this.profit / this.paidAmount) ? 0 : this.profit / this.paidAmount;
 	}
 
 	/**
