@@ -30,6 +30,7 @@ export class Calendar extends React.Component<{}, {}> {
 		this.c.selectedYear = Number(dateArray[0]);
 		this.c.selectedMonth = Number(dateArray[1]) - 1;
 		this.c.selectedDay = Number(dateArray[2]) - 1;
+		this.unifyHeight();
 	}
 
 	componentDidUpdate() {
