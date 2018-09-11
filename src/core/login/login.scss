@@ -2,6 +2,13 @@
 	margin: 50px auto;
 	max-width: 400px;
 	padding: 0 20px;
+	.doctor-choose {
+		border-bottom: 1px solid transparent;
+		&:hover {
+			border-color: #c5cae9;
+			border-radius: 5px;
+		}
+	}
 }
 
 .no-server-mode {
