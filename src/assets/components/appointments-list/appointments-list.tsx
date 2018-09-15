@@ -37,6 +37,10 @@ export class AppointmentsList extends React.Component<{ list: Appointment[] }, {
 		return this.filter ? textualFilter(this.dateFiltered, this.filter) : this.dateFiltered;
 	}
 
+	openAppointment(id: string) {
+		this.selectedAppointmentID = id;
+	}
+
 	render() {
 		return (
 			<div className="appointments-list">

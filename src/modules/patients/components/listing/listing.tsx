@@ -11,7 +11,6 @@ import {
 	SearchBox,
 	TextField
 	} from 'office-ui-fabric-react';
-import { commands } from './commands';
 import { computed, observable } from 'mobx';
 import { DataTable } from '../../../../assets/components/data-table/data-table.component';
 import { Gender, genderToString, patients } from '../../data';
@@ -109,7 +108,22 @@ export class PatientsListing extends React.Component<{}, {}> {
 							}
 						]
 					}))}
-					commands={commands}
+					commands={[
+						{
+							key: 'addNew',
+							title: 'Add new',
+							name: 'Add New',
+							onClick: () => {
+								const patient = new Patient();
+								patients.list.push(patient);
+								this.selectedId = patient._id;
+								API.router.go([ 'patients', patient._id ]);
+							},
+							iconProps: {
+								iconName: 'Add'
+							}
+						}
+					]}
 				/>
 			</div>
 		);

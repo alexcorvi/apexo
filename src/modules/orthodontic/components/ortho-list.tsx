@@ -121,6 +121,7 @@ export class OrthoList extends React.Component<{}, {}> {
 							const orthoCase = new OrthoCase();
 							orthoCase.patientID = val.key;
 							cases.list.push(orthoCase);
+							this.selectedCaseID = orthoCase._id;
 						}}
 						placeholder="Type to select patient"
 					/>
@@ -139,7 +140,10 @@ export class OrthoList extends React.Component<{}, {}> {
 							newPatient.name = this.newPatientName;
 							const orthoCase = new OrthoCase();
 							orthoCase.patientID = newPatient._id;
+							patientsData.patients.list.push(newPatient);
 							cases.list.push(orthoCase);
+							this.newPatientName = '';
+							this.selectedCaseID = orthoCase._id;
 						}}
 						iconProps={{
 							iconName: 'add'

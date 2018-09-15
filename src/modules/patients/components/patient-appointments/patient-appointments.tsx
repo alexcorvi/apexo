@@ -31,9 +31,6 @@ import { TeethDeciduousChart, TeethPermanentChart } from '../index';
 import { treatmentsData } from '../../../treatments';
 import './patient-appointments.scss';
 
-
-
-
 @observer
 export class PatientAppointments extends React.Component<{ patient: Patient; hideTitle?: boolean }, {}> {
 	/**
@@ -49,20 +46,14 @@ export class PatientAppointments extends React.Component<{ patient: Patient; hid
 		});
 	}
 
-	/**
-	 * Selected appointment to be viewed
-	 * 
-	 * @type {(appointmentsData.Appointment | null)}
-	 * @memberof SinglePatient
-	 */
-	@observable selectedAppointment: appointmentsData.Appointment | null = null;
+	l: AppointmentsList | null = null;
 
 	render() {
 		return (
 			<div className="single-patient-appointments appointments">
 				{this.props.hideTitle ? '' : <h3>Appointments</h3>}
 				{this.appointments.length ? (
-					<AppointmentsList list={this.appointments} />
+					<AppointmentsList ref={(l) => (this.l = l)} list={this.appointments} />
 				) : (
 					<p className="no-appointments">This patient does not have any appointment.</p>
 				)}
@@ -73,7 +64,9 @@ export class PatientAppointments extends React.Component<{ patient: Patient; hid
 						apt.patientID = this.props.patient._id;
 						apt.date = new Date().getTime();
 						appointmentsData.appointments.list.push(apt);
-						this.selectedAppointment = apt;
+						if (this.l) {
+							this.l.selectedAppointmentID = apt._id;
+						}
 					}}
 					iconProps={{ iconName: 'add' }}
 				>
