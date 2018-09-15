@@ -11,6 +11,10 @@ A web/desktop application to manage your dental clinic practice.
 ## Changelog
 
 ### 1.6.2
+- open item after creating
+- sort treatments alphabetically
+
+### 1.6.2
 - Critical bug fixes
 
 ### 1.6.1
