@@ -34,8 +34,6 @@ import { Treatment } from '../../treatments/data/class.treatment';
 import { treatmentsData } from '../../treatments';
 import './appointment-editor.scss';
 
-
-
 @observer
 export class AppointmentEditor extends React.Component<
 	{
@@ -209,12 +207,14 @@ export class AppointmentEditor extends React.Component<
 										<Dropdown
 											className="treatment-type"
 											selectedKey={this.props.appointment.treatmentID}
-											options={this.treatmentOptions.map((tr) => {
-												return {
-													key: tr._id,
-													text: tr.type
-												};
-											})}
+											options={this.treatmentOptions
+												.sort((a, b) => a.type.localeCompare(b.type))
+												.map((tr) => {
+													return {
+														key: tr._id,
+														text: tr.type
+													};
+												})}
 											onChanged={(newValue) => {
 												if (this.props.appointment) {
 													this.props.appointment.treatmentID = newValue.key.toString();
