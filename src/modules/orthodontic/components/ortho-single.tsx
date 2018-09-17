@@ -1,34 +1,38 @@
-import './ortho-single.scss';
-
+import * as dateUtils from '../../../assets/utils/date';
+import * as OrthoData from '../data';
 import * as React from 'react';
+import { API } from '../../../core';
+import { Col, Row } from '../../../assets/components/grid/index';
+import { computed, observable } from 'mobx';
+import { convert } from '../../../assets/utils/teeth-numbering-systems';
 import {
 	DatePicker,
 	Dropdown,
 	Icon,
+	IconButton,
 	Panel,
 	PanelType,
 	PrimaryButton,
 	TextField,
 	Toggle,
-	IconButton,
 	TooltipHost
-} from 'office-ui-fabric-react';
-import * as OrthoData from '../data';
-import { computed, observable } from 'mobx';
+	} from 'office-ui-fabric-react';
 import { DentalHistory, PatientAppointments, PatientDetails } from '../../patients/components';
-import { API } from '../../../core';
-import { observer } from 'mobx-react';
-import { Row, Col } from '../../../assets/components/grid/index';
-import { orthoData } from '../index';
-import { FacialProfile, Lips, OralHygiene, OrthoCase } from '../data/class.ortho';
-import { TagInput } from '../../../assets/components/tag-input/tag-input';
-import { patientsData } from '../../patients';
-import { convert } from '../../../assets/utils/teeth-numbering-systems';
 import { EditableList } from '../../../assets/components/editable-list/editable-list';
+import {
+	FacialProfile,
+	Lips,
+	OralHygiene,
+	OrthoCase
+	} from '../data/class.ortho';
 import { Gallery } from '../../../assets/components/gallery/gallery';
+import { observer } from 'mobx-react';
+import { orthoData } from '../index';
+import { patientsData } from '../../patients';
 import { Profile } from '../../../assets/components/profile/profile';
 import { Section } from '../../../assets/components/section/section';
-import * as dateUtils from '../../../assets/utils/date';
+import { TagInput } from '../../../assets/components/tag-input/tag-input';
+import './ortho-single.scss';
 
 @observer
 export class OrthoSingle extends React.Component<{ id: string; onDismiss: () => void }, {}> {
@@ -478,7 +482,7 @@ export class OrthoSingle extends React.Component<{ id: string; onDismiss: () => 
 
 								<br />
 								<br />
-								<h3>Appliances</h3>
+								<h3>Appliances & Modifications</h3>
 								{this.orthoCase.treatmentPlan_appliance.map((appliance, index) => (
 									<div key={index}>
 										<Row gutter={4}>
@@ -520,7 +524,7 @@ export class OrthoSingle extends React.Component<{ id: string; onDismiss: () => 
 										}
 									}}
 								>
-									Plan New Appliance
+									New Appliance / Modification
 								</PrimaryButton>
 							</Section>
 							<Section title="Appointments" showByDefault>
