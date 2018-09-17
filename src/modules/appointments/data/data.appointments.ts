@@ -1,12 +1,12 @@
-import { computed, observable } from 'mobx';
-
+import prompts from '../../../core/prompts/data.prompts';
 import { API } from '../../../core';
 import { Appointment } from './class.appointment';
+import { computed, observable } from 'mobx';
 import { generateID } from '../../../assets/utils/generate-id';
 import { patientsData } from '../../patients';
-import prompts from '../../../core/prompts/data.prompts';
-import { treatmentsData } from '../../treatments';
 import { textualFilter } from '../../../assets/utils/textual-filter';
+import { treatmentsData } from '../../treatments';
+
 
 class AppointmentsData {
 	ignoreObserver: boolean = false;
@@ -33,7 +33,6 @@ class AppointmentsData {
 		if (doctorID) {
 			list = list.filter((appointment) => appointment.doctorsID.indexOf(doctorID) !== -1);
 		}
-
 		return list;
 	}
 	getIndexByID(id: string) {

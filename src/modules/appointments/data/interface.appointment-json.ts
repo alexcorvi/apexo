@@ -14,4 +14,5 @@ export interface AppointmentJSON {
 	doctorsID: string[];
 	records: string[];
 	units: number;
+	notes: string;
 }

@@ -122,6 +122,8 @@ export class Appointment {
 	 */
 	@observable paid: boolean = false;
 
+	@observable notes: string = '';
+
 	/**
 	 * An array of prescriptions IDs
 	 * 
@@ -296,6 +298,7 @@ export class Appointment {
 				${this.future ? 'future' : ''}
 				${this.patient.name}
 				${this.doctors.map((x) => x.name).join(' ')}
+				${this.notes}
 		`.toLowerCase();
 	}
 
@@ -332,6 +335,12 @@ export class Appointment {
 		this.doctorsID = json.doctorsID;
 		this.records = json.records;
 		this.units = json.units || 1;
+		this.notes = json.notes
+			? json.notes
+			: json.complaint && json.diagnosis
+				? `Complaint: ${json.complaint}.
+Diagnosis: ${json.diagnosis}`
+				: '';
 	}
 
 	/**
@@ -356,7 +365,8 @@ export class Appointment {
 			complaint: this.complaint,
 			doctorsID: Array.from(this.doctorsID),
 			records: Array.from(this.records),
-			units: this.units
+			units: this.units,
+			notes: this.notes
 		};
 	}
 

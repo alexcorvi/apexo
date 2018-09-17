@@ -84,7 +84,7 @@ export class AppointmentEditor extends React.Component<
 									<Profile
 										secondaryElement={
 											<span>
-												{dateUtils.relativeFormat(this.props.appointment.date)} /{' '}
+												Appointment: {dateUtils.relativeFormat(this.props.appointment.date)} /{' '}
 												{this.props.appointment.treatment.type}
 											</span>
 										}
@@ -169,37 +169,17 @@ export class AppointmentEditor extends React.Component<
 						</Section>
 
 						<Section title="Case Details" showByDefault>
-							<Row gutter={6}>
-								<Col sm={12}>
-									<div className="appointment-input diagnosis">
-										<label>Complaint: </label>
-										<TextField
-											value={this.props.appointment.complaint}
-											onChanged={(newValue) => {
-												if (!this.props.appointment) {
-													return;
-												}
-												this.props.appointment.complaint = newValue;
-											}}
-										/>
-									</div>
-								</Col>
-								<Col sm={12}>
-									<div className="appointment-input diagnosis">
-										<label>Diagnosis: </label>
-										<TextField
-											value={this.props.appointment.diagnosis}
-											onChanged={(newValue) => {
-												if (!this.props.appointment) {
-													return;
-												}
-												this.props.appointment.diagnosis = newValue;
-											}}
-										/>
-									</div>
-								</Col>
-							</Row>
-
+							<TextField
+								multiline
+								label="Details:"
+								value={this.props.appointment.notes}
+								onChanged={(value) => {
+									if (this.props.appointment) {
+										this.props.appointment.notes = value;
+									}
+								}}
+							/>
+							<br />
 							<Row gutter={6}>
 								<Col sm={12}>
 									<div className="appointment-input treatment">
