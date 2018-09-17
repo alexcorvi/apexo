@@ -44,58 +44,64 @@ export class AppointmentsList extends React.Component<{ list: Appointment[] }, {
 	render() {
 		return (
 			<div className="appointments-list">
-				<Row gutter={6}>
-					<Col md={8}>
-						<DatePicker
-							label="From"
-							value={new Date(this.from)}
-							onSelectDate={(d) => {
-								if (d) {
-									this.from = d.getTime();
-								}
+				{this.props.list.length > 0 ? (
+					<div className="main">
+						<Row gutter={6}>
+							<Col md={8}>
+								<DatePicker
+									label="From"
+									value={new Date(this.from)}
+									onSelectDate={(d) => {
+										if (d) {
+											this.from = d.getTime();
+										}
+									}}
+								/>
+							</Col>
+							<Col md={8}>
+								<DatePicker
+									label="To"
+									value={new Date(this.to)}
+									onSelectDate={(d) => {
+										if (d) {
+											this.to = d.getTime();
+										}
+									}}
+								/>
+							</Col>
+							<Col md={8}>
+								<TextField label="Filter" value={this.filter} onChanged={(v) => (this.filter = v)} />
+							</Col>
+						</Row>
+						<hr />
+						<p
+							style={{
+								textAlign: 'right',
+								fontSize: '13px',
+								color: '#9E9E9E'
 							}}
-						/>
-					</Col>
-					<Col md={8}>
-						<DatePicker
-							label="To"
-							value={new Date(this.to)}
-							onSelectDate={(d) => {
-								if (d) {
-									this.to = d.getTime();
-								}
-							}}
-						/>
-					</Col>
-					<Col md={8}>
-						<TextField label="Filter" value={this.filter} onChanged={(v) => (this.filter = v)} />
-					</Col>
-				</Row>
-				<hr />
-				<p
-					style={{
-						textAlign: 'right',
-						fontSize: '13px',
-						color: '#9E9E9E'
-					}}
-				>
-					Results: {this.filtered.length} out of {this.props.list.length}
-				</p>
-				{this.filtered.length ? (
-					this.filtered.sort((a, b) => a.date - b.date).map((appointment) => {
-						return (
-							<AppointmentThumb
-								key={appointment._id}
-								onClick={() => (this.selectedAppointmentID = appointment._id)}
-								appointment={appointment}
-								canDelete={true}
-							/>
-						);
-					})
+						>
+							Results: {this.filtered.length} out of {this.props.list.length}
+						</p>
+
+						{this.filtered.length ? (
+							this.filtered.sort((a, b) => a.date - b.date).map((appointment) => {
+								return (
+									<AppointmentThumb
+										key={appointment._id}
+										onClick={() => (this.selectedAppointmentID = appointment._id)}
+										appointment={appointment}
+										canDelete={true}
+									/>
+								);
+							})
+						) : (
+							<p className="no-appointments">Nothing found...</p>
+						)}
+					</div>
 				) : (
-					<p className="no-appointments">Nothing found...</p>
+					''
 				)}
-				<br />
 				<AppointmentEditor
 					onDismiss={() => (this.selectedAppointmentID = '')}
 					appointment={appointments.list[appointments.getIndexByID(this.selectedAppointmentID)]}

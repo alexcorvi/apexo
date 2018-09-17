@@ -52,8 +52,9 @@ export class PatientAppointments extends React.Component<{ patient: Patient; hid
 		return (
 			<div className="single-patient-appointments appointments">
 				{this.props.hideTitle ? '' : <h3>Appointments</h3>}
+				<AppointmentsList ref={(l) => (this.l = l)} list={this.appointments} />
 				{this.appointments.length ? (
-					<AppointmentsList ref={(l) => (this.l = l)} list={this.appointments} />
+					''
 				) : (
 					<p className="no-appointments">This patient does not have any appointment.</p>
 				)}
