@@ -1,13 +1,14 @@
+import auth from 'pouchdb-authentication';
+import PouchDB from 'pouchdb-browser';
 import { computed, observable, observe } from 'mobx';
+import { decrypt, encrypt } from '../../assets/utils/encryption';
+import { doctorsData } from '../../modules/doctors';
+import { isOnline } from '../../assets/utils/is-online';
+import { loadDemoData } from '../demo/load-demo-data';
+import { Md5 } from 'ts-md5';
 import { observer } from 'mobx-react';
 import { registerModules } from '../../modules';
-import { isOnline } from '../../assets/utils/is-online';
-import PouchDB from 'pouchdb-browser';
-import auth from 'pouchdb-authentication';
-import { Md5 } from 'ts-md5';
 import { resync } from '../db';
-import { doctorsData } from '../../modules/doctors';
-import { loadDemoData } from '../demo/load-demo-data';
 
 PouchDB.plugin(auth);
 
@@ -48,7 +49,25 @@ class Login {
 	async initialCheck(server: string) {
 		this.server = server;
 
-		if (localStorage.getItem('no-server-mode') === 'true') {
+		let saved = false;
+		let savedUser = '';
+		let savedPassword = '';
+		let savedServer = '';
+		const encrypted = localStorage.getItem('ec') || '';
+		const decrypted = decrypt(encrypted);
+		try {
+			const savedCredentials: { server: string; username: string; password: string } = JSON.parse(decrypted);
+			savedUser = savedCredentials.username;
+			savedPassword = savedCredentials.password;
+			savedServer = savedCredentials.server;
+			saved = true;
+		} catch (e) {}
+
+		if (saved && navigator.onLine) {
+			this.login({ server: savedServer, user: savedUser, pass: savedPassword });
+		} else if (saved) {
+			this.authenticate({ server: savedServer, password: savedPassword, username: savedUser });
+		} else if (localStorage.getItem('no-server-mode') === 'true') {
 			this.noServerMode();
 		} else if (navigator.onLine && (await isOnline(server))) {
 			this.online = true;
@@ -105,6 +124,7 @@ class Login {
 		localStorage.setItem('server_location', server);
 		if (password) {
 			localStorage.setItem('LSL_hash', Md5.hashStr(server + username + password).toString());
+			localStorage.setItem('ec', encrypt(JSON.stringify({ username, password, server })));
 		}
 		this.step = LoginStep.loadingData;
 		try {

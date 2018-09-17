@@ -10,7 +10,14 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
-### 1.6.2
+
+### 1.6.4
+- Fixed: open appointments editor when creating the first appointment
+- Appointment notes instead of diagnosis and complaint
+- Ortho: Appliances & Modifications
+- Save login data more persistently
+
+### 1.6.3
 - open item after creating
 - sort treatments alphabetically
 
