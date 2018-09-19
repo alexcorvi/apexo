@@ -11,6 +11,9 @@ A web/desktop application to manage your dental clinic practice.
 ## Changelog
 
 
+### 1.6.5
+- Graceful errors
+
 ### 1.6.4
 - Fixed: open appointments editor when creating the first appointment
 - Appointment notes instead of diagnosis and complaint
