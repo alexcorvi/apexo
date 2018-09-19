@@ -32,6 +32,7 @@ export class ErrorBoundary extends React.Component<{}> {
 					<textarea defaultValue={this.stackTrace} />
 					<PrimaryButton
 						onClick={() => {
+							location.href = location.href.split('#')[0];
 							location.reload();
 						}}
 					>
