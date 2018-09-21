@@ -64,11 +64,11 @@ class Login {
 		} catch (e) {}
 
 		if (saved && navigator.onLine) {
-			this.login({ server: savedServer, user: savedUser, pass: savedPassword });
+			await this.login({ server: savedServer, user: savedUser, pass: savedPassword });
 		} else if (saved) {
-			this.authenticate({ server: savedServer, password: savedPassword, username: savedUser });
+			await this.authenticate({ server: savedServer, password: savedPassword, username: savedUser });
 		} else if (localStorage.getItem('no-server-mode') === 'true') {
-			this.noServerMode();
+			await this.noServerMode();
 		} else if (navigator.onLine && (await isOnline(server))) {
 			this.online = true;
 			const username = (await new PouchDB(server).getSession()).userCtx.name;
