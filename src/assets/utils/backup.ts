@@ -1,3 +1,4 @@
+import { API } from '../../core';
 import { Appointment, AppointmentJSON } from '../../modules/appointments/data';
 import { appointmentsData } from '../../modules/appointments';
 import { CaseJSON, OrthoCase } from '../../modules/orthodontic/data';
@@ -10,6 +11,8 @@ import { Patient, PatientJSON } from '../../modules/patients/data';
 import { patientsData } from '../../modules/patients';
 import { PrescriptionItem, PrescriptionItemJSON } from '../../modules/prescriptions/data';
 import { prescriptionsData } from '../../modules/prescriptions';
+import { resync } from '../../core/db';
+import { saveAs } from 'file-saver';
 import { SettingItemJSON, SettingsItem } from '../../modules/settings/data';
 import { settingsData } from '../../modules/settings';
 import { Treatment, TreatmentJSON } from '../../modules/treatments/data';
@@ -49,15 +52,55 @@ export function restoreFromJSON(json: BackupJSON) {
 	prescriptionsData.prescriptions.list = [];
 	settingsData.settings.list = [];
 	treatmentsData.treatments.list = [];
-	json.appointments.map((x) => new Appointment(x)).forEach((x) => appointmentsData.appointments.list.push(x));
-	json.doctors.map((x) => new Doctor(x)).forEach((x) => doctorsData.doctors.list.push(x));
-	json.ortho.map((x) => new OrthoCase(x)).forEach((x) => orthoData.cases.list.push(x));
-	json.patients.map((x) => new Patient(x)).forEach((x) => patientsData.patients.list.push(x));
-	json.prescriptions.map((x) => new PrescriptionItem(x)).forEach((x) => prescriptionsData.prescriptions.list.push(x));
-	json.settings.map((x) => new SettingsItem(x)).forEach((x) => settingsData.settings.list.push(x));
-	json.treatments.map((x) => new Treatment(x)).forEach((x) => treatmentsData.treatments.list.push(x));
+	json.appointments.forEach((item) => {
+		appointmentsData.appointments.list.push(new Appointment(item));
+	});
+	json.doctors.forEach((item) => {
+		doctorsData.doctors.list.push(new Doctor(item));
+	});
+	json.ortho.forEach((item) => {
+		orthoData.cases.list.push(new OrthoCase(item));
+	});
+	json.patients.forEach((item) => {
+		patientsData.patients.list.push(new Patient(item));
+	});
+	json.prescriptions.forEach((item) => {
+		prescriptionsData.prescriptions.list.push(new PrescriptionItem(item));
+	});
+	json.settings.forEach((item) => {
+		settingsData.settings.list.push(new SettingsItem(item));
+	});
+	json.treatments.forEach((item) => {
+		treatmentsData.treatments.list.push(new Treatment(item));
+	});
 }
 
-export function restoreFromBase64(base64Data: string) {
+export async function restoreFromBase64(base64Data: string) {
 	restoreFromJSON(JSON.parse(decode(base64Data)));
+	API.router.reSyncing = true;
+	await resync.resync();
+	API.router.reSyncing = false;
+}
+
+export function saveToFile() {
+	const blob = new Blob([ 'apexo-backup:' + backup2Base64() ], { type: 'text/plain;charset=utf-8' });
+	const fileName = prompt('File name:');
+	saveAs(blob, `${fileName || 'apexo-backup'}.apx`);
+}
+
+export async function restoreFromFile(file: string) {
+	const confirmation = prompt(`All unsaved data will be lost.
+All data will be removed and replaced by the backup file.
+Type "yes" to confirm`);
+
+	if (confirmation && confirmation.toLowerCase() === 'yes') {
+		const fileData = atob(file.split('base64,')[1]).split('apexo-backup:')[1];
+		if (fileData) {
+			restoreFromBase64(fileData);
+		} else {
+			alert('Invalid file');
+		}
+	} else {
+		alert('Backup canceled');
+	}
 }
