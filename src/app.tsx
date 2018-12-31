@@ -17,7 +17,7 @@ initializeIconsB('./fonts/');
 ReactDOM.render(
 	<Fabric>
 		<components.MainComponent />
-		<p className="version-num">version 1.6.5 </p>
+		<p className="version-num">version 1.7.0 </p>
 	</Fabric>,
 	document.getElementById('root')
 );
