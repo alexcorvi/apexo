@@ -10,6 +10,11 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+### 1.7.0
+- Remove appointment date filters
+- limit data table rows
+- backing up and restoring using files
+- fixed issues in backing up and restoring
 
 ### 1.6.5
 - Graceful errors
