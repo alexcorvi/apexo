@@ -52,6 +52,7 @@ export class DoctorsListing extends React.Component<{}, {}> {
 							onDelete={(id) => {
 								doctors.deleteModal(id);
 							}}
+							maxItemsOnLoad={15}
 							className={'doctors-data-table'}
 							heads={[ 'Doctor', 'Last Appointment', 'Next Appointment' ]}
 							rows={doctors.list.map((doctor) => ({

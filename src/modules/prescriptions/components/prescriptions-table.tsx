@@ -114,6 +114,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 							]
 						};
 					})}
+					maxItemsOnLoad={15}
 				/>
 
 				{this.selectedPrescription ? (

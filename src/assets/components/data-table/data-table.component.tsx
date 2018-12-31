@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+	Button,
 	Checkbox,
 	CommandBar,
 	ICommandBarItemProps,
@@ -28,6 +29,7 @@ interface Row {
 }
 
 interface Props {
+	maxItemsOnLoad: number;
 	heads: string[];
 	rows: Row[];
 	className?: string;
@@ -48,9 +50,40 @@ export class DataTable extends React.Component<Props, {}> {
 	@observable sortDirection: number = 1;
 	@observable filterString: string = '';
 
+	@observable limit: number = this.props.maxItemsOnLoad;
+
 	@computed
 	get filteredRows() {
 		return textualFilter(this.props.rows, this.filterString);
+	}
+
+	@computed
+	get sortedRows() {
+		return this.filteredRows
+			.map((row, index) => {
+				return {
+					row,
+					index
+				};
+			})
+			.sort((aVal, bVal) => {
+				return this.sortDirection === 1
+					? this.compare(this.sortableValues[aVal.index], this.sortableValues[bVal.index])
+					: this.compare(this.sortableValues[bVal.index], this.sortableValues[aVal.index]);
+			})
+			.map((x) => x.row);
+	}
+
+	@computed
+	get limitedRows() {
+		const limitedRows: Row[] = [];
+		for (let index = 0; index < this.limit; index++) {
+			const item = this.sortedRows[index];
+			if (item) {
+				limitedRows.push(item);
+			}
+		}
+		return limitedRows;
 	}
 
 	render() {
@@ -109,63 +142,59 @@ export class DataTable extends React.Component<Props, {}> {
 						</tr>
 					</thead>
 					<tbody>
-						{this.filteredRows
-							.map((row, index) => {
-								return {
-									row,
-									index
-								};
-							})
-							.sort((aVal, bVal) => {
-								return this.sortDirection === 1
-									? this.compare(this.sortableValues[aVal.index], this.sortableValues[bVal.index])
-									: this.compare(this.sortableValues[bVal.index], this.sortableValues[aVal.index]);
-							})
-							.map((x) => x.row)
-							.map((row, index) => {
-								return (
-									<tr key={row.id}>
-										{row.cells.map((cell, index2) => {
-											return (
-												<td
-													className={
-														(cell.onClick ? 'clickable ' : '') +
-														(cell.className ? cell.className : '')
-													}
-													key={index2}
-													data-head={this.props.heads[index2] || ''}
-													onClick={cell.onClick}
-												>
-													{typeof cell.component === 'string' ? (
-														cell.component
-													) : (
-														cell.component
-													)}
-												</td>
-											);
-										})}
-										<td className="delete-td">
-											{this.props.onDelete ? (
-												<div>
-													<IconButton
-														className="delete-button"
-														iconProps={{ iconName: 'delete' }}
-														onClick={() => {
-															if (this.props.onDelete) {
-																this.props.onDelete(row.id);
-															}
-														}}
-													/>
-												</div>
-											) : (
-												''
-											)}
-										</td>
-									</tr>
-								);
-							})}
+						{this.limitedRows.map((row, index) => {
+							return (
+								<tr key={row.id}>
+									{row.cells.map((cell, index2) => {
+										return (
+											<td
+												className={
+													(cell.onClick ? 'clickable ' : '') +
+													(cell.className ? cell.className : '')
+												}
+												key={index2}
+												data-head={this.props.heads[index2] || ''}
+												onClick={cell.onClick}
+											>
+												{typeof cell.component === 'string' ? cell.component : cell.component}
+											</td>
+										);
+									})}
+									<td className="delete-td">
+										{this.props.onDelete ? (
+											<div>
+												<IconButton
+													className="delete-button"
+													iconProps={{ iconName: 'delete' }}
+													onClick={() => {
+														if (this.props.onDelete) {
+															this.props.onDelete(row.id);
+														}
+													}}
+												/>
+											</div>
+										) : (
+											''
+										)}
+									</td>
+								</tr>
+							);
+						})}
 					</tbody>
 				</table>
+
+				{this.limitedRows.length < this.filteredRows.length ? (
+					<Button
+						style={{ marginTop: 20 }}
+						primary
+						iconProps={{ iconName: 'add' }}
+						onClick={() => (this.limit = this.limit + 10)}
+					>
+						Load More
+					</Button>
+				) : (
+					''
+				)}
 
 				{this.props.rows.length === 0 ? (
 					<p className="no-data">There's no data at this section yet.</p>

@@ -21,8 +21,6 @@ import { computed, observable } from 'mobx';
 import { API } from '../../../../core';
 import { EditableList } from '../../../../assets/components/editable-list/editable-list';
 import { TagInput } from '../../../../assets/components/tag-input/tag-input';
-import { appointmentsComponents } from '../../../appointments';
-import { appointmentsData } from '../../../appointments';
 import { convert } from '../../../../assets/utils/teeth-numbering-systems';
 import { observer } from 'mobx-react';
 import { treatmentsData } from '../../../treatments';

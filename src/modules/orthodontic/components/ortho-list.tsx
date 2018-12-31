@@ -41,6 +41,7 @@ export class OrthoList extends React.Component<{}, {}> {
 					onDelete={(id) => {
 						cases.deleteModal(id);
 					}}
+					maxItemsOnLoad={15}
 					className={'orthodontic-cases-data-table'}
 					heads={[ 'Patient', 'Started', 'Next Appointment' ]}
 					rows={cases.filtered.filter((orthoCase) => orthoCase.patient).map((orthoCase) => {
