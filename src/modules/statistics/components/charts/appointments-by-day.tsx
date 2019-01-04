@@ -1,13 +1,11 @@
 import * as React from 'react';
 
-import { colors, statistics } from '../../data';
-import { computed, observable } from 'mobx';
+import { statistics } from '../../data';
+import { computed } from 'mobx';
 
 import { BarChart } from '../../../../assets/components/charts/bar';
 import { Chart } from '../../data/interface.chart';
-import { appointmentsData } from '../../../appointments';
 import { observer } from 'mobx-react';
-import { patientsData } from '../../../patients';
 import t4mat from 't4mat';
 
 @observer

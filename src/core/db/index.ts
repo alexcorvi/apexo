@@ -1,13 +1,10 @@
 import PouchDB from 'pouchdb-browser';
 import { API } from '../';
 import { configs } from './config';
-import { diff } from 'fast-array-diff';
 import { generateMethods } from './generate-methods';
 import { IClassCreator } from './interface.class-creator';
-import { IDocumentJSON } from './interface.document-json';
 import { IMobXStore } from './interface.mobx-store';
-import { InteractionMethods } from './interface.interaction-methods';
-import { isObservableArray, Lambda, observe } from 'mobx';
+import { observe } from 'mobx';
 import { log } from './log';
 import { Md5 } from 'ts-md5';
 import { observeItem } from './observe-item';

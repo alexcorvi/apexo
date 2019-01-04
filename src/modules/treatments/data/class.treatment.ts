@@ -1,6 +1,5 @@
 import { computed, observable } from 'mobx';
 import { generateID } from '../../../assets/utils/generate-id';
-import { settingsData } from '../../settings';
 import { TreatmentJSON } from './index';
 
 export class Treatment {

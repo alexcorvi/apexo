@@ -4,25 +4,17 @@ import { appointmentsData } from '../../appointments';
 import { Col, Row } from '../../../assets/components/grid/index';
 import { computed, observable } from 'mobx';
 import { DataTable } from '../../../assets/components/data-table/data-table.component';
-import { escapeRegExp } from '../../../assets/utils/escape-regex';
 import {
-	Icon,
 	IconButton,
-	Nav,
 	Panel,
 	PanelType,
-	PrimaryButton,
 	TextField
 	} from 'office-ui-fabric-react';
-import { namespace, Treatment, treatments } from '../data';
+import { Treatment, treatments } from '../data';
 import { observer } from 'mobx-react';
-import { Profile } from '../../../assets/components/profile/profile';
 import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
-import { round } from '../../../assets/utils/round';
 import { Section } from '../../../assets/components/section/section';
 import { settingsData } from '../../settings';
-import { sortArrByProp } from '../../../assets/utils/sort-arr';
-import { TagInput } from '../../../assets/components/tag-input/tag-input';
 import './treatments.scss';
 
 @observer

@@ -2,7 +2,6 @@ import { API } from '../../core';
 import { Appointment, AppointmentJSON } from '../../modules/appointments/data';
 import { appointmentsData } from '../../modules/appointments';
 import { CaseJSON, OrthoCase } from '../../modules/orthodontic/data';
-import { data } from '../../modules';
 import { decode, encode } from './base64';
 import { Doctor, DoctorJSON } from '../../modules/doctors/data';
 import { doctorsData } from '../../modules/doctors';

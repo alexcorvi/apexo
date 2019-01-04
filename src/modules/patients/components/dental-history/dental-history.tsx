@@ -3,29 +3,18 @@ import './dental-history.scss';
 import * as React from 'react';
 
 import {
-	DatePicker,
 	Dropdown,
-	Icon,
 	Panel,
 	PanelType,
-	PrimaryButton,
-	TextField,
 	Toggle,
 	IconButton
 } from 'office-ui-fabric-react';
-import { Gender, ISOTeethArr, Patient, ToothCondition, patients, conditionToColor } from '../../data';
-import { Label, LabelType, getRandomLabelType } from '../../../../assets/components/label/label.component';
+import { Patient, ToothCondition, conditionToColor } from '../../data';
 import { TeethDeciduousChart, TeethPermanentChart } from '../index';
-import { computed, observable } from 'mobx';
+import {  observable } from 'mobx';
 
-import { API } from '../../../../core';
 import { EditableList } from '../../../../assets/components/editable-list/editable-list';
-import { TagInput } from '../../../../assets/components/tag-input/tag-input';
-import { appointmentsComponents } from '../../../appointments';
-import { appointmentsData } from '../../../appointments';
-import { convert } from '../../../../assets/utils/teeth-numbering-systems';
 import { observer } from 'mobx-react';
-import { treatmentsData } from '../../../treatments';
 import { Row, Col } from '../../../../assets/components/grid/index';
 import { Profile } from '../../../../assets/components/profile/profile';
 

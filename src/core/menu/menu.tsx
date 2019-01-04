@@ -1,13 +1,10 @@
 import './menu.scss';
 
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 
-import { INavProps, Icon, Nav, Panel, PanelType } from 'office-ui-fabric-react';
+import { Icon, Nav, Panel, PanelType } from 'office-ui-fabric-react';
 
 import { API } from '../';
-import { Link } from 'office-ui-fabric-react/lib/Link';
-import { Profile } from '../../assets/components/profile/profile';
 import { menu } from './data.menu';
 import { observer } from 'mobx-react';
 

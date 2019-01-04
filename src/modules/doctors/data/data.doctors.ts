@@ -1,9 +1,7 @@
-import { computed, observable, observe } from 'mobx';
+import { observable } from 'mobx';
 
 import { API } from '../../../core';
 import { Doctor } from './class.doctor';
-import { escapeRegExp } from '../../../assets/utils/escape-regex';
-import { patientsData } from '../../patients/index';
 import { appointmentsData } from '../../appointments/index';
 
 class DoctorsData {

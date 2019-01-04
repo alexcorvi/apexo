@@ -1,4 +1,4 @@
-import { computed, observable, observe } from 'mobx';
+import { computed, observable } from 'mobx';
 
 import { API } from '../../../core';
 import { OrthoCase } from './class.ortho';

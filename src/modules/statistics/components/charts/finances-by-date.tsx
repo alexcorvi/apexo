@@ -1,17 +1,13 @@
 import * as React from 'react';
 
-import { colors, statistics } from '../../data';
-import { computed, observable } from 'mobx';
+import { statistics } from '../../data';
+import { computed} from 'mobx';
 
 import { Chart } from '../../data/interface.chart';
 import { LineChart } from '../../../../assets/components/charts/line';
-import { appointmentsData } from '../../../appointments';
 import { observer } from 'mobx-react';
-import { patientsData } from '../../../patients';
 import { round } from '../../../../assets/utils/round';
-import { settingsData } from '../../../settings';
 import t4mat from 't4mat';
-import { treatmentsData } from '../../../treatments';
 
 @observer
 class Component extends React.Component<{}, {}> {

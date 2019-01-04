@@ -3,9 +3,8 @@ import * as React from 'react';
 import { API } from '../../../core';
 import { Appointment, appointments } from '../data';
 import { Col, Row } from '../../../assets/components/grid/index';
-import { computed, observable, toJS } from 'mobx';
+import { computed } from 'mobx';
 import { convert } from '../../../assets/utils/teeth-numbering-systems';
-import { DateLink } from '.';
 import {
 	DatePicker,
 	Dropdown,
@@ -21,7 +20,6 @@ import { doctorsData } from '../../doctors';
 import { Gallery } from '../../../assets/components/gallery/gallery';
 import { Label, LabelType } from '../../../assets/components/label/label.component';
 import { observer } from 'mobx-react';
-import { PatientLink } from '../../patients/components';
 import { patientsData } from '../../patients';
 import { prescriptionsData } from '../../prescriptions';
 import { Profile } from '../../../assets/components/profile/profile';

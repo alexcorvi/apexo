@@ -1,9 +1,7 @@
-import { PrescriptionItem, PrescriptionItemForm, itemFormToString } from './index';
-import { computed, observable } from 'mobx';
+import { PrescriptionItem } from './index';
+import { observable } from 'mobx';
 
 import { API } from '../../../core';
-import { appointmentsData } from '../../appointments';
-import { escapeRegExp } from '../../../assets/utils/escape-regex';
 
 class Prescriptions {
 	ignoreObserver: boolean = false;

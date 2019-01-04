@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { API } from '../../../core';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
-import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import formatter from 't4mat';
 
@@ -15,6 +14,7 @@ interface Props {
 	notClickable: boolean;
 }
 
+@observer
 export class DateLink extends React.Component<Props, {}> {
 	render() {
 		const dateObj = new Date(this.props.time);

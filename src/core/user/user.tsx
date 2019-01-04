@@ -1,11 +1,8 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { API } from '../';
 import { AppointmentThumb } from '../../assets/components/appointment-thumb/appointment-thumb';
 import { Col, Row } from '../../assets/components/grid';
-import { components as modulesComponents } from '../../modules';
 import {
-	CompoundButton,
 	IconButton,
 	Link,
 	Panel,

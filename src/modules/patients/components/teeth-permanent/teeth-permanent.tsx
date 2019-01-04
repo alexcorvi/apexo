@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Gender, ISOTeethArr, Patient, Tooth, ToothCondition, conditionToColor, patients } from '../../data';
+import {  Tooth, conditionToColor} from '../../data';
 
 import { observer } from 'mobx-react';
 

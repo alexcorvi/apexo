@@ -1,27 +1,18 @@
 import * as dateUtils from '../../../assets/utils/date';
 import * as React from 'react';
-import { API } from '../../../core';
-import { appointmentsComponents, appointmentsData } from '../../appointments';
 import { cases, OrthoCase } from '../data';
-import { Col, Row } from '../../../assets/components/grid/index';
 import {
-	CommandBar,
-	IContextualMenuItem,
 	Panel,
 	PanelType,
-	PersonaSize,
-	Pivot,
-	PivotItem,
 	PrimaryButton,
 	TextField
 	} from 'office-ui-fabric-react';
-import { computed, observable } from 'mobx';
+import { observable } from 'mobx';
 import { DataTable } from '../../../assets/components/data-table/data-table.component';
 import { genderToString } from '../../patients/data/enum.gender';
-import { getRandomLabelType, Label, LabelType } from '../../../assets/components/label/label.component';
 import { observer } from 'mobx-react';
 import { OrthoSingle } from '.';
-import { patientsComponents, patientsData } from '../../patients';
+import { patientsData } from '../../patients';
 import { Profile } from '../../../assets/components/profile/profile';
 import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
 import { TagInput } from '../../../assets/components/tag-input/tag-input';

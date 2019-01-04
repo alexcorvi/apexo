@@ -1,4 +1,3 @@
-import { Appointment, appointments } from '../data';
 import { computed, observable } from 'mobx';
 
 interface WeekDayInfo {

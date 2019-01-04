@@ -3,13 +3,11 @@ import { API } from '../../../core';
 import { Appointment, appointments, Calendar as CalendarClass } from '../data';
 import { AppointmentEditor } from './appointment-editor';
 import { Col, Row } from '../../../assets/components/grid/index';
-import { computed, observable } from 'mobx';
+import {  observable } from 'mobx';
 import { Icon, TextField, Toggle } from 'office-ui-fabric-react';
 import { observer } from 'mobx-react';
 import { patientsComponents } from '../../patients';
-import { patientsData } from '../../patients';
 import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
-import { settingsData } from '../../settings/index';
 import './calendar.scss';
 
 @observer

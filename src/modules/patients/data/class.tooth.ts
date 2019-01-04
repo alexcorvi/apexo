@@ -18,7 +18,7 @@ export class Tooth {
 	 * @readonly
 	 * @memberof Tooth
 	 */
-	get Universal() {
+	@computed get Universal() {
 		return convert(this.ISO).Universal;
 	}
 
@@ -28,7 +28,7 @@ export class Tooth {
 	 * @readonly
 	 * @memberof Tooth
 	 */
-	get Palmer() {
+	@computed get Palmer() {
 		return convert(this.ISO).Palmer;
 	}
 
@@ -38,7 +38,7 @@ export class Tooth {
 	 * @readonly
 	 * @memberof Tooth
 	 */
-	get Name() {
+	@computed get Name() {
 		return convert(this.ISO).Name;
 	}
 

@@ -4,7 +4,6 @@ import { IClassStatic } from './interface.class-static';
 import { IMobXStore } from './interface.mobx-store';
 import { InteractionMethods } from './interface.interaction-methods';
 import { diff } from 'fast-array-diff';
-import { log } from './log';
 import { singleItemUpdateQue } from './single-item-update-que';
 
 export function observeItem(item: IClassStatic, data: IMobXStore, methods: InteractionMethods<any>) {

@@ -2,7 +2,6 @@ import * as appointmentsComponents from './components';
 import * as appointmentsData from './data';
 
 import { API } from '../../core';
-import { settingsData } from '../settings/index';
 
 export const register = {
 	async register() {

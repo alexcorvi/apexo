@@ -2,18 +2,8 @@ import * as React from 'react';
 import { Appointment, appointments } from '../../../modules/appointments/data';
 import { AppointmentEditor } from '../../../modules/appointments/components';
 import { AppointmentThumb } from '../appointment-thumb/appointment-thumb';
-import { Col, Row } from '../grid';
 import { computed, observable } from 'mobx';
-import {
-	DatePicker,
-	Dropdown,
-	Icon,
-	Panel,
-	PanelType,
-	PrimaryButton,
-	TextField,
-	Toggle
-	} from 'office-ui-fabric-react';
+import { TextField } from 'office-ui-fabric-react';
 import { observer } from 'mobx-react';
 import { textualFilter } from '../../../assets/utils/textual-filter';
 

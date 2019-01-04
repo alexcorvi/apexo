@@ -1,8 +1,5 @@
-import { computed, observable } from 'mobx';
-
-import { API } from '../../../core';
+import { observable } from 'mobx';
 import { SettingsItem } from './class.setting';
-import { appointmentsData } from '../../appointments';
 import { generateID } from '../../../assets/utils/generate-id';
 import * as settings from './index';
 

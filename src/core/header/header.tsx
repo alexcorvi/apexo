@@ -1,12 +1,10 @@
 import './header.scss';
 
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 
 import { API, components } from '../';
 import { resync } from '../db';
 import { observer } from 'mobx-react';
-import { observable, computed } from 'mobx';
 import { Row, Col } from '../../assets/components/grid/index';
 import {
 	OverflowSet,

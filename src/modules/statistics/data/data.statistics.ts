@@ -12,7 +12,6 @@ import { computed, observable } from 'mobx';
 
 import { Chart } from './interface.chart';
 import { appointmentsData } from '../../appointments';
-import { treatmentsData } from '../../treatments';
 
 class Statistics {
 	@observable filterByDoctor: string = '';

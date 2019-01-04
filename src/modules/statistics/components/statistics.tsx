@@ -3,8 +3,7 @@ import './statistics.scss';
 import * as React from 'react';
 
 import { Label as ColoredLabel, LabelType } from '../../../assets/components/label/label.component';
-import { DatePicker, Dropdown, Label, Pivot, PivotItem, TextField } from 'office-ui-fabric-react';
-import { computed, observable } from 'mobx';
+import { DatePicker, Dropdown, Label } from 'office-ui-fabric-react';
 import { Row, Col } from '../../../assets/components/grid/index';
 import { observer } from 'mobx-react';
 import { round } from '../../../assets/utils/round';

@@ -1,19 +1,9 @@
 import * as dateUtils from '../../../../assets/utils/date';
 import * as React from 'react';
 import { API } from '../../../../core';
-import {
-	CommandBar,
-	ICommandBarItemProps,
-	Icon,
-	Persona,
-	PersonaPresence,
-	PersonaSize,
-	SearchBox,
-	TextField
-	} from 'office-ui-fabric-react';
 import { computed, observable } from 'mobx';
 import { DataTable } from '../../../../assets/components/data-table/data-table.component';
-import { Gender, genderToString, patients } from '../../data';
+import { genderToString, patients } from '../../data';
 import { Label } from '../../../../assets/components/label/label.component';
 import { observer } from 'mobx-react';
 import { Patient } from '../../data';

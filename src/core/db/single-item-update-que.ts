@@ -1,4 +1,3 @@
-import { log } from './log';
 
 export let singleItemUpdateQue: { id: string; update: () => void }[] = [];
 

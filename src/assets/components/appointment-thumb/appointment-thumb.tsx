@@ -1,12 +1,11 @@
 import * as dateUtils from '../../../assets/utils/date';
 import * as React from 'react';
-import { appointmentsComponents, appointmentsData } from '../../../modules/appointments';
+import { appointmentsData } from '../../../modules/appointments';
 import { computed } from 'mobx';
 import { Icon } from 'office-ui-fabric-react';
 import { observer } from 'mobx-react';
 import { patientsComponents } from '../../../modules/patients';
 import { ProfileSquared } from '../profile/profile-squared';
-import { treatmentsComponents, treatmentsData } from '../../../modules/treatments';
 import './appointment-thumb.scss';
 
 @observer

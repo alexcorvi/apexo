@@ -2,8 +2,7 @@ import './modal.scss';
 
 import * as React from 'react';
 
-import { Icon, Panel, PanelType, PrimaryButton } from 'office-ui-fabric-react';
-import { observable } from 'mobx';
+import {  Panel, PanelType, PrimaryButton } from 'office-ui-fabric-react';
 import { observer } from 'mobx-react';
 import { modals } from './data.modal';
 

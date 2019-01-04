@@ -1,16 +1,11 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { API } from '../';
-import { checkServer } from '../../assets/utils/check-server';
 import {
 	DefaultButton,
-	Label,
 	MessageBar,
 	MessageBarType,
 	PrimaryButton,
 	TextField
 	} from 'office-ui-fabric-react';
-import { Label as LabelC, LabelType } from '../../assets/components/label/label.component';
 import { login } from './data.login';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';

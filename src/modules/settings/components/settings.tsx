@@ -1,12 +1,10 @@
 import * as backup from '../../../assets/utils/backup';
-import * as data from '../data';
 import * as React from 'react';
 import { Col, Row } from '../../../assets/components/grid/index';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { PrimaryButton, TextField, Toggle } from 'office-ui-fabric-react';
 import { settings } from '../data';
-import { TagInput } from '../../../assets/components/tag-input/tag-input';
 import './settings.scss';
 
 @observer

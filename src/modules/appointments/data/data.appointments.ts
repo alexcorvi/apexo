@@ -1,11 +1,7 @@
-import prompts from '../../../core/prompts/data.prompts';
 import { API } from '../../../core';
 import { Appointment } from './class.appointment';
-import { computed, observable } from 'mobx';
-import { generateID } from '../../../assets/utils/generate-id';
-import { patientsData } from '../../patients';
+import { observable } from 'mobx';
 import { textualFilter } from '../../../assets/utils/textual-filter';
-import { treatmentsData } from '../../treatments';
 
 
 class AppointmentsData {

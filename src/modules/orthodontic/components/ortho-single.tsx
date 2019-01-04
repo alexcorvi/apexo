@@ -1,21 +1,14 @@
 import * as dateUtils from '../../../assets/utils/date';
-import * as OrthoData from '../data';
 import * as React from 'react';
-import { API } from '../../../core';
 import { Col, Row } from '../../../assets/components/grid/index';
-import { computed, observable } from 'mobx';
-import { convert } from '../../../assets/utils/teeth-numbering-systems';
+import { computed } from 'mobx';
 import {
-	DatePicker,
 	Dropdown,
-	Icon,
 	IconButton,
 	Panel,
 	PanelType,
 	PrimaryButton,
 	TextField,
-	Toggle,
-	TooltipHost
 	} from 'office-ui-fabric-react';
 import { DentalHistory, PatientAppointments, PatientDetails } from '../../patients/components';
 import { EditableList } from '../../../assets/components/editable-list/editable-list';

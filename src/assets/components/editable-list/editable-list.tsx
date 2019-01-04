@@ -1,9 +1,6 @@
 import * as React from 'react';
-import { API } from '../../../core';
 import { Col, Row } from '../../../assets/components/grid/index';
-import { fileTypes, PickFile } from '../../../assets/components/pick-files/pick-files';
 import { Icon } from 'office-ui-fabric-react';
-import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import './editable-list.scss';
 

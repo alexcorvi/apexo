@@ -1,11 +1,10 @@
 import * as React from 'react';
 
 import { colors, statistics } from '../../data';
-import { computed, observable } from 'mobx';
+import { computed } from 'mobx';
 
 import { Chart } from '../../data/interface.chart';
 import { PieChart } from '../../../../assets/components/charts/pie';
-import { convert } from '../../../../assets/utils/teeth-numbering-systems';
 import { observer } from 'mobx-react';
 import { treatmentsData } from '../../../treatments';
 

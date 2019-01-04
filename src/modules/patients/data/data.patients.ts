@@ -1,10 +1,8 @@
-import { computed, observable } from 'mobx';
+import { observable } from 'mobx';
 
 import { API } from '../../../core';
 import { Patient } from './index';
 import { appointmentsData } from '../../appointments';
-import { escapeRegExp } from '../../../assets/utils/escape-regex';
-import { genderToString } from './enum.gender';
 import { orthoData } from '../../orthodontic/index';
 
 class PatientsData {

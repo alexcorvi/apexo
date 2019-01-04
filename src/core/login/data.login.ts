@@ -1,12 +1,11 @@
 import auth from 'pouchdb-authentication';
 import PouchDB from 'pouchdb-browser';
-import { computed, observable, observe } from 'mobx';
+import { observable } from 'mobx';
 import { decrypt, encrypt } from '../../assets/utils/encryption';
 import { doctorsData } from '../../modules/doctors';
 import { isOnline } from '../../assets/utils/is-online';
 import { loadDemoData } from '../demo/load-demo-data';
 import { Md5 } from 'ts-md5';
-import { observer } from 'mobx-react';
 import { registerModules } from '../../modules';
 import { resync } from '../db';
 

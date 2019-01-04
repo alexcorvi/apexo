@@ -1,5 +1,5 @@
 import { appointmentsData } from '../../appointments';
-import { computed, observable, observe } from 'mobx';
+import { computed, observable } from 'mobx';
 import { DoctorJSON } from './interface.doctor-json';
 import { generateID } from '../../../assets/utils/generate-id';
 

@@ -1,7 +1,6 @@
 import { computed, observable } from 'mobx';
 
 import { API } from '../';
-import { INavLink } from 'office-ui-fabric-react/lib/Nav';
 import { MenuItem } from './interface.item';
 
 class MenuData {

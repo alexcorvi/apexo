@@ -3,7 +3,6 @@ import './prompts.scss';
 import * as React from 'react';
 
 import { Icon } from 'office-ui-fabric-react';
-import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import prompts from './data.prompts';
 

@@ -1,15 +1,11 @@
 import * as React from 'react';
 
-import { colors, statistics } from '../../data';
+import { statistics } from '../../data';
 import { computed, observable } from 'mobx';
 
 import { BarChart } from '../../../../assets/components/charts/bar';
 import { Chart } from '../../data/interface.chart';
-import { appointmentsData } from '../../../appointments';
 import { observer } from 'mobx-react';
-import { patientsData } from '../../../patients';
-import { round } from '../../../../assets/utils/round';
-import { settingsData } from '../../../settings';
 import { treatmentsData } from '../../../treatments';
 
 @observer

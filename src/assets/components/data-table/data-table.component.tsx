@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
 	Button,
-	Checkbox,
 	CommandBar,
 	ICommandBarItemProps,
 	Icon,
@@ -9,7 +8,6 @@ import {
 	SearchBox
 	} from 'office-ui-fabric-react';
 import { computed, observable } from 'mobx';
-import { escapeRegExp } from '../../utils/escape-regex';
 import { observer } from 'mobx-react';
 import { textualFilter } from '../../utils/textual-filter';
 import './data-table.component.scss';

@@ -1,14 +1,13 @@
 import * as React from 'react';
 
-import { colors, statistics } from '../../data';
-import { computed, observable } from 'mobx';
+import {  statistics } from '../../data';
+import { computed } from 'mobx';
 
 import { Chart } from '../../data/interface.chart';
 import { Gender } from '../../../patients/data/enum.gender';
 import { PieChart } from '../../../../assets/components/charts/pie';
 import { appointmentsData } from '../../../appointments';
 import { observer } from 'mobx-react';
-import { patientsData } from '../../../patients';
 
 @observer
 class Component extends React.Component<{}, {}> {

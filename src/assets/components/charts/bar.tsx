@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Chart } from 'chart.js';
 import { colors } from './colors';
-import { removeToolTips } from './remove-tooltips';
 
 
 

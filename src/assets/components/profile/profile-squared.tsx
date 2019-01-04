@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Icon, Persona } from 'office-ui-fabric-react';
+import { Persona } from 'office-ui-fabric-react';
 import './profile-squared.scss';
 
 

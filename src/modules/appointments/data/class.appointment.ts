@@ -2,14 +2,11 @@ import * as dateUtils from '../../../assets/utils/date';
 import { AppointmentJSON } from './index';
 import {
 	computed,
-	intercept,
 	observable,
-	observe
 	} from 'mobx';
 import { doctorsData } from '../../doctors';
 import { generateID } from '../../../assets/utils/generate-id';
 import { patientsData } from '../../patients';
-import { prescriptionsData } from '../../prescriptions';
 import { settingsData } from '../../settings';
 import { treatmentsData } from '../../treatments';
 
