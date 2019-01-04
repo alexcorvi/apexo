@@ -10,6 +10,9 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+### 1.7.1
+- You can enter either birth year or age
+
 ### 1.7.0
 - Remove appointment date filters
 - limit data table rows
