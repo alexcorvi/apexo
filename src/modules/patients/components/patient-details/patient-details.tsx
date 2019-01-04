@@ -51,9 +51,9 @@ export class PatientDetails extends React.Component<
 						<Col sm={12}>
 							<div className="birth">
 								<TextField
-									label="Birth"
-									value={this.props.patient.birthYear.toString()}
-									onChanged={(year) => (this.props.patient.birthYear = Number(year))}
+									label="Birth Year / Age"
+									value={this.props.patient.birthYearOrAge.toString()}
+									onChanged={(year) => (this.props.patient.birthYearOrAge = Number(year))}
 									type="number"
 								/>
 							</div>
