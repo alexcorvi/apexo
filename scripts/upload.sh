@@ -1,8 +1,8 @@
 # upload web application
-cd dist/application
-git add .
-git commit -m "deploy"
-git push origin master
+cd dist/application &&
+git add . &&
+git commit -m "deploy" &&
+git push origin master 
 
 # upload demo application
 cd ../
