@@ -1,42 +1,30 @@
-import './single.scss';
+import "./single.scss";
 
-import * as React from 'react';
+import * as React from "react";
 
-import {
-	Panel,
-	PanelType,
-	IconButton
-} from 'office-ui-fabric-react';
-import { Patient, patients, genderToString } from '../../data';
-import { computed } from 'mobx';
+import { Panel, PanelType, IconButton } from "office-ui-fabric-react";
+import { Patient, patients, genderToString } from "../../data";
+import { computed } from "mobx";
 
-import { observer } from 'mobx-react';
-import { Row, Col } from '../../../../assets/components/grid/index';
-import { DentalHistory } from '../dental-history/dental-history';
-import { PatientDetails } from '../patient-details/patient-details';
-import { PatientAppointments } from '../patient-appointments/patient-appointments';
-import { Profile } from '../../../../assets/components/profile/profile';
-import { Section } from '../../../../assets/components/section/section';
+import { observer } from "mobx-react";
+import { Row, Col } from "../../../../assets/components/grid/index";
+import { DentalHistory } from "../dental-history/dental-history";
+import { PatientDetails } from "../patient-details/patient-details";
+import { PatientAppointments } from "../patient-appointments/patient-appointments";
+import { Profile } from "../../../../assets/components/profile/profile";
+import { Section } from "../../../../assets/components/section/section";
+import { API } from "../../../../core/index";
 
 @observer
-export class SinglePatient extends React.Component<{ id: string; onDismiss: () => void }, {}> {
-	/**
-	 * patient index
-	 * 
-	 * @readonly
-	 * @memberof SinglePatient
-	 */
+export class SinglePatient extends React.Component<
+	{ id: string; onDismiss: () => void },
+	{}
+> {
 	@computed
 	get patientIndex() {
 		return patients.findIndexByID(this.props.id);
 	}
 
-	/**
-	 * Selected patient
-	 * 
-	 * @readonly
-	 * @memberof SinglePatient
-	 */
 	@computed
 	get patient() {
 		return patients.list[this.patientIndex] || new Patient();
@@ -59,8 +47,11 @@ export class SinglePatient extends React.Component<{ id: string; onDismiss: () =
 										name={this.patient.name}
 										secondaryElement={
 											<span>
-												Patient, {genderToString(this.patient.gender)} - {this.patient.age}{' '}
-												years old
+												Patient,{" "}
+												{genderToString(
+													this.patient.gender
+												)}{" "}
+												- {this.patient.age} years old
 											</span>
 										}
 										size={3}
@@ -68,7 +59,7 @@ export class SinglePatient extends React.Component<{ id: string; onDismiss: () =
 								</Col>
 								<Col span={2} className="close">
 									<IconButton
-										iconProps={{ iconName: 'cancel' }}
+										iconProps={{ iconName: "cancel" }}
 										onClick={() => {
 											this.props.onDismiss();
 										}}
@@ -84,9 +75,17 @@ export class SinglePatient extends React.Component<{ id: string; onDismiss: () =
 					<Section title="Dental History" showByDefault>
 						<DentalHistory hideTitle patient={this.patient} />
 					</Section>
-					<Section title="Appointments" showByDefault>
-						<PatientAppointments hideTitle patient={this.patient} />
-					</Section>
+
+					{API.user.currentUser.canViewAppointments ? (
+						<Section title="Appointments" showByDefault>
+							<PatientAppointments
+								hideTitle
+								patient={this.patient}
+							/>
+						</Section>
+					) : (
+						""
+					)}
 				</Panel>
 			</div>
 		);

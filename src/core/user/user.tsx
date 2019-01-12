@@ -1,24 +1,25 @@
-import * as React from 'react';
-import { API } from '../';
-import { AppointmentThumb } from '../../assets/components/appointment-thumb/appointment-thumb';
-import { Col, Row } from '../../assets/components/grid';
+import * as React from "react";
+import { API } from "../";
+import { AppointmentThumb } from "../../assets/components/appointment-thumb/appointment-thumb";
+import { Col, Row } from "../../assets/components/grid";
 import {
 	IconButton,
+	TextField,
 	Link,
 	Panel,
 	PanelType
-	} from 'office-ui-fabric-react';
-import { computed } from 'mobx';
-import { observer } from 'mobx-react';
-import { Profile } from '../../assets/components/profile/profile';
-import { user } from './data.user';
-import './user.scss';
+} from "office-ui-fabric-react";
+import { computed } from "mobx";
+import { observer } from "mobx-react";
+import { Profile } from "../../assets/components/profile/profile";
+import { user } from "./data.user";
+import "./user.scss";
 
 @observer
 export class UserComponent extends React.Component<{}, {}> {
 	@computed
 	get todayAppointments() {
-		if (!user.currentDoctor) {
+		if (!user.currentUser) {
 			return [];
 		} else if (user.todayAppointments) {
 			return user.todayAppointments;
@@ -39,7 +40,7 @@ export class UserComponent extends React.Component<{}, {}> {
 					<Row className="panel-heading">
 						<Col span={20}>
 							<Profile
-								name={user.currentDoctor.name}
+								name={user.currentUser.name}
 								size={3}
 								secondaryElement={
 									<div>
@@ -49,14 +50,14 @@ export class UserComponent extends React.Component<{}, {}> {
 											}}
 										>
 											Logout
-										</Link>{' '}
+										</Link>{" "}
 										<Link
-											className="reset-doctor"
+											className="reset-user"
 											onClick={() => {
-												API.login.resetDoctor();
+												API.login.resetUser();
 											}}
 										>
-											Switch Doctor
+											Switch User
 										</Link>
 									</div>
 								}
@@ -64,7 +65,7 @@ export class UserComponent extends React.Component<{}, {}> {
 						</Col>
 						<Col span={4} className="close">
 							<IconButton
-								iconProps={{ iconName: 'cancel' }}
+								iconProps={{ iconName: "cancel" }}
 								onClick={() => {
 									user.visible = false;
 								}}
@@ -75,11 +76,16 @@ export class UserComponent extends React.Component<{}, {}> {
 			>
 				<br />
 				<br />
-				<h3>{this.todayAppointments.length ? `Today's appointments` : 'No Appointments today'}</h3>
+				<h3>
+					{this.todayAppointments.length
+						? `Today's appointments`
+						: "No Appointments today"}
+				</h3>
 				<div className="appointments-listing">
-					{this.todayAppointments.map((appointment) => {
+					{this.todayAppointments.map(appointment => {
 						const date = new Date(appointment.date);
-						const dateLink = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+						const dateLink = `${date.getFullYear()}-${date.getMonth() +
+							1}-${date.getDate()}`;
 						return (
 							<AppointmentThumb
 								key={appointment._id}
@@ -87,7 +93,7 @@ export class UserComponent extends React.Component<{}, {}> {
 								hideDate={true}
 								showPatient={true}
 								onClick={() => {
-									API.router.go([ 'appointments', dateLink ]);
+									API.router.go(["appointments", dateLink]);
 									user.visible = false;
 								}}
 							/>

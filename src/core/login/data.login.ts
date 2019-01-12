@@ -1,28 +1,33 @@
-import auth from 'pouchdb-authentication';
-import PouchDB from 'pouchdb-browser';
-import { observable } from 'mobx';
-import { decrypt, encrypt } from '../../assets/utils/encryption';
-import { doctorsData } from '../../modules/doctors';
-import { isOnline } from '../../assets/utils/is-online';
-import { loadDemoData } from '../demo/load-demo-data';
-import { Md5 } from 'ts-md5';
-import { registerModules } from '../../modules';
-import { resync } from '../db';
+import auth from "pouchdb-authentication";
+import PouchDB from "pouchdb-browser";
+import { observable } from "mobx";
+import { decrypt, encrypt } from "../../assets/utils/encryption";
+import { staffData } from "../../modules/staff";
+import { isOnline } from "../../assets/utils/is-online";
+import { loadDemoData } from "../demo/load-demo-data";
+import { Md5 } from "ts-md5";
+import { registerModules } from "../../modules";
+import { resync } from "../db";
 
 PouchDB.plugin(auth);
 
-const demoHosts = [ 'localhost:8000', 'demo.apexo.app', '192.168.0.101:8000', '192.168.0.102:8000' ];
+const demoHosts: string[] = [
+	"localhost:8000",
+	"demo.apexo.app",
+	"192.168.0.101:8000",
+	"192.168.0.102:8000"
+];
 
 export enum LoginStep {
 	loadingData,
 	allDone,
-	chooseDoctor,
+	chooseUser,
 	initial
 }
 
 class Login {
-	@observable server: string = '';
-	@observable currentDoctorID: string = '';
+	@observable server: string = "";
+	@observable currentUserID: string = "";
 
 	@observable keepOffline = false;
 
@@ -35,9 +40,9 @@ class Login {
 			if (this.keepOffline) {
 				return;
 			}
-			isOnline(this.server).then((online) => {
+			isOnline(this.server).then(online => {
 				if (online && !this.online) {
-					console.log('getting back online');
+					console.log("getting back online");
 					resync.resync();
 				}
 				this.online = online;
@@ -49,13 +54,17 @@ class Login {
 		this.server = server;
 
 		let saved = false;
-		let savedUser = '';
-		let savedPassword = '';
-		let savedServer = '';
-		const encrypted = localStorage.getItem('ec') || '';
+		let savedUser = "";
+		let savedPassword = "";
+		let savedServer = "";
+		const encrypted = localStorage.getItem("ec") || "";
 		const decrypted = decrypt(encrypted);
 		try {
-			const savedCredentials: { server: string; username: string; password: string } = JSON.parse(decrypted);
+			const savedCredentials: {
+				server: string;
+				username: string;
+				password: string;
+			} = JSON.parse(decrypted);
 			savedUser = savedCredentials.username;
 			savedPassword = savedCredentials.password;
 			savedServer = savedCredentials.server;
@@ -63,14 +72,23 @@ class Login {
 		} catch (e) {}
 
 		if (saved && navigator.onLine) {
-			await this.login({ server: savedServer, user: savedUser, pass: savedPassword });
+			await this.login({
+				server: savedServer,
+				user: savedUser,
+				pass: savedPassword
+			});
 		} else if (saved) {
-			await this.authenticate({ server: savedServer, password: savedPassword, username: savedUser });
-		} else if (localStorage.getItem('no-server-mode') === 'true') {
+			await this.authenticate({
+				server: savedServer,
+				password: savedPassword,
+				username: savedUser
+			});
+		} else if (localStorage.getItem("no-server-mode") === "true") {
 			await this.noServerMode();
 		} else if (navigator.onLine && (await isOnline(server))) {
 			this.online = true;
-			const username = (await new PouchDB(server).getSession()).userCtx.name;
+			const username = (await new PouchDB(server).getSession()).userCtx
+				.name;
 			if (username) {
 				await this.authenticate({ server, username });
 			}
@@ -78,8 +96,8 @@ class Login {
 			this.online = false;
 			this.keepOffline = true;
 			await this.authenticate({
-				server: 'https://fake_server.apexo.app',
-				username: ''
+				server: "https://fake_server.apexo.app",
+				username: ""
 			});
 		}
 	}
@@ -88,21 +106,29 @@ class Login {
 		this.online = false;
 		this.keepOffline = true;
 		await this.authenticate({
-			server: 'http://apexo-no-server-mode',
-			username: ''
+			server: "http://apexo-no-server-mode",
+			username: ""
 		});
-		localStorage.setItem('no-server-mode', 'true');
+		localStorage.setItem("no-server-mode", "true");
 	}
 
-	async login({ user, pass, server }: { user: string; pass: string; server: string }) {
+	async login({
+		user,
+		pass,
+		server
+	}: {
+		user: string;
+		pass: string;
+		server: string;
+	}) {
 		// login
 		try {
 			if (await isOnline(server)) {
 				const res = await new PouchDB(server).logIn(user, pass);
 			} else {
-				const LSL_hash = localStorage.getItem('LSL_hash') || '';
+				const LSL_hash = localStorage.getItem("LSL_hash") || "";
 				if (LSL_hash !== Md5.hashStr(server + user + pass).toString()) {
-					throw new Error('...');
+					throw new Error("...");
 				}
 			}
 			this.authenticate({ server, username: user, password: pass });
@@ -113,17 +139,31 @@ class Login {
 					'An error occured, please make sure that the server is online and it\'s accessible. Click "change" to change into another server'
 				);
 			} else {
-				return 'This was not the last username/password combination you used!';
+				return "This was not the last username/password combination you used!";
 			}
 		}
 	}
 
-	async authenticate({ server, username, password }: { server: string; username: string; password?: string }) {
+	async authenticate({
+		server,
+		username,
+		password
+	}: {
+		server: string;
+		username: string;
+		password?: string;
+	}) {
 		this.server = server;
-		localStorage.setItem('server_location', server);
+		localStorage.setItem("server_location", server);
 		if (password) {
-			localStorage.setItem('LSL_hash', Md5.hashStr(server + username + password).toString());
-			localStorage.setItem('ec', encrypt(JSON.stringify({ username, password, server })));
+			localStorage.setItem(
+				"LSL_hash",
+				Md5.hashStr(server + username + password).toString()
+			);
+			localStorage.setItem(
+				"ec",
+				encrypt(JSON.stringify({ username, password, server }))
+			);
 		}
 		this.step = LoginStep.loadingData;
 		try {
@@ -134,8 +174,8 @@ class Login {
 			await loadDemoData();
 		}
 
-		if (!this.checkDoctorID()) {
-			this.step = LoginStep.chooseDoctor;
+		if (!this.checkUserID()) {
+			this.step = LoginStep.chooseUser;
 		}
 	}
 	async logout() {
@@ -144,29 +184,29 @@ class Login {
 				await new PouchDB(this.server).logOut();
 			} catch (e) {}
 		}
-		localStorage.removeItem('LSI');
-		localStorage.removeItem('doctor_id');
-		localStorage.removeItem('no-server-mode');
+		localStorage.removeItem("LSI");
+		localStorage.removeItem("user_id");
+		localStorage.removeItem("no-server-mode");
 		location.reload();
 	}
 
-	checkDoctorID() {
-		const doctorID = localStorage.getItem('doctor_id');
-		if (doctorID && doctorsData.doctors.getIndexByID(doctorID) !== -1) {
-			this.setDoctor(doctorID);
+	checkUserID() {
+		const userID = localStorage.getItem("user_id");
+		if (userID && staffData.staffMembers.getIndexByID(userID) !== -1) {
+			this.setUser(userID);
 			return true;
 		} else {
 			return false;
 		}
 	}
-	resetDoctor() {
-		this.step = LoginStep.chooseDoctor;
-		this.currentDoctorID = '';
+	resetUser() {
+		this.step = LoginStep.chooseUser;
+		this.currentUserID = "";
 	}
-	setDoctor(id: string) {
-		this.currentDoctorID = id;
+	setUser(id: string) {
+		this.currentUserID = id;
 		this.step = LoginStep.allDone;
-		localStorage.setItem('doctor_id', id);
+		localStorage.setItem("user_id", id);
 	}
 }
 

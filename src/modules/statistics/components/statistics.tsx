@@ -1,15 +1,18 @@
-import './statistics.scss';
+import "./statistics.scss";
 
-import * as React from 'react';
+import * as React from "react";
 
-import { Label as ColoredLabel, LabelType } from '../../../assets/components/label/label.component';
-import { DatePicker, Dropdown, Label } from 'office-ui-fabric-react';
-import { Row, Col } from '../../../assets/components/grid/index';
-import { observer } from 'mobx-react';
-import { round } from '../../../assets/utils/round';
-import { statistics } from '../data';
-import { data } from '../../';
-import { Section } from '../../../assets/components/section/section';
+import {
+	Label as ColoredLabel,
+	LabelType
+} from "../../../assets/components/label/label.component";
+import { DatePicker, Dropdown, Label } from "office-ui-fabric-react";
+import { Row, Col } from "../../../assets/components/grid/index";
+import { observer } from "mobx-react";
+import { round } from "../../../assets/utils/round";
+import { statistics } from "../data";
+import { data } from "../../";
+import { Section } from "../../../assets/components/section/section";
 
 @observer
 export class StatisticsComponent extends React.Component<{}, {}> {
@@ -20,28 +23,34 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 					<div className="container-fluid">
 						<Row gutter={2}>
 							<Col sm={8}>
-								<Label>Doctor:</Label>
+								<Label>Staff Member:</Label>
 								<Dropdown
-									placeHolder="Filter By Doctor"
-									options={[ { key: '', text: 'All Doctors' } ].concat(
-										data.doctorsData.doctors.list.map((doctor) => {
-											return {
-												key: doctor._id,
-												text: doctor.name
-											};
-										})
+									placeHolder="Filter By Staff Member"
+									options={[
+										{ key: "", text: "All Members" }
+									].concat(
+										data.staffData.staffMembers.list.map(
+											member => {
+												return {
+													key: member._id,
+													text: member.name
+												};
+											}
+										)
 									)}
-									onChanged={(doctor) => {
-										statistics.filterByDoctor = doctor.key.toString();
+									onChanged={member => {
+										statistics.filterByMember = member.key.toString();
 									}}
 								/>
 							</Col>
 							<Col sm={8}>
 								<Label>From:</Label>
 								<DatePicker
-									onSelectDate={(date) => {
+									onSelectDate={date => {
 										if (date) {
-											statistics.startingDate = statistics.getDayStartingPoint(date.getTime());
+											statistics.startingDate = statistics.getDayStartingPoint(
+												date.getTime()
+											);
 										}
 									}}
 									value={new Date(statistics.startingDate)}
@@ -50,9 +59,11 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							<Col sm={8}>
 								<Label>To:</Label>
 								<DatePicker
-									onSelectDate={(date) => {
+									onSelectDate={date => {
 										if (date) {
-											statistics.endingDate = statistics.getDayStartingPoint(date.getTime());
+											statistics.endingDate = statistics.getDayStartingPoint(
+												date.getTime()
+											);
 										}
 									}}
 									value={new Date(statistics.endingDate)}
@@ -66,20 +77,27 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 						<Row>
 							<Col sm={6} xs={12}>
 								<label>
-									Appointments:{' '}
+									Appointments:{" "}
 									<ColoredLabel
-										text={round(statistics.selectedAppointments.length).toString()}
+										text={round(
+											statistics.selectedAppointments
+												.length
+										).toString()}
 										type={LabelType.primary}
 									/>
 								</label>
 							</Col>
 							<Col sm={6} xs={12}>
 								<label>
-									Payments:{' '}
+									Payments:{" "}
 									<ColoredLabel
 										text={
-											data.settingsData.settings.getSetting('currencySymbol') +
-											round(statistics.totalPayments).toString()
+											data.settingsData.settings.getSetting(
+												"currencySymbol"
+											) +
+											round(
+												statistics.totalPayments
+											).toString()
 										}
 										type={LabelType.warning}
 									/>
@@ -87,11 +105,15 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							</Col>
 							<Col sm={6} xs={12}>
 								<label>
-									Expenses:{' '}
+									Expenses:{" "}
 									<ColoredLabel
 										text={
-											data.settingsData.settings.getSetting('currencySymbol') +
-											round(statistics.totalExpenses).toString()
+											data.settingsData.settings.getSetting(
+												"currencySymbol"
+											) +
+											round(
+												statistics.totalExpenses
+											).toString()
 										}
 										type={LabelType.danger}
 									/>
@@ -99,11 +121,15 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							</Col>
 							<Col sm={6} xs={12}>
 								<label>
-									Profits:{' '}
+									Profits:{" "}
 									<ColoredLabel
 										text={
-											data.settingsData.settings.getSetting('currencySymbol') +
-											round(statistics.totalProfits).toString()
+											data.settingsData.settings.getSetting(
+												"currencySymbol"
+											) +
+											round(
+												statistics.totalProfits
+											).toString()
 										}
 										type={LabelType.success}
 									/>
@@ -118,7 +144,11 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							return (
 								<div
 									key={index + chart.name}
-									className={'chart-wrapper ' + (chart.className || 'col-xs-12 col-md-5 col-lg-4')}
+									className={
+										"chart-wrapper " +
+										(chart.className ||
+											"col-xs-12 col-md-5 col-lg-4")
+									}
 								>
 									<Section title={chart.name} showByDefault>
 										<chart.Component />

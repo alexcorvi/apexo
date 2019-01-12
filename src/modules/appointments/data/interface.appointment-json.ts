@@ -11,7 +11,8 @@ export interface AppointmentJSON {
 	prescriptions: { prescription: string; id: string }[];
 	complaint: string;
 	diagnosis: string;
-	doctorsID: string[];
+	staffID?: string[];
+	doctorsID?: string[];
 	records: string[];
 	units: number;
 	notes: string;

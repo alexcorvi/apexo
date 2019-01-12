@@ -38,3 +38,23 @@ hr {
 	right: 12px;
 	z-index: -1;
 }
+
+
+.external-service-panel {
+	.ms-Panel-main {
+		width: 100% !important;
+		left: 0 !important;
+
+		.ms-Panel-content {
+			padding: 0;
+			overflow: hidden;
+			padding-top: 27px;
+
+			iframe {
+				height: 100%;
+				width: 100%;
+				border: 0;
+			}
+		}
+	}
+}

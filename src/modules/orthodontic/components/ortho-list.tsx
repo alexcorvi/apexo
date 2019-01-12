@@ -1,97 +1,130 @@
-import * as dateUtils from '../../../assets/utils/date';
-import * as React from 'react';
-import { cases, OrthoCase } from '../data';
+import * as dateUtils from "../../../assets/utils/date";
+import * as React from "react";
+import { cases, OrthoCase } from "../data";
 import {
 	Panel,
 	PanelType,
 	PrimaryButton,
 	TextField
-	} from 'office-ui-fabric-react';
-import { observable } from 'mobx';
-import { DataTable } from '../../../assets/components/data-table/data-table.component';
-import { genderToString } from '../../patients/data/enum.gender';
-import { observer } from 'mobx-react';
-import { OrthoSingle } from '.';
-import { patientsData } from '../../patients';
-import { Profile } from '../../../assets/components/profile/profile';
-import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
-import { TagInput } from '../../../assets/components/tag-input/tag-input';
-import './ortho-list.scss';
+} from "office-ui-fabric-react";
+import { observable, computed } from "mobx";
+import { DataTable } from "../../../assets/components/data-table/data-table.component";
+import { genderToString } from "../../patients/data/enum.gender";
+import { observer } from "mobx-react";
+import { OrthoSingle } from ".";
+import { patientsData } from "../../patients";
+import { Profile } from "../../../assets/components/profile/profile";
+import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
+import { TagInput } from "../../../assets/components/tag-input/tag-input";
+import "./ortho-list.scss";
+import { API } from "../../../core/index";
 
 @observer
 export class OrthoList extends React.Component<{}, {}> {
 	@observable showAdditionPanel: boolean = false;
-	@observable newPatientName: string = '';
+	@observable newPatientName: string = "";
 
-	@observable selectedCaseID: string = '';
+	@observable selectedCaseID: string = "";
+
+	@computed get canEdit() {
+		return API.user.currentUser.canEditOrtho;
+	}
 
 	render() {
 		return (
 			<div className="orthodontic-cases-component p-15 p-l-10 p-r-10">
 				<DataTable
-					onDelete={(id) => {
-						cases.deleteModal(id);
-					}}
+					onDelete={
+						this.canEdit
+							? id => {
+									cases.deleteModal(id);
+							  }
+							: undefined
+					}
 					maxItemsOnLoad={15}
-					className={'orthodontic-cases-data-table'}
-					heads={[ 'Patient', 'Started', 'Next Appointment' ]}
-					rows={cases.filtered.filter((orthoCase) => orthoCase.patient).map((orthoCase) => {
-						const patient = orthoCase.patient || new patientsData.Patient();
-						return {
-							id: orthoCase._id,
-							searchableString: orthoCase.searchableString,
-							cells: [
-								{
-									dataValue: patient.name,
-									component: (
-										<Profile
-											name={patient.name}
-											secondaryElement={
-												<span>
-													Patient, {genderToString(patient.gender)} - {patient.age} years old
-												</span>
+					className={"orthodontic-cases-data-table"}
+					heads={["Patient", "Started", "Next Appointment"]}
+					rows={cases.filtered
+						.filter(orthoCase => orthoCase.patient)
+						.map(orthoCase => {
+							const patient =
+								orthoCase.patient || new patientsData.Patient();
+							return {
+								id: orthoCase._id,
+								searchableString: orthoCase.searchableString,
+								cells: [
+									{
+										dataValue: patient.name,
+										component: (
+											<Profile
+												name={patient.name}
+												secondaryElement={
+													<span>
+														Patient,{" "}
+														{genderToString(
+															patient.gender
+														)}{" "}
+														- {patient.age} years
+														old
+													</span>
+												}
+												size={3}
+											/>
+										),
+										className: "no-label",
+										onClick: () => {
+											this.selectedCaseID = orthoCase._id;
+										}
+									},
+									{
+										dataValue: orthoCase.started,
+										component: dateUtils.relativeFormat(
+											orthoCase.started
+										),
+										className: "hidden-xs"
+									},
+									{
+										dataValue: (
+											patient.nextAppointment || {
+												date: 0
 											}
-											size={3}
-										/>
-									),
-									className: 'no-label',
-									onClick: () => {
-										this.selectedCaseID = orthoCase._id;
+										).date,
+										component: patient.nextAppointment ? (
+											<ProfileSquared
+												text={
+													patient.nextAppointment
+														.treatment.type
+												}
+												subText={dateUtils.relativeFormat(
+													patient.nextAppointment.date
+												)}
+												size={3}
+												onClick={() => {}}
+											/>
+										) : (
+											"Not registered"
+										),
+										className: "hidden-xs"
 									}
-								},
-								{
-									dataValue: orthoCase.started,
-									component: dateUtils.relativeFormat(orthoCase.started),
-									className: 'hidden-xs'
-								},
-								{
-									dataValue: (patient.nextAppointment || { date: 0 }).date,
-									component: patient.nextAppointment ? (
-										<ProfileSquared
-											text={patient.nextAppointment.treatment.type}
-											subText={dateUtils.relativeFormat(patient.nextAppointment.date)}
-											size={3}
-											onClick={() => {}}
-										/>
-									) : (
-										'Not registered'
-									),
-									className: 'hidden-xs'
-								}
-							]
-						};
-					})}
-					commands={[
-						{
-							key: 'addNew',
-							title: 'Add new',
-							name: 'Add New',
-							onClick: () => (this.showAdditionPanel = true),
-							iconProps: {
-								iconName: 'Add'
-							}
-						}
-					]}
+								]
+							};
+						})}
+					commands={
+						this.canEdit
+							? [
+									{
+										key: "addNew",
+										title: "Add new",
+										name: "Add New",
+										onClick: () =>
+											(this.showAdditionPanel = true),
+										iconProps: {
+											iconName: "Add"
+										}
+									}
+							  ]
+							: []
+					}
 				/>
 				<Panel
 					isOpen={this.showAdditionPanel}
@@ -107,8 +140,11 @@ export class OrthoList extends React.Component<{}, {}> {
 					<TagInput
 						strict
 						value={[]}
-						options={cases.patientsWithNoOrtho.map((patient) => ({ key: patient._id, text: patient.name }))}
-						onAdd={(val) => {
+						options={cases.patientsWithNoOrtho.map(patient => ({
+							key: patient._id,
+							text: patient.name
+						}))}
+						onAdd={val => {
 							this.showAdditionPanel = false;
 							const orthoCase = new OrthoCase();
 							orthoCase.patientID = val.key;
@@ -124,7 +160,7 @@ export class OrthoList extends React.Component<{}, {}> {
 					<TextField
 						placeholder="Patient name"
 						value={this.newPatientName}
-						onChanged={(v) => (this.newPatientName = v)}
+						onChanged={v => (this.newPatientName = v)}
 					/>
 					<PrimaryButton
 						onClick={() => {
@@ -134,17 +170,20 @@ export class OrthoList extends React.Component<{}, {}> {
 							orthoCase.patientID = newPatient._id;
 							patientsData.patients.list.push(newPatient);
 							cases.list.push(orthoCase);
-							this.newPatientName = '';
+							this.newPatientName = "";
 							this.selectedCaseID = orthoCase._id;
 						}}
 						iconProps={{
-							iconName: 'add'
+							iconName: "add"
 						}}
 					>
 						Add New
 					</PrimaryButton>
 				</Panel>
-				<OrthoSingle id={this.selectedCaseID} onDismiss={() => (this.selectedCaseID = '')} />
+				<OrthoSingle
+					id={this.selectedCaseID}
+					onDismiss={() => (this.selectedCaseID = "")}
+				/>
 			</div>
 		);
 	}

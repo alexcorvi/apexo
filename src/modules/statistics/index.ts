@@ -1,8 +1,8 @@
-import * as statisticsComponents from './components';
-import * as statisticsData from './data';
+import * as statisticsComponents from "./components";
+import * as statisticsData from "./data";
 
-import { API } from '../../core';
-import { settingsData } from '../settings/index';
+import { API } from "../../core";
+import { settingsData } from "../settings/index";
 
 export const register = {
 	async register() {
@@ -10,18 +10,20 @@ export const register = {
 			statisticsData.namespace,
 			/^statistics\/?$/,
 			statisticsComponents.StatisticsComponent,
-			() => !!settingsData.settings.getSetting('module_statistics')
+			() => !!settingsData.settings.getSetting("module_statistics")
 		);
 		API.menu.items.push({
-			icon: 'Chart',
+			icon: "Chart",
 			name: statisticsData.namespace,
 			key: statisticsData.namespace,
 			onClick: () => {
-				API.router.go([ statisticsData.namespace ]);
+				API.router.go([statisticsData.namespace]);
 			},
 			order: 50,
-			url: '',
-			condition: () => !!settingsData.settings.getSetting('module_statistics')
+			url: "",
+			condition: () =>
+				API.user.currentUser.canViewStats &&
+				!!settingsData.settings.getSetting("module_statistics")
 		});
 		return true;
 	},

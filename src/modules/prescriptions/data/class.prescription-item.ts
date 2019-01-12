@@ -1,19 +1,18 @@
-import { computed, observable } from 'mobx';
-import { generateID } from '../../../assets/utils/generate-id';
+import { computed, observable } from "mobx";
+import { generateID } from "../../../assets/utils/generate-id";
 import {
 	itemFormToString,
 	PrescriptionItemForm,
 	PrescriptionItemJSON,
 	stringToItemForm
-	} from './index';
-
+} from "./index";
 
 export class PrescriptionItem {
 	[key: string]: string | number | Function;
 
 	_id: string = generateID();
 
-	@observable name: string = '';
+	@observable name: string = "";
 
 	@observable unitsPerTime: number = 1;
 
@@ -32,12 +31,6 @@ export class PrescriptionItem {
 		`.toLowerCase();
 	}
 
-	/**
-	 * Converts prescription's data to JSON
-	 * 
-	 * @returns {PrescriptionItemJSON} 
-	 * @memberof PrescriptionItem
-	 */
 	toJSON(): PrescriptionItemJSON {
 		return {
 			_id: this._id,
@@ -49,23 +42,12 @@ export class PrescriptionItem {
 		};
 	}
 
-	/**
-	 * Creates an instance of PrescriptionItem from JSON data
-	 * @param {PrescriptionItemJSON} [json] 
-	 * @memberof PrescriptionItem
-	 */
 	constructor(json?: PrescriptionItemJSON) {
 		if (json) {
 			this.fromJSON(json);
 		}
 	}
 
-	/**
-	 * Updates from JSON
-	 * 
-	 * @param {PrescriptionItemJSON} json 
-	 * @memberof PrescriptionItem
-	 */
 	fromJSON(json: PrescriptionItemJSON) {
 		this.name = json.name;
 		this._id = json._id;

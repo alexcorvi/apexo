@@ -1,13 +1,13 @@
 @import "../../../global-styles/shadows.scss";
 
 @media screen and (max-width: 800px) {
-	.doctors-component {
+	.staff-component {
 		padding: 10px;
 	}
 }
 
-.doctor-editor {
-	.doctor-input {
+.staff-editor {
+	.staff-input {
 		margin-bottom: 15px;
 		label {
 			padding-bottom: 5px;

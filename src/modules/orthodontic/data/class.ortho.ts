@@ -1,25 +1,25 @@
-import t4mat from 't4mat';
-import { CaseJSON } from './interface.ortho-json';
-import { computed, observable, observe } from 'mobx';
-import { generateID } from '../../../assets/utils/generate-id';
-import { patientsData } from '../../patients/index';
+import t4mat from "t4mat";
+import { CaseJSON, CephalometricItem } from "./interface.ortho-json";
+import { computed, observable, observe } from "mobx";
+import { generateID } from "../../../assets/utils/generate-id";
+import { patientsData } from "../../patients/index";
 
 export const Lips = {
-	competent: 'competent',
-	incompetent: 'incompetent',
-	potentially_competent: 'potentially_competent'
+	competent: "competent lips",
+	incompetent: "incompetent lips",
+	potentially_competent: "potentially competent lips"
 };
 
 export const FacialProfile = {
-	brachycephalic: 'brachycephalic',
-	dolichocephalic: 'dolichocephalic',
-	mesocephalic: 'mesocephalic'
+	brachycephalic: "brachycephalic profile",
+	dolichocephalic: "dolichocephalic profile",
+	mesocephalic: "mesocephalic profile"
 };
 
 export const OralHygiene = {
-	good: 'good',
-	bad: 'bad',
-	moderate: 'moderate'
+	good: "good oral hygiene",
+	bad: "bad oral hygiene",
+	moderate: "moderate oral hygiene"
 };
 
 export class OrthoCase {
@@ -27,19 +27,19 @@ export class OrthoCase {
 	@observable triggerUpdate: number = 0;
 	@observable started: number = new Date().getTime();
 
-	@observable patientID: string = '';
+	@observable patientID: string = "";
 	@computed
 	get patient() {
-		return patientsData.patients.list.find((x) => x._id === this.patientID);
+		return patientsData.patients.list.find(x => x._id === this.patientID);
 	}
 
 	/**
 	 * Extra-oral observations
 	 */
-	@observable lips: keyof typeof Lips = 'competent';
-	@observable facialProfile: keyof typeof FacialProfile = 'mesocephalic';
+	@observable lips: keyof typeof Lips = "competent";
+	@observable facialProfile: keyof typeof FacialProfile = "mesocephalic";
 	@observable nasioLabialAngle: number = 90;
-	@observable oralHygiene: keyof typeof OralHygiene = 'moderate';
+	@observable oralHygiene: keyof typeof OralHygiene = "moderate";
 
 	/**
 	 * jaw to jaw relationship
@@ -94,11 +94,14 @@ export class OrthoCase {
 
 	@observable orthoGallery: string[] = [];
 
+	@observable cephalometricHistory: CephalometricItem[] = [];
+	@observable orthograph: string = "";
+
 	@computed
 	get searchableString() {
 		return `
-			${this.patient ? this.patient.searchableString : ''}
-			${t4mat({ time: this.started, format: '{R}' })}
+			${this.patient ? this.patient.searchableString : ""}
+			${t4mat({ time: this.started, format: "{R}" })}
 		`.toLowerCase();
 	}
 
@@ -112,6 +115,7 @@ export class OrthoCase {
 			observe(this.treatmentPlan_fill, () => this.triggerUpdate++);
 			observe(this.treatmentPlan_appliance, () => this.triggerUpdate++);
 			observe(this.orthoGallery, () => this.triggerUpdate++);
+			observe(this.cephalometricHistory, () => this.triggerUpdate++);
 		}
 	}
 
@@ -138,7 +142,9 @@ export class OrthoCase {
 			u_spaceAvailable: this.u_spaceAvailable,
 			u_spaceNeeded: this.u_spaceNeeded,
 			crossScissorBite: Array.from(this.crossScissorBite),
-			orthoGallery: Array.from(this.orthoGallery)
+			orthoGallery: Array.from(this.orthoGallery),
+			cephalometricHistory: Array.from(this.cephalometricHistory),
+			orthograph: this.orthograph
 		};
 	}
 
@@ -165,7 +171,8 @@ export class OrthoCase {
 		this.u_spaceNeeded = json.u_spaceNeeded;
 		this.crossScissorBite = json.crossScissorBite;
 		this.orthoGallery = json.orthoGallery || [];
-
+		this.cephalometricHistory = json.cephalometricHistory || [];
+		this.orthograph = json.orthograph || "";
 		observe(this.orthoGallery, () => this.triggerUpdate++);
 	}
 }

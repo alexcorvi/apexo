@@ -1,46 +1,26 @@
-import * as dateUtils from '../../../assets/utils/date';
-import * as React from 'react';
-import { appointmentsData } from '../../../modules/appointments';
-import { computed } from 'mobx';
-import { Icon } from 'office-ui-fabric-react';
-import { observer } from 'mobx-react';
-import { patientsComponents } from '../../../modules/patients';
-import { ProfileSquared } from '../profile/profile-squared';
-import './appointment-thumb.scss';
+import * as dateUtils from "../../../assets/utils/date";
+import * as React from "react";
+import { appointmentsData } from "../../../modules/appointments";
+import { computed } from "mobx";
+import { Icon } from "office-ui-fabric-react";
+import { observer } from "mobx-react";
+import { patientsComponents } from "../../../modules/patients";
+import { ProfileSquared } from "../profile/profile-squared";
+import "./appointment-thumb.scss";
 
 @observer
 export class AppointmentThumb extends React.Component<
 	{
-		/**
-	 * Appointment to view a thumb of
-	 * 
-	 * @type {Appointment}
-	 */
 		appointment: appointmentsData.Appointment;
-		/**
-		 * Callback for click
-		 * 
-		 */
+
 		onClick?: () => void;
-		/**
-		 * View a delete button
-		 * 
-		 * @type {boolean}
-		 */
+
 		canDelete?: boolean;
-		/**
-		 * Add custom className
-		 * 
-		 * @type {string}
-		 */
+
 		className?: string;
-		/**
-		 * show date thumb
-		*/
+
 		hideDate?: boolean;
-		/**
-		 * show patient
-		 */
+
 		showPatient?: boolean;
 
 		hideTreatment?: boolean;
@@ -49,25 +29,25 @@ export class AppointmentThumb extends React.Component<
 > {
 	@computed
 	get className() {
-		let className = 'appointment-thumbnail-component';
-		className = className + ' labeled';
+		let className = "appointment-thumbnail-component";
+		className = className + " labeled";
 		if (this.props.appointment.dueToday) {
-			className = className + ' today-due';
+			className = className + " today-due";
 		}
 		if (this.props.appointment.dueTomorrow) {
-			className = className + ' tomorrow-due';
+			className = className + " tomorrow-due";
 		}
 		if (this.props.appointment.missed) {
-			className = className + ' missed';
+			className = className + " missed";
 		}
 		if (this.props.appointment.outstanding) {
-			className = className + ' to-be-paid';
+			className = className + " to-be-paid";
 		}
 		if (this.props.appointment.future) {
-			className = className + ' future';
+			className = className + " future";
 		}
 		if (this.props.onClick) {
-			className = className + ' clickable';
+			className = className + " clickable";
 		}
 		return className;
 	}
@@ -77,7 +57,7 @@ export class AppointmentThumb extends React.Component<
 		const treatmentID = this.props.appointment.treatmentID;
 		return (
 			<div
-				ref={(el) => (el ? (this.el = el) : '')}
+				ref={el => (el ? (this.el = el) : "")}
 				className={this.className}
 				onClick={this.props.onClick || (() => {})}
 			>
@@ -87,13 +67,15 @@ export class AppointmentThumb extends React.Component<
 						id={this.props.appointment.patientID}
 					/>
 				) : (
-					''
-				)}{' '}
+					""
+				)}{" "}
 				{
 					<div className="m-b-5">
 						<ProfileSquared
 							text={this.props.appointment.treatment.type}
-							subText={dateUtils.relativeFormat(this.props.appointment.date)}
+							subText={dateUtils.relativeFormat(
+								this.props.appointment.date
+							)}
 							size={3}
 						/>
 					</div>
@@ -106,21 +88,26 @@ export class AppointmentThumb extends React.Component<
 							if (!this.el) {
 								return;
 							}
-							this.el.className = this.el.className + ' to-delete';
+							this.el.className =
+								this.el.className + " to-delete";
 						}}
 						onMouseLeave={() => {
 							if (!this.el) {
 								return;
 							}
-							this.el.className = this.el.className.split(' to-delete').join('');
+							this.el.className = this.el.className
+								.split(" to-delete")
+								.join("");
 						}}
-						onClick={(ev) => {
-							appointmentsData.appointments.deleteModal(this.props.appointment._id);
+						onClick={ev => {
+							appointmentsData.appointments.deleteModal(
+								this.props.appointment._id
+							);
 							ev.stopPropagation();
 						}}
 					/>
 				) : (
-					''
+					""
 				)}
 			</div>
 		);

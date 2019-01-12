@@ -1,10 +1,10 @@
-import * as dateUtils from '../../../assets/utils/date';
-import * as React from 'react';
-import { API } from '../../../core';
-import { Appointment, appointments } from '../data';
-import { Col, Row } from '../../../assets/components/grid/index';
-import { computed } from 'mobx';
-import { convert } from '../../../assets/utils/teeth-numbering-systems';
+import * as dateUtils from "../../../assets/utils/date";
+import * as React from "react";
+import { API } from "../../../core";
+import { Appointment, appointments } from "../data";
+import { Col, Row } from "../../../assets/components/grid/index";
+import { computed } from "mobx";
+import { convert } from "../../../assets/utils/teeth-numbering-systems";
 import {
 	DatePicker,
 	Dropdown,
@@ -15,22 +15,25 @@ import {
 	PrimaryButton,
 	TextField,
 	Toggle
-	} from 'office-ui-fabric-react';
-import { doctorsData } from '../../doctors';
-import { Gallery } from '../../../assets/components/gallery/gallery';
-import { Label, LabelType } from '../../../assets/components/label/label.component';
-import { observer } from 'mobx-react';
-import { patientsData } from '../../patients';
-import { prescriptionsData } from '../../prescriptions';
-import { Profile } from '../../../assets/components/profile/profile';
-import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
-import { round } from '../../../assets/utils/round';
-import { Section } from '../../../assets/components/section/section';
-import { settingsData } from '../../settings';
-import { TagInput } from '../../../assets/components/tag-input/tag-input';
-import { Treatment } from '../../treatments/data/class.treatment';
-import { treatmentsData } from '../../treatments';
-import './appointment-editor.scss';
+} from "office-ui-fabric-react";
+import { staffData } from "../../staff";
+import { Gallery } from "../../../assets/components/gallery/gallery";
+import {
+	Label,
+	LabelType
+} from "../../../assets/components/label/label.component";
+import { observer } from "mobx-react";
+import { patientsData } from "../../patients";
+import { prescriptionsData } from "../../prescriptions";
+import { Profile } from "../../../assets/components/profile/profile";
+import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
+import { round } from "../../../assets/utils/round";
+import { Section } from "../../../assets/components/section/section";
+import { settingsData } from "../../settings";
+import { TagInput } from "../../../assets/components/tag-input/tag-input";
+import { Treatment } from "../../treatments/data/class.treatment";
+import { treatmentsData } from "../../treatments";
+import "./appointment-editor.scss";
 
 @observer
 export class AppointmentEditor extends React.Component<
@@ -48,20 +51,32 @@ export class AppointmentEditor extends React.Component<
 		if (!appointment) {
 			return [].length - 1;
 		}
-		return appointments.appointmentsForDay(appointment.date, 0, 0).filter((a) => a._id !== appointment._id).length;
+		return appointments
+			.appointmentsForDay(appointment.date, 0, 0)
+			.filter(a => a._id !== appointment._id).length;
 	}
 
 	@computed
 	get treatmentOptions() {
-		const list: Treatment[] = JSON.parse(JSON.stringify(treatmentsData.treatments.list));
-		if (this.props.appointment && this.props.appointment.treatmentID.indexOf('|') > -1) {
-			const arr = this.props.appointment.treatmentID.split('|');
+		const list: Treatment[] = JSON.parse(
+			JSON.stringify(treatmentsData.treatments.list)
+		);
+		if (
+			this.props.appointment &&
+			this.props.appointment.treatmentID.indexOf("|") > -1
+		) {
+			const arr = this.props.appointment.treatmentID.split("|");
 			const _id = this.props.appointment.treatmentID;
 			const type = arr[0];
 			const expenses = Number(arr[1]);
 			list.push(new Treatment({ _id, expenses, type }));
 		}
 		return list;
+	}
+
+	@computed
+	get canEdit() {
+		return API.user.currentUser.canEditAppointments;
 	}
 
 	render() {
@@ -82,17 +97,26 @@ export class AppointmentEditor extends React.Component<
 									<Profile
 										secondaryElement={
 											<span>
-												Appointment: {dateUtils.relativeFormat(this.props.appointment.date)} /{' '}
-												{this.props.appointment.treatment.type}
+												Appointment:{" "}
+												{dateUtils.relativeFormat(
+													this.props.appointment.date
+												)}{" "}
+												/{" "}
+												{
+													this.props.appointment
+														.treatment.type
+												}
 											</span>
 										}
-										name={this.props.appointment.patient.name}
+										name={
+											this.props.appointment.patient.name
+										}
 										size={3}
 									/>
 								</Col>
 								<Col span={2} className="close">
 									<IconButton
-										iconProps={{ iconName: 'cancel' }}
+										iconProps={{ iconName: "cancel" }}
 										onClick={() => {
 											this.props.onDismiss();
 										}}
@@ -111,54 +135,84 @@ export class AppointmentEditor extends React.Component<
 									<div className="appointment-input date">
 										<label>Date: </label>
 										<DatePicker
+											disabled={!this.canEdit}
 											className="appointment-date"
 											placeholder="Select a date..."
-											value={new Date(this.props.appointment.date)}
-											onSelectDate={(date) => {
+											value={
+												new Date(
+													this.props.appointment.date
+												)
+											}
+											onSelectDate={date => {
 												if (date) {
-													if (!this.props.appointment) {
+													if (
+														!this.props.appointment
+													) {
 														return;
 													}
-													this.props.appointment.setDate(date.getTime());
+													this.props.appointment.setDate(
+														date.getTime()
+													);
 												}
 											}}
 										/>
 										<p className="insight">
-											With{' '}
-											<span className={'num-' + this.otherAppointmentsNumber}>
+											With{" "}
+											<span
+												className={
+													"num-" +
+													this.otherAppointmentsNumber
+												}
+											>
 												{this.otherAppointmentsNumber}
-											</span>{' '}
-											other appointment{this.otherAppointmentsNumber > 1 ? 's' : ''}
+											</span>{" "}
+											other appointment
+											{this.otherAppointmentsNumber > 1
+												? "s"
+												: ""}
 										</p>
 									</div>
 								</Col>
 								<Col sm={12}>
 									<div className="appointment-input date">
-										<label>Operating Doctors: </label>
+										<label>Operating Staff: </label>
 										<TagInput
-											placeholder="Select operating doctors..."
-											options={doctorsData.doctors.list
-												.filter((doctor) => {
-													if (!this.props.appointment) {
+											disabled={!this.canEdit}
+											placeholder="Select operating staff..."
+											options={staffData.staffMembers.list
+												.filter(user => {
+													if (
+														!this.props.appointment
+													) {
 														return;
 													}
 													return (
-														doctor.onDuty.indexOf(
-															new Date(this.props.appointment.date).getDay()
-														) !== -1
+														user.onDuty.indexOf(
+															new Date(
+																this.props.appointment.date
+															).getDay()
+														) !== -1 &&
+														user.operates
 													);
 												})
-												.map((x) => ({ key: x._id, text: x.name }))}
-											value={this.props.appointment.doctors.map((x) => ({
-												key: x._id,
-												text: x.name
-											}))}
+												.map(x => ({
+													key: x._id,
+													text: x.name
+												}))}
+											value={this.props.appointment.operatingStaff.map(
+												x => ({
+													key: x._id,
+													text: x.name
+												})
+											)}
 											strict={true}
-											onChange={(newValue) => {
+											onChange={newValue => {
 												if (!this.props.appointment) {
 													return;
 												}
-												this.props.appointment.doctorsID = newValue.map((x) => x.key);
+												this.props.appointment.staffID = newValue.map(
+													x => x.key
+												);
 											}}
 										/>
 									</div>
@@ -169,9 +223,10 @@ export class AppointmentEditor extends React.Component<
 						<Section title="Case Details" showByDefault>
 							<TextField
 								multiline
+								disabled={!this.canEdit}
 								label="Details:"
 								value={this.props.appointment.notes}
-								onChanged={(value) => {
+								onChanged={value => {
 									if (this.props.appointment) {
 										this.props.appointment.notes = value;
 									}
@@ -183,17 +238,23 @@ export class AppointmentEditor extends React.Component<
 									<div className="appointment-input treatment">
 										<label>Treatment: </label>
 										<Dropdown
+											disabled={!this.canEdit}
 											className="treatment-type"
-											selectedKey={this.props.appointment.treatmentID}
+											selectedKey={
+												this.props.appointment
+													.treatmentID
+											}
 											options={this.treatmentOptions
-												.sort((a, b) => a.type.localeCompare(b.type))
-												.map((tr) => {
+												.sort((a, b) =>
+													a.type.localeCompare(b.type)
+												)
+												.map(tr => {
 													return {
 														key: tr._id,
 														text: tr.type
 													};
 												})}
-											onChanged={(newValue) => {
+											onChanged={newValue => {
 												if (this.props.appointment) {
 													this.props.appointment.treatmentID = newValue.key.toString();
 												}
@@ -205,41 +266,53 @@ export class AppointmentEditor extends React.Component<
 									<div className="appointment-input units-number">
 										<label>Units: </label>
 										<TextField
+											disabled={!this.canEdit}
 											type="number"
 											value={this.props.appointment.units.toString()}
-											onChanged={(newValue) => {
+											onChanged={newValue => {
 												if (!this.props.appointment) {
 													return;
 												}
-												this.props.appointment.units = Number(newValue);
+												this.props.appointment.units = Number(
+													newValue
+												);
 											}}
 										/>
 									</div>
 								</Col>
 								<Col span={24}>
-									{' '}
+									{" "}
 									<div className="appointment-input involved-teeth">
 										<label>Involved Teeth: </label>
 										<TagInput
+											disabled={!this.canEdit}
 											placeholder="Enter tooth number..."
-											value={this.props.appointment.involvedTeeth.map((x) => ({
-												key: x.toString(),
-												text: x.toString()
-											}))}
-											strict={true}
-											options={patientsData.ISOTeethArr.map((x) => {
-												return {
+											value={this.props.appointment.involvedTeeth.map(
+												x => ({
 													key: x.toString(),
 													text: x.toString()
-												};
-											})}
-											formatText={(x) => `${x.toString()} - ${convert(Number(x)).Palmer}`}
-											onChange={(newValue) => {
+												})
+											)}
+											strict={true}
+											options={patientsData.ISOTeethArr.map(
+												x => {
+													return {
+														key: x.toString(),
+														text: x.toString()
+													};
+												}
+											)}
+											formatText={x =>
+												`${x.toString()} - ${
+													convert(Number(x)).Palmer
+												}`
+											}
+											onChange={newValue => {
 												if (!this.props.appointment) {
 													return;
 												}
-												this.props.appointment.involvedTeeth = newValue.map((x) =>
-													Number(x.key)
+												this.props.appointment.involvedTeeth = newValue.map(
+													x => Number(x.key)
 												);
 											}}
 										/>
@@ -247,28 +320,35 @@ export class AppointmentEditor extends React.Component<
 								</Col>
 							</Row>
 
-							{settingsData.settings.getSetting('module_prescriptions') ? (
+							{settingsData.settings.getSetting(
+								"module_prescriptions"
+							) ? (
 								<div>
 									<hr className="appointment-hr" />
 									<div className="appointment-input prescription">
 										<label>Prescription: </label>
 										<TagInput
+											disabled={!this.canEdit}
 											className="prescription"
-											value={this.props.appointment.prescriptions.map((x) => ({
-												key: x.id,
-												text: x.prescription
-											}))}
+											value={this.props.appointment.prescriptions.map(
+												x => ({
+													key: x.id,
+													text: x.prescription
+												})
+											)}
 											options={prescriptionsData.prescriptions.list.map(
 												this.prescriptionToTagInput
 											)}
-											onChange={(newValue) => {
+											onChange={newValue => {
 												if (!this.props.appointment) {
 													return;
 												}
-												this.props.appointment.prescriptions = newValue.map((x) => ({
-													id: x.key,
-													prescription: x.text
-												}));
+												this.props.appointment.prescriptions = newValue.map(
+													x => ({
+														id: x.key,
+														prescription: x.text
+													})
+												);
 											}}
 											strict={true}
 											placeholder="Enter prescription..."
@@ -277,189 +357,340 @@ export class AppointmentEditor extends React.Component<
 
 									<div id="prescription-items">
 										<div className="print-heading">
-											<h2>Dr. {API.user.currentDoctor.name}</h2>
+											<h2>{API.user.currentUser.name}</h2>
 											<hr />
-											<h3>Patient: {this.props.appointment.patient.name}</h3>
+											<h3>
+												Patient:{" "}
+												{
+													this.props.appointment
+														.patient.name
+												}
+											</h3>
 											<Row>
 												<Col span={12}>
-													<h4>Age: {this.props.appointment.patient.age}</h4>
+													<h4>
+														Age:{" "}
+														{
+															this.props
+																.appointment
+																.patient.age
+														}
+													</h4>
 												</Col>
 												<Col span={12}>
 													<h4>
-														Gender:{' '}
-														{this.props.appointment.patient.gender ? 'Female' : 'Male'}
+														Gender:{" "}
+														{this.props.appointment
+															.patient.gender
+															? "Female"
+															: "Male"}
 													</h4>
 												</Col>
 											</Row>
 											<hr />
 										</div>
-										{this.props.appointment.prescriptions.map((item) => {
-											return (
-												<Row key={item.id}>
-													<Col span={20} className="m-b-5">
-														<ProfileSquared
-															text={item.prescription.split(':')[0]}
-															onRenderInitials={() => <Icon iconName="pill" />}
-															subText={item.prescription.split(':')[1]}
-														/>
-													</Col>
-													<Col span={4} style={{ textAlign: 'right' }}>
-														<IconButton
-															iconProps={{ iconName: 'delete' }}
-															onClick={() => {
-																if (this.props.appointment) {
-																	this.props.appointment.prescriptions = this.props.appointment.prescriptions.filter(
-																		(x) => x.id !== item.id
-																	);
+										{this.props.appointment.prescriptions.map(
+											item => {
+												return (
+													<Row key={item.id}>
+														<Col
+															span={20}
+															className="m-b-5"
+														>
+															<ProfileSquared
+																text={
+																	item.prescription.split(
+																		":"
+																	)[0]
 																}
+																onRenderInitials={() => (
+																	<Icon iconName="pill" />
+																)}
+																subText={
+																	item.prescription.split(
+																		":"
+																	)[1]
+																}
+															/>
+														</Col>
+														<Col
+															span={4}
+															style={{
+																textAlign:
+																	"right"
 															}}
-														/>
-													</Col>
-												</Row>
-											);
-										})}
+														>
+															{this.canEdit ? (
+																<IconButton
+																	iconProps={{
+																		iconName:
+																			"delete"
+																	}}
+																	onClick={() => {
+																		if (
+																			this
+																				.props
+																				.appointment
+																		) {
+																			this.props.appointment.prescriptions = this.props.appointment.prescriptions.filter(
+																				x =>
+																					x.id !==
+																					item.id
+																			);
+																		}
+																	}}
+																/>
+															) : (
+																""
+															)}
+														</Col>
+													</Row>
+												);
+											}
+										)}
 									</div>
 
-									{this.props.appointment.prescriptions.length ? (
-										<PrimaryButton onClick={print}>Print Prescription</PrimaryButton>
+									{this.props.appointment.prescriptions
+										.length ? (
+										<PrimaryButton onClick={print}>
+											Print Prescription
+										</PrimaryButton>
 									) : (
-										''
+										""
 									)}
 								</div>
 							) : (
-								''
+								""
 							)}
 							<hr className="appointment-hr" />
-							<Gallery
-								gallery={this.props.appointment.records}
-								onChange={(list) => {
-									if (!this.props.appointment) {
-										return;
-									}
-									this.props.appointment.records = list;
-								}}
-							/>
+							{this.canEdit ? (
+								<Gallery
+									gallery={this.props.appointment.records}
+									onChange={list => {
+										if (!this.props.appointment) {
+											return;
+										}
+										this.props.appointment.records = list;
+									}}
+								/>
+							) : (
+								""
+							)}
 						</Section>
 
 						<Section showByDefault title="Expenses & Price">
 							<Row gutter={6}>
 								<Col sm={12}>
-									{settingsData.settings.getSetting('time_tracking') ? (
+									{settingsData.settings.getSetting(
+										"time_tracking"
+									) ? (
 										<div className="appointment-input time">
-											<label>Time (Hours, minutes, seconds)</label>
+											<label>
+												Time (Hours, minutes, seconds)
+											</label>
 											<TextField
 												className="time-input hours"
 												type="number"
-												ref={(el) => (el ? (this.timerInput[0] = el) : '')}
-												value={this.formatMillisecondsToTime(this.props.appointment.time).hours}
-												onChanged={(newVal) => this.manuallyUpdateTime()}
+												disabled={!this.canEdit}
+												ref={el =>
+													el
+														? (this.timerInput[0] = el)
+														: ""
+												}
+												value={
+													this.formatMillisecondsToTime(
+														this.props.appointment
+															.time
+													).hours
+												}
+												onChanged={newVal =>
+													this.manuallyUpdateTime()
+												}
 											/>
 											<TextField
 												className="time-input minutes"
 												type="number"
-												ref={(el) => (el ? (this.timerInput[1] = el) : '')}
-												value={
-													this.formatMillisecondsToTime(this.props.appointment.time).minutes
+												disabled={!this.canEdit}
+												ref={el =>
+													el
+														? (this.timerInput[1] = el)
+														: ""
 												}
-												onChanged={(newVal) => this.manuallyUpdateTime()}
+												value={
+													this.formatMillisecondsToTime(
+														this.props.appointment
+															.time
+													).minutes
+												}
+												onChanged={newVal =>
+													this.manuallyUpdateTime()
+												}
 											/>
 											<TextField
 												className="time-input seconds"
 												type="number"
-												ref={(el) => (el ? (this.timerInput[2] = el) : '')}
-												value={
-													this.formatMillisecondsToTime(this.props.appointment.time).seconds
+												disabled={!this.canEdit}
+												ref={el =>
+													el
+														? (this.timerInput[2] = el)
+														: ""
 												}
-												onChanged={(newVal) => {
+												value={
+													this.formatMillisecondsToTime(
+														this.props.appointment
+															.time
+													).seconds
+												}
+												onChanged={newVal => {
 													this.manuallyUpdateTime();
 												}}
 											/>
 											{this.props.appointment.timer ? (
 												<PrimaryButton
-													iconProps={{ iconName: 'Timer' }}
+													iconProps={{
+														iconName: "Timer"
+													}}
+													disabled={!this.canEdit}
 													className="appendage stop"
 													text="Stop"
 													onClick={() => {
-														if (!this.props.appointment) {
+														if (
+															!this.props
+																.appointment
+														) {
 															return;
 														}
-														const timer = this.props.appointment.timer;
+														const timer = this.props
+															.appointment.timer;
 														if (timer) {
-															clearInterval(timer);
+															clearInterval(
+																timer
+															);
 														}
 														this.props.appointment.timer = null;
 													}}
 												/>
 											) : (
 												<PrimaryButton
-													iconProps={{ iconName: 'Timer' }}
+													iconProps={{
+														iconName: "Timer"
+													}}
+													disabled={!this.canEdit}
 													className="appendage"
 													text="Start"
 													onClick={() => {
-														if (!this.props.appointment) {
+														if (
+															!this.props
+																.appointment
+														) {
 															return;
 														}
-														const i = appointments.getIndexByID(this.props.appointment._id);
-														const appointment = appointments.list[i];
-														this.props.appointment.timer = window.setInterval(() => {
-															appointment.time = appointment.time + 1000;
-														}, 1000);
+														const i = appointments.getIndexByID(
+															this.props
+																.appointment._id
+														);
+														const appointment =
+															appointments.list[
+																i
+															];
+														this.props.appointment.timer = window.setInterval(
+															() => {
+																appointment.time =
+																	appointment.time +
+																	1000;
+															},
+															1000
+														);
 													}}
 												/>
 											)}
 											<p className="payment-insight">
 												<Label
 													text={
-														'Time value: ' +
-														settingsData.settings.getSetting('currencySymbol') +
-														round(this.props.appointment.spentTimeValue).toString()
+														"Time value: " +
+														settingsData.settings.getSetting(
+															"currencySymbol"
+														) +
+														round(
+															this.props
+																.appointment
+																.spentTimeValue
+														).toString()
 													}
 													type={LabelType.info}
 												/>
 												<br />
 												<Label
 													text={
-														'Expenses: ' +
-														settingsData.settings.getSetting('currencySymbol') +
-														round(this.props.appointment.expenses).toString()
+														"Expenses: " +
+														settingsData.settings.getSetting(
+															"currencySymbol"
+														) +
+														round(
+															this.props
+																.appointment
+																.expenses
+														).toString()
 													}
 													type={LabelType.info}
 												/>
 											</p>
 										</div>
 									) : (
-										''
+										""
 									)}
 								</Col>
-								<Col sm={settingsData.settings.getSetting('time_tracking') ? 12 : 24}>
+								<Col
+									sm={
+										settingsData.settings.getSetting(
+											"time_tracking"
+										)
+											? 12
+											: 24
+									}
+								>
 									<div className="appointment-input paid">
 										<label>Final Price</label>
 										<TextField
 											type="number"
+											disabled={!this.canEdit}
 											value={this.props.appointment.paidAmount.toString()}
-											onChanged={(newVal) => {
+											onChanged={newVal => {
 												if (!this.props.appointment) {
 													return;
 												}
-												this.props.appointment.paidAmount = Number(newVal);
+												this.props.appointment.paidAmount = Number(
+													newVal
+												);
 											}}
-											prefix={settingsData.settings.getSetting('currencySymbol')}
+											prefix={settingsData.settings.getSetting(
+												"currencySymbol"
+											)}
 										/>
 										<p className="payment-insight">
 											<Label
 												text={
-													'Profit: ' +
-													settingsData.settings.getSetting('currencySymbol') +
-													round(this.props.appointment.profit).toString()
+													"Profit: " +
+													settingsData.settings.getSetting(
+														"currencySymbol"
+													) +
+													round(
+														this.props.appointment
+															.profit
+													).toString()
 												}
 												type={LabelType.success}
 											/>
 											<br />
 											<Label
 												text={
-													'Profit percentage: ' +
-													round(this.props.appointment.profitPercentage * 100).toString() +
-													'%'
+													"Profit percentage: " +
+													round(
+														this.props.appointment
+															.profitPercentage *
+															100
+													).toString() +
+													"%"
 												}
 												type={LabelType.success}
 											/>
@@ -470,10 +701,13 @@ export class AppointmentEditor extends React.Component<
 							<Row gutter={6}>
 								<Col sm={12}>
 									<Toggle
-										defaultChecked={this.props.appointment.paid}
+										defaultChecked={
+											this.props.appointment.paid
+										}
 										onText="Paid"
 										offText="Unpaid"
-										onChanged={(newVal) => {
+										disabled={!this.canEdit}
+										onChanged={newVal => {
 											if (!this.props.appointment) {
 												return;
 											}
@@ -483,10 +717,13 @@ export class AppointmentEditor extends React.Component<
 								</Col>
 								<Col sm={12}>
 									<Toggle
-										defaultChecked={this.props.appointment.done}
+										defaultChecked={
+											this.props.appointment.done
+										}
 										onText="Done"
 										offText="Not Done"
-										onChanged={(newVal) => {
+										disabled={!this.canEdit}
+										onChanged={newVal => {
 											if (!this.props.appointment) {
 												return;
 											}
@@ -499,28 +736,32 @@ export class AppointmentEditor extends React.Component<
 
 						<br />
 
-						<PrimaryButton
-							className="delete"
-							iconProps={{
-								iconName: 'delete'
-							}}
-							text="Delete"
-							onClick={() => {
-								const appointment = this.props.appointment;
-								if (!appointment) {
-									return;
-								}
-								appointments.deleteModal(appointment._id);
-								this.props.onDelete();
-							}}
-						/>
+						{this.canEdit ? (
+							<PrimaryButton
+								className="delete"
+								iconProps={{
+									iconName: "delete"
+								}}
+								text="Delete"
+								onClick={() => {
+									const appointment = this.props.appointment;
+									if (!appointment) {
+										return;
+									}
+									appointments.deleteModal(appointment._id);
+									this.props.onDelete();
+								}}
+							/>
+						) : (
+							""
+						)}
 
 						<br />
 						<br />
 						<br />
 					</div>
 				) : (
-					''
+					""
 				)}
 			</Panel>
 		);
@@ -538,7 +779,7 @@ export class AppointmentEditor extends React.Component<
 			seconds: padWithZero(seconds)
 		};
 		function padWithZero(n: number) {
-			return n > 9 ? n.toString() : '0' + n.toString();
+			return n > 9 ? n.toString() : "0" + n.toString();
 		}
 	}
 	manuallyUpdateTime() {
@@ -554,14 +795,15 @@ export class AppointmentEditor extends React.Component<
 		if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
 			return;
 		}
-		this.props.appointment.time = hours * msInHour + minutes * msInMinute + seconds * msInSecond;
+		this.props.appointment.time =
+			hours * msInHour + minutes * msInMinute + seconds * msInSecond;
 	}
 	prescriptionToTagInput(p: prescriptionsData.PrescriptionItem) {
 		return {
 			key: p._id,
-			text: `${p.name}: ${p.doseInMg}mg ${p.timesPerDay}X${p.unitsPerTime} ${prescriptionsData.itemFormToString(
-				p.form
-			)}`
+			text: `${p.name}: ${p.doseInMg}mg ${p.timesPerDay}X${
+				p.unitsPerTime
+			} ${prescriptionsData.itemFormToString(p.form)}`
 		};
 	}
 }

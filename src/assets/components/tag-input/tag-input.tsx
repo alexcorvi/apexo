@@ -1,12 +1,9 @@
-import * as React from 'react';
-import { computed, observable } from 'mobx';
-import { generateID } from '../../../assets/utils/generate-id';
-import { Icon } from 'office-ui-fabric-react';
-import { observer } from 'mobx-react';
-import './tag-input.scss';
-
-
-
+import * as React from "react";
+import { computed, observable } from "mobx";
+import { generateID } from "../../../assets/utils/generate-id";
+import { Icon } from "office-ui-fabric-react";
+import { observer } from "mobx-react";
+import "./tag-input.scss";
 
 export interface TagInputItem {
 	key: string;
@@ -24,13 +21,14 @@ export interface TagInputProps {
 	value?: TagInputItem[];
 	formatText?: (text: string) => string;
 	sortFunction?: (a: TagInputItem, b: TagInputItem) => any;
+	disabled?: boolean;
 }
 
 @observer
 export class TagInput extends React.Component<TagInputProps, {}> {
 	inputElement: HTMLInputElement | undefined;
 
-	@observable searchText: string = '';
+	@observable searchText: string = "";
 
 	@observable initialList: TagInputItem[] = [];
 
@@ -54,9 +52,9 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 		}
 		let list = this.props.options
 			// not on the current list
-			.filter((item) => !this.currentList.find((x) => x.key === item.key))
+			.filter(item => !this.currentList.find(x => x.key === item.key))
 			// does have a content
-			.filter((item) => item.text);
+			.filter(item => item.text);
 
 		if (this.props.sortFunction) {
 			list = list.sort(this.props.sortFunction);
@@ -72,7 +70,10 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 			return this.possibleWithoutDuplication;
 		} else {
 			return this.possibleWithoutDuplication.filter(
-				(item) => item.text.toLowerCase().indexOf(this.searchText.toLowerCase()) > -1
+				item =>
+					item.text
+						.toLowerCase()
+						.indexOf(this.searchText.toLowerCase()) > -1
 			);
 		}
 	}
@@ -93,7 +94,7 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 		if (this.props.onChange) {
 			this.props.onChange(this.currentList);
 		}
-		if (this.currentList.find((x) => x.key === item.key)) {
+		if (this.currentList.find(x => x.key === item.key)) {
 			if (this.props.onAdd) {
 				this.props.onAdd(item);
 			}
@@ -110,8 +111,10 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 				text: text || this.searchText,
 				key: key || generateID(10)
 			});
-			this.triggerCallbacks(this.currentList[this.currentList.length - 1]);
-			this.setSearchText('');
+			this.triggerCallbacks(
+				this.currentList[this.currentList.length - 1]
+			);
+			this.setSearchText("");
 		}
 	}
 
@@ -129,7 +132,7 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 	}
 
 	removeItem(key: string) {
-		const i = this.currentList.findIndex((x) => x.key === key);
+		const i = this.currentList.findIndex(x => x.key === key);
 		if (i === -1) {
 			return;
 		}
@@ -153,7 +156,10 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 		if (event.keyCode === 38 && this.keyboardSelectedIndex > 0) {
 			// up
 			this.keyboardSelectedIndex--;
-		} else if (event.keyCode === 40 && !(this.keyboardSelectedIndex > this.filteredOptions.length)) {
+		} else if (
+			event.keyCode === 40 &&
+			!(this.keyboardSelectedIndex > this.filteredOptions.length)
+		) {
 			// down
 			this.keyboardSelectedIndex++;
 		}
@@ -162,40 +168,50 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 	render() {
 		return (
 			<div
-				className={'tag-input-component ' + (this.props.className || '')}
+				className={
+					"tag-input-component " + (this.props.className || "")
+				}
 				onClick={() => {
 					if (!this.inputElement) {
 						return;
 					}
 					this.inputElement.focus();
 				}}
-				onKeyDown={(event) => this.keyboardNavigation(event)}
+				onKeyDown={event => this.keyboardNavigation(event)}
 			>
 				<input
 					className="input"
-					style={this.currentList.length > 0 ? undefined : { borderBottom: 'none' }}
+					style={
+						this.currentList.length > 0
+							? undefined
+							: { borderBottom: "none" }
+					}
 					placeholder={this.props.placeholder || undefined}
-					ref={(el) => (el ? (this.inputElement = el) : '')}
-					onKeyDown={(event) => this.keyboardEventCallback(event)}
-					onKeyUp={(event) => this.keyboardEventCallback(event)}
-					onChange={(event) => {
+					ref={el => (el ? (this.inputElement = el) : "")}
+					onKeyDown={event => this.keyboardEventCallback(event)}
+					onKeyUp={event => this.keyboardEventCallback(event)}
+					onChange={event => {
 						if (!this.inputElement) {
 							return;
 						}
 						this.setSearchText(this.inputElement.value);
 					}}
+					disabled={this.props.disabled}
 				/>
-				{this.possibleWithoutDuplication.length && !this.searchText.length ? (
+				{this.possibleWithoutDuplication.length &&
+				!this.props.disabled &&
+				!this.searchText.length ? (
 					<Icon
 						className="show-all"
-						iconName={this.showAll ? 'ChevronUp' : 'ChevronDown'}
+						iconName={this.showAll ? "ChevronUp" : "ChevronDown"}
 						onClick={() => (this.showAll = !this.showAll)}
 					/>
 				) : (
-					''
+					""
 				)}
 
-				{(this.searchText.length || this.showAll) && this.filteredOptions.length ? (
+				{(this.searchText.length || this.showAll) &&
+				this.filteredOptions.length ? (
 					<div className="options-menu">
 						{this.filteredOptions.length ? (
 							<div>
@@ -204,12 +220,21 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 										<div
 											key={item.key}
 											className={
-												'options-item' +
-												(this.keyboardSelectedIndex === index ? ' selected' : '')
+												"options-item" +
+												(this.keyboardSelectedIndex ===
+												index
+													? " selected"
+													: "")
 											}
-											onClick={() => this.addItem(item.text, item.key)}
+											onClick={() =>
+												this.addItem(
+													item.text,
+													item.key
+												)
+											}
 										>
-											{(this.props.formatText || ((x) => x))(item.text)}
+											{(this.props.formatText ||
+												(x => x))(item.text)}
 										</div>
 									);
 								})}
@@ -217,23 +242,27 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 						) : this.props.strict ? (
 							<p className="p-l-15">Nothing found</p>
 						) : (
-							''
+							""
 						)}
 					</div>
 				) : (
-					''
+					""
 				)}
-				{this.currentList.map((item) => {
+				{this.currentList.map(item => {
 					return (
 						<span key={item.key} className="item">
-							{(this.props.formatText || ((x) => x))(item.text)}
-							<Icon
-								className="delete-tag-input-item"
-								iconName="ChromeClose"
-								onClick={() => {
-									this.removeItem(item.key);
-								}}
-							/>
+							{(this.props.formatText || (x => x))(item.text)}
+							{this.props.disabled ? (
+								""
+							) : (
+								<Icon
+									className="delete-tag-input-item"
+									iconName="ChromeClose"
+									onClick={() => {
+										this.removeItem(item.key);
+									}}
+								/>
+							)}
 						</span>
 					);
 				})}

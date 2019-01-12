@@ -1,8 +1,8 @@
-import * as prescriptionsComponents from './components';
-import * as prescriptionsData from './data';
+import * as prescriptionsComponents from "./components";
+import * as prescriptionsData from "./data";
 
-import { API } from '../../core';
-import { settingsData } from '../settings/index';
+import { API } from "../../core";
+import { settingsData } from "../settings/index";
 
 export const register = {
 	async register() {
@@ -10,18 +10,20 @@ export const register = {
 			prescriptionsData.namespace,
 			/^prescriptions/,
 			prescriptionsComponents.PrescriptionsTable,
-			() => !!settingsData.settings.getSetting('module_prescriptions')
+			() => !!settingsData.settings.getSetting("module_prescriptions")
 		);
 		API.menu.items.push({
-			icon: 'Pill',
+			icon: "Pill",
 			name: prescriptionsData.namespace,
 			key: prescriptionsData.namespace,
 			onClick: () => {
-				API.router.go([ prescriptionsData.namespace ]);
+				API.router.go([prescriptionsData.namespace]);
 			},
 			order: 9,
-			url: '',
-			condition: () => !!settingsData.settings.getSetting('module_prescriptions')
+			url: "",
+			condition: () =>
+				API.user.currentUser.canViewPrescriptions &&
+				!!settingsData.settings.getSetting("module_prescriptions")
 		});
 		await (API.connectToDB(prescriptionsData.namespace) as any)(
 			prescriptionsData.PrescriptionItem,

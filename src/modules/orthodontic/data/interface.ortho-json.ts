@@ -1,4 +1,9 @@
-import { FacialProfile, Lips, OralHygiene } from './class.ortho';
+import { FacialProfile, Lips, OralHygiene } from "./class.ortho";
+
+export interface CephalometricItem {
+	data: string;
+	date: number;
+}
 
 export interface CaseJSON {
 	_id: string;
@@ -23,4 +28,6 @@ export interface CaseJSON {
 	treatmentPlan_appliance: string[];
 	crossScissorBite: number[];
 	orthoGallery: string[];
+	cephalometricHistory: CephalometricItem[];
+	orthograph: string;
 }

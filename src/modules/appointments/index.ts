@@ -1,20 +1,25 @@
-import * as appointmentsComponents from './components';
-import * as appointmentsData from './data';
+import * as appointmentsComponents from "./components";
+import * as appointmentsData from "./data";
 
-import { API } from '../../core';
+import { API } from "../../core";
 
 export const register = {
 	async register() {
-		API.router.register(appointmentsData.namespace, /^appointments/, appointmentsComponents.Calendar);
+		API.router.register(
+			appointmentsData.namespace,
+			/^appointments/,
+			appointmentsComponents.Calendar
+		);
 		API.menu.items.push({
-			icon: 'Calendar',
+			icon: "Calendar",
 			name: appointmentsData.namespace,
 			key: appointmentsData.namespace,
 			onClick: () => {
-				API.router.go([ appointmentsData.namespace ]);
+				API.router.go([appointmentsData.namespace]);
 			},
 			order: 3,
-			url: ''
+			url: "",
+			condition: () => API.user.currentUser.canViewAppointments
 		});
 		await (API.connectToDB(appointmentsData.namespace, true) as any)(
 			appointmentsData.Appointment,

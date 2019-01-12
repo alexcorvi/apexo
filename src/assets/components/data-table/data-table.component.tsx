@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
 	Button,
 	CommandBar,
@@ -6,11 +6,12 @@ import {
 	Icon,
 	IconButton,
 	SearchBox
-	} from 'office-ui-fabric-react';
-import { computed, observable } from 'mobx';
-import { observer } from 'mobx-react';
-import { textualFilter } from '../../utils/textual-filter';
-import './data-table.component.scss';
+} from "office-ui-fabric-react";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
+import { textualFilter } from "../../utils/textual-filter";
+import "./data-table.component.scss";
+import { PrimaryButton } from "office-ui-fabric-react";
 
 interface Cell {
 	component: string | React.ReactElement<any>;
@@ -38,7 +39,7 @@ interface Props {
 @observer
 export class DataTable extends React.Component<Props, {}> {
 	get sortableValues() {
-		return this.props.rows.map((row) => {
+		return this.props.rows.map(row => {
 			return isNaN(Number(row.cells[this.currentColIndex].dataValue))
 				? row.cells[this.currentColIndex].dataValue
 				: Number(row.cells[this.currentColIndex].dataValue);
@@ -46,7 +47,7 @@ export class DataTable extends React.Component<Props, {}> {
 	}
 	@observable currentColIndex: number = 0;
 	@observable sortDirection: number = 1;
-	@observable filterString: string = '';
+	@observable filterString: string = "";
 
 	@observable limit: number = this.props.maxItemsOnLoad;
 
@@ -66,10 +67,16 @@ export class DataTable extends React.Component<Props, {}> {
 			})
 			.sort((aVal, bVal) => {
 				return this.sortDirection === 1
-					? this.compare(this.sortableValues[aVal.index], this.sortableValues[bVal.index])
-					: this.compare(this.sortableValues[bVal.index], this.sortableValues[aVal.index]);
+					? this.compare(
+							this.sortableValues[aVal.index],
+							this.sortableValues[bVal.index]
+					  )
+					: this.compare(
+							this.sortableValues[bVal.index],
+							this.sortableValues[aVal.index]
+					  );
 			})
-			.map((x) => x.row);
+			.map(x => x.row);
 	}
 
 	@computed
@@ -89,17 +96,19 @@ export class DataTable extends React.Component<Props, {}> {
 			<div className="data-table">
 				<CommandBar
 					{...{
-						className: 'commandBar fixed m-b-15',
+						className: "commandBar fixed m-b-15",
 						isSearchBoxVisible: true,
-						searchPlaceholderText: 'Search Patients...',
-						elipisisAriaLabel: 'More options',
+						searchPlaceholderText: "Search Patients...",
+						elipisisAriaLabel: "More options",
 						farItems: [
 							{
-								key: 'a',
+								key: "a",
 								onRender: () => (
 									<SearchBox
 										placeholder="search"
-										onChange={(newVal: string) => (this.filterString = newVal)}
+										onChange={(newVal: string) =>
+											(this.filterString = newVal)
+										}
 									/>
 								)
 							}
@@ -107,23 +116,32 @@ export class DataTable extends React.Component<Props, {}> {
 						items: this.props.commands || []
 					}}
 				/>
-				<table className={'responsive ms-table ' + this.props.className}>
+				<table
+					className={"responsive ms-table " + this.props.className}
+				>
 					<thead>
 						<tr>
 							{this.props.heads.map((head, index) => (
 								<th
 									className={
-										'table-head-sort' +
-										(this.currentColIndex === index ? ' current' : '') +
-										(this.currentColIndex === index && this.sortDirection === 1
-											? ' positive'
-											: '') +
-										(this.currentColIndex === index && this.sortDirection === -1 ? ' negative' : '')
+										"table-head-sort" +
+										(this.currentColIndex === index
+											? " current"
+											: "") +
+										(this.currentColIndex === index &&
+										this.sortDirection === 1
+											? " positive"
+											: "") +
+										(this.currentColIndex === index &&
+										this.sortDirection === -1
+											? " negative"
+											: "")
 									}
 									key={index}
 									onClick={() => {
 										if (this.currentColIndex === index) {
-											this.sortDirection = this.sortDirection * -1;
+											this.sortDirection =
+												this.sortDirection * -1;
 										} else {
 											this.currentColIndex = index;
 											this.sortDirection = 1;
@@ -132,8 +150,14 @@ export class DataTable extends React.Component<Props, {}> {
 								>
 									{head}
 									<span className="sort-indicators">
-										<Icon className="positive" iconName="ChevronUpSmall" />
-										<Icon className="negative" iconName="ChevronDownSmall" />
+										<Icon
+											className="positive"
+											iconName="ChevronUpSmall"
+										/>
+										<Icon
+											className="negative"
+											iconName="ChevronDownSmall"
+										/>
 									</span>
 								</th>
 							))}
@@ -147,14 +171,24 @@ export class DataTable extends React.Component<Props, {}> {
 										return (
 											<td
 												className={
-													(cell.onClick ? 'clickable ' : '') +
-													(cell.className ? cell.className : '')
+													(cell.onClick
+														? "clickable "
+														: "") +
+													(cell.className
+														? cell.className
+														: "")
 												}
 												key={index2}
-												data-head={this.props.heads[index2] || ''}
+												data-head={
+													this.props.heads[index2] ||
+													""
+												}
 												onClick={cell.onClick}
 											>
-												{typeof cell.component === 'string' ? cell.component : cell.component}
+												{typeof cell.component ===
+												"string"
+													? cell.component
+													: cell.component}
 											</td>
 										);
 									})}
@@ -163,16 +197,22 @@ export class DataTable extends React.Component<Props, {}> {
 											<div>
 												<IconButton
 													className="delete-button"
-													iconProps={{ iconName: 'delete' }}
+													iconProps={{
+														iconName: "delete"
+													}}
 													onClick={() => {
-														if (this.props.onDelete) {
-															this.props.onDelete(row.id);
+														if (
+															this.props.onDelete
+														) {
+															this.props.onDelete(
+																row.id
+															);
 														}
 													}}
 												/>
 											</div>
 										) : (
-											''
+											""
 										)}
 									</td>
 								</tr>
@@ -182,30 +222,35 @@ export class DataTable extends React.Component<Props, {}> {
 				</table>
 
 				{this.limitedRows.length < this.filteredRows.length ? (
-					<Button
+					<PrimaryButton
 						style={{ marginTop: 20 }}
-						primary
-						iconProps={{ iconName: 'add' }}
+						iconProps={{ iconName: "add" }}
 						onClick={() => (this.limit = this.limit + 10)}
 					>
 						Load More
-					</Button>
+					</PrimaryButton>
 				) : (
-					''
+					""
 				)}
 
 				{this.props.rows.length === 0 ? (
-					<p className="no-data">There's no data at this section yet.</p>
+					<p className="no-data">
+						There's no data at this section yet.
+					</p>
 				) : this.filteredRows.length === 0 ? (
-					<p className="no-data">Didn't find anything that matches your search criteria</p>
+					<p className="no-data">
+						Didn't find anything that matches your search criteria
+					</p>
 				) : (
-					''
+					""
 				)}
 			</div>
 		);
 	}
 
 	private compare(a: string | number, b: string | number) {
-		return typeof a === 'number' && typeof b === 'number' ? a - b : a.toString().localeCompare(b.toString());
+		return typeof a === "number" && typeof b === "number"
+			? a - b
+			: a.toString().localeCompare(b.toString());
 	}
 }

@@ -1,8 +1,8 @@
-import * as orthoComponents from './components';
-import * as orthoData from './data';
+import * as orthoComponents from "./components";
+import * as orthoData from "./data";
 
-import { API } from '../../core';
-import { settingsData } from '../settings/index';
+import { API } from "../../core";
+import { settingsData } from "../settings/index";
 
 export const register = {
 	async register() {
@@ -10,21 +10,26 @@ export const register = {
 			orthoData.namespace,
 			/^orthodontic/,
 			orthoComponents.OrthoList,
-			() => !!settingsData.settings.getSetting('module_orthodontics')
+			() => !!settingsData.settings.getSetting("module_orthodontics")
 		);
 		API.menu.items.push({
-			icon: 'DietPlanNotebook',
+			icon: "DietPlanNotebook",
 			name: orthoData.namespace,
 			key: orthoData.namespace,
 			onClick: () => {
-				API.router.go([ orthoData.namespace ]);
+				API.router.go([orthoData.namespace]);
 			},
 			order: 3,
-			url: '',
+			url: "",
 
-			condition: () => !!settingsData.settings.getSetting('module_orthodontics')
+			condition: () =>
+				API.user.currentUser.canViewOrtho &&
+				!!settingsData.settings.getSetting("module_orthodontics")
 		});
-		await (API.connectToDB(orthoData.namespace) as any)(orthoData.OrthoCase, orthoData.cases);
+		await (API.connectToDB(orthoData.namespace) as any)(
+			orthoData.OrthoCase,
+			orthoData.cases
+		);
 		return true;
 	},
 	order: 8

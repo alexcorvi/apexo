@@ -1,24 +1,32 @@
-import * as settingsComponents from './components';
-import * as settingsData from './data';
+import * as settingsComponents from "./components";
+import * as settingsData from "./data";
 
-import { API } from '../../core';
+import { API } from "../../core";
 
 export const register = {
 	async register() {
-		settingsData.settings.setSetting('hourlyRate', '50');
-		settingsData.settings.setSetting('currencySymbol', '$');
-		API.router.register(settingsData.namespace, /^settings\/?$/, settingsComponents.SettingsComponent);
+		settingsData.settings.setSetting("hourlyRate", "50");
+		settingsData.settings.setSetting("currencySymbol", "$");
+		API.router.register(
+			settingsData.namespace,
+			/^settings\/?$/,
+			settingsComponents.SettingsComponent
+		);
 		API.menu.items.push({
-			icon: 'Settings',
+			icon: "Settings",
 			name: settingsData.namespace,
 			key: settingsData.namespace,
 			onClick: () => {
-				API.router.go([ settingsData.namespace ]);
+				API.router.go([settingsData.namespace]);
 			},
 			order: 999,
-			url: ''
+			url: "",
+			condition: () => API.user.currentUser.canViewSettings
 		});
-		await (API.connectToDB(settingsData.namespace) as any)(settingsData.SettingsItem, settingsData.settings);
+		await (API.connectToDB(settingsData.namespace) as any)(
+			settingsData.SettingsItem,
+			settingsData.settings
+		);
 		return true;
 	},
 	order: 0

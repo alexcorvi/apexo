@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { API } from '../../../core';
-import { Appointment, appointments, Calendar as CalendarClass } from '../data';
-import { AppointmentEditor } from './appointment-editor';
-import { Col, Row } from '../../../assets/components/grid/index';
-import {  observable } from 'mobx';
-import { Icon, TextField, Toggle } from 'office-ui-fabric-react';
-import { observer } from 'mobx-react';
-import { patientsComponents } from '../../patients';
-import { ProfileSquared } from '../../../assets/components/profile/profile-squared';
-import './calendar.scss';
+import * as React from "react";
+import { API } from "../../../core";
+import { Appointment, appointments, Calendar as CalendarClass } from "../data";
+import { AppointmentEditor } from "./appointment-editor";
+import { Col, Row } from "../../../assets/components/grid/index";
+import { observable } from "mobx";
+import { Icon, TextField, Toggle } from "office-ui-fabric-react";
+import { observer } from "mobx-react";
+import { patientsComponents } from "../../patients";
+import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
+import "./calendar.scss";
 
 @observer
 export class Calendar extends React.Component<{}, {}> {
-	@observable filter: string = '';
+	@observable filter: string = "";
 
 	c: CalendarClass = new CalendarClass();
 	@observable appointment: Appointment | null = null;
@@ -20,7 +20,7 @@ export class Calendar extends React.Component<{}, {}> {
 	@observable showAll: boolean = true;
 
 	componentDidMount() {
-		const dateString = API.router.currentLocation.split('/')[1];
+		const dateString = API.router.currentLocation.split("/")[1];
 		if (!dateString) {
 			return;
 		}
@@ -36,11 +36,13 @@ export class Calendar extends React.Component<{}, {}> {
 	}
 
 	unifyHeight() {
-		const parent = document.getElementById('full-day-cols');
+		const parent = document.getElementById("full-day-cols");
 		if (!parent) {
 			return;
 		}
-		const els = document.getElementsByClassName('full-day-col') as HTMLCollectionOf<HTMLDivElement>;
+		const els = document.getElementsByClassName(
+			"full-day-col"
+		) as HTMLCollectionOf<HTMLDivElement>;
 		let largest = 0;
 		for (let index = 0; index < els.length; index++) {
 			const height = els[index].clientHeight;
@@ -49,7 +51,7 @@ export class Calendar extends React.Component<{}, {}> {
 			}
 		}
 		for (let index = 0; index < els.length; index++) {
-			els[index].style.minHeight = largest ? largest + 'px' : 'auto';
+			els[index].style.minHeight = largest ? largest + "px" : "auto";
 		}
 	}
 
@@ -63,7 +65,7 @@ export class Calendar extends React.Component<{}, {}> {
 							this.c.currentYear - 1,
 							this.c.currentYear,
 							this.c.currentYear + 1
-						].map((year) => {
+						].map(year => {
 							return (
 								<Col key={year} span={6} className="centered">
 									<a
@@ -73,8 +75,12 @@ export class Calendar extends React.Component<{}, {}> {
 											this.c.selectedDay = 0;
 										}}
 										className={
-											(this.c.selectedYear === year ? 'selected' : '') +
-											(this.c.currentYear === year ? ' current' : '')
+											(this.c.selectedYear === year
+												? "selected"
+												: "") +
+											(this.c.currentYear === year
+												? " current"
+												: "")
 										}
 									>
 										{year}
@@ -88,17 +94,26 @@ export class Calendar extends React.Component<{}, {}> {
 					<Row>
 						{this.c.monthsShort.map((monthShort, index) => {
 							return (
-								<Col key={monthShort} sm={2} xs={4} className="centered">
+								<Col
+									key={monthShort}
+									sm={2}
+									xs={4}
+									className="centered"
+								>
 									<a
 										onClick={() => {
 											this.c.selectedMonth = index;
 											this.c.selectedDay = 0;
 										}}
 										className={
-											(this.c.selectedMonth === index ? 'selected' : '') +
-											(this.c.currentMonth === index && this.c.currentYear === this.c.selectedYear
-												? ' current'
-												: '')
+											(this.c.selectedMonth === index
+												? "selected"
+												: "") +
+											(this.c.currentMonth === index &&
+											this.c.currentYear ===
+												this.c.selectedYear
+												? " current"
+												: "")
 										}
 									>
 										{monthShort}
@@ -111,34 +126,52 @@ export class Calendar extends React.Component<{}, {}> {
 				<div className="selector day-selector">
 					<div className="day-selector-wrapper">
 						<div>
-							{this.c.selectedMonthDays.map((day) => {
+							{this.c.selectedMonthDays.map(day => {
 								return (
 									<div
 										key={day.date}
 										onClick={() => {
 											this.c.selectedDay = day.date;
 											setTimeout(() => {
-												scroll(0, this.findPos(document.getElementById('day_' + day.date)));
+												scroll(
+													0,
+													this.findPos(
+														document.getElementById(
+															"day_" + day.date
+														)
+													)
+												);
 											}, 0);
 										}}
 										className={
-											'day-col' +
-											(this.c.selectedDay === day.date ? ' selected' : '') +
-											(API.user.currentDoctor.holidays.indexOf(day.weekDay.index) > -1
-												? ' holiday'
-												: '') +
-											(day.weekDay.index === 6 ? ' weekend' : '')
+											"day-col" +
+											(this.c.selectedDay === day.date
+												? " selected"
+												: "") +
+											(API.user.currentUser.holidays.indexOf(
+												day.weekDay.index
+											) > -1
+												? " holiday"
+												: "") +
+											(day.weekDay.index === 6
+												? " weekend"
+												: "")
 										}
 									>
-										<div className="day-name">{day.weekDay.dayShort}</div>
+										<div className="day-name">
+											{day.weekDay.dayShort}
+										</div>
 										<a
 											className={
-												'day-number info-row' +
-												(day.date === this.c.currentDay &&
-												this.c.currentMonth === this.c.selectedMonth &&
-												this.c.selectedYear === this.c.currentYear
-													? ' current'
-													: '')
+												"day-number info-row" +
+												(day.date ===
+													this.c.currentDay &&
+												this.c.currentMonth ===
+													this.c.selectedMonth &&
+												this.c.selectedYear ===
+													this.c.currentYear
+													? " current"
+													: "")
 											}
 										>
 											{day.date + 1}
@@ -148,13 +181,15 @@ export class Calendar extends React.Component<{}, {}> {
 							})}
 						</div>
 						<div>
-							{this.c.selectedMonthDays.map((day) => {
+							{this.c.selectedMonthDays.map(day => {
 								const number = appointments.appointmentsForDay(
 									this.c.selectedYear,
 									this.c.selectedMonth + 1,
 									day.date + 1,
 									undefined,
-									this.showAll ? undefined : API.user.currentDoctor._id
+									this.showAll
+										? undefined
+										: API.user.currentUser._id
 								).length;
 								return (
 									<div
@@ -163,14 +198,25 @@ export class Calendar extends React.Component<{}, {}> {
 											this.c.selectedDay = day.date;
 										}}
 										className={
-											'day-col' +
-											(day.weekDay.index === 6 ? ' weekend' : '') +
-											(API.user.currentDoctor.holidays.indexOf(day.weekDay.index) > -1
-												? ' holiday'
-												: '')
+											"day-col" +
+											(day.weekDay.index === 6
+												? " weekend"
+												: "") +
+											(API.user.currentUser.holidays.indexOf(
+												day.weekDay.index
+											) > -1
+												? " holiday"
+												: "")
 										}
 									>
-										<div className={'info-row appointments-num num-' + number}>{number}</div>
+										<div
+											className={
+												"info-row appointments-num num-" +
+												number
+											}
+										>
+											{number}
+										</div>
 									</div>
 								);
 							})}
@@ -185,7 +231,7 @@ export class Calendar extends React.Component<{}, {}> {
 									defaultChecked={this.showAll}
 									onText="All appointments"
 									offText="My appointments only"
-									onChanged={(newValue) => {
+									onChanged={newValue => {
 										this.showAll = newValue;
 									}}
 								/>
@@ -193,35 +239,44 @@ export class Calendar extends React.Component<{}, {}> {
 							<Col sm={12} md={18} xs={0} className="filter">
 								<TextField
 									placeholder="Type to filter"
-									onChanged={(newVal) => (this.filter = newVal)}
+									onChanged={newVal => (this.filter = newVal)}
 								/>
 							</Col>
 						</Row>
 					</div>
 					<div id="full-day-cols">
-						{this.c.selectedWeek.map((day) => {
+						{this.c.selectedWeek.map(day => {
 							return (
 								<div
 									key={day.date}
-									id={'day' + '_' + day.date}
+									id={"day" + "_" + day.date}
 									className={
-										'full-day-col' +
-										(API.user.currentDoctor.holidays.indexOf(day.weekDay.index) > -1
-											? ' holiday'
-											: '') +
-										(this.c.selectedDay === day.date ? ' selected' : '')
+										"full-day-col" +
+										(API.user.currentUser.holidays.indexOf(
+											day.weekDay.index
+										) > -1
+											? " holiday"
+											: "") +
+										(this.c.selectedDay === day.date
+											? " selected"
+											: "")
 									}
 									onClick={() => {
 										this.c.selectedDay = day.date;
 									}}
 									style={{
-										width: (100 / this.c.selectedWeek.length).toString() + '%'
+										width:
+											(
+												100 / this.c.selectedWeek.length
+											).toString() + "%"
 									}}
 								>
 									<h4>
 										<b>{day.date + 1}</b>
 										&nbsp;&nbsp;&nbsp;
-										<span className="day-name">{day.weekDay.day}</span>
+										<span className="day-name">
+											{day.weekDay.day}
+										</span>
 									</h4>
 									{appointments
 										.appointmentsForDay(
@@ -229,9 +284,11 @@ export class Calendar extends React.Component<{}, {}> {
 											this.c.selectedMonth + 1,
 											day.date + 1,
 											this.filter,
-											this.showAll ? undefined : API.user.currentDoctor._id
+											this.showAll
+												? undefined
+												: API.user.currentUser._id
 										)
-										.map((appointment) => {
+										.map(appointment => {
 											return (
 												<div
 													key={appointment._id}
@@ -239,24 +296,46 @@ export class Calendar extends React.Component<{}, {}> {
 													onClick={() => {
 														this.appointment =
 															appointments.list[
-																appointments.getIndexByID(appointment._id)
+																appointments.getIndexByID(
+																	appointment._id
+																)
 															];
 													}}
 												>
 													<div className="m-b-5">
-														<ProfileSquared text={appointment.treatment.type} size={1} />
+														<ProfileSquared
+															text={
+																appointment
+																	.treatment
+																	.type
+															}
+															size={1}
+														/>
 													</div>
 													<patientsComponents.PatientLink
 														notClickable
-														id={appointment.patient._id}
+														id={
+															appointment.patient
+																._id
+														}
 													/>
-													{appointment.doctors.map((doctor) => {
-														return (
-															<div key={doctor._id} className="m-t-5 fs-11">
-																<Icon iconName="Contact" /> Dr. {doctor.name}
-															</div>
-														);
-													})}
+													{appointment.operatingStaff.map(
+														operator => {
+															return (
+																<div
+																	key={
+																		operator._id
+																	}
+																	className="m-t-5 fs-11"
+																>
+																	<Icon iconName="Contact" />{" "}
+																	{
+																		operator.name
+																	}
+																</div>
+															);
+														}
+													)}
 												</div>
 											);
 										})}
@@ -282,5 +361,6 @@ export class Calendar extends React.Component<{}, {}> {
 			} while ((obj = obj.offsetParent as HTMLElement));
 			return curtop - 70;
 		}
+		return 0;
 	}
 }

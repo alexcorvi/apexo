@@ -1,16 +1,40 @@
-import { appointmentsComponents, appointmentsData, register as registerAppointments } from './appointments';
-import { doctorsComponents, doctorsData, register as registerDoctors } from './doctors';
-import { patientsComponents, patientsData, register as registerPatients } from './patients';
-import { prescriptionsComponents, prescriptionsData, register as registerPrescriptions } from './prescriptions';
-import { register as registerSettings, settingsComponents, settingsData } from './settings';
-import { register as registerStatistics, statisticsComponents, statisticsData } from './statistics';
-import { register as registerTreatments, treatmentsComponents, treatmentsData } from './treatments';
-import { register as registerOrthodontics, orthoComponents, orthoData } from './orthodontic';
+import {
+	appointmentsComponents,
+	appointmentsData,
+	register as registerAppointments
+} from "./appointments";
+import { staffComponents, staffData, register as registerStaff } from "./staff";
+import {
+	patientsComponents,
+	patientsData,
+	register as registerPatients
+} from "./patients";
+import {
+	prescriptionsComponents,
+	prescriptionsData,
+	register as registerPrescriptions
+} from "./prescriptions";
+import {
+	register as registerSettings,
+	settingsComponents,
+	settingsData
+} from "./settings";
+import {
+	register as registerStatistics,
+	statisticsComponents,
+	statisticsData
+} from "./statistics";
+import {
+	register as registerTreatments,
+	treatmentsComponents,
+	treatmentsData
+} from "./treatments";
+import {
+	register as registerOrthodontics,
+	orthoComponents,
+	orthoData
+} from "./orthodontic";
 
-/**
- * All modules data
- * @export
- */
 export const data = {
 	appointmentsData,
 	patientsData,
@@ -18,16 +42,12 @@ export const data = {
 	statisticsData,
 	treatmentsData,
 	prescriptionsData,
-	doctorsData,
+	staffData,
 	orthoData
 };
 
 (window as any).data = data;
 
-/**
- * All modules components
- * @export
- */
 export const components = {
 	appointmentsComponents,
 	patientsComponents,
@@ -35,14 +55,10 @@ export const components = {
 	statisticsComponents,
 	treatmentsComponents,
 	prescriptionsComponents,
-	doctorsComponents,
+	staffComponents,
 	orthoComponents
 };
 
-/**
- * Module registration array
- * @export
-*/
 export const register = [
 	registerAppointments,
 	registerPatients,
@@ -50,33 +66,31 @@ export const register = [
 	registerStatistics,
 	registerTreatments,
 	registerPrescriptions,
-	registerDoctors,
+	registerStaff,
 	registerOrthodontics
 ];
 
 let alreadyRegistered = false;
 
-/**
- * Modules registration function
- * @export
- */
 export async function registerModules() {
-	return new Promise<boolean>((resolve) => {
+	return new Promise<boolean>(resolve => {
 		if (alreadyRegistered) {
 			resolve(true);
 		}
 		alreadyRegistered = true;
 		let done = 0;
-		register.sort((a, b) => a.order - b.order).forEach(async (module) => {
-			try {
-				await module.register();
-			} catch (e) {
+		register
+			.sort((a, b) => a.order - b.order)
+			.forEach(async module => {
 				try {
 					await module.register();
-				} catch (e) {}
-			}
-			done++;
-		});
+				} catch (e) {
+					try {
+						await module.register();
+					} catch (e) {}
+				}
+				done++;
+			});
 		const checkRegistered = setInterval(() => {
 			if (done === register.length) {
 				resolve(true);

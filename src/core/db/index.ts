@@ -1,22 +1,41 @@
-import PouchDB from 'pouchdb-browser';
-import { API } from '../';
-import { configs } from './config';
-import { generateMethods } from './generate-methods';
-import { IClassCreator } from './interface.class-creator';
-import { IMobXStore } from './interface.mobx-store';
-import { observe } from 'mobx';
-import { log } from './log';
-import { Md5 } from 'ts-md5';
-import { observeItem } from './observe-item';
-import { singleItemUpdateQue } from './single-item-update-que';
+import PouchDB from "pouchdb-browser";
+import { API } from "../";
+import { configs } from "./config";
+import { generateMethods } from "./generate-methods";
+import { IClassCreator } from "./interface.class-creator";
+import { IMobXStore } from "./interface.mobx-store";
+import { observe } from "mobx";
+import { log } from "./log";
+import { Md5 } from "ts-md5";
+import { observeItem } from "./observe-item";
+import { singleItemUpdateQue } from "./single-item-update-que";
 
-export const resync: { resyncMethods: Array<() => Promise<void>>; resync: () => Promise<boolean> } = {
+export const DBs: PouchDB.Database[] = [];
+
+export function replicateAllDBsToServer({
+	serverURL,
+	password,
+	username
+}: {
+	serverURL: string;
+	password: string;
+	username: string;
+}) {
+	// DBs[0].name
+}
+
+export const resync: {
+	resyncMethods: Array<() => Promise<void>>;
+	resync: () => Promise<boolean>;
+} = {
 	resyncMethods: [],
 	resync: async function() {
-		return new Promise<boolean>((resolve) => {
+		return new Promise<boolean>(resolve => {
 			let done = 0;
-			this.resyncMethods.forEach((resyncMethod) => {
-				resyncMethod().then(() => done++).catch(() => done++);
+			this.resyncMethods.forEach(resyncMethod => {
+				resyncMethod()
+					.then(() => done++)
+					.catch(() => done++);
 			});
 			const checkInterval = setInterval(() => {
 				if (done === this.resyncMethods.length) {
@@ -28,9 +47,13 @@ export const resync: { resyncMethods: Array<() => Promise<void>>; resync: () => 
 	}
 };
 
-export function connectToDB(name: string, shouldLog: boolean = false, config?: PouchDB.AdapterWebSql.Configuration) {
+export function connectToDB(
+	name: string,
+	shouldLog: boolean = false,
+	config?: PouchDB.AdapterWebSql.Configuration
+) {
 	// prefixing local DB name
-	const localName = name + '_' + Md5.hashStr(API.login.server);
+	const localName = name + "_" + Md5.hashStr(API.login.server);
 
 	/**
 	 * Connection object
@@ -61,9 +84,12 @@ export function connectToDB(name: string, shouldLog: boolean = false, config?: P
 				await localDatabase.sync(remoteDatabase);
 			} catch (e) {}
 		}
-		const response = (await localDatabase.allDocs({ include_docs: true })).rows.map((x) => x.doc) || [];
+		const response =
+			(await localDatabase.allDocs({ include_docs: true })).rows.map(
+				x => x.doc
+			) || [];
 		data.ignoreObserver = true;
-		const newData = response.map((x) => new Class(x));
+		const newData = response.map(x => new Class(x));
 		data.list = newData;
 
 		/**
@@ -74,7 +100,7 @@ export function connectToDB(name: string, shouldLog: boolean = false, config?: P
 		 * **/
 
 		// Watch the list as a whole
-		observe(data.list, (change) => {
+		observe(data.list, change => {
 			// only if we're not ignoring it (i.e. we're not syncing from database, thus preventing cycles)
 			if (!data.ignoreObserver) {
 				methods.syncListToDatabase(data.list);
@@ -88,12 +114,12 @@ export function connectToDB(name: string, shouldLog: boolean = false, config?: P
 		// watch the local database for changes
 		localDatabase
 			.changes({
-				since: 'now',
+				since: "now",
 				live: true,
 				include_docs: true,
 				limit: 1
 			})
-			.on('change', function(change) {
+			.on("change", function(change) {
 				// put the local and the remote in sync
 				localDatabase.sync(remoteDatabase);
 
@@ -102,7 +128,7 @@ export function connectToDB(name: string, shouldLog: boolean = false, config?: P
 				// so we need to handle those
 				const newDoc: any = change.doc;
 				const id = change.id;
-				const mobxIndex = data.list.findIndex((x) => x._id === id);
+				const mobxIndex = data.list.findIndex(x => x._id === id);
 
 				const deletion = mobxIndex !== -1 && change.deleted;
 				const update = mobxIndex !== -1 && !change.deleted;
@@ -118,7 +144,7 @@ export function connectToDB(name: string, shouldLog: boolean = false, config?: P
 					// if it's an update
 					// if there's another update that will carry on the same document
 					// don't update the MobX store just now
-					if (singleItemUpdateQue.find((x) => x.id === id)) {
+					if (singleItemUpdateQue.find(x => x.id === id)) {
 					} else {
 						data.list[mobxIndex].fromJSON(newDoc);
 						observeItem(data.list[mobxIndex], data, methods);
@@ -126,7 +152,7 @@ export function connectToDB(name: string, shouldLog: boolean = false, config?: P
 				}
 				data.ignoreObserver = false;
 			})
-			.on('error', (err) => log(name, 'Error occurred', err));
+			.on("error", err => log(name, "Error occurred", err));
 
 		resync.resyncMethods.push(async () => {
 			await localDatabase.sync(remoteDatabase);
