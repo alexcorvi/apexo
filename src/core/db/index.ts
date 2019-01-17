@@ -9,6 +9,7 @@ import { log } from "./log";
 import { Md5 } from "ts-md5";
 import { observeItem } from "./observe-item";
 import { singleItemUpdateQue } from "./single-item-update-que";
+import { decrypt } from "../../assets/utils/encryption";
 
 export const DBs: PouchDB.Database[] = [];
 
@@ -82,7 +83,11 @@ export function connectToDB(
 	 * Connection object
 	 */
 	const localDatabase = new PouchDB(localName);
-	const remoteDatabase = new PouchDB(`${API.login.server}/${name}`);
+
+	const credentials = JSON.parse(decrypt(localStorage.getItem("ec") || ""));
+	const remoteDatabase = new PouchDB(`${API.login.server}/${name}`, {
+		auth: { username: credentials.username, password: credentials.password }
+	});
 
 	configs[name] = {
 		shouldLog: shouldLog
