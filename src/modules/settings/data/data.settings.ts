@@ -3,6 +3,7 @@ import { SettingsItem } from "./class.setting";
 import { generateID } from "../../../assets/utils/generate-id";
 import * as settings from "./index";
 import { API, DropboxFile } from "../../../core/index";
+import { compact } from "../../../core/db";
 
 class Settings {
 	ignoreObserver: boolean = false;
@@ -83,6 +84,10 @@ class Settings {
 			this.setSetting("backup_arr", JSON.stringify(arr));
 			this.updateDropboxFilesList();
 		});
+
+		compact
+			.compact()
+			.then(() => console.log("backup and compaction is done"));
 	}
 
 	constructor() {
