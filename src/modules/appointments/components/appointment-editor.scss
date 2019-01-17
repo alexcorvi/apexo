@@ -33,10 +33,15 @@
 			background: #ff9800;
 		}
 	}
-	label {
+	label:not(.ms-Checkbox-label) {
 		display: block;
 		margin-bottom: 10px;
 	}
+
+	.ms-Checkbox {
+		margin-bottom: 3px;
+	}
+
 	.involved-teeth .ms-BasePicker-text,
 	.prescription .ms-BasePicker-text,
 	.treatment-type .ms-Dropdown-title {
