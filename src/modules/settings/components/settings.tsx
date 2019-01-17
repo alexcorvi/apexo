@@ -19,6 +19,7 @@ import { settings } from "../data";
 import "./settings.scss";
 import { API } from "../../../core/index";
 import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
+import { compact } from "../../../core/db/index";
 
 @observer
 export class SettingsComponent extends React.Component<{}, {}> {
@@ -116,7 +117,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					<Col md={12}>
 						<p className="hint">
 							The access token used to save and retrieve
-							Orthograph data.<br />
+							Orthograph data.
+							<br />
 							<a href="https://github.com/alexcorvi/orthograph#instructions">
 								Learn more
 							</a>
@@ -305,8 +307,17 @@ export class SettingsComponent extends React.Component<{}, {}> {
 
 						<PrimaryButton
 							onClick={() => {
+								compact.compact();
+							}}
+						>
+							Run compaction
+						</PrimaryButton>
+
+						<PrimaryButton
+							onClick={() => {
 								downloadCurrent();
 							}}
+							style={{ marginLeft: 10 }}
 						>
 							Download a backup
 						</PrimaryButton>

@@ -47,6 +47,29 @@ export const resync: {
 	}
 };
 
+export const compact: {
+	compactMethods: Array<() => Promise<void>>;
+	compact: () => Promise<boolean>;
+} = {
+	compactMethods: [],
+	compact: async function() {
+		return new Promise<boolean>(resolve => {
+			let done = 0;
+			this.compactMethods.forEach(compactMethod => {
+				compactMethod()
+					.then(() => done++)
+					.catch(() => done++);
+			});
+			const checkInterval = setInterval(() => {
+				if (done === this.compactMethods.length) {
+					resolve(true);
+					clearInterval(checkInterval);
+				}
+			}, 300);
+		});
+	}
+};
+
 export function connectToDB(
 	name: string,
 	shouldLog: boolean = false,
@@ -156,6 +179,19 @@ export function connectToDB(
 
 		resync.resyncMethods.push(async () => {
 			await localDatabase.sync(remoteDatabase);
+		});
+
+		compact.compactMethods.push(async () => {
+			console.log(
+				"local compaction on",
+				name,
+				await localDatabase.compact()
+			);
+			console.log(
+				"remote compaction on",
+				name,
+				await remoteDatabase.compact()
+			);
 		});
 
 		return methods;
