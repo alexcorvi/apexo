@@ -15,5 +15,6 @@ export const dictionary = {
 	backup_freq: "backup_freq",
 	backup_accessToken: "backup_accessToken",
 	backup_retain: "backup_retain",
-	backup_arr: "backup_arr"
+	backup_arr: "backup_arr",
+	dropbox_accessToken: "dropbox_accessToken"
 };
