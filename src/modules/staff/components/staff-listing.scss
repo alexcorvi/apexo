@@ -9,10 +9,24 @@
 .staff-editor {
 	.staff-input {
 		margin-bottom: 15px;
-		label {
+		label:not(.ms-Checkbox-label) {
 			padding-bottom: 5px;
 			display: block;
 		}
+	}
+
+	.ms-Checkbox {
+		display: inline-block;
+		margin-right: 5px;
+		margin-bottom: 5px;
+		border: 1px solid #ececec;
+		min-width: 70px;
+		text-align: left;
+		padding: 5px;
+	}
+
+	.ms-Checkbox-text {
+		font-size: 12px;
 	}
 }
 

@@ -11,7 +11,8 @@ import {
 	TextField,
 	Toggle,
 	MessageBar,
-	MessageBarType
+	MessageBarType,
+	Checkbox
 } from "office-ui-fabric-react";
 import { computed, observable } from "mobx";
 import { DataTable } from "../../../assets/components/data-table/data-table.component";
@@ -290,27 +291,30 @@ export class StaffListing extends React.Component<{}, {}> {
 
 								<div className="staff-input">
 									<label>Days on duty: </label>
-									<TagInput
-										strict={true}
-										placeholder={"Enter day name..."}
-										options={this.member.days.map(x => ({
-											key: x,
-											text: x
-										}))}
-										onChange={newVal => {
-											this.member.onDutyDays = newVal.map(
-												x => x.text
-											);
-										}}
-										value={this.member.onDutyDays.map(
-											x => ({ text: x, key: x })
-										)}
-										sortFunction={(a, b) =>
-											this.member.days.indexOf(a.text) -
-											this.member.days.indexOf(b.text)
-										}
-										disabled={!this.canEdit}
-									/>
+									{this.member.days.map(day => (
+										<Checkbox
+											label={day.substr(0, 3) + "."}
+											checked={
+												this.member.onDutyDays.indexOf(
+													day
+												) > -1
+											}
+											onChange={(ev, checked) => {
+												if (checked) {
+													this.member.onDutyDays.push(
+														day
+													);
+												} else {
+													this.member.onDutyDays.splice(
+														this.member.onDutyDays.indexOf(
+															day
+														),
+														1
+													);
+												}
+											}}
+										/>
+									))}
 								</div>
 								{this.member._id ===
 								API.user.currentUser._id ? (

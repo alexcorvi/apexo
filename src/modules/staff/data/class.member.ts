@@ -5,13 +5,13 @@ import { generateID } from "../../../assets/utils/generate-id";
 
 export class StaffMember {
 	readonly days = [
+		"Saturday",
 		"Sunday",
 		"Monday",
 		"Tuesday",
 		"Wednesday",
 		"Thursday",
-		"Friday",
-		"Saturday"
+		"Friday"
 	];
 
 	_id: string = generateID();
