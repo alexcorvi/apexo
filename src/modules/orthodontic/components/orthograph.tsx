@@ -52,7 +52,7 @@ export class Orthograph extends React.Component<{
 						"dropbox_accessToken"
 					)}/@id:${encodeURI(
 						this.props.patient._id
-					)}@title:${encodeURI(this.props.patient.name)}`}
+					)}@title:apexo-album`}
 				/>
 			</Panel>
 		);

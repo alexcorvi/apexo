@@ -15,6 +15,10 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+# 2.1.2
+
+-   Fixed non latin album names passed to Apexo
+
 ### 2.1.1
 
 -   Fixed remote DB credentials
