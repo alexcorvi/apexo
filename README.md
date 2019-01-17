@@ -15,6 +15,10 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+### 2.1.1
+
+-   Fixed remote DB credentials
+
 ### 2.1.0
 
 -   New feature: compaction on local and remote databases
