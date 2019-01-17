@@ -747,8 +747,8 @@ export class OrthoSingle extends React.Component<{
 							) : (
 								""
 							)}
-
 							{setting.getSetting("OI_orthograph") &&
+							setting.getSetting("dropbox_accessToken") &&
 							this.canEdit ? (
 								<Section title="Orthograph" showByDefault>
 									<PrimaryButton
@@ -807,15 +807,7 @@ export class OrthoSingle extends React.Component<{
 					<Orthograph
 						open={!!this.viewOrthograph}
 						patient={this.orthoCase.patient}
-						data={
-							this.orthoCase.orthograph ||
-							this.orthoCase.patient.name
-						}
 						onDismiss={() => {
-							this.viewOrthograph = false;
-						}}
-						onSaveData={newData => {
-							this.orthoCase.orthograph = newData;
 							this.viewOrthograph = false;
 						}}
 					/>

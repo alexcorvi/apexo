@@ -95,6 +95,35 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					</Col>
 				</Row>
 
+				<Row gutter={12}>
+					<Col md={12}>
+						<div className="form">
+							<TextField
+								label="Orthograph Dropbox Access Token"
+								value={settings.getSetting(
+									"dropbox_accessToken"
+								)}
+								onChanged={newVal => {
+									settings.setSetting(
+										"dropbox_accessToken",
+										newVal.toString()
+									);
+								}}
+								disabled={!this.canEdit}
+							/>
+						</div>
+					</Col>
+					<Col md={12}>
+						<p className="hint">
+							The access token used to save and retrieve
+							Orthograph data.<br />
+							<a href="https://github.com/alexcorvi/orthograph#instructions">
+								Learn more
+							</a>
+						</p>
+					</Col>
+				</Row>
+
 				<br />
 				<br />
 				<h3>Optional Modules and features</h3>

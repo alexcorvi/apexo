@@ -29,5 +29,4 @@ export interface CaseJSON {
 	crossScissorBite: number[];
 	orthoGallery: string[];
 	cephalometricHistory: CephalometricItem[];
-	orthograph: string;
 }

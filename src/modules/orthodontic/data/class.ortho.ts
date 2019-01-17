@@ -95,8 +95,6 @@ export class OrthoCase {
 	@observable orthoGallery: string[] = [];
 
 	@observable cephalometricHistory: CephalometricItem[] = [];
-	@observable orthograph: string = "";
-
 	@computed
 	get searchableString() {
 		return `
@@ -143,8 +141,7 @@ export class OrthoCase {
 			u_spaceNeeded: this.u_spaceNeeded,
 			crossScissorBite: Array.from(this.crossScissorBite),
 			orthoGallery: Array.from(this.orthoGallery),
-			cephalometricHistory: Array.from(this.cephalometricHistory),
-			orthograph: this.orthograph
+			cephalometricHistory: Array.from(this.cephalometricHistory)
 		};
 	}
 
@@ -172,7 +169,6 @@ export class OrthoCase {
 		this.crossScissorBite = json.crossScissorBite;
 		this.orthoGallery = json.orthoGallery || [];
 		this.cephalometricHistory = json.cephalometricHistory || [];
-		this.orthograph = json.orthograph || "";
 		observe(this.orthoGallery, () => this.triggerUpdate++);
 	}
 }

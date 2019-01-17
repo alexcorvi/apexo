@@ -1,75 +1,22 @@
-import * as dateUtils from "../../../assets/utils/date";
 import * as React from "react";
 import { Col, Row } from "../../../assets/components/grid/index";
-import { computed } from "mobx";
-import {
-	Dropdown,
-	IconButton,
-	Panel,
-	PanelType,
-	PrimaryButton,
-	TextField,
-	DatePicker
-} from "office-ui-fabric-react";
-import {
-	DentalHistory,
-	PatientAppointments,
-	PatientDetails
-} from "../../patients/components";
-import { EditableList } from "../../../assets/components/editable-list/editable-list";
-import {
-	FacialProfile,
-	Lips,
-	OralHygiene,
-	OrthoCase
-} from "../data/class.ortho";
-import { Gallery } from "../../../assets/components/gallery/gallery";
+import { IconButton, Panel, PanelType } from "office-ui-fabric-react";
 import { observer } from "mobx-react";
-import { orthoData } from "../index";
-import { patientsData } from "../../patients";
 import { Profile } from "../../../assets/components/profile/profile";
-import { Section } from "../../../assets/components/section/section";
-import { TagInput } from "../../../assets/components/tag-input/tag-input";
 import "./ortho-single.scss";
 import { Patient } from "../../patients/data/class.patient";
+import setting from "../../settings/data/data.settings";
 
 @observer
 export class Orthograph extends React.Component<{
-	data: string;
 	open: boolean;
 	patient: Patient;
-	onSaveData: (data: string) => void;
 	onDismiss: () => void;
 }> {
-	componentDidMount() {
-		setTimeout(() => {
-			const iFrame: any = document.getElementById("orthograph");
-
-			iFrame.onload = () => {
-				// send the message
-				iFrame.contentWindow.postMessage(
-					"orthograph-open:" + this.props.data,
-					"*"
-				);
-			};
-
-			// wait for response
-			onmessage = e => {
-				if (e.data && typeof e.data === "string") {
-					if (e.data.startsWith("orthograph-save:")) {
-						this.props.onSaveData(
-							e.data.split("orthograph-save:")[1]
-						);
-					}
-				}
-			};
-		}, 100);
-	}
-
 	render() {
 		return (
 			<Panel
-				isOpen={this.props.open && !!this.props.data}
+				isOpen={this.props.open}
 				type={PanelType.largeFixed}
 				closeButtonAriaLabel="Close"
 				isLightDismiss={true}
@@ -99,7 +46,14 @@ export class Orthograph extends React.Component<{
 					);
 				}}
 			>
-				<iframe id="orthograph" src="https://orthograph.apexo.app" />
+				<iframe
+					id="orthograph"
+					src={`https://orthograph.apexo.app/#!/${setting.getSetting(
+						"dropbox_accessToken"
+					)}/@id:${encodeURI(
+						this.props.patient._id
+					)}@title:${encodeURI(this.props.patient.name)}`}
+				/>
 			</Panel>
 		);
 	}
