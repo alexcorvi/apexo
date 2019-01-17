@@ -292,6 +292,7 @@ export class StaffListing extends React.Component<{}, {}> {
 									<label>Days on duty: </label>
 									{this.member.days.map(day => (
 										<Checkbox
+											disabled={!this.canEdit}
 											label={day.substr(0, 3) + "."}
 											checked={
 												this.member.onDutyDays.indexOf(

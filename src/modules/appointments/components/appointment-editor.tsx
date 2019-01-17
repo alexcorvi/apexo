@@ -191,12 +191,13 @@ export class AppointmentEditor extends React.Component<
 													<Checkbox
 														label={staff.name}
 														disabled={
-															!checked &&
-															staff.onDuty.indexOf(
-																new Date(
-																	this.props.appointment.date
-																).getDay()
-															) === -1
+															!this.canEdit ||
+															(!checked &&
+																staff.onDuty.indexOf(
+																	new Date(
+																		this.props.appointment.date
+																	).getDay()
+																) === -1)
 														}
 														checked={checked}
 														onChange={(
