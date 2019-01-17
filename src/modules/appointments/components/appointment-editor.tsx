@@ -14,7 +14,8 @@ import {
 	PanelType,
 	PrimaryButton,
 	TextField,
-	Toggle
+	Toggle,
+	Checkbox
 } from "office-ui-fabric-react";
 import { staffData } from "../../staff";
 import { Gallery } from "../../../assets/components/gallery/gallery";
@@ -130,7 +131,7 @@ export class AppointmentEditor extends React.Component<
 				{this.props.appointment ? (
 					<div className="appointment-editor">
 						<Section title="Appointment" showByDefault>
-							<Row gutter={6}>
+							<Row gutter={12}>
 								<Col sm={12}>
 									<div className="appointment-input date">
 										<label>Date: </label>
@@ -176,45 +177,57 @@ export class AppointmentEditor extends React.Component<
 								<Col sm={12}>
 									<div className="appointment-input date">
 										<label>Operating Staff: </label>
-										<TagInput
-											disabled={!this.canEdit}
-											placeholder="Select operating staff..."
-											options={staffData.staffMembers.list
-												.filter(user => {
-													if (
-														!this.props.appointment
-													) {
-														return;
-													}
-													return (
-														user.onDuty.indexOf(
-															new Date(
-																this.props.appointment.date
-															).getDay()
-														) !== -1 &&
-														user.operates
-													);
-												})
-												.map(x => ({
-													key: x._id,
-													text: x.name
-												}))}
-											value={this.props.appointment.operatingStaff.map(
-												x => ({
-													key: x._id,
-													text: x.name
-												})
-											)}
-											strict={true}
-											onChange={newValue => {
+										{staffData.staffMembers.list
+											.filter(staff => staff.operates)
+											.map(staff => {
 												if (!this.props.appointment) {
 													return;
 												}
-												this.props.appointment.staffID = newValue.map(
-													x => x.key
+												const checked =
+													this.props.appointment.staffID.indexOf(
+														staff._id
+													) > -1;
+												return (
+													<Checkbox
+														label={staff.name}
+														disabled={
+															!checked &&
+															staff.onDuty.indexOf(
+																new Date(
+																	this.props.appointment.date
+																).getDay()
+															) === -1
+														}
+														checked={checked}
+														onChange={(
+															ev,
+															isChecked
+														) => {
+															if (
+																!this.props
+																	.appointment
+															) {
+																return;
+															}
+															if (
+																ev &&
+																isChecked
+															) {
+																this.props.appointment.staffID.push(
+																	staff._id
+																);
+															} else {
+																this.props.appointment.staffID.splice(
+																	this.props.appointment.staffID.indexOf(
+																		staff._id
+																	),
+																	1
+																);
+															}
+														}}
+													/>
 												);
-											}}
-										/>
+											})}
 									</div>
 								</Col>
 							</Row>
@@ -233,7 +246,7 @@ export class AppointmentEditor extends React.Component<
 								}}
 							/>
 							<br />
-							<Row gutter={6}>
+							<Row gutter={12}>
 								<Col sm={12}>
 									<div className="appointment-input treatment">
 										<label>Treatment: </label>
@@ -479,7 +492,7 @@ export class AppointmentEditor extends React.Component<
 						</Section>
 
 						<Section showByDefault title="Expenses & Price">
-							<Row gutter={6}>
+							<Row gutter={12}>
 								<Col sm={12}>
 									{settingsData.settings.getSetting(
 										"time_tracking"
@@ -698,7 +711,7 @@ export class AppointmentEditor extends React.Component<
 									</div>
 								</Col>
 							</Row>
-							<Row gutter={6}>
+							<Row gutter={12}>
 								<Col sm={12}>
 									<Toggle
 										defaultChecked={
