@@ -15,6 +15,14 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+### 2.1.0
+
+-   New feature: compaction on local and remote databases
+-   New feature: compaction automation
+-   Orthograph is now using the dropbox for storage
+-   better UX on choosing duty days
+-   better UX on choosing operating doctors
+
 ### 2.0.0
 
 -   New feature: backup automation to Dropbox
