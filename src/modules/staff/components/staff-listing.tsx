@@ -22,7 +22,6 @@ import { Profile } from "../../../assets/components/profile/profile";
 import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
 import { Section } from "../../../assets/components/section/section";
 import { settings } from "../../settings/data";
-import { TagInput } from "../../../assets/components/tag-input/tag-input";
 import setting from "../../settings/data/data.settings";
 import "./staff-listing.scss";
 

@@ -3,34 +3,12 @@ import * as React from "react";
 import { Col, Row } from "../../../assets/components/grid/index";
 import { computed } from "mobx";
 import {
-	Dropdown,
 	IconButton,
 	Panel,
 	PanelType,
-	PrimaryButton,
-	TextField,
 	DatePicker
 } from "office-ui-fabric-react";
-import {
-	DentalHistory,
-	PatientAppointments,
-	PatientDetails
-} from "../../patients/components";
-import { EditableList } from "../../../assets/components/editable-list/editable-list";
-import {
-	FacialProfile,
-	Lips,
-	OralHygiene,
-	OrthoCase
-} from "../data/class.ortho";
-import { Gallery } from "../../../assets/components/gallery/gallery";
 import { observer } from "mobx-react";
-import { orthoData } from "../index";
-import { patientsData } from "../../patients";
-import { Profile } from "../../../assets/components/profile/profile";
-import { Section } from "../../../assets/components/section/section";
-import { TagInput } from "../../../assets/components/tag-input/tag-input";
-import "./ortho-single.scss";
 import { Patient } from "../../patients/data/class.patient";
 
 @observer
