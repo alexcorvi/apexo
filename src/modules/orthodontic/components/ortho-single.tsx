@@ -701,29 +701,58 @@ export class OrthoSingle extends React.Component<{
 								>
 									{this.orthoCase.cephalometricHistory.map(
 										(c, i) => (
-											<div
+											<Row
 												style={{
-													marginBottom: 10,
-													cursor: "pointer"
+													borderBottom:
+														"1px solid #e3e3e3",
+													marginBottom: "25px"
 												}}
-												onClick={() => {
-													this.cephalometricToViewIndex = i;
-												}}
-												key={i}
 											>
-												<Profile
-													name={`${i +
-														1}: Analysis #${i + 1}`}
-													secondaryElement={
-														<span>
-															{new Date(
-																c.date
-															).toDateString()}
-														</span>
-													}
-													size={3}
-												/>
-											</div>
+												<Col xs={20}>
+													<div
+														style={{
+															marginBottom: 10,
+															cursor: "pointer"
+														}}
+														onClick={() => {
+															this.cephalometricToViewIndex = i;
+														}}
+														key={i}
+													>
+														<Profile
+															name={`${i +
+																1}: Analysis #${i +
+																1}`}
+															secondaryElement={
+																<span>
+																	{new Date(
+																		c.date
+																	).toDateString()}
+																</span>
+															}
+															size={3}
+														/>
+													</div>
+												</Col>
+												<Col
+													xs={4}
+													style={{
+														textAlign: "right"
+													}}
+												>
+													<IconButton
+														iconProps={{
+															iconName: "trash"
+														}}
+														onClick={() =>
+															this.orthoCase.cephalometricHistory.splice(
+																i,
+																1
+															)
+														}
+													/>
+												</Col>
+											</Row>
 										)
 									)}
 									<PrimaryButton
