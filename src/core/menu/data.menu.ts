@@ -24,6 +24,12 @@ class MenuData {
 	get sortedItems() {
 		return this.items
 			.slice()
+			.reduce((arr: MenuItem[], item) => {
+				if (arr.findIndex(x => x.key === item.key) === -1) {
+					arr.push(item);
+				}
+				return arr;
+			}, [])
 			.sort((a, b) => a.order - b.order)
 			.filter(item => !item.condition || item.condition());
 	}
