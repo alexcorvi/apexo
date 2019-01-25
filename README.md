@@ -15,6 +15,16 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+# 2.2.1
+
+-   Sorting calendar appointments according to time
+
+# 2.2.0
+
+-   Deleting cephalometric analysis is now possible
+-   Unifying height now works on opening the calender module
+-   New Feature: Setting appointments exact time
+
 # 2.1.2
 
 -   Fixed non latin album names passed to Apexo

@@ -289,6 +289,7 @@ export class Calendar extends React.Component<{}, {}> {
 												? undefined
 												: API.user.currentUser._id
 										)
+										.sort((a, b) => a.date - b.date)
 										.map(appointment => {
 											return (
 												<div
