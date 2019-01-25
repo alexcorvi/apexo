@@ -15,7 +15,8 @@ import {
 	PrimaryButton,
 	TextField,
 	Toggle,
-	Checkbox
+	Checkbox,
+	Slider
 } from "office-ui-fabric-react";
 import { staffData } from "../../staff";
 import { Gallery } from "../../../assets/components/gallery/gallery";
@@ -175,63 +176,90 @@ export class AppointmentEditor extends React.Component<
 									</div>
 								</Col>
 								<Col sm={12}>
-									<div className="appointment-input date">
-										<label>Operating Staff: </label>
-										{staffData.staffMembers.list
-											.filter(staff => staff.operates)
-											.map(staff => {
-												if (!this.props.appointment) {
-													return;
+									<div className="appointment-input time">
+										<label>
+											Time:{" "}
+											{
+												this.props.appointment
+													.formattedTime
+											}
+										</label>
+										<Row gutter={12}>
+											<Slider
+												min={this.props.appointment.dateFloor.getTime()}
+												max={
+													this.props.appointment.dateFloor.getTime() +
+													1000 * 60 * 60 * 23.5
 												}
-												const checked =
-													this.props.appointment.staffID.indexOf(
-														staff._id
-													) > -1;
-												return (
-													<Checkbox
-														label={staff.name}
-														disabled={
-															!this.canEdit ||
-															(!checked &&
-																staff.onDuty.indexOf(
-																	new Date(
-																		this.props.appointment.date
-																	).getDay()
-																) === -1)
-														}
-														checked={checked}
-														onChange={(
-															ev,
-															isChecked
-														) => {
-															if (
-																!this.props
-																	.appointment
-															) {
-																return;
-															}
-															if (
-																ev &&
-																isChecked
-															) {
-																this.props.appointment.staffID.push(
-																	staff._id
-																);
-															} else {
-																this.props.appointment.staffID.splice(
-																	this.props.appointment.staffID.indexOf(
-																		staff._id
-																	),
-																	1
-																);
-															}
-														}}
-													/>
-												);
-											})}
+												value={
+													this.props.appointment.date
+												}
+												step={1000 * 60 * 30}
+												onChange={val => {
+													if (
+														this.props
+															.appointment &&
+														val >
+															this.props.appointment.dateFloor.getTime()
+													) {
+														this.props.appointment.date = val;
+													}
+												}}
+												showValue={false}
+											/>
+										</Row>
 									</div>
 								</Col>
 							</Row>
+							<div className="appointment-input date">
+								<label>Operating Staff: </label>
+								{staffData.staffMembers.list
+									.filter(staff => staff.operates)
+									.map(staff => {
+										if (!this.props.appointment) {
+											return;
+										}
+										const checked =
+											this.props.appointment.staffID.indexOf(
+												staff._id
+											) > -1;
+										return (
+											<Checkbox
+												key={staff._id}
+												label={staff.name}
+												disabled={
+													!this.canEdit ||
+													(!checked &&
+														staff.onDuty.indexOf(
+															new Date(
+																this.props.appointment.date
+															).getDay()
+														) === -1)
+												}
+												checked={checked}
+												onChange={(ev, isChecked) => {
+													if (
+														!this.props.appointment
+													) {
+														return;
+													}
+													if (ev && isChecked) {
+														this.props.appointment.staffID.push(
+															staff._id
+														);
+													} else {
+														this.props.appointment.staffID.splice(
+															this.props.appointment.staffID.indexOf(
+																staff._id
+															),
+															1
+														);
+													}
+												}}
+											/>
+										);
+									})}
+							</div>
 						</Section>
 
 						<Section title="Case Details" showByDefault>

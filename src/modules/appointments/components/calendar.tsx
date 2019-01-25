@@ -20,6 +20,8 @@ export class Calendar extends React.Component<{}, {}> {
 	@observable showAll: boolean = true;
 
 	componentDidMount() {
+		this.unifyHeight();
+
 		const dateString = API.router.currentLocation.split("/")[1];
 		if (!dateString) {
 			return;
@@ -28,7 +30,6 @@ export class Calendar extends React.Component<{}, {}> {
 		this.c.selectedYear = Number(dateArray[0]);
 		this.c.selectedMonth = Number(dateArray[1]) - 1;
 		this.c.selectedDay = Number(dateArray[2]) - 1;
-		this.unifyHeight();
 	}
 
 	componentDidUpdate() {
@@ -302,6 +303,11 @@ export class Calendar extends React.Component<{}, {}> {
 															];
 													}}
 												>
+													<div className="time">
+														{
+															appointment.formattedTime
+														}
+													</div>
 													<div className="m-b-5">
 														<ProfileSquared
 															text={

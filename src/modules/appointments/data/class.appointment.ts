@@ -135,6 +135,17 @@ export class Appointment {
 		);
 	}
 
+	@computed get dateFloor() {
+		const d = dateUtils.comparableTime(new Date(this.date));
+		return new Date(`${d.y}/${d.m + 1}/${d.d}`);
+	}
+
+	@computed get formattedTime() {
+		return new Date(this.date)
+			.toLocaleTimeString()
+			.replace(/:[0-9]{2} /, " ");
+	}
+
 	@computed
 	get spentTimeValue() {
 		return (
