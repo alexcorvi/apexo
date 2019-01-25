@@ -3766,9 +3766,21 @@
 
 .staff-editor .staff-input {
   margin-bottom: 15px; }
-  .staff-editor .staff-input label {
+  .staff-editor .staff-input label:not(.ms-Checkbox-label) {
     padding-bottom: 5px;
     display: block; }
+
+.staff-editor .ms-Checkbox {
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border: 1px solid #ececec;
+  min-width: 70px;
+  text-align: left;
+  padding: 5px; }
+
+.staff-editor .ms-Checkbox-text {
+  font-size: 12px; }
 
 .duty-table tr {
   border: 1px solid #eeeeee; }
@@ -3818,9 +3830,11 @@
     right: 0; }
     .appointment-input .appendage.stop {
       background: #ff9800; }
-  .appointment-input label {
+  .appointment-input label:not(.ms-Checkbox-label) {
     display: block;
     margin-bottom: 10px; }
+  .appointment-input .ms-Checkbox {
+    margin-bottom: 3px; }
   .appointment-input .involved-teeth .ms-BasePicker-text,
   .appointment-input .prescription .ms-BasePicker-text,
   .appointment-input .treatment-type .ms-Dropdown-title {
@@ -4049,6 +4063,16 @@
       margin-bottom: 10px;
       border-bottom: 1px dotted #e3e3e3;
       cursor: pointer; }
+      .calendar-component .full-day-col .appointment .time {
+        text-align: center;
+        color: #616161;
+        font-size: 12px;
+        margin-bottom: 5px;
+        clear: both;
+        padding: 5px;
+        border: 1px solid #ffebb6;
+        background: #fff9e9;
+        float: right; }
       .calendar-component .full-day-col .appointment a {
         display: inline-block;
         color: #2196f3;
@@ -4064,13 +4088,17 @@
   .calendar-component .filter {
     border-left: 1px dotted #e3e3e3; }
   .calendar-component .day-name {
-    color: '#616161'; }
+    color: #616161; }
 
 @media screen and (min-width: 992px) {
   .calendar-component {
     margin-top: 67px;
     margin-right: 15px;
     border-radius: 3px; } }
+
+@media screen and (min-width: 1250px) {
+  .calendar-component .full-day-col .time {
+    float: none !important; } }
 
 @media screen and (max-width: 1250px) {
   .calendar-component .full-day-col {
