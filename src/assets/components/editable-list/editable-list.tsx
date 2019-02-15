@@ -51,12 +51,9 @@ export class EditableList extends React.Component<
 	inputElement: HTMLInputElement | undefined;
 
 	addItem() {
-		if (!this.inputElement) {
-			return;
-		}
-		if (this.inputElement.value.replace(/\W/, "").length) {
-			this.props.value.push(this.inputElement.value);
-			this.inputElement.value = "";
+		if (this.inputElement!.value.replace(/\W/, "").length) {
+			this.props.value.push(this.inputElement!.value);
+			this.inputElement!.value = "";
 			(this.props.onChange || (() => {}))(this.props.value);
 		}
 	}
@@ -68,10 +65,7 @@ export class EditableList extends React.Component<
 					<div
 						className="input"
 						onClick={() => {
-							if (!this.inputElement) {
-								return;
-							}
-							this.inputElement.focus();
+							this.inputElement!.focus();
 						}}
 						style={
 							this.props.value.length
@@ -161,22 +155,20 @@ export class EditableList extends React.Component<
 														const el = document.getElementById(
 															id
 														);
-														if (el) {
-															el.className =
-																el.className +
-																" toBeDeleted";
-														}
+
+														el!.className =
+															el!.className +
+															" toBeDeleted";
 													}}
 													onMouseLeave={() => {
 														const el = document.getElementById(
 															id
 														);
-														if (el) {
-															el.className = el.className.replace(
-																" toBeDeleted",
-																""
-															);
-														}
+
+														el!.className = el!.className.replace(
+															" toBeDeleted",
+															""
+														);
 													}}
 												/>
 											</Col>

@@ -201,13 +201,9 @@ export class DataTable extends React.Component<Props, {}> {
 														iconName: "delete"
 													}}
 													onClick={() => {
-														if (
-															this.props.onDelete
-														) {
-															this.props.onDelete(
-																row.id
-															);
-														}
+														this.props.onDelete!(
+															row.id
+														);
 													}}
 												/>
 											</div>

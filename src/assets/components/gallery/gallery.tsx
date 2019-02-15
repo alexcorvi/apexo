@@ -1,6 +1,9 @@
-import * as React from 'react';
-import { API } from '../../../core/index';
-import { fileTypes, PickFile } from '../../../assets/components/pick-files/pick-files';
+import * as React from "react";
+import { API } from "../../../core/index";
+import {
+	fileTypes,
+	PickFile
+} from "../../../assets/components/pick-files/pick-files";
 import {
 	Icon,
 	MessageBar,
@@ -10,11 +13,11 @@ import {
 	PrimaryButton,
 	Spinner,
 	SpinnerSize
-	} from 'office-ui-fabric-react';
-import { observable, observe } from 'mobx';
-import { observer } from 'mobx-react';
-import { toJS } from 'mobx';
-import './gallery.scss';
+} from "office-ui-fabric-react";
+import { observable, observe } from "mobx";
+import { observer } from "mobx-react";
+import { toJS } from "mobx";
+import "./gallery.scss";
 
 @observer
 export class Gallery extends React.Component<
@@ -28,7 +31,7 @@ export class Gallery extends React.Component<
 > {
 	pickFileInstance: PickFile | undefined;
 	@observable gallery: string[] = this.props.gallery;
-	@observable show: string = '';
+	@observable show: string = "";
 	@observable loading: boolean = false;
 	@observable galleryResolved: { [key: string]: string } = {};
 
@@ -37,53 +40,61 @@ export class Gallery extends React.Component<
 			<div className="gallery-component">
 				{API.login.online ? (
 					<div>
-						<div className="gallery-label"> {this.props.label} </div>
-						{this.gallery.map(
-							(image) =>
-								this.galleryResolved[image] ? (
-									<div
-										onClick={() => (this.show = image)}
-										key={image}
-										className="image"
-										style={{ backgroundImage: `url(${this.galleryResolved[image]})` }}
-									/>
-								) : (
-									<div key={image} className="image">
-										<Spinner size={SpinnerSize.large} />
-									</div>
-								)
+						<div className="gallery-label">
+							{" "}
+							{this.props.label}{" "}
+						</div>
+						{this.gallery.map(image =>
+							this.galleryResolved[image] ? (
+								<div
+									onClick={() => (this.show = image)}
+									key={image}
+									className="image"
+									style={{
+										backgroundImage: `url(${
+											this.galleryResolved[image]
+										})`
+									}}
+								/>
+							) : (
+								<div key={image} className="image">
+									<Spinner size={SpinnerSize.large} />
+								</div>
+							)
 						)}
 						<div>
 							<span
 								className="input-image"
 								onClick={() => {
-									if (this.pickFileInstance) {
-										this.loading = true;
-										this.pickFileInstance.click();
-									}
+									this.loading = true;
+									this.pickFileInstance!.click();
 								}}
 							>
 								<Icon
-									iconName={this.loading ? 'Sync' : 'Add'}
-									className={this.loading ? 'rotate' : ''}
+									iconName={this.loading ? "Sync" : "Add"}
+									className={this.loading ? "rotate" : ""}
 								/>
 								<span>Add Image</span>
 							</span>
 							<PickFile
 								accept={fileTypes.image}
-								onPick={(newFiles) => {
+								onPick={newFiles => {
 									this.loading = false;
 									this.gallery.push(...newFiles);
 									this.props.onChange(toJS(this.gallery));
 								}}
 								multiple={this.props.single ? false : true}
-								ref={(instance) => (instance ? (this.pickFileInstance = instance) : '')}
+								ref={instance =>
+									instance
+										? (this.pickFileInstance = instance)
+										: ""
+								}
 							/>
 						</div>
 						<Panel
 							isOpen={!!this.show}
 							type={PanelType.smallFluid}
-							onDismiss={() => (this.show = '')}
+							onDismiss={() => (this.show = "")}
 							headerText=""
 							isFooterAtBottom={true}
 							onRenderFooterContent={() => (
@@ -91,14 +102,23 @@ export class Gallery extends React.Component<
 									<PrimaryButton
 										onClick={async () => {
 											this.loading = true;
-											this.gallery.splice(this.gallery.indexOf(this.show), 1);
-											this.props.onChange(toJS(this.gallery));
+											this.gallery.splice(
+												this.gallery.indexOf(this.show),
+												1
+											);
+											this.props.onChange(
+												toJS(this.gallery)
+											);
 											await API.files.remove(this.show);
-											this.show = '';
+											this.show = "";
 											this.loading = false;
 										}}
 										className={`delete`}
-										iconProps={{ iconName: this.loading ? 'sync' : 'delete' }}
+										iconProps={{
+											iconName: this.loading
+												? "sync"
+												: "delete"
+										}}
 										disabled={this.loading}
 									>
 										Delete
@@ -107,7 +127,10 @@ export class Gallery extends React.Component<
 							)}
 						>
 							{this.galleryResolved[this.show] ? (
-								<img src={this.galleryResolved[this.show]} className="gallery-view" />
+								<img
+									src={this.galleryResolved[this.show]}
+									className="gallery-view"
+								/>
 							) : (
 								<Spinner size={SpinnerSize.large} />
 							)}
@@ -117,7 +140,9 @@ export class Gallery extends React.Component<
 					<div>
 						<br />
 						<MessageBar messageBarType={MessageBarType.warning}>
-							{"Attachments are not available while you're offline."}
+							{
+								"Attachments are not available while you're offline."
+							}
 						</MessageBar>
 					</div>
 				)}
@@ -132,10 +157,10 @@ export class Gallery extends React.Component<
 	resolve() {
 		this.gallery
 			// missing from the resolved directory
-			.filter((x) => this.galleryResolved[x] === undefined)
-			.forEach(async (targetID) => {
+			.filter(x => this.galleryResolved[x] === undefined)
+			.forEach(async targetID => {
 				const b64 = await API.files.get(targetID);
-				this.galleryResolved[targetID] = 'data:image/png;base64,' + b64;
+				this.galleryResolved[targetID] = "data:image/png;base64," + b64;
 				this.forceUpdate();
 			});
 	}

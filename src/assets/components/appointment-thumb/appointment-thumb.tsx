@@ -85,19 +85,13 @@ export class AppointmentThumb extends React.Component<
 						iconName="delete"
 						className="delete"
 						onMouseEnter={() => {
-							if (!this.el) {
-								return;
-							}
-							this.el.className =
-								this.el.className + " to-delete";
+							this.el!.className =
+								this.el!.className + " to-delete";
 						}}
 						onMouseLeave={() => {
-							if (!this.el) {
-								return;
-							}
-							this.el.className = this.el.className
-								.split(" to-delete")
-								.join("");
+							this.el!.className = this.el!.className.split(
+								" to-delete"
+							).join("");
 						}}
 						onClick={ev => {
 							appointmentsData.appointments.deleteModal(

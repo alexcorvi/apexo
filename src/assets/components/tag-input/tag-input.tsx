@@ -79,14 +79,11 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 	}
 
 	setSearchText(value: string) {
-		if (!this.inputElement) {
-			return;
-		}
 		this.showAll = false;
 		if (value.length === 0) {
 			this.keyboardSelectedIndex = -1;
 		}
-		this.inputElement.value = value;
+		this.inputElement!.value = value;
 		this.searchText = value;
 	}
 
@@ -141,11 +138,8 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 	}
 
 	keyboardEventCallback(event: React.KeyboardEvent<HTMLInputElement>) {
-		if (!this.inputElement) {
-			return;
-		}
 		if (event.key.length === 1) {
-			this.setSearchText(this.inputElement.value);
+			this.setSearchText(this.inputElement!.value);
 		}
 		if (event.keyCode === 13) {
 			this.verifyAndAdd();
@@ -172,10 +166,7 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 					"tag-input-component " + (this.props.className || "")
 				}
 				onClick={() => {
-					if (!this.inputElement) {
-						return;
-					}
-					this.inputElement.focus();
+					this.inputElement!.focus();
 				}}
 				onKeyDown={event => this.keyboardNavigation(event)}
 			>
@@ -191,10 +182,7 @@ export class TagInput extends React.Component<TagInputProps, {}> {
 					onKeyDown={event => this.keyboardEventCallback(event)}
 					onKeyUp={event => this.keyboardEventCallback(event)}
 					onChange={event => {
-						if (!this.inputElement) {
-							return;
-						}
-						this.setSearchText(this.inputElement.value);
+						this.setSearchText(this.inputElement!.value);
 					}}
 					disabled={this.props.disabled}
 				/>

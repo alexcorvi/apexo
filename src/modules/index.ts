@@ -94,6 +94,7 @@ export async function registerModules() {
 		const checkRegistered = setInterval(() => {
 			if (done === register.length) {
 				resolve(true);
+				clearInterval(checkRegistered);
 			}
 		}, 300);
 	});

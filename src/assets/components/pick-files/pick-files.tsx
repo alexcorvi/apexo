@@ -1,10 +1,9 @@
-import * as React from 'react';
-import { API } from '../../../core';
+import * as React from "react";
+import { API } from "../../../core";
 
 export const fileTypes = {
-	image: [ 'png', 'jpg', 'jpeg', 'gif', 'image/png', 'image/gif', 'image/jpeg' ]
+	image: ["png", "jpg", "jpeg", "gif", "image/png", "image/gif", "image/jpeg"]
 };
-
 
 export class PickFile extends React.Component<
 	{
@@ -24,14 +23,11 @@ export class PickFile extends React.Component<
 				<input
 					type="file"
 					multiple={this.props.multiple}
-					ref={(el) => (el ? (this.pickFileEl = el) : '')}
+					ref={el => (el ? (this.pickFileEl = el) : "")}
 					className="hidden"
-					accept={this.props.accept.join(',')}
+					accept={this.props.accept.join(",")}
 					onChange={() => {
-						if (!this.pickFileEl) {
-							return;
-						}
-						const fileList = this.pickFileEl.files;
+						const fileList = this.pickFileEl!.files;
 						const resultArr: string[] = [];
 						if (!fileList || !fileList[0]) {
 							return;
@@ -41,22 +37,22 @@ export class PickFile extends React.Component<
 							const reader = new FileReader();
 							reader.onload = async (event: Event) => {
 								const imageID = await API.files.save(
-									(event.target as any).result.replace(/.*base64,/, '')
+									(event.target as any).result.replace(
+										/.*base64,/,
+										""
+									)
 								);
 								resultArr.push(imageID);
 							};
 							reader.readAsDataURL(file as any);
 						}
 						const checkInterval = setInterval(() => {
-							if (!this.pickFileEl) {
-								return;
-							}
 							if (resultArr.length !== fileList.length) {
 								return;
 							}
 							this.props.onPick(resultArr);
 							clearInterval(checkInterval);
-							this.pickFileEl.value = '';
+							this.pickFileEl!.value = "";
 						}, 10);
 					}}
 				/>
@@ -64,9 +60,6 @@ export class PickFile extends React.Component<
 		);
 	}
 	click() {
-		if (!this.pickFileEl) {
-			return;
-		}
-		this.pickFileEl.click();
+		this.pickFileEl!.click();
 	}
 }
