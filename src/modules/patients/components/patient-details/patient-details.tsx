@@ -139,7 +139,26 @@ export class PatientDetails extends React.Component<
 									.map(x => ({
 										key: x,
 										text: x
-									}))}
+									}))
+									.reduce(
+										(
+											arr: {
+												key: string;
+												text: string;
+											}[],
+											item
+										) => {
+											if (
+												arr.findIndex(
+													x => x.key === item.key
+												) === -1
+											) {
+												arr.push(item);
+											}
+											return arr;
+										},
+										[]
+									)}
 								onChange={newVal => {
 									this.props.patient.labels = newVal.map(
 										item => {
