@@ -671,14 +671,15 @@ export class StaffListing extends React.Component<{}, {}> {
 							)}
 
 							{API.user.currentUser.canViewAppointments ? (
-								<Section title="Appointments" showByDefault>
+								<Section
+									title="Upcoming Appointments"
+									showByDefault
+								>
 									<AppointmentsList
-										list={appointmentsData.appointments.list.filter(
-											x =>
-												x.staffID.indexOf(
-													this.selectedId
-												) > -1
-										)}
+										list={
+											API.user.currentUser
+												.nextAppointments
+										}
 									/>
 								</Section>
 							) : (
