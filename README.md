@@ -15,6 +15,11 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
+# 2.2.2
+
+-   Show only upcoming appointments on staff page, as showing all appointments may not scale well.
+-   Fixed: patient label suggestions were being repeated.
+
 # 2.2.1
 
 -   Sorting calendar appointments according to time
