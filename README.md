@@ -2,6 +2,10 @@
 
 ![Apexo.app](https://i.imgur.com/Vkdbzb3.png)
 
+![license](https://img.shields.io/github/license/alexcorvi/apexo.svg)
+![David](https://img.shields.io/david/alexcorvi/apexo.svg)
+![David](https://img.shields.io/david/dev/alexcorvi/apexo.svg)
+
 A web/desktop application to manage your dental clinic practice.
 
 -   [More Info](https://apexo.app)
