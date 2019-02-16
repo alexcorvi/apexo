@@ -1,5 +1,7 @@
 # Apexo Dental Clinic Manager
 
+![Apexo.app](https://i.imgur.com/Vkdbzb3.png)
+
 A web/desktop application to manage your dental clinic practice.
 
 -   [More Info](https://apexo.app)
@@ -15,22 +17,22 @@ A web/desktop application to manage your dental clinic practice.
 
 ## Changelog
 
-# 2.2.2
+### 2.2.2
 
 -   Show only upcoming appointments on staff page, as showing all appointments may not scale well.
 -   Fixed: patient label suggestions were being repeated.
 
-# 2.2.1
+### 2.2.1
 
 -   Sorting calendar appointments according to time
 
-# 2.2.0
+### 2.2.0
 
 -   Deleting cephalometric analysis is now possible
 -   Unifying height now works on opening the calender module
 -   New Feature: Setting appointments exact time
 
-# 2.1.2
+### 2.1.2
 
 -   Fixed non latin album names passed to Apexo
 
