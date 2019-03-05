@@ -211,7 +211,7 @@ export class AppointmentEditor extends React.Component<
 											}
 											checked={checked}
 											onChange={(ev, isChecked) => {
-												if (ev && isChecked) {
+												if (isChecked) {
 													this.props.appointment!.staffID.push(
 														staff._id
 													);
@@ -223,6 +223,8 @@ export class AppointmentEditor extends React.Component<
 														1
 													);
 												}
+												this.props.appointment!
+													.triggerUpdate++;
 											}}
 										/>
 									);
