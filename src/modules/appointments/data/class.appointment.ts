@@ -6,6 +6,7 @@ import { generateID } from "../../../assets/utils/generate-id";
 import { patientsData } from "../../patients";
 import { settingsData } from "../../settings";
 import { treatmentsData } from "../../treatments";
+import { Treatment } from "../../treatments/data/class.treatment";
 
 export class Appointment {
 	_id: string = generateID();
@@ -61,7 +62,7 @@ export class Appointment {
 	}
 
 	@computed
-	get treatment() {
+	get treatment(): undefined | Treatment {
 		return treatmentsData.treatments.list[
 			treatmentsData.treatments.getIndexByID(this.treatmentID)
 		];

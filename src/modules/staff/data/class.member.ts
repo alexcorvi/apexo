@@ -136,8 +136,16 @@ export class StaffMember {
 		return `
 			${this.name} ${this.onDutyDays.join(" ")}
 			${this.phone} ${this.email}
-			${this.nextAppointment ? this.nextAppointment.treatment.type : ""}
-			${this.lastAppointment ? this.lastAppointment.treatment.type : ""}
+			${
+				this.nextAppointment
+					? (this.nextAppointment.treatment || { type: "" }).type
+					: ""
+			}
+			${
+				this.lastAppointment
+					? (this.lastAppointment.treatment || { type: "" }).type
+					: ""
+			}
 		`.toLowerCase();
 	}
 

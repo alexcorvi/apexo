@@ -94,8 +94,16 @@ export class Patient {
 			.map(x => x.text)
 			.join(" ")} ${this.medicalHistory.join(" ")}
 			${this.teeth.map(x => x.notes.join(" ")).join(" ")}
-			${this.nextAppointment ? this.nextAppointment.treatment.type : ""}
-			${this.lastAppointment ? this.lastAppointment.treatment.type : ""}
+			${
+				this.nextAppointment
+					? (this.nextAppointment.treatment || { type: "" }).type
+					: ""
+			}
+			${
+				this.lastAppointment
+					? (this.lastAppointment.treatment || { type: "" }).type
+					: ""
+			}
 		`.toLowerCase();
 	}
 

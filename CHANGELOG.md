@@ -1,5 +1,10 @@
 ## Changelog
 
+### 2.2.3
+
+-   Fixed bug: creating new appointment while there are no registered treatments crashes the application
+-   Fixed bug: triggering updates when changing operating staff
+
 ### 2.2.2
 
 -   Show only upcoming appointments on staff page, as showing all appointments may not scale well.

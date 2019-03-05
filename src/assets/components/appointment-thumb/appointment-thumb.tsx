@@ -72,7 +72,11 @@ export class AppointmentThumb extends React.Component<
 				{
 					<div className="m-b-5">
 						<ProfileSquared
-							text={this.props.appointment.treatment.type}
+							text={
+								this.props.appointment.treatment
+									? this.props.appointment.treatment.type
+									: ""
+							}
 							subText={dateUtils.relativeFormat(
 								this.props.appointment.date
 							)}

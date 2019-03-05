@@ -312,9 +312,11 @@ export class Calendar extends React.Component<{}, {}> {
 													<div className="m-b-5">
 														<ProfileSquared
 															text={
-																appointment
-																	.treatment
-																	.type
+																appointment.treatment
+																	? appointment
+																			.treatment
+																			.type
+																	: ""
 															}
 															size={1}
 														/>

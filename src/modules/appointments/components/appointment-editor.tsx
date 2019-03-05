@@ -100,7 +100,12 @@ export class AppointmentEditor extends React.Component<
 											this.props.appointment!.date
 										)}{" "}
 										/{" "}
-										{this.props.appointment!.treatment.type}
+										{this.props.appointment
+											? this.props.appointment.treatment
+												? this.props.appointment
+														.treatment.type
+												: ""
+											: ""}
 									</span>
 								}
 								name={this.props.appointment!.patient.name}

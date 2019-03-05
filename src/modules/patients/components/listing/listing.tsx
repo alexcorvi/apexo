@@ -89,7 +89,9 @@ export class PatientsListing extends React.Component<{}, {}> {
 									<ProfileSquared
 										text={
 											patient.lastAppointment.treatment
-												.type
+												? patient.lastAppointment
+														.treatment.type
+												: ""
 										}
 										subText={dateUtils.relativeFormat(
 											patient.lastAppointment.date
@@ -112,7 +114,9 @@ export class PatientsListing extends React.Component<{}, {}> {
 									<ProfileSquared
 										text={
 											patient.nextAppointment.treatment
-												.type
+												? patient.nextAppointment
+														.treatment.type
+												: ""
 										}
 										subText={dateUtils.relativeFormat(
 											patient.nextAppointment.date

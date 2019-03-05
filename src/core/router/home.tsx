@@ -70,7 +70,10 @@ export class Home extends React.Component<{}, {}> {
 												<ProfileSquared
 													text={
 														appointment.treatment
-															.type
+															? appointment
+																	.treatment
+																	.type
+															: ""
 													}
 													subText={
 														appointment.patient.name
@@ -174,8 +177,11 @@ export class Home extends React.Component<{}, {}> {
 												<td>
 													<ProfileSquared
 														text={
-															appointment
-																.treatment.type
+															appointment.treatment
+																? appointment
+																		.treatment
+																		.type
+																: ""
 														}
 														subText={
 															appointment.patient

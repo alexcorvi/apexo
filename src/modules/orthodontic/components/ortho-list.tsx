@@ -93,7 +93,11 @@ export class OrthoList extends React.Component<{}, {}> {
 											<ProfileSquared
 												text={
 													patient.nextAppointment
-														.treatment.type
+														.treatment
+														? patient
+																.nextAppointment
+																.treatment.type
+														: ""
 												}
 												subText={dateUtils.relativeFormat(
 													patient.nextAppointment.date

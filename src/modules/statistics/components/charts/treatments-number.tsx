@@ -1,12 +1,12 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { statistics } from '../../data';
-import { computed, observable } from 'mobx';
+import { statistics } from "../../data";
+import { computed, observable } from "mobx";
 
-import { BarChart } from '../../../../assets/components/charts/bar';
-import { Chart } from '../../data/interface.chart';
-import { observer } from 'mobx-react';
-import { treatmentsData } from '../../../treatments';
+import { BarChart } from "../../../../assets/components/charts/bar";
+import { Chart } from "../../data/interface.chart";
+import { observer } from "mobx-react";
+import { treatmentsData } from "../../../treatments";
 
 @observer
 class Component extends React.Component<{}, {}> {
@@ -17,11 +17,13 @@ class Component extends React.Component<{}, {}> {
 			profit: number;
 			times: number;
 		}[] = [];
-		statistics.selectedAppointments.forEach((appointment) => {
-			if (!appointment.paid) {
+		statistics.selectedAppointments.forEach(appointment => {
+			if (!appointment.paid || appointment.treatment === undefined) {
 				return;
 			}
-			const i = selectedTreatments.findIndex((t) => t.treatment._id === appointment.treatment._id);
+			const i = selectedTreatments.findIndex(
+				t => t.treatment._id === appointment.treatment!._id
+			);
 			if (i === -1) {
 				selectedTreatments.push({
 					treatment: appointment.treatment,
@@ -30,7 +32,8 @@ class Component extends React.Component<{}, {}> {
 				});
 			} else {
 				selectedTreatments[i].times++;
-				selectedTreatments[i].profit = selectedTreatments[i].profit + appointment.profit;
+				selectedTreatments[i].profit =
+					selectedTreatments[i].profit + appointment.profit;
 			}
 		});
 		return selectedTreatments;
@@ -41,7 +44,12 @@ class Component extends React.Component<{}, {}> {
 			x: i,
 			y: treatment.profit,
 			times: treatment.times,
-			title: treatmentsData.treatments.list[treatmentsData.treatments.getIndexByID(treatment.treatment._id)].type
+			title:
+				treatmentsData.treatments.list[
+					treatmentsData.treatments.getIndexByID(
+						treatment.treatment._id
+					)
+				].type
 		}));
 	}
 	render() {
@@ -52,15 +60,15 @@ class Component extends React.Component<{}, {}> {
 						height: 400,
 						notStacked: true,
 						data: {
-							xLabels: this.values.map((x) => x.title),
+							xLabels: this.values.map(x => x.title),
 							bars: [
 								{
-									label: 'Profits',
-									data: this.values.map((x) => x.y)
+									label: "Profits",
+									data: this.values.map(x => x.y)
 								},
 								{
-									label: 'Applied times',
-									data: this.values.map((x) => x.times)
+									label: "Applied times",
+									data: this.values.map(x => x.times)
 								}
 							]
 						}
@@ -73,8 +81,8 @@ class Component extends React.Component<{}, {}> {
 
 export const treatments: Chart = {
 	Component,
-	name: 'Treatments',
-	description: 'Treatments by profit',
-	tags: 'treatments number profit',
-	className: 'col-xs-12 col-lg-6'
+	name: "Treatments",
+	description: "Treatments by profit",
+	tags: "treatments number profit",
+	className: "col-xs-12 col-lg-6"
 };
