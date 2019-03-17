@@ -3520,7 +3520,11 @@
       margin-bottom: 12px;
       padding-bottom: 12px;
       border-bottom: 1px dotted #e0e0e0; }
+.dental-history .chart {
+  direction: ltr !important; }
+
 .dental-history table {
+  direction: ltr !important;
   margin-bottom: 20px;
   width: 100%;
   border-collapse: collapse; }
@@ -6516,3 +6520,151 @@ hr {
       height: 100%;
       width: 100%;
       border: 0; }
+
+[dir="rtl"] body {
+  direction: rtl;
+  text-align: right; }
+
+[dir="rtl"] .header-component .right-buttons {
+  text-align: left; }
+
+[dir="rtl"] .data-table .ms-CommandBar-secondaryCommand {
+  border-left: none;
+  border-right: 1px solid #f3f3f3; }
+
+[dir="rtl"] .ms-table thead tr th {
+  text-align: right; }
+
+[dir="rtl"] .ms-table th.current .sort-indicators {
+  float: left; }
+
+[dir="rtl"] .ms-Persona-details {
+  text-align: right; }
+
+[dir="rtl"] .cl-section .chevron {
+  position: absolute;
+  right: auto;
+  left: 7px; }
+
+[dir="rtl"] .appointment-thumbnail-component .delete {
+  right: auto;
+  left: 12px; }
+
+[dir="rtl"] .appointment-thumbnail-component.labeled:before {
+  margin-right: auto; }
+
+[dir="rtl"] .ant-col-1,
+[dir="rtl"] .ant-col-2,
+[dir="rtl"] .ant-col-3,
+[dir="rtl"] .ant-col-4,
+[dir="rtl"] .ant-col-5,
+[dir="rtl"] .ant-col-6,
+[dir="rtl"] .ant-col-7,
+[dir="rtl"] .ant-col-8,
+[dir="rtl"] .ant-col-9,
+[dir="rtl"] .ant-col-10,
+[dir="rtl"] .ant-col-11,
+[dir="rtl"] .ant-col-12,
+[dir="rtl"] .ant-col-13,
+[dir="rtl"] .ant-col-14,
+[dir="rtl"] .ant-col-15,
+[dir="rtl"] .ant-col-16,
+[dir="rtl"] .ant-col-17,
+[dir="rtl"] .ant-col-18,
+[dir="rtl"] .ant-col-19,
+[dir="rtl"] .ant-col-20,
+[dir="rtl"] .ant-col-21,
+[dir="rtl"] .ant-col-22,
+[dir="rtl"] .ant-col-23,
+[dir="rtl"] .ant-col-24 {
+  float: right; }
+
+@media (min-width: 768px) {
+  [dir="rtl"] .ant-col-md-1,
+  [dir="rtl"] .ant-col-md-2,
+  [dir="rtl"] .ant-col-md-3,
+  [dir="rtl"] .ant-col-md-4,
+  [dir="rtl"] .ant-col-md-5,
+  [dir="rtl"] .ant-col-md-6,
+  [dir="rtl"] .ant-col-md-7,
+  [dir="rtl"] .ant-col-md-8,
+  [dir="rtl"] .ant-col-md-9,
+  [dir="rtl"] .ant-col-md-10,
+  [dir="rtl"] .ant-col-md-11,
+  [dir="rtl"] .ant-col-md-12,
+  [dir="rtl"] .ant-col-md-13,
+  [dir="rtl"] .ant-col-md-14,
+  [dir="rtl"] .ant-col-md-15,
+  [dir="rtl"] .ant-col-md-16,
+  [dir="rtl"] .ant-col-md-17,
+  [dir="rtl"] .ant-col-md-18,
+  [dir="rtl"] .ant-col-md-19,
+  [dir="rtl"] .ant-col-md-20,
+  [dir="rtl"] .ant-col-md-21,
+  [dir="rtl"] .ant-col-md-22,
+  [dir="rtl"] .ant-col-md-23,
+  [dir="rtl"] .ant-col-md-24 {
+    float: right; } }
+
+@media (min-width: 992px) {
+  [dir="rtl"] .ant-col-lg-1,
+  [dir="rtl"] .ant-col-lg-2,
+  [dir="rtl"] .ant-col-lg-3,
+  [dir="rtl"] .ant-col-lg-4,
+  [dir="rtl"] .ant-col-lg-5,
+  [dir="rtl"] .ant-col-lg-6,
+  [dir="rtl"] .ant-col-lg-7,
+  [dir="rtl"] .ant-col-lg-8,
+  [dir="rtl"] .ant-col-lg-9,
+  [dir="rtl"] .ant-col-lg-10,
+  [dir="rtl"] .ant-col-lg-11,
+  [dir="rtl"] .ant-col-lg-12,
+  [dir="rtl"] .ant-col-lg-13,
+  [dir="rtl"] .ant-col-lg-14,
+  [dir="rtl"] .ant-col-lg-15,
+  [dir="rtl"] .ant-col-lg-16,
+  [dir="rtl"] .ant-col-lg-17,
+  [dir="rtl"] .ant-col-lg-18,
+  [dir="rtl"] .ant-col-lg-19,
+  [dir="rtl"] .ant-col-lg-20,
+  [dir="rtl"] .ant-col-lg-21,
+  [dir="rtl"] .ant-col-lg-22,
+  [dir="rtl"] .ant-col-lg-23,
+  [dir="rtl"] .ant-col-lg-24 {
+    float: right; } }
+
+[dir="rtl"] .panel-heading .close {
+  text-align: left; }
+
+[dir="rtl"] .tag-input-component .show-all {
+  right: auto;
+  left: 12px; }
+
+[dir="rtl"] .appointment-input .appendage {
+  right: auto;
+  left: 0; }
+
+@media (max-width: 767px) {
+  [dir="rtl"] .data-table .delete-td {
+    right: auto;
+    left: 0; } }
+
+@media (min-width: 992px) {
+  [dir="rtl"] .icon-list {
+    right: 0;
+    left: auto;
+    margin-left: auto;
+    margin-right: 12px; }
+  [dir="rtl"] #router-outlet {
+    margin-right: 85px;
+    margin-left: auto;
+    margin-top: 53px; } }
+
+[dir="rtl"] table.responsive tbody tr td.no-label {
+  text-align: right; }
+
+[dir="rtl"] .profile-squared {
+  display: flex !important; }
+
+[dir="rtl"] .data-table .delete-td {
+  text-align: left; }

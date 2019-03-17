@@ -2,6 +2,7 @@ import { computed, observable } from "mobx";
 
 import { API } from "../";
 import { MenuItem } from "./interface.item";
+import { lang } from "../i18/i18";
 
 class MenuData {
 	@observable

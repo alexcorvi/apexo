@@ -34,6 +34,7 @@ import { Cephalometric } from "./cephalometric";
 import { Orthograph } from "./orthograph";
 import setting from "../../settings/data/data.settings";
 import { API } from "../../../core/index";
+import { lang } from "../../../core/i18/i18";
 
 @observer
 export class OrthoSingle extends React.Component<{
@@ -105,13 +106,13 @@ export class OrthoSingle extends React.Component<{
 					}}
 				>
 					<div className="ortho-single-component">
-						<Section title="Patient Details">
+						<Section title={lang("Patient Details")}>
 							<PatientDetails
 								hideTitle
 								patient={this.orthoCase.patient}
 							/>
 						</Section>
-						<Section title="Dental History">
+						<Section title={lang("Dental History")}>
 							<DentalHistory
 								hideTitle
 								patient={this.orthoCase.patient}
@@ -119,10 +120,13 @@ export class OrthoSingle extends React.Component<{
 						</Section>
 
 						{setting.getSetting("OI_ortho_sheet") ? (
-							<Section title="Extraoral Features" showByDefault>
+							<Section
+								title={lang("Extraoral Features")}
+								showByDefault
+							>
 								<Dropdown
 									disabled={!this.canEdit}
-									placeHolder="Lips competency"
+									placeHolder={lang("Lips competency")}
 									options={Object.keys(Lips).map(x => ({
 										key: x,
 										text: (Lips as any)[x]
@@ -139,7 +143,7 @@ export class OrthoSingle extends React.Component<{
 								/>
 								<Dropdown
 									disabled={!this.canEdit}
-									placeHolder="Facial profile"
+									placeHolder={lang("Facial profile")}
 									options={Object.keys(FacialProfile).map(
 										x => ({
 											key: x,
@@ -161,7 +165,7 @@ export class OrthoSingle extends React.Component<{
 								/>
 								<Dropdown
 									disabled={!this.canEdit}
-									placeHolder="Oral hygiene"
+									placeHolder={lang("Oral hygiene")}
 									options={Object.keys(OralHygiene).map(
 										x => ({
 											key: x,
@@ -206,7 +210,7 @@ export class OrthoSingle extends React.Component<{
 
 						{setting.getSetting("OI_ortho_sheet") ? (
 							<Section
-								title="Jaw to Jaw Relationship"
+								title={lang("Jaw to Jaw Relationship")}
 								showByDefault
 							>
 								<Dropdown
@@ -275,7 +279,7 @@ export class OrthoSingle extends React.Component<{
 
 						{setting.getSetting("OI_ortho_sheet") ? (
 							<Section
-								title="Intercuspal Relationships"
+								title={lang("Intercuspal Relationships")}
 								showByDefault
 								zIndex={2}
 							>
@@ -338,7 +342,7 @@ export class OrthoSingle extends React.Component<{
 
 						{setting.getSetting("OI_ortho_sheet") ? (
 							<Section
-								title="Space Analysis: Upper Dentition"
+								title={lang("Space Analysis: Upper Dentition")}
 								showByDefault
 							>
 								<TextField
@@ -393,7 +397,7 @@ export class OrthoSingle extends React.Component<{
 
 						{setting.getSetting("OI_ortho_sheet") ? (
 							<Section
-								title="Space Analysis: Lower Dentition"
+								title={lang("Space Analysis: Lower Dentition")}
 								showByDefault
 							>
 								<TextField
@@ -447,10 +451,13 @@ export class OrthoSingle extends React.Component<{
 						)}
 
 						{setting.getSetting("OI_ortho_sheet") ? (
-							<Section title="Problems List" showByDefault>
+							<Section
+								title={lang("Problems List")}
+								showByDefault
+							>
 								<EditableList
 									disabled={!this.canEdit}
-									label="Type to add..."
+									label={lang("Type to add") + "..."}
 									value={this.orthoCase.problemsList}
 									onChange={v => {
 										this.orthoCase.problemsList = v;
@@ -464,7 +471,10 @@ export class OrthoSingle extends React.Component<{
 
 						{setting.getSetting("OI_ortho_sheet") &&
 						this.canEdit ? (
-							<Section title="Progress gallery" showByDefault>
+							<Section
+								title={lang("Progress gallery")}
+								showByDefault
+							>
 								<Gallery
 									gallery={this.orthoCase.orthoGallery}
 									onChange={list => {
@@ -478,7 +488,7 @@ export class OrthoSingle extends React.Component<{
 
 						{setting.getSetting("OI_ortho_Plan") ? (
 							<Section
-								title="Treatment plan"
+								title={lang("Treatment plan")}
 								zIndex={1}
 								showByDefault
 							>
@@ -488,7 +498,9 @@ export class OrthoSingle extends React.Component<{
 										<TagInput
 											strict
 											disabled={!this.canEdit}
-											placeholder="Extraction teeth"
+											placeholder={lang(
+												"Teeth to extract"
+											)}
 											options={patientsData.ISOTeethArr.map(
 												x => {
 													return {
@@ -516,7 +528,7 @@ export class OrthoSingle extends React.Component<{
 										<TagInput
 											strict
 											disabled={!this.canEdit}
-											placeholder="Filling teeth"
+											placeholder={lang("Teeth to fill")}
 											options={patientsData.ISOTeethArr.map(
 												x => {
 													return {
@@ -543,7 +555,7 @@ export class OrthoSingle extends React.Component<{
 
 								<br />
 								<br />
-								<h3>Appliances & Modifications</h3>
+								<h3>{lang("Appliances & Modifications")}</h3>
 								{this.orthoCase.treatmentPlan_appliance.map(
 									(appliance, index) => (
 										<div key={index}>
@@ -553,7 +565,9 @@ export class OrthoSingle extends React.Component<{
 													<TextField
 														multiline
 														disabled={!this.canEdit}
-														placeholder="Description"
+														placeholder={lang(
+															"Description"
+														)}
 														value={appliance}
 														onChanged={v => {
 															this.orthoCase.treatmentPlan_appliance[
@@ -594,7 +608,7 @@ export class OrthoSingle extends React.Component<{
 											this.orthoCase.triggerUpdate++;
 										}}
 									>
-										New Appliance / Modification
+										{lang("New Appliance / Modification")}
 									</PrimaryButton>
 								) : (
 									""
@@ -607,7 +621,7 @@ export class OrthoSingle extends React.Component<{
 						{setting.getSetting("OI_cephalometric") &&
 						this.canEdit ? (
 							<Section
-								title="Cephalometric History"
+								title={lang("Cephalometric History")}
 								showByDefault
 							>
 								{this.orthoCase.cephalometricHistory.map(
@@ -680,7 +694,7 @@ export class OrthoSingle extends React.Component<{
 												.length - 1;
 									}}
 								>
-									New Analysis
+									{lang("New Analysis")}
 								</PrimaryButton>
 							</Section>
 						) : (
@@ -689,14 +703,14 @@ export class OrthoSingle extends React.Component<{
 						{setting.getSetting("OI_orthograph") &&
 						setting.getSetting("dropbox_accessToken") &&
 						this.canEdit ? (
-							<Section title="Orthograph" showByDefault>
+							<Section title={lang("Orthograph")} showByDefault>
 								<PrimaryButton
 									onClick={() => {
 										this.viewOrthograph = true;
 									}}
 									iconProps={{ iconName: "more" }}
 								>
-									Open orthograph
+									{lang("Open orthograph")}
 								</PrimaryButton>
 							</Section>
 						) : (
@@ -704,7 +718,7 @@ export class OrthoSingle extends React.Component<{
 						)}
 
 						{API.user.currentUser.canViewAppointments ? (
-							<Section title="Appointments" showByDefault>
+							<Section title={lang("Appointments")} showByDefault>
 								<PatientAppointments
 									hideTitle
 									patient={this.orthoCase.patient}

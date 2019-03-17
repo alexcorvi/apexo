@@ -11,6 +11,7 @@ import { Profile } from "../../../../assets/components/profile/profile";
 import { ProfileSquared } from "../../../../assets/components/profile/profile-squared";
 import { SinglePatient } from "../single/single";
 import "./listing.scss";
+import { lang } from "../../../../core/i18/i18";
 
 @observer
 export class PatientsListing extends React.Component<{}, {}> {
@@ -47,10 +48,10 @@ export class PatientsListing extends React.Component<{}, {}> {
 					maxItemsOnLoad={15}
 					className={"patients-data-table"}
 					heads={[
-						"Patient",
-						"Last Appointment",
-						"Next Appointment",
-						"Label"
+						lang("Patient"),
+						lang("Last Appointment"),
+						lang("Next Appointment"),
+						lang("Label")
 					]}
 					rows={patients.list.map(patient => ({
 						id: patient._id,
@@ -68,9 +69,13 @@ export class PatientsListing extends React.Component<{}, {}> {
 										name={patient.name}
 										secondaryElement={
 											<span>
-												Patient,{" "}
-												{genderToString(patient.gender)}{" "}
-												- {patient.age} years old
+												{lang(
+													genderToString(
+														patient.gender
+													)
+												)}{" "}
+												- {patient.age}{" "}
+												{lang("years old")}
 											</span>
 										}
 										size={3}
@@ -100,7 +105,7 @@ export class PatientsListing extends React.Component<{}, {}> {
 										onClick={() => {}}
 									/>
 								) : (
-									"Not registered"
+									lang("Not registered")
 								),
 								className: "hidden-xs"
 							},
@@ -125,7 +130,7 @@ export class PatientsListing extends React.Component<{}, {}> {
 										onClick={() => {}}
 									/>
 								) : (
-									"Not registered"
+									lang("Not registered")
 								),
 								className: "hidden-xs"
 							},
@@ -154,7 +159,7 @@ export class PatientsListing extends React.Component<{}, {}> {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: "Add New",
+										name: lang("Add New"),
 										onClick: () => {
 											const patient = new Patient();
 											patients.list.push(patient);

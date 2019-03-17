@@ -14,6 +14,7 @@ import { observer } from "mobx-react";
 import { Profile } from "../../assets/components/profile/profile";
 import { user } from "./data.user";
 import "./user.scss";
+import { lang } from "../i18/i18";
 
 @observer
 export class UserComponent extends React.Component<{}, {}> {
@@ -49,7 +50,7 @@ export class UserComponent extends React.Component<{}, {}> {
 												API.login.logout();
 											}}
 										>
-											Logout
+											{lang("Logout")}
 										</Link>{" "}
 										<Link
 											className="reset-user"
@@ -57,7 +58,7 @@ export class UserComponent extends React.Component<{}, {}> {
 												API.login.resetUser();
 											}}
 										>
-											Switch User
+											{lang("Switch User")}
 										</Link>
 									</div>
 								}
@@ -78,8 +79,8 @@ export class UserComponent extends React.Component<{}, {}> {
 				<br />
 				<h3>
 					{this.todayAppointments.length
-						? `Today's appointments`
-						: "No Appointments today"}
+						? lang(`Today's Appointments`)
+						: lang("No Appointments today")}
 				</h3>
 				<div className="appointments-listing">
 					{this.todayAppointments.map(appointment => {

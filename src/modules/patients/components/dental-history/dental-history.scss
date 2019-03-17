@@ -3,7 +3,12 @@
 .dental-history {
 	.dental-history-toggle {
 	}
+	.chart {
+		direction: ltr !important;
+	}
 	table {
+		direction: ltr !important;
+
 		margin-bottom: 20px;
 		&.permanent {
 			tr {

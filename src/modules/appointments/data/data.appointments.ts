@@ -2,6 +2,7 @@ import { API } from "../../../core";
 import { Appointment } from "./class.appointment";
 import { observable } from "mobx";
 import { textualFilter } from "../../../assets/utils/textual-filter";
+import { lang } from "../../../core/i18/i18";
 
 class AppointmentsData {
 	ignoreObserver: boolean = false;
@@ -47,7 +48,8 @@ class AppointmentsData {
 	}
 	deleteModal(id: string) {
 		API.modals.newModal({
-			message: "Are you sure you want to delete this appointment?",
+			message:
+				lang("Are you sure you want to delete this appointment?"),
 			onConfirm: () => this.deleteByID(id)
 		});
 	}

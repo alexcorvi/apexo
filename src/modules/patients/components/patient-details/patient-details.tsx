@@ -14,6 +14,7 @@ import { Gallery } from "../../../../assets/components/gallery/gallery";
 import setting from "../../../settings/data/data.settings";
 import { computed } from "mobx";
 import { API } from "../../../../core/index";
+import { lang } from "../../../../core/i18/i18";
 
 @observer
 export class PatientDetails extends React.Component<
@@ -44,7 +45,7 @@ export class PatientDetails extends React.Component<
 						<Col sm={12}>
 							<div className="birth">
 								<TextField
-									label="Birth Year / Age"
+									label={lang("Birth Year / Age")}
 									value={this.props.patient.birthYearOrAge.toString()}
 									onChanged={year =>
 										(this.props.patient.birthYearOrAge = Number(
@@ -59,7 +60,7 @@ export class PatientDetails extends React.Component<
 						<Col sm={12}>
 							<div className="gender">
 								<Dropdown
-									label="Gender"
+									label={lang("Gender")}
 									placeHolder="Gender"
 									selectedKey={
 										this.props.patient.gender ===
@@ -68,8 +69,8 @@ export class PatientDetails extends React.Component<
 											: "female"
 									}
 									options={[
-										{ key: "male", text: "Male" },
-										{ key: "female", text: "Female" }
+										{ key: "male", text: lang("Male") },
+										{ key: "female", text: lang("Female") }
 									]}
 									onChanged={val => {
 										if (val.key === "male") {
@@ -87,7 +88,7 @@ export class PatientDetails extends React.Component<
 					</Row>
 
 					<TextField
-						label="Phone"
+						label={lang("Phone")}
 						value={this.props.patient.phone}
 						onChanged={phone => (this.props.patient.phone = phone)}
 						type="number"
@@ -96,7 +97,7 @@ export class PatientDetails extends React.Component<
 
 					{setting.getSetting("OI_email") ? (
 						<TextField
-							label="Email"
+							label={lang("Email")}
 							value={this.props.patient.email}
 							onChanged={email =>
 								(this.props.patient.email = email)
@@ -109,7 +110,7 @@ export class PatientDetails extends React.Component<
 
 					{setting.getSetting("OI_address") ? (
 						<TextField
-							label="Address"
+							label={lang("Address")}
 							value={this.props.patient.address}
 							onChanged={address =>
 								(this.props.patient.address = address)
@@ -127,7 +128,7 @@ export class PatientDetails extends React.Component<
 							<TagInput
 								disabled={!this.canEdit}
 								className="patient-tags"
-								placeholder="Labels"
+								placeholder={lang("Labels")}
 								options={[""]
 									.concat(
 										...patients.list.map(patient =>
@@ -180,11 +181,11 @@ export class PatientDetails extends React.Component<
 						<Col md={12}>
 							{" "}
 							<MSLabel className="mh-label">
-								Notes and medical history
+								{lang("Notes and medical history")}
 							</MSLabel>
 							<div className="medical-history">
 								<EditableList
-									label="Notes"
+									label={lang("Notes")}
 									value={this.props.patient.medicalHistory}
 									onChange={newVal => {
 										this.props.patient.medicalHistory = newVal;

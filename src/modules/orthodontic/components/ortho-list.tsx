@@ -18,6 +18,7 @@ import { ProfileSquared } from "../../../assets/components/profile/profile-squar
 import { TagInput } from "../../../assets/components/tag-input/tag-input";
 import "./ortho-list.scss";
 import { API } from "../../../core/index";
+import { lang } from "../../../core/i18/i18";
 
 @observer
 export class OrthoList extends React.Component<{}, {}> {
@@ -43,7 +44,11 @@ export class OrthoList extends React.Component<{}, {}> {
 					}
 					maxItemsOnLoad={15}
 					className={"orthodontic-cases-data-table"}
-					heads={["Patient", "Started", "Next Appointment"]}
+					heads={[
+						lang("Orthodontic Patient"),
+						lang("Started"),
+						lang("Next Appointment")
+					]}
 					rows={cases.filtered
 						.filter(orthoCase => orthoCase.patient)
 						.map(orthoCase => {
@@ -106,7 +111,7 @@ export class OrthoList extends React.Component<{}, {}> {
 												onClick={() => {}}
 											/>
 										) : (
-											"Not registered"
+											lang("Not registered")
 										),
 										className: "hidden-xs"
 									}
@@ -119,7 +124,7 @@ export class OrthoList extends React.Component<{}, {}> {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: "Add New",
+										name: lang("Add New"),
 										onClick: () =>
 											(this.showAdditionPanel = true),
 										iconProps: {

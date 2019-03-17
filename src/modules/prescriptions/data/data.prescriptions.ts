@@ -2,6 +2,7 @@ import { PrescriptionItem } from "./index";
 import { observable } from "mobx";
 
 import { API } from "../../../core";
+import { lang } from "../../../core/i18/i18";
 
 class Prescriptions {
 	ignoreObserver: boolean = false;
@@ -21,9 +22,7 @@ class Prescriptions {
 		const i = this.findIndexByID(id);
 
 		API.modals.newModal({
-			message: `Are you sure you want to delete ${
-				this.list[i].name
-			}'s prescription.`,
+			message: lang(`Are you sure you want to delete the prescription?`),
 			onConfirm: () => this.deleteByID(id)
 		});
 	}

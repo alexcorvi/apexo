@@ -1,26 +1,30 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { colors, statistics } from '../../data';
-import { computed } from 'mobx';
+import { colors, statistics } from "../../data";
+import { computed } from "mobx";
 
-import { Chart } from '../../data/interface.chart';
-import { PieChart } from '../../../../assets/components/charts/pie';
-import { observer } from 'mobx-react';
-import { treatmentsData } from '../../../treatments';
+import { Chart } from "../../data/interface.chart";
+import { PieChart } from "../../../../assets/components/charts/pie";
+import { observer } from "mobx-react";
+import { treatmentsData } from "../../../treatments";
+import { lang } from "../../../../core/i18/i18";
 
 @observer
 class Component extends React.Component<{}, {}> {
 	@computed
 	get data() {
 		return statistics.selectedAppointments
-			.map((x) => x.treatmentID)
+			.map(x => x.treatmentID)
 			.reduce((result: { label: string; value: number }[], id) => {
-				const treatment = treatmentsData.treatments.list[treatmentsData.treatments.getIndexByID(id)];
+				const treatment =
+					treatmentsData.treatments.list[
+						treatmentsData.treatments.getIndexByID(id)
+					];
 				if (!treatment) {
 					return result;
 				}
 				const label = treatment.type;
-				const i = result.findIndex((t) => t.label === label);
+				const i = result.findIndex(t => t.label === label);
 				if (i === -1) {
 					result.push({
 						label,
@@ -74,8 +78,8 @@ class Component extends React.Component<{}, {}> {
 
 export const mostAppliedTreatments: Chart = {
 	Component,
-	name: 'Most Applied Treatments',
-	description: 'Top 5 most applied treatments',
-	tags: 'most applied used administered treatments',
-	className: 'col-xs-12 col-lg-6'
+	name: lang("Most Applied Treatments"),
+	description: lang("Top 5 most applied treatments"),
+	tags: "most applied used administered treatments",
+	className: "col-xs-12 col-lg-6"
 };

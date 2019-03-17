@@ -20,6 +20,7 @@ import "./settings.scss";
 import { API } from "../../../core/index";
 import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
 import { compact } from "../../../core/db/index";
+import { lang } from "../../../core/i18/i18";
 
 @observer
 export class SettingsComponent extends React.Component<{}, {}> {
@@ -38,14 +39,32 @@ export class SettingsComponent extends React.Component<{}, {}> {
 	render() {
 		return (
 			<div className="settings-component p-15 p-l-10 p-r-10">
-				<h3>Financial Settings</h3>
+				<h3>{lang("Language")}</h3>
+				<hr />
+				<Dropdown
+					label={lang("Language")}
+					options={[
+						{ key: "en", text: "English" },
+						{ key: "ar", text: "العربية" }
+					]}
+					defaultSelectedKey={settings.getSetting("lang")}
+					onChanged={v => {
+						settings.setSetting("lang", v.key.toString());
+					}}
+					disabled={!this.canEdit}
+				/>
+
+				<br />
+				<br />
+
+				<h3>{lang("Financial Settings")}</h3>
 				<hr />
 				{!!settings.getSetting("time_tracking") ? (
 					<Row gutter={12}>
 						<Col md={12}>
 							<div className="form">
 								<TextField
-									label="Time expenses (per hour)"
+									label={lang("Time expenses (per hour)")}
 									type="number"
 									value={settings.getSetting("hourlyRate")}
 									onChanged={newVal => {
@@ -60,11 +79,10 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						</Col>
 						<Col md={12}>
 							<p className="hint">
-								When time tracking enabled, this is used to
-								calculate profits and expenses, as time is also
-								added to the expenses. So here you can put the
-								electricity, rent, and other time dependent
-								expenses.
+								{lang(
+									// tslint:disable-next-line:max-line-length
+									`When time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses. So here you can put the electricity, rent, and other time dependent expenses.`
+								)}
 							</p>
 						</Col>
 					</Row>
@@ -76,7 +94,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					<Col md={12}>
 						<div className="form">
 							<TextField
-								label="Currency Symbol"
+								label={lang("Currency Symbol")}
 								value={settings.getSetting("currencySymbol")}
 								onChanged={newVal => {
 									settings.setSetting(
@@ -90,51 +108,22 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					</Col>
 					<Col md={12}>
 						<p className="hint">
-							This symbol you enter here will be used across your
-							application.
-						</p>
-					</Col>
-				</Row>
-
-				<Row gutter={12}>
-					<Col md={12}>
-						<div className="form">
-							<TextField
-								label="Orthograph Dropbox Access Token"
-								value={settings.getSetting(
-									"dropbox_accessToken"
-								)}
-								onChanged={newVal => {
-									settings.setSetting(
-										"dropbox_accessToken",
-										newVal.toString()
-									);
-								}}
-								disabled={!this.canEdit}
-							/>
-						</div>
-					</Col>
-					<Col md={12}>
-						<p className="hint">
-							The access token used to save and retrieve
-							Orthograph data.
-							<br />
-							<a href="https://github.com/alexcorvi/orthograph#instructions">
-								Learn more
-							</a>
+							{lang(
+								`This symbol you enter here will be used across your application.`
+							)}
 						</p>
 					</Col>
 				</Row>
 
 				<br />
 				<br />
-				<h3>Optional Modules and features</h3>
+				<h3>{lang("Optional Modules and features")}</h3>
 				<hr />
 
 				<div className="form">
 					<Toggle
-						onText="Prescriptions Module Enabled"
-						offText="Prescriptions Module Disabled"
+						onText={lang("Prescriptions Module Enabled")}
+						offText={lang("Prescriptions Module Disabled")}
 						defaultChecked={
 							!!settings.getSetting("module_prescriptions")
 						}
@@ -147,8 +136,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						disabled={!this.canEdit}
 					/>
 					<Toggle
-						onText="Orthodontic Module Enabled"
-						offText="Orthodontic Module Disabled"
+						onText={lang("Orthodontic Module Enabled")}
+						offText={lang("Orthodontic Module Disabled")}
 						defaultChecked={
 							!!settings.getSetting("module_orthodontics")
 						}
@@ -161,8 +150,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						disabled={!this.canEdit}
 					/>
 					<Toggle
-						onText="Statistics Module Enabled"
-						offText="Statistics Module Disabled"
+						onText={lang("Statistics Module Enabled")}
+						offText={lang("Statistics Module Disabled")}
 						defaultChecked={
 							!!settings.getSetting("module_statistics")
 						}
@@ -175,8 +164,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						disabled={!this.canEdit}
 					/>
 					<Toggle
-						onText="Time Tracking Enabled"
-						offText="Time Tracking Disabled"
+						onText={lang("Time Tracking Enabled")}
+						offText={lang("Time Tracking Disabled")}
 						defaultChecked={!!settings.getSetting("time_tracking")}
 						onChanged={val => {
 							settings.setSetting(
@@ -187,8 +176,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						disabled={!this.canEdit}
 					/>
 					<Toggle
-						onText="Have staff contact details"
-						offText="Don't have staff contact details"
+						onText={lang("Have staff contact details")}
+						offText={lang("Don't have staff contact details")}
 						defaultChecked={
 							!!settings.getSetting("ask_for_user_contact")
 						}
@@ -201,8 +190,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						disabled={!this.canEdit}
 					/>
 					<Toggle
-						onText="Optional input: patient email"
-						offText="Optional input: patient email"
+						onText={lang("Optional input: patient email")}
+						offText={lang("Optional input: patient email")}
 						defaultChecked={!!settings.getSetting("OI_email")}
 						onChanged={val => {
 							settings.setSetting(
@@ -213,8 +202,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						disabled={!this.canEdit}
 					/>
 					<Toggle
-						onText="Optional input: patient address"
-						offText="Optional input: patient address"
+						onText={lang("Optional input: patient address")}
+						offText={lang("Optional input: patient address")}
 						defaultChecked={!!settings.getSetting("OI_address")}
 						onChanged={val => {
 							settings.setSetting(
@@ -228,8 +217,12 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					{settings.getSetting("module_orthodontics") ? (
 						<div>
 							<Toggle
-								onText="Optional input: orthodontic case sheet"
-								offText="Optional input: orthodontic case sheet"
+								onText={lang(
+									"Optional input: orthodontic case sheet"
+								)}
+								offText={lang(
+									"Optional input: orthodontic case sheet"
+								)}
 								defaultChecked={
 									!!settings.getSetting("OI_ortho_sheet")
 								}
@@ -243,8 +236,12 @@ export class SettingsComponent extends React.Component<{}, {}> {
 							/>
 
 							<Toggle
-								onText="Optional input: orthodontic treatment plan"
-								offText="Optional input: orthodontic treatment plan"
+								onText={lang(
+									"Optional input: orthodontic treatment plan"
+								)}
+								offText={lang(
+									"Optional input: orthodontic treatment plan"
+								)}
 								defaultChecked={
 									!!settings.getSetting("OI_ortho_Plan")
 								}
@@ -258,8 +255,12 @@ export class SettingsComponent extends React.Component<{}, {}> {
 							/>
 
 							<Toggle
-								onText="Embedded app: cephalometric analysis"
-								offText="Embedded app: cephalometric analysis"
+								onText={lang(
+									"Embedded app: cephalometric analysis"
+								)}
+								offText={lang(
+									"Embedded app: cephalometric analysis"
+								)}
 								defaultChecked={
 									!!settings.getSetting("OI_cephalometric")
 								}
@@ -273,8 +274,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 							/>
 
 							<Toggle
-								onText="Embedded app: Orthograph"
-								offText="Embedded app: Orthograph"
+								onText={lang("Embedded app: Orthograph")}
+								offText={lang("Embedded app: Orthograph")}
 								defaultChecked={
 									!!settings.getSetting("OI_orthograph")
 								}
@@ -286,6 +287,43 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								}}
 								disabled={!this.canEdit}
 							/>
+
+							{!!settings.getSetting("OI_orthograph") ? (
+								<Row gutter={12}>
+									<Col md={12}>
+										<div className="form">
+											<TextField
+												label={lang(
+													"Orthograph Dropbox Access Token"
+												)}
+												value={settings.getSetting(
+													"dropbox_accessToken"
+												)}
+												onChanged={newVal => {
+													settings.setSetting(
+														"dropbox_accessToken",
+														newVal.toString()
+													);
+												}}
+												disabled={!this.canEdit}
+											/>
+										</div>
+									</Col>
+									<Col md={12}>
+										<p className="hint">
+											{lang(
+												`The access token used to save and retrieve Orthograph data.`
+											)}
+											<br />
+											<a href="https://github.com/alexcorvi/orthograph#instructions">
+												{lang("Learn more")}
+											</a>
+										</p>
+									</Col>
+								</Row>
+							) : (
+								""
+							)}
 						</div>
 					) : (
 						""
@@ -296,13 +334,14 @@ export class SettingsComponent extends React.Component<{}, {}> {
 				<br />
 				{this.canEdit ? (
 					<div>
-						<h3>Backup and restore</h3>
+						<h3>{lang("Backup and restore")}</h3>
 						<hr />
 
 						<p className="hint" style={{ maxWidth: 500 }}>
-							Using this section you can download a file
-							representing all of your clinic data, use this file
-							- later, to restore the same data.
+							{// tslint:disable-next-line:max-line-length
+							lang(
+								`Using this section you can download a file representing all of your clinic data, use this file - later, to restore the same data.`
+							)}
 						</p>
 
 						<PrimaryButton
@@ -310,7 +349,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								compact.compact();
 							}}
 						>
-							Run compaction
+							{lang("Run compaction")}
 						</PrimaryButton>
 
 						<PrimaryButton
@@ -319,7 +358,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 							}}
 							style={{ marginLeft: 10 }}
 						>
-							Download a backup
+							{lang("Download a backup")}
 						</PrimaryButton>
 
 						<PrimaryButton
@@ -328,7 +367,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 							}
 							style={{ marginLeft: 10 }}
 						>
-							Restore from file
+							{lang("Restore from file")}
 						</PrimaryButton>
 						<input
 							ref={el => (this.inputEl = el)}
@@ -347,24 +386,25 @@ export class SettingsComponent extends React.Component<{}, {}> {
 
 						<br />
 						<br />
-						<h3>Automated backup</h3>
+						<h3>{lang("Automated backup")}</h3>
 						<hr />
 						<div style={{ maxWidth: 500 }}>
 							<p className="hint" style={{ maxWidth: 500 }}>
-								Using automated backups you can set your
-								application to automatically backup your data
-								and store it in Dropbox. To turn on automated
-								backups, enter your app access token. <br />
+								{lang(
+									// tslint:disable-next-line:max-line-length
+									`Using automated backups you can set your application to automatically backup your data and store it in Dropbox. To turn on automated backups, enter your app access token.`
+								)}{" "}
+								<br />
 								<a href="https://docs.apexo.app/docs/automated-backups">
-									Learn more
+									{lang("Learn more")}
 								</a>
 							</p>
 							<Dropdown
-								label="Backup frequency"
+								label={lang("Backup frequency")}
 								options={[
-									{ key: "d", text: "Daily" },
-									{ key: "w", text: "Weekly" },
-									{ key: "m", text: "Monthly" }
+									{ key: "d", text: lang("Daily") },
+									{ key: "w", text: lang("Weekly") },
+									{ key: "m", text: lang("Monthly") }
 								]}
 								defaultSelectedKey={settings.getSetting(
 									"backup_freq"
@@ -375,14 +415,16 @@ export class SettingsComponent extends React.Component<{}, {}> {
 										v.key.toString()
 									);
 								}}
+								disabled={!this.canEdit}
 							/>
 
 							<TextField
 								value={settings.getSetting("backup_retain")}
-								label="How many backups to retain"
+								label={lang("How many backups to retain")}
 								onChanged={val => {
 									settings.setSetting("backup_retain", val);
 								}}
+								disabled={!this.canEdit}
 								type="number"
 							/>
 
@@ -390,21 +432,22 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								value={settings.getSetting(
 									"backup_accessToken"
 								)}
-								label="Dropbox access token"
+								label={lang("Dropbox access token")}
 								onChanged={val => {
 									settings.setSetting(
 										"backup_accessToken",
 										val
 									);
 								}}
+								disabled={!this.canEdit}
 							/>
 
 							{settings.dropboxBackups.length ? (
 								<table className="ms-table">
 									<thead>
 										<tr>
-											<th>Backup</th>
-											<th>Actions</th>
+											<th>{lang("Backup")}</th>
+											<th>{lang("Actions")}</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -449,6 +492,9 @@ export class SettingsComponent extends React.Component<{}, {}> {
 																iconName:
 																	"delete"
 															}}
+															disabled={
+																!this.canEdit
+															}
 															onClick={() => {
 																backup
 																	.deleteOld(
@@ -495,6 +541,9 @@ export class SettingsComponent extends React.Component<{}, {}> {
 																iconName:
 																	"ReleaseGateError"
 															}}
+															disabled={
+																!this.canEdit
+															}
 															onClick={() =>
 																restore.fromDropbox(
 																	settings.getSetting(

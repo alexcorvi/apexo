@@ -21,6 +21,7 @@ import { observer } from "mobx-react";
 import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
 import { Section } from "../../../assets/components/section/section";
 import "./prescription-table.scss";
+import { lang } from "../../../core/i18/i18";
 
 @observer
 export class PrescriptionsTable extends React.Component<{}, {}> {
@@ -59,7 +60,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: "Add New",
+										name: lang("Add New"),
 										onClick: () => {
 											const prescription = new PrescriptionItem();
 											prescriptions.list.push(
@@ -74,7 +75,12 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 							  ]
 							: []
 					}
-					heads={["Item name", "Dose", "Frequency", "Form"]}
+					heads={[
+						lang("Item name"),
+						lang("Dose"),
+						lang("Frequency"),
+						lang("Form")
+					]}
 					rows={prescriptions.list.map(prescription => {
 						return {
 							id: prescription._id,
@@ -110,7 +116,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 									dataValue: prescription.timesPerDay,
 									component: (
 										<span>
-											{prescription.timesPerDay} X{" "}
+											{prescription.timesPerDay} *{" "}
 											{prescription.unitsPerTime}
 										</span>
 									),
@@ -179,9 +185,12 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 						)}
 					>
 						<div className="prescription-editor">
-							<Section title="Prescription details" showByDefault>
+							<Section
+								title={lang("Prescription details")}
+								showByDefault
+							>
 								<TextField
-									label="Item name"
+									label={lang("Item name")}
 									value={this.selectedPrescription.name}
 									onChanged={val =>
 										(prescriptions.list[
@@ -194,7 +203,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 								<Row gutter={6}>
 									<Col md={8}>
 										<TextField
-											label="Dosage in mg"
+											label={lang("Dosage in mg")}
 											type="number"
 											value={this.selectedPrescription.doseInMg.toString()}
 											onChanged={val =>
@@ -207,7 +216,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 									</Col>
 									<Col md={8}>
 										<TextField
-											label="Times per day"
+											label={lang("Times per day")}
 											type="number"
 											value={this.selectedPrescription.timesPerDay.toString()}
 											onChanged={val =>
@@ -220,7 +229,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 									</Col>
 									<Col md={8}>
 										<TextField
-											label="Units per time"
+											label={lang("Units per time")}
 											type="number"
 											value={this.selectedPrescription.unitsPerTime.toString()}
 											onChanged={val =>
@@ -234,7 +243,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 								</Row>
 								<Dropdown
 									disabled={!this.canEdit}
-									label="Item form"
+									label={lang("Item form")}
 									className="form-picker"
 									selectedKey={itemFormToString(
 										this.selectedPrescription.form

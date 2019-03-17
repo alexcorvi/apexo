@@ -36,6 +36,7 @@ import { TagInput } from "../../../assets/components/tag-input/tag-input";
 import { Treatment } from "../../treatments/data/class.treatment";
 import { treatmentsData } from "../../treatments";
 import "./appointment-editor.scss";
+import { lang } from "../../../core/i18/i18";
 
 @observer
 export class AppointmentEditor extends React.Component<
@@ -124,15 +125,15 @@ export class AppointmentEditor extends React.Component<
 				)}
 			>
 				<div className="appointment-editor">
-					<Section title="Appointment" showByDefault>
+					<Section title={lang("Appointment")} showByDefault>
 						<Row gutter={12}>
 							<Col sm={12}>
 								<div className="appointment-input date">
-									<label>Date: </label>
+									<label>{lang("Date:")} </label>
 									<DatePicker
 										disabled={!this.canEdit}
 										className="appointment-date"
-										placeholder="Select a date..."
+										placeholder={lang("Select a date...")}
 										value={
 											new Date(
 												this.props.appointment!.date
@@ -147,7 +148,7 @@ export class AppointmentEditor extends React.Component<
 										}}
 									/>
 									<p className="insight">
-										With{" "}
+										{lang("With")}{" "}
 										<span
 											className={
 												"num-" +
@@ -156,17 +157,14 @@ export class AppointmentEditor extends React.Component<
 										>
 											{this.otherAppointmentsNumber}
 										</span>{" "}
-										other appointment
-										{this.otherAppointmentsNumber > 1
-											? "s"
-											: ""}
+										{lang("other appointment")}
 									</p>
 								</div>
 							</Col>
 							<Col sm={12}>
 								<div className="appointment-input time">
 									<label>
-										Time:{" "}
+										{lang("Time:")}{" "}
 										{this.props.appointment!.formattedTime}
 									</label>
 									<Row gutter={12}>
@@ -187,13 +185,14 @@ export class AppointmentEditor extends React.Component<
 												}
 											}}
 											showValue={false}
+											disabled={!this.canEdit}
 										/>
 									</Row>
 								</div>
 							</Col>
 						</Row>
 						<div className="appointment-input date">
-							<label>Operating Staff: </label>
+							<label>{lang("Operating Staff:")} </label>
 							{staffData.staffMembers.list
 								.filter(staff => staff.operates)
 								.map(staff => {
@@ -237,11 +236,11 @@ export class AppointmentEditor extends React.Component<
 						</div>
 					</Section>
 
-					<Section title="Case Details" showByDefault>
+					<Section title={lang("Case Details")} showByDefault>
 						<TextField
 							multiline
 							disabled={!this.canEdit}
-							label="Details:"
+							label={lang("Details") + ":"}
 							value={this.props.appointment!.notes}
 							onChanged={value => {
 								this.props.appointment!.notes = value;
@@ -251,8 +250,8 @@ export class AppointmentEditor extends React.Component<
 						<Row gutter={12}>
 							<Col sm={12}>
 								<div className="appointment-input treatment">
-									<label>Treatment: </label>
 									<Dropdown
+										label={lang("Treatment") + ":"}
 										disabled={!this.canEdit}
 										className="treatment-type"
 										selectedKey={
@@ -276,8 +275,8 @@ export class AppointmentEditor extends React.Component<
 							</Col>
 							<Col sm={12}>
 								<div className="appointment-input units-number">
-									<label>Units: </label>
 									<TextField
+										label={lang("Units number") + ":"}
 										disabled={!this.canEdit}
 										type="number"
 										value={this.props.appointment!.units.toString()}
@@ -292,10 +291,12 @@ export class AppointmentEditor extends React.Component<
 							<Col span={24}>
 								{" "}
 								<div className="appointment-input involved-teeth">
-									<label>Involved Teeth: </label>
+									<label>{lang("Involved Teeth")}: </label>
 									<TagInput
 										disabled={!this.canEdit}
-										placeholder="Enter tooth number..."
+										placeholder={
+											lang("Enter tooth number") + "..."
+										}
 										value={this.props.appointment!.involvedTeeth.map(
 											x => ({
 												key: x.toString(),
@@ -332,7 +333,7 @@ export class AppointmentEditor extends React.Component<
 							<div>
 								<hr className="appointment-hr" />
 								<div className="appointment-input prescription">
-									<label>Prescription: </label>
+									<label>{lang("Prescription")}: </label>
 									<TagInput
 										disabled={!this.canEdit}
 										className="prescription"
@@ -354,7 +355,9 @@ export class AppointmentEditor extends React.Component<
 											);
 										}}
 										strict={true}
-										placeholder="Enter prescription..."
+										placeholder={
+											lang("Enter prescription") + "..."
+										}
 									/>
 								</div>
 
@@ -448,7 +451,7 @@ export class AppointmentEditor extends React.Component<
 								{this.props.appointment!.prescriptions
 									.length ? (
 									<PrimaryButton onClick={print}>
-										Print Prescription
+										{lang("Print Prescription")}
 									</PrimaryButton>
 								) : (
 									""
@@ -470,7 +473,7 @@ export class AppointmentEditor extends React.Component<
 						)}
 					</Section>
 
-					<Section showByDefault title="Expenses & Price">
+					<Section showByDefault title={lang("Expenses & Price")}>
 						<Row gutter={12}>
 							<Col sm={12}>
 								{settingsData.settings.getSetting(
@@ -478,7 +481,9 @@ export class AppointmentEditor extends React.Component<
 								) ? (
 									<div className="appointment-input time">
 										<label>
-											Time (Hours, minutes, seconds)
+											{lang(
+												"Time (Hours, minutes, seconds)"
+											)}
 										</label>
 										<TextField
 											className="time-input hours"
@@ -541,7 +546,7 @@ export class AppointmentEditor extends React.Component<
 												}}
 												disabled={!this.canEdit}
 												className="appendage stop"
-												text="Stop"
+												text={lang("Stop")}
 												onClick={() => {
 													const timer = this.props
 														.appointment!.timer;
@@ -558,7 +563,7 @@ export class AppointmentEditor extends React.Component<
 												}}
 												disabled={!this.canEdit}
 												className="appendage"
-												text="Start"
+												text={lang("Start")}
 												onClick={() => {
 													const i = appointments.getIndexByID(
 														this.props.appointment!
@@ -580,7 +585,8 @@ export class AppointmentEditor extends React.Component<
 										<p className="payment-insight">
 											<Label
 												text={
-													"Time value: " +
+													lang("Time value") +
+													": " +
 													settingsData.settings.getSetting(
 														"currencySymbol"
 													) +
@@ -594,7 +600,8 @@ export class AppointmentEditor extends React.Component<
 											<br />
 											<Label
 												text={
-													"Expenses: " +
+													lang("Expenses") +
+													": " +
 													settingsData.settings.getSetting(
 														"currencySymbol"
 													) +
@@ -621,7 +628,7 @@ export class AppointmentEditor extends React.Component<
 								}
 							>
 								<div className="appointment-input paid">
-									<label>Final Price</label>
+									<label>{lang("Final Price")}</label>
 									<TextField
 										type="number"
 										disabled={!this.canEdit}
@@ -638,7 +645,8 @@ export class AppointmentEditor extends React.Component<
 									<p className="payment-insight">
 										<Label
 											text={
-												"Profit: " +
+												lang("Profit") +
+												": " +
 												settingsData.settings.getSetting(
 													"currencySymbol"
 												) +
@@ -652,7 +660,8 @@ export class AppointmentEditor extends React.Component<
 										<br />
 										<Label
 											text={
-												"Profit percentage: " +
+												lang("Profit percentage") +
+												": " +
 												round(
 													this.props.appointment!
 														.profitPercentage * 100
@@ -671,8 +680,8 @@ export class AppointmentEditor extends React.Component<
 									defaultChecked={
 										this.props.appointment!.paid
 									}
-									onText="Paid"
-									offText="Unpaid"
+									onText={lang("Paid")}
+									offText={lang("Unpaid")}
 									disabled={!this.canEdit}
 									onChanged={newVal => {
 										this.props.appointment!.paid = newVal;
@@ -684,8 +693,8 @@ export class AppointmentEditor extends React.Component<
 									defaultChecked={
 										this.props.appointment!.done
 									}
-									onText="Done"
-									offText="Not Done"
+									onText={lang("Done")}
+									offText={lang("Not Done")}
 									disabled={!this.canEdit}
 									onChanged={newVal => {
 										this.props.appointment!.done = newVal;
@@ -703,7 +712,7 @@ export class AppointmentEditor extends React.Component<
 							iconProps={{
 								iconName: "delete"
 							}}
-							text="Delete"
+							text={lang("Delete")}
 							onClick={() => {
 								const appointment = this.props.appointment;
 								appointments.deleteModal(appointment!._id);

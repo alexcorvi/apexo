@@ -16,6 +16,7 @@ import { ProfileSquared } from "../../../assets/components/profile/profile-squar
 import { Section } from "../../../assets/components/section/section";
 import { settingsData } from "../../settings";
 import "./treatments.scss";
+import { lang } from "../../../core/i18/i18";
 
 @observer
 export class Treatments extends React.Component<{}, {}> {
@@ -53,7 +54,7 @@ export class Treatments extends React.Component<{}, {}> {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: "Add New",
+										name: lang("Add New"),
 										onClick: () => {
 											const treatment = new Treatment();
 											treatments.list.push(treatment);
@@ -67,10 +68,10 @@ export class Treatments extends React.Component<{}, {}> {
 							: []
 					}
 					heads={[
-						"Treatment",
-						"Expenses/unit",
-						"Done appointments",
-						"Upcoming appointments"
+						lang("Treatment"),
+						lang("Expenses/unit"),
+						lang("Done appointments"),
+						lang("Upcoming appointments")
 					]}
 					rows={treatments.list.map(treatment => {
 						const now = new Date().getTime();
@@ -105,9 +106,13 @@ export class Treatments extends React.Component<{}, {}> {
 									component: (
 										<ProfileSquared
 											text={treatment.type}
-											subText={`Expenses: ${settingsData.settings.getSetting(
+											subText={`${lang(
+												"Expenses"
+											)}: ${settingsData.settings.getSetting(
 												"currencySymbol"
-											)}${treatment.expenses} per unit`}
+											)}${treatment.expenses} ${lang(
+												"per unit"
+											)}`}
 										/>
 									),
 									onClick: () => {
@@ -129,12 +134,20 @@ export class Treatments extends React.Component<{}, {}> {
 								},
 								{
 									dataValue: done,
-									component: <span>{done} done</span>,
+									component: (
+										<span>
+											{done} {lang("done")}
+										</span>
+									),
 									className: "hidden-xs"
 								},
 								{
 									dataValue: upcoming,
-									component: <span>{upcoming} upcoming</span>,
+									component: (
+										<span>
+											{upcoming} {lang("upcoming")}
+										</span>
+									),
 									className: "hidden-xs"
 								}
 							]
@@ -158,11 +171,13 @@ export class Treatments extends React.Component<{}, {}> {
 									{this.selectedTreatment ? (
 										<ProfileSquared
 											text={this.selectedTreatment.type}
-											subText={`Expenses: ${settingsData.settings.getSetting(
+											subText={`${lang(
+												"Expenses"
+											)}: ${settingsData.settings.getSetting(
 												"currencySymbol"
 											)}${
 												this.selectedTreatment.expenses
-											} per unit`}
+											} ${lang("per unit")}`}
 										/>
 									) : (
 										<p />
@@ -180,10 +195,13 @@ export class Treatments extends React.Component<{}, {}> {
 						)}
 					>
 						<div className="treatment-editor">
-							<Section title="Treatment details" showByDefault>
+							<Section
+								title={lang("Treatment details")}
+								showByDefault
+							>
 								<div className="treatment-input">
 									<TextField
-										label="Treatment title"
+										label={lang("Treatment title")}
 										value={this.selectedTreatment.type}
 										onChanged={val =>
 											(treatments.list[
@@ -193,7 +211,9 @@ export class Treatments extends React.Component<{}, {}> {
 										disabled={!this.canEdit}
 									/>
 									<TextField
-										label="Treatment expenses (per unit)"
+										label={lang(
+											"Treatment expenses (per unit)"
+										)}
 										type="number"
 										value={this.selectedTreatment.expenses.toString()}
 										onChanged={val =>

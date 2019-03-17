@@ -14,6 +14,7 @@ import { PatientAppointments } from "../patient-appointments/patient-appointment
 import { Profile } from "../../../../assets/components/profile/profile";
 import { Section } from "../../../../assets/components/section/section";
 import { API } from "../../../../core/index";
+import { lang } from "../../../../core/i18/i18";
 
 @observer
 export class SinglePatient extends React.Component<
@@ -47,11 +48,13 @@ export class SinglePatient extends React.Component<
 										name={this.patient.name}
 										secondaryElement={
 											<span>
-												Patient,{" "}
-												{genderToString(
-													this.patient.gender
+												{lang(
+													genderToString(
+														this.patient.gender
+													)
 												)}{" "}
-												- {this.patient.age} years old
+												- {this.patient.age}{" "}
+												{lang("years old")}
 											</span>
 										}
 										size={3}
@@ -69,15 +72,15 @@ export class SinglePatient extends React.Component<
 						);
 					}}
 				>
-					<Section title="Patient Details" showByDefault>
+					<Section title={lang("Patient Details")} showByDefault>
 						<PatientDetails hideTitle patient={this.patient} />
 					</Section>
-					<Section title="Dental History" showByDefault>
+					<Section title={lang("Dental History")} showByDefault>
 						<DentalHistory hideTitle patient={this.patient} />
 					</Section>
 
 					{API.user.currentUser.canViewAppointments ? (
-						<Section title="Appointments" showByDefault>
+						<Section title={lang("Appointments")} showByDefault>
 							<PatientAppointments
 								hideTitle
 								patient={this.patient}

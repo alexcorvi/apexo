@@ -18,6 +18,7 @@ import { observable, observe } from "mobx";
 import { observer } from "mobx-react";
 import { toJS } from "mobx";
 import "./gallery.scss";
+import { lang } from "../../../core/i18/i18";
 
 @observer
 export class Gallery extends React.Component<
@@ -121,7 +122,7 @@ export class Gallery extends React.Component<
 										}}
 										disabled={this.loading}
 									>
-										Delete
+										{lang("Delete")}
 									</PrimaryButton>
 								</div>
 							)}
@@ -140,9 +141,9 @@ export class Gallery extends React.Component<
 					<div>
 						<br />
 						<MessageBar messageBarType={MessageBarType.warning}>
-							{
+							{lang(
 								"Attachments are not available while you're offline."
-							}
+							)}
 						</MessageBar>
 					</div>
 				)}

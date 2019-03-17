@@ -4,6 +4,7 @@ import { API } from "../../../core";
 import { Patient } from "./index";
 import { appointmentsData } from "../../appointments";
 import { orthoData } from "../../orthodontic/index";
+import { lang } from "../../../core/i18/i18";
 
 class PatientsData {
 	ignoreObserver: boolean = false;
@@ -37,11 +38,9 @@ class PatientsData {
 		const i = this.findIndexByID(id);
 
 		API.modals.newModal({
-			message: `All of the patient ${
-				this.list[i].name
-			}'s data will be deleted along with ${
-				this.list[i].appointments.length
-			} appointments.`,
+			message: `${lang("All of the patient")} ${this.list[i].name}${lang(
+				"'s data will be deleted along with"
+			)} ${this.list[i].appointments.length} ${lang("of appointments")}.`,
 			onConfirm: () => this.deleteByID(id)
 		});
 	}

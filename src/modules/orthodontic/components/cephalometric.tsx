@@ -10,6 +10,7 @@ import {
 } from "office-ui-fabric-react";
 import { observer } from "mobx-react";
 import { Patient } from "../../patients/data/class.patient";
+import { lang } from "../../../core/i18/i18";
 
 @observer
 export class Cephalometric extends React.Component<{
@@ -67,7 +68,7 @@ export class Cephalometric extends React.Component<{
 									}}
 								/>
 								<DatePicker
-									placeholder="Select a date..."
+									placeholder={lang("Select a date") + "..."}
 									value={new Date(this.props.date)}
 									onSelectDate={date => {
 										if (date) {

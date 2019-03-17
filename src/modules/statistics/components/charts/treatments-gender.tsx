@@ -8,6 +8,7 @@ import { Chart } from "../../data/interface.chart";
 import { observer } from "mobx-react";
 import { patientsData } from "../../../patients";
 import { treatmentsData } from "../../../treatments";
+import { lang } from "../../../../core/i18/i18";
 
 @observer
 class Component extends React.Component<{}, {}> {
@@ -64,13 +65,13 @@ class Component extends React.Component<{}, {}> {
 							),
 							bars: [
 								{
-									label: "Male",
+									label: lang("Male"),
 									data: this.selectedTreatments.map(
 										x => x.male
 									)
 								},
 								{
-									label: "Female",
+									label: lang("Female"),
 									data: this.selectedTreatments.map(
 										x => x.female * -1
 									)
@@ -86,8 +87,8 @@ class Component extends React.Component<{}, {}> {
 
 export const treatmentsByGender: Chart = {
 	Component,
-	name: "Treatments by gender",
-	description: "applied treatments by patients gender",
+	name: lang("Treatments by gender"),
+	description: lang("applied treatments by patients gender"),
 	tags:
 		"A breakdown of applied treatments by patients gender throughout the selected date",
 	className: "col-xs-12 col-lg-6"

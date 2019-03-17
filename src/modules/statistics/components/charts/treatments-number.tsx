@@ -7,6 +7,7 @@ import { BarChart } from "../../../../assets/components/charts/bar";
 import { Chart } from "../../data/interface.chart";
 import { observer } from "mobx-react";
 import { treatmentsData } from "../../../treatments";
+import { lang } from "../../../../core/i18/i18";
 
 @observer
 class Component extends React.Component<{}, {}> {
@@ -63,11 +64,11 @@ class Component extends React.Component<{}, {}> {
 							xLabels: this.values.map(x => x.title),
 							bars: [
 								{
-									label: "Profits",
+									label: lang("Profits"),
 									data: this.values.map(x => x.y)
 								},
 								{
-									label: "Applied times",
+									label: lang("Applied times"),
 									data: this.values.map(x => x.times)
 								}
 							]
@@ -81,8 +82,8 @@ class Component extends React.Component<{}, {}> {
 
 export const treatments: Chart = {
 	Component,
-	name: "Treatments",
-	description: "Treatments by profit",
+	name: lang("Treatments by profits"),
+	description: lang("Treatments by profit"),
 	tags: "treatments number profit",
 	className: "col-xs-12 col-lg-6"
 };

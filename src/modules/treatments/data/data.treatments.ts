@@ -3,6 +3,7 @@ import { computed, observable } from "mobx";
 import { API } from "../../../core";
 import { Treatment } from "./class.treatment";
 import { appointmentsData } from "../../appointments";
+import { lang } from "../../../core/i18/i18";
 
 class TreatmentData {
 	ignoreObserver: boolean = false;
@@ -17,7 +18,9 @@ class TreatmentData {
 		const i = this.getIndexByID(id);
 		const treatment = this.list[i];
 		API.modals.newModal({
-			message: `Treatment "${treatment.type}" will deleted`,
+			message: `${lang("Treatment")} "${treatment.type}" ${lang(
+				"will be deleted"
+			)}`,
 			onConfirm: () => {
 				this.deleteByID(id);
 			}

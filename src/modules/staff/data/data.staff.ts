@@ -3,6 +3,7 @@ import { observable } from "mobx";
 import { API } from "../../../core";
 import { StaffMember } from "./class.member";
 import { appointmentsData } from "../../appointments/index";
+import { lang } from "../../../core/i18/i18";
 
 class StaffData {
 	ignoreObserver: boolean = false;
@@ -16,7 +17,9 @@ class StaffData {
 	deleteModal(id: string) {
 		const i = this.getIndexByID(id);
 		API.modals.newModal({
-			message: `Are you sure you want to delete ${this.list[i].name}?`,
+			message: `${lang("Are you sure you want to delete")} ${
+				this.list[i].name
+			}`,
 			onConfirm: () => this.deleteByID(id)
 		});
 	}

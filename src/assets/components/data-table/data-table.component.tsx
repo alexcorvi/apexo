@@ -12,6 +12,7 @@ import { observer } from "mobx-react";
 import { textualFilter } from "../../utils/textual-filter";
 import "./data-table.component.scss";
 import { PrimaryButton } from "office-ui-fabric-react";
+import { lang } from "../../../core/i18/i18";
 
 interface Cell {
 	component: string | React.ReactElement<any>;
@@ -98,14 +99,14 @@ export class DataTable extends React.Component<Props, {}> {
 					{...{
 						className: "commandBar fixed m-b-15",
 						isSearchBoxVisible: true,
-						searchPlaceholderText: "Search Patients...",
-						elipisisAriaLabel: "More options",
+						searchPlaceholderText: lang("Search Patients") + "...",
+						elipisisAriaLabel: lang("More options"),
 						farItems: [
 							{
 								key: "a",
 								onRender: () => (
 									<SearchBox
-										placeholder="search"
+										placeholder={lang("search")}
 										onChange={(newVal: string) =>
 											(this.filterString = newVal)
 										}
@@ -223,7 +224,7 @@ export class DataTable extends React.Component<Props, {}> {
 						iconProps={{ iconName: "add" }}
 						onClick={() => (this.limit = this.limit + 10)}
 					>
-						Load More
+						{lang("Load More")}
 					</PrimaryButton>
 				) : (
 					""
@@ -231,11 +232,13 @@ export class DataTable extends React.Component<Props, {}> {
 
 				{this.props.rows.length === 0 ? (
 					<p className="no-data">
-						There's no data at this section yet.
+						{lang("There's no data at this section yet")}
 					</p>
 				) : this.filteredRows.length === 0 ? (
 					<p className="no-data">
-						Didn't find anything that matches your search criteria
+						{lang(
+							"Didn't find anything that matches your search criteria"
+						)}
 					</p>
 				) : (
 					""

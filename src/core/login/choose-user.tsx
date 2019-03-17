@@ -7,6 +7,7 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Profile } from "../../assets/components/profile/profile";
 import "./login.scss";
+import { lang } from "../i18/i18";
 
 @observer
 export class ChooseUser extends React.Component<{}, {}> {
@@ -21,10 +22,10 @@ export class ChooseUser extends React.Component<{}, {}> {
 							onClick={() => {
 								if (user.pin) {
 									const providedPin = prompt(
-										"Please enter your PIN"
+										lang("Please enter your PIN")
 									);
 									if (providedPin !== user.pin) {
-										alert("Incorrect PIN provided");
+										alert(lang("Incorrect PIN provided"));
 										return;
 									}
 								}

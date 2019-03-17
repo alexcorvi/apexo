@@ -1,23 +1,24 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { colors, statistics } from '../../data';
-import { computed } from 'mobx';
+import { colors, statistics } from "../../data";
+import { computed } from "mobx";
 
-import { Chart } from '../../data/interface.chart';
-import { PieChart } from '../../../../assets/components/charts/pie';
-import { convert } from '../../../../assets/utils/teeth-numbering-systems';
-import { observer } from 'mobx-react';
+import { Chart } from "../../data/interface.chart";
+import { PieChart } from "../../../../assets/components/charts/pie";
+import { convert } from "../../../../assets/utils/teeth-numbering-systems";
+import { observer } from "mobx-react";
+import { lang } from "../../../../core/i18/i18";
 
 @observer
 class Component extends React.Component<{}, {}> {
 	@computed
 	get data() {
 		return statistics.selectedAppointments
-			.map((x) => x.involvedTeeth)
+			.map(x => x.involvedTeeth)
 			.reduce((result: { label: number; value: number }[], arr) => {
-				arr.forEach((n) => {
+				arr.forEach(n => {
 					const fixedN = Number(n.toString().charAt(1));
-					const i = result.findIndex((x) => x.label === fixedN);
+					const i = result.findIndex(x => x.label === fixedN);
 					if (i === -1) {
 						result.push({
 							label: fixedN,
@@ -69,14 +70,17 @@ class Component extends React.Component<{}, {}> {
 		return <PieChart height={400} data={this.data} />;
 	}
 	getToothName(n: number) {
-		return convert(Number(`1${n.toString()}`)).Name.replace(/(permanent|deciduous|upper|lower|left|right)/gi, '');
+		return convert(Number(`1${n.toString()}`)).Name.replace(
+			/(permanent|deciduous|upper|lower|left|right)/gi,
+			""
+		);
 	}
 }
 
 export const mostInvolvedTeeth: Chart = {
 	Component,
-	name: 'Most Involved Teeth',
-	description: 'Top 5 most treated teeth',
-	tags: 'teeth most involved tooth treated',
-	className: 'col-xs-12 col-lg-6'
+	name: lang("Most Involved Teeth"),
+	description: lang("Top 5 most treated teeth"),
+	tags: "teeth most involved tooth treated",
+	className: "col-xs-12 col-lg-6"
 };

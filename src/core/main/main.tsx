@@ -35,7 +35,7 @@ export class ErrorBoundary extends React.Component<{}> {
 			// You can render any custom fallback UI
 			return (
 				<MessageBar className="eb" messageBarType={1}>
-					Error occured
+					Error occurred
 					<br /> send a screenshot of the following details
 					<textarea defaultValue={this.stackTrace} />
 					<PrimaryButton

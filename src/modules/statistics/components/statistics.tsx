@@ -13,6 +13,7 @@ import { round } from "../../../assets/utils/round";
 import { statistics } from "../data";
 import { data } from "../../";
 import { Section } from "../../../assets/components/section/section";
+import { lang } from "../../../core/i18/i18";
 
 @observer
 export class StatisticsComponent extends React.Component<{}, {}> {
@@ -23,11 +24,12 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 					<div className="container-fluid">
 						<Row gutter={2}>
 							<Col sm={8}>
-								<Label>Staff Member:</Label>
+								<Label>{lang("Staff Member")}:</Label>
 								<Dropdown
-									placeHolder="Filter By Staff Member"
+									placeHolder={lang("Filter By Staff Member")}
+									defaultValue=""
 									options={[
-										{ key: "", text: "All Members" }
+										{ key: "", text: lang("All Members") }
 									].concat(
 										data.staffData.staffMembers.list.map(
 											member => {
@@ -44,7 +46,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 								/>
 							</Col>
 							<Col sm={8}>
-								<Label>From:</Label>
+								<Label>{lang("From")}:</Label>
 								<DatePicker
 									onSelectDate={date => {
 										if (date) {
@@ -57,7 +59,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 								/>
 							</Col>
 							<Col sm={8}>
-								<Label>To:</Label>
+								<Label>{lang("To")}:</Label>
 								<DatePicker
 									onSelectDate={date => {
 										if (date) {
@@ -73,11 +75,11 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 					</div>
 				</div>
 				<div className="container-fluid m-t-20 quick">
-					<Section title="Quick stats" showByDefault>
+					<Section title={lang("Quick stats")} showByDefault>
 						<Row>
 							<Col sm={6} xs={12}>
 								<label>
-									Appointments:{" "}
+									{lang("Appointments")}:{" "}
 									<ColoredLabel
 										text={round(
 											statistics.selectedAppointments
@@ -89,7 +91,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							</Col>
 							<Col sm={6} xs={12}>
 								<label>
-									Payments:{" "}
+									{lang("Payments")}:{" "}
 									<ColoredLabel
 										text={
 											data.settingsData.settings.getSetting(
@@ -105,7 +107,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							</Col>
 							<Col sm={6} xs={12}>
 								<label>
-									Expenses:{" "}
+									{lang("Expenses")}:{" "}
 									<ColoredLabel
 										text={
 											data.settingsData.settings.getSetting(
@@ -121,7 +123,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							</Col>
 							<Col sm={6} xs={12}>
 								<label>
-									Profits:{" "}
+									{lang("Profits")}:{" "}
 									<ColoredLabel
 										text={
 											data.settingsData.settings.getSetting(

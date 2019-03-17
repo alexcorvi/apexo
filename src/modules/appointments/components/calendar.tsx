@@ -9,6 +9,7 @@ import { observer } from "mobx-react";
 import { patientsComponents } from "../../patients";
 import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
 import "./calendar.scss";
+import { lang } from "../../../core/i18/i18";
 
 @observer
 export class Calendar extends React.Component<{}, {}> {
@@ -230,8 +231,8 @@ export class Calendar extends React.Component<{}, {}> {
 							<Col sm={12} md={6} xs={24}>
 								<Toggle
 									defaultChecked={this.showAll}
-									onText="All appointments"
-									offText="My appointments only"
+									onText={lang("All appointments")}
+									offText={lang("My appointments only")}
 									onChanged={newValue => {
 										this.showAll = newValue;
 									}}
@@ -239,7 +240,7 @@ export class Calendar extends React.Component<{}, {}> {
 							</Col>
 							<Col sm={12} md={18} xs={0} className="filter">
 								<TextField
-									placeholder="Type to filter"
+									placeholder={lang("Type to filter")}
 									onChanged={newVal => (this.filter = newVal)}
 								/>
 							</Col>

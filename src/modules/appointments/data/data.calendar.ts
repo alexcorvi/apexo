@@ -1,4 +1,5 @@
 import { computed, observable } from "mobx";
+import { lang } from "../../../core/i18/i18";
 
 interface WeekDayInfo {
 	index: number;
@@ -8,29 +9,37 @@ interface WeekDayInfo {
 
 export class Calendar {
 	// constants
-	daysShort = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+	daysShort = [
+		lang("SU"),
+		lang("MO"),
+		lang("TU"),
+		lang("WE"),
+		lang("TH"),
+		lang("FR"),
+		lang("SA")
+	];
 	days = [
-		"Sunday",
-		"Monday",
-		"Tuesday",
-		"Wednesday",
-		"Thursday",
-		"Friday",
-		"Saturday"
+		lang("Sunday"),
+		lang("Monday"),
+		lang("Tuesday"),
+		lang("Wednesday"),
+		lang("Thursday"),
+		lang("Friday"),
+		lang("Saturday")
 	];
 	monthsShort = [
-		"Jan",
-		"Feb",
-		"Mar",
-		"Apr",
-		"May",
-		"Jun",
-		"Jul",
-		"Aug",
-		"Sep",
-		"Oct",
-		"Nov",
-		"Dec"
+		lang("Jan"),
+		lang("Feb"),
+		lang("Mar"),
+		lang("Apr"),
+		lang("May"),
+		lang("Jun"),
+		lang("Jul"),
+		lang("Aug"),
+		lang("Sep"),
+		lang("Oct"),
+		lang("Nov"),
+		lang("Dec")
 	];
 	months = [
 		"January",

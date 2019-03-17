@@ -24,6 +24,7 @@ import { Section } from "../../../assets/components/section/section";
 import { settings } from "../../settings/data";
 import setting from "../../settings/data/data.settings";
 import "./staff-listing.scss";
+import { lang } from "../../../core/i18/i18";
 
 @observer
 export class StaffListing extends React.Component<{}, {}> {
@@ -60,9 +61,9 @@ export class StaffListing extends React.Component<{}, {}> {
 							}
 							maxItemsOnLoad={15}
 							heads={[
-								"Staff Member",
-								"Last Appointment",
-								"Next Appointment"
+								lang("Staff Member"),
+								lang("Last Appointment"),
+								lang("Next Appointment")
 							]}
 							rows={staffMembers.list.map(member => ({
 								id: member._id,
@@ -80,7 +81,9 @@ export class StaffListing extends React.Component<{}, {}> {
 																.nextAppointments
 																.length
 														}{" "}
-														upcoming appointments
+														{lang(
+															"upcoming appointments"
+														)}
 													</span>
 												}
 												onClick={() => {
@@ -117,7 +120,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												onClick={() => {}}
 											/>
 										) : (
-											"Not registered"
+											lang("Not registered")
 										),
 										className: "hidden-xs"
 									},
@@ -143,7 +146,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												onClick={() => {}}
 											/>
 										) : (
-											"Not registered"
+											lang("Not registered")
 										),
 										className: "hidden-xs"
 									}
@@ -155,7 +158,7 @@ export class StaffListing extends React.Component<{}, {}> {
 											{
 												key: "addNew",
 												title: "Add new",
-												name: "Add New",
+												name: lang("Add New"),
 												onClick: () => {
 													const member = new StaffMember();
 													staffMembers.list.push(
@@ -188,7 +191,7 @@ export class StaffListing extends React.Component<{}, {}> {
 									return (
 										<tr key={dayName}>
 											<th className="day-name">
-												{dayName}
+												{lang(dayName)}
 											</th>
 											<td>
 												{staffMembers.list
@@ -219,9 +222,12 @@ export class StaffListing extends React.Component<{}, {}> {
 																			)
 																				.length
 																		}{" "}
-																		appointments
-																		for{" "}
-																		{dayName.toLowerCase()}
+																		{lang(
+																			"appointments for"
+																		)}{" "}
+																		{lang(
+																			dayName
+																		)}
 																	</span>
 																}
 																onClick={() => {
@@ -258,9 +264,12 @@ export class StaffListing extends React.Component<{}, {}> {
 											secondaryElement={
 												<span>
 													{this.member.operates
-														? ""
-														: "non"}
-													operating staff
+														? lang(
+																"Operates on patients"
+														  )
+														: lang(
+																"Doesn't operate on patients"
+														  )}
 												</span>
 											}
 											tertiaryText={this.member.phone}
@@ -285,7 +294,7 @@ export class StaffListing extends React.Component<{}, {}> {
 							<Section title="Information" showByDefault>
 								<div className="staff-input">
 									<TextField
-										label="Name: "
+										label={lang("Name")}
 										value={this.member.name}
 										onChanged={val =>
 											(this.member.name = val)
@@ -295,7 +304,7 @@ export class StaffListing extends React.Component<{}, {}> {
 								</div>
 
 								<div className="staff-input">
-									<label>Days on duty: </label>
+									<label>{lang("Days on duty")}</label>
 									{this.member.days.map(day => (
 										<Checkbox
 											disabled={!this.canEdit}
@@ -326,7 +335,7 @@ export class StaffListing extends React.Component<{}, {}> {
 								API.user.currentUser._id ? (
 									<div className="staff-input">
 										<TextField
-											label="Login PIN"
+											label={lang("Login PIN")}
 											value={this.member.pin}
 											onChanged={v =>
 												(this.member.pin = v)
@@ -340,12 +349,15 @@ export class StaffListing extends React.Component<{}, {}> {
 							</Section>
 
 							{settings.getSetting("ask_for_user_contact") ? (
-								<Section title="Contact Details" showByDefault>
+								<Section
+									title={lang("Contact Details")}
+									showByDefault
+								>
 									<Row gutter={12}>
 										<Col sm={12}>
 											<div className="staff-input">
 												<TextField
-													label="Phone Number: "
+													label={lang("Phone Number")}
 													value={this.member.phone}
 													onChanged={val =>
 														(this.member.phone = val)
@@ -357,7 +369,7 @@ export class StaffListing extends React.Component<{}, {}> {
 										<Col sm={12}>
 											<div className="staff-input">
 												<TextField
-													label="Email: "
+													label={lang("Email")}
 													value={this.member.email}
 													onChanged={val =>
 														(this.member.email = val)
@@ -374,7 +386,7 @@ export class StaffListing extends React.Component<{}, {}> {
 
 							{this.canEdit ? (
 								<Section
-									title="Level and permission"
+									title={lang("Level and permission")}
 									showByDefault
 								>
 									{this.member._id ===
@@ -385,8 +397,9 @@ export class StaffListing extends React.Component<{}, {}> {
 													MessageBarType.warning
 												}
 											>
-												You can't edit your own level
-												and permissions
+												{lang(
+													"You can't edit your own level and permissions"
+												)}
 											</MessageBar>
 											<br />
 										</div>
@@ -399,8 +412,10 @@ export class StaffListing extends React.Component<{}, {}> {
 											this.member._id ===
 											API.user.currentUser._id
 										}
-										onText="Operates on patients"
-										offText="Does not operate on patients"
+										onText={lang("Operates on patients")}
+										offText={lang(
+											"Doesn't operate on patients"
+										)}
 										onChanged={newVal => {
 											this.member.operates = newVal;
 										}}
@@ -414,8 +429,10 @@ export class StaffListing extends React.Component<{}, {}> {
 											this.member._id ===
 											API.user.currentUser._id
 										}
-										onText="Can view staff page"
-										offText="Can not view staff page"
+										onText={lang("Can view staff page")}
+										offText={lang(
+											"Can not view staff page"
+										)}
 										onChanged={newVal => {
 											this.member.canViewStaff = newVal;
 										}}
@@ -428,8 +445,10 @@ export class StaffListing extends React.Component<{}, {}> {
 											this.member._id ===
 											API.user.currentUser._id
 										}
-										onText="Can view patients page"
-										offText="Can not view patients page"
+										onText={lang("Can view patients page")}
+										offText={lang(
+											"Can not view patients page"
+										)}
 										onChanged={newVal => {
 											this.member.canViewPatients = newVal;
 										}}
@@ -445,8 +464,12 @@ export class StaffListing extends React.Component<{}, {}> {
 												this.member._id ===
 												API.user.currentUser._id
 											}
-											onText="Can view orthodontics page"
-											offText="Can not view orthodontics page"
+											onText={lang(
+												"Can view orthodontics page"
+											)}
+											offText={lang(
+												"Can not view orthodontics page"
+											)}
 											onChanged={newVal => {
 												this.member.canViewOrtho = newVal;
 											}}
@@ -462,8 +485,12 @@ export class StaffListing extends React.Component<{}, {}> {
 											this.member._id ===
 											API.user.currentUser._id
 										}
-										onText="Can view appointments page"
-										offText="Can not view appointments page"
+										onText={lang(
+											"Can view appointments page"
+										)}
+										offText={lang(
+											"Can not view appointments page"
+										)}
 										onChanged={newVal => {
 											this.member.canViewAppointments = newVal;
 										}}
@@ -476,8 +503,12 @@ export class StaffListing extends React.Component<{}, {}> {
 											this.member._id ===
 											API.user.currentUser._id
 										}
-										onText="Can view treatments page"
-										offText="Can not view treatments page"
+										onText={lang(
+											"Can view treatments page"
+										)}
+										offText={lang(
+											"Can not view treatments page"
+										)}
 										onChanged={newVal => {
 											this.member.canViewTreatments = newVal;
 										}}
@@ -493,8 +524,12 @@ export class StaffListing extends React.Component<{}, {}> {
 												this.member._id ===
 												API.user.currentUser._id
 											}
-											onText="Can view prescriptions page"
-											offText="Can not view prescriptions page"
+											onText={lang(
+												"Can view prescriptions page"
+											)}
+											offText={lang(
+												"Can not view prescriptions page"
+											)}
 											onChanged={newVal => {
 												this.member.canViewPrescriptions = newVal;
 											}}
@@ -511,8 +546,12 @@ export class StaffListing extends React.Component<{}, {}> {
 												this.member._id ===
 												API.user.currentUser._id
 											}
-											onText="Can view statistics page"
-											offText="Can not view statistics page"
+											onText={lang(
+												"Can view statistics page"
+											)}
+											offText={lang(
+												"Can not view statistics page"
+											)}
 											onChanged={newVal => {
 												this.member.canViewStats = newVal;
 											}}
@@ -529,8 +568,10 @@ export class StaffListing extends React.Component<{}, {}> {
 											this.member._id ===
 											API.user.currentUser._id
 										}
-										onText="Can view settings page"
-										offText="Can not view settings page"
+										onText={lang("Can view settings page")}
+										offText={lang(
+											"Can not view settings page"
+										)}
 										onChanged={newVal => {
 											this.member.canViewSettings = newVal;
 										}}
@@ -545,8 +586,10 @@ export class StaffListing extends React.Component<{}, {}> {
 												this.member._id ===
 												API.user.currentUser._id
 											}
-											onText="Can edit staff page"
-											offText="Can not edit staff page"
+											onText={lang("Can edit staff page")}
+											offText={lang(
+												"Can not edit staff page"
+											)}
 											onChanged={newVal => {
 												this.member.canEditStaff = newVal;
 											}}
@@ -563,8 +606,12 @@ export class StaffListing extends React.Component<{}, {}> {
 												this.member._id ===
 												API.user.currentUser._id
 											}
-											onText="Can edit patients page"
-											offText="Can not edit patients page"
+											onText={lang(
+												"Can edit patients page"
+											)}
+											offText={lang(
+												"Can not edit patients page"
+											)}
 											onChanged={newVal => {
 												this.member.canEditPatients = newVal;
 											}}
@@ -584,8 +631,12 @@ export class StaffListing extends React.Component<{}, {}> {
 												this.member._id ===
 												API.user.currentUser._id
 											}
-											onText="Can edit orthodontics page"
-											offText="Can not edit orthodontics page"
+											onText={lang(
+												"Can edit orthodontics page"
+											)}
+											offText={lang(
+												"Can not edit orthodontics page"
+											)}
 											onChanged={newVal => {
 												this.member.canEditOrtho = newVal;
 											}}
@@ -603,8 +654,12 @@ export class StaffListing extends React.Component<{}, {}> {
 												this.member._id ===
 												API.user.currentUser._id
 											}
-											onText="Can edit appointments page"
-											offText="Can not edit appointments page"
+											onText={lang(
+												"Can edit appointments page"
+											)}
+											offText={lang(
+												"Can not edit appointments page"
+											)}
 											onChanged={newVal => {
 												this.member.canEditAppointments = newVal;
 											}}
@@ -622,8 +677,12 @@ export class StaffListing extends React.Component<{}, {}> {
 												this.member._id ===
 												API.user.currentUser._id
 											}
-											onText="Can edit treatments page"
-											offText="Can not edit treatments page"
+											onText={lang(
+												"Can edit treatments page"
+											)}
+											offText={lang(
+												"Can not edit treatments page"
+											)}
 											onChanged={newVal => {
 												this.member.canEditTreatments = newVal;
 											}}
@@ -643,8 +702,12 @@ export class StaffListing extends React.Component<{}, {}> {
 												this.member._id ===
 												API.user.currentUser._id
 											}
-											onText="Can edit prescriptions page"
-											offText="Can not edit prescriptions page"
+											onText={lang(
+												"Can edit prescriptions page"
+											)}
+											offText={lang(
+												"Can not edit prescriptions page"
+											)}
 											onChanged={newVal => {
 												this.member.canEditPrescriptions = newVal;
 											}}
@@ -662,8 +725,12 @@ export class StaffListing extends React.Component<{}, {}> {
 												this.member._id ===
 												API.user.currentUser._id
 											}
-											onText="Can edit settings page"
-											offText="Can not edit settings page"
+											onText={lang(
+												"Can edit settings page"
+											)}
+											offText={lang(
+												"Can not edit settings page"
+											)}
 											onChanged={newVal => {
 												this.member.canEditSettings = newVal;
 											}}
@@ -678,7 +745,7 @@ export class StaffListing extends React.Component<{}, {}> {
 
 							{API.user.currentUser.canViewAppointments ? (
 								<Section
-									title="Upcoming Appointments"
+									title={lang("Upcoming Appointments")}
 									showByDefault
 								>
 									<AppointmentsList

@@ -1,12 +1,13 @@
-import './menu.scss';
+import "./menu.scss";
 
-import * as React from 'react';
+import * as React from "react";
 
-import { Icon, Nav, Panel, PanelType } from 'office-ui-fabric-react';
+import { Icon, Nav, Panel, PanelType } from "office-ui-fabric-react";
 
-import { API } from '../';
-import { menu } from './data.menu';
-import { observer } from 'mobx-react';
+import { API } from "../";
+import { menu } from "./data.menu";
+import { observer } from "mobx-react";
+import { lang } from "../i18/i18";
 
 @observer
 export class MenuComponent extends React.Component<any, any> {
@@ -18,11 +19,16 @@ export class MenuComponent extends React.Component<any, any> {
 						return (
 							<div
 								key={index}
-								className={'item ' + (menu.currentIndex === index ? 'selected' : '')}
+								className={
+									"item " +
+									(menu.currentIndex === index
+										? "selected"
+										: "")
+								}
 								onClick={item.onClick}
 							>
 								<Icon iconName={item.icon} />
-								<span className="text">{item.name}</span>
+								<span className="text">{lang(item.name)}</span>
 							</div>
 						);
 					})}
@@ -38,7 +44,15 @@ export class MenuComponent extends React.Component<any, any> {
 					<Nav
 						groups={[
 							{
-								links: menu.sortedItems
+								links: menu.sortedItems.map(x => {
+									return {
+										icon: x.icon,
+										name: lang(x.name),
+										key: x.key,
+										url: x.url,
+										onClick: x.onClick
+									};
+								})
 							}
 						]}
 						selectedKey={API.router.currentNamespace}

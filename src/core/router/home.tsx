@@ -8,6 +8,7 @@ import { observer } from "mobx-react";
 import { Profile } from "../../assets/components/profile/profile";
 import { ProfileSquared } from "../../assets/components/profile/profile-squared";
 import { user } from "../user/data.user";
+import { lang } from "../i18/i18";
 @observer
 export class Home extends React.Component<{}, {}> {
 	@observable
@@ -42,7 +43,9 @@ export class Home extends React.Component<{}, {}> {
 		return (
 			<div className="home p-l-10 p-r-10">
 				<div className="container">
-					<h2 className="m-b-20">Welcome, {user.currentUser.name}</h2>
+					<h2 className="m-b-20">
+						{lang("Welcome")}, {user.currentUser.name}
+					</h2>
 					<hr />
 					<div>
 						<appointmentsByDate.Component />
@@ -50,14 +53,14 @@ export class Home extends React.Component<{}, {}> {
 					<Row gutter={12}>
 						<Col md={12}>
 							<h3 className="appointments-table-heading">
-								Today's Appointments
+								{lang("Today's Appointments")}
 							</h3>
 							<br />
 							<table className="ms-table">
 								<thead>
 									<tr>
-										<th>Appointment</th>
-										<th>Operators</th>
+										<th>{lang("Appointment")}</th>
+										<th>{lang("Operators")}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -149,7 +152,9 @@ export class Home extends React.Component<{}, {}> {
 
 							{this.todayAppointments.length === 0 ? (
 								<p className="no-appointments">
-									There are no appointments for today
+									{lang(
+										"There are no appointments for today"
+									)}
 								</p>
 							) : (
 								""
@@ -157,14 +162,14 @@ export class Home extends React.Component<{}, {}> {
 						</Col>
 						<Col md={12}>
 							<h3 className="appointments-table-heading">
-								Tomorrow's Appointments
+								{lang("Tomorrow's Appointments")}
 							</h3>
 							<br />
 							<table className="ms-table">
 								<thead>
 									<tr>
-										<th>Appointment</th>
-										<th>Operators</th>
+										<th>{lang("Appointment")}</th>
+										<th>{lang("Operators")}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -261,7 +266,9 @@ export class Home extends React.Component<{}, {}> {
 							</table>
 							{this.tomorrowAppointments.length === 0 ? (
 								<p className="no-appointments">
-									There are no appointments for tomorrow
+									{lang(
+										"There are no appointments for tomorrow"
+									)}
 								</p>
 							) : (
 								""

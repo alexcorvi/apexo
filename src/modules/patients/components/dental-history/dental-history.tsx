@@ -18,6 +18,7 @@ import { observer } from "mobx-react";
 import { Row, Col } from "../../../../assets/components/grid/index";
 import { Profile } from "../../../../assets/components/profile/profile";
 import { API } from "../../../../core/index";
+import { lang } from "../../../../core/i18/i18";
 
 @observer
 export class DentalHistory extends React.Component<
@@ -42,8 +43,8 @@ export class DentalHistory extends React.Component<
 				{this.props.hideTitle ? "" : <h3>Dental History</h3>}
 				<Toggle
 					defaultChecked={true}
-					onText="View graphic chart"
-					offText="View sorted table"
+					onText={lang("View graphic chart")}
+					offText={lang("View sorted table")}
 					onChanged={newVal => {
 						this.viewChart = newVal;
 					}}
@@ -177,12 +178,12 @@ export class DentalHistory extends React.Component<
 								className="single-tooth-condition"
 								options={Object.keys(ToothCondition).map(c => ({
 									key: c,
-									text: c
+									text: lang(c)
 								}))}
 								disabled={!this.canEdit}
 							/>
 							<EditableList
-								label="History notes"
+								label={lang("History notes")}
 								value={
 									this.props.patient.teeth[this.viewToothISO]
 										.notes

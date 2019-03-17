@@ -7,6 +7,7 @@ import { Patient } from "../../data";
 import { observer } from "mobx-react";
 import "./patient-appointments.scss";
 import { API } from "../../../../core/index";
+import { lang } from "../../../../core/i18/i18";
 
 @observer
 export class PatientAppointments extends React.Component<
@@ -38,7 +39,8 @@ export class PatientAppointments extends React.Component<
 					""
 				) : (
 					<p className="no-appointments">
-						This patient does not have any appointment.
+						{lang("This patient does not have any appointment") +
+							"."}
 					</p>
 				)}
 				<br />
@@ -55,7 +57,7 @@ export class PatientAppointments extends React.Component<
 						}}
 						iconProps={{ iconName: "add" }}
 					>
-						Book New Appointment
+						{lang("Book New Appointment")}
 					</PrimaryButton>
 				) : (
 					""
