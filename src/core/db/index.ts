@@ -70,7 +70,10 @@ export function connectToDB(
 	 */
 	const localDatabase = new PouchDB(localName);
 
-	const credentials = JSON.parse(decrypt(localStorage.getItem("ec") || ""));
+	let credentials = { username: "", password: "" };
+	if (localStorage.getItem("ec")) {
+		credentials = JSON.parse(decrypt(localStorage.getItem("ec") || ""));
+	}
 	const remoteDatabase = new PouchDB(`${API.login.server}/${name}`, {
 		auth: { username: credentials.username, password: credentials.password }
 	});
