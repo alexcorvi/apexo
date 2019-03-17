@@ -184,9 +184,11 @@ class Login {
 				await new PouchDB(this.server).logOut();
 			} catch (e) {}
 		}
-		localStorage.removeItem("LSI");
-		localStorage.removeItem("user_id");
+		localStorage.removeItem("LSL_hash");
+		localStorage.removeItem("ec");
 		localStorage.removeItem("no-server-mode");
+		localStorage.removeItem("user_id");
+		localStorage.removeItem("server_location");
 		location.reload();
 	}
 
