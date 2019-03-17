@@ -1,41 +1,8 @@
 import * as React from "react";
 import { Col, Row } from "../../../assets/components/grid/index";
-import { Icon } from "office-ui-fabric-react";
+import { Icon, TextField } from "office-ui-fabric-react";
 import { observer } from "mobx-react";
 import "./editable-list.scss";
-
-@observer
-export class ViewTextual extends React.Component<
-	{
-		text: string;
-		index: number;
-		all: string[];
-		onChange: (newVal: string[]) => void;
-		disabled?: boolean;
-	},
-	{}
-> {
-	editElements: HTMLInputElement[] = [];
-	render() {
-		return (
-			<input
-				disabled={this.props.disabled}
-				type="text"
-				className="editViewItem"
-				value={this.props.text}
-				ref={el =>
-					el ? (this.editElements[this.props.index] = el) : ""
-				}
-				onChange={() => {
-					this.props.all[this.props.index] = this.editElements[
-						this.props.index
-					].value;
-					this.props.onChange(this.props.all);
-				}}
-			/>
-		);
-	}
-}
 
 @observer
 export class EditableList extends React.Component<
@@ -48,12 +15,12 @@ export class EditableList extends React.Component<
 	},
 	{}
 > {
-	inputElement: HTMLInputElement | undefined;
+	valueToAdd: string = "";
 
 	addItem() {
-		if (this.inputElement!.value.replace(/\W/, "").length) {
-			this.props.value.push(this.inputElement!.value);
-			this.inputElement!.value = "";
+		if (this.valueToAdd.replace(/\W/, "").length) {
+			this.props.value.push(this.valueToAdd);
+			this.valueToAdd = "";
 			(this.props.onChange || (() => {}))(this.props.value);
 		}
 	}
@@ -64,9 +31,6 @@ export class EditableList extends React.Component<
 				<div className="editable-list">
 					<div
 						className="input"
-						onClick={() => {
-							this.inputElement!.focus();
-						}}
 						style={
 							this.props.value.length
 								? {}
@@ -78,18 +42,19 @@ export class EditableList extends React.Component<
 								xs={this.props.disabled ? 24 : 20}
 								sm={this.props.disabled ? 24 : 21}
 							>
-								<input
+								<TextField
 									className="input-field"
 									placeholder={this.props.label}
-									ref={el =>
-										el ? (this.inputElement = el) : ""
-									}
 									onKeyDown={keydown => {
 										if (keydown.keyCode === 13) {
 											this.addItem();
+											keydown.preventDefault();
 										}
 									}}
+									value={this.valueToAdd}
+									onChanged={val => (this.valueToAdd = val)}
 									disabled={this.props.disabled}
+									multiline
 								/>
 							</Col>
 							<Col xs={4} sm={3} style={{ textAlign: "right" }}>
@@ -119,13 +84,13 @@ export class EditableList extends React.Component<
 											xs={this.props.disabled ? 24 : 20}
 											sm={this.props.disabled ? 24 : 21}
 										>
-											<ViewTextual
-												index={key}
-												text={item}
-												all={this.props.value}
-												onChange={
-													this.props.onChange ||
-													(() => {})
+											<TextField
+												multiline
+												value={item}
+												onChanged={val =>
+													(this.props.value[
+														key
+													] = val)
 												}
 												disabled={this.props.disabled}
 											/>

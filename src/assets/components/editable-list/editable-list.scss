@@ -15,10 +15,7 @@
 			@include box_shadow(2);
 			border-bottom-color: #4aa9f5;
 		}
-		.input-field,
-		.input-icon {
-			padding: 10px;
-		}
+
 		.input-icon {
 			padding: 10px;
 			color: #2196f3;
@@ -60,14 +57,22 @@
 			}
 			.delete {
 				transition: 0.4s all;
-				font-size: 10px;
+				font-size: 15px;
 				cursor: pointer;
-				padding: 12px 12px 12px 5px;
+				padding: 18px 13px;
 				color: #000;
 				&:hover {
 					color: red;
 				}
 			}
 		}
+	}
+	.ms-TextField-fieldGroup {
+		border: none;
+		min-height: auto !important;
+	}
+	textarea {
+		font-size: 13px;
+		padding: 10px;
 	}
 }
