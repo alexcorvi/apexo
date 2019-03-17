@@ -158,14 +158,29 @@ export const backup = {
 };
 
 export const restore = {
-	fromJSON: function(json: BackupJSON) {
-		appointmentsData.appointments.list = [];
-		staffData.staffMembers.list = [];
-		orthoData.cases.list = [];
-		patientsData.patients.list = [];
-		prescriptionsData.prescriptions.list = [];
-		settingsData.settings.list = [];
-		treatmentsData.treatments.list = [];
+	fromJSON: async function(json: BackupJSON) {
+		API.login.resetUser();
+
+		appointmentsData.appointments.list.splice(
+			0,
+			appointmentsData.appointments.list.length
+		);
+		staffData.staffMembers.list.splice(
+			0,
+			staffData.staffMembers.list.length
+		);
+		orthoData.cases.list.splice(0, orthoData.cases.list.length);
+		patientsData.patients.list.splice(0, patientsData.patients.list.length);
+		prescriptionsData.prescriptions.list.splice(
+			0,
+			prescriptionsData.prescriptions.list.length
+		);
+		settingsData.settings.list.splice(0, settingsData.settings.list.length);
+		treatmentsData.treatments.list.splice(
+			0,
+			treatmentsData.treatments.list.length
+		);
+
 		json.appointments.forEach(item => {
 			appointmentsData.appointments.list.push(new Appointment(item));
 		});
@@ -190,8 +205,6 @@ export const restore = {
 		json.treatments.forEach(item => {
 			treatmentsData.treatments.list.push(new Treatment(item));
 		});
-
-		API.login.resetUser();
 	},
 
 	fromBase64: async function(base64Data: string, ignoreConfirm?: boolean) {

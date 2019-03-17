@@ -41,23 +41,66 @@ export function generateMethods(
 		},
 
 		async add(item: IClassStatic) {
-			const response = await db.put(item.toJSON());
-			return response;
+			let index = this.que.findIndex(x => x.id === item._id);
+			if (index === -1) {
+				index = this.que.length;
+			}
+			this.que[index] = {
+				id: item._id,
+				action: function() {
+					return db.put(item.toJSON());
+				}
+			};
 		},
 
 		async remove(_id: string) {
-			const doc = await db.get(_id);
-			const response = await db.remove(doc._id, doc._rev || "");
-			return response;
+			let index = this.que.findIndex(x => x.id === _id);
+			if (index === -1) {
+				index = this.que.length;
+			}
+			this.que[index] = {
+				id: _id,
+				action: async function() {
+					const doc = await db.get(_id);
+					return db.remove(doc._id, doc._rev || "");
+				}
+			};
 		},
 
 		async update(_id: string, item: IClassStatic) {
-			const document = item.toJSON();
-			const doc = await db.get(_id);
-			document._rev = doc._rev;
-			const response = await db.put(document);
-			return response;
-		}
+			let index = this.que.findIndex(x => x.id === _id);
+			if (index === -1) {
+				index = this.que.length;
+			}
+			this.que[index] = {
+				id: _id,
+				action: async function() {
+					const document = item.toJSON();
+					const doc = await db.get(_id);
+					document._rev = doc._rev;
+					return db.put(document);
+				}
+			};
+		},
+
+		que: []
 	};
+
+	setInterval(() => {
+		if (methods.que.length) {
+			const target = methods.que[0];
+			target
+				.action()
+				.then(() => {
+					const i = methods.que.findIndex(x => x.id === target.id);
+					methods.que.splice(i, 1);
+				})
+				.catch(() => {
+					const i = methods.que.findIndex(x => x.id === target.id);
+					methods.que.splice(i, 1);
+				});
+		}
+	}, 100);
+
 	return methods;
 }

@@ -42,6 +42,10 @@ class Router {
 		component: React.ComponentClass<any>,
 		condition?: () => boolean
 	) {
+		if (this.directory.find(x => x.namespace === name)) {
+			console.log(name, "route name already registered, skipping");
+			return;
+		}
 		this.directory.push({
 			regex: regex,
 			component: component,

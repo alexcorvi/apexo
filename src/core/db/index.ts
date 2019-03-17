@@ -11,20 +11,6 @@ import { observeItem } from "./observe-item";
 import { singleItemUpdateQue } from "./single-item-update-que";
 import { decrypt } from "../../assets/utils/encryption";
 
-export const DBs: PouchDB.Database[] = [];
-
-export function replicateAllDBsToServer({
-	serverURL,
-	password,
-	username
-}: {
-	serverURL: string;
-	password: string;
-	username: string;
-}) {
-	// DBs[0].name
-}
-
 export const resync: {
 	resyncMethods: Array<() => Promise<void>>;
 	resync: () => Promise<boolean>;

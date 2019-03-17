@@ -12,7 +12,7 @@ import { resync } from "../db";
 PouchDB.plugin(auth);
 
 const demoHosts: string[] = [
-	"localhost:8000",
+	// "localhost:8000",
 	"demo.apexo.app",
 	"192.168.0.101:8000",
 	"192.168.0.102:8000"
