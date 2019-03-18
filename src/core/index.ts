@@ -9,9 +9,9 @@ import { menu } from "./menu/data.menu";
 import { MenuComponent } from "./menu/menu";
 import { modals } from "./modal/data.modal";
 import { ModalsComponent } from "./modal/modal";
-import { Prompt } from "./prompts/class.prompt";
-import { prompts } from "./prompts/data.prompts";
-import { PromptsComponent } from "./prompts/prompts";
+import { Message } from "./messages/class.message";
+import { messages } from "./messages/data.messages";
+import { MessagesComponent } from "./messages/messages";
 import { router } from "./router/data.router";
 import { RouterComponent } from "./router/router";
 import { user } from "./user/data.user";
@@ -24,8 +24,8 @@ export { DropboxFile };
 export const API = {
 	menu,
 	router,
-	Prompt,
-	prompts,
+	Message,
+	messages,
 	connectToDB,
 	login,
 	user,
@@ -41,7 +41,7 @@ export const components = {
 	HeaderComponent,
 	MainComponent,
 	MenuComponent,
-	PromptsComponent,
+	MessagesComponent,
 	RouterComponent,
 	LoginComponent,
 	UserComponent,

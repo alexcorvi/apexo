@@ -1,3 +1,4 @@
+import { Message } from "./../../core/messages/class.message";
 import { API } from "../../core";
 import { Appointment, AppointmentJSON } from "../../modules/appointments/data";
 import { appointmentsData } from "../../modules/appointments";
@@ -19,6 +20,8 @@ import { SettingItemJSON, SettingsItem } from "../../modules/settings/data";
 import { settingsData } from "../../modules/settings";
 import { Treatment, TreatmentJSON } from "../../modules/treatments/data";
 import { treatmentsData } from "../../modules/treatments";
+import { modals } from "../../core/modal/data.modal";
+import messages from "../../core/messages/data.messages";
 
 const ext = "apx";
 
@@ -209,19 +212,27 @@ export const restore = {
 
 	fromBase64: async function(base64Data: string, ignoreConfirm?: boolean) {
 		if (!ignoreConfirm) {
-			const confirmation = prompt(`All unsaved data will be lost.
-			All data will be removed and replaced by the backup file.
-			Type "yes" to confirm`);
-
-			if (!confirmation || confirmation.toLowerCase() !== "yes") {
-				return alert("Backup canceled");
-			}
+			const confirmation = modals.newModal({
+				message: `All unsaved data will be lost.
+				All data will be removed and replaced by the backup file.
+				Type "yes" to confirm`,
+				onConfirm: async (input: string) => {
+					if (input.toLowerCase() === "yes") {
+						restore.fromJSON(JSON.parse(decode(base64Data)));
+						API.router.reSyncing = true;
+						await resync.resync();
+						API.router.reSyncing = false;
+					} else {
+						const msg = new Message("Restoration cancelled");
+						return messages.addMessage(msg);
+					}
+				},
+				input: true,
+				showCancelButton: false,
+				showConfirmButton: true,
+				id: Math.random()
+			});
 		}
-
-		restore.fromJSON(JSON.parse(decode(base64Data)));
-		API.router.reSyncing = true;
-		await resync.resync();
-		API.router.reSyncing = false;
 	},
 
 	fromFile: async function(file: Blob) {
@@ -237,7 +248,8 @@ export const restore = {
 					return restore.fromBase64(fileData);
 				}
 			}
-			return alert("Invalid file");
+			const msg = new Message("Invalid file");
+			return messages.addMessage(msg);
 		};
 	},
 
@@ -273,6 +285,14 @@ export const restore = {
 
 export function downloadCurrent() {
 	const blob = backup.toBlob();
-	const fileName = prompt("File name:");
-	saveAs(blob, `${fileName || "apexo-backup"}.${ext}`);
+	modals.newModal({
+		id: Math.random(),
+		message: "Please enter file name",
+		onConfirm: fileName => {
+			saveAs(blob, `${fileName || "apexo-backup"}.${ext}`);
+		},
+		input: true,
+		showCancelButton: true,
+		showConfirmButton: true
+	});
 }

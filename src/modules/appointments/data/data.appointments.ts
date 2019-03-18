@@ -48,9 +48,12 @@ class AppointmentsData {
 	}
 	deleteModal(id: string) {
 		API.modals.newModal({
-			message:
-				lang("Are you sure you want to delete this appointment?"),
-			onConfirm: () => this.deleteByID(id)
+			message: lang("Are you sure you want to delete this appointment?"),
+			onConfirm: () => this.deleteByID(id),
+			showCancelButton: true,
+			showConfirmButton: true,
+			input: false,
+			id: Math.random()
 		});
 	}
 	deleteByID(id: string) {

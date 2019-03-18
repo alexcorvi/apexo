@@ -67,8 +67,6 @@ export class MainComponent extends React.Component<{}, {}> {
 						<components.RouterComponent />
 						<components.HeaderComponent />
 						<components.MenuComponent />
-						<components.PromptsComponent />
-						<components.ModalsComponent />
 					</div>
 				</ErrorBoundary>
 			);

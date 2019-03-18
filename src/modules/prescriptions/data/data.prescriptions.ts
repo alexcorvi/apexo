@@ -23,7 +23,11 @@ class Prescriptions {
 
 		API.modals.newModal({
 			message: lang(`Are you sure you want to delete the prescription?`),
-			onConfirm: () => this.deleteByID(id)
+			onConfirm: () => this.deleteByID(id),
+			showCancelButton: true,
+			showConfirmButton: true,
+			input: false,
+			id: Math.random()
 		});
 	}
 }

@@ -23,7 +23,11 @@ class TreatmentData {
 			)}`,
 			onConfirm: () => {
 				this.deleteByID(id);
-			}
+			},
+			showCancelButton: true,
+			showConfirmButton: true,
+			input: false,
+			id: Math.random()
 		});
 	}
 

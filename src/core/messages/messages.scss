@@ -1,11 +1,11 @@
 @import "../../global-styles/shadows.scss";
 
-.prompts-component {
+.messages-component {
 	position: fixed;
 	bottom: 0;
 	right: 0;
 	padding: 15px;
-	.prompt {
+	.message {
 		@include box_shadow(5);
 		transition: 0.4s all;
 		display: table;
@@ -23,7 +23,7 @@
 			border-radius: 50px;
 			font-weight: bold;
 		}
-		.message {
+		.message-inner {
 			margin-right: 10px;
 		}
 		.button {

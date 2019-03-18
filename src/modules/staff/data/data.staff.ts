@@ -20,7 +20,11 @@ class StaffData {
 			message: `${lang("Are you sure you want to delete")} ${
 				this.list[i].name
 			}`,
-			onConfirm: () => this.deleteByID(id)
+			onConfirm: () => this.deleteByID(id),
+			showCancelButton: true,
+			showConfirmButton: true,
+			input: false,
+			id: Math.random()
 		});
 	}
 

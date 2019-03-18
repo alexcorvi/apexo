@@ -1,20 +1,15 @@
 import { generateID } from "../../assets/utils/generate-id";
 import { observable } from "mobx";
 
-export class Prompt {
+export class Message {
 	id: string = generateID();
 
-	@observable message: string = "";
-
-	@observable buttons: {
-		iconName?: string;
-		title: string;
-		onClick: () => void;
-	}[] = [];
-
-	iconName: string = "";
-
+	@observable string: string = "";
 	expiresIn: number = 10000;
 
 	onExpire: () => void = () => {};
+
+	constructor(string: string) {
+		this.string = string;
+	}
 }

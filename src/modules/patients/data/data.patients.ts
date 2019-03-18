@@ -41,7 +41,11 @@ class PatientsData {
 			message: `${lang("All of the patient")} ${this.list[i].name}${lang(
 				"'s data will be deleted along with"
 			)} ${this.list[i].appointments.length} ${lang("of appointments")}.`,
-			onConfirm: () => this.deleteByID(id)
+			onConfirm: () => this.deleteByID(id),
+			showCancelButton: true,
+			showConfirmButton: true,
+			input: false,
+			id: Math.random()
 		});
 	}
 }

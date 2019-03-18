@@ -1,9 +1,31 @@
-import { observable } from 'mobx';
+import { observable } from "mobx";
+
+interface ModalInterface {
+	message: string;
+	input?: boolean;
+	onConfirm: (inputValue: string) => void;
+	id: number;
+	showConfirmButton: boolean;
+	showCancelButton: boolean;
+}
 
 class ModalData {
-	@observable activeModals: { message: string; onConfirm: () => void; id: number }[] = [];
-	newModal({ message, onConfirm }: { message: string; onConfirm: () => void }) {
-		this.activeModals.push({ message, onConfirm, id: Math.random() });
+	@observable activeModals: ModalInterface[] = [];
+	newModal({
+		message,
+		onConfirm,
+		input,
+		showCancelButton,
+		showConfirmButton
+	}: ModalInterface) {
+		this.activeModals.push({
+			message,
+			onConfirm,
+			input,
+			id: Math.random(),
+			showCancelButton,
+			showConfirmButton
+		});
 	}
 }
 

@@ -65,7 +65,11 @@ class OrthoCases {
 		const orthoCase = this.list[i];
 		API.modals.newModal({
 			message: lang(`Orthodontic case will be deleted`),
-			onConfirm: () => this.deleteByID(id)
+			onConfirm: () => this.deleteByID(id),
+			showCancelButton: true,
+			showConfirmButton: true,
+			input: false,
+			id: Math.random()
 		});
 	}
 }

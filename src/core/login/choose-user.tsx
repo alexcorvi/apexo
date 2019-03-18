@@ -8,6 +8,9 @@ import { observer } from "mobx-react";
 import { Profile } from "../../assets/components/profile/profile";
 import "./login.scss";
 import { lang } from "../i18/i18";
+import { Message } from "../messages/class.message";
+import messages from "../messages/data.messages";
+import { modals } from "../modal/data.modal";
 
 @observer
 export class ChooseUser extends React.Component<{}, {}> {
@@ -21,15 +24,24 @@ export class ChooseUser extends React.Component<{}, {}> {
 							className="m-t-5 p-5 user-chooser pointer"
 							onClick={() => {
 								if (user.pin) {
-									const providedPin = prompt(
-										lang("Please enter your PIN")
-									);
-									if (providedPin !== user.pin) {
-										alert(lang("Incorrect PIN provided"));
-										return;
-									}
+									modals.newModal({
+										id: Math.random(),
+										message: "Please enter your PIN",
+										onConfirm: providedPin => {
+											if (providedPin === user.pin) {
+												login.setUser(user._id);
+											} else {
+												const msg = new Message(
+													"Invalid PIN provided"
+												);
+												messages.addMessage(msg);
+											}
+										},
+										input: true,
+										showCancelButton: true,
+										showConfirmButton: true
+									});
 								}
-								login.setUser(user._id);
 							}}
 							key={user._id}
 						>

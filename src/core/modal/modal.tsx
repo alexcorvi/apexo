@@ -2,20 +2,30 @@ import "./modal.scss";
 
 import * as React from "react";
 
-import { Panel, PanelType, PrimaryButton } from "office-ui-fabric-react";
+import {
+	Panel,
+	PanelType,
+	PrimaryButton,
+	TextField
+} from "office-ui-fabric-react";
 import { observer } from "mobx-react";
 import { modals } from "./data.modal";
 import { lang } from "../i18/i18";
+import { observable } from "mobx";
 
 @observer
 export class ModalsComponent extends React.Component<{}, {}> {
+	@observable inputValue: string = "";
+
 	render() {
 		return (
 			<div className="modals-component">
 				{modals.activeModals.map((modal, index) => (
 					<Panel
 						key={modal.id}
-						className="confirmation-modal"
+						className={`confirmation-modal ${
+							modal.input ? "input-modal" : ""
+						}`}
 						isBlocking
 						isLightDismiss
 						isOpen
@@ -25,21 +35,40 @@ export class ModalsComponent extends React.Component<{}, {}> {
 						onRenderHeader={() => <div />}
 					>
 						<p>{modal.message}</p>
-						<PrimaryButton
-							onClick={() => {
-								modals.activeModals.splice(index, 1);
-								modal.onConfirm();
-							}}
-							iconProps={{ iconName: "CheckMark" }}
-						>
-							{lang("Confirm")}
-						</PrimaryButton>
-						<PrimaryButton
-							onClick={() => modals.activeModals.splice(index, 1)}
-							iconProps={{ iconName: "Cancel" }}
-						>
-							{lang("Cancel")}
-						</PrimaryButton>
+						{modal.input ? (
+							<TextField
+								value={this.inputValue}
+								onChanged={val => (this.inputValue = val)}
+							/>
+						) : (
+							""
+						)}
+
+						{modal.showConfirmButton ? (
+							<PrimaryButton
+								onClick={() => {
+									modals.activeModals.splice(index, 1);
+									modal.onConfirm(this.inputValue);
+								}}
+								iconProps={{ iconName: "CheckMark" }}
+							>
+								{lang("Confirm")}
+							</PrimaryButton>
+						) : (
+							""
+						)}
+						{modal.showCancelButton ? (
+							<PrimaryButton
+								onClick={() =>
+									modals.activeModals.splice(index, 1)
+								}
+								iconProps={{ iconName: "Cancel" }}
+							>
+								{lang("Cancel")}
+							</PrimaryButton>
+						) : (
+							""
+						)}
 					</Panel>
 				))}
 			</div>

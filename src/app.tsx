@@ -17,6 +17,8 @@ initializeIconsB("./fonts/");
 ReactDOM.render(
 	<Fabric>
 		<components.MainComponent />
+		<components.MessagesComponent />
+		<components.ModalsComponent />
 		<p className="version-num">version 2.2.3 </p>
 	</Fabric>,
 	document.getElementById("root")
