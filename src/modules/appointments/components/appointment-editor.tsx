@@ -96,7 +96,6 @@ export class AppointmentEditor extends React.Component<
 							<Profile
 								secondaryElement={
 									<span>
-										Appointment:{" "}
 										{dateUtils.relativeFormat(
 											this.props.appointment!.date
 										)}{" "}

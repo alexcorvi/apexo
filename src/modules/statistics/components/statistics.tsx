@@ -14,66 +14,206 @@ import { statistics } from "../data";
 import { data } from "../../";
 import { Section } from "../../../assets/components/section/section";
 import { lang } from "../../../core/i18/i18";
+import { DataTable } from "../../../assets/components/data-table/data-table.component";
+import { Profile } from "../../../assets/components/profile/profile";
+import * as dateUtils from "../../../assets/utils/date";
+import { AppointmentEditor } from "../../appointments/components";
+import { Appointment } from "../../appointments/data";
+import { observable } from "mobx";
 
 @observer
 export class StatisticsComponent extends React.Component<{}, {}> {
+	@observable appointment: Appointment | null = null;
+
 	render() {
 		return (
-			<div className="statistics-component">
-				<div className="controls">
-					<div className="container-fluid">
-						<Row gutter={2}>
-							<Col sm={8}>
-								<Label>{lang("Staff Member")}:</Label>
-								<Dropdown
-									placeHolder={lang("Filter By Staff Member")}
-									defaultValue=""
-									options={[
-										{ key: "", text: lang("All Members") }
-									].concat(
-										data.staffData.staffMembers.list.map(
-											member => {
-												return {
-													key: member._id,
-													text: member.name
-												};
+			<div className="statistics-component p-15 p-l-10 p-r-10">
+				<DataTable
+					maxItemsOnLoad={15}
+					className={"appointments-data-table"}
+					heads={[
+						lang("Appointment"),
+						lang("Operators"),
+						lang("Paid amount"),
+						lang("Expenses"),
+						lang("Profits")
+					]}
+					rows={statistics.selectedAppointments.map(appointment => ({
+						id: appointment._id,
+						searchableString: appointment.searchableString,
+						cells: [
+							{
+								dataValue: appointment.treatment
+									? appointment.treatment.type
+									: "",
+								component: (
+									<Profile
+										secondaryElement={
+											<span>
+												{dateUtils.relativeFormat(
+													appointment.date
+												)}{" "}
+												/{" "}
+												{appointment.treatment
+													? appointment.treatment.type
+													: ""}
+											</span>
+										}
+										name={appointment!.patient.name}
+										size={3}
+									/>
+								),
+								onClick: () => {
+									this.appointment = appointment;
+								},
+								className: "no-label"
+							},
+							{
+								dataValue: appointment.operatingStaff
+									.map(x => x.name)
+									.join(", "),
+								component: (
+									<div>
+										{appointment.operatingStaff.map(
+											staffMember => (
+												<Profile
+													name={staffMember.name}
+													size={2}
+												/>
+											)
+										)}
+									</div>
+								),
+								className: "hidden-xs"
+							},
+							{
+								dataValue: appointment.paidAmount,
+								component: (
+									<ColoredLabel
+										text={
+											data.settingsData.settings.getSetting(
+												"currencySymbol"
+											) +
+											round(
+												appointment.paidAmount
+											).toString()
+										}
+										type={LabelType.warning}
+									/>
+								),
+								className: "hidden-xs"
+							},
+							{
+								dataValue: appointment.expenses,
+								component: (
+									<ColoredLabel
+										text={
+											data.settingsData.settings.getSetting(
+												"currencySymbol"
+											) +
+											round(
+												appointment.expenses
+											).toString()
+										}
+										type={LabelType.info}
+									/>
+								),
+								className: "hidden-xs"
+							},
+							{
+								dataValue: appointment.profit,
+								component: (
+									<ColoredLabel
+										text={
+											data.settingsData.settings.getSetting(
+												"currencySymbol"
+											) +
+											round(appointment.profit).toString()
+										}
+										type={LabelType.primary}
+									/>
+								),
+								className: "hidden-xs"
+							}
+						]
+					}))}
+					commands={[
+						{
+							key: "1",
+							onRender: () => {
+								return (
+									<Dropdown
+										placeHolder={lang(
+											"Filter By Staff Member"
+										)}
+										defaultValue=""
+										options={[
+											{
+												key: "",
+												text: lang("All Members")
 											}
-										)
-									)}
-									onChanged={member => {
-										statistics.filterByMember = member.key.toString();
-									}}
-								/>
-							</Col>
-							<Col sm={8}>
-								<Label>{lang("From")}:</Label>
-								<DatePicker
-									onSelectDate={date => {
-										if (date) {
-											statistics.startingDate = statistics.getDayStartingPoint(
-												date.getTime()
-											);
+										].concat(
+											data.staffData.staffMembers.list.map(
+												member => {
+													return {
+														key: member._id,
+														text: member.name
+													};
+												}
+											)
+										)}
+										onChanged={member => {
+											statistics.filterByMember = member.key.toString();
+										}}
+									/>
+								);
+							}
+						},
+						{
+							key: "2",
+							onRender: () => {
+								return (
+									<DatePicker
+										onSelectDate={date => {
+											if (date) {
+												statistics.startingDate = statistics.getDayStartingPoint(
+													date.getTime()
+												);
+											}
+										}}
+										value={
+											new Date(statistics.startingDate)
 										}
-									}}
-									value={new Date(statistics.startingDate)}
-								/>
-							</Col>
-							<Col sm={8}>
-								<Label>{lang("To")}:</Label>
-								<DatePicker
-									onSelectDate={date => {
-										if (date) {
-											statistics.endingDate = statistics.getDayStartingPoint(
-												date.getTime()
-											);
-										}
-									}}
-									value={new Date(statistics.endingDate)}
-								/>
-							</Col>
-						</Row>
-					</div>
-				</div>
+									/>
+								);
+							}
+						},
+						{
+							key: "3",
+							onRender: () => {
+								return (
+									<DatePicker
+										onSelectDate={date => {
+											if (date) {
+												statistics.endingDate = statistics.getDayStartingPoint(
+													date.getTime()
+												);
+											}
+										}}
+										value={new Date(statistics.endingDate)}
+									/>
+								);
+							}
+						}
+					]}
+				/>
+
+				<AppointmentEditor
+					appointment={this.appointment}
+					onDismiss={() => (this.appointment = null)}
+					onDelete={() => (this.appointment = null)}
+				/>
+
 				<div className="container-fluid m-t-20 quick">
 					<Section title={lang("Quick stats")} showByDefault>
 						<Row>
@@ -140,6 +280,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 						</Row>
 					</Section>
 				</div>
+
 				<div className="charts container-fluid">
 					<div className="row">
 						{statistics.charts.map((chart, index) => {

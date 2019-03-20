@@ -1,5 +1,21 @@
 @import "../../../global-styles/shadows.scss";
 .statistics-component {
+	.ms-CommandBar-primaryCommand {
+		& > div {
+			margin-top: 4px;
+			&:not(:first-child) {
+				border-left: 1px solid #f4f4f4;
+			}
+			&.ms-OverflowSet-overflowButton {
+				margin-top: 0;
+			}
+		}
+		.ms-TextField-fieldGroup,
+		.ms-Dropdown-title {
+			border: none;
+		}
+	}
+
 	.controls {
 		padding: 10px;
 		@include box_shadow(2);
@@ -42,13 +58,5 @@
 				}
 			}
 		}
-	}
-}
-
-@media screen and (min-width: 992px) {
-	.statistics-component {
-		margin-top: 67px;
-		margin-right: 15px;
-		border-radius: 3px;
 	}
 }
