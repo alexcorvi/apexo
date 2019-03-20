@@ -204,6 +204,7 @@ class Login {
 	resetUser() {
 		this.step = LoginStep.chooseUser;
 		this.currentUserID = "";
+		localStorage.removeItem("user_id");
 	}
 	setUser(id: string) {
 		this.currentUserID = id;

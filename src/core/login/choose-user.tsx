@@ -41,6 +41,8 @@ export class ChooseUser extends React.Component<{}, {}> {
 										showCancelButton: true,
 										showConfirmButton: true
 									});
+								} else {
+									login.setUser(user._id);
 								}
 							}}
 							key={user._id}
