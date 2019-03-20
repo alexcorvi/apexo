@@ -57,6 +57,29 @@ export const compact: {
 	}
 };
 
+export const destroyLocal: {
+	destroyMethods: Array<() => Promise<void>>;
+	destroy: () => Promise<boolean>;
+} = {
+	destroyMethods: [],
+	destroy: async function() {
+		return new Promise<boolean>(resolve => {
+			let done = 0;
+			this.destroyMethods.forEach(destroyMethod => {
+				destroyMethod()
+					.then(() => done++)
+					.catch(() => done++);
+			});
+			const checkInterval = setInterval(() => {
+				if (done === this.destroyMethods.length) {
+					resolve(true);
+					clearInterval(checkInterval);
+				}
+			}, 300);
+		});
+	}
+};
+
 export function connectToDB(
 	name: string,
 	shouldLog: boolean = false,
@@ -186,6 +209,11 @@ export function connectToDB(
 				name,
 				await remoteDatabase.compact()
 			);
+		});
+
+		destroyLocal.destroyMethods.push(async () => {
+			await localDatabase.destroy();
+			return;
 		});
 
 		return methods;

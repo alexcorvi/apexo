@@ -14,7 +14,7 @@ import {
 	PrescriptionItemJSON
 } from "../../modules/prescriptions/data";
 import { prescriptionsData } from "../../modules/prescriptions";
-import { resync } from "../../core/db";
+import { resync, destroyLocal } from "../../core/db";
 import { saveAs } from "file-saver";
 import { SettingItemJSON, SettingsItem } from "../../modules/settings/data";
 import { settingsData } from "../../modules/settings";
@@ -22,18 +22,10 @@ import { Treatment, TreatmentJSON } from "../../modules/treatments/data";
 import { treatmentsData } from "../../modules/treatments";
 import { modals } from "../../core/modal/data.modal";
 import messages from "../../core/messages/data.messages";
+import { decrypt } from "./encryption";
+import PouchDB from "pouchdb-browser";
 
 const ext = "apx";
-
-interface BackupJSON {
-	appointments: AppointmentJSON[];
-	staff: StaffMemberJSON[];
-	ortho: CaseJSON[];
-	patients: PatientJSON[];
-	prescriptions: PrescriptionItemJSON[];
-	settings: SettingItemJSON[];
-	treatments: TreatmentJSON[];
-}
 
 export interface DropboxFile {
 	name: string;
@@ -43,47 +35,88 @@ export interface DropboxFile {
 	client_modified: string;
 }
 
+export interface DatabaseDump {
+	dbName: string;
+	data: any[];
+}
+
 export const backup = {
-	toJSON: function(): BackupJSON {
-		const appointments = appointmentsData.appointments.list.map(x =>
-			x.toJSON()
-		);
-		const staff = staffData.staffMembers.list.map(x => x.toJSON());
-		const ortho = orthoData.cases.list.map(x => x.toJSON());
-		const patients = patientsData.patients.list.map(x => x.toJSON());
-		const prescriptions = prescriptionsData.prescriptions.list.map(x =>
-			x.toJSON()
-		);
-		const settings = settingsData.settings.list.map(x => x.toJSON());
-		const treatments = treatmentsData.treatments.list.map(x => x.toJSON());
+	toJSON: function() {
+		return new Promise(async (resolve, reject) => {
+			const databases = [
+				"appointments",
+				"doctors",
+				"files",
+				"orthodontic",
+				"patients",
+				"prescriptions",
+				"settings",
+				"treatments"
+			];
 
-		return {
-			appointments,
-			staff,
-			ortho,
-			patients,
-			prescriptions,
-			settings,
-			treatments
-		};
+			const dumps: DatabaseDump[] = [];
+
+			let done = 0;
+
+			databases.forEach(async dbName => {
+				let credentials = { username: "", password: "" };
+				if (localStorage.getItem("ec")) {
+					credentials = JSON.parse(
+						decrypt(localStorage.getItem("ec") || "")
+					);
+				}
+				const remoteDatabase = new PouchDB(
+					`${API.login.server}/${dbName}`,
+					{
+						auth: {
+							username: credentials.username,
+							password: credentials.password
+						}
+					}
+				);
+
+				const data = (await remoteDatabase.allDocs({
+					include_docs: true,
+					attachments: true
+				})).rows.map(entry => {
+					if (entry.doc) {
+						delete entry.doc._rev;
+					}
+					return entry.doc;
+				});
+
+				dumps.push({ dbName, data });
+
+				done++;
+				return;
+			});
+
+			const checkInterval = setInterval(() => {
+				if (done === databases.length) {
+					clearInterval(checkInterval);
+					resolve(dumps);
+				}
+			}, 500);
+		});
 	},
 
-	toBase64: function() {
-		return encode(JSON.stringify(backup.toJSON()));
+	toBase64: async function() {
+		const JSONDump = await backup.toJSON();
+		return encode(JSON.stringify(JSONDump));
 	},
 
-	toBlob: function() {
-		return new Blob(["apexo-backup:" + backup.toBase64()], {
+	toBlob: async function() {
+		const base64 = await backup.toBase64();
+		return new Blob(["apexo-backup:" + base64], {
 			type: "text/plain;charset=utf-8"
 		});
 	},
 
 	toDropbox: function(accessToken: string): Promise<number> {
-		return new Promise((resolve, reject) => {
-			const file = backup.toBlob();
+		return new Promise(async (resolve, reject) => {
+			const file = await backup.toBlob();
 			const xhr = new XMLHttpRequest();
 			const fileName = new Date().getTime();
-
 			xhr.onload = function() {
 				if (xhr.status === 200) {
 					return resolve(fileName);
@@ -161,112 +194,129 @@ export const backup = {
 };
 
 export const restore = {
-	fromJSON: async function(json: BackupJSON) {
+	fromJSON: async function(json: DatabaseDump[]) {
 		API.login.resetUser();
+		let done = 0;
 
-		appointmentsData.appointments.list.splice(
-			0,
-			appointmentsData.appointments.list.length
-		);
-		staffData.staffMembers.list.splice(
-			0,
-			staffData.staffMembers.list.length
-		);
-		orthoData.cases.list.splice(0, orthoData.cases.list.length);
-		patientsData.patients.list.splice(0, patientsData.patients.list.length);
-		prescriptionsData.prescriptions.list.splice(
-			0,
-			prescriptionsData.prescriptions.list.length
-		);
-		settingsData.settings.list.splice(0, settingsData.settings.list.length);
-		treatmentsData.treatments.list.splice(
-			0,
-			treatmentsData.treatments.list.length
-		);
+		return new Promise((resolve, reject) => {
+			json.forEach(async dump => {
+				const dbName = dump.dbName;
 
-		json.appointments.forEach(item => {
-			appointmentsData.appointments.list.push(new Appointment(item));
-		});
-		(json.staff || (json as any).doctors) /* in case using an old backup */
-			.forEach(item => {
-				staffData.staffMembers.list.push(new StaffMember(item));
+				let credentials = { username: "", password: "" };
+				if (localStorage.getItem("ec")) {
+					credentials = JSON.parse(
+						decrypt(localStorage.getItem("ec") || "")
+					);
+				}
+				const remoteDatabase1 = new PouchDB(
+					`${API.login.server}/${dbName}`,
+					{
+						auth: {
+							username: credentials.username,
+							password: credentials.password
+						},
+						skip_setup: false
+					}
+				);
+				await remoteDatabase1.destroy();
+				const remoteDatabase2 = new PouchDB(
+					`${API.login.server}/${dbName}`,
+					{
+						auth: {
+							username: credentials.username,
+							password: credentials.password
+						},
+						skip_setup: false
+					}
+				);
+				const a = await remoteDatabase2.bulkDocs(dump.data);
+				done++;
+				return;
 			});
-		json.ortho.forEach(item => {
-			orthoData.cases.list.push(new OrthoCase(item));
-		});
-		json.patients.forEach(item => {
-			patientsData.patients.list.push(new Patient(item));
-		});
-		json.prescriptions.forEach(item => {
-			prescriptionsData.prescriptions.list.push(
-				new PrescriptionItem(item)
-			);
-		});
-		json.settings.forEach(item => {
-			settingsData.settings.list.push(new SettingsItem(item));
-		});
-		json.treatments.forEach(item => {
-			treatmentsData.treatments.list.push(new Treatment(item));
+
+			const checkInterval = setInterval(async () => {
+				if (done === json.length) {
+					clearInterval(checkInterval);
+					await destroyLocal.destroy();
+					await resync.resync();
+					location.reload();
+				}
+			});
 		});
 	},
 
 	fromBase64: async function(base64Data: string, ignoreConfirm?: boolean) {
-		if (!ignoreConfirm) {
-			const confirmation = modals.newModal({
-				message: `All unsaved data will be lost.
-				All data will be removed and replaced by the backup file.
-				Type "yes" to confirm`,
-				onConfirm: async (input: string) => {
-					if (input.toLowerCase() === "yes") {
-						restore.fromJSON(JSON.parse(decode(base64Data)));
-						API.router.reSyncing = true;
-						await resync.resync();
-						API.router.reSyncing = false;
-					} else {
-						const msg = new Message("Restoration cancelled");
-						return messages.addMessage(msg);
-					}
-				},
-				input: true,
-				showCancelButton: false,
-				showConfirmButton: true,
-				id: Math.random()
-			});
-		}
+		return new Promise(async (resolve, reject) => {
+			if (ignoreConfirm) {
+				const json = JSON.parse(decode(base64Data));
+				await restore.fromJSON(json);
+				resolve();
+			} else {
+				modals.newModal({
+					message: `All unsaved data will be lost. All data will be removed and replaced by the backup file. Type "yes" to confirm`,
+					onConfirm: async (input: string) => {
+						if (input.toLowerCase() === "yes") {
+							const json = JSON.parse(decode(base64Data));
+							await restore.fromJSON(json);
+							resolve();
+						} else {
+							const msg = new Message("Restoration cancelled");
+							messages.addMessage(msg);
+							reject();
+						}
+					},
+					input: true,
+					showCancelButton: false,
+					showConfirmButton: true,
+					id: Math.random()
+				});
+			}
+		});
 	},
 
 	fromFile: async function(file: Blob) {
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onloadend = function() {
-			const base64data = reader.result;
-			if (typeof base64data === "string") {
-				const fileData = atob(base64data.split("base64,")[1]).split(
-					"apexo-backup:"
-				)[1];
-				if (fileData) {
-					return restore.fromBase64(fileData);
-				}
+		return new Promise((resolve, reject) => {
+			function terminate() {
+				const msg = new Message("Invalid file");
+				messages.addMessage(msg);
+				reject();
 			}
-			const msg = new Message("Invalid file");
-			return messages.addMessage(msg);
-		};
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onloadend = async function() {
+				const base64data = reader.result;
+				if (typeof base64data === "string") {
+					const fileData = atob(base64data.split("base64,")[1]).split(
+						"apexo-backup:"
+					)[1];
+					if (fileData) {
+						await restore.fromBase64(fileData);
+						resolve();
+					} else {
+						terminate();
+					}
+				} else {
+					terminate();
+				}
+			};
+		});
 	},
 
-	fromDropbox: function(accessToken: string, filePath: string) {
+	fromDropbox: async function(accessToken: string, filePath: string) {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
 			xhr.responseType = "arraybuffer";
-			xhr.onload = function() {
+			xhr.onload = async function() {
 				if (xhr.status === 200) {
 					const backupBlob = new Blob([xhr.response], {
 						type: "application/octet-stream"
 					});
-
-					restore.fromFile(backupBlob);
+					await restore.fromFile(backupBlob);
+					resolve();
 				} else {
 					const errorMessage =
 						xhr.response || "Unable to download file";
+					reject(errorMessage);
 				}
 			};
 
@@ -283,16 +333,19 @@ export const restore = {
 	}
 };
 
-export function downloadCurrent() {
-	const blob = backup.toBlob();
-	modals.newModal({
-		id: Math.random(),
-		message: "Please enter file name",
-		onConfirm: fileName => {
-			saveAs(blob, `${fileName || "apexo-backup"}.${ext}`);
-		},
-		input: true,
-		showCancelButton: true,
-		showConfirmButton: true
+export async function downloadCurrent() {
+	const blob = await backup.toBlob();
+	return new Promise(resolve => {
+		modals.newModal({
+			id: Math.random(),
+			message: "Please enter file name",
+			onConfirm: fileName => {
+				saveAs(blob, `${fileName || "apexo-backup"}.${ext}`);
+				resolve();
+			},
+			input: true,
+			showCancelButton: true,
+			showConfirmButton: true
+		});
 	});
 }
