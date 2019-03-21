@@ -1,5 +1,6 @@
 import { computed, observable } from "mobx";
 import { lang } from "../../../core/i18/i18";
+import * as dateUtils from "../../../assets/utils/date";
 
 interface WeekDayInfo {
 	index: number;
@@ -9,52 +10,6 @@ interface WeekDayInfo {
 
 export class Calendar {
 	// constants
-	daysShort = [
-		lang("SU"),
-		lang("MO"),
-		lang("TU"),
-		lang("WE"),
-		lang("TH"),
-		lang("FR"),
-		lang("SA")
-	];
-	days = [
-		lang("Sunday"),
-		lang("Monday"),
-		lang("Tuesday"),
-		lang("Wednesday"),
-		lang("Thursday"),
-		lang("Friday"),
-		lang("Saturday")
-	];
-	monthsShort = [
-		lang("Jan"),
-		lang("Feb"),
-		lang("Mar"),
-		lang("Apr"),
-		lang("May"),
-		lang("Jun"),
-		lang("Jul"),
-		lang("Aug"),
-		lang("Sep"),
-		lang("Oct"),
-		lang("Nov"),
-		lang("Dec")
-	];
-	months = [
-		"January",
-		"February",
-		"March",
-		"April",
-		"May",
-		"June",
-		"July",
-		"August",
-		"September",
-		"October",
-		"November",
-		"December"
-	];
 	// currents
 	currentYear: number = new Date().getFullYear();
 	currentMonth: number = new Date().getMonth();
@@ -136,8 +91,8 @@ export class Calendar {
 		const index = new Date(year, month, day).getDay();
 		return {
 			index,
-			day: this.days[index],
-			dayShort: this.daysShort[index]
+			day: dateUtils.name.days()[index],
+			dayShort: dateUtils.name.daysShort()[index]
 		};
 	}
 
