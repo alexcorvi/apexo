@@ -23,6 +23,7 @@ import { API } from "../../../core/index";
 import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
 import { compact } from "../../../core/db/index";
 import { lang } from "../../../core/i18/i18";
+import { unifiedDateFormat } from "../../../assets/utils/date";
 
 @observer
 export class SettingsComponent extends React.Component<{}, {}> {
@@ -492,7 +493,9 @@ export class SettingsComponent extends React.Component<{}, {}> {
 																				1}`}
 																		</div>
 																	)}
-																	text={date.toDateString()}
+																	text={unifiedDateFormat(
+																		date
+																	)}
 																	subText={`${Math.round(
 																		file.size /
 																			1000

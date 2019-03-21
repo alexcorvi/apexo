@@ -1,14 +1,5 @@
 import t4mat from "t4mat";
 import { lang } from "../../core/i18/i18";
-export function relativeFormat(timestamp: number) {
-	return isToday(timestamp)
-		? "Today"
-		: isTomorrow(timestamp)
-		? "Tomorrow"
-		: isYesterday(timestamp)
-		? "Yesterday"
-		: t4mat({ time: timestamp, format: "{R}" });
-}
 
 export function comparableTime(date: Date) {
 	return {
@@ -41,6 +32,16 @@ export function isTomorrow(timestamp: number) {
 			comparableTime(new Date(new Date().getTime() + 86400000))
 		)
 	);
+}
+
+export function unifiedDateFormat(d: Date | number) {
+	if (typeof d === "number") {
+		d = new Date(d);
+	}
+
+	return `${d!.getDate()} ${
+		name.monthsShort()[d!.getMonth()]
+	}'${d!.getFullYear() - 2000}`;
 }
 
 export const name = {

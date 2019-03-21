@@ -77,7 +77,7 @@ export class AppointmentThumb extends React.Component<
 									? this.props.appointment.treatment.type
 									: ""
 							}
-							subText={dateUtils.relativeFormat(
+							subText={dateUtils.unifiedDateFormat(
 								this.props.appointment.date
 							)}
 							size={3}

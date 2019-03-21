@@ -83,7 +83,7 @@ export class OrthoList extends React.Component<{}, {}> {
 									},
 									{
 										dataValue: orthoCase.started,
-										component: dateUtils.relativeFormat(
+										component: dateUtils.unifiedDateFormat(
 											orthoCase.started
 										),
 										className: "hidden-xs"
@@ -104,7 +104,7 @@ export class OrthoList extends React.Component<{}, {}> {
 																.treatment.type
 														: ""
 												}
-												subText={dateUtils.relativeFormat(
+												subText={dateUtils.unifiedDateFormat(
 													patient.nextAppointment.date
 												)}
 												size={3}

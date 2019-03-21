@@ -113,7 +113,7 @@ export class StaffListing extends React.Component<{}, {}> {
 																.treatment.type
 														: ""
 												}
-												subText={dateUtils.relativeFormat(
+												subText={dateUtils.unifiedDateFormat(
 													member.lastAppointment.date
 												)}
 												size={3}
@@ -139,7 +139,7 @@ export class StaffListing extends React.Component<{}, {}> {
 																.treatment.type
 														: ""
 												}
-												subText={dateUtils.relativeFormat(
+												subText={dateUtils.unifiedDateFormat(
 													member.nextAppointment.date
 												)}
 												size={3}

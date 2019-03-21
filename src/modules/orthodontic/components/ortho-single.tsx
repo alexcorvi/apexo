@@ -85,7 +85,7 @@ export class OrthoSingle extends React.Component<{
 										secondaryElement={
 											<span>
 												Started:{" "}
-												{dateUtils.relativeFormat(
+												{dateUtils.unifiedDateFormat(
 													this.orthoCase.started
 												)}
 											</span>
@@ -650,9 +650,9 @@ export class OrthoSingle extends React.Component<{
 															1}`}
 														secondaryElement={
 															<span>
-																{new Date(
+																{dateUtils.unifiedDateFormat(
 																	c.date
-																).toDateString()}
+																)}
 															</span>
 														}
 														size={3}

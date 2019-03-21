@@ -51,7 +51,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 									<Profile
 										secondaryElement={
 											<span>
-												{dateUtils.relativeFormat(
+												{dateUtils.unifiedDateFormat(
 													appointment.date
 												)}{" "}
 												/{" "}
