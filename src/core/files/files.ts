@@ -1,34 +1,101 @@
 import pouchDB = require("pouchdb-browser");
 const PouchDB: PouchDB.Static = (pouchDB as any).default;
-import { API } from "../";
 import { generateID } from "../../assets/utils/generate-id";
-import { base64StringToBlob, blobToBase64String } from "blob-util";
+import setting from "../../modules/settings/data/data.settings";
 
 export const files = {
-	db() {
-		return new PouchDB(`${API.login.server}/files`);
+	async save(fileB64: string, ext: string, dir: string): Promise<string> {
+		return new Promise(async (resolve, reject) => {
+			const accessToken = setting.getSetting("dropbox_accessToken");
+			if (!accessToken) {
+				reject("Did not find DropBox access token");
+			}
+
+			const fileBlob = new Blob(["apexo-backup:" + fileB64], {
+				type: "text/plain;charset=utf-8"
+			});
+
+			const xhr = new XMLHttpRequest();
+			const path = `/${dir}/${new Date().getTime()}-${generateID(
+				4
+			)}.${ext}`;
+
+			xhr.onload = function() {
+				if (xhr.status === 200) {
+					return resolve(path);
+				} else {
+					return reject(xhr.response || "Unable to upload file");
+				}
+			};
+
+			xhr.open("POST", "https://content.dropboxapi.com/2/files/upload");
+			xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+			xhr.setRequestHeader("Content-Type", "application/octet-stream");
+			xhr.setRequestHeader(
+				"Dropbox-API-Arg",
+				JSON.stringify({
+					path,
+					mode: "add",
+					autorename: true,
+					mute: false
+				})
+			);
+
+			xhr.send(fileBlob);
+		});
 	},
 
-	async save(fileB64: string) {
-		const id = "image_id_" + generateID();
-		return (await this.db().putAttachment(
-			id,
-			id + "_image",
-			base64StringToBlob(fileB64),
-			"image/png"
-		)).id;
+	async get(path: string): Promise<string> {
+		return new Promise((resolve, reject) => {
+			const accessToken = setting.getSetting("dropbox_accessToken");
+			if (!accessToken) {
+				reject("Did not find DropBox access token");
+			}
+			const xhr = new XMLHttpRequest();
+			xhr.responseType = "arraybuffer";
+			xhr.onload = async function() {
+				if (xhr.status === 200) {
+					resolve(xhr.response);
+				} else {
+					const errorMessage =
+						xhr.response || "Unable to download file";
+					reject(errorMessage);
+				}
+			};
+
+			xhr.open("POST", "https://content.dropboxapi.com/2/files/download");
+			xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+			xhr.setRequestHeader(
+				"Dropbox-API-Arg",
+				JSON.stringify({
+					path
+				})
+			);
+			xhr.send();
+		});
 	},
 
-	async get(id: string) {
-		return await blobToBase64String((await this.db().getAttachment(
-			id,
-			id + "_image"
-		)) as Blob);
-	},
+	async remove(path: string) {
+		return new Promise((resolve, reject) => {
+			const accessToken = setting.getSetting("dropbox_accessToken");
+			if (!accessToken) {
+				reject("Did not find DropBox access token");
+			}
+			const xhr = new XMLHttpRequest();
 
-	async remove(id: string) {
-		const doc = await this.db().get(id);
-		const response = await this.db().remove(doc._id, doc._rev || "");
-		return response;
+			xhr.onload = function() {
+				if (xhr.status === 200) {
+					return resolve();
+				} else {
+					return reject(xhr.response || "Unable to delete file");
+				}
+			};
+
+			xhr.open("POST", "https://api.dropboxapi.com/2/files/delete_v2");
+			xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+			xhr.setRequestHeader("Content-Type", "application/json");
+
+			xhr.send(JSON.stringify({ path }));
+		});
 	}
 };
