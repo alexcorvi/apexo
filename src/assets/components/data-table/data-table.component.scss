@@ -38,13 +38,19 @@
 		font-size: 13px;
 	}
 
-	.delete-button {
-		background: #e3e3e3;
+	.action-button {
+		background: #fff;
 		color: #212121;
 		border-radius: 3px;
-		&:hover {
+		border: 1px solid #f1f1f1;
+		margin-right: 5px;
+		&.delete:hover {
 			color: #fff;
 			background: #f44336;
+			border-color: #f44336;
+		}
+		&:hover {
+			border-color: #00bcd4;
 		}
 	}
 	.delete-td {

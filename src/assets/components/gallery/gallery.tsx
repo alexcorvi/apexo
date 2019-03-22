@@ -2,7 +2,7 @@ import * as React from "react";
 import { API } from "../../../core/index";
 import {
 	fileTypes,
-	PickFile
+	PickAndUpload
 } from "../../../assets/components/pick-files/pick-files";
 import {
 	Icon,
@@ -30,7 +30,7 @@ export class Gallery extends React.Component<
 	},
 	{}
 > {
-	pickFileInstance: PickFile | undefined;
+	pickFileInstance: PickAndUpload | undefined;
 	@observable gallery: string[] = this.props.gallery;
 	@observable show: string = "";
 	@observable loading: boolean = false;
@@ -77,7 +77,7 @@ export class Gallery extends React.Component<
 								/>
 								<span>Add Image</span>
 							</span>
-							<PickFile
+							<pickAndUpload
 								accept={fileTypes.image}
 								onPick={newFiles => {
 									this.loading = false;

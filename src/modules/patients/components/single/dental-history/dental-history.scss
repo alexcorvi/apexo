@@ -1,0 +1,128 @@
+@import "../../../../../global-styles/shadows.scss";
+
+.dental-history {
+	.dental-history-toggle {
+	}
+	.chart {
+		direction: ltr !important;
+	}
+	table {
+		direction: ltr !important;
+
+		margin-bottom: 20px;
+		&.permanent {
+			tr {
+				td {
+					&:nth-child(8) {
+						border-right: 2px solid #000;
+					}
+					&:nth-child(9) {
+						border-left: 2px solid #000;
+					}
+				}
+			}
+		}
+		&.deciduous {
+			tr {
+				td {
+					&:nth-child(5) {
+						border-right: 2px solid #000;
+					}
+					&:nth-child(6) {
+						border-left: 2px solid #000;
+					}
+				}
+			}
+		}
+		width: 100%;
+		border-collapse: collapse;
+		tr {
+			td {
+				.has-notes {
+					transition: 0.4s all;
+					background: #2196f3;
+					height: 10px;
+					width: 10px;
+					display: inline-block;
+					position: absolute;
+					top: 5px;
+					left: 5px;
+					border-radius: 5px;
+					@include box_shadow(5);
+				}
+				position: relative;
+				background: #fff;
+				transition: 0.4s all;
+				&:hover {
+					@include box_shadow(5);
+				}
+				cursor: pointer;
+				text-align: center;
+				padding: 10px;
+				color: #000;
+				&.filled {
+					.has-notes {
+						background: #ff6f00;
+					}
+					background: #ffc107;
+					color: #fff;
+				}
+				&.compromised {
+					.has-notes {
+						background: #b71c1c;
+					}
+					background: #f44336;
+					color: #fff;
+				}
+				&.endo {
+					.has-notes {
+						background: #9575cd;
+					}
+					background: #673ab7;
+					color: #fff;
+				}
+				&.missing {
+					.has-notes {
+						background: #757575;
+					}
+					color: #eee;
+					background: #bdbdbd;
+				}
+				@include box_shadow(1);
+			}
+		}
+	}
+	.tooth-details {
+		background: #fff;
+		border-radius: 3px;
+		@include box_shadow(2);
+		padding: 30px;
+		h4 {
+			color: #616161;
+		}
+		.tooth-name {
+			font-size: 17px;
+			text-transform: capitalize;
+			margin-bottom: 25px;
+		}
+		.close-details {
+			position: absolute;
+			top: 0px;
+			right: 10px;
+			padding: 5px 5px 3px;
+			border-radius: 2px;
+			font-size: 10px;
+			cursor: pointer;
+			transition: 0.4s all;
+			&:hover {
+				background: #3e50b3;
+				color: #fff;
+				@include box_shadow(2);
+			}
+		}
+	}
+}
+
+.single-tooth-condition {
+	margin-top: 10px;
+}

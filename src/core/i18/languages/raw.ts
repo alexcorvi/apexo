@@ -37,6 +37,13 @@ export const ar: Language = {
 		Patient: "",
 		Started: "",
 		"Next Appointment": "",
+		"Last Appointment": "",
+		"Last/Next Appointment": "",
+		"Total/Outstanding Payments": "",
+		"No last appointment": "",
+		"No next appointment": "",
+		"Payments made": "",
+		"Outstanding amount": "",
 		"Search Patients...": "",
 		"More options": "",
 		"There's no data at this section yet": "",
@@ -190,7 +197,6 @@ export const ar: Language = {
 		/**========================================
 		 * Patient details
 		 */
-		"Last Appointment": "",
 		Label: "",
 		male: "",
 		female: "",

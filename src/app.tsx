@@ -4,6 +4,8 @@ import { components } from "./core";
 import { Fabric } from "office-ui-fabric-react";
 import { initializeIcons as initializeIconsA } from "./core/icons-subset/subset-a";
 import { initializeIcons as initializeIconsB } from "./core/icons-subset/subset-b";
+import { initializeIcons as initializeIconsC } from "./core/icons-subset/subset-c";
+
 import "./index.html";
 import "./style.scss";
 
@@ -13,6 +15,7 @@ import "./style.scss";
 // 3. put the contents of src dir in './core/icons-subset/'
 initializeIconsA("./fonts/");
 initializeIconsB("./fonts/");
+initializeIconsC("./fonts/");
 
 ReactDOM.render(
 	<Fabric>

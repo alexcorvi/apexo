@@ -30,13 +30,18 @@
   color: #fff;
   font-size: 13px; }
 
-.data-table .delete-button {
-  background: #e3e3e3;
+.data-table .action-button {
+  background: #fff;
   color: #212121;
-  border-radius: 3px; }
-  .data-table .delete-button:hover {
+  border-radius: 3px;
+  border: 1px solid #f1f1f1;
+  margin-right: 5px; }
+  .data-table .action-button.delete:hover {
     color: #fff;
-    background: #f44336; }
+    background: #f44336;
+    border-color: #f44336; }
+  .data-table .action-button:hover {
+    border-color: #00bcd4; }
 
 .data-table .delete-td {
   text-align: right;
@@ -3346,9 +3351,6 @@
     .editable-list-component .input:hover {
       box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
       border-bottom-color: #4aa9f5; }
-    .editable-list-component .input .input-field,
-    .editable-list-component .input .input-icon {
-      padding: 10px; }
     .editable-list-component .input .input-icon {
       padding: 10px;
       color: #2196f3;
@@ -3381,12 +3383,18 @@
       width: 100%; }
     .editable-list-component .items .item .delete {
       transition: 0.4s all;
-      font-size: 10px;
+      font-size: 15px;
       cursor: pointer;
-      padding: 12px 12px 12px 5px;
+      padding: 18px 13px;
       color: #000; }
       .editable-list-component .items .item .delete:hover {
         color: red; }
+  .editable-list-component .ms-TextField-fieldGroup {
+    border: none;
+    min-height: auto !important; }
+  .editable-list-component textarea {
+    font-size: 13px;
+    padding: 10px; }
 .gallery-component {
   margin-top: 10px; }
   .gallery-component .gallery-label {
@@ -3474,16 +3482,6 @@
     display: block; }
   .ortho-single-component .has-error .ms-TextField-fieldGroup {
     border-color: #a80000; }
-.prescriptions-component table.responsive tbody tr td:not(.no-label):before {
-  display: none; }
-
-.prescriptions-component table.responsive tbody tr td.no-label {
-  text-align: left; }
-.treatments-component table.responsive tbody tr td:not(.no-label):before {
-  display: none; }
-
-.treatments-component table.responsive tbody tr td.no-label {
-  text-align: left; }
 .settings-component {
   font-size: 13px;
   background: #fff;
@@ -3508,18 +3506,30 @@
     margin-top: 67px;
     margin-right: 15px;
     border-radius: 3px; } }
-.single-patient-component {
-  font-size: 13px; }
-  .single-patient-component section {
-    background: #fff;
-    margin-top: 10px;
-    padding: 15px;
-    border-radius: 3px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-    .single-patient-component section h3 {
-      margin-bottom: 12px;
-      padding-bottom: 12px;
-      border-bottom: 1px dotted #e0e0e0; }
+@media screen and (max-width: 800px) {
+  .patients-component {
+    padding: 10px; } }
+.single-patient-details .gender {
+  margin-bottom: 12px; }
+
+.single-patient-details .patient-tags {
+  border: 1px solid #c8c8c8;
+  transition: 0.3s all; }
+  .single-patient-details .patient-tags:hover {
+    border-color: #0078d7; }
+
+.single-patient-details .avatar {
+  text-align: center;
+  font-size: 100px;
+  color: #0078d7;
+  border: 1px; }
+
+.single-patient-details .buttons {
+  margin-top: 20px; }
+  .single-patient-details .buttons button {
+    width: 100%; }
+  .single-patient-details .buttons .delete {
+    position: static !important; }
 .dental-history .chart {
   direction: ltr !important; }
 
@@ -3606,39 +3616,6 @@
 
 .single-tooth-condition {
   margin-top: 10px; }
-.single-patient-details .gender {
-  margin-bottom: 12px; }
-
-.single-patient-details .ms-TextField-wrapper .ms-TextField-field {
-  background: #fff; }
-
-.single-patient-details .ms-TextField-wrapper div:nth-child(1) {
-  transition: 0.3s all;
-  border-color: #c8c8c8; }
-  .single-patient-details .ms-TextField-wrapper div:nth-child(1):hover {
-    border-color: #0078d7; }
-  .single-patient-details .ms-TextField-wrapper div:nth-child(1) div {
-    background: #f5f5f5;
-    min-width: 70px; }
-
-.single-patient-details .patient-tags {
-  border: 1px solid #c8c8c8;
-  transition: 0.3s all; }
-  .single-patient-details .patient-tags:hover {
-    border-color: #0078d7; }
-
-.single-patient-details .avatar {
-  text-align: center;
-  font-size: 100px;
-  color: #0078d7;
-  border: 1px; }
-
-.single-patient-details .buttons {
-  margin-top: 20px; }
-  .single-patient-details .buttons button {
-    width: 100%; }
-  .single-patient-details .buttons .delete {
-    position: static !important; }
 .single-patient-appointments {
   position: relative; }
   .single-patient-appointments .add-new {
@@ -3663,9 +3640,42 @@
   .single-patient-appointments .no-appointments {
     color: #757575;
     margin: 15px 0px 7px; }
-@media screen and (max-width: 800px) {
-  .patients-component {
-    padding: 10px; } }
+.single-patient-gallery .thumbs {
+  text-align: center;
+  border: 1px solid #f1f1f1;
+  padding: 5px;
+  width: 52px;
+  float: left; }
+  .single-patient-gallery .thumbs .thumb {
+    height: 40px;
+    width: 40px;
+    background-size: cover;
+    display: inline-block;
+    margin-right: 5px; }
+    .single-patient-gallery .thumbs .thumb.selected {
+      border: 1px solid darkred; }
+  .single-patient-gallery .thumbs .add-photo {
+    margin-bottom: 10px; }
+  .single-patient-gallery .thumbs .placeholder {
+    padding: 13px;
+    background: #e3e3e3;
+    margin-bottom: 5px; }
+
+.single-patient-gallery .viewport {
+  float: left;
+  margin-left: 5px;
+  border: 1px solid #f1f1f1;
+  padding: 5px;
+  width: calc(100% - 60px);
+  position: relative; }
+  .single-patient-gallery .viewport img {
+    width: 100%; }
+  .single-patient-gallery .viewport .delete-photo {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #fff;
+    border: 1px solid #f1f1f1; }
 .patient-link-component {
   cursor: pointer; }
   .patient-link-component .icon {
@@ -3808,6 +3818,16 @@
 @media (max-width: 435px) {
   .duty-table {
     display: none; } }
+.treatments-component table.responsive tbody tr td:not(.no-label):before {
+  display: none; }
+
+.treatments-component table.responsive tbody tr td.no-label {
+  text-align: left; }
+.prescriptions-component table.responsive tbody tr td:not(.no-label):before {
+  display: none; }
+
+.prescriptions-component table.responsive tbody tr td.no-label {
+  text-align: left; }
 .appointment-hr {
   border: none;
   margin-bottom: 20px;
@@ -4128,6 +4148,17 @@
     margin-right: 5px;
     position: relative;
     top: 1px; }
+.statistics-component .ms-CommandBar-primaryCommand > div {
+  margin-top: 4px; }
+  .statistics-component .ms-CommandBar-primaryCommand > div:not(:first-child) {
+    border-left: 1px solid #f4f4f4; }
+  .statistics-component .ms-CommandBar-primaryCommand > div.ms-OverflowSet-overflowButton {
+    margin-top: 0; }
+
+.statistics-component .ms-CommandBar-primaryCommand .ms-TextField-fieldGroup,
+.statistics-component .ms-CommandBar-primaryCommand .ms-Dropdown-title {
+  border: none; }
+
 .statistics-component .controls {
   padding: 10px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
@@ -4163,12 +4194,6 @@
         margin-top: 10px;
         padding: 15px;
         padding-top: 0; }
-
-@media screen and (min-width: 992px) {
-  .statistics-component {
-    margin-top: 67px;
-    margin-right: 15px;
-    border-radius: 3px; } }
 .login-component {
   margin: 50px auto;
   max-width: 400px;
@@ -4315,12 +4340,18 @@
 
 .confirmation-modal .ms-Panel-content {
   padding-top: 0; }
-.prompts-component {
+
+.confirmation-modal.input-modal .ms-Panel-main {
+  box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.14) !important;
+  height: 160px;
+  bottom: initial;
+  top: 0; }
+.messages-component {
   position: fixed;
   bottom: 0;
   right: 0;
   padding: 15px; }
-  .prompts-component .prompt {
+  .messages-component .message {
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
     transition: 0.4s all;
     display: table;
@@ -4330,27 +4361,27 @@
     padding: 10px;
     border-radius: 2px;
     margin-top: 15px; }
-    .prompts-component .prompt i {
+    .messages-component .message i {
       margin-right: 5px; }
-    .prompts-component .prompt > i {
+    .messages-component .message > i {
       padding: 5px;
       border-radius: 50px;
       font-weight: bold; }
-    .prompts-component .prompt .message {
+    .messages-component .message .message-inner {
       margin-right: 10px; }
-    .prompts-component .prompt .button {
+    .messages-component .message .button {
       border-radius: 2px;
       transition: 0.4s all;
       border-left: 1px solid #fafafa;
       padding: 15px 15px 12px;
       margin-left: 10px;
       cursor: pointer; }
-      .prompts-component .prompt .button:hover {
+      .messages-component .message .button:hover {
         background: #f5f5f5; }
-      .prompts-component .prompt .button:last-child {
+      .messages-component .message .button:last-child {
         margin-right: -11px;
         margin-left: 0; }
-      .prompts-component .prompt .button i {
+      .messages-component .message .button i {
         font-size: 11px; }
 .home .home-td {
   border-bottom: 1px solid whitesmoke; }

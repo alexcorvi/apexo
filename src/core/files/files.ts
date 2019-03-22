@@ -3,17 +3,28 @@ const PouchDB: PouchDB.Static = (pouchDB as any).default;
 import { generateID } from "../../assets/utils/generate-id";
 import setting from "../../modules/settings/data/data.settings";
 
+function arrayBufferToBase64(
+	buffer: ArrayBuffer,
+	ext: string
+): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const blob = new Blob([buffer], { type: `image/${ext}` });
+		const reader = new FileReader();
+		reader.onload = function(evt: any) {
+			const dataURL: string = evt.target.result;
+			resolve(dataURL);
+		};
+		reader.readAsDataURL(blob);
+	});
+}
+
 export const files = {
-	async save(fileB64: string, ext: string, dir: string): Promise<string> {
+	async save(blob: Blob, ext: string, dir: string): Promise<string> {
 		return new Promise(async (resolve, reject) => {
 			const accessToken = setting.getSetting("dropbox_accessToken");
 			if (!accessToken) {
 				reject("Did not find DropBox access token");
 			}
-
-			const fileBlob = new Blob(["apexo-backup:" + fileB64], {
-				type: "text/plain;charset=utf-8"
-			});
 
 			const xhr = new XMLHttpRequest();
 			const path = `/${dir}/${new Date().getTime()}-${generateID(
@@ -41,7 +52,7 @@ export const files = {
 				})
 			);
 
-			xhr.send(fileBlob);
+			xhr.send(blob);
 		});
 	},
 
@@ -55,7 +66,10 @@ export const files = {
 			xhr.responseType = "arraybuffer";
 			xhr.onload = async function() {
 				if (xhr.status === 200) {
-					resolve(xhr.response);
+					const splittedPath = path.split(".");
+					const ext = splittedPath[splittedPath.length - 1];
+					const base64 = await arrayBufferToBase64(xhr.response, ext);
+					resolve(base64);
 				} else {
 					const errorMessage =
 						xhr.response || "Unable to download file";

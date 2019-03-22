@@ -13,7 +13,7 @@ export const register = {
 			() => !!settingsData.settings.getSetting("module_orthodontics")
 		);
 		API.menu.items.push({
-			icon: "DietPlanNotebook",
+			icon: "MiniLink",
 			name: orthoData.namespace,
 			key: orthoData.namespace,
 			onClick: () => {

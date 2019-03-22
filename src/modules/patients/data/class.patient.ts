@@ -85,6 +85,24 @@ export class Patient {
 		return this.age > 5;
 	}
 
+	@computed get totalPayments() {
+		return this.appointments
+			.map(x => x.paidAmount)
+			.reduce((t, c) => {
+				t = t + c;
+				return t;
+			}, 0);
+	}
+
+	@computed get outstandingAmount() {
+		return this.appointments
+			.map(x => x.outstandingAmount)
+			.reduce((t, c) => {
+				t = t + c;
+				return t;
+			}, 0);
+	}
+
 	@computed
 	get searchableString() {
 		return `
