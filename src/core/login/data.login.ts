@@ -1,5 +1,8 @@
-import auth from "pouchdb-authentication";
-import PouchDB from "pouchdb-browser";
+import pouchDB = require("pouchdb-browser");
+const PouchDB: PouchDB.Static = (pouchDB as any).default;
+import auth = require("pouchdb-authentication");
+PouchDB.plugin((auth as any).default);
+
 import { observable } from "mobx";
 import { decrypt, encrypt } from "../../assets/utils/encryption";
 import { staffData } from "../../modules/staff";
@@ -8,8 +11,6 @@ import { loadDemoData } from "../demo/load-demo-data";
 import { Md5 } from "ts-md5";
 import { registerModules } from "../../modules";
 import { resync } from "../db";
-
-PouchDB.plugin(auth);
 
 const demoHosts: string[] = [
 	// "localhost:8000",
@@ -134,6 +135,7 @@ class Login {
 			this.authenticate({ server, username: user, password: pass });
 		} catch (e) {
 			if (navigator.onLine) {
+				console.log(e);
 				return (
 					e.reason ||
 					'An error occured, please make sure that the server is online and it\'s accessible. Click "change" to change into another server'

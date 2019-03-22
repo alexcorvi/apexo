@@ -23,7 +23,9 @@ import { treatmentsData } from "../../modules/treatments";
 import { modals } from "../../core/modal/data.modal";
 import messages from "../../core/messages/data.messages";
 import { decrypt } from "./encryption";
-import PouchDB from "pouchdb-browser";
+
+import pouchDB = require("pouchdb-browser");
+const PouchDB: PouchDB.Static = (pouchDB as any).default;
 
 const ext = "apx";
 

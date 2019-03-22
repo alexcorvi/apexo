@@ -1,4 +1,5 @@
-import PouchDB from "pouchdb-browser";
+import pouchDB = require("pouchdb-browser");
+const PouchDB: PouchDB.Static = (pouchDB as any).default;
 import { API } from "../";
 import { configs } from "./config";
 import { generateMethods } from "./generate-methods";
