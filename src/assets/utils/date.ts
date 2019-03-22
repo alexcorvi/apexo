@@ -34,9 +34,13 @@ export function isTomorrow(timestamp: number) {
 	);
 }
 
-export function unifiedDateFormat(d: Date | number) {
+export function unifiedDateFormat(d: Date | number | undefined) {
 	if (typeof d === "number") {
 		d = new Date(d);
+	}
+
+	if (typeof d === "undefined") {
+		d = new Date(0);
 	}
 
 	return `${d!.getDate()} ${

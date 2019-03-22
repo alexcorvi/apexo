@@ -28,7 +28,7 @@ class Component extends React.Component<{}, {}> {
 		return statistics.selectedAppointmentsByDay.reduce((acc, val) => {
 			acc.paid.push(val.appointments.filter(a => a.isPaid).length);
 			acc.outstanding.push(
-				val.appointments.filter(a => a.outstanding).length
+				val.appointments.filter(a => a.isOutstanding).length
 			);
 			acc.missed.push(val.appointments.filter(a => a.missed).length);
 			acc.days.push(

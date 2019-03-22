@@ -77,6 +77,9 @@ export class Cephalometric extends React.Component<{
 											);
 										}
 									}}
+									formatDate={d =>
+										dateUtils.unifiedDateFormat(d || 0)
+									}
 								/>
 							</Col>
 							<Col span={2} className="close">

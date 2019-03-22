@@ -145,6 +145,9 @@ export class AppointmentEditor extends React.Component<
 												);
 											}
 										}}
+										formatDate={d =>
+											dateUtils.unifiedDateFormat(d || 0)
+										}
 									/>
 									<p className="insight">
 										{lang("With")}{" "}
@@ -648,7 +651,7 @@ export class AppointmentEditor extends React.Component<
 											<TextField
 												type="number"
 												disabled={!this.canEdit}
-												label={lang("Paid amount")}
+												label={lang("Paid Amount")}
 												value={this.props.appointment!.paidAmount.toString()}
 												onChanged={newVal => {
 													this.props.appointment!.paidAmount = Number(
@@ -665,7 +668,7 @@ export class AppointmentEditor extends React.Component<
 												type="number"
 												disabled={true}
 												label={lang(
-													"Outstanding amount"
+													"Outstanding Amount"
 												)}
 												value={this.props.appointment!.outstandingAmount.toString()}
 												prefix={settingsData.settings.getSetting(
