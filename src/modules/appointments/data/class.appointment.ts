@@ -35,17 +35,24 @@ export class Appointment {
 
 	@observable time: number = 0;
 
+	@observable finalPrice: number = 0;
 	@observable paidAmount: number = 0;
 
-	@observable done: boolean = false;
-
-	@observable paid: boolean = false;
+	@observable isDone: boolean = false;
 
 	@observable notes: string = "";
 
 	@observable prescriptions: { prescription: string; id: string }[] = [];
 
 	@observable records: string[] = observable([]);
+
+	@computed get isPaid() {
+		return this.paidAmount >= this.finalPrice;
+	}
+
+	@computed get outstandingAmount() {
+		return Math.max(this.finalPrice - this.paidAmount, 0);
+	}
 
 	@computed
 	get operatingStaff() {
@@ -87,24 +94,24 @@ export class Appointment {
 
 	@computed
 	get profit() {
-		return this.paidAmount - this.totalExpenses;
+		return this.finalPrice - this.totalExpenses;
 	}
 
 	@computed
 	get profitPercentage() {
-		return isNaN(this.profit / this.paidAmount)
+		return isNaN(this.profit / this.finalPrice)
 			? 0
-			: this.profit / this.paidAmount;
+			: this.profit / this.finalPrice;
 	}
 
 	@computed
-	get outstanding() {
-		return this.done && !this.paid;
+	get isOutstanding() {
+		return this.isDone && !this.isPaid;
 	}
 
 	@computed
 	get dueToday() {
-		return dateUtils.isToday(this.date) && !this.done;
+		return dateUtils.isToday(this.date) && !this.isDone;
 	}
 
 	@computed
@@ -121,7 +128,7 @@ export class Appointment {
 	get missed() {
 		return (
 			new Date().getTime() - new Date(this.date).getTime() > 0 &&
-			!this.done &&
+			!this.isDone &&
 			!this.dueToday
 		);
 	}
@@ -131,7 +138,7 @@ export class Appointment {
 		return (
 			!this.dueToday &&
 			!this.dueTomorrow &&
-			!this.done &&
+			!this.isDone &&
 			this.date > new Date().getTime()
 		);
 	}
@@ -162,8 +169,8 @@ export class Appointment {
                 ${this.diagnosis}
                 ${new Date(this.date).toDateString()}
                 ${this.treatment ? this.treatment.type : ""}
-                ${this.paid ? "paid" : ""}
-                ${this.outstanding ? "outstanding" : ""}
+                ${this.isPaid ? "paid" : ""}
+                ${this.isOutstanding ? "outstanding" : ""}
                 ${this.missed ? "missed" : ""}
                 ${this.dueToday ? "today" : ""}
 				${this.dueTomorrow ? "tomorrow" : ""}
@@ -187,8 +194,11 @@ export class Appointment {
 		this.date = json.date;
 		this.involvedTeeth = json.involvedTeeth;
 		this.paidAmount = json.paidAmount;
-		this.done = json.done;
-		this.paid = json.paid;
+		this.finalPrice = json.finalPrice || 0;
+		this.isDone =
+			typeof json.isDone === "undefined"
+				? (json as any).done
+				: json.isDone;
 		this.prescriptions = json.prescriptions;
 		this.time = json.time;
 		this.diagnosis = json.diagnosis;
@@ -212,8 +222,8 @@ Diagnosis: ${json.diagnosis}`
 			date: this.date,
 			involvedTeeth: Array.from(this.involvedTeeth),
 			paidAmount: this.paidAmount,
-			done: this.done,
-			paid: this.paid,
+			finalPrice: this.finalPrice || 0,
+			isDone: this.isDone,
 			prescriptions: Array.from(this.prescriptions),
 			time: this.time,
 			diagnosis: this.diagnosis,

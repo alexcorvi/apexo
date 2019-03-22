@@ -40,7 +40,7 @@ export class AppointmentThumb extends React.Component<
 		if (this.props.appointment.missed) {
 			className = className + " missed";
 		}
-		if (this.props.appointment.outstanding) {
+		if (this.props.appointment.isOutstanding) {
 			className = className + " to-be-paid";
 		}
 		if (this.props.appointment.future) {

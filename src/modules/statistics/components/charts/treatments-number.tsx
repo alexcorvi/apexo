@@ -19,7 +19,7 @@ class Component extends React.Component<{}, {}> {
 			times: number;
 		}[] = [];
 		statistics.selectedAppointments.forEach(appointment => {
-			if (!appointment.paid || appointment.treatment === undefined) {
+			if (!appointment.isPaid || appointment.treatment === undefined) {
 				return;
 			}
 			const i = selectedTreatments.findIndex(

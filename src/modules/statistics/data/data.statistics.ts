@@ -122,8 +122,8 @@ class Statistics {
 					expenses,
 					profit,
 					profitPercentage,
-					isPaid: appointment.paid,
-					isDone: appointment.done
+					isPaid: appointment.isPaid,
+					isDone: appointment.isDone
 				};
 			});
 			return {

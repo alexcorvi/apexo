@@ -6,8 +6,8 @@ export interface AppointmentJSON {
 	involvedTeeth: number[];
 	time: number;
 	paidAmount: number;
-	done: boolean;
-	paid: boolean;
+	finalPrice: number;
+	isDone: boolean;
 	prescriptions: { prescription: string; id: string }[];
 	complaint: string;
 	diagnosis: string;

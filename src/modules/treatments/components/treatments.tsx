@@ -92,7 +92,7 @@ export class Treatments extends React.Component<{}, {}> {
 							if (appointment.date > now) {
 								upcoming++;
 							}
-							if (appointment.done) {
+							if (appointment.isDone) {
 								done++;
 							}
 						}

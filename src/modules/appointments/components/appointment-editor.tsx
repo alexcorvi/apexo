@@ -627,20 +627,53 @@ export class AppointmentEditor extends React.Component<
 								}
 							>
 								<div className="appointment-input paid">
-									<label>{lang("Final Price")}</label>
-									<TextField
-										type="number"
-										disabled={!this.canEdit}
-										value={this.props.appointment!.paidAmount.toString()}
-										onChanged={newVal => {
-											this.props.appointment!.paidAmount = Number(
-												newVal
-											);
-										}}
-										prefix={settingsData.settings.getSetting(
-											"currencySymbol"
-										)}
-									/>
+									<Row gutter={12}>
+										<Col sm={8}>
+											<TextField
+												type="number"
+												disabled={!this.canEdit}
+												label={lang("Final Price")}
+												value={this.props.appointment!.finalPrice.toString()}
+												onChanged={newVal => {
+													this.props.appointment!.finalPrice = Number(
+														newVal
+													);
+												}}
+												prefix={settingsData.settings.getSetting(
+													"currencySymbol"
+												)}
+											/>
+										</Col>
+										<Col sm={8}>
+											<TextField
+												type="number"
+												disabled={!this.canEdit}
+												label={lang("Paid amount")}
+												value={this.props.appointment!.paidAmount.toString()}
+												onChanged={newVal => {
+													this.props.appointment!.paidAmount = Number(
+														newVal
+													);
+												}}
+												prefix={settingsData.settings.getSetting(
+													"currencySymbol"
+												)}
+											/>
+										</Col>
+										<Col sm={8}>
+											<TextField
+												type="number"
+												disabled={true}
+												label={lang(
+													"Outstanding amount"
+												)}
+												value={this.props.appointment!.outstandingAmount.toString()}
+												prefix={settingsData.settings.getSetting(
+													"currencySymbol"
+												)}
+											/>
+										</Col>
+									</Row>
 									<p className="payment-insight">
 										<Label
 											text={
@@ -674,29 +707,16 @@ export class AppointmentEditor extends React.Component<
 							</Col>
 						</Row>
 						<Row gutter={12}>
-							<Col sm={12}>
+							<Col sm={24}>
 								<Toggle
 									defaultChecked={
-										this.props.appointment!.paid
-									}
-									onText={lang("Paid")}
-									offText={lang("Unpaid")}
-									disabled={!this.canEdit}
-									onChanged={newVal => {
-										this.props.appointment!.paid = newVal;
-									}}
-								/>
-							</Col>
-							<Col sm={12}>
-								<Toggle
-									defaultChecked={
-										this.props.appointment!.done
+										this.props.appointment!.isDone
 									}
 									onText={lang("Done")}
 									offText={lang("Not Done")}
 									disabled={!this.canEdit}
 									onChanged={newVal => {
-										this.props.appointment!.done = newVal;
+										this.props.appointment!.isDone = newVal;
 									}}
 								/>
 							</Col>

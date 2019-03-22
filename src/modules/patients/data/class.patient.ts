@@ -58,7 +58,7 @@ export class Patient {
 	@computed
 	get lastAppointment() {
 		return this.appointments
-			.filter(appointment => appointment.done === true)
+			.filter(appointment => appointment.isDone === true)
 			.sort((a, b) => b.date - a.date)[0];
 	}
 
@@ -67,7 +67,7 @@ export class Patient {
 		return this.appointments
 			.filter(
 				appointment =>
-					appointment.done === false &&
+					appointment.isDone === false &&
 					appointment.date >
 						Math.round(new Date().getTime() / 43200000) * 43200000 -
 							43200000
