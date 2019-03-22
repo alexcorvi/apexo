@@ -89,6 +89,8 @@ export const ar: Language = {
 		"Time value": "قيمة الوقت",
 		Expenses: "المصاريف",
 		"Final Price": "السعر النهائي",
+		"Paid Amount": "المدفوع",
+		"Outstanding Amount": "المتبقي",
 		Profit: "الربح",
 		"Profit percentage": "نسبة الربح",
 		Unpaid: "غير مدفوع",

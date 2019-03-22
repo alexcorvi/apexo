@@ -121,6 +121,8 @@ export const ar: Language = {
 		"Time value": "",
 		Expenses: "",
 		"Final Price": "",
+		"Paid Amount": "",
+		"Outstanding Amount": "",
 		Profit: "",
 		"Profit percentage": "",
 		Unpaid: "",
