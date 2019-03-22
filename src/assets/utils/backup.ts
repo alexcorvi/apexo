@@ -147,9 +147,7 @@ export const backup = {
 	deleteOld: function(accessToken: string, name: string) {
 		const path = `/${name}.${ext}`;
 		return new Promise((resolve, reject) => {
-			const file = backup.toBlob();
 			const xhr = new XMLHttpRequest();
-			const fileName = new Date().getTime();
 
 			xhr.onload = function() {
 				if (xhr.status === 200) {
