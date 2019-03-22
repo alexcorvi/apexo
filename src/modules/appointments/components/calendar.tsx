@@ -10,6 +10,7 @@ import { patientsComponents } from "../../patients";
 import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
 import "./calendar.scss";
 import { lang } from "../../../core/i18/i18";
+import { name } from "../../../assets/utils/date";
 
 @observer
 export class Calendar extends React.Component<{}, {}> {
@@ -94,7 +95,7 @@ export class Calendar extends React.Component<{}, {}> {
 				</div>
 				<div className="selector month-selector">
 					<Row>
-						{this.c.monthsShort.map((monthShort, index) => {
+						{name.monthsShort().map((monthShort, index) => {
 							return (
 								<Col
 									key={monthShort}
