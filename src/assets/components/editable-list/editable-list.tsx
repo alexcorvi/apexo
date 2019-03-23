@@ -1,8 +1,15 @@
 import * as React from "react";
 import { Col, Row } from "../../../assets/components/grid/index";
-import { Icon, TextField } from "office-ui-fabric-react";
+import {
+	Icon,
+	TextField,
+	DetailsList,
+	SelectionMode,
+	IconButton
+} from "office-ui-fabric-react";
 import { observer } from "mobx-react";
 import "./editable-list.scss";
+import { observable } from "mobx";
 
 @observer
 export class EditableList extends React.Component<
@@ -15,7 +22,9 @@ export class EditableList extends React.Component<
 	},
 	{}
 > {
-	valueToAdd: string = "";
+	@observable valueToAdd: string = "";
+
+	@observable expandIndex: number = -1;
 
 	addItem() {
 		if (this.valueToAdd.replace(/\W/, "").length) {
@@ -54,7 +63,6 @@ export class EditableList extends React.Component<
 									value={this.valueToAdd}
 									onChanged={val => (this.valueToAdd = val)}
 									disabled={this.props.disabled}
-									multiline
 								/>
 							</Col>
 							<Col xs={4} sm={3} style={{ textAlign: "right" }}>
@@ -72,77 +80,70 @@ export class EditableList extends React.Component<
 							</Col>
 						</Row>
 					</div>
-					<div className="items">
-						{this.props.value.map((item, key) => {
-							const id = Math.random()
-								.toString(32)
-								.substr(3);
-							return (
-								<div key={key} id={id} className="item">
-									<Row gutter={6}>
-										<Col
-											xs={this.props.disabled ? 24 : 20}
-											sm={this.props.disabled ? 24 : 21}
-										>
-											<TextField
-												multiline
-												value={item}
-												onChanged={val =>
-													(this.props.value[
-														key
-													] = val)
-												}
-												disabled={this.props.disabled}
+					{this.props.value.length ? (
+						<div className="items">
+							<DetailsList
+								compact
+								onActiveItemChanged={a => {
+									this.expandIndex = Number(a[0].props.id);
+								}}
+								items={[
+									...this.props.value.map((x, i) => [
+										<div id={i.toString()}>
+											{this.expandIndex === i ? (
+												<div className="list-item">
+													<TextField
+														multiline
+														value={x}
+														onBlur={() =>
+															(this.expandIndex = -1)
+														}
+														autoFocus
+														onChanged={val => {
+															this.props.value[
+																i
+															] = val;
+
+															(this.props
+																.onChange ||
+																(() => {}))(
+																this.props.value
+															);
+														}}
+													/>
+												</div>
+											) : x.length > 30 ? (
+												x.substr(0, 25) + "..."
+											) : (
+												x
+											)}
+											<IconButton
+												className="delete"
+												iconProps={{
+													iconName: "trash"
+												}}
+												onClick={e => {
+													this.expandIndex = -1;
+													this.props.value.splice(
+														i,
+														1
+													);
+													(this.props.onChange ||
+														(() => {}))(
+														this.props.value
+													);
+												}}
 											/>
-										</Col>
-										{this.props.disabled ? (
-											""
-										) : (
-											<Col
-												xs={4}
-												sm={3}
-												style={{ textAlign: "right" }}
-											>
-												<Icon
-													className="delete"
-													iconName="delete"
-													onClick={async () => {
-														this.props.value.splice(
-															key,
-															1
-														);
-														(this.props.onChange ||
-															(() => {}))(
-															this.props.value
-														);
-													}}
-													onMouseEnter={() => {
-														const el = document.getElementById(
-															id
-														);
-
-														el!.className =
-															el!.className +
-															" toBeDeleted";
-													}}
-													onMouseLeave={() => {
-														const el = document.getElementById(
-															id
-														);
-
-														el!.className = el!.className.replace(
-															" toBeDeleted",
-															""
-														);
-													}}
-												/>
-											</Col>
-										)}
-									</Row>
-								</div>
-							);
-						})}
-					</div>
+										</div>
+									])
+								]}
+								isHeaderVisible={false}
+								selectionMode={SelectionMode.none}
+							/>
+						</div>
+					) : (
+						""
+					)}
 				</div>
 			</div>
 		);
