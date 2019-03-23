@@ -5,7 +5,6 @@ export const dictionary = {
 	module_orthodontics: "module_prescriptions",
 	module_statistics: "module_statistics",
 	time_tracking: "time_tracking",
-	ask_for_user_contact: "ask_for_user_contact",
 	OI_email: "OI_email",
 	OI_address: "OI_address",
 	OI_ortho_sheet: "OI_ortho_sheet",

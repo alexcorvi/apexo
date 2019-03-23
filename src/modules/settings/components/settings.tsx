@@ -179,20 +179,6 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						disabled={!this.canEdit}
 					/>
 					<Toggle
-						onText={lang("Have staff contact details")}
-						offText={lang("Don't have staff contact details")}
-						defaultChecked={
-							!!settings.getSetting("ask_for_user_contact")
-						}
-						onChanged={val => {
-							settings.setSetting(
-								"ask_for_user_contact",
-								val ? "enable" : ""
-							);
-						}}
-						disabled={!this.canEdit}
-					/>
-					<Toggle
 						onText={lang("Optional input: patient email")}
 						offText={lang("Optional input: patient email")}
 						defaultChecked={!!settings.getSetting("OI_email")}
