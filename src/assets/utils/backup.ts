@@ -48,7 +48,6 @@ export const backup = {
 			const databases = [
 				"appointments",
 				"doctors",
-				"files",
 				"orthodontic",
 				"patients",
 				"prescriptions",
