@@ -12,7 +12,9 @@ import {
 	Toggle,
 	MessageBar,
 	MessageBarType,
-	Checkbox
+	Checkbox,
+	PersonaInitialsColor,
+	Icon
 } from "office-ui-fabric-react";
 import { computed, observable } from "mobx";
 import { DataTable } from "../../../assets/components/data-table/data-table.component";
@@ -29,6 +31,7 @@ import { lang } from "../../../core/i18/i18";
 @observer
 export class StaffListing extends React.Component<{}, {}> {
 	@observable selectedId: string = API.router.currentLocation.split("/")[1];
+	@observable viewWhich: number = 0;
 
 	@computed get canEdit() {
 		return API.user.currentUser.canEditStaff;
@@ -50,20 +53,11 @@ export class StaffListing extends React.Component<{}, {}> {
 				<Row gutter={16}>
 					<Col lg={16}>
 						<DataTable
-							onDelete={
-								this.canEdit
-									? id => {
-											if (this.canEdit) {
-												staffMembers.deleteModal(id);
-											}
-									  }
-									: undefined
-							}
 							maxItemsOnLoad={15}
 							heads={[
 								lang("Staff Member"),
-								lang("Last Appointment"),
-								lang("Next Appointment")
+								lang("Last/Next Appointment"),
+								lang("Contact Details")
 							]}
 							rows={staffMembers.list.map(member => ({
 								id: member._id,
@@ -72,81 +66,210 @@ export class StaffListing extends React.Component<{}, {}> {
 									{
 										dataValue: member.name,
 										component: (
-											<Profile
-												name={member.name}
-												secondaryElement={
-													<span>
-														{
-															member
-																.nextAppointments
-																.length
-														}{" "}
-														{lang(
-															"upcoming appointments"
-														)}
-													</span>
-												}
-												onClick={() => {
-													this.selectedId =
-														member._id;
-												}}
-												size={3}
-											/>
+											<div>
+												<Profile
+													name={member.name}
+													secondaryElement={
+														<span>
+															{
+																member
+																	.nextAppointments
+																	.length
+															}{" "}
+															{lang(
+																"upcoming appointments"
+															)}
+														</span>
+													}
+													onClick={() => {
+														this.selectedId =
+															member._id;
+													}}
+													size={3}
+												/>
+												<br />
+												<IconButton
+													className="action-button"
+													iconProps={{
+														iconName:
+															"DietPlanNotebook"
+													}}
+													onClick={() => {
+														this.selectedId =
+															member._id;
+														this.viewWhich = 1;
+													}}
+												/>
+												<IconButton
+													className="action-button"
+													iconProps={{
+														iconName: "Permissions"
+													}}
+													onClick={() => {
+														this.selectedId =
+															member._id;
+														this.viewWhich = 2;
+													}}
+												/>
+												{API.user.currentUser
+													.canViewAppointments ? (
+													<IconButton
+														className="action-button"
+														iconProps={{
+															iconName: "Calendar"
+														}}
+														onClick={() => {
+															this.selectedId =
+																member._id;
+															this.viewWhich = 3;
+														}}
+													/>
+												) : (
+													""
+												)}
+												<IconButton
+													className="action-button delete"
+													iconProps={{
+														iconName: "Trash"
+													}}
+													onClick={() =>
+														staffMembers.deleteModal(
+															member._id
+														)
+													}
+													disabled={!this.canEdit}
+												/>
+											</div>
 										),
-										onClick: () => {
-											this.selectedId = member._id;
-										},
 										className: "no-label"
 									},
 									{
 										dataValue: (
-											member.lastAppointment || {
+											member.lastAppointment ||
+											member.nextAppointment || {
 												date: 0
 											}
 										).date,
-										component: member.lastAppointment ? (
-											<ProfileSquared
-												text={
-													member.lastAppointment
-														.treatment
-														? member.lastAppointment
-																.treatment.type
-														: ""
-												}
-												subText={dateUtils.unifiedDateFormat(
-													member.lastAppointment.date
-												)}
-												size={3}
-												onClick={() => {}}
-											/>
-										) : (
-											lang("Not registered")
+										component: (
+											<div>
+												<ProfileSquared
+													text={
+														member.lastAppointment
+															? member
+																	.lastAppointment
+																	.treatment
+																? member
+																		.lastAppointment
+																		.treatment
+																		.type
+																: ""
+															: ""
+													}
+													subText={
+														member.lastAppointment
+															? dateUtils.unifiedDateFormat(
+																	member
+																		.lastAppointment
+																		.date
+															  )
+															: lang(
+																	"No last appointment"
+															  )
+													}
+													size={3}
+													onRenderInitials={() => (
+														<Icon iconName="Previous" />
+													)}
+													onClick={() => {}}
+													initialsColor={
+														member.lastAppointment
+															? undefined
+															: PersonaInitialsColor.transparent
+													}
+												/>
+												<br />
+												<ProfileSquared
+													text={
+														member.nextAppointment
+															? member
+																	.nextAppointment
+																	.treatment
+																? member
+																		.nextAppointment
+																		.treatment
+																		.type
+																: ""
+															: ""
+													}
+													subText={
+														member.nextAppointment
+															? dateUtils.unifiedDateFormat(
+																	member
+																		.nextAppointment
+																		.date
+															  )
+															: lang(
+																	"No next appointment"
+															  )
+													}
+													size={3}
+													onRenderInitials={() => (
+														<Icon iconName="Next" />
+													)}
+													onClick={() => {}}
+													initialsColor={
+														member.nextAppointment
+															? undefined
+															: PersonaInitialsColor.transparent
+													}
+												/>
+											</div>
 										),
 										className: "hidden-xs"
 									},
 									{
-										dataValue: (
-											member.nextAppointment || {
-												date: Infinity
-											}
-										).date,
-										component: member.nextAppointment ? (
-											<ProfileSquared
-												text={
-													member.nextAppointment
-														.treatment
-														? member.nextAppointment
-																.treatment.type
-														: ""
-												}
-												subText={dateUtils.unifiedDateFormat(
-													member.nextAppointment.date
-												)}
-												size={3}
-												onClick={() => {}}
-											/>
-										) : (
-											lang("Not registered")
+										dataValue: member.phone || member.email,
+										component: (
+											<div>
+												<ProfileSquared
+													text={member.phone}
+													subText={
+														member.phone
+															? lang(
+																	"Phone number"
+															  )
+															: lang(
+																	"No phone number"
+															  )
+													}
+													size={3}
+													onRenderInitials={() => (
+														<Icon iconName="Phone" />
+													)}
+													initialsColor={
+														member.phone
+															? PersonaInitialsColor.teal
+															: PersonaInitialsColor.transparent
+													}
+												/>
+												<ProfileSquared
+													text={member.email}
+													subText={
+														member.email
+															? lang("Email")
+															: lang("No Email")
+													}
+													size={3}
+													onRenderInitials={() => (
+														<Icon iconName="Mail" />
+													)}
+													initialsColor={
+														member.email
+															? PersonaInitialsColor.teal
+															: PersonaInitialsColor.transparent
+													}
+												/>
+											</div>
 										),
 										className: "hidden-xs"
 									}
@@ -246,7 +369,7 @@ export class StaffListing extends React.Component<{}, {}> {
 					</Col>
 				</Row>
 
-				{this.member ? (
+				{this.member && this.viewWhich ? (
 					<Panel
 						isOpen={!!this.member}
 						type={PanelType.medium}
@@ -254,6 +377,7 @@ export class StaffListing extends React.Component<{}, {}> {
 						isLightDismiss={true}
 						onDismiss={() => {
 							this.selectedId = "";
+							this.viewWhich = 0;
 						}}
 						onRenderNavigation={() => (
 							<Row className="panel-heading">
@@ -263,13 +387,21 @@ export class StaffListing extends React.Component<{}, {}> {
 											name={this.member.name}
 											secondaryElement={
 												<span>
-													{this.member.operates
+													{this.viewWhich === 1
 														? lang(
-																"Operates on patients"
+																"Staff member details"
 														  )
-														: lang(
-																"Doesn't operate on patients"
-														  )}
+														: ""}
+													{this.viewWhich === 2
+														? lang(
+																"Level and permission"
+														  )
+														: ""}
+													{this.viewWhich === 3
+														? lang(
+																"Upcoming appointments"
+														  )
+														: ""}
 												</span>
 											}
 											tertiaryText={this.member.phone}
@@ -291,68 +423,63 @@ export class StaffListing extends React.Component<{}, {}> {
 						)}
 					>
 						<div className="staff-editor">
-							<Section title="Information" showByDefault>
-								<div className="staff-input">
-									<TextField
-										label={lang("Name")}
-										value={this.member.name}
-										onChanged={val =>
-											(this.member.name = val)
-										}
-										disabled={!this.canEdit}
-									/>
-								</div>
-
-								<div className="staff-input">
-									<label>{lang("Days on duty")}</label>
-									{this.member.days.map(day => (
-										<Checkbox
-											disabled={!this.canEdit}
-											label={day.substr(0, 3) + "."}
-											checked={
-												this.member.onDutyDays.indexOf(
-													day
-												) > -1
-											}
-											onChange={(ev, checked) => {
-												if (checked) {
-													this.member.onDutyDays.push(
-														day
-													);
-												} else {
-													this.member.onDutyDays.splice(
-														this.member.onDutyDays.indexOf(
-															day
-														),
-														1
-													);
-												}
-											}}
-										/>
-									))}
-								</div>
-								{this.member._id ===
-								API.user.currentUser._id ? (
+							{this.viewWhich === 1 ? (
+								<div>
 									<div className="staff-input">
 										<TextField
-											label={lang("Login PIN")}
-											value={this.member.pin}
-											onChanged={v =>
-												(this.member.pin = v)
+											label={lang("Name")}
+											value={this.member.name}
+											onChanged={val =>
+												(this.member.name = val)
 											}
-											onClick={() => {}}
+											disabled={!this.canEdit}
 										/>
 									</div>
-								) : (
-									""
-								)}
-							</Section>
 
-							{settings.getSetting("ask_for_user_contact") ? (
-								<Section
-									title={lang("Contact Details")}
-									showByDefault
-								>
+									<div className="staff-input">
+										<label>{lang("Days on duty")}</label>
+										{this.member.days.map(day => (
+											<Checkbox
+												disabled={!this.canEdit}
+												label={day.substr(0, 3) + "."}
+												checked={
+													this.member.onDutyDays.indexOf(
+														day
+													) > -1
+												}
+												onChange={(ev, checked) => {
+													if (checked) {
+														this.member.onDutyDays.push(
+															day
+														);
+													} else {
+														this.member.onDutyDays.splice(
+															this.member.onDutyDays.indexOf(
+																day
+															),
+															1
+														);
+													}
+												}}
+											/>
+										))}
+									</div>
+									{this.member._id ===
+									API.user.currentUser._id ? (
+										<div className="staff-input">
+											<TextField
+												label={lang("Login PIN")}
+												value={this.member.pin}
+												onChanged={v =>
+													(this.member.pin = v)
+												}
+												onClick={() => {}}
+											/>
+										</div>
+									) : (
+										""
+									)}
+
 									<Row gutter={12}>
 										<Col sm={12}>
 											<div className="staff-input">
@@ -379,16 +506,13 @@ export class StaffListing extends React.Component<{}, {}> {
 											</div>
 										</Col>
 									</Row>
-								</Section>
+								</div>
 							) : (
 								""
 							)}
 
-							{this.canEdit ? (
-								<Section
-									title={lang("Level and permission")}
-									showByDefault
-								>
+							{this.viewWhich === 2 ? (
+								<div>
 									{this.member._id ===
 									API.user.currentUser._id ? (
 										<div>
@@ -738,23 +862,21 @@ export class StaffListing extends React.Component<{}, {}> {
 									) : (
 										""
 									)}
-								</Section>
+								</div>
 							) : (
 								""
 							)}
 
-							{API.user.currentUser.canViewAppointments ? (
-								<Section
-									title={lang("Upcoming Appointments")}
-									showByDefault
-								>
+							{this.viewWhich === 3 ? (
+								this.member.nextAppointments.length ? (
 									<AppointmentsList
-										list={
-											API.user.currentUser
-												.nextAppointments
-										}
+										list={this.member.nextAppointments}
 									/>
-								</Section>
+								) : (
+									<h3 style={{ textAlign: "center" }}>
+										{lang("No upcoming appointments")}
+									</h3>
+								)
 							) : (
 								""
 							)}
