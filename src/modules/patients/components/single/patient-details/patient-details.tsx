@@ -14,6 +14,7 @@ import setting from "../../../../settings/data/data.settings";
 import { computed } from "mobx";
 import { API } from "../../../../../core/index";
 import { lang } from "../../../../../core/i18/i18";
+import { Section } from "../../../../../assets/components/section/section";
 
 @observer
 export class PatientDetails extends React.Component<{
@@ -26,7 +27,7 @@ export class PatientDetails extends React.Component<{
 	render() {
 		return (
 			<div className="single-patient-details">
-				<div className="basic-info">
+				<Section showByDefault title="Basic Info">
 					<div className="name">
 						<TextField
 							label="Name"
@@ -80,7 +81,9 @@ export class PatientDetails extends React.Component<{
 							</div>
 						</Col>
 					</Row>
+				</Section>
 
+				<Section showByDefault title="Contact Info">
 					<TextField
 						label={lang("Phone")}
 						value={this.props.patient.phone}
@@ -89,32 +92,24 @@ export class PatientDetails extends React.Component<{
 						disabled={!this.canEdit}
 					/>
 
-					{setting.getSetting("OI_email") ? (
-						<TextField
-							label={lang("Email")}
-							value={this.props.patient.email}
-							onChanged={email =>
-								(this.props.patient.email = email)
-							}
-							disabled={!this.canEdit}
-						/>
-					) : (
-						""
-					)}
+					<TextField
+						label={lang("Email")}
+						value={this.props.patient.email}
+						onChanged={email => (this.props.patient.email = email)}
+						disabled={!this.canEdit}
+					/>
 
-					{setting.getSetting("OI_address") ? (
-						<TextField
-							label={lang("Address")}
-							value={this.props.patient.address}
-							onChanged={address =>
-								(this.props.patient.address = address)
-							}
-							disabled={!this.canEdit}
-						/>
-					) : (
-						""
-					)}
+					<TextField
+						label={lang("Address")}
+						value={this.props.patient.address}
+						onChanged={address =>
+							(this.props.patient.address = address)
+						}
+						disabled={!this.canEdit}
+					/>
+				</Section>
 
+				<Section showByDefault title="Other Notes">
 					<Row gutter={6}>
 						<Col md={12}>
 							{" "}
@@ -190,7 +185,7 @@ export class PatientDetails extends React.Component<{
 							</div>
 						</Col>
 					</Row>
-				</div>
+				</Section>
 			</div>
 		);
 	}
