@@ -26,6 +26,7 @@ import { lang } from "../../../core/i18/i18";
 import { SinglePatientGallery } from "../../patients/components/single/gallery/gallery";
 import { Row, Col } from "../../../assets/components/grid";
 import { Profile } from "../../../assets/components/profile/profile";
+import { unifiedDateFormat } from "../../../assets/utils/date";
 
 @observer
 export class OrthoGallery extends React.Component<{
@@ -78,9 +79,7 @@ export class OrthoGallery extends React.Component<{
 										name={`${i + 1}: Analysis #${i + 1}`}
 										secondaryElement={
 											<span>
-												{new Date(
-													c.date
-												).toDateString()}
+												{unifiedDateFormat(c.date)}
 											</span>
 										}
 										size={3}
