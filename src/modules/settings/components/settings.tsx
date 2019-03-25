@@ -369,16 +369,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 										e.target.files &&
 										e.target.files.length > 0
 									) {
-										console.log(
-											"being",
-											new Date().getTime()
-										);
 										await restore.fromFile(
 											e.target.files[0]
-										);
-										console.log(
-											"end",
-											new Date().getTime()
 										);
 									}
 								}}

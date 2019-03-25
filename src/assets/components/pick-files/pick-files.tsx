@@ -88,7 +88,6 @@ export class PickAndUpload extends React.Component<
 									.result;
 								if (this.props.crop) {
 									this.toCrop[generateID()] = base64DataURI;
-									console.log("added to crop");
 								} else {
 									this.saveBase64(base64DataURI);
 								}

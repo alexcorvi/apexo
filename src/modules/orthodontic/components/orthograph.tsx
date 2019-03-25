@@ -121,13 +121,10 @@ export class Orthograph extends React.Component<{
 					Object.keys(this.imagesTable).sort(),
 					this.allImages.sort()
 				);
-				console.log(diffResult);
 				diffResult.added.forEach(path => {
-					console.log("adding", path);
 					this.addImage(path);
 				});
 				diffResult.removed.forEach(path => {
-					console.log("removing", path);
 					this.removeImage(path);
 				});
 			}
@@ -274,6 +271,7 @@ export class Orthograph extends React.Component<{
 															</p>
 														)}
 														<br />
+
 														<IconButton
 															iconProps={{
 																iconName:

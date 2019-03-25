@@ -167,11 +167,9 @@ export class SinglePatientGallery extends React.Component<
 					this.props.patient.gallery
 				);
 				diffResult.added.forEach(path => {
-					console.log("adding", path);
 					this.addImage(path);
 				});
 				diffResult.removed.forEach(path => {
-					console.log("removing", path);
 					this.removeImage(path);
 				});
 			}

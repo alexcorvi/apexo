@@ -52,17 +52,17 @@ export class Photo {
 }
 
 export class Visit {
-	id: string = generateID();
-	visitNumber: number = 1;
-	photos: Photo[] = [
+	@observable id: string = generateID();
+	@observable visitNumber: number = 1;
+	@observable photos: Photo[] = [
 		new Photo(), // 1 Labial
 		new Photo(), // 2 Right
 		new Photo(), // 3 Left
 		new Photo(), // 4 Lingual
 		new Photo() // 5 Palatal
 	];
-	date: number = new Date().getTime();
-	appliance: string = "";
+	@observable date: number = new Date().getTime();
+	@observable appliance: string = "";
 
 	constructor(json?: VisitJSON, visitNumber?: number) {
 		if (json) {
