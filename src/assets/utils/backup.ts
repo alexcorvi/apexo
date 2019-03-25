@@ -1,25 +1,8 @@
 import { Message } from "./../../core/messages/class.message";
 import { API } from "../../core";
-import { Appointment, AppointmentJSON } from "../../modules/appointments/data";
-import { appointmentsData } from "../../modules/appointments";
-import { CaseJSON, OrthoCase } from "../../modules/orthodontic/data";
 import { decode, encode } from "./base64";
-import { StaffMember, StaffMemberJSON } from "../../modules/staff/data";
-import { staffData } from "../../modules/staff";
-import { orthoData } from "../../modules/orthodontic";
-import { Patient, PatientJSON } from "../../modules/patients/data";
-import { patientsData } from "../../modules/patients";
-import {
-	PrescriptionItem,
-	PrescriptionItemJSON
-} from "../../modules/prescriptions/data";
-import { prescriptionsData } from "../../modules/prescriptions";
 import { resync, destroyLocal } from "../../core/db";
 import { saveAs } from "file-saver";
-import { SettingItemJSON, SettingsItem } from "../../modules/settings/data";
-import { settingsData } from "../../modules/settings";
-import { Treatment, TreatmentJSON } from "../../modules/treatments/data";
-import { treatmentsData } from "../../modules/treatments";
 import { modals } from "../../core/modal/data.modal";
 import messages from "../../core/messages/data.messages";
 import { decrypt } from "./encryption";

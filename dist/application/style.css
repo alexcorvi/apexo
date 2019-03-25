@@ -3364,67 +3364,22 @@
       border: none;
       display: block;
       width: 100%; }
-  .editable-list-component .items .item {
-    transition: 0.3s all;
-    border-bottom: 1px dotted #c8c8c8;
-    background: #fff;
-    display: block; }
-    .editable-list-component .items .item:last-child {
-      border-bottom: none; }
-    .editable-list-component .items .item:hover {
-      border-color: #2196f3;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-    .editable-list-component .items .item.toBeDeleted {
-      border-color: red; }
-    .editable-list-component .items .item .editViewItem {
-      background: transparent;
-      border: 0;
-      padding: 10px;
-      width: 100%; }
-    .editable-list-component .items .item .delete {
-      transition: 0.4s all;
-      font-size: 15px;
-      cursor: pointer;
-      padding: 18px 13px;
-      color: #000; }
-      .editable-list-component .items .item .delete:hover {
-        color: red; }
   .editable-list-component .ms-TextField-fieldGroup {
     border: none;
-    min-height: auto !important; }
-  .editable-list-component textarea {
-    font-size: 13px;
-    padding: 10px; }
-.gallery-component {
-  margin-top: 10px; }
-  .gallery-component .gallery-label {
-    margin-bottom: 5px; }
-  .gallery-component .image {
-    height: 73px;
-    width: 73px;
-    display: inline-block;
-    background-size: cover;
-    background-position: center;
-    padding: 20px; }
-  .gallery-component .input-image {
-    font-size: 22px;
-    padding: 16px 10px;
-    cursor: pointer;
-    vertical-align: top;
-    transition: 0.4s all;
-    display: inline-block;
-    text-align: center; }
-    .gallery-component .input-image:hover {
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      color: #0078d7; }
-    .gallery-component .input-image span {
-      font-size: 10px;
-      display: block;
-      margin-top: 7px;
-      text-transform: uppercase; }
-
-.gallery-view {
-  max-width: 100%; }
+    min-height: auto !important;
+    background: transparent; }
+  .editable-list-component .ms-DetailsRow-cell {
+    border-bottom: 1px solid #f1f1f1; }
+    .editable-list-component .ms-DetailsRow-cell textarea {
+      font-size: 13px;
+      padding: 10px;
+      background: transparent;
+      margin-right: 35px; }
+    .editable-list-component .ms-DetailsRow-cell .delete {
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-left: 1px solid #e3e3e3; }
 .cl-section {
   background: #fff;
   margin-top: 10px;
@@ -3449,39 +3404,138 @@
       margin-bottom: 0;
       padding: 0;
       border: none; }
-.ortho-single-component {
-  font-size: 13px; }
-  .ortho-single-component .ms-Dropdown-container {
-    margin-bottom: 10px; }
-  .ortho-single-component .ms-TextField-prefix {
-    min-width: 108px;
+.orthograph .ms-DetailsList {
+  overflow: hidden; }
+
+.orthograph .album {
+  text-align: center; }
+  .orthograph .album table {
+    width: 100%; }
+    .orthograph .album table td {
+      position: relative;
+      overflow: hidden; }
+    .orthograph .album table .term-initials {
+      font-size: 12px;
+      font-style: italic;
+      margin-bottom: 3px;
+      display: inline-block;
+      padding: 7px;
+      height: 27px;
+      width: 27px;
+      border-bottom: 1px solid #f1f1f1; }
+    .orthograph .album table .photo {
+      position: relative;
+      cursor: pointer; }
+      .orthograph .album table .photo .hover-effect {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        padding-top: 15%;
+        background: #0000005e;
+        color: #fff; }
+      .orthograph .album table .photo:hover .hover-effect {
+        display: block; }
+    .orthograph .album table .clickable-icon {
+      display: inline-block;
+      cursor: pointer;
+      text-align: center;
+      background: #f1f1f1; }
+      .orthograph .album table .clickable-icon:hover {
+        background: #2196f3;
+        color: #fff; }
+      .orthograph .album table .clickable-icon.delete-visit:hover {
+        background: #f44336; }
+      .orthograph .album table .clickable-icon.add-photo:hover {
+        background: #00aba9; }
+
+.photo-dialog .ms-DetailsRow {
+  border-bottom: 1px solid #f1f1f1; }
+
+.photo-dialog .ms-Dialog-main {
+  width: 350px;
+  overflow: hidden; }
+
+.photo-dialog .ms-Dialog-inner {
+  padding: 0;
+  border-top: 1px solid #e3e3e3;
+  margin-top: 12px; }
+  .photo-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button {
     font-size: 12px; }
-  .ortho-single-component .ab-marker {
-    position: relative; }
-    .ortho-single-component .ab-marker .ab-marker-bubble {
-      height: 10px;
-      width: 10px;
-      position: absolute;
-      background: #f00;
-      top: 10px;
-      left: -4px;
-      border-radius: 10px;
-      opacity: 0.7; }
-  .ortho-single-component [class^="errorMessage"],
-  .ortho-single-component .ms-TextField-errorMessage {
-    display: none;
-    font-size: 12px;
-    padding-top: 5px; }
-    .ortho-single-component [class^="errorMessage"]:before,
-    .ortho-single-component .ms-TextField-errorMessage:before {
-      display: none; }
-  .ortho-single-component .ms-Dropdown-container:hover [class^="errorMessage"],
-  .ortho-single-component .ms-Dropdown-container:hover .ms-TextField-errorMessage,
-  .ortho-single-component .ms-TextField:hover [class^="errorMessage"],
-  .ortho-single-component .ms-TextField:hover .ms-TextField-errorMessage {
-    display: block; }
-  .ortho-single-component .has-error .ms-TextField-fieldGroup {
-    border-color: #a80000; }
+    .photo-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button i {
+      font-size: 12px; }
+  .photo-dialog .ms-Dialog-inner .ms-CommandBar .active-button {
+    background: #e3e3e3; }
+
+.photo-dialog .ms-Dialog-actions {
+  margin-top: 0; }
+
+.photo-dialog .overlay-img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0.6;
+  filter: saturate(2);
+  pointer-events: none; }
+
+.in-callout-list {
+  margin: 15px; }
+.crop-dialog .ms-Dialog-inner {
+  padding: 0;
+  margin-top: 10px; }
+
+.crop-dialog .ms-Dialog-main {
+  max-width: none; }
+
+.crop-dialog .editor {
+  position: relative; }
+  .crop-dialog .editor .grid {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 9999;
+    pointer-events: none;
+    background-size: 30px 100%, 100% 30px;
+    background-image: linear-gradient(to right, #fff 0%, transparent 2%, transparent 100%), linear-gradient(to bottom, #fff 0%, transparent 2%, transparent 100%); }
+  .crop-dialog .editor .prev-overlay {
+    position: absolute;
+    left: 25px;
+    top: 25px;
+    opacity: 0.6;
+    filter: saturate(2);
+    pointer-events: none; }
+
+.crop-dialog .crop-controls {
+  padding: 10px;
+  padding: 10px;
+  background: #f1f1f1;
+  border-bottom: 1px solid #e3e3e3; }
+  .crop-dialog .crop-controls .ms-Button {
+    margin-top: 10px;
+    background: #e3e3e3; }
+
+.crop-dialog .active-button {
+  background: #e3e3e3; }
+.grid-table {
+  position: absolute;
+  z-index: 99;
+  width: 100%;
+  height: 100%;
+  text-align: right;
+  color: #fff;
+  opacity: 0.5;
+  pointer-events: none;
+  border-spacing: 0;
+  border-collapse: collapse; }
+  .grid-table td {
+    padding-right: 3px;
+    border-right: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    font-size: 8px; }
 .settings-component {
   font-size: 13px;
   background: #fff;

@@ -1,5 +1,10 @@
 import * as React from "react";
 import { API } from "../../../core";
+import { observable } from "mobx";
+import { Crop } from "./crop";
+import { generateID } from "../../utils/generate-id";
+import { Icon } from "office-ui-fabric-react";
+import { observer } from "mobx-react";
 
 function dataURItoBlob(dataURI: string) {
 	const byteString = atob(dataURI.split(",")[1]);
@@ -30,6 +35,7 @@ export const fileTypes = {
 	image: ["png", "jpg", "jpeg", "gif", "image/png", "image/gif", "image/jpeg"]
 };
 
+@observer
 export class PickAndUpload extends React.Component<
 	{
 		// select multiple files at once
@@ -41,10 +47,20 @@ export class PickAndUpload extends React.Component<
 		onStartLoading?: () => void;
 		onFinishLoading?: () => void;
 		targetDir: string;
+		crop?: boolean;
+		prevSrc?: string;
 	},
 	{}
 > {
 	pickFileEl: HTMLInputElement | undefined;
+
+	@observable resultArr: string[] = [];
+	@observable toCrop: { [key: string]: string } = {};
+
+	@observable loading: boolean = false;
+
+	@observable filesNumber: number = 0;
+
 	render() {
 		return (
 			<div onClick={() => this.click()}>
@@ -56,51 +72,81 @@ export class PickAndUpload extends React.Component<
 					accept={this.props.accept.join(",")}
 					onChange={() => {
 						const fileList = this.pickFileEl!.files;
-						const resultArr: string[] = [];
 						if (!fileList || !fileList[0]) {
 							return;
 						}
+						this.loading = true;
 						if (this.props.onStartLoading) {
 							this.props.onStartLoading();
 						}
+						this.filesNumber = fileList.length;
 						for (let index = 0; index < fileList.length; index++) {
 							const file = fileList.item(index);
 							const reader = new FileReader();
 							reader.onload = async (event: Event) => {
 								const base64DataURI = (event.target as any)
 									.result;
-								const blob = dataURItoBlob(base64DataURI);
-								const filePath = await API.files.save(
-									blob,
-									base64DataURI.replace(
-										/data:[a-z]*\/([a-z]*);.*/,
-										"$1"
-									),
-									this.props.targetDir
-								);
-								resultArr.push(filePath);
+								if (this.props.crop) {
+									this.toCrop[generateID()] = base64DataURI;
+									console.log("added to crop");
+								} else {
+									this.saveBase64(base64DataURI);
+								}
 							};
 							reader.readAsDataURL(file as any);
 						}
 						const checkInterval = setInterval(() => {
-							if (resultArr.length !== fileList.length) {
+							if (this.resultArr.length !== this.filesNumber) {
 								return;
 							}
-
+							this.pickFileEl!.value = "";
+							this.loading = false;
 							if (this.props.onFinishLoading) {
 								this.props.onFinishLoading();
 							}
-							this.props.onFinish(resultArr);
+							this.props.onFinish(this.resultArr.filter(x => x));
 							clearInterval(checkInterval);
-							this.pickFileEl!.value = "";
-						}, 10);
+						}, 100);
 					}}
 				/>
-				{this.props.children}
+				{this.loading ? (
+					<div>
+						<Icon iconName="sync" className="rotate" />
+						{Object.keys(this.toCrop).map(id => {
+							return (
+								<Crop
+									key={id}
+									src={this.toCrop[id]}
+									prevSrc={this.props.prevSrc || ""}
+									onSave={result => {
+										this.saveBase64(result);
+										delete this.toCrop[id];
+									}}
+									onDismiss={() => {
+										this.filesNumber--;
+										delete this.toCrop[id];
+									}}
+								/>
+							);
+						})}
+					</div>
+				) : (
+					this.props.children
+				)}
 			</div>
 		);
 	}
 	click() {
 		this.pickFileEl!.click();
+	}
+
+	async saveBase64(base64DataURI: string) {
+		const blob = dataURItoBlob(base64DataURI);
+		const filePath = await API.files.save(
+			blob,
+			base64DataURI.replace(/data:[a-z]*\/([a-z]*);.*/, "$1"),
+			this.props.targetDir
+		);
+		this.resultArr.push(filePath);
 	}
 }

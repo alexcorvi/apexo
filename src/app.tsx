@@ -6,6 +6,7 @@ import { initializeIcons as initializeIconsA } from "./core/icons-subset/subset-
 import { initializeIcons as initializeIconsB } from "./core/icons-subset/subset-b";
 import { initializeIcons as initializeIconsC } from "./core/icons-subset/subset-c";
 import { initializeIcons as initializeIconsD } from "./core/icons-subset/subset-d";
+import { initializeIcons as initializeIconsE } from "./core/icons-subset/subset-e";
 
 import "./index.html";
 import "./style.scss";
@@ -18,6 +19,7 @@ initializeIconsA("./fonts/");
 initializeIconsB("./fonts/");
 initializeIconsC("./fonts/");
 initializeIconsD("./fonts/");
+initializeIconsE("./fonts/");
 
 ReactDOM.render(
 	<Fabric>

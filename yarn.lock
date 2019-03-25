@@ -18,6 +18,11 @@
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-0.0.30.tgz#dc1e40f7af3b9c815013a7860e6252f6352a84df"
 
+"@types/enquire.js@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@types/enquire.js/-/enquire.js-2.1.2.tgz#8cfa6196faabb9a7e09aebcb50c4b9a8538e229c"
+  integrity sha512-0Jmr8vj9xsPtPTEJbnXA4ChRtG+kggFojsUlvG6n1VnxcNSEy62RLY2M0eGECyvwun++uSOsxwsootzWD0ycyQ==
+
 "@types/file-saver@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@types/file-saver/-/file-saver-2.0.0.tgz#cbb49815a5e1129d5f23836a98d65d93822409af"
@@ -144,6 +149,13 @@
 "@types/prop-types@^15.5.3":
   version "15.5.3"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.3.tgz#bef071852dca2a2dbb65fecdb7bfb30cedae2de2"
+
+"@types/react-avatar-editor@^10.3.4":
+  version "10.3.4"
+  resolved "https://registry.yarnpkg.com/@types/react-avatar-editor/-/react-avatar-editor-10.3.4.tgz#af8d0a783dd692a9572509d665c623958067667b"
+  integrity sha512-yulle6pZw+7jCxq156WbIqT0qwuLtzxt53fCIm1op0IFUotChAYYSZmKQR2+4jjhToHrX53nR83Slvr8H6ar5Q==
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-dom@^16.8.3":
   version "16.8.3"
@@ -4345,7 +4357,7 @@ prop-types@^15.5.10:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
-prop-types@^15.6.2:
+prop-types@^15.5.8, prop-types@^15.6.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -4495,6 +4507,13 @@ rc@^1.1.7:
     ini "~1.3.0"
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
+
+react-avatar-editor@^11.0.6:
+  version "11.0.6"
+  resolved "https://registry.yarnpkg.com/react-avatar-editor/-/react-avatar-editor-11.0.6.tgz#c6194397bf9d27ab35c9741959fce1313c2f2c52"
+  integrity sha512-RI0+22g9qVsjHcslhwrwp3rn2A++53tFiq0NsdhOzdsQ/CcBQWWafpw3wd658G+Euj6kuxQX5j+Adp2l9adLOw==
+  dependencies:
+    prop-types "^15.5.8"
 
 react-dom@^16.8.5:
   version "16.8.5"

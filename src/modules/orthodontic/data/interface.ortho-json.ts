@@ -1,13 +1,26 @@
-import { FacialProfile, Lips, OralHygiene } from "./class.ortho";
+import { FacialProfile, Lips, OralHygiene, Visit } from "./class.ortho";
 
 export interface CephalometricItem {
 	data: string;
 	date: number;
 }
 
+export interface PhotoJSON {
+	id: string;
+	photoID: string;
+	comment: string;
+}
+
+export interface VisitJSON {
+	id: string;
+	visitNumber: number;
+	date: number;
+	appliance: string;
+	photos: PhotoJSON[];
+}
+
 export interface CaseJSON {
 	_id: string;
-	started: number;
 	patientID: string;
 	lips: keyof typeof Lips;
 	facialProfile: keyof typeof FacialProfile;
@@ -23,10 +36,14 @@ export interface CaseJSON {
 	l_spaceAvailable: number;
 	l_spaceNeeded: number;
 	problemsList: string[];
-	treatmentPlan_extraction: number[];
-	treatmentPlan_fill: number[];
 	treatmentPlan_appliance: string[];
 	crossScissorBite: number[];
 	orthoGallery: string[];
 	cephalometricHistory: CephalometricItem[];
+	isFinished: boolean;
+	isStarted: boolean;
+	startedDate: number;
+	finishedDate: number;
+	nextVisitNotes: string[];
+	visits: VisitJSON[];
 }

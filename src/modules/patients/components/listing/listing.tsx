@@ -344,7 +344,9 @@ export class PatientsListing extends React.Component<{}, {}> {
 								className: "hidden-xs"
 							},
 							{
-								dataValue: patient.name,
+								dataValue: patient.labels
+									.map(x => x.text)
+									.join(","),
 								component: (
 									<div>
 										{patient.labels.map((label, index) => {

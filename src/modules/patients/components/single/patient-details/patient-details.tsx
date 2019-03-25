@@ -10,7 +10,6 @@ import { EditableList } from "../../../../../assets/components/editable-list/edi
 import { TagInput } from "../../../../../assets/components/tag-input/tag-input";
 import { observer } from "mobx-react";
 import { Row, Col } from "../../../../../assets/components/grid/index";
-import { Gallery } from "../../../../../assets/components/gallery/gallery";
 import setting from "../../../../settings/data/data.settings";
 import { computed } from "mobx";
 import { API } from "../../../../../core/index";

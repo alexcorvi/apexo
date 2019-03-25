@@ -19,7 +19,6 @@ import {
 	Slider
 } from "office-ui-fabric-react";
 import { staffData } from "../../staff";
-import { Gallery } from "../../../assets/components/gallery/gallery";
 import {
 	Label,
 	LabelType
@@ -459,17 +458,6 @@ export class AppointmentEditor extends React.Component<
 									""
 								)}
 							</div>
-						) : (
-							""
-						)}
-						<hr className="appointment-hr" />
-						{this.canEdit ? (
-							<Gallery
-								gallery={this.props.appointment!.records}
-								onChange={list => {
-									this.props.appointment!.records = list;
-								}}
-							/>
 						) : (
 							""
 						)}
