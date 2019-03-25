@@ -30,14 +30,15 @@ import {
 } from "../../patients/components";
 import { OrthoCaseSheet } from "./case-sheet";
 import { Orthograph } from "./orthograph";
+import { OrthoGallery } from "./ortho-gallery";
 
 @observer
 export class OrthoList extends React.Component<{}, {}> {
 	@observable showAdditionPanel: boolean = false;
 	@observable newPatientName: string = "";
 
-	@observable selectedId: string = cases.list[0]._id;
-	@observable viewWhich: number = 4;
+	@observable selectedId: string = "";
+	@observable viewWhich: number = 0;
 
 	@computed get selectedCase() {
 		return cases.list.find(orthoCase => orthoCase._id === this.selectedId);
@@ -142,7 +143,8 @@ export class OrthoList extends React.Component<{}, {}> {
 												<IconButton
 													className="action-button"
 													iconProps={{
-														iconName: "Diagnostic"
+														iconName:
+															"PhotoCollection"
 													}}
 													onClick={() => {
 														this.selectedId =
@@ -504,7 +506,7 @@ export class OrthoList extends React.Component<{}, {}> {
 													? lang("Orthodontic Album")
 													: ""}
 												{this.viewWhich === 5
-													? lang("Diagnostic X-Rays")
+													? lang("Gallery and X-Rays")
 													: ""}
 												{this.viewWhich === 6
 													? lang(
@@ -561,6 +563,15 @@ export class OrthoList extends React.Component<{}, {}> {
 								) : (
 									""
 								)}
+
+								{this.viewWhich === 5 ? (
+									<OrthoGallery
+										orthoCase={this.selectedCase}
+									/>
+								) : (
+									""
+								)}
+
 								{this.viewWhich === 6 ? (
 									<PatientAppointments
 										patient={this.selectedPatient}
