@@ -21,6 +21,7 @@ import { AppointmentEditor } from "../../appointments/components";
 import { Appointment } from "../../appointments/data";
 import { observable } from "mobx";
 import { Calendar } from "../../appointments/data/data.calendar";
+import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
 
 @observer
 export class StatisticsComponent extends React.Component<{}, {}> {
@@ -34,8 +35,9 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 					className={"appointments-data-table"}
 					heads={[
 						lang("Appointment"),
-						lang("Operators"),
-						lang("Paid amount"),
+						lang("Treatment"),
+						lang("Paid"),
+						lang("Outstanding"),
 						lang("Expenses"),
 						lang("Profits")
 					]}
@@ -55,9 +57,13 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 													appointment.date
 												)}{" "}
 												/{" "}
-												{appointment.treatment
-													? appointment.treatment.type
-													: ""}
+												{appointment.operatingStaff.map(
+													x => (
+														<i key={x._id}>
+															{x.name}
+														</i>
+													)
+												)}
 											</span>
 										}
 										name={appointment!.patient.name}
@@ -70,69 +76,76 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 								className: "no-label"
 							},
 							{
-								dataValue: appointment.operatingStaff
-									.map(x => x.name)
-									.join(", "),
+								dataValue: appointment.treatmentID,
 								component: (
-									<div>
-										{appointment.operatingStaff.map(
-											staffMember => (
-												<Profile
-													name={staffMember.name}
-													size={2}
-												/>
-											)
+									<ProfileSquared
+										text={
+											appointment.treatment
+												? appointment.treatment.type
+												: ""
+										}
+										subText={dateUtils.unifiedDateFormat(
+											appointment.date
 										)}
-									</div>
+										size={3}
+										onClick={() => {}}
+									/>
 								),
 								className: "hidden-xs"
 							},
 							{
 								dataValue: appointment.paidAmount,
 								component: (
-									<ColoredLabel
-										text={
-											data.settingsData.settings.getSetting(
-												"currencySymbol"
-											) +
+									<span>
+										{data.settingsData.settings.getSetting(
+											"currencySymbol"
+										) +
 											round(
 												appointment.paidAmount
-											).toString()
-										}
-										type={LabelType.warning}
-									/>
+											).toString()}
+									</span>
+								),
+								className: "hidden-xs"
+							},
+							{
+								dataValue: appointment.outstandingAmount,
+								component: (
+									<span>
+										{data.settingsData.settings.getSetting(
+											"currencySymbol"
+										) +
+											round(
+												appointment.outstandingAmount
+											).toString()}
+									</span>
 								),
 								className: "hidden-xs"
 							},
 							{
 								dataValue: appointment.expenses,
 								component: (
-									<ColoredLabel
-										text={
-											data.settingsData.settings.getSetting(
-												"currencySymbol"
-											) +
+									<span>
+										{data.settingsData.settings.getSetting(
+											"currencySymbol"
+										) +
 											round(
 												appointment.expenses
-											).toString()
-										}
-										type={LabelType.info}
-									/>
+											).toString()}
+									</span>
 								),
 								className: "hidden-xs"
 							},
 							{
 								dataValue: appointment.profit,
 								component: (
-									<ColoredLabel
-										text={
-											data.settingsData.settings.getSetting(
-												"currencySymbol"
-											) +
-											round(appointment.profit).toString()
-										}
-										type={LabelType.primary}
-									/>
+									<span>
+										{data.settingsData.settings.getSetting(
+											"currencySymbol"
+										) +
+											round(
+												appointment.profit
+											).toString()}
+									</span>
 								),
 								className: "hidden-xs"
 							}
