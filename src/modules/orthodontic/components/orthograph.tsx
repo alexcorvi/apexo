@@ -339,21 +339,29 @@ export class Orthograph extends React.Component<{
 												return (
 													<tr key={visit.id}>
 														<td>
-															<IconButton
-																id={visit.id.replace(
-																	/[0-9]/g,
-																	""
-																)}
-																iconProps={{
-																	iconName:
-																		"info"
-																}}
-																onClick={() => {
-																	this.openCallouts.push(
-																		visit.id
-																	);
-																}}
-															/>
+															<TooltipHost
+																content={`#${
+																	visit.visitNumber
+																}, ${unifiedDateFormat(
+																	visit.date
+																)}`}
+															>
+																<IconButton
+																	id={visit.id.replace(
+																		/[0-9]/g,
+																		""
+																	)}
+																	iconProps={{
+																		iconName:
+																			"info"
+																	}}
+																	onClick={() => {
+																		this.openCallouts.push(
+																			visit.id
+																		);
+																	}}
+																/>
+															</TooltipHost>
 															<Callout
 																target={`#${visit.id.replace(
 																	/[0-9]/g,

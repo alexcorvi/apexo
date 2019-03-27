@@ -1,46 +1,48 @@
 import * as dateUtils from "../../../assets/utils/date";
 import * as React from "react";
 import { Col, Row } from "../../../assets/components/grid/index";
-import { computed } from "mobx";
+import { computed, observable } from "mobx";
 import {
 	IconButton,
 	Panel,
 	PanelType,
-	DatePicker
+	DatePicker,
+	Icon
 } from "office-ui-fabric-react";
 import { observer } from "mobx-react";
-import { Patient } from "../../patients/data/class.patient";
 import { lang } from "../../../core/i18/i18";
+import { CephalometricItem } from "../data/interface.ortho-json";
+import { cases } from "../data";
 
 @observer
-export class Cephalometric extends React.Component<{
-	data: string;
-	date: number;
-	open: boolean;
-	patient: Patient;
-	onSaveData: (data: string) => void;
-	onSaveDate: (date: number) => void;
+export class CephalometricEditor extends React.Component<{
+	item: CephalometricItem;
 	onDismiss: () => void;
 }> {
+	@observable loading: boolean = true;
 	componentDidMount() {
-		setTimeout(() => {
+		setTimeout(async () => {
 			const iFrame: any = document.getElementById("cephalometric");
-
 			iFrame.onload = () => {
-				// send the message
-				iFrame.contentWindow.postMessage(
-					"cephalometric-open:" + this.props.data,
-					"*"
-				);
+				cases.toCephString(this.props.item).then(cephString => {
+					iFrame.contentWindow.postMessage(
+						"cephalometric-open:" + cephString,
+						"*"
+					);
+					this.loading = false;
+				});
 			};
 
 			// wait for response
 			onmessage = e => {
 				if (e.data && typeof e.data === "string") {
 					if (e.data.startsWith("cephalometric-save:")) {
-						this.props.onSaveData(
+						this.props.item.pointCoordinates = cases.getCephCoordinates(
 							e.data.split("cephalometric-save:")[1]
 						);
+
+						this.props.onDismiss();
+						cases.triggerUpdate++;
 					}
 				}
 			};
@@ -50,11 +52,13 @@ export class Cephalometric extends React.Component<{
 	render() {
 		return (
 			<Panel
-				isOpen={this.props.open && !!this.props.data}
+				isOpen={!!this.props.item}
 				type={PanelType.largeFixed}
 				closeButtonAriaLabel="Close"
 				isLightDismiss={true}
-				onDismiss={this.props.onDismiss}
+				onDismiss={() => {
+					this.props.onDismiss();
+				}}
 				className="external-service-panel"
 				onRenderNavigation={() => {
 					return (
@@ -69,12 +73,12 @@ export class Cephalometric extends React.Component<{
 								/>
 								<DatePicker
 									placeholder={lang("Select a date") + "..."}
-									value={new Date(this.props.date)}
+									value={new Date(this.props.item.date)}
 									onSelectDate={date => {
 										if (date) {
-											this.props.onSaveDate(
-												new Date(date).getTime()
-											);
+											this.props.item.date = new Date(
+												date
+											).getTime();
 										}
 									}}
 									formatDate={d =>
@@ -95,9 +99,23 @@ export class Cephalometric extends React.Component<{
 				}}
 			>
 				<iframe
+					style={{ display: this.loading ? "none" : "block" }}
 					id="cephalometric"
 					src="https://cephalometric.apexo.app"
 				/>
+				{this.loading ? (
+					<div
+						style={{
+							fontSize: 38,
+							marginTop: 60,
+							textAlign: "center"
+						}}
+					>
+						<Icon iconName="sync" className="rotate" />
+					</div>
+				) : (
+					""
+				)}
 			</Panel>
 		);
 	}

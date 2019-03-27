@@ -1,3 +1,5 @@
+import { files } from "./../../../core/files/files";
+import { CephalometricItem } from "./interface.ortho-json";
 import { computed, observable } from "mobx";
 
 import { API } from "../../../core";
@@ -42,6 +44,29 @@ class OrthoCases {
 		return patientsData.patients.list.filter(
 			patient => this.allPatientsIDs.indexOf(patient._id) === -1
 		);
+	}
+
+	toCephString(obj: CephalometricItem): Promise<string> {
+		return new Promise(async (resolve, reject) => {
+			const img = await files.get(obj.imgPath);
+			const i = new Image();
+			i.onload = function() {
+				console.log(i.height, i.width);
+				const data = `{"imgSource":{"source":"${img}","height":${
+					i.height
+				},"width":${
+					i.width
+				}},"currentAnalysisName":"basic","pointCoordinates":${
+					obj.pointCoordinates ? obj.pointCoordinates : "{}"
+				}}`;
+				resolve(data);
+			};
+			i.src = img;
+		});
+	}
+
+	getCephCoordinates(string: string): string {
+		return JSON.stringify(JSON.parse(string).pointCoordinates);
 	}
 
 	getIndexByID(id: string) {

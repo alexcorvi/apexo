@@ -344,6 +344,13 @@ export class OrthoCase {
 		this.visits = json.visits ? json.visits.map(x => new Visit(x)) : [];
 		this.isFinished = !!json.isFinished;
 		this.isStarted = !!json.isStarted;
+		observe(this.crossScissorBite, () => this.triggerUpdate++);
+		observe(this.problemsList, () => this.triggerUpdate++);
+		observe(this.treatmentPlan_appliance, () => this.triggerUpdate++);
 		observe(this.orthoGallery, () => this.triggerUpdate++);
+		observe(this.cephalometricHistory, () => this.triggerUpdate++);
+		observe(this.visits, () => {
+			this.triggerUpdate++;
+		});
 	}
 }

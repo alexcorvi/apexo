@@ -1,8 +1,9 @@
 import { FacialProfile, Lips, OralHygiene, Visit } from "./class.ortho";
 
 export interface CephalometricItem {
-	data: string;
+	pointCoordinates: string;
 	date: number;
+	imgPath: string;
 }
 
 export interface PhotoJSON {
