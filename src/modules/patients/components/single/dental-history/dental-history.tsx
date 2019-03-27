@@ -19,6 +19,7 @@ import { Row, Col } from "../../../../../assets/components/grid/index";
 import { Profile } from "../../../../../assets/components/profile/profile";
 import { API } from "../../../../../core/index";
 import { lang } from "../../../../../core/i18/i18";
+import { Section } from "../../../../../assets/components/section/section";
 
 @observer
 export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
@@ -37,6 +38,7 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 	render() {
 		return (
 			<div className="dental-history teeth">
+				<br />
 				<Toggle
 					defaultChecked={true}
 					onText={lang("View graphic chart")}
@@ -48,59 +50,61 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 				<div className="m-t-20">
 					{this.viewChart ? (
 						<div className="chart">
-							<Row>
-								<Col sm={12}>
-									<TeethPermanentChart
-										teeth={this.props.patient.teeth}
-										onClick={number =>
-											(this.viewToothISO = number)
-										}
-									/>
-								</Col>
-								<Col sm={12}>
-									<TeethDeciduousChart
-										teeth={this.props.patient.teeth}
-										onClick={number =>
-											(this.viewToothISO = number)
-										}
-									/>
-								</Col>
-							</Row>
+							<Section title="Permanent Teeth" showByDefault>
+								<TeethPermanentChart
+									teeth={this.props.patient.teeth}
+									onClick={number =>
+										(this.viewToothISO = number)
+									}
+								/>
+							</Section>
+							<Section title="Deciduous Teeth" showByDefault>
+								<TeethDeciduousChart
+									teeth={this.props.patient.teeth}
+									onClick={number =>
+										(this.viewToothISO = number)
+									}
+								/>
+							</Section>
 						</div>
 					) : (
 						<div className="tabulated">
-							<table className="permanent">
-								<tbody>
-									<tr>
-										{[
-											this.mapQuadrant(11, 18, true),
-											this.mapQuadrant(21, 28, false)
-										]}
-									</tr>
-									<tr>
-										{[
-											this.mapQuadrant(41, 48, true),
-											this.mapQuadrant(31, 38, false)
-										]}
-									</tr>
-								</tbody>
-							</table>
-							<table className="deciduous">
-								<tbody>
-									<tr>
-										{[
-											this.mapQuadrant(51, 55, true),
-											this.mapQuadrant(61, 65, false)
-										]}
-									</tr>
-									<tr>
-										{[
-											this.mapQuadrant(81, 85, true),
-											this.mapQuadrant(71, 75, false)
-										]}
-									</tr>
-								</tbody>
-							</table>
+							<Section title="Permanent teeth" showByDefault>
+								<table className="permanent">
+									<tbody>
+										<tr>
+											{[
+												this.mapQuadrant(11, 18, true),
+												this.mapQuadrant(21, 28, false)
+											]}
+										</tr>
+										<tr>
+											{[
+												this.mapQuadrant(41, 48, true),
+												this.mapQuadrant(31, 38, false)
+											]}
+										</tr>
+									</tbody>
+								</table>
+							</Section>
+							<Section title="Deciduous Teeth" showByDefault>
+								<table className="deciduous">
+									<tbody>
+										<tr>
+											{[
+												this.mapQuadrant(51, 55, true),
+												this.mapQuadrant(61, 65, false)
+											]}
+										</tr>
+										<tr>
+											{[
+												this.mapQuadrant(81, 85, true),
+												this.mapQuadrant(71, 75, false)
+											]}
+										</tr>
+									</tbody>
+								</table>
+							</Section>
 						</div>
 					)}
 				</div>
@@ -185,6 +189,12 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 										.notes
 								}
 								disabled={!this.canEdit}
+								onChange={e => {
+									this.props.patient.teeth[
+										this.viewToothISO
+									].notes = e;
+									this.props.patient.triggerUpdate++;
+								}}
 							/>
 						</div>
 					) : (

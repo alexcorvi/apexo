@@ -608,15 +608,7 @@ export class AppointmentEditor extends React.Component<
 									""
 								)}
 							</Col>
-							<Col
-								sm={
-									settingsData.settings.getSetting(
-										"time_tracking"
-									)
-										? 12
-										: 24
-								}
-							>
+							<Col sm={24}>
 								<div className="appointment-input paid">
 									<Row gutter={12}>
 										<Col sm={8}>

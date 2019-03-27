@@ -425,87 +425,89 @@ export class StaffListing extends React.Component<{}, {}> {
 						<div className="staff-editor">
 							{this.viewWhich === 1 ? (
 								<div>
-									<div className="staff-input">
-										<TextField
-											label={lang("Name")}
-											value={this.member.name}
-											onChanged={val =>
-												(this.member.name = val)
-											}
-											disabled={!this.canEdit}
-										/>
-									</div>
-
-									<div className="staff-input">
-										<label>{lang("Days on duty")}</label>
-										{this.member.days.map(day => (
-											<Checkbox
-												disabled={!this.canEdit}
-												label={day.substr(0, 3) + "."}
-												checked={
-													this.member.onDutyDays.indexOf(
-														day
-													) > -1
-												}
-												onChange={(ev, checked) => {
-													if (checked) {
-														this.member.onDutyDays.push(
-															day
-														);
-													} else {
-														this.member.onDutyDays.splice(
-															this.member.onDutyDays.indexOf(
-																day
-															),
-															1
-														);
-													}
-												}}
-											/>
-										))}
-									</div>
-									{this.member._id ===
-									API.user.currentUser._id ? (
+									<Section showByDefault title="Basic Info">
 										<div className="staff-input">
 											<TextField
-												label={lang("Login PIN")}
-												value={this.member.pin}
-												onChanged={v =>
-													(this.member.pin = v)
+												label={lang("Name")}
+												value={this.member.name}
+												onChanged={val =>
+													(this.member.name = val)
 												}
-												onClick={() => {}}
+												disabled={!this.canEdit}
 											/>
 										</div>
-									) : (
-										""
-									)}
 
-									<Row gutter={12}>
-										<Col sm={12}>
-											<div className="staff-input">
-												<TextField
-													label={lang("Phone Number")}
-													value={this.member.phone}
-													onChanged={val =>
-														(this.member.phone = val)
-													}
+										<div className="staff-input">
+											<label>
+												{lang("Days on duty")}
+											</label>
+											{this.member.days.map(day => (
+												<Checkbox
 													disabled={!this.canEdit}
-												/>
-											</div>
-										</Col>
-										<Col sm={12}>
-											<div className="staff-input">
-												<TextField
-													label={lang("Email")}
-													value={this.member.email}
-													onChanged={val =>
-														(this.member.email = val)
+													label={
+														day.substr(0, 3) + "."
 													}
-													disabled={!this.canEdit}
+													checked={
+														this.member.onDutyDays.indexOf(
+															day
+														) > -1
+													}
+													onChange={(ev, checked) => {
+														if (checked) {
+															this.member.onDutyDays.push(
+																day
+															);
+														} else {
+															this.member.onDutyDays.splice(
+																this.member.onDutyDays.indexOf(
+																	day
+																),
+																1
+															);
+														}
+													}}
 												/>
-											</div>
-										</Col>
-									</Row>
+											))}
+										</div>
+									</Section>
+
+									<Section
+										showByDefault
+										title="Contact Details"
+									>
+										<Row gutter={12}>
+											<Col sm={12}>
+												<div className="staff-input">
+													<TextField
+														label={lang(
+															"Phone Number"
+														)}
+														value={
+															this.member.phone
+														}
+														onChanged={val =>
+															(this.member.phone = val)
+														}
+														disabled={!this.canEdit}
+													/>
+												</div>
+											</Col>
+											<Col sm={12}>
+												<div className="staff-input">
+													<TextField
+														label={lang("Email")}
+														value={
+															this.member.email
+														}
+														onChanged={val =>
+															(this.member.email = val)
+														}
+														disabled={!this.canEdit}
+													/>
+												</div>
+											</Col>
+										</Row>
+									</Section>
 								</div>
 							) : (
 								""
@@ -515,368 +517,426 @@ export class StaffListing extends React.Component<{}, {}> {
 								<div>
 									{this.member._id ===
 									API.user.currentUser._id ? (
-										<div>
+										<Section
+											showByDefault
+											title="Login PIN"
+										>
+											<div className="staff-input">
+												<TextField
+													label={lang("Login PIN")}
+													value={this.member.pin}
+													onChanged={v => {
+														if (Number(v) < 10000) {
+															this.member.pin = v.toString();
+														} else {
+															this.forceUpdate();
+														}
+													}}
+													onClick={() => {}}
+													type="number"
+													max={9999}
+												/>
+											</div>
 											<MessageBar
 												messageBarType={
-													MessageBarType.warning
+													MessageBarType.info
 												}
 											>
-												{lang(
-													"You can't edit your own level and permissions"
-												)}
+												Only you can edit this PIN, it
+												can only be 4 numbers
 											</MessageBar>
-											<br />
-										</div>
+										</Section>
 									) : (
 										""
 									)}
-									<Toggle
-										defaultChecked={this.member.operates}
-										disabled={
-											this.member._id ===
-											API.user.currentUser._id
-										}
-										onText={lang("Operates on patients")}
-										offText={lang(
-											"Doesn't operate on patients"
+									<Section showByDefault title="Permission">
+										{this.member._id ===
+										API.user.currentUser._id ? (
+											<div>
+												<MessageBar
+													messageBarType={
+														MessageBarType.warning
+													}
+												>
+													{lang(
+														"You can't edit your own level and permissions"
+													)}
+												</MessageBar>
+												<br />
+											</div>
+										) : (
+											""
 										)}
-										onChanged={newVal => {
-											this.member.operates = newVal;
-										}}
-									/>
+										<Toggle
+											defaultChecked={
+												this.member.operates
+											}
+											disabled={
+												this.member._id ===
+												API.user.currentUser._id
+											}
+											onText={lang(
+												"Operates on patients"
+											)}
+											offText={lang(
+												"Doesn't operate on patients"
+											)}
+											onChanged={newVal => {
+												this.member.operates = newVal;
+											}}
+										/>
 
-									<Toggle
-										defaultChecked={
-											this.member.canViewStaff
-										}
-										disabled={
-											this.member._id ===
-											API.user.currentUser._id
-										}
-										onText={lang("Can view staff page")}
-										offText={lang(
-											"Can not view staff page"
+										<Toggle
+											defaultChecked={
+												this.member.canViewStaff
+											}
+											disabled={
+												this.member._id ===
+												API.user.currentUser._id
+											}
+											onText={lang("Can view staff page")}
+											offText={lang(
+												"Can not view staff page"
+											)}
+											onChanged={newVal => {
+												this.member.canViewStaff = newVal;
+											}}
+										/>
+										<Toggle
+											defaultChecked={
+												this.member.canViewPatients
+											}
+											disabled={
+												this.member._id ===
+												API.user.currentUser._id
+											}
+											onText={lang(
+												"Can view patients page"
+											)}
+											offText={lang(
+												"Can not view patients page"
+											)}
+											onChanged={newVal => {
+												this.member.canViewPatients = newVal;
+											}}
+										/>
+										{setting.getSetting(
+											"module_orthodontics"
+										) ? (
+											<Toggle
+												defaultChecked={
+													this.member.canViewOrtho
+												}
+												disabled={
+													this.member._id ===
+													API.user.currentUser._id
+												}
+												onText={lang(
+													"Can view orthodontics page"
+												)}
+												offText={lang(
+													"Can not view orthodontics page"
+												)}
+												onChanged={newVal => {
+													this.member.canViewOrtho = newVal;
+												}}
+											/>
+										) : (
+											""
 										)}
-										onChanged={newVal => {
-											this.member.canViewStaff = newVal;
-										}}
-									/>
-									<Toggle
-										defaultChecked={
-											this.member.canViewPatients
-										}
-										disabled={
-											this.member._id ===
-											API.user.currentUser._id
-										}
-										onText={lang("Can view patients page")}
-										offText={lang(
-											"Can not view patients page"
+										<Toggle
+											defaultChecked={
+												this.member.canViewAppointments
+											}
+											disabled={
+												this.member._id ===
+												API.user.currentUser._id
+											}
+											onText={lang(
+												"Can view appointments page"
+											)}
+											offText={lang(
+												"Can not view appointments page"
+											)}
+											onChanged={newVal => {
+												this.member.canViewAppointments = newVal;
+											}}
+										/>
+										<Toggle
+											defaultChecked={
+												this.member.canViewTreatments
+											}
+											disabled={
+												this.member._id ===
+												API.user.currentUser._id
+											}
+											onText={lang(
+												"Can view treatments page"
+											)}
+											offText={lang(
+												"Can not view treatments page"
+											)}
+											onChanged={newVal => {
+												this.member.canViewTreatments = newVal;
+											}}
+										/>
+										{setting.getSetting(
+											"module_prescriptions"
+										) ? (
+											<Toggle
+												defaultChecked={
+													this.member
+														.canViewPrescriptions
+												}
+												disabled={
+													this.member._id ===
+													API.user.currentUser._id
+												}
+												onText={lang(
+													"Can view prescriptions page"
+												)}
+												offText={lang(
+													"Can not view prescriptions page"
+												)}
+												onChanged={newVal => {
+													this.member.canViewPrescriptions = newVal;
+												}}
+											/>
+										) : (
+											""
 										)}
-										onChanged={newVal => {
-											this.member.canViewPatients = newVal;
-										}}
-									/>
-									{setting.getSetting(
-										"module_orthodontics"
-									) ? (
-										<Toggle
-											defaultChecked={
-												this.member.canViewOrtho
-											}
-											disabled={
-												this.member._id ===
-												API.user.currentUser._id
-											}
-											onText={lang(
-												"Can view orthodontics page"
-											)}
-											offText={lang(
-												"Can not view orthodontics page"
-											)}
-											onChanged={newVal => {
-												this.member.canViewOrtho = newVal;
-											}}
-										/>
-									) : (
-										""
-									)}
-									<Toggle
-										defaultChecked={
-											this.member.canViewAppointments
-										}
-										disabled={
-											this.member._id ===
-											API.user.currentUser._id
-										}
-										onText={lang(
-											"Can view appointments page"
+										{setting.getSetting(
+											"module_statistics"
+										) ? (
+											<Toggle
+												defaultChecked={
+													this.member.canViewStats
+												}
+												disabled={
+													this.member._id ===
+													API.user.currentUser._id
+												}
+												onText={lang(
+													"Can view statistics page"
+												)}
+												offText={lang(
+													"Can not view statistics page"
+												)}
+												onChanged={newVal => {
+													this.member.canViewStats = newVal;
+												}}
+											/>
+										) : (
+											""
 										)}
-										offText={lang(
-											"Can not view appointments page"
+
+										<Toggle
+											defaultChecked={
+												this.member.canViewSettings
+											}
+											disabled={
+												this.member._id ===
+												API.user.currentUser._id
+											}
+											onText={lang(
+												"Can view settings page"
+											)}
+											offText={lang(
+												"Can not view settings page"
+											)}
+											onChanged={newVal => {
+												this.member.canViewSettings = newVal;
+											}}
+										/>
+
+										{this.member.canViewStaff ? (
+											<Toggle
+												defaultChecked={
+													this.member.canEditStaff
+												}
+												disabled={
+													this.member._id ===
+													API.user.currentUser._id
+												}
+												onText={lang(
+													"Can edit staff page (including permissions)"
+												)}
+												offText={lang(
+													"Can not edit staff page"
+												)}
+												onChanged={newVal => {
+													this.member.canEditStaff = newVal;
+												}}
+											/>
+										) : (
+											""
 										)}
-										onChanged={newVal => {
-											this.member.canViewAppointments = newVal;
-										}}
-									/>
-									<Toggle
-										defaultChecked={
-											this.member.canViewTreatments
-										}
-										disabled={
-											this.member._id ===
-											API.user.currentUser._id
-										}
-										onText={lang(
-											"Can view treatments page"
+										{this.member.canViewPatients ? (
+											<Toggle
+												defaultChecked={
+													this.member.canEditPatients
+												}
+												disabled={
+													this.member._id ===
+													API.user.currentUser._id
+												}
+												onText={lang(
+													"Can edit patients page"
+												)}
+												offText={lang(
+													"Can not edit patients page"
+												)}
+												onChanged={newVal => {
+													this.member.canEditPatients = newVal;
+												}}
+											/>
+										) : (
+											""
 										)}
-										offText={lang(
-											"Can not view treatments page"
+
+										{settings.getSetting(
+											"module_orthodontics"
+										) && this.member.canViewOrtho ? (
+											<Toggle
+												defaultChecked={
+													this.member.canEditOrtho
+												}
+												disabled={
+													this.member._id ===
+													API.user.currentUser._id
+												}
+												onText={lang(
+													"Can edit orthodontics page"
+												)}
+												offText={lang(
+													"Can not edit orthodontics page"
+												)}
+												onChanged={newVal => {
+													this.member.canEditOrtho = newVal;
+												}}
+											/>
+										) : (
+											""
 										)}
-										onChanged={newVal => {
-											this.member.canViewTreatments = newVal;
-										}}
-									/>
-									{setting.getSetting(
-										"module_prescriptions"
-									) ? (
-										<Toggle
-											defaultChecked={
-												this.member.canViewPrescriptions
-											}
-											disabled={
-												this.member._id ===
-												API.user.currentUser._id
-											}
-											onText={lang(
-												"Can view prescriptions page"
-											)}
-											offText={lang(
-												"Can not view prescriptions page"
-											)}
-											onChanged={newVal => {
-												this.member.canViewPrescriptions = newVal;
-											}}
-										/>
-									) : (
-										""
-									)}
-									{setting.getSetting("module_statistics") ? (
-										<Toggle
-											defaultChecked={
-												this.member.canViewStats
-											}
-											disabled={
-												this.member._id ===
-												API.user.currentUser._id
-											}
-											onText={lang(
-												"Can view statistics page"
-											)}
-											offText={lang(
-												"Can not view statistics page"
-											)}
-											onChanged={newVal => {
-												this.member.canViewStats = newVal;
-											}}
-										/>
-									) : (
-										""
-									)}
 
-									<Toggle
-										defaultChecked={
-											this.member.canViewSettings
-										}
-										disabled={
-											this.member._id ===
-											API.user.currentUser._id
-										}
-										onText={lang("Can view settings page")}
-										offText={lang(
-											"Can not view settings page"
+										{this.member.canViewAppointments ? (
+											<Toggle
+												defaultChecked={
+													this.member
+														.canEditAppointments
+												}
+												disabled={
+													this.member._id ===
+													API.user.currentUser._id
+												}
+												onText={lang(
+													"Can edit appointments page"
+												)}
+												offText={lang(
+													"Can not edit appointments page"
+												)}
+												onChanged={newVal => {
+													this.member.canEditAppointments = newVal;
+												}}
+											/>
+										) : (
+											""
 										)}
-										onChanged={newVal => {
-											this.member.canViewSettings = newVal;
-										}}
-									/>
 
-									{this.member.canViewStaff ? (
-										<Toggle
-											defaultChecked={
-												this.member.canEditStaff
-											}
-											disabled={
-												this.member._id ===
-												API.user.currentUser._id
-											}
-											onText={lang("Can edit staff page")}
-											offText={lang(
-												"Can not edit staff page"
-											)}
-											onChanged={newVal => {
-												this.member.canEditStaff = newVal;
-											}}
-										/>
-									) : (
-										""
-									)}
-									{this.member.canViewPatients ? (
-										<Toggle
-											defaultChecked={
-												this.member.canEditPatients
-											}
-											disabled={
-												this.member._id ===
-												API.user.currentUser._id
-											}
-											onText={lang(
-												"Can edit patients page"
-											)}
-											offText={lang(
-												"Can not edit patients page"
-											)}
-											onChanged={newVal => {
-												this.member.canEditPatients = newVal;
-											}}
-										/>
-									) : (
-										""
-									)}
+										{this.member.canViewTreatments ? (
+											<Toggle
+												defaultChecked={
+													this.member
+														.canEditTreatments
+												}
+												disabled={
+													this.member._id ===
+													API.user.currentUser._id
+												}
+												onText={lang(
+													"Can edit treatments page"
+												)}
+												offText={lang(
+													"Can not edit treatments page"
+												)}
+												onChanged={newVal => {
+													this.member.canEditTreatments = newVal;
+												}}
+											/>
+										) : (
+											""
+										)}
 
-									{settings.getSetting(
-										"module_orthodontics"
-									) && this.member.canViewOrtho ? (
-										<Toggle
-											defaultChecked={
-												this.member.canEditOrtho
-											}
-											disabled={
-												this.member._id ===
-												API.user.currentUser._id
-											}
-											onText={lang(
-												"Can edit orthodontics page"
-											)}
-											offText={lang(
-												"Can not edit orthodontics page"
-											)}
-											onChanged={newVal => {
-												this.member.canEditOrtho = newVal;
-											}}
-										/>
-									) : (
-										""
-									)}
+										{setting.getSetting(
+											"module_prescriptions"
+										) &&
+										this.member.canViewPrescriptions ? (
+											<Toggle
+												defaultChecked={
+													this.member
+														.canEditPrescriptions
+												}
+												disabled={
+													this.member._id ===
+													API.user.currentUser._id
+												}
+												onText={lang(
+													"Can edit prescriptions page"
+												)}
+												offText={lang(
+													"Can not edit prescriptions page"
+												)}
+												onChanged={newVal => {
+													this.member.canEditPrescriptions = newVal;
+												}}
+											/>
+										) : (
+											""
+										)}
 
-									{this.member.canViewAppointments ? (
-										<Toggle
-											defaultChecked={
-												this.member.canEditAppointments
-											}
-											disabled={
-												this.member._id ===
-												API.user.currentUser._id
-											}
-											onText={lang(
-												"Can edit appointments page"
-											)}
-											offText={lang(
-												"Can not edit appointments page"
-											)}
-											onChanged={newVal => {
-												this.member.canEditAppointments = newVal;
-											}}
-										/>
-									) : (
-										""
-									)}
-
-									{this.member.canViewTreatments ? (
-										<Toggle
-											defaultChecked={
-												this.member.canEditTreatments
-											}
-											disabled={
-												this.member._id ===
-												API.user.currentUser._id
-											}
-											onText={lang(
-												"Can edit treatments page"
-											)}
-											offText={lang(
-												"Can not edit treatments page"
-											)}
-											onChanged={newVal => {
-												this.member.canEditTreatments = newVal;
-											}}
-										/>
-									) : (
-										""
-									)}
-
-									{setting.getSetting(
-										"module_prescriptions"
-									) && this.member.canViewPrescriptions ? (
-										<Toggle
-											defaultChecked={
-												this.member.canEditPrescriptions
-											}
-											disabled={
-												this.member._id ===
-												API.user.currentUser._id
-											}
-											onText={lang(
-												"Can edit prescriptions page"
-											)}
-											offText={lang(
-												"Can not edit prescriptions page"
-											)}
-											onChanged={newVal => {
-												this.member.canEditPrescriptions = newVal;
-											}}
-										/>
-									) : (
-										""
-									)}
-
-									{this.member.canViewSettings ? (
-										<Toggle
-											defaultChecked={
-												this.member.canEditSettings
-											}
-											disabled={
-												this.member._id ===
-												API.user.currentUser._id
-											}
-											onText={lang(
-												"Can edit settings page"
-											)}
-											offText={lang(
-												"Can not edit settings page"
-											)}
-											onChanged={newVal => {
-												this.member.canEditSettings = newVal;
-											}}
-										/>
-									) : (
-										""
-									)}
+										{this.member.canViewSettings ? (
+											<Toggle
+												defaultChecked={
+													this.member.canEditSettings
+												}
+												disabled={
+													this.member._id ===
+													API.user.currentUser._id
+												}
+												onText={lang(
+													"Can edit settings page"
+												)}
+												offText={lang(
+													"Can not edit settings page"
+												)}
+												onChanged={newVal => {
+													this.member.canEditSettings = newVal;
+												}}
+											/>
+										) : (
+											""
+										)}
+									</Section>
 								</div>
 							) : (
 								""
 							)}
 
 							{this.viewWhich === 3 ? (
-								this.member.nextAppointments.length ? (
-									<AppointmentsList
-										list={this.member.nextAppointments}
-									/>
-								) : (
-									<h3 style={{ textAlign: "center" }}>
-										{lang("No upcoming appointments")}
-									</h3>
-								)
+								<Section
+									showByDefault
+									title="Upcoming Appointments"
+								>
+									{this.member.nextAppointments.length ? (
+										<AppointmentsList
+											list={this.member.nextAppointments}
+										/>
+									) : (
+										<h3 style={{ textAlign: "center" }}>
+											{lang("No upcoming appointments")}
+										</h3>
+									)}
+								</Section>
 							) : (
 								""
 							)}

@@ -8,6 +8,7 @@ import { observer } from "mobx-react";
 import "./patient-appointments.scss";
 import { API } from "../../../../../core/index";
 import { lang } from "../../../../../core/i18/i18";
+import { Section } from "../../../../../assets/components/section/section";
 
 @observer
 export class PatientAppointments extends React.Component<
@@ -30,37 +31,40 @@ export class PatientAppointments extends React.Component<
 	render() {
 		return (
 			<div className="single-patient-appointments appointments">
-				<AppointmentsList
-					ref={l => (this.l = l)}
-					list={this.appointments}
-				/>
-				{this.appointments.length ? (
-					""
-				) : (
-					<p className="no-appointments">
-						{lang("This patient does not have any appointment") +
-							"."}
-					</p>
-				)}
-				<br />
-				{this.canEdit ? (
-					<PrimaryButton
-						onClick={() => {
-							const apt = new appointmentsData.Appointment();
-							apt.patientID = this.props.patient._id;
-							apt.date = new Date().getTime();
-							appointmentsData.appointments.list.push(apt);
-							if (this.l) {
-								this.l.selectedAppointmentID = apt._id;
-							}
-						}}
-						iconProps={{ iconName: "add" }}
-					>
-						{lang("Book New Appointment")}
-					</PrimaryButton>
-				) : (
-					""
-				)}
+				<Section title="Patient Appointments" showByDefault>
+					<AppointmentsList
+						ref={l => (this.l = l)}
+						list={this.appointments}
+					/>
+					{this.appointments.length ? (
+						""
+					) : (
+						<p className="no-appointments">
+							{lang(
+								"This patient does not have any appointment"
+							) + "."}
+						</p>
+					)}
+					<br />
+					{this.canEdit ? (
+						<PrimaryButton
+							onClick={() => {
+								const apt = new appointmentsData.Appointment();
+								apt.patientID = this.props.patient._id;
+								apt.date = new Date().getTime();
+								appointmentsData.appointments.list.push(apt);
+								if (this.l) {
+									this.l.selectedAppointmentID = apt._id;
+								}
+							}}
+							iconProps={{ iconName: "add" }}
+						>
+							{lang("Book New Appointment")}
+						</PrimaryButton>
+					) : (
+						""
+					)}
+				</Section>
 			</div>
 		);
 	}
