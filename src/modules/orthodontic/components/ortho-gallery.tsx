@@ -20,7 +20,7 @@ import {
 	fileTypes
 } from "../../../assets/components/pick-files/pick-files";
 import dataOrtho from "../data/data.ortho";
-import { files } from "../../../core/files/files";
+import { files, CEPHALOMETRIC_DIR } from "../../../core/files/files";
 import { orthoData } from "..";
 import { CephalometricItem } from "../data/interface.ortho-json";
 import { CephalometricEditor } from "./cephalometric";
@@ -153,7 +153,7 @@ export class OrthoGallery extends React.Component<{
 												.cephalometricHistory.length - 1
 										];
 									}}
-									targetDir={`cephalometric/${
+									targetDir={`${CEPHALOMETRIC_DIR}/${
 										this.props.orthoCase._id
 									}`}
 								>

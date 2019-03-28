@@ -31,7 +31,7 @@ import {
 	PickAndUpload,
 	fileTypes
 } from "../../../assets/components/pick-files/pick-files";
-import { files } from "../../../core/files/files";
+import { files, ORTHO_RECORDS_DIR } from "../../../core/files/files";
 import { diff } from "fast-array-diff";
 import { GridTable } from "./grid-table";
 import { API } from "../../../core";
@@ -962,7 +962,7 @@ export class Orthograph extends React.Component<{
 																								this.uploadingPhotoID =
 																									"";
 																							},
-																							targetDir: `orthodontics/${
+																							targetDir: `${ORTHO_RECORDS_DIR}/${
 																								this
 																									.props
 																									.orthoCase

@@ -11,7 +11,7 @@ import {
 	MessageBar,
 	MessageBarType
 } from "office-ui-fabric-react";
-import { files } from "../../../../../core/files/files";
+import { files, GALLERIES_DIR } from "../../../../../core/files/files";
 import {
 	PickAndUpload,
 	fileTypes
@@ -87,7 +87,9 @@ export class SinglePatientGallery extends React.Component<
 											onFinishLoading={() => {
 												this.uploading = false;
 											}}
-											targetDir="patient-galleries"
+											targetDir={`${GALLERIES_DIR}/${
+												this.props.patient._id
+											}`}
 										>
 											<IconButton
 												className={`add-photo`}
