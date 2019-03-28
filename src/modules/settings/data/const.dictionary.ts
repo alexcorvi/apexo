@@ -7,7 +7,6 @@ export const dictionary = {
 	time_tracking: "time_tracking",
 	backup_freq: "backup_freq",
 	backup_retain: "backup_retain",
-	backup_arr: "backup_arr",
 	dropbox_accessToken: "dropbox_accessToken",
 	lang: "lang"
 };

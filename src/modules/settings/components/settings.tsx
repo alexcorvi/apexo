@@ -36,6 +36,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 		return API.user.currentUser.canEditSettings;
 	}
 
+	@observable loading: boolean = false;
+
 	componentWillMount() {
 		setTimeout(() => settings.updateDropboxBackups(), second);
 	}
@@ -293,10 +295,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 													const date = new Date(
 														file.client_modified
 													);
-													const fileName = file.path_lower.replace(
-														/[^0-9]/gim,
-														""
-													);
+
 													return (
 														<tr key={file.id}>
 															<td>
@@ -325,46 +324,39 @@ export class SettingsComponent extends React.Component<{}, {}> {
 															<td>
 																<IconButton
 																	style={{
-																		background:
-																			"#f3f3f3",
 																		marginRight: 6
 																	}}
 																	iconProps={{
-																		iconName:
-																			"delete"
+																		iconName: this
+																			.loading
+																			? "sync"
+																			: "delete"
 																	}}
+																	className={
+																		this
+																			.loading
+																			? "rotate"
+																			: ""
+																	}
 																	disabled={
 																		!this
 																			.canEdit
 																	}
 																	onClick={() => {
+																		this.loading = true;
 																		backup
 																			.deleteOld(
-																				fileName
+																				file.path_lower
 																			)
 																			.then(
 																				() => {
-																					const arr: string[] = JSON.parse(
-																						settings.getSetting(
-																							"backup_arr"
-																						) ||
-																							"[]"
-																					);
-																					const i = arr.findIndex(
-																						x =>
-																							x ===
-																							fileName
-																					);
-																					arr.splice(
-																						i,
-																						1
-																					);
-																					settings.setSetting(
-																						"backup_arr",
-																						JSON.stringify(
-																							arr
-																						)
-																					);
+																					this.loading = false;
+																					settings.updateDropboxBackups();
+																				}
+																			)
+																			.catch(
+																				() => {
+																					this.loading = false;
 																					settings.updateDropboxBackups();
 																				}
 																			);
@@ -372,26 +364,39 @@ export class SettingsComponent extends React.Component<{}, {}> {
 																/>
 																<IconButton
 																	style={{
-																		background:
-																			"#f3f3f3",
 																		marginRight: 6
 																	}}
 																	iconProps={{
-																		iconName:
-																			"DatabaseSync"
+																		iconName: this
+																			.loading
+																			? "sync"
+																			: "DatabaseSync"
 																	}}
+																	className={
+																		this
+																			.loading
+																			? "rotate"
+																			: ""
+																	}
 																	disabled={
 																		!this
 																			.canEdit
 																	}
-																	onClick={() =>
-																		restore.fromDropbox(
-																			settings.getSetting(
-																				"dropbox_accessToken"
-																			),
-																			file.path_lower
-																		)
-																	}
+																	onClick={() => {
+																		this.loading = true;
+																		restore
+																			.fromDropbox(
+																				file.path_lower
+																			)
+																			.then(
+																				() =>
+																					(this.loading = false)
+																			)
+																			.catch(
+																				() =>
+																					(this.loading = false)
+																			);
+																	}}
 																/>
 															</td>
 														</tr>

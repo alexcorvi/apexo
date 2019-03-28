@@ -230,8 +230,10 @@ export const restore = {
 		});
 	},
 
-	fromDropbox: async function(accessToken: string, filePath: string) {
-		///!!!
+	fromDropbox: async function(filePath: string) {
+		const base64File = (await files.get(filePath)).split(";base64,")[1];
+		const base64Data = decode(base64File).split("apexo-backup:")[1];
+		this.fromBase64(base64Data);
 	}
 };
 
