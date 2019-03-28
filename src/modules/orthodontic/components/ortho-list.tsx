@@ -175,7 +175,7 @@ export class OrthoList extends React.Component<{}, {}> {
 													}}
 													onClick={() =>
 														cases.deleteModal(
-															patient._id
+															orthoCase._id
 														)
 													}
 													disabled={!this.canEdit}
