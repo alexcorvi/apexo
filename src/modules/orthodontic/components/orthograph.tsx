@@ -136,21 +136,37 @@ export class Orthograph extends React.Component<{
 		return (
 			<div className="orthograph">
 				<Section title="Problems">
-					<DetailsList
-						compact
-						items={[
-							...[
-								...this.props.orthoCase.computedProblems,
-								...this.props.orthoCase.problemsList.map(
-									x => "Patient concern: " + x
-								)
-							].map((x, i) => [`${i + 1}. ${x}`])
-						]}
-						isHeaderVisible={false}
-						selectionMode={SelectionMode.none}
-					/>
+					{this.props.orthoCase.computedProblems.length === 0 &&
+					this.props.orthoCase.problemsList.length === 0 ? (
+						<MessageBar messageBarType={MessageBarType.warning}>
+							This patient does not seem to have any problems or
+							concerns, have you filled the case sheet?
+						</MessageBar>
+					) : (
+						<DetailsList
+							compact
+							items={[
+								...[
+									...this.props.orthoCase.computedProblems,
+									...this.props.orthoCase.problemsList.map(
+										x => "Patient concern: " + x
+									)
+								].map((x, i) => [`${i + 1}. ${x}`])
+							]}
+							isHeaderVisible={false}
+							selectionMode={SelectionMode.none}
+						/>
+					)}
 				</Section>
 				<Section title="Treatment Plan">
+					{this.props.orthoCase.treatmentPlan_appliance.length ? (
+						""
+					) : (
+						<MessageBar messageBarType={MessageBarType.warning}>
+							A treatment plan must be before starting the
+							treatment.
+						</MessageBar>
+					)}
 					<EditableList
 						label="add plan..."
 						value={this.props.orthoCase.treatmentPlan_appliance}

@@ -2,7 +2,11 @@ import * as React from "react";
 import { appointmentsData } from "../../../../appointments";
 import { AppointmentsList } from "../../../../../assets/components/appointments-list/appointments-list";
 import { computed } from "mobx";
-import { PrimaryButton } from "office-ui-fabric-react";
+import {
+	PrimaryButton,
+	MessageBar,
+	MessageBarType
+} from "office-ui-fabric-react";
 import { Patient } from "../../../data";
 import { observer } from "mobx-react";
 import "./patient-appointments.scss";
@@ -31,7 +35,7 @@ export class PatientAppointments extends React.Component<
 	render() {
 		return (
 			<div className="single-patient-appointments appointments">
-				<Section title="Patient Appointments" >
+				<Section title="Patient Appointments">
 					<AppointmentsList
 						ref={l => (this.l = l)}
 						list={this.appointments}
@@ -39,11 +43,9 @@ export class PatientAppointments extends React.Component<
 					{this.appointments.length ? (
 						""
 					) : (
-						<p className="no-appointments">
-							{lang(
-								"This patient does not have any appointment"
-							) + "."}
-						</p>
+						<MessageBar messageBarType={MessageBarType.info}>
+							This patient does not have any appointment.
+						</MessageBar>
 					)}
 					<br />
 					{this.canEdit ? (

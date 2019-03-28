@@ -5,7 +5,9 @@ import {
 	TextField,
 	DetailsList,
 	ConstrainMode,
-	SelectionMode
+	SelectionMode,
+	MessageBar,
+	MessageBarType
 } from "office-ui-fabric-react";
 
 import { EditableList } from "../../../assets/components/editable-list/editable-list";
@@ -268,17 +270,24 @@ export class OrthoCaseSheet extends React.Component<{
 					<br />
 					<br />
 					<h3>Other Problems</h3>
-					<DetailsList
-						constrainMode={ConstrainMode.horizontalConstrained}
-						compact
-						items={[
-							...this.props.orthoCase.computedProblems.map(
-								(x, i) => [`${i + 1}. ${x}`]
-							)
-						]}
-						isHeaderVisible={false}
-						selectionMode={SelectionMode.none}
-					/>
+					{this.props.orthoCase.computedProblems.length === 0 ? (
+						<MessageBar messageBarType={MessageBarType.info}>
+							The case sheet of this patient does not show any
+							problems that needs orthodontic treatment.
+						</MessageBar>
+					) : (
+						<DetailsList
+							constrainMode={ConstrainMode.horizontalConstrained}
+							compact
+							items={[
+								...this.props.orthoCase.computedProblems.map(
+									(x, i) => [`${i + 1}. ${x}`]
+								)
+							]}
+							isHeaderVisible={false}
+							selectionMode={SelectionMode.none}
+						/>
+					)}
 				</Section>
 			</div>
 		);

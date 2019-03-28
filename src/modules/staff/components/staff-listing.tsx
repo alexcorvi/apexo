@@ -425,7 +425,7 @@ export class StaffListing extends React.Component<{}, {}> {
 						<div className="staff-editor">
 							{this.viewWhich === 1 ? (
 								<div>
-									<Section  title="Basic Info">
+									<Section title="Basic Info">
 										<div className="staff-input">
 											<TextField
 												label={lang("Name")}
@@ -471,10 +471,7 @@ export class StaffListing extends React.Component<{}, {}> {
 										</div>
 									</Section>
 
-									<Section
-										
-										title="Contact Details"
-									>
+									<Section title="Contact Details">
 										<Row gutter={12}>
 											<Col sm={12}>
 												<div className="staff-input">
@@ -517,10 +514,7 @@ export class StaffListing extends React.Component<{}, {}> {
 								<div>
 									{this.member._id ===
 									API.user.currentUser._id ? (
-										<Section
-											
-											title="Login PIN"
-										>
+										<Section title="Login PIN">
 											<div className="staff-input">
 												<TextField
 													label={lang("Login PIN")}
@@ -549,7 +543,7 @@ export class StaffListing extends React.Component<{}, {}> {
 									) : (
 										""
 									)}
-									<Section  title="Permission">
+									<Section title="Permission">
 										{this.member._id ===
 										API.user.currentUser._id ? (
 											<div>
@@ -923,18 +917,18 @@ export class StaffListing extends React.Component<{}, {}> {
 							)}
 
 							{this.viewWhich === 3 ? (
-								<Section
-									
-									title="Upcoming Appointments"
-								>
+								<Section title="Upcoming Appointments">
 									{this.member.nextAppointments.length ? (
 										<AppointmentsList
 											list={this.member.nextAppointments}
 										/>
 									) : (
-										<h3 style={{ textAlign: "center" }}>
-											{lang("No upcoming appointments")}
-										</h3>
+										<MessageBar
+											messageBarType={MessageBarType.info}
+										>
+											There are no upcoming appointments
+											for this staff member.
+										</MessageBar>
 									)}
 								</Section>
 							) : (

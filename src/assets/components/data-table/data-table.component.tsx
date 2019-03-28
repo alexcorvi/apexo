@@ -5,7 +5,9 @@ import {
 	ICommandBarItemProps,
 	Icon,
 	IconButton,
-	SearchBox
+	SearchBox,
+	MessageBar,
+	MessageBarType
 } from "office-ui-fabric-react";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -231,15 +233,14 @@ export class DataTable extends React.Component<Props, {}> {
 				)}
 
 				{this.props.rows.length === 0 ? (
-					<p className="no-data">
-						{lang("There's no data at this section yet")}
-					</p>
+					<MessageBar messageBarType={MessageBarType.info}>
+						No data in this section yet, you can add new data by
+						clicking the button above.
+					</MessageBar>
 				) : this.filteredRows.length === 0 ? (
-					<p className="no-data">
-						{lang(
-							"Didn't find anything that matches your search criteria"
-						)}
-					</p>
+					<MessageBar messageBarType={MessageBarType.info}>
+						Did not find anything that matches your search criteria.
+					</MessageBar>
 				) : (
 					""
 				)}

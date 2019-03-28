@@ -50,6 +50,16 @@ export class SinglePatientGallery extends React.Component<
 			<Section title="Patient Gallery">
 				{API.login.online ? (
 					<div className="single-patient-gallery">
+						{this.props.patient.gallery.length === 0 ? (
+							<MessageBar messageBarType={MessageBarType.info}>
+								This patient does not seem to have any photo
+								record uploaded, press the plus sign button
+								below to start uploading.
+							</MessageBar>
+						) : (
+							""
+						)}
+						<br />
 						<div className="thumbs">
 							{this.canEdit ? (
 								this.uploading ? (
@@ -145,7 +155,6 @@ export class SinglePatientGallery extends React.Component<
 					</div>
 				) : (
 					<MessageBar messageBarType={MessageBarType.warning}>
-						{" "}
 						You can not access patient gallery while offline
 					</MessageBar>
 				)}
