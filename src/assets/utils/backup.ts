@@ -1,3 +1,5 @@
+import { compact } from "./../../core/db/index";
+import { files, BACKUPS_DIR } from "./../../core/files/files";
 import { Message } from "./../../core/messages/class.message";
 import { API } from "../../core";
 import { decode, encode } from "./base64";
@@ -16,7 +18,6 @@ import { prescriptionsData } from "../../modules/prescriptions";
 import { settingsData } from "../../modules/settings";
 import { treatmentsData } from "../../modules/treatments";
 const PouchDB: PouchDB.Static = (pouchDB as any).default;
-
 const ext = "apx";
 
 export interface DropboxFile {
@@ -35,9 +36,11 @@ export interface DatabaseDump {
 export const backup = {
 	toJSON: function() {
 		return new Promise(async (resolve, reject) => {
+			await compact.compact();
+
 			const databases = [
 				appointmentsData.namespace,
-				staffData.namespace,
+				"doctors",
 				orthoData.namespace,
 				patientsData.namespace,
 				prescriptionsData.namespace,
@@ -103,82 +106,18 @@ export const backup = {
 		});
 	},
 
-	toDropbox: function(accessToken: string): Promise<number> {
-		return new Promise(async (resolve, reject) => {
-			const file = await backup.toBlob();
-			const xhr = new XMLHttpRequest();
-			const fileName = new Date().getTime();
-			xhr.onload = function() {
-				if (xhr.status === 200) {
-					return resolve(fileName);
-				} else {
-					return reject(xhr.response || "Unable to upload file");
-				}
-			};
-
-			xhr.open("POST", "https://content.dropboxapi.com/2/files/upload");
-			xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-			xhr.setRequestHeader("Content-Type", "application/octet-stream");
-			xhr.setRequestHeader(
-				"Dropbox-API-Arg",
-				JSON.stringify({
-					path: "/" + `${fileName}.${ext}`,
-					mode: "add",
-					autorename: true,
-					mute: false
-				})
-			);
-
-			xhr.send(file);
-		});
+	toDropbox: async function(): Promise<string> {
+		const blob = await backup.toBlob();
+		const path = await files.save(blob, ext, BACKUPS_DIR);
+		return path;
 	},
 
-	deleteOld: function(accessToken: string, name: string) {
-		const path = `/${name}.${ext}`;
-		return new Promise((resolve, reject) => {
-			const xhr = new XMLHttpRequest();
-
-			xhr.onload = function() {
-				if (xhr.status === 200) {
-					return resolve();
-				} else {
-					return reject(xhr.response || "Unable to delete file");
-				}
-			};
-
-			xhr.open("POST", "https://api.dropboxapi.com/2/files/delete_v2");
-			xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-			xhr.setRequestHeader("Content-Type", "application/json");
-
-			xhr.send(JSON.stringify({ path }));
-		});
+	list: async function() {
+		return await files.list(BACKUPS_DIR);
 	},
 
-	list: function(accessToken: string): Promise<DropboxFile[]> {
-		return new Promise((resolve, reject) => {
-			const xhr = new XMLHttpRequest();
-
-			xhr.onload = function() {
-				if (xhr.status === 200) {
-					return resolve(JSON.parse(xhr.response).entries);
-				} else {
-					return reject(xhr.response || "Unable to upload file");
-				}
-			};
-
-			xhr.open("POST", "https://api.dropboxapi.com/2/files/list_folder");
-			xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-			xhr.setRequestHeader("Content-Type", "application/json");
-			xhr.send(
-				JSON.stringify({
-					path: "",
-					recursive: false,
-					include_media_info: false,
-					include_deleted: false,
-					include_has_explicit_shared_members: false
-				})
-			);
-		});
+	deleteOld: async function(path: string) {
+		return await files.remove(path);
 	}
 };
 
@@ -292,33 +231,7 @@ export const restore = {
 	},
 
 	fromDropbox: async function(accessToken: string, filePath: string) {
-		return new Promise((resolve, reject) => {
-			const xhr = new XMLHttpRequest();
-			xhr.responseType = "arraybuffer";
-			xhr.onload = async function() {
-				if (xhr.status === 200) {
-					const backupBlob = new Blob([xhr.response], {
-						type: "application/octet-stream"
-					});
-					await restore.fromFile(backupBlob);
-					resolve();
-				} else {
-					const errorMessage =
-						xhr.response || "Unable to download file";
-					reject(errorMessage);
-				}
-			};
-
-			xhr.open("POST", "https://content.dropboxapi.com/2/files/download");
-			xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-			xhr.setRequestHeader(
-				"Dropbox-API-Arg",
-				JSON.stringify({
-					path: filePath
-				})
-			);
-			xhr.send();
-		});
+		///!!!
 	}
 };
 

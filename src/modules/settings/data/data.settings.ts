@@ -25,26 +25,28 @@ class Settings {
 		}
 	}
 
-	updateDropboxFilesList() {
-		const accessToken = this.getSetting("dropbox_accessToken");
-		API.backup
-			.list(accessToken)
-			.then(list => {
-				this.dropboxBackups = list;
-			})
-			.catch(() => {});
+	async updateDropboxBackups() {
+		const sortedResult = (await API.backup.list())
+			.filter(x => x.client_modified)
+			.sort(
+				(a, b) =>
+					new Date(a.client_modified).getTime() -
+					new Date(b.client_modified).getTime()
+			);
+
+		this.dropboxBackups = sortedResult;
 	}
 
-	automatedBackups() {
-		const frequency: "d" | "w" | "m" = this.getSetting(
+	async automatedBackups() {
+		console.log("Automated backups process started");
+
+		const frequency: "d" | "w" | "m" | "n" = this.getSetting(
 			"backup_freq"
 		) as any;
-		const accessToken = this.getSetting("dropbox_accessToken");
 		const retain = Number(this.getSetting("backup_retain")) || 3;
-		const arr: string[] = JSON.parse(this.getSetting("backup_arr") || "[]");
 
 		// carry on, only if there's access token
-		if (!accessToken || !frequency) {
+		if (!API.login.dropboxActive) {
 			return;
 		}
 
@@ -52,48 +54,70 @@ class Settings {
 			return;
 		}
 
-		// delete if due
-		if (arr.length > retain) {
-			API.backup.deleteOld(accessToken, arr[0]).then(() => {
-				arr.splice(0, 1);
-				this.setSetting("backup_arr", JSON.stringify(arr));
-				this.updateDropboxFilesList();
-			});
+		const lastBackupFile = this.dropboxBackups[
+			this.dropboxBackups.length - 1
+		] || {
+			name: "",
+			path_lower: "",
+			id: "",
+			size: 0,
+			client_modified: new Date(0).getTime()
+		};
+
+		console.log(
+			"last backup file",
+			JSON.parse(JSON.stringify(lastBackupFile))
+		);
+
+		const now = new Date().getTime();
+		const then = new Date(lastBackupFile.client_modified).getTime();
+		const diffInDays = Math.floor((now - then) / (1000 * 60 * 60 * 24));
+
+		console.log("Time stamps");
+		console.log(now, then, diffInDays);
+
+		if (frequency === "d" && diffInDays > 1) {
+			console.log("backup initiated");
+			await API.backup.toDropbox();
+			await this.updateDropboxBackups();
+			console.log("Backup and updating completed");
+		} else if (frequency === "w" && diffInDays > 7) {
+			console.log("backup initiated");
+			await API.backup.toDropbox();
+			await this.updateDropboxBackups();
+			console.log("Backup and updating completed");
+		} else if (frequency === "m" && diffInDays > 30) {
+			console.log("backup initiated");
+			await API.backup.toDropbox();
+			await this.updateDropboxBackups();
+			console.log("Backup and updating completed");
 		}
 
-		// backup if due
-		const lastBackupFileName = arr[arr.length - 1];
-		if (lastBackupFileName) {
-			const now = new Date().getTime();
-			const then = new Date(Number(lastBackupFileName)).getTime();
-			const diffInDays = Math.floor((now - then) / (1000 * 60 * 60 * 24));
+		let backupsToDeleteNumber = this.dropboxBackups.length - retain;
+		const backupsToDeleteFiles: DropboxFile[] = [];
 
-			if (frequency === "m" && diffInDays < 30) {
-				return;
-			}
-			if (frequency === "w" && diffInDays < 7) {
-				return;
-			}
-			if (frequency === "d" && diffInDays < 1) {
-				return;
-			}
+		console.log("will delete", backupsToDeleteNumber, "backups");
+
+		while (backupsToDeleteNumber > 0) {
+			backupsToDeleteFiles.push(
+				this.dropboxBackups[backupsToDeleteNumber - 1]
+			);
+			backupsToDeleteNumber--;
 		}
 
-		API.backup.toDropbox(accessToken).then(name => {
-			arr.push(name.toString());
-			this.setSetting("backup_arr", JSON.stringify(arr));
-			this.updateDropboxFilesList();
+		console.log("will delete the following backups", backupsToDeleteFiles);
+
+		backupsToDeleteFiles.forEach(async file => {
+			await API.backup.deleteOld(file.path_lower);
+			await this.updateDropboxBackups();
+			console.log(backupsToDeleteNumber, "deleted", file);
 		});
-
-		compact
-			.compact()
-			.then(() => console.log("backup and compaction is done"));
 	}
 
 	constructor() {
 		setInterval(() => {
 			this.automatedBackups();
-		}, 60 * 1000); // check every minutes
+		}, 2 * 60 * 1000); // check every 2 minutes
 	}
 }
 

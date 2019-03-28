@@ -37,13 +37,13 @@ export class SettingsComponent extends React.Component<{}, {}> {
 	}
 
 	componentWillMount() {
-		setTimeout(() => settings.updateDropboxFilesList(), 1000);
+		setTimeout(() => settings.updateDropboxBackups(), 1000);
 	}
 
 	render() {
 		return (
 			<div className="settings-component p-15 p-l-10 p-r-10">
-				<Section title="General Setting" >
+				<Section title="General Setting">
 					<Input
 						element={
 							<Dropdown
@@ -77,6 +77,11 @@ export class SettingsComponent extends React.Component<{}, {}> {
 										"dropbox_accessToken",
 										val
 									);
+
+									setTimeout(
+										() => API.login.validateDropBoxToken(),
+										500
+									);
 								}}
 								disabled={!this.canEdit}
 							/>
@@ -85,7 +90,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					/>
 				</Section>
 
-				<Section title="Financial Settings" >
+				<Section title="Financial Settings">
 					<Input
 						element={
 							<TextField
@@ -123,7 +128,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					/>
 				</Section>
 
-				<Section title="Optional Modules and Features" >
+				<Section title="Optional Modules and Features">
 					<Toggle
 						onText={lang("Prescriptions Module Enabled")}
 						offText={lang("Prescriptions Module Disabled")}
@@ -180,7 +185,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					/>
 				</Section>
 
-				<Section title="Backup and Restore" >
+				<Section title="Backup and Restore">
 					{API.login.online ? (
 						<div>
 							<PrimaryButton
@@ -237,161 +242,174 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					)}
 				</Section>
 
-				<Section title="Automated Backup and Restore" >
+				<Section title="Automated Backup and Restore">
 					{API.login.online ? (
-						<div>
-							<Dropdown
-								label={lang("Backup frequency")}
-								options={[
-									{ key: "d", text: lang("Daily") },
-									{ key: "w", text: lang("Weekly") },
-									{ key: "m", text: lang("Monthly") }
-								]}
-								defaultSelectedKey={settings.getSetting(
-									"backup_freq"
-								)}
-								onChanged={v => {
-									settings.setSetting(
-										"backup_freq",
-										v.key.toString()
-									);
-								}}
-								disabled={!this.canEdit}
-							/>
+						API.login.dropboxActive ? (
+							<div>
+								<Dropdown
+									label={lang("Backup frequency")}
+									options={[
+										{ key: "d", text: lang("Daily") },
+										{ key: "w", text: lang("Weekly") },
+										{ key: "m", text: lang("Monthly") },
+										{ key: "n", text: lang("Never") }
+									]}
+									defaultSelectedKey={settings.getSetting(
+										"backup_freq"
+									)}
+									onChanged={v => {
+										settings.setSetting(
+											"backup_freq",
+											v.key.toString()
+										);
+									}}
+									disabled={!this.canEdit}
+								/>
 
-							<TextField
-								value={settings.getSetting("backup_retain")}
-								label={lang("How many backups to retain")}
-								onChanged={val => {
-									settings.setSetting("backup_retain", val);
-								}}
-								disabled={!this.canEdit}
-								type="number"
-							/>
+								<TextField
+									value={settings.getSetting("backup_retain")}
+									label={lang("How many backups to retain")}
+									onChanged={val => {
+										settings.setSetting(
+											"backup_retain",
+											val
+										);
+									}}
+									disabled={!this.canEdit}
+									type="number"
+								/>
 
-							{settings.dropboxBackups.length ? (
-								<table className="ms-table">
-									<thead>
-										<tr>
-											<th>{lang("Backup")}</th>
-											<th>{lang("Actions")}</th>
-										</tr>
-									</thead>
-									<tbody>
-										{settings.dropboxBackups.map(file => {
-											const date = new Date(
-												file.client_modified
-											);
-											const fileName = file.path_lower.replace(
-												/[^0-9]/gim,
-												""
-											);
-											return (
-												<tr key={file.id}>
-													<td>
-														<ProfileSquared
-															onRenderInitials={() => (
-																<div
+								{settings.dropboxBackups.length ? (
+									<table className="ms-table">
+										<thead>
+											<tr>
+												<th>{lang("Backup")}</th>
+												<th>{lang("Actions")}</th>
+											</tr>
+										</thead>
+										<tbody>
+											{settings.dropboxBackups.map(
+												file => {
+													const date = new Date(
+														file.client_modified
+													);
+													const fileName = file.path_lower.replace(
+														/[^0-9]/gim,
+														""
+													);
+													return (
+														<tr key={file.id}>
+															<td>
+																<ProfileSquared
+																	onRenderInitials={() => (
+																		<div
+																			style={{
+																				textAlign:
+																					"center",
+																				fontSize: 10
+																			}}
+																		>
+																			{`${date.getDate()}/${date.getMonth() +
+																				1}`}
+																		</div>
+																	)}
+																	text={unifiedDateFormat(
+																		date
+																	)}
+																	subText={`${Math.round(
+																		file.size /
+																			1000
+																	)} KB`}
+																/>
+															</td>
+															<td>
+																<IconButton
 																	style={{
-																		textAlign:
-																			"center",
-																		fontSize: 10
+																		background:
+																			"#f3f3f3",
+																		marginRight: 6
 																	}}
-																>
-																	{`${date.getDate()}/${date.getMonth() +
-																		1}`}
-																</div>
-															)}
-															text={unifiedDateFormat(
-																date
-															)}
-															subText={`${Math.round(
-																file.size / 1000
-															)} KB`}
-														/>
-													</td>
-													<td>
-														<IconButton
-															style={{
-																background:
-																	"#f3f3f3",
-																marginRight: 6
-															}}
-															iconProps={{
-																iconName:
-																	"delete"
-															}}
-															disabled={
-																!this.canEdit
-															}
-															onClick={() => {
-																backup
-																	.deleteOld(
-																		settings.getSetting(
-																			"dropbox_accessToken"
-																		),
-																		fileName
-																	)
-																	.then(
-																		() => {
-																			const arr: string[] = JSON.parse(
-																				settings.getSetting(
-																					"backup_arr"
-																				) ||
-																					"[]"
+																	iconProps={{
+																		iconName:
+																			"delete"
+																	}}
+																	disabled={
+																		!this
+																			.canEdit
+																	}
+																	onClick={() => {
+																		backup
+																			.deleteOld(
+																				fileName
+																			)
+																			.then(
+																				() => {
+																					const arr: string[] = JSON.parse(
+																						settings.getSetting(
+																							"backup_arr"
+																						) ||
+																							"[]"
+																					);
+																					const i = arr.findIndex(
+																						x =>
+																							x ===
+																							fileName
+																					);
+																					arr.splice(
+																						i,
+																						1
+																					);
+																					settings.setSetting(
+																						"backup_arr",
+																						JSON.stringify(
+																							arr
+																						)
+																					);
+																					settings.updateDropboxBackups();
+																				}
 																			);
-																			const i = arr.findIndex(
-																				x =>
-																					x ===
-																					fileName
-																			);
-																			arr.splice(
-																				i,
-																				1
-																			);
-																			settings.setSetting(
-																				"backup_arr",
-																				JSON.stringify(
-																					arr
-																				)
-																			);
-																			settings.updateDropboxFilesList();
-																		}
-																	);
-															}}
-														/>
-														<IconButton
-															style={{
-																background:
-																	"#f3f3f3",
-																marginRight: 6
-															}}
-															iconProps={{
-																iconName:
-																	"DatabaseSync"
-															}}
-															disabled={
-																!this.canEdit
-															}
-															onClick={() =>
-																restore.fromDropbox(
-																	settings.getSetting(
-																		"dropbox_accessToken"
-																	),
-																	file.path_lower
-																)
-															}
-														/>
-													</td>
-												</tr>
-											);
-										})}
-									</tbody>
-								</table>
-							) : (
-								""
-							)}
-						</div>
+																	}}
+																/>
+																<IconButton
+																	style={{
+																		background:
+																			"#f3f3f3",
+																		marginRight: 6
+																	}}
+																	iconProps={{
+																		iconName:
+																			"DatabaseSync"
+																	}}
+																	disabled={
+																		!this
+																			.canEdit
+																	}
+																	onClick={() =>
+																		restore.fromDropbox(
+																			settings.getSetting(
+																				"dropbox_accessToken"
+																			),
+																			file.path_lower
+																		)
+																	}
+																/>
+															</td>
+														</tr>
+													);
+												}
+											)}
+										</tbody>
+									</table>
+								) : (
+									""
+								)}
+							</div>
+						) : (
+							<MessageBar messageBarType={MessageBarType.warning}>
+								A valid DropBox access token is required for
+								this section
+							</MessageBar>
+						)
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
 							{lang(

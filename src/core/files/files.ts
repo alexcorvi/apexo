@@ -1,7 +1,13 @@
+import { DropboxFile } from "./../../assets/utils/backup";
 import pouchDB = require("pouchdb-browser");
 const PouchDB: PouchDB.Static = (pouchDB as any).default;
 import { generateID } from "../../assets/utils/generate-id";
 import setting from "../../modules/settings/data/data.settings";
+
+export const BACKUPS_DIR = "/backups";
+export const GALLERIES_DIR = "/galleries";
+export const ORTHO_RECORDS_DIR = "/ortho";
+export const CEPHALOMETRIC_DIR = "/ceph";
 
 function arrayBufferToBase64(
 	buffer: ArrayBuffer,
@@ -29,7 +35,9 @@ export const files = {
 			const xhr = new XMLHttpRequest();
 			const path = `/${dir}/${new Date().getTime()}-${generateID(
 				4
-			)}.${ext}`;
+			)}.${ext}`
+				.split("//")
+				.join("/");
 
 			xhr.onload = function() {
 				if (xhr.status === 200) {
@@ -82,7 +90,7 @@ export const files = {
 			xhr.setRequestHeader(
 				"Dropbox-API-Arg",
 				JSON.stringify({
-					path
+					path: path.split("//").join("/")
 				})
 			);
 			xhr.send();
@@ -109,7 +117,66 @@ export const files = {
 			xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
 			xhr.setRequestHeader("Content-Type", "application/json");
 
-			xhr.send(JSON.stringify({ path }));
+			xhr.send(JSON.stringify({ path: path.split("//").join("/") }));
+		});
+	},
+
+	async status() {
+		return new Promise((resolve, reject) => {
+			const accessToken = setting.getSetting("dropbox_accessToken");
+			if (!accessToken) {
+				reject("Did not find DropBox access token");
+			}
+			const xhr = new XMLHttpRequest();
+
+			xhr.onload = function() {
+				if (xhr.status === 200) {
+					return resolve();
+				} else {
+					return reject(xhr.response || "Not valid");
+				}
+			};
+
+			xhr.open(
+				"POST",
+				"https://api.dropboxapi.com/2/users/get_current_account"
+			);
+			xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+
+			xhr.send();
+		});
+	},
+
+	async list(path: string): Promise<DropboxFile[]> {
+		return new Promise((resolve, reject) => {
+			const accessToken = setting.getSetting("dropbox_accessToken");
+			if (!accessToken) {
+				reject("Did not find DropBox access token");
+			}
+			const xhr = new XMLHttpRequest();
+
+			xhr.onload = function() {
+				if (xhr.status === 200) {
+					return resolve(JSON.parse(xhr.response).entries);
+				} else {
+					return reject(xhr.response || "Unable to upload file");
+				}
+			};
+
+			xhr.open("POST", "https://api.dropboxapi.com/2/files/list_folder");
+			xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+			xhr.setRequestHeader("Content-Type", "application/json");
+			xhr.send(
+				JSON.stringify({
+					path: path.split("//").join("/"),
+					recursive: false,
+					include_media_info: false,
+					include_deleted: false,
+					include_has_explicit_shared_members: false
+				})
+			);
 		});
 	}
 };
+
+(window as any).files = files;
