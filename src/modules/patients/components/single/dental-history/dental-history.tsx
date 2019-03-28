@@ -50,7 +50,7 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 				<div className="m-t-20">
 					{this.viewChart ? (
 						<div className="chart">
-							<Section title="Permanent Teeth" >
+							<Section title="Permanent Teeth">
 								<TeethPermanentChart
 									teeth={this.props.patient.teeth}
 									onClick={number =>
@@ -58,7 +58,7 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 									}
 								/>
 							</Section>
-							<Section title="Deciduous Teeth" >
+							<Section title="Deciduous Teeth">
 								<TeethDeciduousChart
 									teeth={this.props.patient.teeth}
 									onClick={number =>
@@ -69,7 +69,7 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 						</div>
 					) : (
 						<div className="tabulated">
-							<Section title="Permanent teeth" >
+							<Section title="Permanent Teeth">
 								<table className="permanent">
 									<tbody>
 										<tr>
@@ -87,7 +87,7 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 									</tbody>
 								</table>
 							</Section>
-							<Section title="Deciduous Teeth" >
+							<Section title="Deciduous Teeth">
 								<table className="deciduous">
 									<tbody>
 										<tr>

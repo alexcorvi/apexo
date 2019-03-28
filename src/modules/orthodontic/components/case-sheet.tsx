@@ -33,7 +33,7 @@ export class OrthoCaseSheet extends React.Component<{
 	render() {
 		return (
 			<div>
-				<Section  title="Extra-oral Features">
+				<Section title="Extra-Oral Features">
 					<Dropdown
 						disabled={!this.canEdit}
 						placeHolder={lang("Lips competency")}
@@ -83,7 +83,7 @@ export class OrthoCaseSheet extends React.Component<{
 					/>
 				</Section>
 
-				<Section  title="Jaw-Jaw relationships">
+				<Section title="Jaw-Jaw Relationships">
 					<Dropdown
 						disabled={!this.canEdit}
 						placeHolder="Skeletal relationship"
@@ -128,10 +128,7 @@ export class OrthoCaseSheet extends React.Component<{
 					/>
 				</Section>
 
-				<Section
-					
-					title="Intercuspal-Interincisal relationships"
-				>
+				<Section title="Intercuspal-Interincisal Relationships">
 					<TextField
 						disabled={!this.canEdit}
 						type="number"
@@ -174,7 +171,7 @@ export class OrthoCaseSheet extends React.Component<{
 					/>
 				</Section>
 
-				<Section  title="Upper arch space analysis">
+				<Section title="Upper Arch Space Analysis">
 					<TextField
 						disabled={!this.canEdit}
 						type="number"
@@ -216,7 +213,7 @@ export class OrthoCaseSheet extends React.Component<{
 					)}
 				</Section>
 
-				<Section  title="Lower arch space analysis">
+				<Section title="Lower Arch Space Analysis">
 					<TextField
 						type="number"
 						prefix="Space available"
@@ -258,7 +255,7 @@ export class OrthoCaseSheet extends React.Component<{
 					)}
 				</Section>
 
-				<Section  title="Problems">
+				<Section title="Problems">
 					<EditableList
 						disabled={!this.canEdit}
 						label={lang("Patient Concerns") + "..."}
