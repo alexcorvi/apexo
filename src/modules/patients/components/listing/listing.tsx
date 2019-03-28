@@ -325,16 +325,30 @@ export class PatientsListing extends React.Component<{}, {}> {
 												setting.getSetting(
 													"currencySymbol"
 												) +
-												patient.outstandingAmount.toString()
+												(patient.differenceAmount < 0
+													? patient.outstandingAmount.toString()
+													: patient.differenceAmount >
+													  0
+													? patient.overpaidAmount.toString()
+													: "0")
 											}
-											subText={lang("Outstanding amount")}
+											subText={
+												patient.differenceAmount < 0
+													? lang("Outstanding amount")
+													: patient.differenceAmount >
+													  0
+													? lang("Overpaid amount")
+													: lang(
+															"No outstanding amount"
+													  )
+											}
 											size={3}
 											onRenderInitials={() => (
 												<Icon iconName="Cancel" />
 											)}
 											onClick={() => {}}
 											initialsColor={
-												patient.outstandingAmount > 0
+												patient.differenceAmount !== 0
 													? PersonaInitialsColor.darkRed
 													: PersonaInitialsColor.transparent
 											}

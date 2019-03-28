@@ -3575,9 +3575,9 @@
     background: #fff;
     border: 1px solid #f1f1f1; }
 .settings-component {
-  font-size: 13px;
-  background: #fff;
-  padding: 20px; }
+  font-size: 13px; }
+  .settings-component .ms-MessageBar {
+    margin-top: 22px; }
   .settings-component .form .ms-TextField-prefix {
     font-size: 11px;
     width: 90px; }
@@ -3804,6 +3804,11 @@
       .appointment-thumbnail-component.labeled.to-be-paid:before {
         content: "OUTSTANDING";
         background: #ef9a99; }
+    .appointment-thumbnail-component.labeled.over-paid {
+      border-color: #bbdefb; }
+      .appointment-thumbnail-component.labeled.over-paid:before {
+        content: "OVER-PAID";
+        background: #bbdefb; }
     .appointment-thumbnail-component.labeled.future {
       border-color: #dcedc8; }
       .appointment-thumbnail-component.labeled.future:before {
@@ -3819,7 +3824,7 @@
     position: relative;
     top: 1px; }
     .appointment-thumbnail-component .appointment-patient-link:before {
-      content: 'Patient';
+      content: "Patient";
       background: #e0e0e0;
       color: #3f3f3f;
       padding: 3px 10px 4px;
@@ -5495,8 +5500,8 @@ h5 {
 .ms-Panel-content {
   height: 100%; }
 
-.ms-Dropdown-title {
-  text-align: left; }
+.ms-Dropdown-container {
+  margin-bottom: 10px; }
 
 .ms-TextField {
   margin-bottom: 10px !important; }

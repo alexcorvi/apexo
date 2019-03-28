@@ -2,6 +2,7 @@ import { appointmentsData } from "../../appointments";
 import { computed, observable } from "mobx";
 import { StaffMemberJSON } from "./interface.member-json";
 import { generateID } from "../../../assets/utils/generate-id";
+import { unifiedDateFormat } from "../../../assets/utils/date";
 
 export class StaffMember {
 	readonly days = [
@@ -141,11 +142,13 @@ export class StaffMember {
 					? (this.nextAppointment.treatment || { type: "" }).type
 					: ""
 			}
+			${this.nextAppointment ? unifiedDateFormat(this.nextAppointment.date) : ""}
 			${
 				this.lastAppointment
 					? (this.lastAppointment.treatment || { type: "" }).type
 					: ""
 			}
+			${this.lastAppointment ? unifiedDateFormat(this.lastAppointment.date) : ""}
 		`.toLowerCase();
 	}
 

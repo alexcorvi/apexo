@@ -647,10 +647,32 @@ export class AppointmentEditor extends React.Component<
 											<TextField
 												type="number"
 												disabled={true}
-												label={lang(
-													"Outstanding Amount"
-												)}
-												value={this.props.appointment!.outstandingAmount.toString()}
+												label={
+													this.props.appointment!
+														.outstandingAmount
+														? lang(
+																"Outstanding Amount"
+														  )
+														: this.props
+																.appointment!
+																.overpaidAmount
+														? lang(
+																"Overpaid Amount"
+														  )
+														: lang(
+																"Outstanding Amount"
+														  )
+												}
+												value={
+													this.props.appointment!
+														.outstandingAmount
+														? this.props.appointment!.outstandingAmount.toString()
+														: this.props
+																.appointment!
+																.overpaidAmount
+														? this.props.appointment!.overpaidAmount.toString()
+														: this.props.appointment!.outstandingAmount.toString()
+												}
 												prefix={settingsData.settings.getSetting(
 													"currencySymbol"
 												)}

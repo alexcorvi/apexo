@@ -54,6 +54,10 @@ export class Appointment {
 		return Math.max(this.finalPrice - this.paidAmount, 0);
 	}
 
+	@computed get overpaidAmount() {
+		return Math.max(this.paidAmount - this.finalPrice, 0);
+	}
+
 	@computed
 	get operatingStaff() {
 		return staffData.staffMembers.list.filter(
@@ -106,7 +110,12 @@ export class Appointment {
 
 	@computed
 	get isOutstanding() {
-		return this.isDone && !this.isPaid;
+		return this.isDone && this.outstandingAmount !== 0;
+	}
+
+	@computed
+	get isOverpaid() {
+		return this.isDone && this.overpaidAmount !== 0;
 	}
 
 	@computed
@@ -170,7 +179,8 @@ export class Appointment {
                 ${new Date(this.date).toDateString()}
                 ${this.treatment ? this.treatment.type : ""}
                 ${this.isPaid ? "paid" : ""}
-                ${this.isOutstanding ? "outstanding" : ""}
+				${this.isOutstanding ? "outstanding" : ""}
+				${this.isOverpaid ? "overpaid" : ""}
                 ${this.missed ? "missed" : ""}
                 ${this.dueToday ? "today" : ""}
 				${this.dueTomorrow ? "tomorrow" : ""}

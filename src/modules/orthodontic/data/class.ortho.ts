@@ -8,6 +8,8 @@ import {
 import { computed, observable, observe } from "mobx";
 import { generateID } from "../../../assets/utils/generate-id";
 import { patientsData } from "../../patients/index";
+import { genderToString } from "../../patients/data";
+import { unifiedDateFormat } from "../../../assets/utils/date";
 
 export const Lips = {
 	competent: "competent lips",
@@ -264,9 +266,49 @@ export class OrthoCase {
 
 	@computed
 	get searchableString() {
-		return `
-			${this.patient ? this.patient.searchableString : ""}
-			${t4mat({ time: this.startedDate, format: "{R}" })}
+		return !this.patient
+			? ""
+			: `
+			${this.patient.age} ${this.patient.birthYearOrAge}
+			${this.patient.phone} ${this.patient.email} ${
+					this.patient.address
+			  } ${genderToString(this.patient.gender)}
+			${this.patient.name} ${this.patient.labels
+					.map(x => x.text)
+					.join(" ")} ${this.patient.medicalHistory.join(" ")}
+			${this.patient.teeth.map(x => x.notes.join(" ")).join(" ")}
+			${
+				this.patient.nextAppointment
+					? (this.patient.nextAppointment.treatment || { type: "" })
+							.type
+					: ""
+			}
+			${
+				this.patient.nextAppointment
+					? unifiedDateFormat(this.patient.nextAppointment.date)
+					: ""
+			}
+			${
+				this.patient.lastAppointment
+					? (this.patient.lastAppointment.treatment || { type: "" })
+							.type
+					: ""
+			}
+			${
+				this.patient.lastAppointment
+					? unifiedDateFormat(this.patient.lastAppointment.date)
+					: ""
+			}
+			${
+				this.patient.differenceAmount < 0
+					? "outstanding " + this.patient.outstandingAmount
+					: ""
+			}
+			${
+				this.patient.differenceAmount > 0
+					? "Overpaid " + this.patient.overpaidAmount
+					: ""
+			}
 		`.toLowerCase();
 	}
 

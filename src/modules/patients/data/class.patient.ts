@@ -14,6 +14,7 @@ import {
 	LabelTypeToString,
 	stringToLabelType
 } from "../../../assets/components/label/label.component";
+import { unifiedDateFormat } from "../../../assets/utils/date";
 
 export class Patient {
 	_id: string = generateID();
@@ -103,6 +104,19 @@ export class Patient {
 			}, 0);
 	}
 
+	@computed get overpaidAmount() {
+		return this.appointments
+			.map(x => x.overpaidAmount)
+			.reduce((t, c) => {
+				t = t + c;
+				return t;
+			}, 0);
+	}
+
+	@computed get differenceAmount() {
+		return this.overpaidAmount - this.outstandingAmount;
+	}
+
 	@computed
 	get searchableString() {
 		return `
@@ -117,11 +131,15 @@ export class Patient {
 					? (this.nextAppointment.treatment || { type: "" }).type
 					: ""
 			}
+			${this.nextAppointment ? unifiedDateFormat(this.nextAppointment.date) : ""}
 			${
 				this.lastAppointment
 					? (this.lastAppointment.treatment || { type: "" }).type
 					: ""
 			}
+			${this.lastAppointment ? unifiedDateFormat(this.lastAppointment.date) : ""}
+			${this.differenceAmount < 0 ? "outstanding " + this.outstandingAmount : ""}
+			${this.differenceAmount > 0 ? "Overpaid " + this.overpaidAmount : ""}
 		`.toLowerCase();
 	}
 

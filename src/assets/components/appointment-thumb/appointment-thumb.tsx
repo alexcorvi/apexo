@@ -43,6 +43,9 @@ export class AppointmentThumb extends React.Component<
 		if (this.props.appointment.isOutstanding) {
 			className = className + " to-be-paid";
 		}
+		if (this.props.appointment.isOverpaid) {
+			className = className + " over-paid";
+		}
 		if (this.props.appointment.future) {
 			className = className + " future";
 		}

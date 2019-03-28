@@ -86,6 +86,13 @@
 				background: #ef9a99;
 			}
 		}
+		&.over-paid {
+			border-color: #bbdefb;
+			&:before {
+				content: "OVER-PAID";
+				background: #bbdefb;
+			}
+		}
 		&.future {
 			border-color: #dcedc8;
 			&:before {
@@ -104,7 +111,7 @@
 		position: relative;
 		top: 1px;
 		&:before {
-			content: 'Patient';
+			content: "Patient";
 			background: #e0e0e0;
 			color: #3f3f3f;
 			padding: 3px 10px 4px;
