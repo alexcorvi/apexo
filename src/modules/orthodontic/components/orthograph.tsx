@@ -169,7 +169,7 @@ export class Orthograph extends React.Component<{
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
 							A treatment plan must be before starting the
-							treatment.
+							treatment
 						</MessageBar>
 					)}
 					<EditableList
@@ -1095,8 +1095,7 @@ export class Orthograph extends React.Component<{
 						)
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							You can not access orthodontic records while
-							offline.
+							You can not access orthodontic records while offline
 						</MessageBar>
 					)}
 				</Section>

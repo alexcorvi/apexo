@@ -427,7 +427,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 		);
 	}
 }
-
+@observer
 export class Input extends React.Component<{
 	element: React.ReactElement<any>;
 	info: string;

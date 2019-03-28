@@ -1,6 +1,5 @@
-import * as React from 'react';
-import './label.scss';
-
+import * as React from "react";
+import "./label.scss";
 
 export enum LabelType {
 	warning,
@@ -12,30 +11,30 @@ export enum LabelType {
 
 export function LabelTypeToString(input: LabelType) {
 	if (input === LabelType.danger) {
-		return 'danger';
+		return "danger";
 	} else if (input === LabelType.info) {
-		return 'info';
+		return "info";
 	} else if (input === LabelType.primary) {
-		return 'primary';
+		return "primary";
 	} else if (input === LabelType.success) {
-		return 'success';
+		return "success";
 	} else if (input === LabelType.warning) {
-		return 'warning';
+		return "warning";
 	} else {
-		return 'primary';
+		return "primary";
 	}
 }
 
 export function stringToLabelType(input: string) {
-	if (input === 'danger') {
+	if (input === "danger") {
 		return LabelType.danger;
-	} else if (input === 'info') {
+	} else if (input === "info") {
 		return LabelType.info;
-	} else if (input === 'primary') {
+	} else if (input === "primary") {
 		return LabelType.primary;
-	} else if (input === 'success') {
+	} else if (input === "success") {
 		return LabelType.success;
-	} else if (input === 'warning') {
+	} else if (input === "warning") {
 		return LabelType.warning;
 	} else {
 		return LabelType.primary;
@@ -43,7 +42,11 @@ export function stringToLabelType(input: string) {
 }
 
 export function getRandomLabelType(str: string) {
-	const r = Number((str.length * str.charCodeAt(0) + str.charCodeAt(str.length - 1)).toString().charAt(0));
+	const r = Number(
+		(str.length * str.charCodeAt(0) + str.charCodeAt(str.length - 1))
+			.toString()
+			.charAt(0)
+	);
 	if (r === 1 || r === 4) {
 		return LabelType.primary;
 	}
@@ -67,11 +70,15 @@ interface Props {
 	className?: string;
 }
 
+@observer
 export class Label extends React.Component<Props, {}> {
 	render() {
 		return (
 			<span
-				className={`label ${LabelTypeToString(this.props.type)} ` + (this.props.onClick ? 'clickable' : '')}
+				className={
+					`label ${LabelTypeToString(this.props.type)} ` +
+					(this.props.onClick ? "clickable" : "")
+				}
 				onClick={this.props.onClick}
 			>
 				{this.props.text}

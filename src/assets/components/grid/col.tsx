@@ -1,9 +1,16 @@
-import * as PropTypes from 'prop-types';
-import * as React from 'react';
-import classNames from 'classnames';
+import * as PropTypes from "prop-types";
+import * as React from "react";
+import classNames from "classnames";
+import { observer } from "mobx-react";
 
-const stringOrNumber = PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]);
-const objectOrNumber = PropTypes.oneOfType([ PropTypes.object, PropTypes.number ]);
+const stringOrNumber = PropTypes.oneOfType([
+	PropTypes.string,
+	PropTypes.number
+]);
+const objectOrNumber = PropTypes.oneOfType([
+	PropTypes.object,
+	PropTypes.number
+]);
 
 export interface ColSize {
 	span?: number;
@@ -27,7 +34,7 @@ export interface ColProps extends React.HTMLAttributes<HTMLDivElement> {
 	xxl?: number | ColSize;
 	prefixCls?: string;
 }
-
+@observer
 export default class Col extends React.Component<ColProps, {}> {
 	static propTypes = {
 		span: stringOrNumber,
@@ -47,13 +54,23 @@ export default class Col extends React.Component<ColProps, {}> {
 
 	render() {
 		const props: any = this.props;
-		const { span, order, offset, push, pull, className, children, prefixCls = 'ant-col', ...others } = props;
+		const {
+			span,
+			order,
+			offset,
+			push,
+			pull,
+			className,
+			children,
+			prefixCls = "ant-col",
+			...others
+		} = props;
 		let sizeClassObj = {};
-		[ 'xs', 'sm', 'md', 'lg', 'xl', 'xxl' ].forEach((size) => {
+		["xs", "sm", "md", "lg", "xl", "xxl"].forEach(size => {
 			let sizeProps: ColSize = {};
-			if (typeof props[size] === 'number') {
+			if (typeof props[size] === "number") {
 				sizeProps.span = props[size];
-			} else if (typeof props[size] === 'object') {
+			} else if (typeof props[size] === "object") {
 				sizeProps = props[size] || {};
 			}
 
@@ -61,11 +78,16 @@ export default class Col extends React.Component<ColProps, {}> {
 
 			sizeClassObj = {
 				...sizeClassObj,
-				[`${prefixCls}-${size}-${sizeProps.span}`]: sizeProps.span !== undefined,
-				[`${prefixCls}-${size}-order-${sizeProps.order}`]: sizeProps.order || sizeProps.order === 0,
-				[`${prefixCls}-${size}-offset-${sizeProps.offset}`]: sizeProps.offset || sizeProps.offset === 0,
-				[`${prefixCls}-${size}-push-${sizeProps.push}`]: sizeProps.push || sizeProps.push === 0,
-				[`${prefixCls}-${size}-pull-${sizeProps.pull}`]: sizeProps.pull || sizeProps.pull === 0
+				[`${prefixCls}-${size}-${sizeProps.span}`]:
+					sizeProps.span !== undefined,
+				[`${prefixCls}-${size}-order-${sizeProps.order}`]:
+					sizeProps.order || sizeProps.order === 0,
+				[`${prefixCls}-${size}-offset-${sizeProps.offset}`]:
+					sizeProps.offset || sizeProps.offset === 0,
+				[`${prefixCls}-${size}-push-${sizeProps.push}`]:
+					sizeProps.push || sizeProps.push === 0,
+				[`${prefixCls}-${size}-pull-${sizeProps.pull}`]:
+					sizeProps.pull || sizeProps.pull === 0
 			};
 		});
 		const classes = classNames(
