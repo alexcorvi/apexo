@@ -5,7 +5,12 @@ import { observer } from "mobx-react";
 import "./gallery.scss";
 import { API } from "../../../../../core/index";
 import { lang } from "../../../../../core/i18/i18";
-import { IconButton, Icon } from "office-ui-fabric-react";
+import {
+	IconButton,
+	Icon,
+	MessageBar,
+	MessageBarType
+} from "office-ui-fabric-react";
 import { files } from "../../../../../core/files/files";
 import {
 	PickAndUpload,
@@ -42,98 +47,108 @@ export class SinglePatientGallery extends React.Component<
 
 	render() {
 		return (
-			<Section title="Patient Gallery" >
-				<div className="single-patient-gallery">
-					<div className="thumbs">
-						{this.canEdit ? (
-							this.uploading ? (
-								<Icon
-									iconName="sync"
-									className="rotate"
-									style={{ padding: 10 }}
-								/>
-							) : (
-								<PickAndUpload
-									allowMultiple={true}
-									accept={fileTypes.image}
-									onFinish={paths => {
-										this.props.patient.gallery.push(
-											...paths
-										);
-									}}
-									onStartLoading={() => {
-										this.uploading = true;
-									}}
-									onFinishLoading={() => {
-										this.uploading = false;
-									}}
-									targetDir="patient-galleries"
-								>
-									<IconButton
-										className={`add-photo`}
-										iconProps={{
-											iconName: "add"
-										}}
-									/>
-								</PickAndUpload>
-							)
-						) : (
-							""
-						)}
-						{Object.keys(this.imagesTable).map(imagePath => {
-							const URI = this.imagesTable[imagePath];
-							return URI ? (
-								<span
-									className={`thumb ${
-										this.selectedImagePath === imagePath
-											? "selected"
-											: ""
-									}`}
-									key={imagePath}
-									style={{
-										backgroundImage: `url('${
-											URI ? URI : ""
-										}')`
-									}}
-									onClick={() => {
-										this.selectedImagePath = imagePath;
-									}}
-								/>
-							) : (
-								<div
-									key={imagePath + "-placeholder"}
-									className="placeholder"
-								>
-									<Icon iconName="sync" className="rotate" />
-								</div>
-							);
-						})}
-					</div>
-					{this.selectedImagePath ? (
-						<div className="viewport">
-							<img
-								key={this.selectedImagePath}
-								src={this.selectedImageURI}
-							/>
+			<Section title="Patient Gallery">
+				{API.login.online ? (
+					<div className="single-patient-gallery">
+						<div className="thumbs">
 							{this.canEdit ? (
-								<IconButton
-									className="delete-photo"
-									iconProps={{ iconName: "trash" }}
-									onClick={async () => {
-										await this.removeImage(
-											this.selectedImagePath
-										);
-										this.selectedImagePath = "";
-									}}
-								/>
+								this.uploading ? (
+									<Icon
+										iconName="sync"
+										className="rotate"
+										style={{ padding: 10 }}
+									/>
+								) : (
+									<PickAndUpload
+										allowMultiple={true}
+										accept={fileTypes.image}
+										onFinish={paths => {
+											this.props.patient.gallery.push(
+												...paths
+											);
+										}}
+										onStartLoading={() => {
+											this.uploading = true;
+										}}
+										onFinishLoading={() => {
+											this.uploading = false;
+										}}
+										targetDir="patient-galleries"
+									>
+										<IconButton
+											className={`add-photo`}
+											iconProps={{
+												iconName: "add"
+											}}
+										/>
+									</PickAndUpload>
+								)
 							) : (
 								""
 							)}
+							{Object.keys(this.imagesTable).map(imagePath => {
+								const URI = this.imagesTable[imagePath];
+								return URI ? (
+									<span
+										className={`thumb ${
+											this.selectedImagePath === imagePath
+												? "selected"
+												: ""
+										}`}
+										key={imagePath}
+										style={{
+											backgroundImage: `url('${
+												URI ? URI : ""
+											}')`
+										}}
+										onClick={() => {
+											this.selectedImagePath = imagePath;
+										}}
+									/>
+								) : (
+									<div
+										key={imagePath + "-placeholder"}
+										className="placeholder"
+									>
+										<Icon
+											iconName="sync"
+											className="rotate"
+										/>
+									</div>
+								);
+							})}
 						</div>
-					) : (
-						""
-					)}
-				</div>{" "}
+						{this.selectedImagePath ? (
+							<div className="viewport">
+								<img
+									key={this.selectedImagePath}
+									src={this.selectedImageURI}
+								/>
+								{this.canEdit ? (
+									<IconButton
+										className="delete-photo"
+										iconProps={{ iconName: "trash" }}
+										onClick={async () => {
+											await this.removeImage(
+												this.selectedImagePath
+											);
+											this.selectedImagePath = "";
+										}}
+									/>
+								) : (
+									""
+								)}
+							</div>
+						) : (
+							""
+						)}
+					</div>
+				) : (
+					<MessageBar messageBarType={MessageBarType.error}>
+						{" "}
+						You can not access patient gallery while offline
+					</MessageBar>
+				)}
 				<div style={{ clear: "both" }} />
 			</Section>
 		);
