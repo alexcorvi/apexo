@@ -3574,6 +3574,16 @@
     right: 5px;
     background: #fff;
     border: 1px solid #f1f1f1; }
+.prescriptions-component table.responsive tbody tr td:not(.no-label):before {
+  display: none; }
+
+.prescriptions-component table.responsive tbody tr td.no-label {
+  text-align: left; }
+.treatments-component table.responsive tbody tr td:not(.no-label):before {
+  display: none; }
+
+.treatments-component table.responsive tbody tr td.no-label {
+  text-align: left; }
 .settings-component {
   font-size: 13px; }
   .settings-component .ms-MessageBar {
@@ -3879,16 +3889,6 @@
 @media (max-width: 435px) {
   .duty-table {
     display: none; } }
-.treatments-component table.responsive tbody tr td:not(.no-label):before {
-  display: none; }
-
-.treatments-component table.responsive tbody tr td.no-label {
-  text-align: left; }
-.prescriptions-component table.responsive tbody tr td:not(.no-label):before {
-  display: none; }
-
-.prescriptions-component table.responsive tbody tr td.no-label {
-  text-align: left; }
 .appointment-hr {
   border: none;
   margin-bottom: 20px;
