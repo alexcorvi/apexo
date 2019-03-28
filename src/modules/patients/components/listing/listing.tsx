@@ -29,6 +29,9 @@ import { SinglePatientGallery } from "../single/gallery/gallery";
 export class PatientsListing extends React.Component<{}, {}> {
 	@observable selectedId: string = API.router.currentLocation.split("/")[1];
 
+	@observable viewWhich: number = API.router.currentLocation.split("/")[1]
+		? 1
+		: 0;
 
 	@computed
 	get patient() {
