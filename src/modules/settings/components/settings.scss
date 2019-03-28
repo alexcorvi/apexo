@@ -2,8 +2,11 @@
 
 .settings-component {
 	font-size: 13px;
-	background: #fff;
-	padding: 20px;
+
+	.ms-MessageBar {
+		margin-top: 22px;
+	}
+
 	.form {
 		.ms-TextField-prefix {
 			font-size: 11px;

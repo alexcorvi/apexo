@@ -26,7 +26,7 @@ class Settings {
 	}
 
 	updateDropboxFilesList() {
-		const accessToken = this.getSetting("backup_accessToken");
+		const accessToken = this.getSetting("dropbox_accessToken");
 		API.backup
 			.list(accessToken)
 			.then(list => {
@@ -39,7 +39,7 @@ class Settings {
 		const frequency: "d" | "w" | "m" = this.getSetting(
 			"backup_freq"
 		) as any;
-		const accessToken = this.getSetting("backup_accessToken");
+		const accessToken = this.getSetting("dropbox_accessToken");
 		const retain = Number(this.getSetting("backup_retain")) || 3;
 		const arr: string[] = JSON.parse(this.getSetting("backup_arr") || "[]");
 

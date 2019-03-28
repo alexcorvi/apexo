@@ -24,6 +24,7 @@ import { ProfileSquared } from "../../../assets/components/profile/profile-squar
 import { compact } from "../../../core/db/index";
 import { lang } from "../../../core/i18/i18";
 import { unifiedDateFormat } from "../../../assets/utils/date";
+import { Section } from "../../../assets/components/section/section";
 
 @observer
 export class SettingsComponent extends React.Component<{}, {}> {
@@ -42,60 +43,70 @@ export class SettingsComponent extends React.Component<{}, {}> {
 	render() {
 		return (
 			<div className="settings-component p-15 p-l-10 p-r-10">
-				<h3>{lang("Language")}</h3>
-				<hr />
-				<Dropdown
-					label={lang("Language")}
-					options={[
-						{ key: "en", text: "English" },
-						{ key: "ar", text: "العربية" }
-					]}
-					defaultSelectedKey={settings.getSetting("lang")}
-					onChanged={v => {
-						settings.setSetting("lang", v.key.toString());
-					}}
-					disabled={!this.canEdit}
-				/>
+				<Section title="General Setting" showByDefault>
+					<Input
+						element={
+							<Dropdown
+								label={lang("Language")}
+								options={[
+									{ key: "en", text: "English" },
+									{ key: "ar", text: "العربية" }
+								]}
+								defaultSelectedKey={settings.getSetting("lang")}
+								onChanged={v => {
+									settings.setSetting(
+										"lang",
+										v.key.toString()
+									);
+								}}
+								disabled={!this.canEdit}
+							/>
+						}
+						info="Choose the main language of display menus and items"
+					/>
 
-				<br />
-				<br />
-
-				<h3>{lang("Financial Settings")}</h3>
-				<hr />
-				{!!settings.getSetting("time_tracking") ? (
-					<Row gutter={12}>
-						<Col md={12}>
-							<div className="form">
-								<TextField
-									label={lang("Time expenses (per hour)")}
-									type="number"
-									value={settings.getSetting("hourlyRate")}
-									onChanged={newVal => {
-										settings.setSetting(
-											"hourlyRate",
-											newVal.toString()
-										);
-									}}
-									disabled={!this.canEdit}
-								/>
-							</div>
-						</Col>
-						<Col md={12}>
-							<p className="hint">
-								{lang(
-									// tslint:disable-next-line:max-line-length
-									`When time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses. So here you can put the electricity, rent, and other time dependent expenses.`
+					<Input
+						element={
+							<TextField
+								value={settings.getSetting(
+									"dropbox_accessToken"
 								)}
-							</p>
-						</Col>
-					</Row>
-				) : (
-					""
-				)}
+								label={lang("Dropbox access token")}
+								onChanged={val => {
+									settings.setSetting(
+										"dropbox_accessToken",
+										val
+									);
+								}}
+								disabled={!this.canEdit}
+							/>
+						}
+						info="This access token is used to store files across the application, like backups and images"
+					/>
+				</Section>
 
-				<Row gutter={12}>
-					<Col md={12}>
-						<div className="form">
+				<Section title="Financial Settings" showByDefault>
+					<Input
+						element={
+							<TextField
+								label={lang("Time expenses (per hour)")}
+								type="number"
+								value={settings.getSetting("hourlyRate")}
+								onChanged={newVal => {
+									settings.setSetting(
+										"hourlyRate",
+										newVal.toString()
+									);
+								}}
+								disabled={!this.canEdit}
+							/>
+						}
+						// tslint:disable-next-line:max-line-length
+						info="When time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses. So here you can put the electricity, rent, and other time dependent expenses."
+					/>
+
+					<Input
+						element={
 							<TextField
 								label={lang("Currency Symbol")}
 								value={settings.getSetting("currencySymbol")}
@@ -107,23 +118,12 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								}}
 								disabled={!this.canEdit}
 							/>
-						</div>
-					</Col>
-					<Col md={12}>
-						<p className="hint">
-							{lang(
-								`This symbol you enter here will be used across your application.`
-							)}
-						</p>
-					</Col>
-				</Row>
+						}
+						info="This symbol you enter here will be used across your application."
+					/>
+				</Section>
 
-				<br />
-				<br />
-				<h3>{lang("Optional Modules and features")}</h3>
-				<hr />
-
-				<div className="form">
+				<Section title="Optional Modules and Features" showByDefault>
 					<Toggle
 						onText={lang("Prescriptions Module Enabled")}
 						offText={lang("Prescriptions Module Disabled")}
@@ -178,27 +178,16 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						}}
 						disabled={!this.canEdit}
 					/>
-				</div>
+				</Section>
 
-				<br />
-				<br />
-				{this.canEdit ? (
-					API.login.online ? (
+				<Section title="Backup and Restore" showByDefault>
+					{API.login.online ? (
 						<div>
-							<h3>{lang("Backup and restore")}</h3>
-							<hr />
-
-							<p className="hint" style={{ maxWidth: 500 }}>
-								{// tslint:disable-next-line:max-line-length
-								lang(
-									`Using this section you can download a file representing all of your clinic data, use this file - later, to restore the same data.`
-								)}
-							</p>
-
 							<PrimaryButton
 								onClick={() => {
 									compact.compact();
 								}}
+								iconProps={{ iconName: "ZipFolder" }}
 							>
 								{lang("Run compaction")}
 							</PrimaryButton>
@@ -208,6 +197,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 									downloadCurrent();
 								}}
 								style={{ marginLeft: 10 }}
+								iconProps={{ iconName: "Database" }}
 							>
 								{lang("Download a backup")}
 							</PrimaryButton>
@@ -217,6 +207,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 									this.inputEl ? this.inputEl.click() : ""
 								}
 								style={{ marginLeft: 10 }}
+								iconProps={{ iconName: "DatabaseSync" }}
 							>
 								{lang("Restore from file")}
 							</PrimaryButton>
@@ -236,213 +227,203 @@ export class SettingsComponent extends React.Component<{}, {}> {
 									}
 								}}
 							/>
-
-							<br />
-							<br />
-							<h3>{lang("Automated backup")}</h3>
-							<hr />
-							<div style={{ maxWidth: 500 }}>
-								<p className="hint" style={{ maxWidth: 500 }}>
-									{lang(
-										// tslint:disable-next-line:max-line-length
-										`Using automated backups you can set your application to automatically backup your data and store it in Dropbox. To turn on automated backups, enter your app access token.`
-									)}{" "}
-									<br />
-									<a href="https://docs.apexo.app/docs/automated-backups">
-										{lang("Learn more")}
-									</a>
-								</p>
-								<Dropdown
-									label={lang("Backup frequency")}
-									options={[
-										{ key: "d", text: lang("Daily") },
-										{ key: "w", text: lang("Weekly") },
-										{ key: "m", text: lang("Monthly") }
-									]}
-									defaultSelectedKey={settings.getSetting(
-										"backup_freq"
-									)}
-									onChanged={v => {
-										settings.setSetting(
-											"backup_freq",
-											v.key.toString()
-										);
-									}}
-									disabled={!this.canEdit}
-								/>
-
-								<TextField
-									value={settings.getSetting("backup_retain")}
-									label={lang("How many backups to retain")}
-									onChanged={val => {
-										settings.setSetting(
-											"backup_retain",
-											val
-										);
-									}}
-									disabled={!this.canEdit}
-									type="number"
-								/>
-
-								<TextField
-									value={settings.getSetting(
-										"backup_accessToken"
-									)}
-									label={lang("Dropbox access token")}
-									onChanged={val => {
-										settings.setSetting(
-											"backup_accessToken",
-											val
-										);
-									}}
-									disabled={!this.canEdit}
-								/>
-
-								{settings.dropboxBackups.length ? (
-									<table className="ms-table">
-										<thead>
-											<tr>
-												<th>{lang("Backup")}</th>
-												<th>{lang("Actions")}</th>
-											</tr>
-										</thead>
-										<tbody>
-											{settings.dropboxBackups.map(
-												file => {
-													const date = new Date(
-														file.client_modified
-													);
-													const fileName = file.path_lower.replace(
-														/[^0-9]/gim,
-														""
-													);
-													return (
-														<tr key={file.id}>
-															<td>
-																<ProfileSquared
-																	onRenderInitials={() => (
-																		<div
-																			style={{
-																				textAlign:
-																					"center",
-																				fontSize: 10
-																			}}
-																		>
-																			{`${date.getDate()}/${date.getMonth() +
-																				1}`}
-																		</div>
-																	)}
-																	text={unifiedDateFormat(
-																		date
-																	)}
-																	subText={`${Math.round(
-																		file.size /
-																			1000
-																	)} KB`}
-																/>
-															</td>
-															<td>
-																<IconButton
-																	style={{
-																		background:
-																			"#f3f3f3",
-																		marginRight: 6
-																	}}
-																	iconProps={{
-																		iconName:
-																			"delete"
-																	}}
-																	disabled={
-																		!this
-																			.canEdit
-																	}
-																	onClick={() => {
-																		backup
-																			.deleteOld(
-																				settings.getSetting(
-																					"backup_accessToken"
-																				),
-																				fileName
-																			)
-																			.then(
-																				() => {
-																					const arr: string[] = JSON.parse(
-																						settings.getSetting(
-																							"backup_arr"
-																						) ||
-																							"[]"
-																					);
-																					const i = arr.findIndex(
-																						x =>
-																							x ===
-																							fileName
-																					);
-																					arr.splice(
-																						i,
-																						1
-																					);
-																					settings.setSetting(
-																						"backup_arr",
-																						JSON.stringify(
-																							arr
-																						)
-																					);
-																					settings.updateDropboxFilesList();
-																				}
-																			);
-																	}}
-																/>
-																<IconButton
-																	style={{
-																		background:
-																			"#f3f3f3",
-																		marginRight: 6
-																	}}
-																	iconProps={{
-																		iconName:
-																			"ReleaseGateError"
-																	}}
-																	disabled={
-																		!this
-																			.canEdit
-																	}
-																	onClick={() =>
-																		restore.fromDropbox(
-																			settings.getSetting(
-																				"backup_accessToken"
-																			),
-																			file.path_lower
-																		)
-																	}
-																/>
-															</td>
-														</tr>
-													);
-												}
-											)}
-										</tbody>
-									</table>
-								) : (
-									""
-								)}
-
-								<br />
-							</div>
 						</div>
 					) : (
+						<MessageBar messageBarType={MessageBarType.warning}>
+							{lang(
+								"Backup and restore functionality are not available while you're offline."
+							)}
+						</MessageBar>
+					)}
+				</Section>
+
+				<Section title="Automated Backup and Restore" showByDefault>
+					{API.login.online ? (
 						<div>
-							<br />
-							<MessageBar messageBarType={MessageBarType.warning}>
-								{lang(
-									"Backup and restore functionality are not available while you're offline."
+							<Dropdown
+								label={lang("Backup frequency")}
+								options={[
+									{ key: "d", text: lang("Daily") },
+									{ key: "w", text: lang("Weekly") },
+									{ key: "m", text: lang("Monthly") }
+								]}
+								defaultSelectedKey={settings.getSetting(
+									"backup_freq"
 								)}
-							</MessageBar>
+								onChanged={v => {
+									settings.setSetting(
+										"backup_freq",
+										v.key.toString()
+									);
+								}}
+								disabled={!this.canEdit}
+							/>
+
+							<TextField
+								value={settings.getSetting("backup_retain")}
+								label={lang("How many backups to retain")}
+								onChanged={val => {
+									settings.setSetting("backup_retain", val);
+								}}
+								disabled={!this.canEdit}
+								type="number"
+							/>
+
+							{settings.dropboxBackups.length ? (
+								<table className="ms-table">
+									<thead>
+										<tr>
+											<th>{lang("Backup")}</th>
+											<th>{lang("Actions")}</th>
+										</tr>
+									</thead>
+									<tbody>
+										{settings.dropboxBackups.map(file => {
+											const date = new Date(
+												file.client_modified
+											);
+											const fileName = file.path_lower.replace(
+												/[^0-9]/gim,
+												""
+											);
+											return (
+												<tr key={file.id}>
+													<td>
+														<ProfileSquared
+															onRenderInitials={() => (
+																<div
+																	style={{
+																		textAlign:
+																			"center",
+																		fontSize: 10
+																	}}
+																>
+																	{`${date.getDate()}/${date.getMonth() +
+																		1}`}
+																</div>
+															)}
+															text={unifiedDateFormat(
+																date
+															)}
+															subText={`${Math.round(
+																file.size / 1000
+															)} KB`}
+														/>
+													</td>
+													<td>
+														<IconButton
+															style={{
+																background:
+																	"#f3f3f3",
+																marginRight: 6
+															}}
+															iconProps={{
+																iconName:
+																	"delete"
+															}}
+															disabled={
+																!this.canEdit
+															}
+															onClick={() => {
+																backup
+																	.deleteOld(
+																		settings.getSetting(
+																			"dropbox_accessToken"
+																		),
+																		fileName
+																	)
+																	.then(
+																		() => {
+																			const arr: string[] = JSON.parse(
+																				settings.getSetting(
+																					"backup_arr"
+																				) ||
+																					"[]"
+																			);
+																			const i = arr.findIndex(
+																				x =>
+																					x ===
+																					fileName
+																			);
+																			arr.splice(
+																				i,
+																				1
+																			);
+																			settings.setSetting(
+																				"backup_arr",
+																				JSON.stringify(
+																					arr
+																				)
+																			);
+																			settings.updateDropboxFilesList();
+																		}
+																	);
+															}}
+														/>
+														<IconButton
+															style={{
+																background:
+																	"#f3f3f3",
+																marginRight: 6
+															}}
+															iconProps={{
+																iconName:
+																	"DatabaseSync"
+															}}
+															disabled={
+																!this.canEdit
+															}
+															onClick={() =>
+																restore.fromDropbox(
+																	settings.getSetting(
+																		"dropbox_accessToken"
+																	),
+																	file.path_lower
+																)
+															}
+														/>
+													</td>
+												</tr>
+											);
+										})}
+									</tbody>
+								</table>
+							) : (
+								""
+							)}
 						</div>
-					)
-				) : (
-					""
-				)}
+					) : (
+						<MessageBar messageBarType={MessageBarType.warning}>
+							{lang(
+								"Backup and restore functionality are not available while you're offline."
+							)}
+						</MessageBar>
+					)}
+				</Section>
 			</div>
+		);
+	}
+}
+
+export class Input extends React.Component<{
+	element: React.ReactElement<any>;
+	info: string;
+}> {
+	render() {
+		return (
+			<Row gutter={12} style={{ marginBottom: 20 }}>
+				<Col style={{ marginBottom: -15 }} md={12}>
+					{this.props.element}
+				</Col>
+				<Col md={12}>
+					<MessageBar
+						style={{ marginTop: 22 }}
+						messageBarType={MessageBarType.info}
+					>
+						{this.props.info}
+					</MessageBar>
+				</Col>
+			</Row>
 		);
 	}
 }
