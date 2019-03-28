@@ -14,7 +14,7 @@ import {
 	LabelTypeToString,
 	stringToLabelType
 } from "../../../assets/components/label/label.component";
-import { unifiedDateFormat } from "../../../assets/utils/date";
+import { unifiedDateFormat, day } from "../../../assets/utils/date";
 
 export class Patient {
 	_id: string = generateID();
@@ -70,8 +70,9 @@ export class Patient {
 				appointment =>
 					appointment.isDone === false &&
 					appointment.date >
-						Math.round(new Date().getTime() / 43200000) * 43200000 -
-							43200000
+						Math.round(new Date().getTime() / (day / 2)) *
+							(day / 2) -
+							day / 2
 			)
 			.sort((a, b) => a.date - b.date)[0];
 	}

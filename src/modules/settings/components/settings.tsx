@@ -23,7 +23,7 @@ import { API } from "../../../core/index";
 import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
 import { compact } from "../../../core/db/index";
 import { lang } from "../../../core/i18/i18";
-import { unifiedDateFormat } from "../../../assets/utils/date";
+import { unifiedDateFormat, second } from "../../../assets/utils/date";
 import { Section } from "../../../assets/components/section/section";
 
 @observer
@@ -37,7 +37,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 	}
 
 	componentWillMount() {
-		setTimeout(() => settings.updateDropboxBackups(), 1000);
+		setTimeout(() => settings.updateDropboxBackups(), second);
 	}
 
 	render() {
@@ -80,7 +80,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 
 									setTimeout(
 										() => API.login.validateDropBoxToken(),
-										500
+										second / 2
 									);
 								}}
 								disabled={!this.canEdit}
