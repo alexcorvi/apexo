@@ -44,8 +44,6 @@ export class Appointment {
 
 	@observable prescriptions: { prescription: string; id: string }[] = [];
 
-	@observable records: string[] = observable([]);
-
 	@computed get isPaid() {
 		return this.paidAmount >= this.finalPrice;
 	}
@@ -214,7 +212,6 @@ export class Appointment {
 		this.diagnosis = json.diagnosis;
 		this.complaint = json.complaint;
 		this.staffID = json.staffID || json.doctorsID || [];
-		this.records = json.records;
 		this.units = json.units || 1;
 		this.notes = json.notes
 			? json.notes
@@ -239,7 +236,6 @@ Diagnosis: ${json.diagnosis}`
 			diagnosis: this.diagnosis,
 			complaint: this.complaint,
 			staffID: Array.from(this.staffID),
-			records: Array.from(this.records),
 			units: this.units,
 			notes: this.notes
 		};

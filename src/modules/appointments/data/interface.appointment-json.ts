@@ -13,7 +13,6 @@ export interface AppointmentJSON {
 	diagnosis: string;
 	staffID?: string[];
 	doctorsID?: string[];
-	records: string[];
 	units: number;
 	notes: string;
 }

@@ -144,7 +144,7 @@ export class SinglePatientGallery extends React.Component<
 						)}
 					</div>
 				) : (
-					<MessageBar messageBarType={MessageBarType.error}>
+					<MessageBar messageBarType={MessageBarType.warning}>
 						{" "}
 						You can not access patient gallery while offline
 					</MessageBar>
