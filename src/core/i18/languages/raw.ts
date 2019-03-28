@@ -16,6 +16,8 @@ export const ar: Language = {
 		"Tomorrow's Appointments": "",
 		Appointment: "",
 		Operators: "",
+		"There are no appointments for tomorrow": "",
+		"There are no appointments for today": "",
 
 		/**========================================
 		 * Menu Items
@@ -293,7 +295,8 @@ export const ar: Language = {
 		"Days on duty": "",
 		"Login PIN": "",
 		"Contact Details": "",
-		"Phone Number": "",
+		"Phone number": "",
+		"No phone number": "",
 		"Level and permission": "",
 		"You can't edit your own level and permissions": "",
 		"Can view staff page": "",
