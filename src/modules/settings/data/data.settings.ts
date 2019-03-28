@@ -53,6 +53,8 @@ class Settings {
 			return;
 		}
 
+		await this.updateDropboxBackups();
+
 		const lastBackupFile = this.dropboxBackups[
 			this.dropboxBackups.length - 1
 		] || {
