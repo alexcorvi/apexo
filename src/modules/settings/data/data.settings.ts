@@ -29,7 +29,7 @@ class Settings {
 
 	async updateDropboxBackups() {
 		const sortedResult = (await API.backup.list())
-			.filter(x => x.client_modified)
+			.filter(x => x.client_modified && x.name.endsWith(".apx"))
 			.sort(
 				(a, b) =>
 					new Date(a.client_modified).getTime() -
