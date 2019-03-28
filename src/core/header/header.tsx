@@ -67,7 +67,6 @@ export class HeaderComponent extends React.Component<{}, {}> {
 								onClick={() => (API.user.visible = true)}
 								disabled={false}
 								iconProps={{ iconName: "Contact" }}
-								title="Personal Panel"
 							/>
 						</section>
 					</Col>
