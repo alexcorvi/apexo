@@ -31,7 +31,7 @@ import { lang } from "../../../core/i18/i18";
 @observer
 export class StaffListing extends React.Component<{}, {}> {
 	@observable selectedId: string = API.router.currentLocation.split("/")[1];
-	@observable viewWhich: number = 0;
+	@observable viewWhich: number = 1;
 
 	@computed get canEdit() {
 		return API.user.currentUser.canEditStaff;
@@ -81,10 +81,6 @@ export class StaffListing extends React.Component<{}, {}> {
 															)}
 														</span>
 													}
-													onClick={() => {
-														this.selectedId =
-															member._id;
-													}}
 													size={3}
 												/>
 												<br />
@@ -289,6 +285,7 @@ export class StaffListing extends React.Component<{}, {}> {
 													);
 													this.selectedId =
 														member._id;
+													this.viewWhich = 1;
 												},
 												iconProps: {
 													iconName: "Add"
@@ -443,6 +440,7 @@ export class StaffListing extends React.Component<{}, {}> {
 											</label>
 											{this.member.days.map(day => (
 												<Checkbox
+													key={day}
 													disabled={!this.canEdit}
 													label={
 														day.substr(0, 3) + "."

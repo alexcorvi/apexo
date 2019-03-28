@@ -29,7 +29,6 @@ import { SinglePatientGallery } from "../single/gallery/gallery";
 export class PatientsListing extends React.Component<{}, {}> {
 	@observable selectedId: string = API.router.currentLocation.split("/")[1];
 
-	@observable viewWhich: number = 0;
 
 	@computed
 	get patient() {
@@ -389,10 +388,7 @@ export class PatientsListing extends React.Component<{}, {}> {
 											const patient = new Patient();
 											patients.list.push(patient);
 											this.selectedId = patient._id;
-											API.router.go([
-												"patients",
-												patient._id
-											]);
+											this.viewWhich = 1;
 										},
 										iconProps: {
 											iconName: "Add"
