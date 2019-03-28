@@ -1,10 +1,11 @@
 import { staffData } from "../../modules/staff";
 import { appointmentsData } from "../../modules/appointments";
 import { restore } from "../../assets/utils/backup";
+import { day } from "../../assets/utils/date";
 
 function randomDate() {
 	const now = new Date().getTime();
-	const fifteenDays = 86400000 * 15;
+	const fifteenDays = day * 15;
 	return Math.floor(
 		Math.random() * (now + fifteenDays - (now - fifteenDays)) +
 			(now - fifteenDays)

@@ -1,3 +1,4 @@
+import { minute, second } from "./../../assets/utils/date";
 import pouchDB = require("pouchdb-browser");
 const PouchDB: PouchDB.Static = (pouchDB as any).default;
 import auth = require("pouchdb-authentication");
@@ -11,6 +12,7 @@ import { loadDemoData } from "../demo/load-demo-data";
 import { Md5 } from "ts-md5";
 import { registerModules } from "../../modules";
 import { resync } from "../db";
+import { files } from "../files/files";
 
 const demoHosts: string[] = [
 	// "localhost:8000",
@@ -36,19 +38,14 @@ class Login {
 
 	@observable online: boolean = false;
 
+	@observable dropboxActive: boolean = false;
+
 	constructor() {
-		setInterval(() => {
-			if (this.keepOffline) {
-				return;
-			}
-			isOnline(this.server).then(online => {
-				if (online && !this.online) {
-					console.log("getting back online");
-					resync.resync();
-				}
-				this.online = online;
-			});
-		}, 2000);
+		setInterval(() => this.validateOnlineStatus(), second * 2);
+
+		setTimeout(() => this.validateDropBoxToken(), second * 5);
+
+		setInterval(() => this.validateDropBoxToken(), minute * 10); // every minute
 	}
 
 	async initialCheck(server: string) {
@@ -212,6 +209,30 @@ class Login {
 		this.currentUserID = id;
 		this.step = LoginStep.allDone;
 		localStorage.setItem("user_id", id);
+	}
+
+	validateDropBoxToken() {
+		files
+			.status()
+			.then(x => {
+				this.dropboxActive = true;
+			})
+			.catch(e => {
+				this.dropboxActive = false;
+			});
+	}
+
+	validateOnlineStatus() {
+		if (this.keepOffline) {
+			return;
+		}
+		isOnline(this.server).then(online => {
+			if (online && !this.online) {
+				console.log("getting back online");
+				resync.resync();
+			}
+			this.online = online;
+		});
 	}
 }
 
