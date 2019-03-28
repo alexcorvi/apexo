@@ -59,12 +59,12 @@ class Statistics {
 
 	@computed
 	private get _selectedAppointmentsByDay() {
-		return this.selectedDays.map(day =>
+		return this.selectedDays.map(calDay =>
 			appointmentsData.appointments
 				.appointmentsForDay(
-					day.getFullYear(),
-					day.getMonth() + 1,
-					day.getDate()
+					calDay.getFullYear(),
+					calDay.getMonth() + 1,
+					calDay.getDate()
 				)
 				.filter(
 					appointment =>
