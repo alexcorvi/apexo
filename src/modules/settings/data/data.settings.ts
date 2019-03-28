@@ -4,7 +4,6 @@ import { SettingsItem } from "./class.setting";
 import { generateID } from "../../../assets/utils/generate-id";
 import * as settings from "./index";
 import { API, DropboxFile } from "../../../core/index";
-import { compact } from "../../../core/db";
 import { day } from "../../../assets/utils/date";
 
 class Settings {
@@ -40,8 +39,6 @@ class Settings {
 	}
 
 	async automatedBackups() {
-		console.log("Automated backups process started");
-
 		const frequency: "d" | "w" | "m" | "n" = this.getSetting(
 			"backup_freq"
 		) as any;
@@ -66,39 +63,23 @@ class Settings {
 			client_modified: new Date(0).getTime()
 		};
 
-		console.log(
-			"last backup file",
-			JSON.parse(JSON.stringify(lastBackupFile))
-		);
-
 		const now = new Date().getTime();
 		const then = new Date(lastBackupFile.client_modified).getTime();
 		const diffInDays = Math.floor((now - then) / day);
 
-		console.log("Time stamps");
-		console.log(now, then, diffInDays);
-
 		if (frequency === "d" && diffInDays > 1) {
-			console.log("backup initiated");
 			await API.backup.toDropbox();
 			await this.updateDropboxBackups();
-			console.log("Backup and updating completed");
 		} else if (frequency === "w" && diffInDays > 7) {
-			console.log("backup initiated");
 			await API.backup.toDropbox();
 			await this.updateDropboxBackups();
-			console.log("Backup and updating completed");
 		} else if (frequency === "m" && diffInDays > 30) {
-			console.log("backup initiated");
 			await API.backup.toDropbox();
 			await this.updateDropboxBackups();
-			console.log("Backup and updating completed");
 		}
 
 		let backupsToDeleteNumber = this.dropboxBackups.length - retain;
 		const backupsToDeleteFiles: DropboxFile[] = [];
-
-		console.log("will delete", backupsToDeleteNumber, "backups");
 
 		while (backupsToDeleteNumber > 0) {
 			backupsToDeleteFiles.push(
@@ -107,12 +88,9 @@ class Settings {
 			backupsToDeleteNumber--;
 		}
 
-		console.log("will delete the following backups", backupsToDeleteFiles);
-
 		backupsToDeleteFiles.forEach(async file => {
 			await API.backup.deleteOld(file.path_lower);
 			await this.updateDropboxBackups();
-			console.log(backupsToDeleteNumber, "deleted", file);
 		});
 	}
 

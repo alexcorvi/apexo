@@ -51,7 +51,6 @@ class OrthoCases {
 			const img = await files.get(obj.imgPath);
 			const i = new Image();
 			i.onload = function() {
-				console.log(i.height, i.width);
 				const data = `{"imgSource":{"source":"${img}","height":${
 					i.height
 				},"width":${
