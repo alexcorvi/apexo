@@ -324,7 +324,6 @@ export class Calendar extends React.Component<{}, {}> {
 														/>
 													</div>
 													<patientsComponents.PatientLink
-														notClickable
 														id={
 															appointment.patient
 																._id
