@@ -98,6 +98,9 @@ export class EditableList extends React.Component<
 														onBlur={() =>
 															(this.expandIndex = -1)
 														}
+														disabled={
+															this.props.disabled
+														}
 														autoFocus
 														onChanged={val => {
 															this.props.value[
@@ -133,6 +136,7 @@ export class EditableList extends React.Component<
 														this.props.value
 													);
 												}}
+												disabled={this.props.disabled}
 											/>
 										</div>
 									])

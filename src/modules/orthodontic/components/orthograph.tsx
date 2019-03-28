@@ -65,6 +65,10 @@ export class Orthograph extends React.Component<{
 
 	@observable openCallouts: string[] = [];
 
+	@computed get canEdit() {
+		return API.user.currentUser.canEditOrtho;
+	}
+
 	@computed get dates() {
 		if (!this.props.orthoCase.patient) {
 			return [];
@@ -175,6 +179,7 @@ export class Orthograph extends React.Component<{
 							this.props.orthoCase.treatmentPlan_appliance = val;
 							this.tu();
 						}}
+						disabled={!this.canEdit}
 					/>
 				</Section>
 				<Section title="Started/Finished">
@@ -187,6 +192,7 @@ export class Orthograph extends React.Component<{
 								onChanged={val =>
 									(this.props.orthoCase.isStarted = val)
 								}
+								disabled={!this.canEdit}
 							/>
 							{this.props.orthoCase.isStarted ? (
 								<Dropdown
@@ -203,6 +209,7 @@ export class Orthograph extends React.Component<{
 											}`
 										};
 									})}
+									disabled={!this.canEdit}
 									onChanged={newValue => {
 										this.props.orthoCase.startedDate = Number(
 											newValue.key
@@ -221,6 +228,7 @@ export class Orthograph extends React.Component<{
 								onChanged={val =>
 									(this.props.orthoCase.isFinished = val)
 								}
+								disabled={!this.canEdit}
 							/>
 							{this.props.orthoCase.isFinished ? (
 								<Dropdown
@@ -237,6 +245,7 @@ export class Orthograph extends React.Component<{
 											}`
 										};
 									})}
+									disabled={!this.canEdit}
 									onChanged={newValue => {
 										this.props.orthoCase.finishedDate = Number(
 											newValue.key
@@ -430,12 +439,16 @@ export class Orthograph extends React.Component<{
 																							<TextField
 																								autoFocus
 																								type="number"
-																								label="Visit Number"
+																								label="Visit number"
 																								value={visit.visitNumber.toString()}
 																								onBlur={() => {
 																									this.expandedField =
 																										"";
 																								}}
+																								disabled={
+																									!this
+																										.canEdit
+																								}
 																								onChanged={val => {
 																									this.props.orthoCase.visits[
 																										visitIndex
@@ -460,6 +473,10 @@ export class Orthograph extends React.Component<{
 																							<Dropdown
 																								label="Visit date"
 																								selectedKey={visit.date.toString()}
+																								disabled={
+																									!this
+																										.canEdit
+																								}
 																								options={this.dates.map(
 																									date => {
 																										return {
@@ -500,6 +517,10 @@ export class Orthograph extends React.Component<{
 																							<TextField
 																								autoFocus
 																								label="Appliance"
+																								disabled={
+																									!this
+																										.canEdit
+																								}
 																								value={
 																									visit.appliance
 																								}
@@ -695,8 +716,12 @@ export class Orthograph extends React.Component<{
 																													"gf-visit" ? (
 																														<TextField
 																															autoFocus
+																															disabled={
+																																!this
+																																	.canEdit
+																															}
 																															type="number"
-																															label="Visit Number"
+																															label="Visit number"
 																															value={visit.visitNumber.toString()}
 																															onBlur={() => {
 																																this.expandedField =
@@ -725,6 +750,10 @@ export class Orthograph extends React.Component<{
 																													"gf-date" ? (
 																														<Dropdown
 																															label="Visit date"
+																															disabled={
+																																!this
+																																	.canEdit
+																															}
 																															selectedKey={visit.date.toString()}
 																															options={this.dates.map(
 																																date => {
@@ -769,6 +798,10 @@ export class Orthograph extends React.Component<{
 																															value={
 																																visit.appliance
 																															}
+																															disabled={
+																																!this
+																																	.canEdit
+																															}
 																															onBlur={() => {
 																																this.expandedField =
 																																	"";
@@ -798,6 +831,10 @@ export class Orthograph extends React.Component<{
 																														<TextField
 																															autoFocus
 																															label="Comment"
+																															disabled={
+																																!this
+																																	.canEdit
+																															}
 																															value={
 																																photo.comment
 																															}
@@ -842,7 +879,7 @@ export class Orthograph extends React.Component<{
 																												key:
 																													"overlay prev",
 																												text:
-																													"Overlay Prev",
+																													"Overlay prev",
 																												iconProps: {
 																													iconName:
 																														"MapLayers"
@@ -868,7 +905,7 @@ export class Orthograph extends React.Component<{
 																												key:
 																													"overlay next",
 																												text:
-																													"Overlay Next",
+																													"Overlay next",
 																												iconProps: {
 																													iconName:
 																														"MapLayers"
@@ -901,6 +938,8 @@ export class Orthograph extends React.Component<{
 																													iconName:
 																														"trash"
 																												},
+																												disabled: !this
+																													.canEdit,
 																												onClick: () => {
 																													this.props.orthoCase.visits[
 																														visitIndex
@@ -929,7 +968,6 @@ export class Orthograph extends React.Component<{
 																					<PickAndUpload
 																						{...{
 																							crop: true,
-																							disabled: true,
 																							allowMultiple: false,
 																							accept:
 																								fileTypes.image,
@@ -941,6 +979,8 @@ export class Orthograph extends React.Component<{
 																								]
 																									.photoID
 																							],
+																							disabled: !this
+																								.canEdit,
 																							onFinish: e => {
 																								if (
 																									e[0]
@@ -976,6 +1016,10 @@ export class Orthograph extends React.Component<{
 																									"Photo2Add"
 																							}}
 																							className="clickable-icon add-photo"
+																							disabled={
+																								!this
+																									.canEdit
+																							}
 																						/>
 																					</PickAndUpload>
 																				)}
@@ -988,6 +1032,10 @@ export class Orthograph extends React.Component<{
 																		className="clickable-icon delete-visit"
 																		key={
 																			visit.id
+																		}
+																		disabled={
+																			!this
+																				.canEdit
 																		}
 																		iconProps={{
 																			iconName:
@@ -1012,14 +1060,15 @@ export class Orthograph extends React.Component<{
 									<MessageBar
 										messageBarType={MessageBarType.info}
 									>
-										No Visits recorded yet! add a new visit
+										No visits recorded yet! add a new visit
 										using the button below
 									</MessageBar>
 								)}
 								<br />
 								<PrimaryButton
+									disabled={!this.canEdit}
 									iconProps={{ iconName: "ExploreContent" }}
-									text="Add Visit"
+									text="Add visit"
 									onClick={() => {
 										const visitNumber = this.props.orthoCase
 											.visits.length
@@ -1059,6 +1108,7 @@ export class Orthograph extends React.Component<{
 							this.props.orthoCase.nextVisitNotes = val;
 							this.tu();
 						}}
+						disabled={!this.canEdit}
 					/>
 				</Section>
 			</div>

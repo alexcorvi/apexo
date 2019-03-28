@@ -49,6 +49,7 @@ export class PickAndUpload extends React.Component<
 		targetDir: string;
 		crop?: boolean;
 		prevSrc?: string;
+		disabled?: boolean;
 	},
 	{}
 > {
@@ -136,7 +137,9 @@ export class PickAndUpload extends React.Component<
 		);
 	}
 	click() {
-		this.pickFileEl!.click();
+		if (!this.props.disabled) {
+			this.pickFileEl!.click();
+		}
 	}
 
 	async saveBase64(base64DataURI: string) {

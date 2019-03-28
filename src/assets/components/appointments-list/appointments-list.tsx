@@ -7,6 +7,7 @@ import { TextField } from "office-ui-fabric-react";
 import { observer } from "mobx-react";
 import { textualFilter } from "../../../assets/utils/textual-filter";
 import { lang } from "../../../core/i18/i18";
+import { API } from "../../../core";
 
 @observer
 export class AppointmentsList extends React.Component<
@@ -22,6 +23,9 @@ export class AppointmentsList extends React.Component<
 		return this.filter
 			? textualFilter(this.props.list, this.filter)
 			: this.props.list;
+	}
+	@computed get canEdit() {
+		return API.user.currentUser.canEditOrtho;
 	}
 
 	render() {
@@ -59,7 +63,7 @@ export class AppointmentsList extends React.Component<
 													appointment._id)
 											}
 											appointment={appointment}
-											canDelete={true}
+											canDelete={this.canEdit}
 										/>
 									);
 								})

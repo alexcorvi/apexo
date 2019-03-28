@@ -7,6 +7,7 @@ import { observer } from "mobx-react";
 import { patientsComponents } from "../../../modules/patients";
 import { ProfileSquared } from "../profile/profile-squared";
 import "./appointment-thumb.scss";
+import { API } from "../../../core";
 
 @observer
 export class AppointmentThumb extends React.Component<
@@ -54,10 +55,12 @@ export class AppointmentThumb extends React.Component<
 		}
 		return className;
 	}
+	@computed get canEdit() {
+		return API.user.currentUser.canEditOrtho;
+	}
 
 	el: HTMLElement | undefined;
 	render() {
-		const treatmentID = this.props.appointment.treatmentID;
 		return (
 			<div
 				ref={el => (el ? (this.el = el) : "")}
