@@ -18,6 +18,7 @@ import {
 } from "../../../../../assets/components/pick-files/pick-files";
 import { diff } from "fast-array-diff";
 import { Section } from "../../../../../assets/components/section/section";
+import setting from "../../../../settings/data/data.settings";
 
 interface Image {
 	path: string;
@@ -49,110 +50,122 @@ export class SinglePatientGallery extends React.Component<
 		return (
 			<Section title="Patient Gallery">
 				{API.login.online ? (
-					<div className="single-patient-gallery">
-						{this.props.patient.gallery.length === 0 ? (
-							<MessageBar messageBarType={MessageBarType.info}>
-								This patient does not seem to have any photo
-								record uploaded, press the plus sign button
-								below to start uploading.
-							</MessageBar>
-						) : (
-							""
-						)}
-						<br />
-						<div className="thumbs">
-							{this.canEdit ? (
-								this.uploading ? (
-									<Icon
-										iconName="sync"
-										className="rotate"
-										style={{ padding: 10 }}
-									/>
-								) : (
-									<PickAndUpload
-										allowMultiple={true}
-										accept={fileTypes.image}
-										onFinish={paths => {
-											this.props.patient.gallery.push(
-												...paths
-											);
-										}}
-										onStartLoading={() => {
-											this.uploading = true;
-										}}
-										onFinishLoading={() => {
-											this.uploading = false;
-										}}
-										targetDir="patient-galleries"
-									>
-										<IconButton
-											className={`add-photo`}
-											iconProps={{
-												iconName: "add"
-											}}
-										/>
-									</PickAndUpload>
-								)
+					API.login.dropboxActive ? (
+						<div className="single-patient-gallery">
+							{this.props.patient.gallery.length === 0 ? (
+								<MessageBar
+									messageBarType={MessageBarType.info}
+								>
+									This patient does not seem to have any photo
+									record uploaded, press the plus sign button
+									below to start uploading.
+								</MessageBar>
 							) : (
 								""
 							)}
-							{Object.keys(this.imagesTable).map(imagePath => {
-								const URI = this.imagesTable[imagePath];
-								return URI ? (
-									<span
-										className={`thumb ${
-											this.selectedImagePath === imagePath
-												? "selected"
-												: ""
-										}`}
-										key={imagePath}
-										style={{
-											backgroundImage: `url('${
-												URI ? URI : ""
-											}')`
-										}}
-										onClick={() => {
-											this.selectedImagePath = imagePath;
-										}}
-									/>
-								) : (
-									<div
-										key={imagePath + "-placeholder"}
-										className="placeholder"
-									>
+							<br />
+							<div className="thumbs">
+								{this.canEdit ? (
+									this.uploading ? (
 										<Icon
 											iconName="sync"
 											className="rotate"
+											style={{ padding: 10 }}
 										/>
-									</div>
-								);
-							})}
-						</div>
-						{this.selectedImagePath ? (
-							<div className="viewport">
-								<img
-									key={this.selectedImagePath}
-									src={this.selectedImageURI}
-								/>
-								{this.canEdit ? (
-									<IconButton
-										className="delete-photo"
-										iconProps={{ iconName: "trash" }}
-										onClick={async () => {
-											await this.removeImage(
-												this.selectedImagePath
-											);
-											this.selectedImagePath = "";
-										}}
-									/>
+									) : (
+										<PickAndUpload
+											allowMultiple={true}
+											accept={fileTypes.image}
+											onFinish={paths => {
+												this.props.patient.gallery.push(
+													...paths
+												);
+											}}
+											onStartLoading={() => {
+												this.uploading = true;
+											}}
+											onFinishLoading={() => {
+												this.uploading = false;
+											}}
+											targetDir="patient-galleries"
+										>
+											<IconButton
+												className={`add-photo`}
+												iconProps={{
+													iconName: "add"
+												}}
+											/>
+										</PickAndUpload>
+									)
 								) : (
 									""
 								)}
+								{Object.keys(this.imagesTable).map(
+									imagePath => {
+										const URI = this.imagesTable[imagePath];
+										return URI ? (
+											<span
+												className={`thumb ${
+													this.selectedImagePath ===
+													imagePath
+														? "selected"
+														: ""
+												}`}
+												key={imagePath}
+												style={{
+													backgroundImage: `url('${
+														URI ? URI : ""
+													}')`
+												}}
+												onClick={() => {
+													this.selectedImagePath = imagePath;
+												}}
+											/>
+										) : (
+											<div
+												key={imagePath + "-placeholder"}
+												className="placeholder"
+											>
+												<Icon
+													iconName="sync"
+													className="rotate"
+												/>
+											</div>
+										);
+									}
+								)}
 							</div>
-						) : (
-							""
-						)}
-					</div>
+							{this.selectedImagePath ? (
+								<div className="viewport">
+									<img
+										key={this.selectedImagePath}
+										src={this.selectedImageURI}
+									/>
+									{this.canEdit ? (
+										<IconButton
+											className="delete-photo"
+											iconProps={{ iconName: "trash" }}
+											onClick={async () => {
+												await this.removeImage(
+													this.selectedImagePath
+												);
+												this.selectedImagePath = "";
+											}}
+										/>
+									) : (
+										""
+									)}
+								</div>
+							) : (
+								""
+							)}
+						</div>
+					) : (
+						<MessageBar messageBarType={MessageBarType.warning}>
+							A valid DropBox access token is required for this
+							section
+						</MessageBar>
+					)
 				) : (
 					<MessageBar messageBarType={MessageBarType.warning}>
 						You can not access patient gallery while offline
