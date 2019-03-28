@@ -64,7 +64,7 @@ export class OrthoGallery extends React.Component<{
 					""
 				)}
 
-				<Section showByDefault title="Cephalometric Analysis">
+				<Section  title="Cephalometric Analysis">
 					{this.props.orthoCase.cephalometricHistory.map((c, i) => (
 						<Row
 							key={c.imgPath}

@@ -31,7 +31,7 @@ export class PatientAppointments extends React.Component<
 	render() {
 		return (
 			<div className="single-patient-appointments appointments">
-				<Section title="Patient Appointments" showByDefault>
+				<Section title="Patient Appointments" >
 					<AppointmentsList
 						ref={l => (this.l = l)}
 						list={this.appointments}

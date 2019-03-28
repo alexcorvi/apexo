@@ -42,7 +42,7 @@ export class SinglePatientGallery extends React.Component<
 
 	render() {
 		return (
-			<Section title="Patient Gallery" showByDefault>
+			<Section title="Patient Gallery" >
 				<div className="single-patient-gallery">
 					<div className="thumbs">
 						{this.canEdit ? (

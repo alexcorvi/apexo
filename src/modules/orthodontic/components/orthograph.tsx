@@ -134,7 +134,7 @@ export class Orthograph extends React.Component<{
 	render() {
 		return (
 			<div className="orthograph">
-				<Section showByDefault title="Problems">
+				<Section  title="Problems">
 					<DetailsList
 						compact
 						items={[
@@ -149,7 +149,7 @@ export class Orthograph extends React.Component<{
 						selectionMode={SelectionMode.none}
 					/>
 				</Section>
-				<Section showByDefault title="Treatment Plan">
+				<Section  title="Treatment Plan">
 					<EditableList
 						label="add plan..."
 						value={this.props.orthoCase.treatmentPlan_appliance}
@@ -159,7 +159,7 @@ export class Orthograph extends React.Component<{
 						}}
 					/>
 				</Section>
-				<Section showByDefault title="Started/Finished">
+				<Section  title="Started/Finished">
 					<Row gutter={12}>
 						<Col span={12}>
 							<Toggle
@@ -231,7 +231,7 @@ export class Orthograph extends React.Component<{
 						</Col>
 					</Row>
 				</Section>
-				<Section showByDefault title="Records">
+				<Section  title="Records">
 					<div className="album">
 						{this.props.orthoCase.visits.length ? (
 							<table>
@@ -1000,7 +1000,7 @@ export class Orthograph extends React.Component<{
 						/>
 					</div>
 				</Section>
-				<Section showByDefault title="Notes for the next visit">
+				<Section  title="Notes for the next visit">
 					<EditableList
 						label="add note..."
 						value={this.props.orthoCase.nextVisitNotes}

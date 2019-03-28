@@ -43,7 +43,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 	render() {
 		return (
 			<div className="settings-component p-15 p-l-10 p-r-10">
-				<Section title="General Setting" showByDefault>
+				<Section title="General Setting" >
 					<Input
 						element={
 							<Dropdown
@@ -85,7 +85,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					/>
 				</Section>
 
-				<Section title="Financial Settings" showByDefault>
+				<Section title="Financial Settings" >
 					<Input
 						element={
 							<TextField
@@ -123,7 +123,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					/>
 				</Section>
 
-				<Section title="Optional Modules and Features" showByDefault>
+				<Section title="Optional Modules and Features" >
 					<Toggle
 						onText={lang("Prescriptions Module Enabled")}
 						offText={lang("Prescriptions Module Disabled")}
@@ -180,7 +180,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					/>
 				</Section>
 
-				<Section title="Backup and Restore" showByDefault>
+				<Section title="Backup and Restore" >
 					{API.login.online ? (
 						<div>
 							<PrimaryButton
@@ -237,7 +237,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					)}
 				</Section>
 
-				<Section title="Automated Backup and Restore" showByDefault>
+				<Section title="Automated Backup and Restore" >
 					{API.login.online ? (
 						<div>
 							<Dropdown

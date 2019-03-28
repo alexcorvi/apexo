@@ -187,7 +187,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 						<div className="prescription-editor">
 							<Section
 								title={lang("Prescription details")}
-								showByDefault
+								
 							>
 								<TextField
 									label={lang("Item name")}

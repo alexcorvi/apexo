@@ -425,7 +425,7 @@ export class StaffListing extends React.Component<{}, {}> {
 						<div className="staff-editor">
 							{this.viewWhich === 1 ? (
 								<div>
-									<Section showByDefault title="Basic Info">
+									<Section  title="Basic Info">
 										<div className="staff-input">
 											<TextField
 												label={lang("Name")}
@@ -472,7 +472,7 @@ export class StaffListing extends React.Component<{}, {}> {
 									</Section>
 
 									<Section
-										showByDefault
+										
 										title="Contact Details"
 									>
 										<Row gutter={12}>
@@ -518,7 +518,7 @@ export class StaffListing extends React.Component<{}, {}> {
 									{this.member._id ===
 									API.user.currentUser._id ? (
 										<Section
-											showByDefault
+											
 											title="Login PIN"
 										>
 											<div className="staff-input">
@@ -549,7 +549,7 @@ export class StaffListing extends React.Component<{}, {}> {
 									) : (
 										""
 									)}
-									<Section showByDefault title="Permission">
+									<Section  title="Permission">
 										{this.member._id ===
 										API.user.currentUser._id ? (
 											<div>
@@ -924,7 +924,7 @@ export class StaffListing extends React.Component<{}, {}> {
 
 							{this.viewWhich === 3 ? (
 								<Section
-									showByDefault
+									
 									title="Upcoming Appointments"
 								>
 									{this.member.nextAppointments.length ? (

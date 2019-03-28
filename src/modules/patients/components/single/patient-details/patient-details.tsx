@@ -27,7 +27,7 @@ export class PatientDetails extends React.Component<{
 	render() {
 		return (
 			<div className="single-patient-details">
-				<Section showByDefault title="Basic Info">
+				<Section  title="Basic Info">
 					<div className="name">
 						<TextField
 							label="Name"
@@ -83,7 +83,7 @@ export class PatientDetails extends React.Component<{
 					</Row>
 				</Section>
 
-				<Section showByDefault title="Contact Info">
+				<Section  title="Contact Info">
 					<TextField
 						label={lang("Phone")}
 						value={this.props.patient.phone}
@@ -109,7 +109,7 @@ export class PatientDetails extends React.Component<{
 					/>
 				</Section>
 
-				<Section showByDefault title="Other Notes">
+				<Section  title="Other Notes">
 					<Row gutter={6}>
 						<Col md={12}>
 							{" "}
