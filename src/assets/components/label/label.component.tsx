@@ -1,5 +1,6 @@
 import * as React from "react";
 import "./label.scss";
+import { observer } from "mobx-react";
 
 export enum LabelType {
 	warning,

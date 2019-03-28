@@ -3,6 +3,7 @@ import * as React from "react";
 import classNames from "classnames";
 import { Children, cloneElement } from "react";
 import enquire = require("enquire.js");
+import { observer } from "mobx-react";
 
 export type Breakpoint = "xxl" | "xl" | "lg" | "md" | "sm" | "xs";
 export type BreakpointMap = Partial<Record<Breakpoint, string>>;
@@ -29,7 +30,7 @@ const responsiveMap: BreakpointMap = {
 	xl: "(min-width: 1200px)",
 	xxl: "(min-width: 1600px)"
 };
-
+@observer
 export default class Row extends React.Component<RowProps, RowState> {
 	static defaultProps = {
 		gutter: 0
