@@ -1,57 +1,71 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+		/>
+		<title>Apexo</title>
+		<link
+			rel="apple-touch-icon"
+			sizes="180x180"
+			href="/apple-touch-icon.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="/favicon-32x32.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="16x16"
+			href="/favicon-16x16.png"
+		/>
+		<link rel="manifest" href="/site.webmanifest" />
+		<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+		<meta name="apple-mobile-web-app-title" content="Apexo" />
+		<meta name="application-name" content="Apexo" />
+		<meta name="msapplication-TileColor" content="#603cba" />
+		<meta name="theme-color" content="#ffffff" />
+		<script>
+			var couchDBServer = undefined;
+		</script>
+		<script>
+			FabricConfig = {
+				fontBaseUrl: "./"
+			};
+		</script>
+	</head>
 
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-	<title>Apexo</title>
-	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-	<link rel="manifest" href="/site.webmanifest">
-	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-	<meta name="apple-mobile-web-app-title" content="Apexo">
-	<meta name="application-name" content="Apexo">
-	<meta name="msapplication-TileColor" content="#603cba">
-	<meta name="theme-color" content="#ffffff">
-	<script>
-		var couchDBServer = undefined;
-	</script>
-	<script>
-		FabricConfig = {
-			fontBaseUrl: "./"
-		}
-	</script>
-</head>
-
-<body>
-	<noscript>
-		JavaScript must be enabled to view this website!
-	</noscript>
-	<div id="root"></div>
-	<script src="./upup.min.js"></script>
-	<script src="./upup.sw.min.js"></script>
-	<script>
-		UpUp.start({
-			'content-url': 'index.html',
-			'assets': [
-				'app.js',
-				'style.css',
-				'fonts/fabric-icons-ac63a47f.woff',
-				'fonts/segoeui-westeuropean/segoeui-light.woff',
-				'fonts/segoeui-westeuropean/segoeui-light.woff2',
-				'fonts/segoeui-westeuropean/segoeui-regular.woff',
-				'fonts/segoeui-westeuropean/segoeui-regular.woff2',
-				'fonts/segoeui-westeuropean/segoeui-semibold.woff',
-				'fonts/segoeui-westeuropean/segoeui-semibold.woff2',
-				'fonts/segoeui-westeuropean/segoeui-semilight.woff',
-				'fonts/segoeui-westeuropean/segoeui-semilight.woff2',
-			]
-		});
-	</script>
-	<script src="./app.js"></script>
-	<link rel="stylesheet" type="text/css" href="./style.css">
-
-</body>
-
+	<body>
+		<noscript>
+			JavaScript must be enabled to view this website!
+		</noscript>
+		<div id="root"></div>
+		<script src="./upup.min.js"></script>
+		<script src="./upup.sw.min.js"></script>
+		<script>
+			UpUp.start({
+				"content-url": "index.html",
+				assets: [
+					"app.js",
+					"style.css",
+					"fonts/fabric-icons-d40e9e78.woff",
+					"fonts/segoeui-westeuropean/segoeui-light.woff",
+					"fonts/segoeui-westeuropean/segoeui-light.woff2",
+					"fonts/segoeui-westeuropean/segoeui-regular.woff",
+					"fonts/segoeui-westeuropean/segoeui-regular.woff2",
+					"fonts/segoeui-westeuropean/segoeui-semibold.woff",
+					"fonts/segoeui-westeuropean/segoeui-semibold.woff2",
+					"fonts/segoeui-westeuropean/segoeui-semilight.woff",
+					"fonts/segoeui-westeuropean/segoeui-semilight.woff2"
+				]
+			});
+		</script>
+		<script src="./app.js"></script>
+		<link rel="stylesheet" type="text/css" href="./style.css" />
+	</body>
 </html>
