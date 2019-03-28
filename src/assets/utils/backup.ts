@@ -8,6 +8,13 @@ import messages from "../../core/messages/data.messages";
 import { decrypt } from "./encryption";
 
 import pouchDB = require("pouchdb-browser");
+import { appointmentsData } from "../../modules/appointments";
+import { staffData } from "../../modules/staff";
+import { orthoData } from "../../modules/orthodontic";
+import { patientsData } from "../../modules/patients";
+import { prescriptionsData } from "../../modules/prescriptions";
+import { settingsData } from "../../modules/settings";
+import { treatmentsData } from "../../modules/treatments";
 const PouchDB: PouchDB.Static = (pouchDB as any).default;
 
 const ext = "apx";
@@ -29,13 +36,13 @@ export const backup = {
 	toJSON: function() {
 		return new Promise(async (resolve, reject) => {
 			const databases = [
-				"appointments",
-				"doctors",
-				"orthodontic",
-				"patients",
-				"prescriptions",
-				"settings",
-				"treatments"
+				appointmentsData.namespace,
+				staffData.namespace,
+				orthoData.namespace,
+				patientsData.namespace,
+				prescriptionsData.namespace,
+				settingsData.namespace,
+				treatmentsData.namespace
 			];
 
 			const dumps: DatabaseDump[] = [];
