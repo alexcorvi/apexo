@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 import { data } from "../../modules";
 import { PrimaryButton, TextField } from "office-ui-fabric-react";
 import { login } from "./data.login";
