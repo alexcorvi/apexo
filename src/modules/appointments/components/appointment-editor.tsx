@@ -451,7 +451,10 @@ export class AppointmentEditor extends React.Component<
 
 								{this.props.appointment!.prescriptions
 									.length ? (
-									<PrimaryButton onClick={print}>
+									<PrimaryButton
+										onClick={print}
+										iconProps={{ iconName: "print" }}
+									>
 										{lang("Print Prescription")}
 									</PrimaryButton>
 								) : (
