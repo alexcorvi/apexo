@@ -12,11 +12,12 @@ import { computed, observable } from "mobx";
 
 import { Chart } from "./interface.chart";
 import { appointmentsData } from "../../appointments";
+import { day } from "../../../assets/utils/date";
 
 class Statistics {
 	@observable filterByMember: string = "";
 
-	readonly msInDay = 1000 * 60 * 60 * 24;
+	readonly msInDay = day;
 
 	readonly todayDateObject: Date = new Date();
 

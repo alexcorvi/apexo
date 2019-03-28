@@ -1,3 +1,4 @@
+import { hour } from "./../../../assets/utils/date";
 import * as dateUtils from "../../../assets/utils/date";
 import { AppointmentJSON } from "./index";
 import { computed, observable } from "mobx";
@@ -165,7 +166,7 @@ export class Appointment {
 	get spentTimeValue() {
 		return (
 			Number(settingsData.settings.getSetting("hourlyRate")) *
-			(this.time / (1000 * 60 * 60))
+			(this.time / hour)
 		);
 	}
 

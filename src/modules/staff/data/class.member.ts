@@ -1,3 +1,4 @@
+import { week } from "./../../../assets/utils/date";
 import { appointmentsData } from "../../appointments";
 import { computed, observable } from "mobx";
 import { StaffMemberJSON } from "./interface.member-json";
@@ -98,7 +99,7 @@ export class StaffMember {
 	@computed
 	get nextWeekAppointments() {
 		const c = new appointmentsData.Calendar();
-		c.selectDayByTimeStamp(new Date().getTime() + 1000 * 60 * 60 * 24 * 7);
+		c.selectDayByTimeStamp(new Date().getTime() + week);
 		return c.selectedWeek.map(day => {
 			const d = day.date;
 			const m = c.currentMonth;
@@ -114,7 +115,7 @@ export class StaffMember {
 	@computed
 	get lastWeekAppointments() {
 		const c = new appointmentsData.Calendar();
-		c.selectDayByTimeStamp(new Date().getTime() - 1000 * 60 * 60 * 24 * 7);
+		c.selectDayByTimeStamp(new Date().getTime() - week);
 		return c.selectedWeek.map(day => {
 			const d = day.date;
 			const m = c.currentMonth;

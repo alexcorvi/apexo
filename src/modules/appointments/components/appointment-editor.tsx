@@ -123,7 +123,7 @@ export class AppointmentEditor extends React.Component<
 				)}
 			>
 				<div className="appointment-editor">
-					<Section title={lang("Appointment")} >
+					<Section title={lang("Appointment")}>
 						<Row gutter={12}>
 							<Col sm={12}>
 								<div className="appointment-input date">
@@ -173,10 +173,10 @@ export class AppointmentEditor extends React.Component<
 											min={this.props.appointment!.dateFloor.getTime()}
 											max={
 												this.props.appointment!.dateFloor.getTime() +
-												1000 * 60 * 60 * 23.5
+												dateUtils.hour * 23.5
 											}
 											value={this.props.appointment!.date}
-											step={1000 * 60 * 30}
+											step={dateUtils.minute * 30}
 											onChange={val => {
 												if (
 													val >
@@ -237,7 +237,7 @@ export class AppointmentEditor extends React.Component<
 						</div>
 					</Section>
 
-					<Section title={lang("Case Details")} >
+					<Section title={lang("Case Details")}>
 						<TextField
 							multiline
 							disabled={!this.canEdit}
@@ -463,7 +463,7 @@ export class AppointmentEditor extends React.Component<
 						)}
 					</Section>
 
-					<Section  title={lang("Expenses & Price")}>
+					<Section title={lang("Expenses & Price")}>
 						<Row gutter={12}>
 							<Col sm={12}>
 								{settingsData.settings.getSetting(

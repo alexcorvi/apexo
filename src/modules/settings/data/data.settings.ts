@@ -1,9 +1,11 @@
+import { minute } from "./../../../assets/utils/date";
 import { observable } from "mobx";
 import { SettingsItem } from "./class.setting";
 import { generateID } from "../../../assets/utils/generate-id";
 import * as settings from "./index";
 import { API, DropboxFile } from "../../../core/index";
 import { compact } from "../../../core/db";
+import { day } from "../../../assets/utils/date";
 
 class Settings {
 	ignoreObserver: boolean = false;
@@ -71,7 +73,7 @@ class Settings {
 
 		const now = new Date().getTime();
 		const then = new Date(lastBackupFile.client_modified).getTime();
-		const diffInDays = Math.floor((now - then) / (1000 * 60 * 60 * 24));
+		const diffInDays = Math.floor((now - then) / day);
 
 		console.log("Time stamps");
 		console.log(now, then, diffInDays);
@@ -117,7 +119,7 @@ class Settings {
 	constructor() {
 		setInterval(() => {
 			this.automatedBackups();
-		}, 2 * 60 * 1000); // check every 2 minutes
+		}, 2 * minute); // check every 2 minutes
 	}
 }
 
