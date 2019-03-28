@@ -185,7 +185,7 @@ export class OrthoCase {
 			computedProblemsArr.push(FacialProfile[this.facialProfile]);
 		}
 
-		if (this.oralHygiene !== "good") {
+		if (this.oralHygiene === "bad") {
 			computedProblemsArr.push(OralHygiene[this.oralHygiene]);
 		}
 
