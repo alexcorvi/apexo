@@ -77,7 +77,7 @@ export class MainComponent extends React.Component<{}, {}> {
 		} else {
 			return (
 				<div className="spinner-container">
-					<Spinner size={SpinnerSize.large} label="Please Wait" />
+					<Spinner size={SpinnerSize.large} label="Please wait" />
 				</div>
 			);
 		}

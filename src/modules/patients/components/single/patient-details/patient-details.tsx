@@ -27,7 +27,7 @@ export class PatientDetails extends React.Component<{
 	render() {
 		return (
 			<div className="single-patient-details">
-				<Section  title="Basic Info">
+				<Section title="Basic Info">
 					<div className="name">
 						<TextField
 							label="Name"
@@ -40,7 +40,7 @@ export class PatientDetails extends React.Component<{
 						<Col sm={12}>
 							<div className="birth">
 								<TextField
-									label={lang("Birth Year / Age")}
+									label={lang("Birth year / age")}
 									value={this.props.patient.birthYearOrAge.toString()}
 									onChanged={year =>
 										(this.props.patient.birthYearOrAge = Number(
@@ -83,7 +83,7 @@ export class PatientDetails extends React.Component<{
 					</Row>
 				</Section>
 
-				<Section  title="Contact Info">
+				<Section title="Contact Info">
 					<TextField
 						label={lang("Phone")}
 						value={this.props.patient.phone}
@@ -109,11 +109,10 @@ export class PatientDetails extends React.Component<{
 					/>
 				</Section>
 
-				<Section  title="Other Notes">
+				<Section title="Other Notes">
 					<Row gutter={6}>
 						<Col md={12}>
 							{" "}
-							<MSLabel>Labels</MSLabel>
 							<TagInput
 								disabled={!this.canEdit}
 								className="patient-tags"
@@ -168,10 +167,6 @@ export class PatientDetails extends React.Component<{
 							/>
 						</Col>
 						<Col md={12}>
-							{" "}
-							<MSLabel className="mh-label">
-								{lang("Notes and medical history")}
-							</MSLabel>
 							<div className="medical-history">
 								<EditableList
 									label={lang("Notes")}

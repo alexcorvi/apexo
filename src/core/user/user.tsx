@@ -58,7 +58,7 @@ export class UserComponent extends React.Component<{}, {}> {
 												API.login.resetUser();
 											}}
 										>
-											{lang("Switch User")}
+											{lang("Switch user")}
 										</Link>
 									</div>
 								}
@@ -80,7 +80,7 @@ export class UserComponent extends React.Component<{}, {}> {
 				<h3>
 					{this.todayAppointments.length
 						? lang(`Today's Appointments`)
-						: lang("No Appointments today")}
+						: lang("No appointments today")}
 				</h3>
 				<div className="appointments-listing">
 					{this.todayAppointments.map(appointment => {

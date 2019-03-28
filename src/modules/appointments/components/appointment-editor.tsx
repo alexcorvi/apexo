@@ -193,7 +193,7 @@ export class AppointmentEditor extends React.Component<
 							</Col>
 						</Row>
 						<div className="appointment-input date">
-							<label>{lang("Operating Staff:")} </label>
+							<label>{lang("Operating staff:")} </label>
 							{staffData.staffMembers.list
 								.filter(staff => staff.operates)
 								.map(staff => {
@@ -292,7 +292,7 @@ export class AppointmentEditor extends React.Component<
 							<Col span={24}>
 								{" "}
 								<div className="appointment-input involved-teeth">
-									<label>{lang("Involved Teeth")}: </label>
+									<label>{lang("Involved teeth")}: </label>
 									<TagInput
 										disabled={!this.canEdit}
 										placeholder={
@@ -455,7 +455,7 @@ export class AppointmentEditor extends React.Component<
 										onClick={print}
 										iconProps={{ iconName: "print" }}
 									>
-										{lang("Print Prescription")}
+										{lang("Print prescription")}
 									</PrimaryButton>
 								) : (
 									""
@@ -618,7 +618,7 @@ export class AppointmentEditor extends React.Component<
 											<TextField
 												type="number"
 												disabled={!this.canEdit}
-												label={lang("Final Price")}
+												label={lang("Price")}
 												value={this.props.appointment!.finalPrice.toString()}
 												onChanged={newVal => {
 													this.props.appointment!.finalPrice = Number(
@@ -634,7 +634,7 @@ export class AppointmentEditor extends React.Component<
 											<TextField
 												type="number"
 												disabled={!this.canEdit}
-												label={lang("Paid Amount")}
+												label={lang("Paid")}
 												value={this.props.appointment!.paidAmount.toString()}
 												onChanged={newVal => {
 													this.props.appointment!.paidAmount = Number(
@@ -653,18 +653,12 @@ export class AppointmentEditor extends React.Component<
 												label={
 													this.props.appointment!
 														.outstandingAmount
-														? lang(
-																"Outstanding Amount"
-														  )
+														? lang("Outstanding")
 														: this.props
 																.appointment!
 																.overpaidAmount
-														? lang(
-																"Overpaid Amount"
-														  )
-														: lang(
-																"Outstanding Amount"
-														  )
+														? lang("Overpaid")
+														: lang("Outstanding")
 												}
 												value={
 													this.props.appointment!
@@ -721,7 +715,7 @@ export class AppointmentEditor extends React.Component<
 										this.props.appointment!.isDone
 									}
 									onText={lang("Done")}
-									offText={lang("Not Done")}
+									offText={lang("Not done")}
 									disabled={!this.canEdit}
 									onChanged={newVal => {
 										this.props.appointment!.isDone = newVal;

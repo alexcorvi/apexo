@@ -54,7 +54,7 @@ export class Treatments extends React.Component<{}, {}> {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: lang("Add New"),
+										name: lang("Add new"),
 										onClick: () => {
 											const treatment = new Treatment();
 											treatments.list.push(treatment);
@@ -195,10 +195,7 @@ export class Treatments extends React.Component<{}, {}> {
 						)}
 					>
 						<div className="treatment-editor">
-							<Section
-								title={lang("Treatment details")}
-								
-							>
+							<Section title={lang("Treatment details")}>
 								<div className="treatment-input">
 									<TextField
 										label={lang("Treatment title")}

@@ -109,7 +109,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 							/>
 						}
 						// tslint:disable-next-line:max-line-length
-						info="When time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses. So here you can put the electricity, rent, and other time dependent expenses."
+						info="When time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses So here you can put the electricity, rent, and other time dependent expenses"
 					/>
 
 					<Input
@@ -126,7 +126,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								disabled={!this.canEdit}
 							/>
 						}
-						info="This symbol you enter here will be used across your application."
+						info="This symbol you enter here will be used across your application"
 					/>
 				</Section>
 

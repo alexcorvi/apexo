@@ -58,7 +58,7 @@ export class SinglePatientGallery extends React.Component<
 								>
 									This patient does not seem to have any photo
 									record uploaded, press the plus sign button
-									below to start uploading.
+									below to start uploading
 								</MessageBar>
 							) : (
 								""

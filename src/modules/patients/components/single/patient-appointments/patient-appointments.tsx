@@ -44,7 +44,7 @@ export class PatientAppointments extends React.Component<
 						""
 					) : (
 						<MessageBar messageBarType={MessageBarType.info}>
-							This patient does not have any appointment.
+							This patient does not have any appointment
 						</MessageBar>
 					)}
 					<br />
@@ -61,7 +61,7 @@ export class PatientAppointments extends React.Component<
 							}}
 							iconProps={{ iconName: "add" }}
 						>
-							{lang("Book New Appointment")}
+							{lang("Book new appointment")}
 						</PrimaryButton>
 					) : (
 						""

@@ -152,7 +152,7 @@ export class OrthoCaseSheet extends React.Component<{
 					<TagInput
 						disabled={!this.canEdit}
 						strict
-						placeholder="Cross/Scissors Bite"
+						placeholder="Cross/scissors bite"
 						options={patientsData.ISOTeethArr.map(x => {
 							return {
 								key: x.toString(),
@@ -260,7 +260,7 @@ export class OrthoCaseSheet extends React.Component<{
 				<Section title="Problems">
 					<EditableList
 						disabled={!this.canEdit}
-						label={lang("Patient Concerns") + "..."}
+						label={lang("Patient concerns") + "..."}
 						value={this.props.orthoCase.problemsList}
 						onChange={v => {
 							this.props.orthoCase.problemsList = v;
@@ -273,7 +273,7 @@ export class OrthoCaseSheet extends React.Component<{
 					{this.props.orthoCase.computedProblems.length === 0 ? (
 						<MessageBar messageBarType={MessageBarType.info}>
 							The case sheet of this patient does not show any
-							problems that needs orthodontic treatment.
+							problems that needs orthodontic treatment
 						</MessageBar>
 					) : (
 						<DetailsList

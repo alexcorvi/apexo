@@ -414,7 +414,7 @@ export class OrthoList extends React.Component<{}, {}> {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: lang("Add New"),
+										name: lang("Add new"),
 										onClick: () =>
 											(this.showAdditionPanel = true),
 										iconProps: {
@@ -434,7 +434,7 @@ export class OrthoList extends React.Component<{}, {}> {
 						this.showAdditionPanel = false;
 					}}
 				>
-					<h4>Choose Patient</h4>
+					<h4>{lang("Choose patient")}</h4>
 					<br />
 					<TagInput
 						strict
@@ -478,7 +478,7 @@ export class OrthoList extends React.Component<{}, {}> {
 							iconName: "add"
 						}}
 					>
-						Add New
+						Add new
 					</PrimaryButton>
 				</Panel>
 
@@ -519,7 +519,7 @@ export class OrthoList extends React.Component<{}, {}> {
 													: ""}
 												{this.viewWhich === 3
 													? lang(
-															"Orthodontic Case sheet"
+															"Orthodontic Case Sheet"
 													  )
 													: ""}
 												{this.viewWhich === 4

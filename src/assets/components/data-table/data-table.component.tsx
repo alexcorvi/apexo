@@ -101,7 +101,7 @@ export class DataTable extends React.Component<Props, {}> {
 					{...{
 						className: "commandBar fixed m-b-15",
 						isSearchBoxVisible: true,
-						searchPlaceholderText: lang("Search Patients") + "...",
+						searchPlaceholderText: lang("Search patients") + "...",
 						elipisisAriaLabel: lang("More options"),
 						farItems: [
 							{
@@ -226,7 +226,7 @@ export class DataTable extends React.Component<Props, {}> {
 						iconProps={{ iconName: "add" }}
 						onClick={() => (this.limit = this.limit + 10)}
 					>
-						{lang("Load More")}
+						{lang("Load more")}
 					</PrimaryButton>
 				) : (
 					""
@@ -235,11 +235,11 @@ export class DataTable extends React.Component<Props, {}> {
 				{this.props.rows.length === 0 ? (
 					<MessageBar messageBarType={MessageBarType.info}>
 						No data in this section yet, you can add new data by
-						clicking the button above.
+						clicking the button above
 					</MessageBar>
 				) : this.filteredRows.length === 0 ? (
 					<MessageBar messageBarType={MessageBarType.info}>
-						Did not find anything that matches your search criteria.
+						Did not find anything that matches your search criteria
 					</MessageBar>
 				) : (
 					""

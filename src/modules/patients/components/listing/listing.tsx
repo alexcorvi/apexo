@@ -386,7 +386,7 @@ export class PatientsListing extends React.Component<{}, {}> {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: lang("Add New"),
+										name: lang("Add new"),
 										onClick: () => {
 											const patient = new Patient();
 											patients.list.push(patient);

@@ -160,7 +160,7 @@ export class OrthoGallery extends React.Component<{
 									<PrimaryButton
 										iconProps={{ iconName: "Add" }}
 									>
-										New Analysis
+										New analysis
 									</PrimaryButton>
 								</PickAndUpload>
 							</div>

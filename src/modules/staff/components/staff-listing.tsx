@@ -253,7 +253,7 @@ export class StaffListing extends React.Component<{}, {}> {
 													subText={
 														member.email
 															? lang("Email")
-															: lang("No Email")
+															: lang("No email")
 													}
 													size={3}
 													onRenderInitials={() => (
@@ -277,7 +277,7 @@ export class StaffListing extends React.Component<{}, {}> {
 											{
 												key: "addNew",
 												title: "Add new",
-												name: lang("Add New"),
+												name: lang("Add new"),
 												onClick: () => {
 													const member = new StaffMember();
 													staffMembers.list.push(
@@ -475,7 +475,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												<div className="staff-input">
 													<TextField
 														label={lang(
-															"Phone Number"
+															"Phone number"
 														)}
 														value={
 															this.member.phone
@@ -925,7 +925,7 @@ export class StaffListing extends React.Component<{}, {}> {
 											messageBarType={MessageBarType.info}
 										>
 											There are no upcoming appointments
-											for this staff member.
+											for this staff member
 										</MessageBar>
 									)}
 								</Section>

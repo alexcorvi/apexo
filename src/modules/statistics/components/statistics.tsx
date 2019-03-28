@@ -158,13 +158,13 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 								return (
 									<Dropdown
 										placeHolder={lang(
-											"Filter By Staff Member"
+											"Filter by staff member"
 										)}
 										defaultValue=""
 										options={[
 											{
 												key: "",
-												text: lang("All Members")
+												text: lang("All members")
 											}
 										].concat(
 											data.staffData.staffMembers.list.map(
@@ -243,7 +243,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 				/>
 
 				<div className="container-fluid m-t-20 quick">
-					<Section title={lang("Quick stats")} >
+					<Section title={lang("Quick stats")}>
 						<Row>
 							<Col sm={6} xs={12}>
 								<label>
@@ -321,7 +321,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 											"col-xs-12 col-md-5 col-lg-4")
 									}
 								>
-									<Section title={chart.name} >
+									<Section title={chart.name}>
 										<chart.Component />
 									</Section>
 								</div>
