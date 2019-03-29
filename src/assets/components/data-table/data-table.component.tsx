@@ -101,14 +101,13 @@ export class DataTable extends React.Component<Props, {}> {
 					{...{
 						className: "commandBar fixed m-b-15",
 						isSearchBoxVisible: true,
-						searchPlaceholderText: lang("Search patients") + "...",
 						elipisisAriaLabel: lang("More options"),
 						farItems: [
 							{
 								key: "a",
 								onRender: () => (
 									<SearchBox
-										placeholder={lang("search")}
+										placeholder={lang("Search")}
 										onChange={(newVal: string) =>
 											(this.filterString = newVal)
 										}
@@ -223,23 +222,25 @@ export class DataTable extends React.Component<Props, {}> {
 				{this.limitedRows.length < this.filteredRows.length ? (
 					<PrimaryButton
 						style={{ marginTop: 20 }}
-						iconProps={{ iconName: "add" }}
+						iconProps={{ iconName: "more" }}
 						onClick={() => (this.limit = this.limit + 10)}
-					>
-						{lang("Load more")}
-					</PrimaryButton>
+						text={lang("Load more")}
+					/>
 				) : (
 					""
 				)}
 
 				{this.props.rows.length === 0 ? (
 					<MessageBar messageBarType={MessageBarType.info}>
-						No data in this section yet, you can add new data by
-						clicking the button above
+						{lang(
+							"No data in this section yet, you can add new data by clicking the button above"
+						)}
 					</MessageBar>
 				) : this.filteredRows.length === 0 ? (
 					<MessageBar messageBarType={MessageBarType.info}>
-						Did not find anything that matches your search criteria
+						{lang(
+							"Did not find anything that matches your search criteria"
+						)}
 					</MessageBar>
 				) : (
 					""

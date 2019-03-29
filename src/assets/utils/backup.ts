@@ -17,6 +17,7 @@ import { patientsData } from "../../modules/patients";
 import { prescriptionsData } from "../../modules/prescriptions";
 import { settingsData } from "../../modules/settings";
 import { treatmentsData } from "../../modules/treatments";
+import { lang } from "../../core/i18/i18";
 const PouchDB: PouchDB.Static = (pouchDB as any).default;
 const ext = "apx";
 
@@ -181,14 +182,18 @@ export const restore = {
 				resolve();
 			} else {
 				modals.newModal({
-					message: `All unsaved data will be lost. All data will be removed and replaced by the backup file. Type "yes" to confirm`,
+					message: lang(
+						`All unsaved data will be lost. All data will be removed and replaced by the backup file. Type "yes" to confirm`
+					),
 					onConfirm: async (input: string) => {
 						if (input.toLowerCase() === "yes") {
 							const json = JSON.parse(decode(base64Data));
 							await restore.fromJSON(json);
 							resolve();
 						} else {
-							const msg = new Message("Restoration cancelled");
+							const msg = new Message(
+								lang("Restoration cancelled")
+							);
 							messages.addMessage(msg);
 							reject();
 						}
@@ -205,7 +210,7 @@ export const restore = {
 	fromFile: async function(file: Blob) {
 		return new Promise((resolve, reject) => {
 			function terminate() {
-				const msg = new Message("Invalid file");
+				const msg = new Message(lang("Invalid file"));
 				messages.addMessage(msg);
 				reject();
 			}
@@ -242,7 +247,7 @@ export async function downloadCurrent() {
 	return new Promise(resolve => {
 		modals.newModal({
 			id: Math.random(),
-			message: "Please enter file name",
+			message: lang("Please enter file name"),
 			onConfirm: fileName => {
 				saveAs(blob, `${fileName || "apexo-backup"}.${ext}`);
 				resolve();

@@ -35,7 +35,7 @@ export class PatientAppointments extends React.Component<
 	render() {
 		return (
 			<div className="single-patient-appointments appointments">
-				<Section title="Patient Appointments">
+				<Section title={lang(`Patient Appointments`)}>
 					<AppointmentsList
 						ref={l => (this.l = l)}
 						list={this.appointments}
@@ -44,7 +44,7 @@ export class PatientAppointments extends React.Component<
 						""
 					) : (
 						<MessageBar messageBarType={MessageBarType.info}>
-							This patient does not have any appointment
+							{lang("This patient does not have any appointment")}
 						</MessageBar>
 					)}
 					<br />
@@ -60,9 +60,8 @@ export class PatientAppointments extends React.Component<
 								}
 							}}
 							iconProps={{ iconName: "add" }}
-						>
-							{lang("Book new appointment")}
-						</PrimaryButton>
+							text={lang("Book new appointment")}
+						/>
 					) : (
 						""
 					)}

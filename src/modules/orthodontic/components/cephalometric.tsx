@@ -72,7 +72,7 @@ export class CephalometricEditor extends React.Component<{
 									}}
 								/>
 								<DatePicker
-									placeholder={lang("Select a date") + "..."}
+									placeholder={lang("Select a date")}
 									value={new Date(this.props.item.date)}
 									onSelectDate={date => {
 										if (date) {

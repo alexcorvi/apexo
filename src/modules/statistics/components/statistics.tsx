@@ -2,11 +2,8 @@ import "./statistics.scss";
 
 import * as React from "react";
 
-import {
-	Label as ColoredLabel,
-	LabelType
-} from "../../../assets/components/label/label.component";
-import { DatePicker, Dropdown, Label } from "office-ui-fabric-react";
+import { Tag, TagType } from "../../../assets/components/label/label.component";
+import { DatePicker, Dropdown } from "office-ui-fabric-react";
 import { Row, Col } from "../../../assets/components/grid/index";
 import { observer } from "mobx-react";
 import { round } from "../../../assets/utils/round";
@@ -248,19 +245,19 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							<Col sm={6} xs={12}>
 								<label>
 									{lang("Appointments")}:{" "}
-									<ColoredLabel
+									<Tag
 										text={round(
 											statistics.selectedAppointments
 												.length
 										).toString()}
-										type={LabelType.primary}
+										type={TagType.primary}
 									/>
 								</label>
 							</Col>
 							<Col sm={6} xs={12}>
 								<label>
 									{lang("Payments")}:{" "}
-									<ColoredLabel
+									<Tag
 										text={
 											data.settingsData.settings.getSetting(
 												"currencySymbol"
@@ -269,14 +266,14 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 												statistics.totalPayments
 											).toString()
 										}
-										type={LabelType.warning}
+										type={TagType.warning}
 									/>
 								</label>
 							</Col>
 							<Col sm={6} xs={12}>
 								<label>
 									{lang("Expenses")}:{" "}
-									<ColoredLabel
+									<Tag
 										text={
 											data.settingsData.settings.getSetting(
 												"currencySymbol"
@@ -285,14 +282,14 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 												statistics.totalExpenses
 											).toString()
 										}
-										type={LabelType.danger}
+										type={TagType.danger}
 									/>
 								</label>
 							</Col>
 							<Col sm={6} xs={12}>
 								<label>
 									{lang("Profits")}:{" "}
-									<ColoredLabel
+									<Tag
 										text={
 											data.settingsData.settings.getSetting(
 												"currencySymbol"
@@ -301,7 +298,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 												statistics.totalProfits
 											).toString()
 										}
-										type={LabelType.success}
+										type={TagType.success}
 									/>
 								</label>
 							</Col>
@@ -321,7 +318,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 											"col-xs-12 col-md-5 col-lg-4")
 									}
 								>
-									<Section title={chart.name}>
+									<Section title={lang(chart.name)}>
 										<chart.Component />
 									</Section>
 								</div>

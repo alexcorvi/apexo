@@ -195,7 +195,7 @@ export class Treatments extends React.Component<{}, {}> {
 						)}
 					>
 						<div className="treatment-editor">
-							<Section title={lang("Treatment details")}>
+							<Section title={lang("Treatment Details")}>
 								<div className="treatment-input">
 									<TextField
 										label={lang("Treatment title")}

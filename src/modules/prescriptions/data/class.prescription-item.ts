@@ -6,6 +6,7 @@ import {
 	PrescriptionItemJSON,
 	stringToItemForm
 } from "./index";
+import { lang } from "../../../core/i18/i18";
 
 export class PrescriptionItem {
 	[key: string]: string | number | Function;
@@ -25,7 +26,7 @@ export class PrescriptionItem {
 	@computed
 	get searchableString() {
 		return `
-			${this.name} ${this.doseInMg}mg ${this.doseInMg}
+			${this.name} ${this.doseInMg}${lang("mg")} ${this.doseInMg}
 			${this.timesPerDay}X${this.unitsPerTime}
 			${itemFormToString(this.form)}
 		`.toLowerCase();

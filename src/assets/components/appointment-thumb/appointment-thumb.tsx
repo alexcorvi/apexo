@@ -74,22 +74,20 @@ export class AppointmentThumb extends React.Component<
 					/>
 				) : (
 					""
-				)}{" "}
-				{
-					<div className="m-b-5">
-						<ProfileSquared
-							text={
-								this.props.appointment.treatment
-									? this.props.appointment.treatment.type
-									: ""
-							}
-							subText={dateUtils.unifiedDateFormat(
-								this.props.appointment.date
-							)}
-							size={3}
-						/>
-					</div>
-				}
+				)}
+				<div className="m-b-5">
+					<ProfileSquared
+						text={
+							this.props.appointment.treatment
+								? this.props.appointment.treatment.type
+								: ""
+						}
+						subText={dateUtils.unifiedDateFormat(
+							this.props.appointment.date
+						)}
+						size={3}
+					/>
+				</div>
 				{this.props.canDelete ? (
 					<Icon
 						iconName="delete"

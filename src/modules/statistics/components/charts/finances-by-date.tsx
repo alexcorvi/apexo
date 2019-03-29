@@ -77,7 +77,7 @@ class Component extends React.Component<{}, {}> {
 
 export const financesByDate: Chart = {
 	Component,
-	name: lang("Finances by date"),
+	name: lang("Finances by Date"),
 	description: lang("A calculation of finances"),
 	tags: "net profit by per day date",
 	className: "col-xs-12"

@@ -2,15 +2,14 @@ import "./patient-details.scss";
 
 import * as React from "react";
 
-import { Dropdown, TextField, Label as MSLabel } from "office-ui-fabric-react";
+import { Dropdown, TextField } from "office-ui-fabric-react";
 import { Gender, Patient, patients } from "../../../data";
-import { getRandomLabelType } from "../../../../../assets/components/label/label.component";
+import { getRandomTagType } from "../../../../../assets/components/label/label.component";
 
 import { EditableList } from "../../../../../assets/components/editable-list/editable-list";
 import { TagInput } from "../../../../../assets/components/tag-input/tag-input";
 import { observer } from "mobx-react";
 import { Row, Col } from "../../../../../assets/components/grid/index";
-import setting from "../../../../settings/data/data.settings";
 import { computed } from "mobx";
 import { API } from "../../../../../core/index";
 import { lang } from "../../../../../core/i18/i18";
@@ -27,10 +26,10 @@ export class PatientDetails extends React.Component<{
 	render() {
 		return (
 			<div className="single-patient-details">
-				<Section title="Basic Info">
+				<Section title={lang(`Basic Info`)}>
 					<div className="name">
 						<TextField
-							label="Name"
+							label={lang(`Name`)}
 							value={this.props.patient.name}
 							onChanged={name => (this.props.patient.name = name)}
 							disabled={!this.canEdit}
@@ -56,7 +55,6 @@ export class PatientDetails extends React.Component<{
 							<div className="gender">
 								<Dropdown
 									label={lang("Gender")}
-									placeHolder="Gender"
 									selectedKey={
 										this.props.patient.gender ===
 										Gender.male
@@ -83,7 +81,7 @@ export class PatientDetails extends React.Component<{
 					</Row>
 				</Section>
 
-				<Section title="Contact Info">
+				<Section title={lang(`Contact Info`)}>
 					<TextField
 						label={lang("Phone")}
 						value={this.props.patient.phone}
@@ -109,7 +107,7 @@ export class PatientDetails extends React.Component<{
 					/>
 				</Section>
 
-				<Section title="Other Notes">
+				<Section title={lang(`Other Notes`)}>
 					<Row gutter={6}>
 						<Col md={12}>
 							{" "}
@@ -153,7 +151,7 @@ export class PatientDetails extends React.Component<{
 										item => {
 											return {
 												text: item.text,
-												type: getRandomLabelType(
+												type: getRandomTagType(
 													item.text
 												)
 											};

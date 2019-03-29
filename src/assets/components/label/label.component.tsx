@@ -2,7 +2,7 @@ import * as React from "react";
 import "./label.scss";
 import { observer } from "mobx-react";
 
-export enum LabelType {
+export enum TagType {
 	warning,
 	danger,
 	success,
@@ -10,74 +10,74 @@ export enum LabelType {
 	primary
 }
 
-export function LabelTypeToString(input: LabelType) {
-	if (input === LabelType.danger) {
+export function TagTypeToString(input: TagType) {
+	if (input === TagType.danger) {
 		return "danger";
-	} else if (input === LabelType.info) {
+	} else if (input === TagType.info) {
 		return "info";
-	} else if (input === LabelType.primary) {
+	} else if (input === TagType.primary) {
 		return "primary";
-	} else if (input === LabelType.success) {
+	} else if (input === TagType.success) {
 		return "success";
-	} else if (input === LabelType.warning) {
+	} else if (input === TagType.warning) {
 		return "warning";
 	} else {
 		return "primary";
 	}
 }
 
-export function stringToLabelType(input: string) {
+export function stringToTagType(input: string) {
 	if (input === "danger") {
-		return LabelType.danger;
+		return TagType.danger;
 	} else if (input === "info") {
-		return LabelType.info;
+		return TagType.info;
 	} else if (input === "primary") {
-		return LabelType.primary;
+		return TagType.primary;
 	} else if (input === "success") {
-		return LabelType.success;
+		return TagType.success;
 	} else if (input === "warning") {
-		return LabelType.warning;
+		return TagType.warning;
 	} else {
-		return LabelType.primary;
+		return TagType.primary;
 	}
 }
 
-export function getRandomLabelType(str: string) {
+export function getRandomTagType(str: string) {
 	const r = Number(
 		(str.length * str.charCodeAt(0) + str.charCodeAt(str.length - 1))
 			.toString()
 			.charAt(0)
 	);
 	if (r === 1 || r === 4) {
-		return LabelType.primary;
+		return TagType.primary;
 	}
 	if (r === 3) {
-		return LabelType.warning;
+		return TagType.warning;
 	}
 	if (r === 5 || r === 6) {
-		return LabelType.success;
+		return TagType.success;
 	}
 	if (r === 7 || r === 8 || r === 2) {
-		return LabelType.info;
+		return TagType.info;
 	} else {
-		return LabelType.danger;
+		return TagType.danger;
 	}
 }
 
 interface Props {
 	text: string;
-	type: LabelType;
+	type: TagType;
 	onClick?: () => void;
 	className?: string;
 }
 
 @observer
-export class Label extends React.Component<Props, {}> {
+export class Tag extends React.Component<Props, {}> {
 	render() {
 		return (
 			<span
 				className={
-					`label ${LabelTypeToString(this.props.type)} ` +
+					`label ${TagTypeToString(this.props.type)} ` +
 					(this.props.onClick ? "clickable" : "")
 				}
 				onClick={this.props.onClick}

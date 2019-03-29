@@ -25,13 +25,13 @@ export class ChooseUser extends React.Component<{}, {}> {
 								if (user.pin) {
 									modals.newModal({
 										id: Math.random(),
-										message: "Please enter your PIN",
+										message: lang("Please enter your PIN"),
 										onConfirm: providedPin => {
 											if (providedPin === user.pin) {
 												login.setUser(user._id);
 											} else {
 												const msg = new Message(
-													"Invalid PIN provided"
+													lang("Invalid PIN provided")
 												);
 												messages.addMessage(msg);
 											}
@@ -62,7 +62,7 @@ export class ChooseUser extends React.Component<{}, {}> {
 						<TextField
 							value={this.newDocName}
 							onChanged={v => (this.newDocName = v)}
-							label={"Register as new staff member"}
+							label={lang("Register as new staff member")}
 						/>
 						<PrimaryButton
 							onClick={() => {
@@ -72,9 +72,8 @@ export class ChooseUser extends React.Component<{}, {}> {
 								data.staffData.staffMembers.list.push(newDoc);
 								login.setUser(newDoc._id);
 							}}
-						>
-							Register
-						</PrimaryButton>
+							text={lang("Register")}
+						/>
 					</div>
 				) : (
 					""

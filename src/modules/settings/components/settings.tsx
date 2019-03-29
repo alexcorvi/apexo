@@ -45,7 +45,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 	render() {
 		return (
 			<div className="settings-component p-15 p-l-10 p-r-10">
-				<Section title="General Setting">
+				<Section title={lang(`General Setting`)}>
 					<Input
 						element={
 							<Dropdown
@@ -64,7 +64,9 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								disabled={!this.canEdit}
 							/>
 						}
-						info="Choose the main language of display menus and items"
+						info={lang(
+							`Choose the main language of display menus and items`
+						)}
 					/>
 
 					<Input
@@ -88,11 +90,13 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								disabled={!this.canEdit}
 							/>
 						}
-						info="This access token is used to store files across the application, like backups and images"
+						info={lang(
+							`This access token is used to store files across the application, like backups and images`
+						)}
 					/>
 				</Section>
 
-				<Section title="Financial Settings">
+				<Section title={lang(`Financial Settings`)}>
 					<Input
 						element={
 							<TextField
@@ -108,14 +112,16 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								disabled={!this.canEdit}
 							/>
 						}
-						// tslint:disable-next-line:max-line-length
-						info="When time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses So here you can put the electricity, rent, and other time dependent expenses"
+						info={lang(
+							// tslint:disable-next-line:max-line-length
+							`When time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses So here you can put the electricity, rent, and other time dependent expenses`
+						)}
 					/>
 
 					<Input
 						element={
 							<TextField
-								label={lang("Currency Symbol")}
+								label={lang("Currency symbol")}
 								value={settings.getSetting("currencySymbol")}
 								onChanged={newVal => {
 									settings.setSetting(
@@ -126,14 +132,16 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								disabled={!this.canEdit}
 							/>
 						}
-						info="This symbol you enter here will be used across your application"
+						info={lang(
+							`This symbol you enter here will be used across your application`
+						)}
 					/>
 				</Section>
 
-				<Section title="Optional Modules and Features">
+				<Section title={lang(`Optional Modules and Features`)}>
 					<Toggle
-						onText={lang("Prescriptions Module Enabled")}
-						offText={lang("Prescriptions Module Disabled")}
+						onText={lang("Prescriptions module enabled")}
+						offText={lang("Prescriptions module disabled")}
 						defaultChecked={
 							!!settings.getSetting("module_prescriptions")
 						}
@@ -146,8 +154,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						disabled={!this.canEdit}
 					/>
 					<Toggle
-						onText={lang("Orthodontic Module Enabled")}
-						offText={lang("Orthodontic Module Disabled")}
+						onText={lang("Orthodontic module enabled")}
+						offText={lang("Orthodontic module disabled")}
 						defaultChecked={
 							!!settings.getSetting("module_orthodontics")
 						}
@@ -160,8 +168,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						disabled={!this.canEdit}
 					/>
 					<Toggle
-						onText={lang("Statistics Module Enabled")}
-						offText={lang("Statistics Module Disabled")}
+						onText={lang("Statistics module enabled")}
+						offText={lang("Statistics module disabled")}
 						defaultChecked={
 							!!settings.getSetting("module_statistics")
 						}
@@ -174,8 +182,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						disabled={!this.canEdit}
 					/>
 					<Toggle
-						onText={lang("Time Tracking Enabled")}
-						offText={lang("Time Tracking Disabled")}
+						onText={lang("Time tracking enabled")}
+						offText={lang("Time tracking disabled")}
 						defaultChecked={!!settings.getSetting("time_tracking")}
 						onChanged={val => {
 							settings.setSetting(
@@ -187,7 +195,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					/>
 				</Section>
 
-				<Section title="Backup and Restore">
+				<Section title={lang(`Backup and Restore`)}>
 					{API.login.online ? (
 						<div>
 							<PrimaryButton
@@ -195,9 +203,9 @@ export class SettingsComponent extends React.Component<{}, {}> {
 									compact.compact();
 								}}
 								iconProps={{ iconName: "ZipFolder" }}
-							>
-								{lang("Run compaction")}
-							</PrimaryButton>
+								style={{ marginLeft: 10 }}
+								text={lang("Run compaction")}
+							/>
 
 							<PrimaryButton
 								onClick={() => {
@@ -205,9 +213,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								}}
 								style={{ marginLeft: 10 }}
 								iconProps={{ iconName: "Database" }}
-							>
-								{lang("Download a backup")}
-							</PrimaryButton>
+								text={lang("Download a backup")}
+							/>
 
 							<PrimaryButton
 								onClick={() =>
@@ -215,9 +222,8 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								}
 								style={{ marginLeft: 10 }}
 								iconProps={{ iconName: "DatabaseSync" }}
-							>
-								{lang("Restore from file")}
-							</PrimaryButton>
+								text={lang("Restore from file")}
+							/>
 							<input
 								ref={el => (this.inputEl = el)}
 								hidden
@@ -238,13 +244,13 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
 							{lang(
-								"Backup and restore functionality are not available while you're offline."
+								"Backup and restore functionality are not available while you're offline"
 							)}
 						</MessageBar>
 					)}
 				</Section>
 
-				<Section title="Automated Backup and Restore">
+				<Section title={lang(`Automated Backup and Restore`)}>
 					{API.login.online ? (
 						API.login.dropboxActive ? (
 							<div>
@@ -418,7 +424,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
 							{lang(
-								"Backup and restore functionality are not available while you're offline."
+								"Backup and restore functionality are not available while you're offline"
 							)}
 						</MessageBar>
 					)}

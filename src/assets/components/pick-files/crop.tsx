@@ -6,13 +6,13 @@ import {
 	Slider,
 	Toggle,
 	IconButton,
-	PrimaryButton,
 	Dialog,
 	CommandBar
 } from "office-ui-fabric-react";
 import { Row, Col } from "../grid";
 import "./crop.scss";
 import { GridTable } from "../../../modules/orthodontic/components/grid-table";
+import { lang } from "../../../core/i18/i18";
 const Editor = ImageEditor.default || ImageEditor;
 
 const MAX_ZOOM = 5;
@@ -82,7 +82,7 @@ export class Crop extends React.Component<{
 									onChange={v => {
 										this.zoom = v / 100;
 									}}
-									label="Zoom"
+									label={lang(`Zoom`)}
 									showValue={false}
 								/>
 							</Col>
@@ -99,7 +99,7 @@ export class Crop extends React.Component<{
 													this.addedRotation = v;
 												}
 											}}
-											label="Rotation"
+											label={lang(`Rotation`)}
 											showValue={false}
 										/>
 									</Col>
@@ -135,7 +135,7 @@ export class Crop extends React.Component<{
 						items={[
 							{
 								key: "grid",
-								text: "Grid",
+								text: lang("Grid"),
 								iconProps: { iconName: "GridViewSmall" },
 								className: this.showGrid
 									? "active-button"
@@ -147,7 +147,7 @@ export class Crop extends React.Component<{
 							},
 							{
 								key: "overlay",
-								text: "Overlay",
+								text: lang("Overlay"),
 								iconProps: { iconName: "MapLayers" },
 								className: this.overlay
 									? "active-button"
@@ -161,7 +161,7 @@ export class Crop extends React.Component<{
 						farItems={[
 							{
 								key: "save",
-								text: "Save",
+								text: lang("Save"),
 								iconProps: { iconName: "save" },
 								classNames: "abc",
 								onClick: () => {
@@ -178,7 +178,7 @@ export class Crop extends React.Component<{
 							},
 							{
 								key: "cancel",
-								text: "Cancel",
+								text: lang("Cancel"),
 								iconProps: { iconName: "cancel" },
 								classNames: "abc",
 								onClick: () => {

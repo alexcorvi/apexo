@@ -25,6 +25,7 @@ import { orthoData } from "..";
 import { CephalometricItem } from "../data/interface.ortho-json";
 import { CephalometricEditor } from "./cephalometric";
 import setting from "../../settings/data/data.settings";
+import { lang } from "../../../core/i18/i18";
 
 @observer
 export class OrthoGallery extends React.Component<{
@@ -70,7 +71,7 @@ export class OrthoGallery extends React.Component<{
 					""
 				)}
 
-				<Section title="Cephalometric Analysis">
+				<Section title={lang(`Cephalometric Analysis`)}>
 					{API.login.online ? (
 						API.login.dropboxActive ? (
 							<div>
@@ -96,9 +97,9 @@ export class OrthoGallery extends React.Component<{
 													key={i}
 												>
 													<Profile
-														name={`${i +
-															1}: Analysis #${i +
-															1}`}
+														name={`${i + 1}: ${lang(
+															"Analysis"
+														)} #${i + 1}`}
 														secondaryElement={
 															<span>
 																{unifiedDateFormat(
@@ -159,20 +160,22 @@ export class OrthoGallery extends React.Component<{
 								>
 									<PrimaryButton
 										iconProps={{ iconName: "Add" }}
-									>
-										New analysis
-									</PrimaryButton>
+										text={lang("New analysis")}
+									/>
 								</PickAndUpload>
 							</div>
 						) : (
 							<MessageBar messageBarType={MessageBarType.warning}>
-								A valid DropBox access token is required for
-								this section
+								{lang(
+									"A valid DropBox access token is required for this section"
+								)}
 							</MessageBar>
 						)
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							You can not access cephalometric data while offline
+							{lang(
+								"You can not access cephalometric data while offline"
+							)}
 						</MessageBar>
 					)}
 				</Section>

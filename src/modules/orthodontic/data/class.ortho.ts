@@ -10,6 +10,7 @@ import { generateID } from "../../../assets/utils/generate-id";
 import { patientsData } from "../../patients/index";
 import { genderToString } from "../../patients/data";
 import { unifiedDateFormat } from "../../../assets/utils/date";
+import { lang } from "../../../core/i18/i18";
 
 export const Lips = {
 	competent: "competent lips",
@@ -178,86 +179,98 @@ export class OrthoCase {
 	get computedProblems() {
 		const computedProblemsArr: string[] = [];
 		if (this.lips !== "competent") {
-			computedProblemsArr.push(Lips[this.lips]);
+			computedProblemsArr.push(lang(Lips[this.lips]));
 		}
 
 		if (this.facialProfile !== "mesocephalic") {
-			computedProblemsArr.push(FacialProfile[this.facialProfile]);
+			computedProblemsArr.push(lang(FacialProfile[this.facialProfile]));
 		}
 
 		if (this.oralHygiene === "bad") {
-			computedProblemsArr.push(OralHygiene[this.oralHygiene]);
+			computedProblemsArr.push(lang(OralHygiene[this.oralHygiene]));
 		}
 
 		if (this.nasioLabialAngle < 90 || this.nasioLabialAngle > 93) {
 			computedProblemsArr.push(
-				`Nasio-labial angle is ${
-					this.nasioLabialAngle
-				} degrees, while it must be between 90 amd 93 degrees`
+				`${lang("Nasio-labial angle")}: ${this.nasioLabialAngle} ${lang(
+					"degrees"
+				)}`
 			);
 		}
 
 		if (this.skeletalRelationship !== 1) {
 			computedProblemsArr.push(
-				`Skeletal relationship Class ${this.skeletalRelationship}`
+				`${lang("Skeletal relationship: Class ")}${
+					this.skeletalRelationship
+				}`
 			);
 		}
 
 		if (this.molarsRelationship !== 1) {
 			computedProblemsArr.push(
-				`Molars relationship Class ${this.molarsRelationship}`
+				`${lang("Molars relationship: Class ")}${
+					this.molarsRelationship
+				}`
 			);
 		}
 
 		if (this.canineRelationship !== 1) {
 			computedProblemsArr.push(
-				`Canines relationship Class ${this.canineRelationship}`
+				`${lang("Canine relationship: Class ")}${
+					this.canineRelationship
+				}`
 			);
 		}
 
 		if (this.overJet > 3 || this.overJet < 1) {
 			computedProblemsArr.push(
-				`Overjet is ${
-					this.overJet
-				}mm, while it must be between 1mm and 3mm`
+				`${lang("Overjet")} :${this.overJet} ${lang("mm")}`
 			);
 		}
 
 		if (this.overBite > 4 || this.overBite < 2) {
 			computedProblemsArr.push(
-				`Overbite is ${
-					this.overBite
-				}mm, while it must be between 2mm and 4m`
+				`${lang("Overbite")} :${this.overBite} ${lang("mm")}`
 			);
 		}
 
 		if (this.crossScissorBite.length) {
 			computedProblemsArr.push(
-				`Corssbite on teeth ${this.crossScissorBite.join(", ")}`
+				`${lang("Cross/scissors bite")}: ${this.crossScissorBite.join(
+					", "
+				)}`
 			);
 		}
 
 		if (this.u_crowding > 0) {
 			computedProblemsArr.push(
-				`Upper arch crowding by ${this.u_crowding}mm`
+				`${lang("Upper arch crowding by")} ${this.u_crowding}${lang(
+					"mm"
+				)}`
 			);
 		}
 
 		if (this.u_spacing > 0) {
 			computedProblemsArr.push(
-				`Upper arch spacing by ${this.u_spacing}mm`
+				`${lang("Upper arch spacing by")} ${this.u_spacing}${lang(
+					"mm"
+				)}`
 			);
 		}
 
 		if (this.l_crowding > 0) {
 			computedProblemsArr.push(
-				`Lower arch crowding by ${this.l_crowding}mm`
+				`${lang("Lower arch crowding by")} ${this.l_crowding}${lang(
+					"mm"
+				)}`
 			);
 		}
 
 		if (this.l_spacing > 0) {
 			computedProblemsArr.push(
-				`Lower arch spacing by ${this.l_spacing}mm`
+				`${lang("Lower arch spacing by")} ${this.l_spacing}${lang(
+					"mm"
+				)}`
 			);
 		}
 

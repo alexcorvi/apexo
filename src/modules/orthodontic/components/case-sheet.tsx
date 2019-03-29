@@ -35,13 +35,13 @@ export class OrthoCaseSheet extends React.Component<{
 	render() {
 		return (
 			<div>
-				<Section title="Extra-Oral Features">
+				<Section title={lang(`Extra-Oral Features`)}>
 					<Dropdown
 						disabled={!this.canEdit}
 						placeHolder={lang("Lips competency")}
 						options={Object.keys(Lips).map(x => ({
 							key: x,
-							text: (Lips as any)[x]
+							text: lang((Lips as any)[x])
 						}))}
 						defaultSelectedKey={this.props.orthoCase.lips}
 						onChanged={(has: any) => {
@@ -53,7 +53,7 @@ export class OrthoCaseSheet extends React.Component<{
 						placeHolder={lang("Facial profile")}
 						options={Object.keys(FacialProfile).map(x => ({
 							key: x,
-							text: (FacialProfile as any)[x]
+							text: lang((FacialProfile as any)[x])
 						}))}
 						defaultSelectedKey={this.props.orthoCase.facialProfile}
 						onChanged={(has: any) => {
@@ -65,7 +65,7 @@ export class OrthoCaseSheet extends React.Component<{
 						placeHolder={lang("Oral hygiene")}
 						options={Object.keys(OralHygiene).map(x => ({
 							key: x,
-							text: (OralHygiene as any)[x]
+							text: lang((OralHygiene as any)[x])
 						}))}
 						defaultSelectedKey={this.props.orthoCase.oralHygiene}
 						onChanged={(has: any) => {
@@ -81,17 +81,17 @@ export class OrthoCaseSheet extends React.Component<{
 							this.props.orthoCase.nasioLabialAngle = Number(v);
 						}}
 						type="number"
-						prefix="Nasio-labial angle"
+						prefix={lang(`Nasio-labial angle`)}
 					/>
 				</Section>
 
-				<Section title="Jaw-Jaw Relationships">
+				<Section title={lang(`Jaw-Jaw Relationships`)}>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeHolder="Skeletal relationship"
+						placeHolder={lang(`Skeletal relationship`)}
 						options={[1, 2, 3].map(n => ({
 							key: n.toString(),
-							text: "Skeletal relationship: Class " + n
+							text: lang("Skeletal relationship: Class ") + n
 						}))}
 						defaultSelectedKey={this.props.orthoCase.skeletalRelationship.toString()}
 						onChanged={n => {
@@ -102,10 +102,10 @@ export class OrthoCaseSheet extends React.Component<{
 					/>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeHolder="Molars relationship"
+						placeHolder={lang(`Molars relationship`)}
 						options={[1, 2, 3].map(n => ({
 							key: n.toString(),
-							text: "Molars relationship: Class " + n
+							text: lang("Molars relationship: Class ") + n
 						}))}
 						defaultSelectedKey={this.props.orthoCase.molarsRelationship.toString()}
 						onChanged={n => {
@@ -116,10 +116,10 @@ export class OrthoCaseSheet extends React.Component<{
 					/>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeHolder="Canine relationship"
+						placeHolder={lang(`Canine relationship`)}
 						options={[1, 2, 3].map(n => ({
 							key: n.toString(),
-							text: "Canine relationship: Class " + n
+							text: lang("Canine relationship: Class ") + n
 						}))}
 						defaultSelectedKey={this.props.orthoCase.canineRelationship.toString()}
 						onChanged={n => {
@@ -130,11 +130,11 @@ export class OrthoCaseSheet extends React.Component<{
 					/>
 				</Section>
 
-				<Section title="Intercuspal-Interincisal Relationships">
+				<Section title={lang(`Intercuspal-Interincisal Relationships`)}>
 					<TextField
 						disabled={!this.canEdit}
 						type="number"
-						prefix="Overjet"
+						prefix={lang(`Overjet`)}
 						value={this.props.orthoCase.overJet.toString()}
 						onChanged={n => {
 							this.props.orthoCase.overJet = n;
@@ -143,7 +143,7 @@ export class OrthoCaseSheet extends React.Component<{
 					<TextField
 						disabled={!this.canEdit}
 						type="number"
-						prefix="Overbite"
+						prefix={lang(`Overbite`)}
 						value={this.props.orthoCase.overBite.toString()}
 						onChanged={n => {
 							this.props.orthoCase.overBite = n;
@@ -152,7 +152,7 @@ export class OrthoCaseSheet extends React.Component<{
 					<TagInput
 						disabled={!this.canEdit}
 						strict
-						placeholder="Cross/scissors bite"
+						placeholder={lang("Cross/scissors bite")}
 						options={patientsData.ISOTeethArr.map(x => {
 							return {
 								key: x.toString(),
@@ -173,11 +173,11 @@ export class OrthoCaseSheet extends React.Component<{
 					/>
 				</Section>
 
-				<Section title="Upper Arch Space Analysis">
+				<Section title={lang(`Upper Arch Space Analysis`)}>
 					<TextField
 						disabled={!this.canEdit}
 						type="number"
-						prefix="Space available"
+						prefix={lang(`Space available`)}
 						value={this.props.orthoCase.u_spaceAvailable.toString()}
 						onChanged={v => {
 							this.props.orthoCase.u_spaceAvailable = Number(v);
@@ -186,7 +186,7 @@ export class OrthoCaseSheet extends React.Component<{
 					<TextField
 						disabled={!this.canEdit}
 						type="number"
-						prefix="Space required"
+						prefix={lang(`Space required`)}
 						value={this.props.orthoCase.u_spaceNeeded.toString()}
 						onChanged={v => {
 							this.props.orthoCase.u_spaceNeeded = Number(v);
@@ -196,7 +196,7 @@ export class OrthoCaseSheet extends React.Component<{
 						<TextField
 							type="number"
 							disabled
-							prefix="Crowding"
+							prefix={lang(`Crowding`)}
 							value={this.props.orthoCase.u_crowding.toString()}
 						/>
 					) : (
@@ -207,7 +207,7 @@ export class OrthoCaseSheet extends React.Component<{
 						<TextField
 							type="number"
 							disabled
-							prefix="Spacing"
+							prefix={lang(`Spacing`)}
 							value={this.props.orthoCase.u_spacing.toString()}
 						/>
 					) : (
@@ -215,10 +215,10 @@ export class OrthoCaseSheet extends React.Component<{
 					)}
 				</Section>
 
-				<Section title="Lower Arch Space Analysis">
+				<Section title={lang(`Lower Arch Space Analysis`)}>
 					<TextField
 						type="number"
-						prefix="Space available"
+						prefix={lang(`Space available`)}
 						disabled={!this.canEdit}
 						value={this.props.orthoCase.l_spaceAvailable.toString()}
 						onChanged={v => {
@@ -227,7 +227,7 @@ export class OrthoCaseSheet extends React.Component<{
 					/>
 					<TextField
 						type="number"
-						prefix="Space required"
+						prefix={lang(`Space required`)}
 						disabled={!this.canEdit}
 						value={this.props.orthoCase.l_spaceNeeded.toString()}
 						onChanged={v => {
@@ -238,7 +238,7 @@ export class OrthoCaseSheet extends React.Component<{
 						<TextField
 							type="number"
 							disabled
-							prefix="Crowding"
+							prefix={lang(`Crowding`)}
 							value={this.props.orthoCase.l_crowding.toString()}
 						/>
 					) : (
@@ -249,7 +249,7 @@ export class OrthoCaseSheet extends React.Component<{
 						<TextField
 							type="number"
 							disabled
-							prefix="Spacing"
+							prefix={lang(`Spacing`)}
 							value={this.props.orthoCase.l_spacing.toString()}
 						/>
 					) : (
@@ -257,10 +257,10 @@ export class OrthoCaseSheet extends React.Component<{
 					)}
 				</Section>
 
-				<Section title="Problems">
+				<Section title={lang(`Problems`)}>
 					<EditableList
 						disabled={!this.canEdit}
-						label={lang("Patient concerns") + "..."}
+						label={lang("Patient concerns")}
 						value={this.props.orthoCase.problemsList}
 						onChange={v => {
 							this.props.orthoCase.problemsList = v;
@@ -269,11 +269,12 @@ export class OrthoCaseSheet extends React.Component<{
 					/>
 					<br />
 					<br />
-					<h3>Other Problems</h3>
+					<h3>{lang("Other Problems")}</h3>
 					{this.props.orthoCase.computedProblems.length === 0 ? (
 						<MessageBar messageBarType={MessageBarType.info}>
-							The case sheet of this patient does not show any
-							problems that needs orthodontic treatment
+							{lang(
+								"The case sheet of this patient does not show any problems that needs orthodontic treatment"
+							)}
 						</MessageBar>
 					) : (
 						<DetailsList

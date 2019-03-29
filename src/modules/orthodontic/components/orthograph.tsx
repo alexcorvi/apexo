@@ -36,6 +36,7 @@ import { diff } from "fast-array-diff";
 import { GridTable } from "./grid-table";
 import { API } from "../../../core";
 import setting from "../../settings/data/data.settings";
+import { lang } from "../../../core/i18/i18";
 
 const viewsTerms = [
 	"Frontal",
@@ -140,12 +141,13 @@ export class Orthograph extends React.Component<{
 	render() {
 		return (
 			<div className="orthograph">
-				<Section title="Problems">
+				<Section title={lang(`Problems`)}>
 					{this.props.orthoCase.computedProblems.length === 0 &&
 					this.props.orthoCase.problemsList.length === 0 ? (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							This patient does not seem to have any problems or
-							concerns, have you filled the case sheet?
+							{lang(
+								"This patient does not seem to have any problems or concerns, have you filled the case sheet?"
+							)}
 						</MessageBar>
 					) : (
 						<DetailsList
@@ -154,7 +156,7 @@ export class Orthograph extends React.Component<{
 								...[
 									...this.props.orthoCase.computedProblems,
 									...this.props.orthoCase.problemsList.map(
-										x => "Patient concern: " + x
+										x => lang("Patient concern") + ": " + x
 									)
 								].map((x, i) => [`${i + 1}. ${x}`])
 							]}
@@ -163,17 +165,18 @@ export class Orthograph extends React.Component<{
 						/>
 					)}
 				</Section>
-				<Section title="Treatment Plan">
+				<Section title={lang(`Treatment Plan`)}>
 					{this.props.orthoCase.treatmentPlan_appliance.length ? (
 						""
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							A treatment plan must be before starting the
-							treatment
+							{lang(
+								"A treatment plan must be before starting the treatment"
+							)}
 						</MessageBar>
 					)}
 					<EditableList
-						label="add plan..."
+						label={lang(`Add Plan`)}
 						value={this.props.orthoCase.treatmentPlan_appliance}
 						onChange={val => {
 							this.props.orthoCase.treatmentPlan_appliance = val;
@@ -182,12 +185,12 @@ export class Orthograph extends React.Component<{
 						disabled={!this.canEdit}
 					/>
 				</Section>
-				<Section title="Started/Finished">
+				<Section title={lang(`Started/Finished`)}>
 					<Row gutter={12}>
 						<Col span={12}>
 							<Toggle
-								onText="Started"
-								offText="Not started yet"
+								onText={lang("Started")}
+								offText={lang("Not started yet")}
 								checked={this.props.orthoCase.isStarted}
 								onChanged={val =>
 									(this.props.orthoCase.isStarted = val)
@@ -222,8 +225,8 @@ export class Orthograph extends React.Component<{
 						</Col>{" "}
 						<Col span={12}>
 							<Toggle
-								onText="Finished"
-								offText="Not finished yet"
+								onText={lang("Finished")}
+								offText={lang("Not finished yet")}
 								checked={this.props.orthoCase.isFinished}
 								onChanged={val =>
 									(this.props.orthoCase.isFinished = val)
@@ -258,7 +261,7 @@ export class Orthograph extends React.Component<{
 						</Col>
 					</Row>
 				</Section>
-				<Section title="Records">
+				<Section title={lang(`Records`)}>
 					{API.login.online ? (
 						API.login.dropboxActive ? (
 							<div className="album">
@@ -439,7 +442,9 @@ export class Orthograph extends React.Component<{
 																							<TextField
 																								autoFocus
 																								type="number"
-																								label="Visit number"
+																								label={lang(
+																									`Visit number`
+																								)}
 																								value={visit.visitNumber.toString()}
 																								onBlur={() => {
 																									this.expandedField =
@@ -459,7 +464,9 @@ export class Orthograph extends React.Component<{
 																								}}
 																							/>
 																						) : (
-																							`Visit #${
+																							`${lang(
+																								"Visit"
+																							)} #${
 																								visit.visitNumber
 																							}`
 																						)}
@@ -471,7 +478,9 @@ export class Orthograph extends React.Component<{
 																							.expandedField ===
 																						"gf-date" ? (
 																							<Dropdown
-																								label="Visit date"
+																								label={lang(
+																									`Visit date`
+																								)}
 																								selectedKey={visit.date.toString()}
 																								disabled={
 																									!this
@@ -503,7 +512,9 @@ export class Orthograph extends React.Component<{
 																								}}
 																							/>
 																						) : (
-																							`Date: ${unifiedDateFormat(
+																							`${lang(
+																								"Date"
+																							)}: ${unifiedDateFormat(
 																								visit.date
 																							)}`
 																						)}
@@ -516,7 +527,9 @@ export class Orthograph extends React.Component<{
 																						"gf-appliance" ? (
 																							<TextField
 																								autoFocus
-																								label="Appliance"
+																								label={lang(
+																									`Appliance`
+																								)}
 																								disabled={
 																									!this
 																										.canEdit
@@ -537,10 +550,14 @@ export class Orthograph extends React.Component<{
 																								}}
 																							/>
 																						) : (
-																							`Appliance: ${
+																							`${lang(
+																								"Appliance"
+																							)}: ${
 																								visit.appliance
 																									? visit.appliance
-																									: "no appliance info"
+																									: lang(
+																											"No appliance info"
+																									  )
 																							}`
 																						)}
 																					</div>
@@ -721,7 +738,9 @@ export class Orthograph extends React.Component<{
 																																	.canEdit
 																															}
 																															type="number"
-																															label="Visit number"
+																															label={lang(
+																																`Visit number`
+																															)}
 																															value={visit.visitNumber.toString()}
 																															onBlur={() => {
 																																this.expandedField =
@@ -737,7 +756,9 @@ export class Orthograph extends React.Component<{
 																															}}
 																														/>
 																													) : (
-																														`Visit #${
+																														`${lang(
+																															"Visit"
+																														)} #${
 																															visit.visitNumber
 																														}`
 																													)}
@@ -749,7 +770,9 @@ export class Orthograph extends React.Component<{
 																														.expandedField ===
 																													"gf-date" ? (
 																														<Dropdown
-																															label="Visit date"
+																															label={lang(
+																																`Visit date`
+																															)}
 																															disabled={
 																																!this
 																																	.canEdit
@@ -781,7 +804,9 @@ export class Orthograph extends React.Component<{
 																															}}
 																														/>
 																													) : (
-																														`Date: ${unifiedDateFormat(
+																														`${lang(
+																															"Date"
+																														)}: ${unifiedDateFormat(
 																															visit.date
 																														)}`
 																													)}
@@ -794,7 +819,9 @@ export class Orthograph extends React.Component<{
 																													"gf-appliance" ? (
 																														<TextField
 																															autoFocus
-																															label="Appliance"
+																															label={lang(
+																																`Appliance`
+																															)}
 																															value={
 																																visit.appliance
 																															}
@@ -815,10 +842,14 @@ export class Orthograph extends React.Component<{
 																															}}
 																														/>
 																													) : (
-																														`Appliance: ${
+																														`${lang(
+																															"Appliance"
+																														)}: ${
 																															visit.appliance
 																																? visit.appliance
-																																: "no appliance info"
+																																: lang(
+																																		"No appliance info"
+																																  )
 																														}`
 																													)}
 																												</div>
@@ -830,7 +861,9 @@ export class Orthograph extends React.Component<{
 																													"gf-comment" ? (
 																														<TextField
 																															autoFocus
-																															label="Comment"
+																															label={lang(
+																																`Comment`
+																															)}
 																															disabled={
 																																!this
 																																	.canEdit
@@ -853,10 +886,14 @@ export class Orthograph extends React.Component<{
 																															}}
 																														/>
 																													) : (
-																														`Comment: ${
+																														`${lang(
+																															"Comment"
+																														)}: ${
 																															photo.comment
 																																? photo.comment
-																																: "no comment on this photo"
+																																: lang(
+																																		"no comment on this photo"
+																																  )
 																														}`
 																													)}
 																												</div>
@@ -878,8 +915,9 @@ export class Orthograph extends React.Component<{
 																											{
 																												key:
 																													"overlay prev",
-																												text:
-																													"Overlay prev",
+																												text: lang(
+																													"Overlay prev"
+																												),
 																												iconProps: {
 																													iconName:
 																														"MapLayers"
@@ -904,8 +942,9 @@ export class Orthograph extends React.Component<{
 																											{
 																												key:
 																													"overlay next",
-																												text:
-																													"Overlay next",
+																												text: lang(
+																													"Overlay next"
+																												),
 																												iconProps: {
 																													iconName:
 																														"MapLayers"
@@ -932,8 +971,9 @@ export class Orthograph extends React.Component<{
 																											{
 																												key:
 																													"delete photo",
-																												text:
-																													"Delete",
+																												text: lang(
+																													"Delete"
+																												),
 																												iconProps: {
 																													iconName:
 																														"trash"
@@ -1060,15 +1100,16 @@ export class Orthograph extends React.Component<{
 									<MessageBar
 										messageBarType={MessageBarType.info}
 									>
-										No visits recorded yet! add a new visit
-										using the button below
+										{lang(
+											"No visits recorded yet! add a new visit using the button below"
+										)}
 									</MessageBar>
 								)}
 								<br />
 								<PrimaryButton
 									disabled={!this.canEdit}
 									iconProps={{ iconName: "ExploreContent" }}
-									text="Add visit"
+									text={lang("Add visit")}
 									onClick={() => {
 										const visitNumber = this.props.orthoCase
 											.visits.length
@@ -1089,19 +1130,22 @@ export class Orthograph extends React.Component<{
 							</div>
 						) : (
 							<MessageBar messageBarType={MessageBarType.warning}>
-								A valid DropBox access token is required for
-								this section
+								{lang(
+									"A valid DropBox access token is required for this section"
+								)}
 							</MessageBar>
 						)
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							You can not access orthodontic records while offline
+							{lang(
+								"You can not access orthodontic records while offline"
+							)}
 						</MessageBar>
 					)}
 				</Section>
-				<Section title="Notes for the next visit">
+				<Section title={lang(`Notes for the next visit`)}>
 					<EditableList
-						label="add note..."
+						label={lang(`Add note`)}
 						value={this.props.orthoCase.nextVisitNotes}
 						onChange={val => {
 							this.props.orthoCase.nextVisitNotes = val;

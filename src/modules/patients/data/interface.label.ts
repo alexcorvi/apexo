@@ -1,7 +1,7 @@
-import { LabelType } from "../../../assets/components/label/label.component";
+import { TagType } from "../../../assets/components/label/label.component";
 
 // patient labels interface
 export interface Label {
-	type: LabelType;
+	type: TagType;
 	text: string;
 }

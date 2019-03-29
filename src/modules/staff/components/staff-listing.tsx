@@ -253,7 +253,7 @@ export class StaffListing extends React.Component<{}, {}> {
 													subText={
 														member.email
 															? lang("Email")
-															: lang("No email")
+															: lang("No Email")
 													}
 													size={3}
 													onRenderInitials={() => (
@@ -422,7 +422,7 @@ export class StaffListing extends React.Component<{}, {}> {
 						<div className="staff-editor">
 							{this.viewWhich === 1 ? (
 								<div>
-									<Section title="Basic Info">
+									<Section title={lang(`Basic Info`)}>
 										<div className="staff-input">
 											<TextField
 												label={lang("Name")}
@@ -443,7 +443,8 @@ export class StaffListing extends React.Component<{}, {}> {
 													key={day}
 													disabled={!this.canEdit}
 													label={
-														day.substr(0, 3) + "."
+														lang(day.substr(0, 3)) +
+														"."
 													}
 													checked={
 														this.member.onDutyDays.indexOf(
@@ -469,7 +470,7 @@ export class StaffListing extends React.Component<{}, {}> {
 										</div>
 									</Section>
 
-									<Section title="Contact Details">
+									<Section title={lang(`Contact Details`)}>
 										<Row gutter={12}>
 											<Col sm={12}>
 												<div className="staff-input">
@@ -512,7 +513,7 @@ export class StaffListing extends React.Component<{}, {}> {
 								<div>
 									{this.member._id ===
 									API.user.currentUser._id ? (
-										<Section title="Login PIN">
+										<Section title={lang(`Login PIN`)}>
 											<div className="staff-input">
 												<TextField
 													label={lang("Login PIN")}
@@ -534,14 +535,15 @@ export class StaffListing extends React.Component<{}, {}> {
 													MessageBarType.info
 												}
 											>
-												Only you can edit this PIN, it
-												can only be 4 numbers
+												{lang(
+													"Only you can edit this PIN, and it can only be 4 numbers"
+												)}
 											</MessageBar>
 										</Section>
 									) : (
 										""
 									)}
-									<Section title="Permission">
+									<Section title={lang(`Permission`)}>
 										{this.member._id ===
 										API.user.currentUser._id ? (
 											<div>
@@ -751,7 +753,7 @@ export class StaffListing extends React.Component<{}, {}> {
 													API.user.currentUser._id
 												}
 												onText={lang(
-													"Can edit staff page (including permissions)"
+													"Can edit staff page"
 												)}
 												offText={lang(
 													"Can not edit staff page"
@@ -915,7 +917,7 @@ export class StaffListing extends React.Component<{}, {}> {
 							)}
 
 							{this.viewWhich === 3 ? (
-								<Section title="Upcoming Appointments">
+								<Section title={lang(`Upcoming Appointments`)}>
 									{this.member.nextAppointments.length ? (
 										<AppointmentsList
 											list={this.member.nextAppointments}
@@ -924,8 +926,9 @@ export class StaffListing extends React.Component<{}, {}> {
 										<MessageBar
 											messageBarType={MessageBarType.info}
 										>
-											There are no upcoming appointments
-											for this staff member
+											{lang(
+												"There are no upcoming appointments for this staff member"
+											)}
 										</MessageBar>
 									)}
 								</Section>

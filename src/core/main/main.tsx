@@ -10,6 +10,7 @@ import {
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import "./main.scss";
+import { lang } from "../i18/i18";
 
 @observer
 export class ErrorBoundary extends React.Component<{}> {
@@ -42,9 +43,8 @@ export class ErrorBoundary extends React.Component<{}> {
 							location.href = location.href.split("#")[0];
 							location.reload();
 						}}
-					>
-						Reload
-					</PrimaryButton>
+						text={lang("Reload")}
+					/>
 				</MessageBar>
 			);
 		}
@@ -76,7 +76,10 @@ export class MainComponent extends React.Component<{}, {}> {
 		} else {
 			return (
 				<div className="spinner-container">
-					<Spinner size={SpinnerSize.large} label="Please wait" />
+					<Spinner
+						size={SpinnerSize.large}
+						label={lang(`Please wait`)}
+					/>
 				</div>
 			);
 		}

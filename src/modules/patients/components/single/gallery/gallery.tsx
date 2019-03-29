@@ -48,7 +48,7 @@ export class SinglePatientGallery extends React.Component<
 
 	render() {
 		return (
-			<Section title="Patient Gallery">
+			<Section title={lang(`Patient Gallery`)}>
 				{API.login.online ? (
 					API.login.dropboxActive ? (
 						<div className="single-patient-gallery">
@@ -56,9 +56,9 @@ export class SinglePatientGallery extends React.Component<
 								<MessageBar
 									messageBarType={MessageBarType.info}
 								>
-									This patient does not seem to have any photo
-									record uploaded, press the plus sign button
-									below to start uploading
+									{lang(
+										"This patient does not seem to have any photo record uploaded, press the plus sign button below to start uploading"
+									)}
 								</MessageBar>
 							) : (
 								""
@@ -164,13 +164,16 @@ export class SinglePatientGallery extends React.Component<
 						</div>
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							A valid DropBox access token is required for this
-							section
+							{lang(
+								"A valid DropBox access token is required for this section"
+							)}
 						</MessageBar>
 					)
 				) : (
 					<MessageBar messageBarType={MessageBarType.warning}>
-						You can not access patient gallery while offline
+						{lang(
+							"You can not access patient gallery while offline"
+						)}
 					</MessageBar>
 				)}
 				<div style={{ clear: "both" }} />

@@ -11,8 +11,8 @@ import {
 } from "./index";
 import { generateID } from "../../../assets/utils/generate-id";
 import {
-	LabelTypeToString,
-	stringToLabelType
+	TagTypeToString,
+	stringToTagType
 } from "../../../assets/components/label/label.component";
 import { unifiedDateFormat, day } from "../../../assets/utils/date";
 
@@ -187,7 +187,7 @@ export class Patient {
 		this.labels = json.labels.map(x => {
 			return {
 				text: x.text,
-				type: stringToLabelType(x.type)
+				type: stringToTagType(x.type)
 			};
 		});
 		observe(this.medicalHistory, () => this.triggerUpdate++);
@@ -218,7 +218,7 @@ export class Patient {
 				this.labels.map(x => {
 					return {
 						text: x.text,
-						type: LabelTypeToString(x.type)
+						type: TagTypeToString(x.type)
 					};
 				})
 			)

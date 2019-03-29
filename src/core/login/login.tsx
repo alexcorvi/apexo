@@ -64,7 +64,7 @@ export class LoginComponent extends React.Component<{}, {}> {
 							>
 								<TextField
 									name="server"
-									label="Server location"
+									label={lang(`Server location`)}
 									ref={el =>
 										el ? (this.serverField = el) : ""
 									}
@@ -91,19 +91,19 @@ export class LoginComponent extends React.Component<{}, {}> {
 						<hr />
 						<TextField
 							name="identification"
-							label="Username"
+							label={lang(`Username`)}
 							ref={el => (el ? (this.usernameField = el) : "")}
 							disabled={this.disableInputs}
 						/>
 						<TextField
 							name="password"
 							type="Password"
-							label="Password"
+							label={lang(`Password`)}
 							ref={el => (el ? (this.passwordField = el) : "")}
 							disabled={this.disableInputs}
 						/>
 						<PrimaryButton
-							text="login"
+							text={lang("Login")}
 							disabled={this.disableInputs}
 							className="m-t-15 m-b-15"
 							onClick={async () => {

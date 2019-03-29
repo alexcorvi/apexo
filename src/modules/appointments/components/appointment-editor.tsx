@@ -19,10 +19,7 @@ import {
 	Slider
 } from "office-ui-fabric-react";
 import { staffData } from "../../staff";
-import {
-	Label,
-	LabelType
-} from "../../../assets/components/label/label.component";
+import { Tag, TagType } from "../../../assets/components/label/label.component";
 import { observer } from "mobx-react";
 import { patientsData } from "../../patients";
 import { prescriptionsData } from "../../prescriptions";
@@ -127,11 +124,11 @@ export class AppointmentEditor extends React.Component<
 						<Row gutter={12}>
 							<Col sm={12}>
 								<div className="appointment-input date">
-									<label>{lang("Date:")} </label>
 									<DatePicker
+										label={lang("Date")}
 										disabled={!this.canEdit}
 										className="appointment-date"
-										placeholder={lang("Select a date...")}
+										placeholder={lang("Select a date")}
 										value={
 											new Date(
 												this.props.appointment!.date
@@ -164,12 +161,9 @@ export class AppointmentEditor extends React.Component<
 							</Col>
 							<Col sm={12}>
 								<div className="appointment-input time">
-									<label>
-										{lang("Time:")}{" "}
-										{this.props.appointment!.formattedTime}
-									</label>
 									<Row gutter={12}>
 										<Slider
+											label={lang("Time")}
 											min={this.props.appointment!.dateFloor.getTime()}
 											max={
 												this.props.appointment!.dateFloor.getTime() +
@@ -193,7 +187,7 @@ export class AppointmentEditor extends React.Component<
 							</Col>
 						</Row>
 						<div className="appointment-input date">
-							<label>{lang("Operating staff:")} </label>
+							<label>{lang("Operating staff")} </label>
 							{staffData.staffMembers.list
 								.filter(staff => staff.operates)
 								.map(staff => {
@@ -241,7 +235,7 @@ export class AppointmentEditor extends React.Component<
 						<TextField
 							multiline
 							disabled={!this.canEdit}
-							label={lang("Details") + ":"}
+							label={lang("Details")}
 							value={this.props.appointment!.notes}
 							onChanged={value => {
 								this.props.appointment!.notes = value;
@@ -252,7 +246,7 @@ export class AppointmentEditor extends React.Component<
 							<Col sm={12}>
 								<div className="appointment-input treatment">
 									<Dropdown
-										label={lang("Treatment") + ":"}
+										label={lang("Treatment")}
 										disabled={!this.canEdit}
 										className="treatment-type"
 										selectedKey={
@@ -277,7 +271,7 @@ export class AppointmentEditor extends React.Component<
 							<Col sm={12}>
 								<div className="appointment-input units-number">
 									<TextField
-										label={lang("Units number") + ":"}
+										label={lang("Units number")}
 										disabled={!this.canEdit}
 										type="number"
 										value={this.props.appointment!.units.toString()}
@@ -292,12 +286,9 @@ export class AppointmentEditor extends React.Component<
 							<Col span={24}>
 								{" "}
 								<div className="appointment-input involved-teeth">
-									<label>{lang("Involved teeth")}: </label>
 									<TagInput
 										disabled={!this.canEdit}
-										placeholder={
-											lang("Enter tooth number") + "..."
-										}
+										placeholder={lang("Involved teeth")}
 										value={this.props.appointment!.involvedTeeth.map(
 											x => ({
 												key: x.toString(),
@@ -334,7 +325,6 @@ export class AppointmentEditor extends React.Component<
 							<div>
 								<hr className="appointment-hr" />
 								<div className="appointment-input prescription">
-									<label>{lang("Prescription")}: </label>
 									<TagInput
 										disabled={!this.canEdit}
 										className="prescription"
@@ -356,9 +346,7 @@ export class AppointmentEditor extends React.Component<
 											);
 										}}
 										strict={true}
-										placeholder={
-											lang("Enter prescription") + "..."
-										}
+										placeholder={lang("Prescription")}
 									/>
 								</div>
 
@@ -454,9 +442,8 @@ export class AppointmentEditor extends React.Component<
 									<PrimaryButton
 										onClick={print}
 										iconProps={{ iconName: "print" }}
-									>
-										{lang("Print prescription")}
-									</PrimaryButton>
+										text={lang("Print prescription")}
+									/>
 								) : (
 									""
 								)}
@@ -475,7 +462,7 @@ export class AppointmentEditor extends React.Component<
 									<div className="appointment-input time">
 										<label>
 											{lang(
-												"Time (Hours, minutes, seconds)"
+												"Time (hours, minutes, seconds)"
 											)}
 										</label>
 										<TextField
@@ -576,7 +563,7 @@ export class AppointmentEditor extends React.Component<
 											/>
 										)}
 										<p className="payment-insight">
-											<Label
+											<Tag
 												text={
 													lang("Time value") +
 													": " +
@@ -588,10 +575,10 @@ export class AppointmentEditor extends React.Component<
 															.spentTimeValue
 													).toString()
 												}
-												type={LabelType.info}
+												type={TagType.info}
 											/>
 											<br />
-											<Label
+											<Tag
 												text={
 													lang("Expenses") +
 													": " +
@@ -603,7 +590,7 @@ export class AppointmentEditor extends React.Component<
 															.expenses
 													).toString()
 												}
-												type={LabelType.info}
+												type={TagType.info}
 											/>
 										</p>
 									</div>
@@ -677,7 +664,7 @@ export class AppointmentEditor extends React.Component<
 										</Col>
 									</Row>
 									<p className="payment-insight">
-										<Label
+										<Tag
 											text={
 												lang("Profit") +
 												": " +
@@ -689,10 +676,10 @@ export class AppointmentEditor extends React.Component<
 														.profit
 												).toString()
 											}
-											type={LabelType.success}
+											type={TagType.success}
 										/>
 										<br />
-										<Label
+										<Tag
 											text={
 												lang("Profit percentage") +
 												": " +
@@ -702,7 +689,7 @@ export class AppointmentEditor extends React.Component<
 												).toString() +
 												"%"
 											}
-											type={LabelType.success}
+											type={TagType.success}
 										/>
 									</p>
 								</div>
@@ -785,9 +772,9 @@ export class AppointmentEditor extends React.Component<
 	prescriptionToTagInput(p: prescriptionsData.PrescriptionItem) {
 		return {
 			key: p._id,
-			text: `${p.name}: ${p.doseInMg}mg ${p.timesPerDay}X${
+			text: `${p.name}: ${p.doseInMg}${lang("mg")} ${p.timesPerDay}X${
 				p.unitsPerTime
-			} ${prescriptionsData.itemFormToString(p.form)}`
+			} ${lang(prescriptionsData.itemFormToString(p.form))}`
 		};
 	}
 }

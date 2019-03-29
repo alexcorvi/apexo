@@ -51,9 +51,8 @@ export class ModalsComponent extends React.Component<{}, {}> {
 									modal.onConfirm(this.inputValue);
 								}}
 								iconProps={{ iconName: "CheckMark" }}
-							>
-								{lang("Confirm")}
-							</PrimaryButton>
+								text={lang("Confirm")}
+							/>
 						) : (
 							""
 						)}
@@ -63,9 +62,8 @@ export class ModalsComponent extends React.Component<{}, {}> {
 									modals.activeModals.splice(index, 1)
 								}
 								iconProps={{ iconName: "Cancel" }}
-							>
-								{lang("Cancel")}
-							</PrimaryButton>
+								text={lang("Cancel")}
+							/>
 						) : (
 							""
 						)}

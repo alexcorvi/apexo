@@ -4,7 +4,7 @@ import { API } from "../../../../core";
 import { computed, observable } from "mobx";
 import { DataTable } from "../../../../assets/components/data-table/data-table.component";
 import { genderToString, patients } from "../../data";
-import { Label } from "../../../../assets/components/label/label.component";
+import { Tag } from "../../../../assets/components/label/label.component";
 import { observer } from "mobx-react";
 import { Patient } from "../../data";
 import { Profile } from "../../../../assets/components/profile/profile";
@@ -367,7 +367,7 @@ export class PatientsListing extends React.Component<{}, {}> {
 									<div>
 										{patient.labels.map((label, index) => {
 											return (
-												<Label
+												<Tag
 													key={index}
 													text={label.text}
 													type={label.type}

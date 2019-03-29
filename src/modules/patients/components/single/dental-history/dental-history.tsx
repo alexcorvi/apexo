@@ -50,7 +50,7 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 				<div className="m-t-20">
 					{this.viewChart ? (
 						<div className="chart">
-							<Section title="Permanent Teeth">
+							<Section title={lang(`Permanent Teeth`)}>
 								<TeethPermanentChart
 									teeth={this.props.patient.teeth}
 									onClick={number =>
@@ -58,7 +58,7 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 									}
 								/>
 							</Section>
-							<Section title="Deciduous Teeth">
+							<Section title={lang(`Deciduous Teeth`)}>
 								<TeethDeciduousChart
 									teeth={this.props.patient.teeth}
 									onClick={number =>
@@ -69,7 +69,7 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 						</div>
 					) : (
 						<div className="tabulated">
-							<Section title="Permanent Teeth">
+							<Section title={lang(`Permanent Teeth`)}>
 								<table className="permanent">
 									<tbody>
 										<tr>
@@ -87,7 +87,7 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 									</tbody>
 								</table>
 							</Section>
-							<Section title="Deciduous Teeth">
+							<Section title={lang(`Deciduous Teeth`)}>
 								<table className="deciduous">
 									<tbody>
 										<tr>
@@ -163,7 +163,7 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 					{this.props.patient.teeth[this.viewToothISO] ? (
 						<div className="tooth-details">
 							<Dropdown
-								placeHolder="Condition"
+								placeHolder={lang(`Condition`)}
 								onChanged={(newVal: any) => {
 									this.props.patient.teeth[
 										this.viewToothISO

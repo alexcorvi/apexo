@@ -85,11 +85,13 @@ export class OrthoList extends React.Component<{}, {}> {
 													name={patient.name}
 													secondaryElement={
 														<span>
-															{genderToString(
-																patient.gender
+															{lang(
+																genderToString(
+																	patient.gender
+																)
 															)}{" "}
 															- {patient.age}{" "}
-															years old
+															{lang("years old")}
 														</span>
 													}
 													size={3}
@@ -451,14 +453,14 @@ export class OrthoList extends React.Component<{}, {}> {
 							this.selectedId = orthoCase._id;
 							this.viewWhich = 3;
 						}}
-						placeholder="Type to select patient"
+						placeholder={lang(`Type to select patient`)}
 					/>
 					<br />
 					<hr />
 					<h4>Or add new patient</h4>
 					<br />
 					<TextField
-						placeholder="Patient name"
+						placeholder={lang(`Patient name`)}
 						value={this.newPatientName}
 						onChanged={v => (this.newPatientName = v)}
 					/>
@@ -477,9 +479,8 @@ export class OrthoList extends React.Component<{}, {}> {
 						iconProps={{
 							iconName: "add"
 						}}
-					>
-						Add new
-					</PrimaryButton>
+						text={lang("Add new")}
+					/>
 				</Panel>
 
 				<Panel

@@ -67,7 +67,7 @@ class Component extends React.Component<{}, {}> {
 
 export const appointmentsByDate: Chart = {
 	Component,
-	name: lang("Appointments By Date"),
+	name: lang("Appointments by Date"),
 	description: lang("Number of appointments"),
 	tags: "appointments date number how many",
 	className: "col-xs-12"

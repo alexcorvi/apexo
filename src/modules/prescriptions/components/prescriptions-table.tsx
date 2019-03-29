@@ -93,10 +93,14 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 											text={prescription.name}
 											subText={`${
 												prescription.doseInMg
-											}mg ${prescription.timesPerDay}X${
+											}${lang("mg")} ${
+												prescription.timesPerDay
+											}X${
 												prescription.unitsPerTime
-											} ${itemFormToString(
-												prescription.form
+											} ${lang(
+												itemFormToString(
+													prescription.form
+												)
 											)}`}
 										/>
 									),
@@ -108,7 +112,9 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 								{
 									dataValue: prescription.doseInMg,
 									component: (
-										<span>{prescription.doseInMg} mg</span>
+										<span>
+											{prescription.doseInMg} {lang("mg")}
+										</span>
 									),
 									className: "hidden-xs"
 								},
@@ -126,8 +132,10 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 									dataValue: prescription.form,
 									component: (
 										<span>
-											{itemFormToString(
-												prescription.form
+											{lang(
+												itemFormToString(
+													prescription.form
+												)
 											)}
 										</span>
 									),
@@ -159,14 +167,17 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 											subText={`${
 												this.selectedPrescription
 													.doseInMg
-											}mg ${
+											}${lang("mg")} ${
 												this.selectedPrescription
 													.timesPerDay
 											}X${
 												this.selectedPrescription
 													.unitsPerTime
-											} ${itemFormToString(
-												this.selectedPrescription.form
+											} ${lang(
+												itemFormToString(
+													this.selectedPrescription
+														.form
+												)
 											)}`}
 										/>
 									) : (
@@ -185,10 +196,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 						)}
 					>
 						<div className="prescription-editor">
-							<Section
-								title={lang("Prescription details")}
-								
-							>
+							<Section title={lang("Prescription Details")}>
 								<TextField
 									label={lang("Item name")}
 									value={this.selectedPrescription.name}
@@ -251,7 +259,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 									options={prescriptionItemForms.map(form => {
 										return {
 											key: form,
-											text: form
+											text: lang(form)
 										};
 									})}
 									onChanged={newValue => {
