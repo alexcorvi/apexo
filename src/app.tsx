@@ -18,7 +18,7 @@ ReactDOM.render(
 		<components.MainComponent />
 		<components.MessagesComponent />
 		<components.ModalsComponent />
-		<p className="version-num">version 2.2.3 </p>
+		<p className="version-num">version 3.0.0 </p>
 	</Fabric>,
 	document.getElementById("root")
 );

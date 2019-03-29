@@ -1,5 +1,21 @@
 ## Changelog
 
+### 3.0.0
+
+-   New feature: Introduced internationalization
+-   New feature: Orthodontic archive / replacing orthograph
+-   New feature: calculation of outstanding and overpaid amounts
+-   New feature: All files are uploaded to DropBox
+-   Bug fix: Backup and restore was not being done as it should be
+-   Bug fix: Automated backups was not being done as it should be
+-   Bug fix: uploading images were requiring credentials
+-   Bug fix: PIN, user permissions, and logging-out
+-   Bug fix: offline mode had data persisting
+-   Enhancement: Unified all date formats
+-   Enhancement: Data tables and panels separation
+-   Enhancement: A table of all the involved appointments in stats
+-   Enhancement: Unification of icon sub-sets
+
 ### 2.2.3
 
 -   Fixed bug: creating new appointment while there are no registered treatments crashes the application
