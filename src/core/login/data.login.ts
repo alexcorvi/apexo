@@ -175,6 +175,7 @@ class Login {
 		await this.start({
 			server: "http://apexo-no-server-mode"
 		});
+		store.set("LSL_hash", Md5.hashStr("no server mode").toString());
 		store.set("no_server_mode", "true");
 	}
 
