@@ -33,6 +33,7 @@ import { Treatment } from "../../treatments/data/class.treatment";
 import { treatmentsData } from "../../treatments";
 import "./appointment-editor.scss";
 import { lang } from "../../../core/i18/i18";
+import { num } from "../../../assets/utils/num";
 
 @observer
 export class AppointmentEditor extends React.Component<
@@ -68,7 +69,7 @@ export class AppointmentEditor extends React.Component<
 			const arr = this.props.appointment.treatmentID.split("|");
 			const _id = this.props.appointment.treatmentID;
 			const type = arr[0];
-			const expenses = Number(arr[1]);
+			const expenses = num(arr[1]);
 			list.push(new Treatment({ _id, expenses, type }));
 		}
 		return list;
@@ -277,8 +278,8 @@ export class AppointmentEditor extends React.Component<
 										type="number"
 										value={this.props.appointment!.units.toString()}
 										onChange={(e, newValue) => {
-											this.props.appointment!.units = Number(
-												newValue
+											this.props.appointment!.units = num(
+												newValue!
 											);
 										}}
 									/>
@@ -307,12 +308,12 @@ export class AppointmentEditor extends React.Component<
 										)}
 										formatText={x =>
 											`${x.toString()} - ${
-												convert(Number(x)).Palmer
+												convert(num(x)).Palmer
 											}`
 										}
 										onChange={newValue => {
 											this.props.appointment!.involvedTeeth = newValue.map(
-												x => Number(x.key)
+												x => num(x.key)
 											);
 										}}
 									/>
@@ -476,7 +477,7 @@ export class AppointmentEditor extends React.Component<
 												).hours
 											}
 											onChange={(e, v) => {
-												this.timerInputs[0] = Number(v);
+												this.timerInputs[0] = num(v!);
 												this.manuallyUpdateTime();
 											}}
 										/>
@@ -490,7 +491,7 @@ export class AppointmentEditor extends React.Component<
 												).minutes
 											}
 											onChange={(e, v) => {
-												this.timerInputs[1] = Number(v);
+												this.timerInputs[1] = num(v!);
 												this.manuallyUpdateTime();
 											}}
 										/>
@@ -504,7 +505,7 @@ export class AppointmentEditor extends React.Component<
 												).seconds
 											}
 											onChange={(e, v) => {
-												this.timerInputs[2] = Number(v);
+												this.timerInputs[2] = num(v!);
 												this.manuallyUpdateTime();
 											}}
 										/>
@@ -597,8 +598,8 @@ export class AppointmentEditor extends React.Component<
 												label={lang("Price")}
 												value={this.props.appointment!.finalPrice.toString()}
 												onChange={(e, newVal) => {
-													this.props.appointment!.finalPrice = Number(
-														newVal
+													this.props.appointment!.finalPrice = num(
+														newVal!
 													);
 												}}
 												prefix={settingsData.settings.getSetting(
@@ -613,8 +614,8 @@ export class AppointmentEditor extends React.Component<
 												label={lang("Paid")}
 												value={this.props.appointment!.paidAmount.toString()}
 												onChange={(e, newVal) => {
-													this.props.appointment!.paidAmount = Number(
-														newVal
+													this.props.appointment!.paidAmount = num(
+														newVal!
 													);
 												}}
 												prefix={settingsData.settings.getSetting(

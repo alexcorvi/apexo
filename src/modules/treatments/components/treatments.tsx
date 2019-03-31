@@ -17,6 +17,7 @@ import { Section } from "../../../assets/components/section/section";
 import { settingsData } from "../../settings";
 import "./treatments.scss";
 import { lang } from "../../../core/i18/i18";
+import { num } from "../../../assets/utils/num";
 
 @observer
 export class Treatments extends React.Component<{}, {}> {
@@ -216,7 +217,7 @@ export class Treatments extends React.Component<{}, {}> {
 										onChange={(ev, val) =>
 											(treatments.list[
 												this.selectedIndex
-											].expenses = Number(val))
+											].expenses = num(val!))
 										}
 										prefix={settingsData.settings.getSetting(
 											"currencySymbol"

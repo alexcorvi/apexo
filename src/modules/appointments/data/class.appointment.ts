@@ -8,6 +8,7 @@ import { patientsData } from "../../patients";
 import { settingsData } from "../../settings";
 import { treatmentsData } from "../../treatments";
 import { Treatment } from "../../treatments/data/class.treatment";
+import { num } from "../../../assets/utils/num";
 
 export class Appointment {
 	_id: string = generateID();
@@ -82,7 +83,7 @@ export class Appointment {
 	get expenses() {
 		if (!this.treatment) {
 			if (this.treatmentID.indexOf("|") > -1) {
-				return Number(this.treatmentID.split("|")[1]);
+				return num(this.treatmentID.split("|")[1]);
 			} else {
 				return 0;
 			}
@@ -165,7 +166,7 @@ export class Appointment {
 	@computed
 	get spentTimeValue() {
 		return (
-			Number(settingsData.settings.getSetting("hourlyRate")) *
+			num(settingsData.settings.getSetting("hourlyRate")) *
 			(this.time / hour)
 		);
 	}

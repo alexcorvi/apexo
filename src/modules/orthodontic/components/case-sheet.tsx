@@ -23,6 +23,7 @@ import { Section } from "../../../assets/components/section/section";
 import { TagInput } from "../../../assets/components/tag-input/tag-input";
 import { API } from "../../../core/index";
 import { lang } from "../../../core/i18/i18";
+import { num } from "../../../assets/utils/num";
 
 @observer
 export class OrthoCaseSheet extends React.Component<{
@@ -78,7 +79,7 @@ export class OrthoCaseSheet extends React.Component<{
 						max={180}
 						value={this.props.orthoCase.nasioLabialAngle.toString()}
 						onChange={(ev, v) => {
-							this.props.orthoCase.nasioLabialAngle = Number(v);
+							this.props.orthoCase.nasioLabialAngle = num(v!);
 						}}
 						type="number"
 						prefix={lang(`Nasio-labial angle`)}
@@ -95,7 +96,7 @@ export class OrthoCaseSheet extends React.Component<{
 						}))}
 						defaultSelectedKey={this.props.orthoCase.skeletalRelationship.toString()}
 						onChange={(ev, n) => {
-							this.props.orthoCase.skeletalRelationship = Number(
+							this.props.orthoCase.skeletalRelationship = num(
 								n!.key
 							);
 						}}
@@ -109,7 +110,7 @@ export class OrthoCaseSheet extends React.Component<{
 						}))}
 						defaultSelectedKey={this.props.orthoCase.molarsRelationship.toString()}
 						onChange={(ev, n) => {
-							this.props.orthoCase.molarsRelationship = Number(
+							this.props.orthoCase.molarsRelationship = num(
 								n!.key
 							);
 						}}
@@ -123,7 +124,7 @@ export class OrthoCaseSheet extends React.Component<{
 						}))}
 						defaultSelectedKey={this.props.orthoCase.canineRelationship.toString()}
 						onChange={(ev, n) => {
-							this.props.orthoCase.canineRelationship = Number(
+							this.props.orthoCase.canineRelationship = num(
 								n!.key
 							);
 						}}
@@ -137,7 +138,7 @@ export class OrthoCaseSheet extends React.Component<{
 						prefix={lang(`Overjet`)}
 						value={this.props.orthoCase.overJet.toString()}
 						onChange={(ev, n) => {
-							this.props.orthoCase.overJet = Number(n!);
+							this.props.orthoCase.overJet = num(n!);
 						}}
 					/>
 					<TextField
@@ -146,7 +147,7 @@ export class OrthoCaseSheet extends React.Component<{
 						prefix={lang(`Overbite`)}
 						value={this.props.orthoCase.overBite.toString()}
 						onChange={(ev, n) => {
-							this.props.orthoCase.overBite = Number(n);
+							this.props.orthoCase.overBite = num(n!);
 						}}
 					/>
 					<TagInput
@@ -167,7 +168,7 @@ export class OrthoCaseSheet extends React.Component<{
 						}))}
 						onChange={newValue => {
 							this.props.orthoCase.crossScissorBite = newValue.map(
-								x => Number(x.key)
+								x => num(x.key)
 							);
 						}}
 					/>
@@ -180,7 +181,7 @@ export class OrthoCaseSheet extends React.Component<{
 						prefix={lang(`Space available`)}
 						value={this.props.orthoCase.u_spaceAvailable.toString()}
 						onChange={(ev, v) => {
-							this.props.orthoCase.u_spaceAvailable = Number(v);
+							this.props.orthoCase.u_spaceAvailable = num(v!);
 						}}
 					/>
 					<TextField
@@ -189,7 +190,7 @@ export class OrthoCaseSheet extends React.Component<{
 						prefix={lang(`Space required`)}
 						value={this.props.orthoCase.u_spaceNeeded.toString()}
 						onChange={(ev, v) => {
-							this.props.orthoCase.u_spaceNeeded = Number(v);
+							this.props.orthoCase.u_spaceNeeded = num(v!);
 						}}
 					/>
 					{this.props.orthoCase.u_crowding > 0 ? (
@@ -222,7 +223,7 @@ export class OrthoCaseSheet extends React.Component<{
 						disabled={!this.canEdit}
 						value={this.props.orthoCase.l_spaceAvailable.toString()}
 						onChange={(ev, v) => {
-							this.props.orthoCase.l_spaceAvailable = Number(v);
+							this.props.orthoCase.l_spaceAvailable = num(v!);
 						}}
 					/>
 					<TextField
@@ -231,7 +232,7 @@ export class OrthoCaseSheet extends React.Component<{
 						disabled={!this.canEdit}
 						value={this.props.orthoCase.l_spaceNeeded.toString()}
 						onChange={(ev, v) => {
-							this.props.orthoCase.l_spaceNeeded = Number(v);
+							this.props.orthoCase.l_spaceNeeded = num(v!);
 						}}
 					/>
 					{this.props.orthoCase.l_crowding > 0 ? (

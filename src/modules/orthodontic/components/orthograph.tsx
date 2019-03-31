@@ -37,6 +37,7 @@ import { GridTable } from "./grid-table";
 import { API } from "../../../core";
 import setting from "../../settings/data/data.settings";
 import { lang } from "../../../core/i18/i18";
+import { num } from "../../../assets/utils/num";
 
 const viewsTerms = [
 	"Frontal",
@@ -214,7 +215,7 @@ export class Orthograph extends React.Component<{
 									})}
 									disabled={!this.canEdit}
 									onChange={(ev, newValue) => {
-										this.props.orthoCase.startedDate = Number(
+										this.props.orthoCase.startedDate = num(
 											newValue!.key
 										);
 									}}
@@ -250,7 +251,7 @@ export class Orthograph extends React.Component<{
 									})}
 									disabled={!this.canEdit}
 									onChange={(ev, newValue) => {
-										this.props.orthoCase.finishedDate = Number(
+										this.props.orthoCase.finishedDate = num(
 											newValue!.key
 										);
 									}}
@@ -460,8 +461,8 @@ export class Orthograph extends React.Component<{
 																								) => {
 																									this.props.orthoCase.visits[
 																										visitIndex
-																									].visitNumber = Number(
-																										val
+																									].visitNumber = num(
+																										val!
 																									);
 																									this.tu();
 																								}}
@@ -511,7 +512,7 @@ export class Orthograph extends React.Component<{
 																								) => {
 																									this.props.orthoCase.visits[
 																										visitIndex
-																									].date = Number(
+																									].date = num(
 																										newValue!
 																											.key
 																									);
@@ -762,8 +763,8 @@ export class Orthograph extends React.Component<{
 																															) => {
 																																this.props.orthoCase.visits[
 																																	visitIndex
-																																].visitNumber = Number(
-																																	val
+																																].visitNumber = num(
+																																	val!
 																																);
 																																this.tu();
 																															}}
@@ -813,7 +814,7 @@ export class Orthograph extends React.Component<{
 																															) => {
 																																this.props.orthoCase.visits[
 																																	visitIndex
-																																].date = Number(
+																																].date = num(
 																																	newValue!
 																																		.key
 																																);

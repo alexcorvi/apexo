@@ -14,6 +14,7 @@ import { computed } from "mobx";
 import { API } from "../../../../../core/index";
 import { lang } from "../../../../../core/i18/i18";
 import { Section } from "../../../../../assets/components/section/section";
+import { num } from "../../../../../assets/utils/num";
 
 @observer
 export class PatientDetails extends React.Component<{
@@ -44,8 +45,8 @@ export class PatientDetails extends React.Component<{
 									label={lang("Birth year / age")}
 									value={this.props.patient.birthYearOrAge.toString()}
 									onChange={(ev, year) =>
-										(this.props.patient.birthYearOrAge = Number(
-											year
+										(this.props.patient.birthYearOrAge = num(
+											year!
 										))
 									}
 									type="number"

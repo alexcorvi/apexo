@@ -15,6 +15,7 @@ import { textualFilter } from "../../utils/textual-filter";
 import "./data-table.component.scss";
 import { PrimaryButton } from "office-ui-fabric-react";
 import { lang } from "../../../core/i18/i18";
+import { num } from "../../utils/num";
 
 interface Cell {
 	component: string | React.ReactElement<any>;
@@ -43,9 +44,9 @@ interface Props {
 export class DataTable extends React.Component<Props, {}> {
 	get sortableValues() {
 		return this.props.rows.map(row => {
-			return isNaN(Number(row.cells[this.currentColIndex].dataValue))
+			return isNaN(num(row.cells[this.currentColIndex].dataValue))
 				? row.cells[this.currentColIndex].dataValue
-				: Number(row.cells[this.currentColIndex].dataValue);
+				: num(row.cells[this.currentColIndex].dataValue);
 		});
 	}
 	@observable currentColIndex: number = 0;

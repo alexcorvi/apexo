@@ -8,6 +8,7 @@ import { PieChart } from "../../../../assets/components/charts/pie";
 import { convert } from "../../../../assets/utils/teeth-numbering-systems";
 import { observer } from "mobx-react";
 import { lang } from "../../../../core/i18/i18";
+import { num } from "../../../../assets/utils/num";
 
 @observer
 class Component extends React.Component<{}, {}> {
@@ -17,7 +18,7 @@ class Component extends React.Component<{}, {}> {
 			.map(x => x.involvedTeeth)
 			.reduce((result: { label: number; value: number }[], arr) => {
 				arr.forEach(n => {
-					const fixedN = Number(n.toString().charAt(1));
+					const fixedN = num(n.toString().charAt(1));
 					const i = result.findIndex(x => x.label === fixedN);
 					if (i === -1) {
 						result.push({
@@ -70,7 +71,7 @@ class Component extends React.Component<{}, {}> {
 		return <PieChart height={400} data={this.data} />;
 	}
 	getToothName(n: number) {
-		return convert(Number(`1${n.toString()}`)).Name.replace(
+		return convert(num(`1${n.toString()}`)).Name.replace(
 			/(permanent|deciduous|upper|lower|left|right)/gi,
 			""
 		);

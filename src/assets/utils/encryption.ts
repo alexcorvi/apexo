@@ -1,3 +1,5 @@
+import { num } from "./num";
+
 const salt = location.host
 	.split("")
 	.map(x => x.charCodeAt(0))
@@ -13,6 +15,6 @@ export function encrypt(str: string) {
 export function decrypt(str: string) {
 	return str
 		.split(",")
-		.map(x => String.fromCharCode(Number(x) - salt))
+		.map(x => String.fromCharCode(num(x) - salt))
 		.join("");
 }

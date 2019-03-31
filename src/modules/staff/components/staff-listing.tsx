@@ -27,6 +27,7 @@ import { settings } from "../../settings/data";
 import setting from "../../settings/data/data.settings";
 import "./staff-listing.scss";
 import { lang } from "../../../core/i18/i18";
+import { num } from "../../../assets/utils/num";
 
 @observer
 export class StaffListing extends React.Component<{}, {}> {
@@ -519,7 +520,7 @@ export class StaffListing extends React.Component<{}, {}> {
 													label={lang("Login PIN")}
 													value={this.member.pin}
 													onChange={(ev, v) => {
-														if (Number(v) < 10000) {
+														if (num(v!) < 10000) {
 															this.member.pin = v!.toString();
 														} else {
 															this.forceUpdate();

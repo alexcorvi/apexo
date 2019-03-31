@@ -22,6 +22,7 @@ import { ProfileSquared } from "../../../assets/components/profile/profile-squar
 import { Section } from "../../../assets/components/section/section";
 import "./prescription-table.scss";
 import { lang } from "../../../core/i18/i18";
+import { num } from "../../../assets/utils/num";
 
 @observer
 export class PrescriptionsTable extends React.Component<{}, {}> {
@@ -217,7 +218,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 											onChange={(ev, val) =>
 												(prescriptions.list[
 													this.selectedIndex
-												].doseInMg = Number(val))
+												].doseInMg = num(val!))
 											}
 											disabled={!this.canEdit}
 										/>
@@ -230,7 +231,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 											onChange={(ev, val) =>
 												(prescriptions.list[
 													this.selectedIndex
-												].timesPerDay = Number(val))
+												].timesPerDay = num(val!))
 											}
 											disabled={!this.canEdit}
 										/>
@@ -243,7 +244,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 											onChange={(ev, val) =>
 												(prescriptions.list[
 													this.selectedIndex
-												].unitsPerTime = Number(val))
+												].unitsPerTime = num(val!))
 											}
 											disabled={!this.canEdit}
 										/>

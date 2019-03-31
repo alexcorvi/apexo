@@ -10,6 +10,7 @@ import {
 import { observer } from "mobx-react";
 import "./editable-list.scss";
 import { observable } from "mobx";
+import { num } from "../../utils/num";
 
 @observer
 export class EditableList extends React.Component<
@@ -87,7 +88,7 @@ export class EditableList extends React.Component<
 							<DetailsList
 								compact
 								onActiveItemChanged={a => {
-									this.expandIndex = Number(a[0].props.id);
+									this.expandIndex = num(a[0].props.id);
 								}}
 								items={[
 									...this.props.value.map((x, i) => [

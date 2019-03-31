@@ -13,6 +13,7 @@ import { registerModules } from "../../modules";
 import { resync } from "../db";
 import { files } from "../files/files";
 import { store } from "./store";
+import { num } from "../../assets/utils/num";
 
 const demoHosts: string[] = [
 	// "localhost:8000",
@@ -75,7 +76,7 @@ class Login {
 			}
 		} else if (store.found("LSL_hash")) {
 			const now = new Date().getTime();
-			const then = new Date(Number(store.get("LSL_TS"))).getTime();
+			const then = new Date(num(store.get("LSL_TS"))).getTime();
 			if (now - then < 7 * day) {
 				this.start({ server });
 			}

@@ -5,6 +5,7 @@ import { generateID } from "../../../assets/utils/generate-id";
 import * as settings from "./index";
 import { API, DropboxFile } from "../../../core/index";
 import { day } from "../../../assets/utils/date";
+import { num } from "../../../assets/utils/num";
 
 class Settings {
 	ignoreObserver: boolean = false;
@@ -42,7 +43,7 @@ class Settings {
 		const frequency: "d" | "w" | "m" | "n" = this.getSetting(
 			"backup_freq"
 		) as any;
-		const retain = Number(this.getSetting("backup_retain")) || 3;
+		const retain = num(this.getSetting("backup_retain")) || 3;
 
 		// carry on, only if there's access token
 		if (!API.login.dropboxActive) {

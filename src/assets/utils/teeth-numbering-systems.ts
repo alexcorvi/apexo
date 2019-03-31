@@ -1,3 +1,5 @@
+import { num } from "./num";
+
 const dictionary: { [index: number]: string } = {
 	11: "permanent upper right central incisor",
 	12: "permanent upper right lateral incisor",
@@ -50,13 +52,13 @@ const dictionary: { [index: number]: string } = {
 	82: "deciduous lower right lateral incisor",
 	83: "deciduous lower right canine",
 	84: "deciduous lower right first molar",
-	85: "deciduous lower right second molar",
+	85: "deciduous lower right second molar"
 };
 
 export function convert(ISO: number) {
 	const WHOString = ISO.toString();
-	const quadrant = Number(WHOString.charAt(0));
-	const toothNumber = Number(WHOString.charAt(1));
+	const quadrant = num(WHOString.charAt(0));
+	const toothNumber = num(WHOString.charAt(1));
 
 	let Palmer = "";
 	let Universal: number | string = 0;
@@ -67,16 +69,13 @@ export function convert(ISO: number) {
 		if (quadrant === 1) {
 			Palmer = toothNumber + " ┘";
 			Universal = 9 - toothNumber;
-		}
-		else if (quadrant === 2) {
+		} else if (quadrant === 2) {
 			Palmer = "└ " + toothNumber;
 			Universal = toothNumber + 8;
-		}
-		else if (quadrant === 3) {
+		} else if (quadrant === 3) {
 			Palmer = "┌ " + toothNumber;
 			Universal = 9 - toothNumber + 16;
-		}
-		else if (quadrant === 4) {
+		} else if (quadrant === 4) {
 			Palmer = toothNumber + " ┐";
 			Universal = toothNumber + 24;
 		}
@@ -87,16 +86,13 @@ export function convert(ISO: number) {
 		if (quadrant === 5) {
 			Palmer = num2Letter(toothNumber) + " ┘";
 			Universal = num2Letter(6 - toothNumber);
-		}
-		else if (quadrant === 6) {
+		} else if (quadrant === 6) {
 			Palmer = "└ " + num2Letter(toothNumber);
 			Universal = num2Letter(toothNumber + 5);
-		}
-		else if (quadrant === 7) {
+		} else if (quadrant === 7) {
 			Palmer = "┌ " + num2Letter(toothNumber);
 			Universal = num2Letter(6 - toothNumber + 10);
-		}
-		else if (quadrant === 8) {
+		} else if (quadrant === 8) {
 			Palmer = num2Letter(toothNumber) + " ┐";
 			Universal = num2Letter(toothNumber + 15);
 		}
@@ -109,6 +105,6 @@ export function convert(ISO: number) {
 	};
 }
 
-function num2Letter(num: number): string {
-	return String.fromCharCode(64 + num);
+function num2Letter(number: number): string {
+	return String.fromCharCode(64 + number);
 }

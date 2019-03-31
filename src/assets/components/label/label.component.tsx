@@ -1,6 +1,7 @@
 import * as React from "react";
 import "./label.scss";
 import { observer } from "mobx-react";
+import { num } from "../../utils/num";
 
 export enum TagType {
 	warning,
@@ -43,7 +44,7 @@ export function stringToTagType(input: string) {
 }
 
 export function getRandomTagType(str: string) {
-	const r = Number(
+	const r = num(
 		(str.length * str.charCodeAt(0) + str.charCodeAt(str.length - 1))
 			.toString()
 			.charAt(0)

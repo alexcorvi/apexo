@@ -11,6 +11,7 @@ import { ProfileSquared } from "../../../assets/components/profile/profile-squar
 import "./calendar.scss";
 import { lang } from "../../../core/i18/i18";
 import { name } from "../../../assets/utils/date";
+import { num } from "../../../assets/utils/num";
 
 @observer
 export class Calendar extends React.Component<{}, {}> {
@@ -29,9 +30,9 @@ export class Calendar extends React.Component<{}, {}> {
 			return;
 		}
 		const dateArray = dateString.split(/\W/);
-		this.c.selectedYear = Number(dateArray[0]);
-		this.c.selectedMonth = Number(dateArray[1]) - 1;
-		this.c.selectedDay = Number(dateArray[2]) - 1;
+		this.c.selectedYear = num(dateArray[0]);
+		this.c.selectedMonth = num(dateArray[1]) - 1;
+		this.c.selectedDay = num(dateArray[2]) - 1;
 	}
 
 	componentDidUpdate() {
