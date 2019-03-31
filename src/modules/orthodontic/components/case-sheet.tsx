@@ -44,7 +44,7 @@ export class OrthoCaseSheet extends React.Component<{
 							text: lang((Lips as any)[x])
 						}))}
 						defaultSelectedKey={this.props.orthoCase.lips}
-						onChanged={(has: any) => {
+						onChange={(ev, has: any) => {
 							this.props.orthoCase.lips = has.key;
 						}}
 					/>
@@ -56,7 +56,7 @@ export class OrthoCaseSheet extends React.Component<{
 							text: lang((FacialProfile as any)[x])
 						}))}
 						defaultSelectedKey={this.props.orthoCase.facialProfile}
-						onChanged={(has: any) => {
+						onChange={(ev, has: any) => {
 							this.props.orthoCase.facialProfile = has.key;
 						}}
 					/>
@@ -68,7 +68,7 @@ export class OrthoCaseSheet extends React.Component<{
 							text: lang((OralHygiene as any)[x])
 						}))}
 						defaultSelectedKey={this.props.orthoCase.oralHygiene}
-						onChanged={(has: any) => {
+						onChange={(ev, has: any) => {
 							this.props.orthoCase.oralHygiene = has.key;
 						}}
 					/>
@@ -77,7 +77,7 @@ export class OrthoCaseSheet extends React.Component<{
 						min={0}
 						max={180}
 						value={this.props.orthoCase.nasioLabialAngle.toString()}
-						onChanged={v => {
+						onChange={(ev, v) => {
 							this.props.orthoCase.nasioLabialAngle = Number(v);
 						}}
 						type="number"
@@ -94,9 +94,9 @@ export class OrthoCaseSheet extends React.Component<{
 							text: lang("Skeletal relationship: Class ") + n
 						}))}
 						defaultSelectedKey={this.props.orthoCase.skeletalRelationship.toString()}
-						onChanged={n => {
+						onChange={(ev, n) => {
 							this.props.orthoCase.skeletalRelationship = Number(
-								n.key
+								n!.key
 							);
 						}}
 					/>
@@ -108,9 +108,9 @@ export class OrthoCaseSheet extends React.Component<{
 							text: lang("Molars relationship: Class ") + n
 						}))}
 						defaultSelectedKey={this.props.orthoCase.molarsRelationship.toString()}
-						onChanged={n => {
+						onChange={(ev, n) => {
 							this.props.orthoCase.molarsRelationship = Number(
-								n.key
+								n!.key
 							);
 						}}
 					/>
@@ -122,9 +122,9 @@ export class OrthoCaseSheet extends React.Component<{
 							text: lang("Canine relationship: Class ") + n
 						}))}
 						defaultSelectedKey={this.props.orthoCase.canineRelationship.toString()}
-						onChanged={n => {
+						onChange={(ev, n) => {
 							this.props.orthoCase.canineRelationship = Number(
-								n.key
+								n!.key
 							);
 						}}
 					/>
@@ -136,8 +136,8 @@ export class OrthoCaseSheet extends React.Component<{
 						type="number"
 						prefix={lang(`Overjet`)}
 						value={this.props.orthoCase.overJet.toString()}
-						onChanged={n => {
-							this.props.orthoCase.overJet = n;
+						onChange={(ev, n) => {
+							this.props.orthoCase.overJet = Number(n!);
 						}}
 					/>
 					<TextField
@@ -145,8 +145,8 @@ export class OrthoCaseSheet extends React.Component<{
 						type="number"
 						prefix={lang(`Overbite`)}
 						value={this.props.orthoCase.overBite.toString()}
-						onChanged={n => {
-							this.props.orthoCase.overBite = n;
+						onChange={(ev, n) => {
+							this.props.orthoCase.overBite = Number(n);
 						}}
 					/>
 					<TagInput
@@ -179,7 +179,7 @@ export class OrthoCaseSheet extends React.Component<{
 						type="number"
 						prefix={lang(`Space available`)}
 						value={this.props.orthoCase.u_spaceAvailable.toString()}
-						onChanged={v => {
+						onChange={(ev, v) => {
 							this.props.orthoCase.u_spaceAvailable = Number(v);
 						}}
 					/>
@@ -188,7 +188,7 @@ export class OrthoCaseSheet extends React.Component<{
 						type="number"
 						prefix={lang(`Space required`)}
 						value={this.props.orthoCase.u_spaceNeeded.toString()}
-						onChanged={v => {
+						onChange={(ev, v) => {
 							this.props.orthoCase.u_spaceNeeded = Number(v);
 						}}
 					/>
@@ -221,7 +221,7 @@ export class OrthoCaseSheet extends React.Component<{
 						prefix={lang(`Space available`)}
 						disabled={!this.canEdit}
 						value={this.props.orthoCase.l_spaceAvailable.toString()}
-						onChanged={v => {
+						onChange={(ev, v) => {
 							this.props.orthoCase.l_spaceAvailable = Number(v);
 						}}
 					/>
@@ -230,7 +230,7 @@ export class OrthoCaseSheet extends React.Component<{
 						prefix={lang(`Space required`)}
 						disabled={!this.canEdit}
 						value={this.props.orthoCase.l_spaceNeeded.toString()}
-						onChanged={v => {
+						onChange={(ev, v) => {
 							this.props.orthoCase.l_spaceNeeded = Number(v);
 						}}
 					/>

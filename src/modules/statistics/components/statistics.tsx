@@ -173,8 +173,8 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 												}
 											)
 										)}
-										onChanged={member => {
-											statistics.filterByMember = member.key.toString();
+										onChange={(ev, member) => {
+											statistics.filterByMember = member!.key.toString();
 										}}
 									/>
 								);

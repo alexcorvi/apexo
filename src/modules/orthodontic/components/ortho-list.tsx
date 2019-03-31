@@ -462,7 +462,7 @@ export class OrthoList extends React.Component<{}, {}> {
 					<TextField
 						placeholder={lang(`Patient name`)}
 						value={this.newPatientName}
-						onChanged={v => (this.newPatientName = v)}
+						onChange={(e, v) => (this.newPatientName = v!)}
 					/>
 					<PrimaryButton
 						onClick={() => {

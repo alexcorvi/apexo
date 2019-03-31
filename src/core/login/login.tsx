@@ -96,8 +96,8 @@ export class LoginComponent extends React.Component<{}, {}> {
 												this.disableInputs ||
 												!this.editServerLocation
 											}
-											onChanged={v =>
-												(this.serverFieldValue = v)
+											onChange={(ev, v) =>
+												(this.serverFieldValue = v!)
 											}
 										/>
 									</div>
@@ -120,8 +120,8 @@ export class LoginComponent extends React.Component<{}, {}> {
 									label={lang(`Username`)}
 									disabled={this.disableInputs}
 									value={this.usernameFieldValue}
-									onChanged={v =>
-										(this.usernameFieldValue = v)
+									onChange={(e, v) =>
+										(this.usernameFieldValue = v!)
 									}
 								/>
 								<TextField
@@ -130,8 +130,8 @@ export class LoginComponent extends React.Component<{}, {}> {
 									label={lang(`Password`)}
 									disabled={this.disableInputs}
 									value={this.passwordFieldValue}
-									onChanged={v =>
-										(this.passwordFieldValue = v)
+									onChange={(e, v) =>
+										(this.passwordFieldValue = v!)
 									}
 								/>
 								<PrimaryButton

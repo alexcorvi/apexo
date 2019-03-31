@@ -200,10 +200,10 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 								<TextField
 									label={lang("Item name")}
 									value={this.selectedPrescription.name}
-									onChanged={val =>
+									onChange={(ev, val) =>
 										(prescriptions.list[
 											this.selectedIndex
-										].name = val)
+										].name = val!)
 									}
 									disabled={!this.canEdit}
 								/>
@@ -214,7 +214,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 											label={lang("Dosage in mg")}
 											type="number"
 											value={this.selectedPrescription.doseInMg.toString()}
-											onChanged={val =>
+											onChange={(ev, val) =>
 												(prescriptions.list[
 													this.selectedIndex
 												].doseInMg = Number(val))
@@ -227,7 +227,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 											label={lang("Times per day")}
 											type="number"
 											value={this.selectedPrescription.timesPerDay.toString()}
-											onChanged={val =>
+											onChange={(ev, val) =>
 												(prescriptions.list[
 													this.selectedIndex
 												].timesPerDay = Number(val))
@@ -240,7 +240,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 											label={lang("Units per time")}
 											type="number"
 											value={this.selectedPrescription.unitsPerTime.toString()}
-											onChanged={val =>
+											onChange={(ev, val) =>
 												(prescriptions.list[
 													this.selectedIndex
 												].unitsPerTime = Number(val))
@@ -262,11 +262,11 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 											text: lang(form)
 										};
 									})}
-									onChanged={newValue => {
+									onChange={(ev, newValue) => {
 										prescriptions.list[
 											this.selectedIndex
 										].form = stringToItemForm(
-											newValue.text
+											newValue!.text
 										);
 									}}
 								/>

@@ -192,8 +192,8 @@ export class Orthograph extends React.Component<{
 								onText={lang("Started")}
 								offText={lang("Not started yet")}
 								checked={this.props.orthoCase.isStarted}
-								onChanged={val =>
-									(this.props.orthoCase.isStarted = val)
+								onChange={(ev, val) =>
+									(this.props.orthoCase.isStarted = val!)
 								}
 								disabled={!this.canEdit}
 							/>
@@ -213,9 +213,9 @@ export class Orthograph extends React.Component<{
 										};
 									})}
 									disabled={!this.canEdit}
-									onChanged={newValue => {
+									onChange={(ev, newValue) => {
 										this.props.orthoCase.startedDate = Number(
-											newValue.key
+											newValue!.key
 										);
 									}}
 								/>
@@ -228,8 +228,8 @@ export class Orthograph extends React.Component<{
 								onText={lang("Finished")}
 								offText={lang("Not finished yet")}
 								checked={this.props.orthoCase.isFinished}
-								onChanged={val =>
-									(this.props.orthoCase.isFinished = val)
+								onChange={(ev, val) =>
+									(this.props.orthoCase.isFinished = val!)
 								}
 								disabled={!this.canEdit}
 							/>
@@ -249,9 +249,9 @@ export class Orthograph extends React.Component<{
 										};
 									})}
 									disabled={!this.canEdit}
-									onChanged={newValue => {
+									onChange={(ev, newValue) => {
 										this.props.orthoCase.finishedDate = Number(
-											newValue.key
+											newValue!.key
 										);
 									}}
 								/>
@@ -454,7 +454,10 @@ export class Orthograph extends React.Component<{
 																									!this
 																										.canEdit
 																								}
-																								onChanged={val => {
+																								onChange={(
+																									ev,
+																									val
+																								) => {
 																									this.props.orthoCase.visits[
 																										visitIndex
 																									].visitNumber = Number(
@@ -502,11 +505,15 @@ export class Orthograph extends React.Component<{
 																										};
 																									}
 																								)}
-																								onChanged={newValue => {
+																								onChange={(
+																									ev,
+																									newValue
+																								) => {
 																									this.props.orthoCase.visits[
 																										visitIndex
 																									].date = Number(
-																										newValue.key
+																										newValue!
+																											.key
 																									);
 																									this.tu();
 																								}}
@@ -542,10 +549,13 @@ export class Orthograph extends React.Component<{
 																										"";
 																								}}
 																								multiline
-																								onChanged={val => {
+																								onChange={(
+																									ev,
+																									val
+																								) => {
 																									this.props.orthoCase.visits[
 																										visitIndex
-																									].appliance = val;
+																									].appliance = val!;
 																									this.tu();
 																								}}
 																							/>
@@ -746,7 +756,10 @@ export class Orthograph extends React.Component<{
 																																this.expandedField =
 																																	"";
 																															}}
-																															onChanged={val => {
+																															onChange={(
+																																ev,
+																																val
+																															) => {
 																																this.props.orthoCase.visits[
 																																	visitIndex
 																																].visitNumber = Number(
@@ -794,11 +807,15 @@ export class Orthograph extends React.Component<{
 																																	};
 																																}
 																															)}
-																															onChanged={newValue => {
+																															onChange={(
+																																ev,
+																																newValue
+																															) => {
 																																this.props.orthoCase.visits[
 																																	visitIndex
 																																].date = Number(
-																																	newValue.key
+																																	newValue!
+																																		.key
 																																);
 																																this.tu();
 																															}}
@@ -834,10 +851,13 @@ export class Orthograph extends React.Component<{
 																																	"";
 																															}}
 																															multiline
-																															onChanged={val => {
+																															onChange={(
+																																ev,
+																																val
+																															) => {
 																																this.props.orthoCase.visits[
 																																	visitIndex
-																																].appliance = val;
+																																].appliance = val!;
 																																this.tu();
 																															}}
 																														/>
@@ -876,12 +896,15 @@ export class Orthograph extends React.Component<{
 																																	"";
 																															}}
 																															multiline
-																															onChanged={val => {
+																															onChange={(
+																																ev,
+																																val
+																															) => {
 																																this.props.orthoCase.visits[
 																																	visitIndex
 																																].photos[
 																																	photoIndex
-																																].comment = val;
+																																].comment = val!;
 																																this.tu();
 																															}}
 																														/>

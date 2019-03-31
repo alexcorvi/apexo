@@ -55,10 +55,10 @@ export class SettingsComponent extends React.Component<{}, {}> {
 									{ key: "ar", text: "العربية" }
 								]}
 								defaultSelectedKey={settings.getSetting("lang")}
-								onChanged={v => {
+								onChange={(ev, v) => {
 									settings.setSetting(
 										"lang",
-										v.key.toString()
+										v!.key.toString()
 									);
 								}}
 								disabled={!this.canEdit}
@@ -76,10 +76,10 @@ export class SettingsComponent extends React.Component<{}, {}> {
 									"dropbox_accessToken"
 								)}
 								label={lang("Dropbox access token")}
-								onChanged={val => {
+								onChange={(ev, val) => {
 									settings.setSetting(
 										"dropbox_accessToken",
-										val
+										val!
 									);
 
 									setTimeout(
@@ -103,10 +103,10 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								label={lang("Time expenses (per hour)")}
 								type="number"
 								value={settings.getSetting("hourlyRate")}
-								onChanged={newVal => {
+								onChange={(ev, newVal) => {
 									settings.setSetting(
 										"hourlyRate",
-										newVal.toString()
+										newVal!.toString()
 									);
 								}}
 								disabled={!this.canEdit}
@@ -123,10 +123,10 @@ export class SettingsComponent extends React.Component<{}, {}> {
 							<TextField
 								label={lang("Currency symbol")}
 								value={settings.getSetting("currencySymbol")}
-								onChanged={newVal => {
+								onChange={(ev, newVal) => {
 									settings.setSetting(
 										"currencySymbol",
-										newVal.toString()
+										newVal!.toString()
 									);
 								}}
 								disabled={!this.canEdit}
@@ -145,7 +145,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						defaultChecked={
 							!!settings.getSetting("module_prescriptions")
 						}
-						onChanged={val => {
+						onChange={(ev, val) => {
 							settings.setSetting(
 								"module_prescriptions",
 								val ? "enable" : ""
@@ -159,7 +159,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						defaultChecked={
 							!!settings.getSetting("module_orthodontics")
 						}
-						onChanged={val => {
+						onChange={(ev, val) => {
 							settings.setSetting(
 								"module_orthodontics",
 								val ? "enable" : ""
@@ -173,7 +173,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						defaultChecked={
 							!!settings.getSetting("module_statistics")
 						}
-						onChanged={val => {
+						onChange={(ev, val) => {
 							settings.setSetting(
 								"module_statistics",
 								val ? "enable" : ""
@@ -185,7 +185,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						onText={lang("Time tracking enabled")}
 						offText={lang("Time tracking disabled")}
 						defaultChecked={!!settings.getSetting("time_tracking")}
-						onChanged={val => {
+						onChange={(ev, val) => {
 							settings.setSetting(
 								"time_tracking",
 								val ? "enable" : ""
@@ -265,10 +265,10 @@ export class SettingsComponent extends React.Component<{}, {}> {
 									defaultSelectedKey={settings.getSetting(
 										"backup_freq"
 									)}
-									onChanged={v => {
+									onChange={(ev, v) => {
 										settings.setSetting(
 											"backup_freq",
-											v.key.toString()
+											v!.key.toString()
 										);
 									}}
 									disabled={!this.canEdit}
@@ -277,10 +277,10 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								<TextField
 									value={settings.getSetting("backup_retain")}
 									label={lang("How many backups to retain")}
-									onChanged={val => {
+									onChange={(ev, val) => {
 										settings.setSetting(
 											"backup_retain",
-											val
+											val!
 										);
 									}}
 									disabled={!this.canEdit}

@@ -61,7 +61,7 @@ export class ChooseUser extends React.Component<{}, {}> {
 					<div>
 						<TextField
 							value={this.newDocName}
-							onChanged={v => (this.newDocName = v)}
+							onChange={(ev, v) => (this.newDocName = v!)}
 							label={lang("Register as new staff member")}
 						/>
 						<PrimaryButton

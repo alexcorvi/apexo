@@ -38,7 +38,7 @@ export class ModalsComponent extends React.Component<{}, {}> {
 						{modal.input ? (
 							<TextField
 								value={this.inputValue}
-								onChanged={val => (this.inputValue = val)}
+								onChange={(e, val) => (this.inputValue = val!)}
 							/>
 						) : (
 							""

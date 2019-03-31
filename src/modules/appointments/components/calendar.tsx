@@ -234,15 +234,17 @@ export class Calendar extends React.Component<{}, {}> {
 									defaultChecked={this.showAll}
 									onText={lang("All appointments")}
 									offText={lang("My appointments only")}
-									onChanged={newValue => {
-										this.showAll = newValue;
+									onChange={(ev, newValue) => {
+										this.showAll = newValue!;
 									}}
 								/>
 							</Col>
 							<Col sm={12} md={18} xs={0} className="filter">
 								<TextField
 									placeholder={lang("Type to filter")}
-									onChanged={newVal => (this.filter = newVal)}
+									onChange={(ev, newVal) =>
+										(this.filter = newVal!)
+									}
 								/>
 							</Col>
 						</Row>

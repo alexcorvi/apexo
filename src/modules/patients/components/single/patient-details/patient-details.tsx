@@ -31,7 +31,9 @@ export class PatientDetails extends React.Component<{
 						<TextField
 							label={lang(`Name`)}
 							value={this.props.patient.name}
-							onChanged={name => (this.props.patient.name = name)}
+							onChange={(ev, name) =>
+								(this.props.patient.name = name!)
+							}
 							disabled={!this.canEdit}
 						/>
 					</div>
@@ -41,7 +43,7 @@ export class PatientDetails extends React.Component<{
 								<TextField
 									label={lang("Birth year / age")}
 									value={this.props.patient.birthYearOrAge.toString()}
-									onChanged={year =>
+									onChange={(ev, year) =>
 										(this.props.patient.birthYearOrAge = Number(
 											year
 										))
@@ -65,8 +67,8 @@ export class PatientDetails extends React.Component<{
 										{ key: "male", text: lang("Male") },
 										{ key: "female", text: lang("Female") }
 									]}
-									onChanged={val => {
-										if (val.key === "male") {
+									onChange={(ev, val) => {
+										if (val!.key === "male") {
 											this.props.patient.gender =
 												Gender.male;
 										} else {
@@ -85,7 +87,9 @@ export class PatientDetails extends React.Component<{
 					<TextField
 						label={lang("Phone")}
 						value={this.props.patient.phone}
-						onChanged={phone => (this.props.patient.phone = phone)}
+						onChange={(ev, phone) =>
+							(this.props.patient.phone = phone!)
+						}
 						type="number"
 						disabled={!this.canEdit}
 					/>
@@ -93,15 +97,17 @@ export class PatientDetails extends React.Component<{
 					<TextField
 						label={lang("Email")}
 						value={this.props.patient.email}
-						onChanged={email => (this.props.patient.email = email)}
+						onChange={(ev, email) =>
+							(this.props.patient.email = email!)
+						}
 						disabled={!this.canEdit}
 					/>
 
 					<TextField
 						label={lang("Address")}
 						value={this.props.patient.address}
-						onChanged={address =>
-							(this.props.patient.address = address)
+						onChange={(ev, address) =>
+							(this.props.patient.address = address!)
 						}
 						disabled={!this.canEdit}
 					/>

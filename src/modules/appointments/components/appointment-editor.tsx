@@ -238,8 +238,8 @@ export class AppointmentEditor extends React.Component<
 							disabled={!this.canEdit}
 							label={lang("Details")}
 							value={this.props.appointment!.notes}
-							onChanged={value => {
-								this.props.appointment!.notes = value;
+							onChange={(e, value) => {
+								this.props.appointment!.notes = value!;
 							}}
 						/>
 						<br />
@@ -263,8 +263,8 @@ export class AppointmentEditor extends React.Component<
 													text: tr.type
 												};
 											})}
-										onChanged={newValue => {
-											this.props.appointment!.treatmentID = newValue.key.toString();
+										onChange={(e, newValue) => {
+											this.props.appointment!.treatmentID = newValue!.key.toString();
 										}}
 									/>
 								</div>
@@ -276,7 +276,7 @@ export class AppointmentEditor extends React.Component<
 										disabled={!this.canEdit}
 										type="number"
 										value={this.props.appointment!.units.toString()}
-										onChanged={newValue => {
+										onChange={(e, newValue) => {
 											this.props.appointment!.units = Number(
 												newValue
 											);
@@ -596,7 +596,7 @@ export class AppointmentEditor extends React.Component<
 												disabled={!this.canEdit}
 												label={lang("Price")}
 												value={this.props.appointment!.finalPrice.toString()}
-												onChanged={newVal => {
+												onChange={(e, newVal) => {
 													this.props.appointment!.finalPrice = Number(
 														newVal
 													);
@@ -612,7 +612,7 @@ export class AppointmentEditor extends React.Component<
 												disabled={!this.canEdit}
 												label={lang("Paid")}
 												value={this.props.appointment!.paidAmount.toString()}
-												onChanged={newVal => {
+												onChange={(e, newVal) => {
 													this.props.appointment!.paidAmount = Number(
 														newVal
 													);
@@ -693,8 +693,8 @@ export class AppointmentEditor extends React.Component<
 									onText={lang("Done")}
 									offText={lang("Not done")}
 									disabled={!this.canEdit}
-									onChanged={newVal => {
-										this.props.appointment!.isDone = newVal;
+									onChange={(e, newVal) => {
+										this.props.appointment!.isDone = newVal!;
 									}}
 								/>
 							</Col>

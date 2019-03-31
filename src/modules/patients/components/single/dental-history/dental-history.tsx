@@ -43,8 +43,8 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 					defaultChecked={true}
 					onText={lang("View graphic chart")}
 					offText={lang("View sorted table")}
-					onChanged={newVal => {
-						this.viewChart = newVal;
+					onChange={(ev, newVal) => {
+						this.viewChart = newVal!;
 					}}
 				/>
 				<div className="m-t-20">
@@ -164,7 +164,7 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 						<div className="tooth-details">
 							<Dropdown
 								placeHolder={lang(`Condition`)}
-								onChanged={(newVal: any) => {
+								onChange={(ev, newVal: any) => {
 									this.props.patient.teeth[
 										this.viewToothISO
 									].condition = newVal.key.toString();

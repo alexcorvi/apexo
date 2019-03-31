@@ -200,10 +200,10 @@ export class Treatments extends React.Component<{}, {}> {
 									<TextField
 										label={lang("Treatment title")}
 										value={this.selectedTreatment.type}
-										onChanged={val =>
+										onChange={(ev, val) =>
 											(treatments.list[
 												this.selectedIndex
-											].type = val)
+											].type = val!)
 										}
 										disabled={!this.canEdit}
 									/>
@@ -213,7 +213,7 @@ export class Treatments extends React.Component<{}, {}> {
 										)}
 										type="number"
 										value={this.selectedTreatment.expenses.toString()}
-										onChanged={val =>
+										onChange={(ev, val) =>
 											(treatments.list[
 												this.selectedIndex
 											].expenses = Number(val))

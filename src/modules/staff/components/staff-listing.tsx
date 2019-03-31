@@ -427,8 +427,8 @@ export class StaffListing extends React.Component<{}, {}> {
 											<TextField
 												label={lang("Name")}
 												value={this.member.name}
-												onChanged={val =>
-													(this.member.name = val)
+												onChange={(ev, val) =>
+													(this.member.name = val!)
 												}
 												disabled={!this.canEdit}
 											/>
@@ -481,8 +481,8 @@ export class StaffListing extends React.Component<{}, {}> {
 														value={
 															this.member.phone
 														}
-														onChanged={val =>
-															(this.member.phone = val)
+														onChange={(ev, val) =>
+															(this.member.phone = val!)
 														}
 														disabled={!this.canEdit}
 													/>
@@ -495,8 +495,8 @@ export class StaffListing extends React.Component<{}, {}> {
 														value={
 															this.member.email
 														}
-														onChanged={val =>
-															(this.member.email = val)
+														onChange={(ev, val) =>
+															(this.member.email = val!)
 														}
 														disabled={!this.canEdit}
 													/>
@@ -518,9 +518,9 @@ export class StaffListing extends React.Component<{}, {}> {
 												<TextField
 													label={lang("Login PIN")}
 													value={this.member.pin}
-													onChanged={v => {
+													onChange={(ev, v) => {
 														if (Number(v) < 10000) {
-															this.member.pin = v.toString();
+															this.member.pin = v!.toString();
 														} else {
 															this.forceUpdate();
 														}
@@ -575,8 +575,8 @@ export class StaffListing extends React.Component<{}, {}> {
 											offText={lang(
 												"Doesn't operate on patients"
 											)}
-											onChanged={newVal => {
-												this.member.operates = newVal;
+											onChange={(ev, newVal) => {
+												this.member.operates = newVal!;
 											}}
 										/>
 
@@ -592,8 +592,8 @@ export class StaffListing extends React.Component<{}, {}> {
 											offText={lang(
 												"Can not view staff page"
 											)}
-											onChanged={newVal => {
-												this.member.canViewStaff = newVal;
+											onChange={(ev, newVal) => {
+												this.member.canViewStaff = newVal!;
 											}}
 										/>
 										<Toggle
@@ -610,8 +610,8 @@ export class StaffListing extends React.Component<{}, {}> {
 											offText={lang(
 												"Can not view patients page"
 											)}
-											onChanged={newVal => {
-												this.member.canViewPatients = newVal;
+											onChange={(ev, newVal) => {
+												this.member.canViewPatients = newVal!;
 											}}
 										/>
 										{setting.getSetting(
@@ -631,8 +631,8 @@ export class StaffListing extends React.Component<{}, {}> {
 												offText={lang(
 													"Can not view orthodontics page"
 												)}
-												onChanged={newVal => {
-													this.member.canViewOrtho = newVal;
+												onChange={(ev, newVal) => {
+													this.member.canViewOrtho = newVal!;
 												}}
 											/>
 										) : (
@@ -652,8 +652,8 @@ export class StaffListing extends React.Component<{}, {}> {
 											offText={lang(
 												"Can not view appointments page"
 											)}
-											onChanged={newVal => {
-												this.member.canViewAppointments = newVal;
+											onChange={(ev, newVal) => {
+												this.member.canViewAppointments = newVal!;
 											}}
 										/>
 										<Toggle
@@ -670,8 +670,8 @@ export class StaffListing extends React.Component<{}, {}> {
 											offText={lang(
 												"Can not view treatments page"
 											)}
-											onChanged={newVal => {
-												this.member.canViewTreatments = newVal;
+											onChange={(ev, newVal) => {
+												this.member.canViewTreatments = newVal!;
 											}}
 										/>
 										{setting.getSetting(
@@ -692,8 +692,8 @@ export class StaffListing extends React.Component<{}, {}> {
 												offText={lang(
 													"Can not view prescriptions page"
 												)}
-												onChanged={newVal => {
-													this.member.canViewPrescriptions = newVal;
+												onChange={(ev, newVal) => {
+													this.member.canViewPrescriptions = newVal!;
 												}}
 											/>
 										) : (
@@ -716,8 +716,8 @@ export class StaffListing extends React.Component<{}, {}> {
 												offText={lang(
 													"Can not view statistics page"
 												)}
-												onChanged={newVal => {
-													this.member.canViewStats = newVal;
+												onChange={(ev, newVal) => {
+													this.member.canViewStats = newVal!;
 												}}
 											/>
 										) : (
@@ -738,8 +738,8 @@ export class StaffListing extends React.Component<{}, {}> {
 											offText={lang(
 												"Can not view settings page"
 											)}
-											onChanged={newVal => {
-												this.member.canViewSettings = newVal;
+											onChange={(ev, newVal) => {
+												this.member.canViewSettings = newVal!;
 											}}
 										/>
 
@@ -758,8 +758,8 @@ export class StaffListing extends React.Component<{}, {}> {
 												offText={lang(
 													"Can not edit staff page"
 												)}
-												onChanged={newVal => {
-													this.member.canEditStaff = newVal;
+												onChange={(ev, newVal) => {
+													this.member.canEditStaff = newVal!;
 												}}
 											/>
 										) : (
@@ -780,8 +780,8 @@ export class StaffListing extends React.Component<{}, {}> {
 												offText={lang(
 													"Can not edit patients page"
 												)}
-												onChanged={newVal => {
-													this.member.canEditPatients = newVal;
+												onChange={(ev, newVal) => {
+													this.member.canEditPatients = newVal!;
 												}}
 											/>
 										) : (
@@ -805,8 +805,8 @@ export class StaffListing extends React.Component<{}, {}> {
 												offText={lang(
 													"Can not edit orthodontics page"
 												)}
-												onChanged={newVal => {
-													this.member.canEditOrtho = newVal;
+												onChange={(ev, newVal) => {
+													this.member.canEditOrtho = newVal!;
 												}}
 											/>
 										) : (
@@ -829,8 +829,8 @@ export class StaffListing extends React.Component<{}, {}> {
 												offText={lang(
 													"Can not edit appointments page"
 												)}
-												onChanged={newVal => {
-													this.member.canEditAppointments = newVal;
+												onChange={(ev, newVal) => {
+													this.member.canEditAppointments = newVal!;
 												}}
 											/>
 										) : (
@@ -853,8 +853,8 @@ export class StaffListing extends React.Component<{}, {}> {
 												offText={lang(
 													"Can not edit treatments page"
 												)}
-												onChanged={newVal => {
-													this.member.canEditTreatments = newVal;
+												onChange={(ev, newVal) => {
+													this.member.canEditTreatments = newVal!;
 												}}
 											/>
 										) : (
@@ -880,8 +880,8 @@ export class StaffListing extends React.Component<{}, {}> {
 												offText={lang(
 													"Can not edit prescriptions page"
 												)}
-												onChanged={newVal => {
-													this.member.canEditPrescriptions = newVal;
+												onChange={(ev, newVal) => {
+													this.member.canEditPrescriptions = newVal!;
 												}}
 											/>
 										) : (
@@ -903,8 +903,8 @@ export class StaffListing extends React.Component<{}, {}> {
 												offText={lang(
 													"Can not edit settings page"
 												)}
-												onChanged={newVal => {
-													this.member.canEditSettings = newVal;
+												onChange={(ev, newVal) => {
+													this.member.canEditSettings = newVal!;
 												}}
 											/>
 										) : (
