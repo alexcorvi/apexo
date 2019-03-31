@@ -9,8 +9,6 @@ function unsetRTL() {
 	document.getElementsByTagName("html")[0].setAttribute("dir", "ltr");
 }
 
-(window as any).unknown = [];
-
 export function lang(term: string) {
 	const currentLanguageCode = setting.getSetting("lang");
 	const currentLanguage = languages.find(
@@ -21,10 +19,6 @@ export function lang(term: string) {
 		setRTL();
 	} else {
 		unsetRTL();
-	}
-
-	if (!currentLanguage.terms[term]) {
-		(window as any).unknown.push(term);
 	}
 
 	return currentLanguage.terms[term] || term;
