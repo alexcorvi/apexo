@@ -71,23 +71,6 @@ h5 {
 	}
 }
 
-.ms-CommandBar.fixed {
-	box-sizing: content-box;
-	@include box_shadow(3);
-	background-color: #fff !important;
-	border-bottom: 1px solid #e0e0e0;
-	.ms-CommandBarSearch {
-		border-right: none !important;
-	}
-	.ms-CommandBar-primaryCommands {
-		margin-right: 0;
-		right: 0;
-	}
-	.ms-CommandBarSearch:before {
-		border-bottom: none;
-	}
-}
-
 @media screen and (max-width: 767px) {
 	.ms-Panel-content {
 		padding-bottom: 40px;

@@ -61,7 +61,9 @@ export class EditableList extends React.Component<
 										}
 									}}
 									value={this.valueToAdd}
-									onChanged={val => (this.valueToAdd = val)}
+									onChange={(e, val) =>
+										(this.valueToAdd = val!)
+									}
 									disabled={this.props.disabled}
 								/>
 							</Col>
@@ -102,10 +104,10 @@ export class EditableList extends React.Component<
 															this.props.disabled
 														}
 														autoFocus
-														onChanged={val => {
+														onChange={(e, val) => {
 															this.props.value[
 																i
-															] = val;
+															] = val!;
 
 															(this.props
 																.onChange ||

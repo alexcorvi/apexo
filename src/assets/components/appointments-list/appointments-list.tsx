@@ -36,7 +36,10 @@ export class AppointmentsList extends React.Component<
 						<TextField
 							label={lang("Filter")}
 							value={this.filter}
-							onChanged={v => (this.filter = v)}
+							onChange={(e, v) => {
+								console.log(v);
+								this.filter = v!;
+							}}
 						/>
 
 						<hr />

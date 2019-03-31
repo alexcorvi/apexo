@@ -11,7 +11,7 @@ export class GridTable extends React.Component {
 				const parentHeight = el.parentElement!.offsetHeight;
 				(el as any).style.height = `${parentHeight}px`;
 			});
-		}, 300);
+		}, 300) as any;
 	}
 
 	componentWillUnmount() {

@@ -3,7 +3,7 @@ import * as React from "react";
 import { API } from "../../../core";
 import { Appointment, appointments } from "../data";
 import { Col, Row } from "../../../assets/components/grid/index";
-import { computed } from "mobx";
+import { computed, observable } from "mobx";
 import { convert } from "../../../assets/utils/teeth-numbering-systems";
 import {
 	DatePicker,
@@ -43,7 +43,8 @@ export class AppointmentEditor extends React.Component<
 	},
 	{}
 > {
-	timerInput: TextField[] = [];
+	@observable timerInputs: number[] = [];
+
 	@computed
 	get otherAppointmentsNumber() {
 		const appointment = this.props.appointment;
@@ -469,53 +470,41 @@ export class AppointmentEditor extends React.Component<
 											className="time-input hours"
 											type="number"
 											disabled={!this.canEdit}
-											ref={el =>
-												el
-													? (this.timerInput[0] = el)
-													: ""
-											}
 											value={
 												this.formatMillisecondsToTime(
 													this.props.appointment!.time
 												).hours
 											}
-											onChanged={() =>
-												this.manuallyUpdateTime()
-											}
+											onChange={(e, v) => {
+												this.timerInputs[0] = Number(v);
+												this.manuallyUpdateTime();
+											}}
 										/>
 										<TextField
 											className="time-input minutes"
 											type="number"
 											disabled={!this.canEdit}
-											ref={el =>
-												el
-													? (this.timerInput[1] = el)
-													: ""
-											}
 											value={
 												this.formatMillisecondsToTime(
 													this.props.appointment!.time
 												).minutes
 											}
-											onChanged={() =>
-												this.manuallyUpdateTime()
-											}
+											onChange={(e, v) => {
+												this.timerInputs[1] = Number(v);
+												this.manuallyUpdateTime();
+											}}
 										/>
 										<TextField
 											className="time-input seconds"
 											type="number"
 											disabled={!this.canEdit}
-											ref={el =>
-												el
-													? (this.timerInput[2] = el)
-													: ""
-											}
 											value={
 												this.formatMillisecondsToTime(
 													this.props.appointment!.time
 												).seconds
 											}
-											onChanged={() => {
+											onChange={(e, v) => {
+												this.timerInputs[2] = Number(v);
 												this.manuallyUpdateTime();
 											}}
 										/>
@@ -760,9 +749,9 @@ export class AppointmentEditor extends React.Component<
 		const msInSecond = 1000;
 		const msInMinute = msInSecond * 60;
 		const msInHour = msInMinute * 60;
-		const hours = Number(this.timerInput[0].value);
-		const minutes = Number(this.timerInput[1].value);
-		const seconds = Number(this.timerInput[2].value);
+		const hours = this.timerInputs[0];
+		const minutes = this.timerInputs[1];
+		const seconds = this.timerInputs[2];
 		if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
 			return;
 		}
