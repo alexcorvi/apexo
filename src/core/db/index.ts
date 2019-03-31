@@ -1,5 +1,9 @@
 import pouchDB = require("pouchdb-browser");
 const PouchDB: PouchDB.Static = (pouchDB as any).default;
+import * as cryptoPouch from "crypto-pouch";
+import auth = require("pouchdb-authentication");
+PouchDB.plugin(cryptoPouch);
+PouchDB.plugin((auth as any).default);
 import { API } from "../";
 import { configs } from "./config";
 import { generateMethods } from "./generate-methods";
@@ -82,13 +86,17 @@ export const destroyLocal: {
 	}
 };
 
+export function connectToDB(name: string, shouldLog: boolean = false) {
+	const unique = Md5.hashStr(store.get("LSL_hash")).toString();
+
 	// prefixing local DB name
-	const localName = name + "_" + Md5.hashStr(API.login.server);
+	const localName = name + "_" + unique;
 
 	/**
 	 * Connection object
 	 */
 	const localDatabase = new PouchDB(localName);
+	localDatabase.crypto(unique);
 
 	const remoteDatabase = new PouchDB(`${API.login.server}/${name}`, {
 		fetch: (url, opts) =>
