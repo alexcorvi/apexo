@@ -6,16 +6,7 @@ import { API, components } from "../";
 import { resync } from "../db";
 import { observer } from "mobx-react";
 import { Row, Col } from "../../assets/components/grid/index";
-import {
-	OverflowSet,
-	Link,
-	IconButton,
-	CommandBarButton,
-	IOverflowSetItemProps,
-	IOverflowSet,
-	Icon
-} from "office-ui-fabric-react";
-import { isOnline } from "../../assets/utils/is-online";
+import { IconButton, Icon } from "office-ui-fabric-react";
 import { lang } from "../i18/i18";
 
 @observer
