@@ -6511,7 +6511,7 @@ h5 {
   #router-outlet > div {
     padding: 0; }
   .commandBar {
-    margin-bottom: 0; }
+    margin-bottom: -1px; }
   .data-table tr {
     margin-top: 0 !important; }
   .ms-CommandBar.fixed,
@@ -6567,44 +6567,6 @@ h5 {
   .statistics-component .quick .label {
     background: #e3e3e3 !important;
     color: inherit; } }
-
-html,
-body {
-  overflow-x: hidden !important; }
-
-body {
-  background: #f5f5f5 !important;
-  font-family: "Segoe UI WestEuropean";
-  line-height: 1;
-  height: auto; }
-
-hr {
-  border: none;
-  margin-bottom: 20px;
-  border-top: 1px dotted #e0e0e0; }
-
-.hidden {
-  display: none; }
-
-.version-num {
-  font-size: 12px;
-  position: absolute;
-  color: #e3e3e3;
-  bottom: 5px;
-  right: 12px;
-  z-index: -1; }
-
-.external-service-panel .ms-Panel-main {
-  width: 100% !important;
-  left: 0 !important; }
-  .external-service-panel .ms-Panel-main .ms-Panel-content {
-    padding: 0;
-    overflow: hidden;
-    padding-top: 27px; }
-    .external-service-panel .ms-Panel-main .ms-Panel-content iframe {
-      height: 100%;
-      width: 100%;
-      border: 0; }
 
 [dir="rtl"] body {
   direction: rtl;
@@ -6794,3 +6756,41 @@ hr {
   left: 0;
   border-left: none;
   border-right: 1px solid #e3e3e3; }
+
+html,
+body {
+  overflow-x: hidden !important; }
+
+body {
+  background: #f5f5f5 !important;
+  font-family: "Segoe UI WestEuropean";
+  line-height: 1;
+  height: auto; }
+
+hr {
+  border: none;
+  margin-bottom: 20px;
+  border-top: 1px dotted #e0e0e0; }
+
+.hidden {
+  display: none; }
+
+.version-num {
+  font-size: 12px;
+  position: absolute;
+  color: #e3e3e3;
+  bottom: 5px;
+  right: 12px;
+  z-index: -1; }
+
+.external-service-panel .ms-Panel-main {
+  width: 100% !important;
+  left: 0 !important; }
+  .external-service-panel .ms-Panel-main .ms-Panel-content {
+    padding: 0;
+    overflow: hidden;
+    padding-top: 27px; }
+    .external-service-panel .ms-Panel-main .ms-Panel-content iframe {
+      height: 100%;
+      width: 100%;
+      border: 0; }
