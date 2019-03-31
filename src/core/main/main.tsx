@@ -32,7 +32,6 @@ export class ErrorBoundary extends React.Component<{}> {
 
 	render() {
 		if (this.hasError) {
-			// You can render any custom fallback UI
 			return (
 				<MessageBar className="eb" messageBarType={1}>
 					Error occurred
