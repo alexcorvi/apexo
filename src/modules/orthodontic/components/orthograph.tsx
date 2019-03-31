@@ -19,7 +19,8 @@ import {
 	PrimaryButton,
 	Toggle,
 	Dropdown,
-	TooltipHost
+	TooltipHost,
+	DefaultButton
 } from "office-ui-fabric-react";
 import { generateID } from "../../../assets/utils/generate-id";
 import { observable, computed, observe } from "mobx";
@@ -1130,7 +1131,7 @@ export class Orthograph extends React.Component<{
 									</MessageBar>
 								)}
 								<br />
-								<PrimaryButton
+								<DefaultButton
 									disabled={!this.canEdit}
 									iconProps={{ iconName: "ExploreContent" }}
 									text={lang("Add visit")}

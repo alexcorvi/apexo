@@ -5,7 +5,8 @@ import { computed } from "mobx";
 import {
 	PrimaryButton,
 	MessageBar,
-	MessageBarType
+	MessageBarType,
+	DefaultButton
 } from "office-ui-fabric-react";
 import { Patient } from "../../../data";
 import { observer } from "mobx-react";
@@ -49,7 +50,7 @@ export class PatientAppointments extends React.Component<
 					)}
 					<br />
 					{this.canEdit ? (
-						<PrimaryButton
+						<DefaultButton
 							onClick={() => {
 								const apt = new appointmentsData.Appointment();
 								apt.patientID = this.props.patient._id;

@@ -7,13 +7,13 @@ import {
 	IconButton,
 	SearchBox,
 	MessageBar,
-	MessageBarType
+	MessageBarType,
+	DefaultButton
 } from "office-ui-fabric-react";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { textualFilter } from "../../utils/textual-filter";
 import "./data-table.component.scss";
-import { PrimaryButton } from "office-ui-fabric-react";
 import { lang } from "../../../core/i18/i18";
 import { num } from "../../utils/num";
 
@@ -221,7 +221,7 @@ export class DataTable extends React.Component<Props, {}> {
 				</table>
 
 				{this.limitedRows.length < this.filteredRows.length ? (
-					<PrimaryButton
+					<DefaultButton
 						style={{ marginTop: 20 }}
 						iconProps={{ iconName: "more" }}
 						onClick={() => (this.limit = this.limit + 10)}

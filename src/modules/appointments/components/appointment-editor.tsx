@@ -16,7 +16,8 @@ import {
 	TextField,
 	Toggle,
 	Checkbox,
-	Slider
+	Slider,
+	DefaultButton
 } from "office-ui-fabric-react";
 import { staffData } from "../../staff";
 import { Tag, TagType } from "../../../assets/components/label/label.component";
@@ -441,7 +442,7 @@ export class AppointmentEditor extends React.Component<
 
 								{this.props.appointment!.prescriptions
 									.length ? (
-									<PrimaryButton
+									<DefaultButton
 										onClick={print}
 										iconProps={{ iconName: "print" }}
 										text={lang("Print prescription")}

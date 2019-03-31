@@ -8,7 +8,8 @@ import {
 	TextField,
 	IconButton,
 	PersonaInitialsColor,
-	Icon
+	Icon,
+	DefaultButton
 } from "office-ui-fabric-react";
 import { observable, computed } from "mobx";
 import { DataTable } from "../../../assets/components/data-table/data-table.component";
@@ -464,7 +465,7 @@ export class OrthoList extends React.Component<{}, {}> {
 						value={this.newPatientName}
 						onChange={(e, v) => (this.newPatientName = v!)}
 					/>
-					<PrimaryButton
+					<DefaultButton
 						onClick={() => {
 							const newPatient = new patientsData.Patient();
 							newPatient.name = this.newPatientName;

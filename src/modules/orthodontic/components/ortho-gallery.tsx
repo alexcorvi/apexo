@@ -4,7 +4,8 @@ import {
 	IconButton,
 	PrimaryButton,
 	MessageBar,
-	MessageBarType
+	MessageBarType,
+	DefaultButton
 } from "office-ui-fabric-react";
 
 import { OrthoCase } from "../data/class.ortho";
@@ -158,7 +159,7 @@ export class OrthoGallery extends React.Component<{
 										this.props.orthoCase._id
 									}`}
 								>
-									<PrimaryButton
+									<DefaultButton
 										iconProps={{ iconName: "Add" }}
 										text={lang("New analysis")}
 									/>

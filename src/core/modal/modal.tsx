@@ -6,7 +6,8 @@ import {
 	Panel,
 	PanelType,
 	PrimaryButton,
-	TextField
+	TextField,
+	DefaultButton
 } from "office-ui-fabric-react";
 import { observer } from "mobx-react";
 import { modals } from "./data.modal";
@@ -57,7 +58,7 @@ export class ModalsComponent extends React.Component<{}, {}> {
 							""
 						)}
 						{modal.showCancelButton ? (
-							<PrimaryButton
+							<DefaultButton
 								onClick={() =>
 									modals.activeModals.splice(index, 1)
 								}
