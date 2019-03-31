@@ -38,7 +38,6 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 	render() {
 		return (
 			<div className="dental-history teeth">
-				<br />
 				<Toggle
 					defaultChecked={true}
 					onText={lang("View graphic chart")}
