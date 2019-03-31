@@ -15,7 +15,8 @@ import {
 	Dropdown,
 	IconButton,
 	MessageBar,
-	MessageBarType
+	MessageBarType,
+	DefaultButton
 } from "office-ui-fabric-react";
 import { settings } from "../data";
 import "./settings.scss";
@@ -198,29 +199,29 @@ export class SettingsComponent extends React.Component<{}, {}> {
 				<Section title={lang(`Backup and Restore`)}>
 					{API.login.online ? (
 						<div>
-							<PrimaryButton
+							<DefaultButton
 								onClick={() => {
 									compact.compact();
 								}}
 								iconProps={{ iconName: "ZipFolder" }}
-								style={{ marginLeft: 10 }}
+								className="m-l-5 m-t-5"
 								text={lang("Run compaction")}
 							/>
 
-							<PrimaryButton
+							<DefaultButton
 								onClick={() => {
 									downloadCurrent();
 								}}
-								style={{ marginLeft: 10 }}
+								className="m-l-5 m-t-5"
 								iconProps={{ iconName: "Database" }}
 								text={lang("Download a backup")}
 							/>
 
-							<PrimaryButton
+							<DefaultButton
 								onClick={() =>
 									this.inputEl ? this.inputEl.click() : ""
 								}
-								style={{ marginLeft: 10 }}
+								className="m-l-5 m-t-5"
 								iconProps={{ iconName: "DatabaseSync" }}
 								text={lang("Restore from file")}
 							/>

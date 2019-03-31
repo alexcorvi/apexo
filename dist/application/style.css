@@ -3584,6 +3584,8 @@
   font-size: 13px; }
   .settings-component .ms-MessageBar {
     margin-top: 22px; }
+    .settings-component .ms-MessageBar .ms-MessageBar-innerText {
+      margin-top: 0 !important; }
   .settings-component .form .ms-TextField-prefix {
     font-size: 11px;
     width: 90px; }

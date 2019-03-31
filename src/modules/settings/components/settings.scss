@@ -5,6 +5,9 @@
 
 	.ms-MessageBar {
 		margin-top: 22px;
+		.ms-MessageBar-innerText {
+			margin-top: 0 !important;
+		}
 	}
 
 	.form {
