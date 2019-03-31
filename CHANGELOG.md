@@ -16,6 +16,7 @@
 -   Enhancement: Data tables and panels separation
 -   Enhancement: A table of all the involved appointments in stats
 -   Enhancement: Unification of icon sub-sets
+-   Updated dependencies
 
 ### 2.2.3
 
