@@ -6,6 +6,7 @@
 -   New feature: Orthodontic archive / replacing orthograph
 -   New feature: calculation of outstanding and overpaid amounts
 -   New feature: All files are uploaded to DropBox
+-   New feature: client-side data encryption
 -   Bug fix: Backup and restore was not being done as it should be
 -   Bug fix: Automated backups was not being done as it should be
 -   Bug fix: uploading images were requiring credentials

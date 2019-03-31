@@ -1,11 +1,10 @@
-import { minute, second } from "./../../assets/utils/date";
+import { minute, second, day } from "./../../assets/utils/date";
 import pouchDB = require("pouchdb-browser");
 const PouchDB: PouchDB.Static = (pouchDB as any).default;
 import auth = require("pouchdb-authentication");
 PouchDB.plugin((auth as any).default);
 
 import { observable } from "mobx";
-import { decrypt, encrypt } from "../../assets/utils/encryption";
 import { staffData } from "../../modules/staff";
 import { isOnline } from "../../assets/utils/is-online";
 import { loadDemoData } from "../demo/load-demo-data";
@@ -13,6 +12,7 @@ import { Md5 } from "ts-md5";
 import { registerModules } from "../../modules";
 import { resync } from "../db";
 import { files } from "../files/files";
+import { store } from "./store";
 
 const demoHosts: string[] = [
 	// "localhost:8000",
@@ -40,139 +40,152 @@ class Login {
 
 	@observable dropboxActive: boolean = false;
 
+	@observable tryOffline: boolean = false;
+
 	constructor() {
 		setInterval(() => this.validateOnlineStatus(), second * 2);
 
-		setTimeout(() => this.validateDropBoxToken(), second * 5);
+		setTimeout(() => this.validateDropBoxToken(), second * 5); // initial
 
-		setInterval(() => this.validateDropBoxToken(), minute * 10); // every minute
+		setInterval(() => this.validateDropBoxToken(), minute); // then every minute
 	}
 
 	async initialCheck(server: string) {
+		// If we're on a demo host
+		if (demoHosts.indexOf(location.host) !== -1) {
+			console.log("Login: Demo mode");
+			return await this.startDemoServer();
+		}
+
+		// if we're running on no server mode
+		if (store.found("no_server_mode")) {
+			console.log("Login: No server mode");
+			return await this.startNoServer();
+		}
+
 		this.server = server;
 
-		let saved = false;
-		let savedUser = "";
-		let savedPassword = "";
-		let savedServer = "";
-		const encrypted = localStorage.getItem("ec") || "";
-		const decrypted = decrypt(encrypted);
-		try {
-			const savedCredentials: {
-				server: string;
-				username: string;
-				password: string;
-			} = JSON.parse(decrypted);
-			savedUser = savedCredentials.username;
-			savedPassword = savedCredentials.password;
-			savedServer = savedCredentials.server;
-			saved = true;
-		} catch (e) {}
+		const activeSession = await this.activeSession(this.server);
 
-		if (saved && navigator.onLine) {
-			await this.login({
-				server: savedServer,
-				user: savedUser,
-				pass: savedPassword
-			});
-		} else if (saved) {
-			await this.authenticate({
-				server: savedServer,
-				password: savedPassword,
-				username: savedUser
-			});
-		} else if (localStorage.getItem("no-server-mode") === "true") {
-			await this.noServerMode();
-		} else if (navigator.onLine && (await isOnline(server))) {
-			this.online = true;
-			const username = (await new PouchDB(server).getSession()).userCtx
-				.name;
-			if (username) {
-				await this.authenticate({ server, username });
+		if (navigator.onLine) {
+			if (activeSession) {
+				console.log("Login: using active session");
+				await this.start({ server });
+				store.set("LSL_TS", new Date().getTime().toString());
 			}
-		} else if (demoHosts.indexOf(location.host) !== -1) {
-			this.online = false;
-			this.keepOffline = true;
-			await this.authenticate({
-				server: "https://fake_server.apexo.app",
-				username: ""
-			});
+		} else if (store.found("LSL_hash")) {
+			const now = new Date().getTime();
+			const then = new Date(Number(store.get("LSL_TS"))).getTime();
+			if (now - then < 7 * day) {
+				this.start({ server });
+			}
 		}
 	}
 
-	async noServerMode() {
-		this.online = false;
-		this.keepOffline = true;
-		await this.authenticate({
-			server: "http://apexo-no-server-mode",
-			username: ""
-		});
-		localStorage.setItem("no-server-mode", "true");
-	}
-
-	async login({
-		user,
-		pass,
+	async loginWithCredentials({
+		username,
+		password,
 		server
 	}: {
-		user: string;
-		pass: string;
+		username: string;
+		password: string;
 		server: string;
 	}) {
-		// login
-		try {
-			if (await isOnline(server)) {
-				const res = await new PouchDB(server).logIn(user, pass);
-			} else {
-				const LSL_hash = localStorage.getItem("LSL_hash") || "";
-				if (LSL_hash !== Md5.hashStr(server + user + pass).toString()) {
-					throw new Error("...");
-				}
+		if (!navigator.onLine && store.found("LSL_hash")) {
+			return this.loginWithCredentialsOffline({
+				username,
+				password,
+				server
+			});
+		}
+
+		const onlineServer = await isOnline(server);
+
+		if (navigator.onLine && onlineServer) {
+			return this.loginWithCredentialsOnline({
+				username,
+				password,
+				server
+			});
+		} else {
+			if (store.found("LSL_hash")) {
+				this.tryOffline = true;
 			}
-			this.authenticate({ server, username: user, password: pass });
-		} catch (e) {
-			if (navigator.onLine) {
-				console.log(e);
-				return (
-					e.reason ||
-					'An error occured, please make sure that the server is online and it\'s accessible. Click "change" to change into another server'
-				);
-			} else {
-				return "This was not the last username/password combination you used!";
-			}
+			return `
+				An error occured, please make sure that the server is online and it\'s accessible.
+				Click "change" to change into another server
+			`;
 		}
 	}
 
-	async authenticate({
-		server,
+	async loginWithCredentialsOnline({
 		username,
-		password
+		password,
+		server
 	}: {
-		server: string;
 		username: string;
-		password?: string;
+		password: string;
+		server: string;
 	}) {
-		this.server = server;
-		localStorage.setItem("server_location", server);
-		if (password) {
-			localStorage.setItem(
+		try {
+			await new PouchDB(server, { skip_setup: true }).logIn(
+				username,
+				password
+			);
+			store.set(
 				"LSL_hash",
 				Md5.hashStr(server + username + password).toString()
 			);
-			localStorage.setItem(
-				"ec",
-				encrypt(JSON.stringify({ username, password, server }))
-			);
+			store.set("LSL_TS", new Date().getTime().toString());
+			this.start({ server });
+			return true;
+		} catch (e) {
+			console.error(e);
+			return (e.reason as string) || "Could not login";
 		}
+	}
+
+	async loginWithCredentialsOffline({
+		username,
+		password,
+		server
+	}: {
+		username: string;
+		password: string;
+		server: string;
+	}) {
+		const LSL_hash = store.get("LSL_hash");
+		if (LSL_hash === Md5.hashStr(server + username + password).toString()) {
+			this.start({ server });
+			return true;
+		} else {
+			return "This was not the last username/password combination you used!";
+		}
+	}
+
+	async startDemoServer() {
+		await this.startNoServer();
+		await loadDemoData();
+	}
+
+	async startNoServer() {
+		this.online = false;
+		this.keepOffline = true;
+		await this.start({
+			server: "http://apexo-no-server-mode"
+		});
+		store.set("no_server_mode", "true");
+	}
+
+	async start({ server }: { server: string }) {
+		this.server = server;
+		store.set("server_location", server);
 		this.step = LoginStep.loadingData;
 		try {
 			await registerModules();
-		} catch (e) {}
-
-		if (demoHosts.indexOf(location.host) !== -1) {
-			await loadDemoData();
+		} catch (e) {
+			console.log("Registering modules failed", e);
 		}
-
 		if (!this.checkUserID()) {
 			this.step = LoginStep.chooseUser;
 		}
@@ -180,19 +193,17 @@ class Login {
 	async logout() {
 		if (navigator.onLine && !this.keepOffline) {
 			try {
-				await new PouchDB(this.server).logOut();
-			} catch (e) {}
+				await new PouchDB(this.server, { skip_setup: true }).logOut();
+			} catch (e) {
+				console.log("Failed to logout", e);
+			}
 		}
-		localStorage.removeItem("LSL_hash");
-		localStorage.removeItem("ec");
-		localStorage.removeItem("no-server-mode");
-		localStorage.removeItem("user_id");
-		localStorage.removeItem("server_location");
+		store.clear();
 		location.reload();
 	}
 
 	checkUserID() {
-		const userID = localStorage.getItem("user_id");
+		const userID = store.get("user_id");
 		if (userID && staffData.staffMembers.getIndexByID(userID) !== -1) {
 			this.setUser(userID);
 			return true;
@@ -203,12 +214,12 @@ class Login {
 	resetUser() {
 		this.step = LoginStep.chooseUser;
 		this.currentUserID = "";
-		localStorage.removeItem("user_id");
+		store.remove("user_id");
 	}
 	setUser(id: string) {
 		this.currentUserID = id;
 		this.step = LoginStep.allDone;
-		localStorage.setItem("user_id", id);
+		store.set("user_id", id);
 	}
 
 	validateDropBoxToken() {
@@ -220,6 +231,17 @@ class Login {
 			.catch(e => {
 				this.dropboxActive = false;
 			});
+	}
+
+	async activeSession(server: string) {
+		try {
+			if (navigator.onLine && (await isOnline(server))) {
+				return !!(await new PouchDB(server, {
+					skip_setup: true
+				}).getSession()).userCtx.name;
+			}
+		} catch (e) {}
+		return false;
 	}
 
 	validateOnlineStatus() {

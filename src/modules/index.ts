@@ -86,8 +86,20 @@ export async function registerModules() {
 					await module.register();
 				} catch (e) {
 					try {
+						console.error(
+							"Failed to register module with order:",
+							module.order,
+							e,
+							"Will try again"
+						);
 						await module.register();
-					} catch (e) {}
+					} catch (e) {
+						console.error(
+							"Failed to register module with order:",
+							module.order,
+							e
+						);
+					}
 				}
 				done++;
 			});

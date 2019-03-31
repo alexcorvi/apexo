@@ -1,3 +1,9 @@
+.data-table .ms-CommandBar {
+  box-sizing: content-box;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  background-color: #fff !important;
+  border-bottom: 1px solid #e0e0e0; }
+
 .data-table .ms-table {
   background: #fafafa; }
   .data-table .ms-table td.clickable {
@@ -3574,16 +3580,6 @@
     right: 5px;
     background: #fff;
     border: 1px solid #f1f1f1; }
-.prescriptions-component table.responsive tbody tr td:not(.no-label):before {
-  display: none; }
-
-.prescriptions-component table.responsive tbody tr td.no-label {
-  text-align: left; }
-.treatments-component table.responsive tbody tr td:not(.no-label):before {
-  display: none; }
-
-.treatments-component table.responsive tbody tr td.no-label {
-  text-align: left; }
 .settings-component {
   font-size: 13px; }
   .settings-component .ms-MessageBar {
@@ -3889,6 +3885,16 @@
 @media (max-width: 435px) {
   .duty-table {
     display: none; } }
+.treatments-component table.responsive tbody tr td:not(.no-label):before {
+  display: none; }
+
+.treatments-component table.responsive tbody tr td.no-label {
+  text-align: left; }
+.prescriptions-component table.responsive tbody tr td:not(.no-label):before {
+  display: none; }
+
+.prescriptions-component table.responsive tbody tr td.no-label {
+  text-align: left; }
 .appointment-hr {
   border: none;
   margin-bottom: 20px;
@@ -5432,19 +5438,6 @@ h5 {
     .ms-table .table-head-sort:hover {
       background: #f5f5f5;
       color: #212121; }
-
-.ms-CommandBar.fixed {
-  box-sizing: content-box;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  background-color: #fff !important;
-  border-bottom: 1px solid #e0e0e0; }
-  .ms-CommandBar.fixed .ms-CommandBarSearch {
-    border-right: none !important; }
-  .ms-CommandBar.fixed .ms-CommandBar-primaryCommands {
-    margin-right: 0;
-    right: 0; }
-  .ms-CommandBar.fixed .ms-CommandBarSearch:before {
-    border-bottom: none; }
 
 @media screen and (max-width: 767px) {
   .ms-Panel-content {

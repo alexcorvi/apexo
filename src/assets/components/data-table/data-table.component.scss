@@ -1,4 +1,13 @@
+@import "../../../global-styles/shadows";
+
 .data-table {
+	.ms-CommandBar {
+		box-sizing: content-box;
+		@include box_shadow(3);
+		background-color: #fff !important;
+		border-bottom: 1px solid #e0e0e0;
+	}
+
 	.ms-table {
 		background: #fafafa;
 		td.clickable {

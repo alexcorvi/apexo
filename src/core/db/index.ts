@@ -11,6 +11,7 @@ import { Md5 } from "ts-md5";
 import { observeItem } from "./observe-item";
 import { singleItemUpdateQue } from "./single-item-update-que";
 import { decrypt } from "../../assets/utils/encryption";
+import { store } from "../login/store";
 
 export const resync: {
 	resyncMethods: Array<() => Promise<void>>;
@@ -81,11 +82,6 @@ export const destroyLocal: {
 	}
 };
 
-export function connectToDB(
-	name: string,
-	shouldLog: boolean = false,
-	config?: PouchDB.AdapterWebSql.Configuration
-) {
 	// prefixing local DB name
 	const localName = name + "_" + Md5.hashStr(API.login.server);
 
@@ -94,12 +90,12 @@ export function connectToDB(
 	 */
 	const localDatabase = new PouchDB(localName);
 
-	let credentials = { username: "", password: "" };
-	if (localStorage.getItem("ec")) {
-		credentials = JSON.parse(decrypt(localStorage.getItem("ec") || ""));
-	}
 	const remoteDatabase = new PouchDB(`${API.login.server}/${name}`, {
-		auth: { username: credentials.username, password: credentials.password }
+		fetch: (url, opts) =>
+			PouchDB.fetch(url, {
+				...opts,
+				credentials: "include"
+			})
 	});
 
 	configs[name] = {
@@ -123,7 +119,9 @@ export function connectToDB(
 		} catch (e) {
 			try {
 				await localDatabase.sync(remoteDatabase);
-			} catch (e) {}
+			} catch (e) {
+				console.log("Sync", name, "Failed", e);
+			}
 		}
 		const response =
 			(await localDatabase.allDocs({ include_docs: true })).rows.map(

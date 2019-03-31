@@ -7,20 +7,20 @@ import {
 	TextField
 } from "office-ui-fabric-react";
 import { login } from "./data.login";
-import { observable } from "mobx";
+import { observable, computed } from "mobx";
 import { observer } from "mobx-react";
 import "./login.scss";
 import { lang } from "../i18/i18";
+import { API } from "..";
+import { second } from "../../assets/utils/date";
 
 @observer
 export class LoginComponent extends React.Component<{}, {}> {
-	usernameField: TextField | undefined;
-	passwordField: TextField | undefined;
-	serverField: TextField | undefined;
-
-	couchDBDefaultServer: string =
+	@observable usernameFieldValue = "";
+	@observable passwordFieldValue = "";
+	@observable serverFieldValue =
 		(window as any).couchDBServer ||
-		localStorage.getItem("server_location") ||
+		API.store.get("server_location") ||
 		location.origin.replace(/:\d+$/g, ":5984");
 
 	@observable errorMessage: string = "";
@@ -31,134 +31,207 @@ export class LoginComponent extends React.Component<{}, {}> {
 
 	@observable initiallyChecked: boolean = false;
 
+	@computed get impossibleToLogin() {
+		return !navigator.onLine && !API.store.found("LSL_hash");
+	}
+
 	componentWillMount() {
 		login
-			.initialCheck(this.couchDBDefaultServer)
+			.initialCheck(this.serverFieldValue)
 			.then(() => (this.initiallyChecked = true));
 	}
 
 	render() {
 		return (
 			<div className="login-component">
-				{this.initiallyChecked ? (
-					<div className="login-step">
-						<div className={navigator.onLine ? "hidden" : ""}>
-							<MessageBar messageBarType={MessageBarType.warning}>
-								{`${lang(
-									`You're offline. Use the latest username/password you've successfully used on this machine to login to this server`
-								)}:
-								${(this.couchDBDefaultServer || "").replace(/([^\/])\/[^\/].+/, "$1")}.
-							`}
-							</MessageBar>
-						</div>
-
-						<br />
-						<hr />
-
-						<div className={navigator.onLine ? "" : "hidden"}>
-							<div
-								style={{
-									display: "inline-block",
-									width: "75%"
-								}}
-							>
-								<TextField
-									name="server"
-									label={lang(`Server location`)}
-									ref={el =>
-										el ? (this.serverField = el) : ""
-									}
-									disabled={
-										this.disableInputs ||
-										!this.editServerLocation
-									}
-									defaultValue={this.couchDBDefaultServer}
-								/>
-							</div>
-
-							<DefaultButton
-								className="edit-server-location"
-								onClick={() => {
-									this.editServerLocation = true;
-								}}
-							>
-								Change
-							</DefaultButton>
-						</div>
-
-						<br />
-						<br />
-						<hr />
-						<TextField
-							name="identification"
-							label={lang(`Username`)}
-							ref={el => (el ? (this.usernameField = el) : "")}
-							disabled={this.disableInputs}
-						/>
-						<TextField
-							name="password"
-							type="Password"
-							label={lang(`Password`)}
-							ref={el => (el ? (this.passwordField = el) : "")}
-							disabled={this.disableInputs}
-						/>
-						<PrimaryButton
-							text={lang("Login")}
-							disabled={this.disableInputs}
-							className="m-t-15 m-b-15"
-							onClick={async () => {
-								if (
-									!(
-										this.passwordField &&
-										this.usernameField &&
-										this.serverField
-									)
-								) {
-									return;
-								}
-								if (
-									!(
-										this.usernameField.value &&
-										this.passwordField.value &&
-										this.serverField.value
-									)
-								) {
-									this.errorMessage =
-										"All fields are necessary";
-									return;
-								}
-								this.errorMessage = "";
-								const result = await login.login({
-									user: this.usernameField.value,
-									pass: this.passwordField.value,
-									server: this.serverField.value.replace(
-										/([^\/])\/[^\/].+/,
-										"$1"
-									)
-								});
-								if (result !== true) {
-									this.errorMessage = result;
-								}
-							}}
-						/>
+				{this.impossibleToLogin ? (
+					<div className="impossible">
+						<MessageBar messageBarType={MessageBarType.error}>
+							You're offline and unable to login
+							<br />
+						</MessageBar>
 						<DefaultButton
+							text="Reload"
+							className="m-t-15 m-b-15"
 							onClick={() => {
-								login.noServerMode();
+								location.reload();
 							}}
-							className="no-server-mode"
-						>
-							no-server mode
-						</DefaultButton>
+						/>
 					</div>
 				) : (
-					""
-				)}
-				{this.errorMessage ? (
-					<MessageBar messageBarType={MessageBarType.error}>
-						{this.errorMessage}
-					</MessageBar>
-				) : (
-					""
+					<div>
+						{this.initiallyChecked ? (
+							<div className="login-step">
+								<div
+									className={navigator.onLine ? "hidden" : ""}
+								>
+									<MessageBar
+										messageBarType={MessageBarType.warning}
+									>
+										{`${lang(
+											`You're offline. Use the latest username/password you've successfully used on this machine to login to this server`
+										)}:
+								${(this.serverFieldValue || "").replace(/([^\/])\/[^\/].+/, "$1")}.
+							`}
+									</MessageBar>
+								</div>
+
+								<br />
+								<hr />
+
+								<div
+									className={navigator.onLine ? "" : "hidden"}
+								>
+									<div
+										style={{
+											display: "inline-block",
+											width: "75%"
+										}}
+									>
+										<TextField
+											name="server"
+											label={lang(`Server location`)}
+											value={this.serverFieldValue}
+											disabled={
+												this.disableInputs ||
+												!this.editServerLocation
+											}
+											onChanged={v =>
+												(this.serverFieldValue = v)
+											}
+										/>
+									</div>
+
+									<DefaultButton
+										className="edit-server-location"
+										onClick={() => {
+											this.editServerLocation = true;
+										}}
+									>
+										Change
+									</DefaultButton>
+								</div>
+
+								<br />
+								<br />
+								<hr />
+								<TextField
+									name="identification"
+									label={lang(`Username`)}
+									disabled={this.disableInputs}
+									value={this.usernameFieldValue}
+									onChanged={v =>
+										(this.usernameFieldValue = v)
+									}
+								/>
+								<TextField
+									name="password"
+									type="Password"
+									label={lang(`Password`)}
+									disabled={this.disableInputs}
+									value={this.passwordFieldValue}
+									onChanged={v =>
+										(this.passwordFieldValue = v)
+									}
+								/>
+								<PrimaryButton
+									text={lang("Login")}
+									disabled={this.disableInputs}
+									className="m-t-15 m-b-15"
+									onClick={async () => {
+										if (
+											!(
+												this.usernameFieldValue &&
+												this.passwordFieldValue &&
+												this.serverFieldValue
+											)
+										) {
+											this.errorMessage =
+												"All fields are necessary";
+											return;
+										}
+										this.errorMessage = "";
+										const result = await login.loginWithCredentials(
+											{
+												username: this
+													.usernameFieldValue,
+												password: this
+													.passwordFieldValue,
+												server: this.serverFieldValue.replace(
+													/([^\/])\/[^\/].+/,
+													"$1"
+												)
+											}
+										);
+										if (
+											typeof result !== "boolean" ||
+											result !== true
+										) {
+											this.errorMessage = result;
+										}
+									}}
+								/>
+								{login.tryOffline ? (
+									<PrimaryButton
+										text={lang("Access offline")}
+										disabled={this.disableInputs}
+										className="m-t-15 m-b-15 m-l-5 m-r-5"
+										onClick={async () => {
+											if (
+												!(
+													this.usernameFieldValue &&
+													this.passwordFieldValue &&
+													this.serverFieldValue
+												)
+											) {
+												this.errorMessage =
+													"All fields are necessary";
+												return;
+											}
+											this.errorMessage = "";
+											const result = await login.loginWithCredentialsOffline(
+												{
+													username: this
+														.usernameFieldValue,
+													password: this
+														.passwordFieldValue,
+													server: this.serverFieldValue.replace(
+														/([^\/])\/[^\/].+/,
+														"$1"
+													)
+												}
+											);
+											if (
+												typeof result !== "boolean" ||
+												result !== true
+											) {
+												this.errorMessage = result;
+											}
+										}}
+									/>
+								) : (
+									""
+								)}
+								<DefaultButton
+									onClick={() => {
+										login.startNoServer();
+									}}
+									className="no-server-mode"
+								>
+									no-server mode
+								</DefaultButton>
+							</div>
+						) : (
+							""
+						)}
+						{this.errorMessage ? (
+							<MessageBar messageBarType={MessageBarType.error}>
+								{this.errorMessage}
+							</MessageBar>
+						) : (
+							""
+						)}
+					</div>
 				)}
 			</div>
 		);

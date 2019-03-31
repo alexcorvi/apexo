@@ -39,34 +39,19 @@ export const backup = {
 		return new Promise(async (resolve, reject) => {
 			await compact.compact();
 
-			const databases = [
-				appointmentsData.namespace,
-				"doctors",
-				orthoData.namespace,
-				patientsData.namespace,
-				prescriptionsData.namespace,
-				settingsData.namespace,
-				treatmentsData.namespace
-			];
-
 			const dumps: DatabaseDump[] = [];
 
 			let done = 0;
 
-			databases.forEach(async dbName => {
-				let credentials = { username: "", password: "" };
-				if (localStorage.getItem("ec")) {
-					credentials = JSON.parse(
-						decrypt(localStorage.getItem("ec") || "")
-					);
-				}
+			API.DBsList.forEach(async dbName => {
 				const remoteDatabase = new PouchDB(
 					`${API.login.server}/${dbName}`,
 					{
-						auth: {
-							username: credentials.username,
-							password: credentials.password
-						}
+						fetch: (url, opts) =>
+							PouchDB.fetch(url, {
+								...opts,
+								credentials: "include"
+							})
 					}
 				);
 
@@ -87,7 +72,7 @@ export const backup = {
 			});
 
 			const checkInterval = setInterval(() => {
-				if (done === databases.length) {
+				if (done === API.DBsList.length) {
 					clearInterval(checkInterval);
 					resolve(dumps);
 				}
@@ -131,31 +116,25 @@ export const restore = {
 			json.forEach(async dump => {
 				const dbName = dump.dbName;
 
-				let credentials = { username: "", password: "" };
-				if (localStorage.getItem("ec")) {
-					credentials = JSON.parse(
-						decrypt(localStorage.getItem("ec") || "")
-					);
-				}
 				const remoteDatabase1 = new PouchDB(
 					`${API.login.server}/${dbName}`,
 					{
-						auth: {
-							username: credentials.username,
-							password: credentials.password
-						},
-						skip_setup: false
+						fetch: (url, opts) =>
+							PouchDB.fetch(url, {
+								...opts,
+								credentials: "include"
+							})
 					}
 				);
 				await remoteDatabase1.destroy();
 				const remoteDatabase2 = new PouchDB(
 					`${API.login.server}/${dbName}`,
 					{
-						auth: {
-							username: credentials.username,
-							password: credentials.password
-						},
-						skip_setup: false
+						fetch: (url, opts) =>
+							PouchDB.fetch(url, {
+								...opts,
+								credentials: "include"
+							})
 					}
 				);
 				const a = await remoteDatabase2.bulkDocs(dump.data);
@@ -195,7 +174,7 @@ export const restore = {
 								lang("Restoration cancelled")
 							);
 							messages.addMessage(msg);
-							reject();
+							return reject();
 						}
 					},
 					input: true,
@@ -212,7 +191,7 @@ export const restore = {
 			function terminate() {
 				const msg = new Message(lang("Invalid file"));
 				messages.addMessage(msg);
-				reject();
+				return reject();
 			}
 			const reader = new FileReader();
 			reader.readAsDataURL(file);

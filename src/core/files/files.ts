@@ -29,7 +29,7 @@ export const files = {
 		return new Promise(async (resolve, reject) => {
 			const accessToken = setting.getSetting("dropbox_accessToken");
 			if (!accessToken) {
-				reject("Did not find DropBox access token");
+				return reject("Did not find DropBox access token");
 			}
 
 			const xhr = new XMLHttpRequest();
@@ -68,7 +68,7 @@ export const files = {
 		return new Promise((resolve, reject) => {
 			const accessToken = setting.getSetting("dropbox_accessToken");
 			if (!accessToken) {
-				reject("Did not find DropBox access token");
+				return reject("Did not find DropBox access token");
 			}
 			const xhr = new XMLHttpRequest();
 			xhr.responseType = "arraybuffer";
@@ -81,7 +81,7 @@ export const files = {
 				} else {
 					const errorMessage =
 						xhr.response || "Unable to download file";
-					reject(errorMessage);
+					return reject(errorMessage);
 				}
 			};
 
@@ -101,7 +101,7 @@ export const files = {
 		return new Promise((resolve, reject) => {
 			const accessToken = setting.getSetting("dropbox_accessToken");
 			if (!accessToken) {
-				reject("Did not find DropBox access token");
+				return reject("Did not find DropBox access token");
 			}
 			const xhr = new XMLHttpRequest();
 
@@ -125,7 +125,7 @@ export const files = {
 		return new Promise((resolve, reject) => {
 			const accessToken = setting.getSetting("dropbox_accessToken");
 			if (!accessToken) {
-				reject("Did not find DropBox access token");
+				return reject("Did not find DropBox access token");
 			}
 			const xhr = new XMLHttpRequest();
 
@@ -151,7 +151,7 @@ export const files = {
 		return new Promise((resolve, reject) => {
 			const accessToken = setting.getSetting("dropbox_accessToken");
 			if (!accessToken) {
-				reject("Did not find DropBox access token");
+				return reject("Did not find DropBox access token");
 			}
 			const xhr = new XMLHttpRequest();
 
@@ -178,5 +178,3 @@ export const files = {
 		});
 	}
 };
-
-(window as any).files = files;

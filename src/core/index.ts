@@ -1,3 +1,5 @@
+import { store } from "./login/store";
+import { DBsList } from "./db/list";
 import { ChooseUser } from "./login/choose-user";
 import { connectToDB } from "./db";
 import { ErrorBoundary, MainComponent } from "./main/main";
@@ -33,7 +35,9 @@ export const API = {
 	modals,
 	files,
 	backup,
-	restore
+	restore,
+	DBsList,
+	store
 };
 
 // Components
@@ -49,5 +53,3 @@ export const components = {
 	ModalsComponent,
 	ErrorBoundary
 };
-
-(window as any).API = API;
