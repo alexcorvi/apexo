@@ -10,7 +10,9 @@ export const register = {
 			statisticsData.namespace,
 			/^statistics\/?$/,
 			statisticsComponents.StatisticsComponent,
-			() => !!settingsData.settings.getSetting("module_statistics")
+			() =>
+				!!settingsData.settings.getSetting("module_statistics") &&
+				API.user.currentUser.canViewStats
 		);
 		API.menu.items.push({
 			icon: "Chart",

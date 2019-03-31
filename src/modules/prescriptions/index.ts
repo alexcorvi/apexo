@@ -10,7 +10,9 @@ export const register = {
 			prescriptionsData.namespace,
 			/^prescriptions/,
 			prescriptionsComponents.PrescriptionsTable,
-			() => !!settingsData.settings.getSetting("module_prescriptions")
+			() =>
+				!!settingsData.settings.getSetting("module_prescriptions") &&
+				API.user.currentUser.canViewPrescriptions
 		);
 		API.menu.items.push({
 			icon: "Pill",

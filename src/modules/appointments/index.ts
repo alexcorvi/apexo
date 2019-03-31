@@ -8,7 +8,8 @@ export const register = {
 		API.router.register(
 			appointmentsData.namespace,
 			/^appointments/,
-			appointmentsComponents.Calendar
+			appointmentsComponents.Calendar,
+			() => API.user.currentUser.canViewAppointments
 		);
 		API.menu.items.push({
 			icon: "Calendar",

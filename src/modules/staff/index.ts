@@ -8,7 +8,8 @@ export const register = {
 		API.router.register(
 			staffData.namespace,
 			/^staff/,
-			staffComponents.StaffListing
+			staffComponents.StaffListing,
+			() => API.user.currentUser.canViewStaff
 		);
 		API.menu.items.push({
 			icon: "Contact",

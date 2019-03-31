@@ -8,7 +8,8 @@ export const register = {
 		API.router.register(
 			patientsData.namespace,
 			/^patients\/?/,
-			patientsComponents.PatientsListing
+			patientsComponents.PatientsListing,
+			() => API.user.currentUser.canViewPatients
 		);
 		API.menu.items.push({
 			icon: "ContactCard",

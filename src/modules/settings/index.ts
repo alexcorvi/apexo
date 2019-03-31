@@ -10,7 +10,8 @@ export const register = {
 		API.router.register(
 			settingsData.namespace,
 			/^settings\/?$/,
-			settingsComponents.SettingsComponent
+			settingsComponents.SettingsComponent,
+			() => API.user.currentUser.canViewSettings
 		);
 		API.menu.items.push({
 			icon: "Settings",

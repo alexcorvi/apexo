@@ -10,7 +10,9 @@ export const register = {
 			orthoData.namespace,
 			/^orthodontic/,
 			orthoComponents.OrthoList,
-			() => !!settingsData.settings.getSetting("module_orthodontics")
+			() =>
+				!!settingsData.settings.getSetting("module_orthodontics") &&
+				API.user.currentUser.canViewOrtho
 		);
 		API.menu.items.push({
 			icon: "MiniLink",

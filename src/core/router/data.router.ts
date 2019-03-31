@@ -13,25 +13,25 @@ class Router {
 
 	@observable innerWidth = 0;
 
-	@computed
-	get currentComponent() {
+	@computed get currentRoute() {
 		return (
 			this.directory.find(route => {
 				return (
 					(!route.condition || route.condition()) &&
 					route.regex.test(this.currentLocation)
 				);
-			}) || { component: Home }
-		).component;
+			}) || { component: Home, namespace: "Home" }
+		);
+	}
+
+	@computed
+	get currentComponent() {
+		return this.currentRoute.component;
 	}
 
 	@computed
 	get currentNamespace() {
-		return (
-			this.directory.find(route => {
-				return route.regex.test(this.currentLocation);
-			}) || { namespace: "Home" }
-		).namespace;
+		return this.currentRoute.namespace;
 	}
 
 	directory: Route[] = [];
