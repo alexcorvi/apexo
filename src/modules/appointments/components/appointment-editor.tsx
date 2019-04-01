@@ -458,7 +458,7 @@ export class AppointmentEditor extends React.Component<
 
 					<Section title={lang("Expenses & Price")}>
 						<Row gutter={12}>
-							<Col sm={12}>
+							<Col sm={16}>
 								{settingsData.settings.getSetting(
 									"time_tracking"
 								) ? (

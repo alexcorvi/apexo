@@ -22,14 +22,13 @@
 	.time-input {
 		display: inline-block;
 		margin-bottom: 0;
-		width: 22%;
+		width: 25%;
 		&:not(.seconds) .ms-TextField-wrapper div {
 			border-right: none;
 		}
 	}
 	.appendage {
 		position: absolute;
-		right: 0;
 		&.stop {
 			background: #ff9800;
 		}
@@ -54,9 +53,6 @@
 	.payment-insight,
 	.insight {
 		font-size: 12px;
-		span {
-			color: #fff;
-		}
 	}
 
 	.prescription {
