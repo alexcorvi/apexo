@@ -16,7 +16,7 @@ import { store } from "./store";
 import { num } from "../../assets/utils/num";
 
 const demoHosts: string[] = [
-	// "localhost:8000",
+	"localhost:8000",
 	"demo.apexo.app",
 	"192.168.0.101:8000",
 	"192.168.0.102:8000"
