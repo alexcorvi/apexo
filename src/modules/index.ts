@@ -46,8 +46,6 @@ export const data = {
 	orthoData
 };
 
-(window as any).data = data;
-
 export const components = {
 	appointmentsComponents,
 	patientsComponents,
