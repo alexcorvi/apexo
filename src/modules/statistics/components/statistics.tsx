@@ -154,7 +154,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							onRender: () => {
 								return (
 									<Dropdown
-										placeHolder={lang(
+										placeholder={lang(
 											"Filter by staff member"
 										)}
 										defaultValue=""

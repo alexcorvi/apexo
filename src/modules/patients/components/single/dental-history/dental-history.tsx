@@ -162,7 +162,7 @@ export class DentalHistory extends React.Component<{ patient: Patient }, {}> {
 					{this.props.patient.teeth[this.viewToothISO] ? (
 						<div className="tooth-details">
 							<Dropdown
-								placeHolder={lang(`Condition`)}
+								placeholder={lang(`Condition`)}
 								onChange={(ev, newVal: any) => {
 									this.props.patient.teeth[
 										this.viewToothISO

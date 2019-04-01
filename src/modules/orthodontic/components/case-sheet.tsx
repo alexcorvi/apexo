@@ -39,7 +39,7 @@ export class OrthoCaseSheet extends React.Component<{
 				<Section title={lang(`Extra-Oral Features`)}>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeHolder={lang("Lips competency")}
+						placeholder={lang("Lips competency")}
 						options={Object.keys(Lips).map(x => ({
 							key: x,
 							text: lang((Lips as any)[x])
@@ -51,7 +51,7 @@ export class OrthoCaseSheet extends React.Component<{
 					/>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeHolder={lang("Facial profile")}
+						placeholder={lang("Facial profile")}
 						options={Object.keys(FacialProfile).map(x => ({
 							key: x,
 							text: lang((FacialProfile as any)[x])
@@ -63,7 +63,7 @@ export class OrthoCaseSheet extends React.Component<{
 					/>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeHolder={lang("Oral hygiene")}
+						placeholder={lang("Oral hygiene")}
 						options={Object.keys(OralHygiene).map(x => ({
 							key: x,
 							text: lang((OralHygiene as any)[x])
@@ -89,7 +89,7 @@ export class OrthoCaseSheet extends React.Component<{
 				<Section title={lang(`Jaw-Jaw Relationships`)}>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeHolder={lang(`Skeletal relationship`)}
+						placeholder={lang(`Skeletal relationship`)}
 						options={[1, 2, 3].map(n => ({
 							key: n.toString(),
 							text: lang("Skeletal relationship: Class ") + n
@@ -103,7 +103,7 @@ export class OrthoCaseSheet extends React.Component<{
 					/>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeHolder={lang(`Molars relationship`)}
+						placeholder={lang(`Molars relationship`)}
 						options={[1, 2, 3].map(n => ({
 							key: n.toString(),
 							text: lang("Molars relationship: Class ") + n
@@ -117,7 +117,7 @@ export class OrthoCaseSheet extends React.Component<{
 					/>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeHolder={lang(`Canine relationship`)}
+						placeholder={lang(`Canine relationship`)}
 						options={[1, 2, 3].map(n => ({
 							key: n.toString(),
 							text: lang("Canine relationship: Class ") + n
