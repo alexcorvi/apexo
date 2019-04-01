@@ -49,9 +49,12 @@ export class StaffMember {
 
 	@computed
 	get sortedDays() {
-		return this.onDutyDays.sort(
-			(dayA, dayB) => this.days.indexOf(dayA) - this.days.indexOf(dayB)
-		);
+		return this.onDutyDays
+			.slice()
+			.sort(
+				(dayA, dayB) =>
+					this.days.indexOf(dayA) - this.days.indexOf(dayB)
+			);
 	}
 
 	@computed
