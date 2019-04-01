@@ -4,20 +4,25 @@
 	margin-top: 10px;
 	font-size: 13px;
 	line-height: 1;
+	border: 1px solid #a6a6a6;
+	&:hover {
+		border: 1px solid #121212;
+	}
 	.editable-list {
-		border: 1px solid #a6a6a6;
+		.new-item-input {
+			border: none;
+			background: #fff;
+			display: block;
+			width: 100%;
+			padding: 8px;
+		}
 	}
 	.input {
 		transition: 0.3s all;
 		background: #fff;
-		border-bottom: 1px solid #c8c8c8;
-		&:hover {
-			@include box_shadow(2);
-			border-bottom-color: #4aa9f5;
-		}
 
 		.input-icon {
-			padding: 10px;
+			padding: 9px;
 			color: #2196f3;
 			cursor: pointer;
 		}

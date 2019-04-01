@@ -52,18 +52,28 @@ export class EditableList extends React.Component<
 								xs={this.props.disabled ? 24 : 20}
 								sm={this.props.disabled ? 24 : 21}
 							>
-								<TextField
-									className="input-field"
-									placeholder={this.props.label}
+								<input
+									className="new-item-input"
+									style={
+										this.props.value.length > 0
+											? undefined
+											: { borderBottom: "none" }
+									}
+									placeholder={this.props.label || undefined}
 									onKeyDown={keydown => {
 										if (keydown.keyCode === 13) {
 											this.addItem();
 											keydown.preventDefault();
 										}
 									}}
-									value={this.valueToAdd}
-									onChange={(e, val) =>
-										(this.valueToAdd = val!)
+									onKeyUp={keyUp => {
+										if (keyUp.keyCode === 13) {
+											this.addItem();
+											keyUp.preventDefault();
+										}
+									}}
+									onChange={e =>
+										(this.valueToAdd = e.target.value)
 									}
 									disabled={this.props.disabled}
 								/>
