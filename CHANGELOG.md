@@ -17,6 +17,7 @@
 -   Enhancement: A table of all the involved appointments in stats
 -   Enhancement: Unification of icon sub-sets
 -   Updated dependencies
+-   Many more enhancements, bug fixes and new features
 
 ### 2.2.3
 
