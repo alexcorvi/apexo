@@ -54,27 +54,32 @@
   text-align: right;
   padding-right: 12px; }
 .label {
-  background: #212121;
+  background: #fff;
   padding: 5px 10px 7px;
-  color: #fff;
+  color: #000;
   border-radius: 2px;
   font-size: 13px;
   margin-right: 3px;
   margin-bottom: 3px;
   display: inline-block;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); }
+  border: 1px solid #e3e3e3; }
   .label.clickable {
     cursor: pointer; }
   .label.warning {
-    background: #fb8c00; }
+    border-color: #fb8c00;
+    color: #fb8c00; }
   .label.primary {
-    background: #3f51b5; }
+    border-color: #3f51b5;
+    color: #3f51b5; }
   .label.danger {
-    background: #f44336; }
+    border-color: #e91e63;
+    color: #e91e63; }
   .label.success {
-    background: #4caf50; }
+    border-color: #4caf50;
+    color: #4caf50; }
   .label.info {
-    background: #212121; }
+    border-color: #212121;
+    color: #212121; }
 .profile-squared {
   display: inline-flex !important; }
   .profile-squared .ms-Persona-initials {
@@ -3348,18 +3353,21 @@
 .editable-list-component {
   margin-top: 10px;
   font-size: 13px;
-  line-height: 1; }
-  .editable-list-component .editable-list {
-    border: 1px solid #a6a6a6; }
+  line-height: 1;
+  border: 1px solid #a6a6a6; }
+  .editable-list-component:hover {
+    border: 1px solid #121212; }
+  .editable-list-component .editable-list .new-item-input {
+    border: none;
+    background: #fff;
+    display: block;
+    width: 100%;
+    padding: 8px; }
   .editable-list-component .input {
     transition: 0.3s all;
-    background: #fff;
-    border-bottom: 1px solid #c8c8c8; }
-    .editable-list-component .input:hover {
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      border-bottom-color: #4aa9f5; }
+    background: #fff; }
     .editable-list-component .input .input-icon {
-      padding: 10px;
+      padding: 9px;
       color: #2196f3;
       cursor: pointer; }
     .editable-list-component .input .input-image {
@@ -3915,12 +3923,11 @@
   .appointment-input .time-input {
     display: inline-block;
     margin-bottom: 0;
-    width: 22%; }
+    width: 25%; }
     .appointment-input .time-input:not(.seconds) .ms-TextField-wrapper div {
       border-right: none; }
   .appointment-input .appendage {
-    position: absolute;
-    right: 0; }
+    position: absolute; }
     .appointment-input .appendage.stop {
       background: #ff9800; }
   .appointment-input label:not(.ms-Checkbox-label) {
@@ -3937,9 +3944,6 @@
   .appointment-input .payment-insight,
   .appointment-input .insight {
     font-size: 12px; }
-    .appointment-input .payment-insight span,
-    .appointment-input .insight span {
-      color: #fff; }
   .appointment-input .prescription .item {
     display: none; }
   .appointment-input .prescription .input {
@@ -5496,9 +5500,6 @@ h5 {
   position: relative;
   top: 2px; }
 
-.ms-Panel-content {
-  height: 100%; }
-
 .ms-Dropdown-container {
   margin-bottom: 10px; }
 
@@ -5506,7 +5507,10 @@ h5 {
   margin-bottom: 10px !important; }
 
 .ms-Panel-content {
-  padding-top: 35px; }
+  height: 100%;
+  padding-top: 35px;
+  padding-bottom: 35px;
+  overflow-y: auto; }
 
 .fs-10 {
   font-size: 10px; }

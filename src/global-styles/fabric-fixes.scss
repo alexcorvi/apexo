@@ -142,10 +142,6 @@ h5 {
 	top: 2px;
 }
 
-.ms-Panel-content {
-	height: 100%;
-}
-
 .ms-Dropdown-container {
 	margin-bottom: 10px;
 }
@@ -155,5 +151,8 @@ h5 {
 }
 
 .ms-Panel-content {
+	height: 100%;
 	padding-top: 35px;
+	padding-bottom: 35px;
+	overflow-y: auto;
 }
