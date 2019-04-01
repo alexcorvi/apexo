@@ -282,7 +282,7 @@ export class OrthoCase {
 		return !this.patient
 			? ""
 			: `
-			${this.patient.age} ${this.patient.birthYearOrAge}
+			${this.patient.age} ${this.patient.birthYear}
 			${this.patient.phone} ${this.patient.email} ${
 					this.patient.address
 			  } ${genderToString(this.patient.gender)}

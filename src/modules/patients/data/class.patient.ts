@@ -23,7 +23,7 @@ export class Patient {
 
 	@observable name: string = "";
 
-	@observable birthYearOrAge: number = 0;
+	@observable birthYear: number = 0;
 
 	@observable gender: Gender = Gender.male;
 
@@ -45,8 +45,8 @@ export class Patient {
 
 	@computed
 	get age() {
-		const diff = new Date().getFullYear() - this.birthYearOrAge;
-		return diff > this.birthYearOrAge ? this.birthYearOrAge : diff;
+		const diff = new Date().getFullYear() - this.birthYear;
+		return diff > this.birthYear ? this.birthYear : diff;
 	}
 
 	@computed
@@ -121,7 +121,7 @@ export class Patient {
 	@computed
 	get searchableString() {
 		return `
-			${this.age} ${this.birthYearOrAge}
+			${this.age} ${this.birthYear}
 			${this.phone} ${this.email} ${this.address} ${genderToString(this.gender)}
 			${this.name} ${this.labels
 			.map(x => x.text)
@@ -168,7 +168,7 @@ export class Patient {
 	fromJSON(json: PatientJSON) {
 		this._id = json._id;
 		this.name = json.name;
-		this.birthYearOrAge = json.birthYear;
+		this.birthYear = json.birthYear;
 		this.gender = stringToGender(json.gender);
 		this.tags = json.tags;
 		this.address = json.address;
@@ -205,7 +205,7 @@ export class Patient {
 		return {
 			_id: this._id,
 			name: this.name,
-			birthYear: this.birthYearOrAge,
+			birthYear: this.birthYear,
 			gender: genderToString(this.gender),
 			tags: this.tags,
 			address: this.address,

@@ -13,11 +13,11 @@ class Component extends React.Component<{}, {}> {
 	@computed
 	get values() {
 		return statistics.selectedPatients
-			.filter(x => x.birthYearOrAge)
+			.filter(x => x.birthYear)
 			.map(x => {
-				if (x.birthYearOrAge === 0) {
+				if (x.birthYear === 0) {
 				}
-				return new Date().getFullYear() - x.birthYearOrAge;
+				return new Date().getFullYear() - x.birthYear;
 			})
 			.reduce((result: { x: number; y: number }[], occ) => {
 				const i = result.findIndex(rOCC => rOCC.x === occ);

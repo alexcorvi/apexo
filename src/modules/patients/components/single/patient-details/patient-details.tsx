@@ -43,9 +43,9 @@ export class PatientDetails extends React.Component<{
 							<div className="birth">
 								<TextField
 									label={lang("Birth year / age")}
-									value={this.props.patient.birthYearOrAge.toString()}
+									value={this.props.patient.birthYear.toString()}
 									onChange={(ev, year) =>
-										(this.props.patient.birthYearOrAge = num(
+										(this.props.patient.birthYear = num(
 											year!
 										))
 									}
