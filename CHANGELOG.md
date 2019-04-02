@@ -1,5 +1,10 @@
 ## Changelog
 
+### 3.0.1
+
+-   Fixed sorting textual values #59
+-   Fixed editable list #60
+
 ### 3.0.0
 
 -   New feature: Introduced internationalization

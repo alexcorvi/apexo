@@ -72,6 +72,7 @@ export class EditableList extends React.Component<
 											keyUp.preventDefault();
 										}
 									}}
+									value={this.valueToAdd}
 									onChange={e =>
 										(this.valueToAdd = e.target.value)
 									}
