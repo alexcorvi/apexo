@@ -28,15 +28,19 @@ class Settings {
 	}
 
 	async updateDropboxBackups() {
-		const sortedResult = (await API.backup.list())
-			.filter(x => x.client_modified && x.name.endsWith(".apx"))
-			.sort(
-				(a, b) =>
-					new Date(a.client_modified).getTime() -
-					new Date(b.client_modified).getTime()
-			);
+		try {
+			const sortedResult = (await API.backup.list())
+				.filter(x => x.client_modified && x.name.endsWith(".apx"))
+				.sort(
+					(a, b) =>
+						new Date(a.client_modified).getTime() -
+						new Date(b.client_modified).getTime()
+				);
 
-		this.dropboxBackups = sortedResult;
+			this.dropboxBackups = sortedResult;
+		} catch (e) {
+			console.log("Could not update dropbox backups", e);
+		}
 	}
 
 	async automatedBackups() {
