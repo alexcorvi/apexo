@@ -3466,28 +3466,36 @@
       .orthograph .album table .clickable-icon.add-photo:hover {
         background: #00aba9; }
 
-.photo-dialog .ms-DetailsRow {
+.photo-dialog .ms-DetailsRow,
+.visit-dialog .ms-DetailsRow {
   border-bottom: 1px solid #f1f1f1; }
 
-.photo-dialog .ms-Dialog-main {
+.photo-dialog .ms-Dialog-main,
+.visit-dialog .ms-Dialog-main {
   width: 350px;
   overflow: hidden; }
 
-.photo-dialog .ms-Dialog-inner {
+.photo-dialog .ms-Dialog-inner,
+.visit-dialog .ms-Dialog-inner {
   padding: 0;
   border-top: 1px solid #e3e3e3;
   margin-top: 12px; }
-  .photo-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button {
+  .photo-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button,
+  .visit-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button {
     font-size: 12px; }
-    .photo-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button i {
+    .photo-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button i,
+    .visit-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button i {
       font-size: 12px; }
-  .photo-dialog .ms-Dialog-inner .ms-CommandBar .active-button {
+  .photo-dialog .ms-Dialog-inner .ms-CommandBar .active-button,
+  .visit-dialog .ms-Dialog-inner .ms-CommandBar .active-button {
     background: #e3e3e3; }
 
-.photo-dialog .ms-Dialog-actions {
+.photo-dialog .ms-Dialog-actions,
+.visit-dialog .ms-Dialog-actions {
   margin-top: 0; }
 
-.photo-dialog .overlay-img {
+.photo-dialog .overlay-img,
+.visit-dialog .overlay-img {
   position: absolute;
   left: 0;
   top: 0;
@@ -3496,10 +3504,6 @@
   opacity: 0.6;
   filter: saturate(2);
   pointer-events: none; }
-
-.in-callout-list {
-  margin: 15px;
-  min-width: 250px; }
 .crop-dialog .ms-Dialog-inner {
   padding: 0;
   margin-top: 10px; }

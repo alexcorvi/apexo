@@ -62,7 +62,8 @@
 	}
 }
 
-.photo-dialog {
+.photo-dialog,
+.visit-dialog {
 	.ms-DetailsRow {
 		border-bottom: 1px solid #f1f1f1;
 	}
@@ -99,9 +100,4 @@
 		filter: saturate(2);
 		pointer-events: none;
 	}
-}
-
-.in-callout-list {
-	margin: 15px;
-	min-width: 250px;
 }

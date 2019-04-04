@@ -410,11 +410,7 @@ export class Orthograph extends React.Component<{
 																			}}
 																		/>
 																	</TooltipHost>
-																	<Callout
-																		target={`#${visit.id.replace(
-																			/[0-9]/g,
-																			""
-																		)}`}
+																	<Dialog
 																		onDismiss={() => {
 																			this.openCallouts = this.openCallouts.filter(
 																				x =>
@@ -422,18 +418,15 @@ export class Orthograph extends React.Component<{
 																					visit.id
 																			);
 																		}}
-																		setInitialFocus={
-																			true
-																		}
 																		hidden={
 																			this.openCallouts.indexOf(
 																				visit.id
 																			) ===
 																			-1
 																		}
+																		className="visit-dialog"
 																	>
 																		<DetailsList
-																			className="in-callout-list"
 																			compact
 																			items={[
 																				[
@@ -586,7 +579,7 @@ export class Orthograph extends React.Component<{
 																					row[0].props.id;
 																			}}
 																		/>
-																	</Callout>
+																	</Dialog>
 																</td>
 																{viewsTerms.map(
 																	(
