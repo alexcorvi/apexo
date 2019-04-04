@@ -182,7 +182,11 @@ export class AppointmentEditor extends React.Component<
 													this.props.appointment!.date = val;
 												}
 											}}
-											showValue={false}
+											showValue={true}
+											valueFormat={v =>
+												this.props.appointment!
+													.formattedTime
+											}
 											disabled={!this.canEdit}
 										/>
 									</Row>
