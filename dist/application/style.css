@@ -6802,9 +6802,9 @@ hr {
   width: 100% !important;
   left: 0 !important; }
   .external-service-panel .ms-Panel-main .ms-Panel-content {
-    padding: 0;
-    overflow: hidden;
-    padding-top: 27px; }
+    padding-top: 70px;
+    margin-top: -70px;
+    height: 100vh; }
     .external-service-panel .ms-Panel-main .ms-Panel-content iframe {
       height: 100%;
       width: 100%;
