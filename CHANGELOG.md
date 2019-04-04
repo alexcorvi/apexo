@@ -1,5 +1,12 @@
 ## Changelog
 
+### 3.0.2
+
+-   Fixed: Time not showing while selecting #61
+-   Fixed: Cephalometric window height #62
+-   Fixed: Orthograph visit callout acting weird
+-   Fixed: Automated backups requiring users to already have created directories
+
 ### 3.0.1
 
 -   Fixed sorting textual values #59
