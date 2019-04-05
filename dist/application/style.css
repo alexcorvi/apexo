@@ -3429,6 +3429,14 @@
     .orthograph .album table td {
       position: relative;
       overflow: hidden; }
+    .orthograph .album table .days-num {
+      font-size: 12px;
+      display: block;
+      border: 1px dashed #e3e3e3;
+      border-left: none;
+      border-right: 0;
+      padding: 10px 0;
+      text-align: center; }
     .orthograph .album table .term-initials {
       font-size: 12px;
       font-style: italic;
@@ -3523,11 +3531,12 @@
     background-image: linear-gradient(to right, #fff 0%, transparent 2%, transparent 100%), linear-gradient(to bottom, #fff 0%, transparent 2%, transparent 100%); }
   .crop-dialog .editor .prev-overlay {
     position: absolute;
-    left: 25px;
-    top: 25px;
+    left: 0;
+    top: 0;
     opacity: 0.6;
     filter: saturate(2);
-    pointer-events: none; }
+    pointer-events: none;
+    width: 100%; }
 
 .crop-dialog .crop-controls {
   padding: 10px;
