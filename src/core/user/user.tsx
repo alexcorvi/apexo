@@ -7,7 +7,9 @@ import {
 	TextField,
 	Link,
 	Panel,
-	PanelType
+	PanelType,
+	MessageBar,
+	MessageBarType
 } from "office-ui-fabric-react";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
@@ -75,13 +77,18 @@ export class UserComponent extends React.Component<{}, {}> {
 					</Row>
 				)}
 			>
-				<br />
-				<br />
 				<h3>
 					{this.todayAppointments.length
 						? lang(`Today's Appointments`)
-						: lang("No appointments today")}
+						: ""}
 				</h3>
+				{this.todayAppointments.length === 0 ? (
+					<MessageBar messageBarType={MessageBarType.info}>
+						{lang("No appointments today")}
+					</MessageBar>
+				) : (
+					""
+				)}
 				<div className="appointments-listing">
 					{this.todayAppointments.map(appointment => {
 						const date = new Date(appointment.date);
