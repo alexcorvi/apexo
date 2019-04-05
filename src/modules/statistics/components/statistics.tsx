@@ -43,9 +43,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 						searchableString: appointment.searchableString,
 						cells: [
 							{
-								dataValue: appointment.treatment
-									? appointment.treatment.type
-									: "",
+								dataValue: appointment.patient.name,
 								component: (
 									<Profile
 										secondaryElement={
@@ -57,7 +55,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 												{appointment.operatingStaff.map(
 													x => (
 														<i key={x._id}>
-															{x.name}
+															{x.name}{" "}
 														</i>
 													)
 												)}
