@@ -370,6 +370,28 @@ export const ar: Language = {
 		Never: "ملغي",
 
 		/**========================================
+		 * Tooltips
+		 */
+
+		"Flip horizontal": "قلب أفقي",
+		"Flip vertical": "قلب عامودي",
+		"Rotate clockwise": "تدوير مع عقارب الساعة",
+		"Rotate anti-clockwise": "تدوير عكس عقارب الساعة",
+		"Sync with server": "مزامنة مع الخادم",
+		"User panel": "لوحة المستخدم",
+		"Patient Details": "معلومات المراجع",
+		"Dental History": "المعلومات السنية",
+		"Orthodontic Case Sheet": "تفاصيل الحالة التقويمية",
+		"Orthodontic Album": "البوم وسجل زيارات التقويم",
+		"Gallery and X-Rays": "صور وأشعة تشخيصية",
+		"View grid": "عرض الشبكة",
+		"Add photo": "إضافة صورة",
+		"Delete visit": "حذف الزيارة",
+		Restore: "إستعادة",
+		"Level and Permission": "المستوى والتراخيص",
+		"Staff Member Details": "معلومات المستخدم",
+
+		/**========================================
 		 * Dental History
 		 */
 		sound: "سليم",

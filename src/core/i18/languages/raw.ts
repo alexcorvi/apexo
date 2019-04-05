@@ -351,6 +351,28 @@ export const ar: Language = {
 		Never: "",
 
 		/**========================================
+		 * Tooltips
+		 */
+
+		"Flip horizontal": "",
+		"Flip vertical": "",
+		"Rotate clockwise": "",
+		"Rotate anti-clockwise": "",
+		"Sync with server": "",
+		"User panel": "",
+		"Patient Details": "",
+		"Dental History": "",
+		"Orthodontic Case Sheet": "",
+		"Orthodontic Album": "",
+		"Gallery and X-Rays": "",
+		"View grid": "",
+		"Add photo": "",
+		"Delete visit": "",
+		Restore: "",
+		"Level and Permission": "",
+		"Staff Member Details": "",
+
+		/**========================================
 		 * Dental History
 		 */
 		sound: "",
