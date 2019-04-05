@@ -16,5 +16,4 @@ A web/desktop application to manage your dental clinic practice.
 
 #### Embedded Apps that can be used separately
 
--   [Orthograph](https://orthograph.apexo.app), [repo](https://github.com/alexcorvi/orthograph)
 -   [Cephalometric](https://cephalometric.apexo.app), [repo](https://github.com/alexcorvi/cephalometric)
