@@ -11,15 +11,20 @@ import {
 	MessageBar,
 	MessageBarType
 } from "office-ui-fabric-react";
-import { computed } from "mobx";
+import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Profile } from "../../assets/components/profile/profile";
 import { user } from "./data.user";
 import "./user.scss";
 import { lang } from "../i18/i18";
+import { Section } from "../../assets/components/section/section";
+import { AppointmentEditor } from "../../modules/appointments/components";
+import { Appointment } from "../../modules/appointments/data";
 
 @observer
 export class UserComponent extends React.Component<{}, {}> {
+	@observable appointment: Appointment | null = null;
+
 	@computed
 	get todayAppointments() {
 		if (!user.currentUser) {
@@ -53,7 +58,8 @@ export class UserComponent extends React.Component<{}, {}> {
 											}}
 										>
 											{lang("Logout")}
-										</Link>{" "}
+										</Link>
+										{" / "}
 										<Link
 											className="reset-user"
 											onClick={() => {
@@ -77,37 +83,37 @@ export class UserComponent extends React.Component<{}, {}> {
 					</Row>
 				)}
 			>
-				<h3>
-					{this.todayAppointments.length
-						? lang(`Today's Appointments`)
-						: ""}
-				</h3>
-				{this.todayAppointments.length === 0 ? (
-					<MessageBar messageBarType={MessageBarType.info}>
-						{lang("No appointments today")}
-					</MessageBar>
-				) : (
-					""
-				)}
-				<div className="appointments-listing">
-					{this.todayAppointments.map(appointment => {
-						const date = new Date(appointment.date);
-						const dateLink = `${date.getFullYear()}-${date.getMonth() +
-							1}-${date.getDate()}`;
-						return (
-							<AppointmentThumb
-								key={appointment._id}
-								appointment={appointment}
-								hideDate={true}
-								showPatient={true}
-								onClick={() => {
-									API.router.go(["appointments", dateLink]);
-									user.visible = false;
-								}}
-							/>
-						);
-					})}
-				</div>
+				<Section title={lang("Today's Appointments")}>
+					{this.todayAppointments.length === 0 ? (
+						<MessageBar messageBarType={MessageBarType.info}>
+							{lang("No appointments today")}
+						</MessageBar>
+					) : (
+						<div className="appointments-listing">
+							{this.todayAppointments.map(appointment => {
+								const date = new Date(appointment.date);
+								const dateLink = `${date.getFullYear()}-${date.getMonth() +
+									1}-${date.getDate()}`;
+								return (
+									<AppointmentThumb
+										key={appointment._id}
+										appointment={appointment}
+										hideDate={true}
+										showPatient={true}
+										onClick={() => {
+											this.appointment = appointment;
+										}}
+									/>
+								);
+							})}
+						</div>
+					)}
+				</Section>
+				<AppointmentEditor
+					appointment={this.appointment}
+					onDismiss={() => (this.appointment = null)}
+					onDelete={() => (this.appointment = null)}
+				/>
 			</Panel>
 		);
 	}
