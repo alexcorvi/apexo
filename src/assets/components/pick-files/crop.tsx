@@ -72,7 +72,6 @@ export class Crop extends React.Component<{
 											min={MIN_ZOOM * 100}
 											max={MAX_ZOOM * 100}
 											value={this.zoom * 100}
-											defaultValue={this.zoom * 100}
 											onChange={v => {
 												this.zoom = v / 100;
 											}}
@@ -135,7 +134,6 @@ export class Crop extends React.Component<{
 											min={-45}
 											max={45}
 											value={this.addedRotation}
-											defaultValue={this.addedRotation}
 											onChange={v => {
 												if (v !== -1) {
 													this.addedRotation = v;
