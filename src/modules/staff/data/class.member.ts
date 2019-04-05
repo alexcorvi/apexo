@@ -1,4 +1,4 @@
-import { week } from "./../../../assets/utils/date";
+import { week, name } from "./../../../assets/utils/date";
 import { appointmentsData } from "../../appointments";
 import { computed, observable } from "mobx";
 import { StaffMemberJSON } from "./interface.member-json";
@@ -6,16 +6,6 @@ import { generateID } from "../../../assets/utils/generate-id";
 import { unifiedDateFormat } from "../../../assets/utils/date";
 
 export class StaffMember {
-	readonly days = [
-		"Saturday",
-		"Sunday",
-		"Monday",
-		"Tuesday",
-		"Wednesday",
-		"Thursday",
-		"Friday"
-	];
-
 	_id: string = generateID();
 
 	@observable name: string = "";
@@ -48,27 +38,30 @@ export class StaffMember {
 	@observable onDutyDays: string[] = [];
 
 	@computed
+	get holidays() {
+		return name
+			.days(true)
+			.filter(day => this.onDutyDays.indexOf(day) === -1)
+			.map(day => name.days(true).indexOf(day));
+	}
+
+	@computed
+	get onDuty() {
+		return name
+			.days(true)
+			.filter(day => this.onDutyDays.indexOf(day) !== -1)
+			.map(day => name.days(true).indexOf(day));
+	}
+
+	@computed
 	get sortedDays() {
 		return this.onDutyDays
 			.slice()
 			.sort(
 				(dayA, dayB) =>
-					this.days.indexOf(dayA) - this.days.indexOf(dayB)
+					name.days(true).indexOf(dayA) -
+					name.days(true).indexOf(dayB)
 			);
-	}
-
-	@computed
-	get holidays() {
-		return this.days
-			.filter(day => this.onDutyDays.indexOf(day) === -1)
-			.map(day => this.days.indexOf(day));
-	}
-
-	@computed
-	get onDuty() {
-		return this.days
-			.filter(day => this.onDutyDays.indexOf(day) !== -1)
-			.map(day => this.days.indexOf(day));
 	}
 
 	@computed

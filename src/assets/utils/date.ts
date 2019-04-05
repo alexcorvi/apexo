@@ -66,14 +66,14 @@ export const name = {
 		lang("SA")
 	],
 
-	days: () => [
-		lang("Sunday"),
-		lang("Monday"),
-		lang("Tuesday"),
-		lang("Wednesday"),
-		lang("Thursday"),
-		lang("Friday"),
-		lang("Saturday")
+	days: (skip?: boolean) => [
+		lang("Sunday" + (skip ? "_" : "")).replace("_", ""),
+		lang("Monday" + (skip ? "_" : "")).replace("_", ""),
+		lang("Tuesday" + (skip ? "_" : "")).replace("_", ""),
+		lang("Wednesday" + (skip ? "_" : "")).replace("_", ""),
+		lang("Thursday" + (skip ? "_" : "")).replace("_", ""),
+		lang("Friday" + (skip ? "_" : "")).replace("_", ""),
+		lang("Saturday" + (skip ? "_" : "")).replace("_", "")
 	],
 	monthsShort: () => [
 		lang("Jan"),

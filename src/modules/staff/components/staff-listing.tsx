@@ -466,35 +466,46 @@ export class StaffListing extends React.Component<{}, {}> {
 											<label>
 												{lang("Days on duty")}
 											</label>
-											{this.member.days.map(day => (
-												<Checkbox
-													key={day}
-													disabled={!this.canEdit}
-													label={
-														lang(day.substr(0, 3)) +
-														"."
-													}
-													checked={
-														this.member.onDutyDays.indexOf(
-															day
-														) > -1
-													}
-													onChange={(ev, checked) => {
-														if (checked) {
-															this.member.onDutyDays.push(
-																day
-															);
-														} else {
-															this.member.onDutyDays.splice(
+											{dateUtils.name
+												.days(true)
+												.map((day, i) => {
+													console.log(day);
+													return (
+														<Checkbox
+															key={day}
+															disabled={
+																!this.canEdit
+															}
+															label={
+																dateUtils.name.daysShort()[
+																	i
+																]
+															}
+															checked={
 																this.member.onDutyDays.indexOf(
 																	day
-																),
-																1
-															);
-														}
-													}}
-												/>
-											))}
+																) > -1
+															}
+															onChange={(
+																ev,
+																checked
+															) => {
+																if (checked) {
+																	this.member.onDutyDays.push(
+																		day
+																	);
+																} else {
+																	this.member.onDutyDays.splice(
+																		this.member.onDutyDays.indexOf(
+																			day
+																		),
+																		1
+																	);
+																}
+															}}
+														/>
+													);
+												})}
 										</div>
 									</Section>
 
