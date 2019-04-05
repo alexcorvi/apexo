@@ -215,4 +215,13 @@
 		border-left: none;
 		border-right: 1px solid #e3e3e3;
 	}
+
+	.statistics-component {
+		.ms-CommandBar-primaryCommand {
+			& > div {
+				border-left: 1px solid #f4f4f4;
+				border-right: none;
+			}
+		}
+	}
 }

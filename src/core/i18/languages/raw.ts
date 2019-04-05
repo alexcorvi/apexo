@@ -509,6 +509,8 @@ export const ar: Language = {
 		"Lower arch spacing by": "",
 		Visit: "",
 		Date: "",
+		From: "",
+		Until: "",
 
 		/**========================================
 		 * Statistics page

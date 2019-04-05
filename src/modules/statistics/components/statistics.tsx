@@ -148,7 +148,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							}
 						]
 					}))}
-					commands={[
+					farItems={[
 						{
 							key: "1",
 							onRender: () => {
@@ -179,7 +179,10 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 									/>
 								);
 							}
-						},
+						}
+					]}
+					hideSearch
+					commands={[
 						{
 							key: "2",
 							onRender: () => {
@@ -196,11 +199,11 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 											new Date(statistics.startingDate)
 										}
 										formatDate={d =>
-											`From: ${d!.getDate()} ${
-												dateUtils.name.monthsShort()[
-													d!.getMonth()
-												]
-											}'${d!.getFullYear() - 2000}`
+											`${lang(
+												"From"
+											)}: ${dateUtils.unifiedDateFormat(
+												d
+											)}`
 										}
 									/>
 								);
@@ -220,11 +223,11 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 										}}
 										value={new Date(statistics.endingDate)}
 										formatDate={d =>
-											`Until: ${d!.getDate()} ${
-												dateUtils.name.monthsShort()[
-													d!.getMonth()
-												]
-											}'${d!.getFullYear() - 2000}`
+											`${lang(
+												"Until"
+											)}: ${dateUtils.unifiedDateFormat(
+												d
+											)}`
 										}
 									/>
 								);

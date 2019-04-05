@@ -527,6 +527,8 @@ export const ar: Language = {
 		"Lower arch spacing by": "فراغات في الفك السفلي بقدر",
 		Visit: "جلسة",
 		Date: "التاريخ",
+		From: "من",
+		Until: "حتى",
 
 		/**========================================
 		 * Statistics page

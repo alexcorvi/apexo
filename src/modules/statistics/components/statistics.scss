@@ -3,13 +3,14 @@
 	.ms-CommandBar-primaryCommand {
 		& > div {
 			margin-top: 4px;
-			&:not(:first-child) {
-				border-left: 1px solid #f4f4f4;
-			}
+			border-right: 1px solid #f4f4f4;
 			&.ms-OverflowSet-overflowButton {
 				margin-top: 0;
 			}
 		}
+	}
+
+	.commandBar {
 		.ms-TextField-fieldGroup,
 		.ms-Dropdown-title {
 			border: none;
@@ -19,6 +20,9 @@
 				font-size: 13px;
 				padding: 0 10px;
 			}
+		}
+		.ms-Dropdown-container {
+			margin-top: 4px;
 		}
 	}
 

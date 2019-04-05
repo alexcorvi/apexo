@@ -38,6 +38,10 @@ interface Props {
 	className?: string;
 	commands?: ICommandBarItemProps[];
 	onDelete?: (id: string) => void;
+
+	hideSearch?: boolean;
+
+	farItems?: ICommandBarItemProps[];
 }
 
 @observer
@@ -95,27 +99,37 @@ export class DataTable extends React.Component<Props, {}> {
 		return limitedRows;
 	}
 
+	@computed get farItems(): ICommandBarItemProps[] {
+		const items: ICommandBarItemProps[] = [];
+		if (!this.props.hideSearch) {
+			items.push({
+				key: "a",
+				onRender: () => (
+					<SearchBox
+						placeholder={lang("Search")}
+						onChange={(newVal: string) =>
+							(this.filterString = newVal)
+						}
+					/>
+				)
+			});
+		}
+
+		if (this.props.farItems) {
+			return items.concat(this.props.farItems);
+		}
+		return items;
+	}
+
 	render() {
 		return (
 			<div className="data-table">
 				<CommandBar
 					{...{
 						className: "commandBar fixed m-b-15",
-						isSearchBoxVisible: true,
+						isSearchBoxVisible: !this.props.hideSearch,
 						elipisisAriaLabel: lang("More options"),
-						farItems: [
-							{
-								key: "a",
-								onRender: () => (
-									<SearchBox
-										placeholder={lang("Search")}
-										onChange={(newVal: string) =>
-											(this.filterString = newVal)
-										}
-									/>
-								)
-							}
-						],
+						farItems: this.farItems,
 						items: this.props.commands || []
 					}}
 				/>
