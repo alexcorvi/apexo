@@ -31,11 +31,12 @@
 		}
 		.prev-overlay {
 			position: absolute;
-			left: 25px;
-			top: 25px;
+			left: 0;
+			top: 0;
 			opacity: 0.6;
 			filter: saturate(2);
 			pointer-events: none;
+			width: 100%;
 		}
 	}
 

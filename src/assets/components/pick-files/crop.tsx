@@ -13,6 +13,7 @@ import { Row, Col } from "../grid";
 import "./crop.scss";
 import { GridTable } from "../../../modules/orthodontic/components/grid-table";
 import { lang } from "../../../core/i18/i18";
+import { generateID } from "../../utils/generate-id";
 const Editor = ImageEditor.default || ImageEditor;
 
 const MAX_ZOOM = 5;
@@ -25,16 +26,13 @@ export class Crop extends React.Component<{
 	onDismiss: () => void;
 	onSave: (src: string) => void;
 }> {
+	@observable unique: string = generateID(20).replace(/[^a-z]/g, "");
+
 	@observable overlay: boolean = false;
 	@observable zoom: number = 1;
 	@observable baseRotation: number = 1;
 	@observable addedRotation: number = 1;
 	@observable showGrid: boolean = true;
-	@observable editorRef: ImageEditor.default | null = null;
-
-	@observable x: number = 0.5;
-	@observable y: number = 0.5;
-
 	render() {
 		return (
 			<div className="crop-modal">
@@ -54,40 +52,84 @@ export class Crop extends React.Component<{
 							""
 						)}
 						<Editor
+							className={this.unique}
 							image={this.props.src}
 							width={280}
 							height={530}
 							color={[0, 0, 0, 0.6]}
 							scale={this.zoom}
 							rotate={this.baseRotation + this.addedRotation}
-							ref={ref => (this.editorRef = ref)}
-							position={{ x: this.x, y: this.y }}
-							onPositionChange={
-								((p: { x: number; y: number }) => {
-									this.x = p.x;
-									this.y = p.y;
-								}) as any
-							}
+							border={0}
 						/>
 					</div>
 
 					<div className="crop-controls">
-						<Row gutter={6}>
+						<Row gutter={0}>
 							<Col span={12}>
-								<Slider
-									min={MIN_ZOOM * 100}
-									max={MAX_ZOOM * 100}
-									value={this.zoom * 100}
-									defaultValue={this.zoom * 100}
-									onChange={v => {
-										this.zoom = v / 100;
-									}}
-									label={lang(`Zoom`)}
-									showValue={false}
-								/>
+								<Row gutter={0}>
+									<Col span={16}>
+										<Slider
+											min={MIN_ZOOM * 100}
+											max={MAX_ZOOM * 100}
+											value={this.zoom * 100}
+											defaultValue={this.zoom * 100}
+											onChange={v => {
+												this.zoom = v / 100;
+											}}
+											label={lang(`Zoom`)}
+											showValue={false}
+										/>
+									</Col>
+									<Col span={4}>
+										<IconButton
+											onClick={() => {
+												const canvas = document.querySelectorAll(
+													"." + this.unique
+												)[0] as HTMLCanvasElement;
+
+												const context = canvas.getContext(
+													"2d"
+												);
+
+												context!.translate(
+													context!.canvas.width,
+													0
+												);
+												context!.scale(-1, 1);
+												this.forceUpdate();
+											}}
+											iconProps={{
+												iconName: "More"
+											}}
+										/>
+									</Col>
+									<Col span={4}>
+										<IconButton
+											onClick={() => {
+												const canvas = document.querySelectorAll(
+													"." + this.unique
+												)[0] as HTMLCanvasElement;
+
+												const context = canvas.getContext(
+													"2d"
+												);
+
+												context!.translate(
+													0,
+													context!.canvas.height
+												);
+												context!.scale(1, -1);
+												this.forceUpdate();
+											}}
+											iconProps={{
+												iconName: "MoreVertical"
+											}}
+										/>
+									</Col>
+								</Row>
 							</Col>
 							<Col span={12}>
-								<Row gutter={2}>
+								<Row gutter={0}>
 									<Col span={16}>
 										<Slider
 											min={-45}
@@ -165,15 +207,10 @@ export class Crop extends React.Component<{
 								iconProps: { iconName: "save" },
 								classNames: "abc",
 								onClick: () => {
-									if (!this.editorRef) {
-										return;
-									}
-
-									this.props.onSave(
-										this.editorRef
-											.getImageScaledToCanvas()
-											.toDataURL()
-									);
+									const canvas = document.querySelectorAll(
+										"." + this.unique
+									)[0] as HTMLCanvasElement;
+									this.props.onSave(canvas.toDataURL());
 								}
 							},
 							{
