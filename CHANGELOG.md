@@ -1,5 +1,14 @@
 ## Changelog
 
+### 3.1.0
+
+-   New feature: Selecting a date format from setting #67
+-   New feature: Confirmation on deleting a visit from the orthodontic records #66
+-   New feature: Adding number of days between visits in the orthodontic records #64
+-   New feature: Flipping images when cropping #63
+-   Enhancement: Save higher resolution files when cropping
+-   Enhancement: Added a tooltip to all icon button #63
+
 ### 3.0.2
 
 -   Fixed: Time not showing while selecting #61
