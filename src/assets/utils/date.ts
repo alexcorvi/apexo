@@ -1,5 +1,5 @@
-import t4mat from "t4mat";
 import { lang } from "../../core/i18/i18";
+import setting from "../../modules/settings/data/data.settings";
 
 export function comparableTime(date: Date) {
 	return {
@@ -43,9 +43,16 @@ export function unifiedDateFormat(d: Date | number | undefined) {
 		d = new Date(0);
 	}
 
-	return `${d!.getDate()} ${
-		name.monthsShort()[d!.getMonth()]
-	}'${d!.getFullYear() - 2000}`;
+	const dateFormat = setting.getSetting("date_format");
+	if (dateFormat === "dd/mm/yyyy") {
+		return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+	} else if (dateFormat === "mm/dd/yyyy") {
+		return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+	} else {
+		return `${d!.getDate()} ${
+			name.monthsShort()[d!.getMonth()]
+		}'${d!.getFullYear() - 2000}`;
+	}
 }
 
 export const name = {

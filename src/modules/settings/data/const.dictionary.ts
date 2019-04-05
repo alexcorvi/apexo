@@ -8,5 +8,6 @@ export const dictionary = {
 	backup_freq: "backup_freq",
 	backup_retain: "backup_retain",
 	dropbox_accessToken: "dropbox_accessToken",
-	lang: "lang"
+	lang: "lang",
+	date_format: "date_format"
 };

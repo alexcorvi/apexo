@@ -72,6 +72,32 @@ export class SettingsComponent extends React.Component<{}, {}> {
 
 					<Input
 						element={
+							<Dropdown
+								label={lang("Date format")}
+								options={[
+									{ key: "dd/mm/yyyy", text: "dd/mm/yyyy" },
+									{ key: "mm/dd/yyyy", text: "mm/dd/yyyy" },
+									{ key: "dd MM 'YY", text: "dd MM 'YY" }
+								]}
+								defaultSelectedKey={settings.getSetting(
+									"date_format"
+								)}
+								onChange={(ev, v) => {
+									settings.setSetting(
+										"date_format",
+										v!.key.toString()
+									);
+								}}
+								disabled={!this.canEdit}
+							/>
+						}
+						info={lang(
+							`Set the date format to be used across this application`
+						)}
+					/>
+
+					<Input
+						element={
 							<TextField
 								value={settings.getSetting(
 									"dropbox_accessToken"

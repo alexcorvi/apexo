@@ -129,6 +129,8 @@ export const ar: Language = {
 			"لا يمكنك عمل نسخ احتياطي أو استرجاع لانك غير متصل بالانترنت",
 		"Choose the main language of display menus and items":
 			"قم باختيار اللغة الرئيسية للعرض والقوائم",
+		"Set the date format to be used across this application":
+			"إختر صيغة التاريخ التي سيتم إستخدامها في التطبيق",
 		"This access token is used to store files across the application, like backups and images":
 			"هذا الرمز مطلوب للقيام برفع أي ملف من خلال البرنامج كالصور والتحليلات الرئسية وملفات النسخ الاحتياطي",
 		// tslint:disable-next-line:max-line-length
@@ -296,6 +298,7 @@ export const ar: Language = {
 		"Units per time": "الوحدات في كل تكرار",
 		"Item form": "صيغة العلاج",
 		Language: "اللغة",
+		"Date format": "صيغة التاريخ",
 		"Dropbox access token": "الرمز السري للدروبوكس",
 		"Time expenses (per hour)": "مصاريف الوقت \\ ساعة",
 		"Currency symbol": "رمز العملة",

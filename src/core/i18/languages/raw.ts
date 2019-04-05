@@ -119,6 +119,7 @@ export const ar: Language = {
 		"Backup and restore functionality are not available while you're offline":
 			"",
 		"Choose the main language of display menus and items": "",
+		"Set the date format to be used across this application": "",
 		"This access token is used to store files across the application, like backups and images":
 			"",
 		// tslint:disable-next-line:max-line-length
@@ -279,6 +280,7 @@ export const ar: Language = {
 		"Units per time": "",
 		"Item form": "",
 		Language: "",
+		"Date format": "",
 		"Dropbox access token": "",
 		"Time expenses (per hour)": "",
 		"Currency symbol": "",
