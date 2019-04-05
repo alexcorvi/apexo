@@ -427,6 +427,7 @@ export const ar: Language = {
 		"No appointments today": "",
 		"Date:": "",
 		"Select a date...": "",
+		days: "",
 
 		/**========================================
 		 * Editing Appointment
