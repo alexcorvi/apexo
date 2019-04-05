@@ -26,7 +26,7 @@ import { generateID } from "../../../assets/utils/generate-id";
 import { observable, computed, observe } from "mobx";
 import { EditableList } from "../../../assets/components/editable-list/editable-list";
 import { Section } from "../../../assets/components/section/section";
-import { unifiedDateFormat } from "../../../assets/utils/date";
+import { unifiedDateFormat, day } from "../../../assets/utils/date";
 import { Visit, Photo } from "../data/class.ortho";
 import {
 	PickAndUpload,
@@ -384,7 +384,7 @@ export class Orthograph extends React.Component<{
 															sortedVisits[
 																visitIndex + 1
 															] || new Visit();
-														return (
+														return [
 															<tr key={visit.id}>
 																<td>
 																	<TooltipHost
@@ -1108,8 +1108,34 @@ export class Orthograph extends React.Component<{
 																		}}
 																	/>
 																</td>
+															</tr>,
+															<tr
+																key={
+																	visit.id +
+																	"days"
+																}
+															>
+																<td colSpan={7}>
+																	{sortedVisits[
+																		visitIndex +
+																			1
+																	] ? (
+																		<i className="days-num">
+																			{Math.round(
+																				(nextVisit.date -
+																					visit.date) /
+																					day
+																			)}{" "}
+																			{lang(
+																				"days"
+																			)}
+																		</i>
+																	) : (
+																		""
+																	)}
+																</td>
 															</tr>
-														);
+														];
 													}
 												)}
 										</tbody>

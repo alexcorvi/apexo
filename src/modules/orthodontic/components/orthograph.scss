@@ -12,6 +12,16 @@
 
 			width: 100%;
 
+			.days-num {
+				font-size: 12px;
+				display: block;
+				border: 1px dashed #e3e3e3;
+				border-left: none;
+				border-right: 0;
+				padding: 10px 0;
+				text-align: center;
+			}
+
 			.term-initials {
 				font-size: 12px;
 				font-style: italic;
