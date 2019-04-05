@@ -7,7 +7,8 @@ import {
 	Toggle,
 	IconButton,
 	Dialog,
-	CommandBar
+	CommandBar,
+	TooltipHost
 } from "office-ui-fabric-react";
 import { Row, Col } from "../grid";
 import "./crop.scss";
@@ -80,50 +81,58 @@ export class Crop extends React.Component<{
 										/>
 									</Col>
 									<Col span={4}>
-										<IconButton
-											onClick={() => {
-												const canvas = document.querySelectorAll(
-													"." + this.unique
-												)[0] as HTMLCanvasElement;
+										<TooltipHost
+											content={lang("Flip horizontal")}
+										>
+											<IconButton
+												onClick={() => {
+													const canvas = document.querySelectorAll(
+														"." + this.unique
+													)[0] as HTMLCanvasElement;
 
-												const context = canvas.getContext(
-													"2d"
-												);
+													const context = canvas.getContext(
+														"2d"
+													);
 
-												context!.translate(
-													context!.canvas.width,
-													0
-												);
-												context!.scale(-1, 1);
-												this.forceUpdate();
-											}}
-											iconProps={{
-												iconName: "More"
-											}}
-										/>
+													context!.translate(
+														context!.canvas.width,
+														0
+													);
+													context!.scale(-1, 1);
+													this.forceUpdate();
+												}}
+												iconProps={{
+													iconName: "More"
+												}}
+											/>
+										</TooltipHost>
 									</Col>
 									<Col span={4}>
-										<IconButton
-											onClick={() => {
-												const canvas = document.querySelectorAll(
-													"." + this.unique
-												)[0] as HTMLCanvasElement;
+										<TooltipHost
+											content={lang("Flip vertical")}
+										>
+											<IconButton
+												onClick={() => {
+													const canvas = document.querySelectorAll(
+														"." + this.unique
+													)[0] as HTMLCanvasElement;
 
-												const context = canvas.getContext(
-													"2d"
-												);
+													const context = canvas.getContext(
+														"2d"
+													);
 
-												context!.translate(
-													0,
-													context!.canvas.height
-												);
-												context!.scale(1, -1);
-												this.forceUpdate();
-											}}
-											iconProps={{
-												iconName: "MoreVertical"
-											}}
-										/>
+													context!.translate(
+														0,
+														context!.canvas.height
+													);
+													context!.scale(1, -1);
+													this.forceUpdate();
+												}}
+												iconProps={{
+													iconName: "MoreVertical"
+												}}
+											/>
+										</TooltipHost>
 									</Col>
 								</Row>
 							</Col>
@@ -144,27 +153,36 @@ export class Crop extends React.Component<{
 										/>
 									</Col>
 									<Col span={4}>
-										<IconButton
-											onClick={() => {
-												this.baseRotation =
-													this.baseRotation - 90;
-											}}
-											iconProps={{
-												iconName: "Rotate90Clockwise"
-											}}
-										/>
+										<TooltipHost
+											content={lang("Rotate clockwise")}
+										>
+											<IconButton
+												onClick={() => {
+													this.baseRotation =
+														this.baseRotation - 90;
+												}}
+												iconProps={{
+													iconName:
+														"Rotate90Clockwise"
+												}}
+											/>
+										</TooltipHost>
 									</Col>
 									<Col span={4}>
-										<IconButton
-											onClick={() => {
-												this.baseRotation =
-													this.baseRotation + 90;
-											}}
-											iconProps={{
-												iconName:
-													"Rotate90CounterClockwise"
-											}}
-										/>
+										<TooltipHost
+											content={"Rotate anti-clockwise"}
+										>
+											<IconButton
+												onClick={() => {
+													this.baseRotation =
+														this.baseRotation + 90;
+												}}
+												iconProps={{
+													iconName:
+														"Rotate90CounterClockwise"
+												}}
+											/>
+										</TooltipHost>
 									</Col>
 								</Row>
 							</Col>

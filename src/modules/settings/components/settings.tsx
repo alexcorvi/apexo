@@ -16,7 +16,8 @@ import {
 	IconButton,
 	MessageBar,
 	MessageBarType,
-	DefaultButton
+	DefaultButton,
+	TooltipHost
 } from "office-ui-fabric-react";
 import { settings } from "../data";
 import "./settings.scss";
@@ -355,82 +356,95 @@ export class SettingsComponent extends React.Component<{}, {}> {
 																/>
 															</td>
 															<td>
-																<IconButton
-																	style={{
-																		marginRight: 6
-																	}}
-																	iconProps={{
-																		iconName: this
-																			.loading
-																			? "sync"
-																			: "delete"
-																	}}
-																	className={
-																		this
-																			.loading
-																			? "rotate"
-																			: ""
-																	}
-																	disabled={
-																		!this
-																			.canEdit
-																	}
-																	onClick={() => {
-																		this.loading = true;
-																		backup
-																			.deleteOld(
-																				file.path_lower
-																			)
-																			.then(
-																				() => {
-																					this.loading = false;
-																					settings.updateDropboxBackups();
-																				}
-																			)
-																			.catch(
-																				() => {
-																					this.loading = false;
-																					settings.updateDropboxBackups();
-																				}
-																			);
-																	}}
-																/>
-																<IconButton
-																	style={{
-																		marginRight: 6
-																	}}
-																	iconProps={{
-																		iconName: this
-																			.loading
-																			? "sync"
-																			: "DatabaseSync"
-																	}}
-																	className={
-																		this
-																			.loading
-																			? "rotate"
-																			: ""
-																	}
-																	disabled={
-																		!this
-																			.canEdit
-																	}
-																	onClick={() => {
-																		this.loading = true;
-																		restore
-																			.fromDropbox(
-																				file.path_lower
-																			)
-																			.then(
-																				() =>
-																					(this.loading = false)
-																			)
-																			.catch(
-																				() =>
-																					(this.loading = false)
-																			);
-																	}}
-																/>
+																<TooltipHost
+																	content={lang(
+																		"Delete"
+																	)}
+																>
+																	<IconButton
+																		style={{
+																			marginRight: 6
+																		}}
+																		iconProps={{
+																			iconName: this
+																				.loading
+																				? "sync"
+																				: "delete"
+																		}}
+																		className={
+																			this
+																				.loading
+																				? "rotate"
+																				: ""
+																		}
+																		disabled={
+																			!this
+																				.canEdit
+																		}
+																		onClick={() => {
+																			this.loading = true;
+																			backup
+																				.deleteOld(
+																					file.path_lower
+																				)
+																				.then(
+																					() => {
+																						this.loading = false;
+																						settings.updateDropboxBackups();
+																					}
+																				)
+																				.catch(
+																					() => {
+																						this.loading = false;
+																						settings.updateDropboxBackups();
+																					}
+																				);
+																		}}
+																	/>
+																</TooltipHost>
+
+																<TooltipHost
+																	content={lang(
+																		"Restore"
+																	)}
+																>
+																	<IconButton
+																		style={{
+																			marginRight: 6
+																		}}
+																		iconProps={{
+																			iconName: this
+																				.loading
+																				? "sync"
+																				: "DatabaseSync"
+																		}}
+																		className={
+																			this
+																				.loading
+																				? "rotate"
+																				: ""
+																		}
+																		disabled={
+																			!this
+																				.canEdit
+																		}
+																		onClick={() => {
+																			this.loading = true;
+																			restore
+																				.fromDropbox(
+																					file.path_lower
+																				)
+																				.then(
+																					() =>
+																						(this.loading = false)
+																				)
+																				.catch(
+																					() =>
+																						(this.loading = false)
+																				);
+																		}}
+																	/>
+																</TooltipHost>
 															</td>
 														</tr>
 													);

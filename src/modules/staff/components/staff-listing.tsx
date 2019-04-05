@@ -14,7 +14,8 @@ import {
 	MessageBarType,
 	Checkbox,
 	PersonaInitialsColor,
-	Icon
+	Icon,
+	TooltipHost
 } from "office-ui-fabric-react";
 import { computed, observable } from "mobx";
 import { DataTable } from "../../../assets/components/data-table/data-table.component";
@@ -85,57 +86,83 @@ export class StaffListing extends React.Component<{}, {}> {
 													size={3}
 												/>
 												<br />
-												<IconButton
-													className="action-button"
-													iconProps={{
-														iconName:
-															"DietPlanNotebook"
-													}}
-													onClick={() => {
-														this.selectedId =
-															member._id;
-														this.viewWhich = 1;
-													}}
-												/>
-												<IconButton
-													className="action-button"
-													iconProps={{
-														iconName: "Permissions"
-													}}
-													onClick={() => {
-														this.selectedId =
-															member._id;
-														this.viewWhich = 2;
-													}}
-												/>
-												{API.user.currentUser
-													.canViewAppointments ? (
+												<TooltipHost
+													content={lang(
+														"Staff Member Details"
+													)}
+												>
 													<IconButton
 														className="action-button"
 														iconProps={{
-															iconName: "Calendar"
+															iconName:
+																"DietPlanNotebook"
 														}}
 														onClick={() => {
 															this.selectedId =
 																member._id;
-															this.viewWhich = 3;
+															this.viewWhich = 1;
 														}}
 													/>
+												</TooltipHost>
+
+												<TooltipHost
+													content={lang(
+														"Level and Permission"
+													)}
+												>
+													<IconButton
+														className="action-button"
+														iconProps={{
+															iconName:
+																"Permissions"
+														}}
+														onClick={() => {
+															this.selectedId =
+																member._id;
+															this.viewWhich = 2;
+														}}
+													/>
+												</TooltipHost>
+
+												{API.user.currentUser
+													.canViewAppointments ? (
+													<TooltipHost
+														content={lang(
+															"Upcoming Appointments"
+														)}
+													>
+														<IconButton
+															className="action-button"
+															iconProps={{
+																iconName:
+																	"Calendar"
+															}}
+															onClick={() => {
+																this.selectedId =
+																	member._id;
+																this.viewWhich = 3;
+															}}
+														/>
+													</TooltipHost>
 												) : (
 													""
 												)}
-												<IconButton
-													className="action-button delete"
-													iconProps={{
-														iconName: "Trash"
-													}}
-													onClick={() =>
-														staffMembers.deleteModal(
-															member._id
-														)
-													}
-													disabled={!this.canEdit}
-												/>
+												<TooltipHost
+													content={lang("Delete")}
+												>
+													<IconButton
+														className="action-button delete"
+														iconProps={{
+															iconName: "Trash"
+														}}
+														onClick={() =>
+															staffMembers.deleteModal(
+																member._id
+															)
+														}
+														disabled={!this.canEdit}
+													/>
+												</TooltipHost>
 											</div>
 										),
 										className: "no-label"
@@ -387,17 +414,17 @@ export class StaffListing extends React.Component<{}, {}> {
 												<span>
 													{this.viewWhich === 1
 														? lang(
-																"Staff member details"
+																"Staff Member Details"
 														  )
 														: ""}
 													{this.viewWhich === 2
 														? lang(
-																"Level and permission"
+																"Level and Permission"
 														  )
 														: ""}
 													{this.viewWhich === 3
 														? lang(
-																"Upcoming appointments"
+																"Upcoming Appointments"
 														  )
 														: ""}
 												</span>

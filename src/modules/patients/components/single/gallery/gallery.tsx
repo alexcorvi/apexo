@@ -9,7 +9,8 @@ import {
 	IconButton,
 	Icon,
 	MessageBar,
-	MessageBarType
+	MessageBarType,
+	TooltipHost
 } from "office-ui-fabric-react";
 import { files, GALLERIES_DIR } from "../../../../../core/files/files";
 import {
@@ -91,12 +92,16 @@ export class SinglePatientGallery extends React.Component<
 												this.props.patient._id
 											}`}
 										>
-											<IconButton
-												className={`add-photo`}
-												iconProps={{
-													iconName: "add"
-												}}
-											/>
+											<TooltipHost
+												content={lang("Add photo")}
+											>
+												<IconButton
+													className={`add-photo`}
+													iconProps={{
+														iconName: "Photo2Add"
+													}}
+												/>
+											</TooltipHost>
 										</PickAndUpload>
 									)
 								) : (

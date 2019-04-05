@@ -318,42 +318,54 @@ export class Orthograph extends React.Component<{
 																	)}
 																	<br />
 
-																	<IconButton
-																		iconProps={{
-																			iconName:
-																				this
-																					.zoomedColumn ===
-																				index
-																					? "ZoomOut"
-																					: "ZoomIn"
-																		}}
-																		className="clickable-icon"
-																		onClick={() => {
-																			if (
-																				this
-																					.zoomedColumn ===
-																				index
-																			) {
-																				this.zoomedColumn = -1;
-																				return;
-																			}
-																			this.zoomedColumn = index;
-																		}}
-																	/>
-																	{this
-																		.zoomedColumn ===
-																	index ? (
+																	<TooltipHost
+																		content={lang(
+																			"Zoom"
+																		)}
+																	>
 																		<IconButton
 																			iconProps={{
 																				iconName:
-																					"gridViewSmall"
+																					this
+																						.zoomedColumn ===
+																					index
+																						? "ZoomOut"
+																						: "ZoomIn"
 																			}}
 																			className="clickable-icon"
 																			onClick={() => {
-																				this.showGrid = !this
-																					.showGrid;
+																				if (
+																					this
+																						.zoomedColumn ===
+																					index
+																				) {
+																					this.zoomedColumn = -1;
+																					return;
+																				}
+																				this.zoomedColumn = index;
 																			}}
 																		/>
+																	</TooltipHost>
+																	{this
+																		.zoomedColumn ===
+																	index ? (
+																		<TooltipHost
+																			content={lang(
+																				"View grid"
+																			)}
+																		>
+																			<IconButton
+																				iconProps={{
+																					iconName:
+																						"gridViewSmall"
+																				}}
+																				className="clickable-icon"
+																				onClick={() => {
+																					this.showGrid = !this
+																						.showGrid;
+																				}}
+																			/>
+																		</TooltipHost>
 																	) : (
 																		""
 																	)}
@@ -1069,17 +1081,23 @@ export class Orthograph extends React.Component<{
 																							}`
 																						}}
 																					>
-																						<IconButton
-																							iconProps={{
-																								iconName:
-																									"Photo2Add"
-																							}}
-																							className="clickable-icon add-photo"
-																							disabled={
-																								!this
-																									.canEdit
-																							}
-																						/>
+																						<TooltipHost
+																							content={lang(
+																								"Add photo"
+																							)}
+																						>
+																							<IconButton
+																								iconProps={{
+																									iconName:
+																										"Photo2Add"
+																								}}
+																								className="clickable-icon add-photo"
+																								disabled={
+																									!this
+																										.canEdit
+																								}
+																							/>
+																						</TooltipHost>
 																					</PickAndUpload>
 																				)}
 																			</td>
@@ -1087,39 +1105,45 @@ export class Orthograph extends React.Component<{
 																	}
 																)}
 																<td>
-																	<IconButton
-																		className="clickable-icon delete-visit"
-																		key={
-																			visit.id
-																		}
-																		disabled={
-																			!this
-																				.canEdit
-																		}
-																		iconProps={{
-																			iconName:
-																				"DeleteRows"
-																		}}
-																		onClick={() => {
-																			modals.newModal(
-																				{
-																					message: lang(
-																						"This visit data will be deleted along with all photos and notes"
-																					),
-																					onConfirm: () => {
-																						this.props.orthoCase.visits.splice(
-																							visitIndex,
-																							1
-																						);
-																						this.tu();
-																					},
-																					showCancelButton: true,
-																					showConfirmButton: true,
-																					id: Math.random()
-																				}
-																			);
-																		}}
-																	/>
+																	<TooltipHost
+																		content={lang(
+																			"Delete visit"
+																		)}
+																	>
+																		<IconButton
+																			className="clickable-icon delete-visit"
+																			key={
+																				visit.id
+																			}
+																			disabled={
+																				!this
+																					.canEdit
+																			}
+																			iconProps={{
+																				iconName:
+																					"DeleteRows"
+																			}}
+																			onClick={() => {
+																				modals.newModal(
+																					{
+																						message: lang(
+																							"This visit data will be deleted along with all photos and notes"
+																						),
+																						onConfirm: () => {
+																							this.props.orthoCase.visits.splice(
+																								visitIndex,
+																								1
+																							);
+																							this.tu();
+																						},
+																						showCancelButton: true,
+																						showConfirmButton: true,
+																						id: Math.random()
+																					}
+																				);
+																			}}
+																		/>
+																	</TooltipHost>
 																</td>
 															</tr>,
 															<tr

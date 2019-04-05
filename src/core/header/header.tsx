@@ -6,7 +6,7 @@ import { API, components } from "../";
 import { resync } from "../db";
 import { observer } from "mobx-react";
 import { Row, Col } from "../../assets/components/grid/index";
-import { IconButton, Icon } from "office-ui-fabric-react";
+import { IconButton, Icon, TooltipHost } from "office-ui-fabric-react";
 import { lang } from "../i18/i18";
 
 @observer
@@ -36,29 +36,33 @@ export class HeaderComponent extends React.Component<{}, {}> {
 					<Col span={8}>
 						<section className="right-buttons">
 							{API.login.online ? (
-								<IconButton
-									onClick={async () => {
-										API.router.reSyncing = true;
-										await resync.resync();
-										API.router.reSyncing = false;
-									}}
-									iconProps={{ iconName: "Sync" }}
-									className={
-										API.router.reSyncing ? "rotate" : ""
-									}
-									title="Re-Sync"
-								/>
+								<TooltipHost content={lang("Sync with server")}>
+									<IconButton
+										onClick={async () => {
+											API.router.reSyncing = true;
+											await resync.resync();
+											API.router.reSyncing = false;
+										}}
+										iconProps={{ iconName: "Sync" }}
+										className={
+											API.router.reSyncing ? "rotate" : ""
+										}
+										title="Re-Sync"
+									/>
+								</TooltipHost>
 							) : (
 								<span className="offline">
 									<Icon iconName="WifiWarning4" />
 								</span>
 							)}
 
-							<IconButton
-								onClick={() => (API.user.visible = true)}
-								disabled={false}
-								iconProps={{ iconName: "Contact" }}
-							/>
+							<TooltipHost content={lang("User panel")}>
+								<IconButton
+									onClick={() => (API.user.visible = true)}
+									disabled={false}
+									iconProps={{ iconName: "Contact" }}
+								/>
+							</TooltipHost>
 						</section>
 					</Col>
 				</Row>

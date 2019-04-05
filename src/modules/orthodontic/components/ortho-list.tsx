@@ -9,7 +9,8 @@ import {
 	IconButton,
 	PersonaInitialsColor,
 	Icon,
-	DefaultButton
+	DefaultButton,
+	TooltipHost
 } from "office-ui-fabric-react";
 import { observable, computed } from "mobx";
 import { DataTable } from "../../../assets/components/data-table/data-table.component";
@@ -98,91 +99,139 @@ export class OrthoList extends React.Component<{}, {}> {
 													size={3}
 												/>
 												<br />
-												<IconButton
-													className="action-button"
-													iconProps={{
-														iconName:
-															"DietPlanNotebook"
-													}}
-													onClick={() => {
-														this.selectedId =
-															orthoCase._id;
-														this.viewWhich = 1;
-													}}
-												/>
-												<IconButton
-													className="action-button"
-													iconProps={{
-														iconName: "Teeth"
-													}}
-													onClick={() => {
-														this.selectedId =
-															orthoCase._id;
-														this.viewWhich = 2;
-													}}
-												/>
-												<IconButton
-													className="action-button"
-													iconProps={{
-														iconName: "GroupedList"
-													}}
-													onClick={() => {
-														this.selectedId =
-															orthoCase._id;
-														this.viewWhich = 3;
-													}}
-												/>
-												<IconButton
-													className="action-button"
-													iconProps={{
-														iconName: "TripleColumn"
-													}}
-													onClick={() => {
-														this.selectedId =
-															orthoCase._id;
-														this.viewWhich = 4;
-													}}
-												/>
-												<IconButton
-													className="action-button"
-													iconProps={{
-														iconName:
-															"PhotoCollection"
-													}}
-													onClick={() => {
-														this.selectedId =
-															orthoCase._id;
-														this.viewWhich = 5;
-													}}
-												/>
-												{API.user.currentUser
-													.canViewAppointments ? (
+												<TooltipHost
+													content={lang(
+														"Patient Details"
+													)}
+												>
 													<IconButton
 														className="action-button"
 														iconProps={{
-															iconName: "Calendar"
+															iconName:
+																"DietPlanNotebook"
 														}}
 														onClick={() => {
 															this.selectedId =
 																orthoCase._id;
-															this.viewWhich = 6;
+															this.viewWhich = 1;
 														}}
 													/>
+												</TooltipHost>
+
+												<TooltipHost
+													content={lang(
+														"Dental History"
+													)}
+												>
+													<IconButton
+														className="action-button"
+														iconProps={{
+															iconName: "Teeth"
+														}}
+														onClick={() => {
+															this.selectedId =
+																orthoCase._id;
+															this.viewWhich = 2;
+														}}
+													/>
+												</TooltipHost>
+
+												<TooltipHost
+													content={lang(
+														"Orthodontic Case Sheet"
+													)}
+												>
+													<IconButton
+														className="action-button"
+														iconProps={{
+															iconName:
+																"GroupedList"
+														}}
+														onClick={() => {
+															this.selectedId =
+																orthoCase._id;
+															this.viewWhich = 3;
+														}}
+													/>
+												</TooltipHost>
+
+												<TooltipHost
+													content={lang(
+														"Orthodontic Album"
+													)}
+												>
+													<IconButton
+														className="action-button"
+														iconProps={{
+															iconName:
+																"TripleColumn"
+														}}
+														onClick={() => {
+															this.selectedId =
+																orthoCase._id;
+															this.viewWhich = 4;
+														}}
+													/>
+												</TooltipHost>
+
+												<TooltipHost
+													content={lang(
+														"Gallery and X-Rays"
+													)}
+												>
+													<IconButton
+														className="action-button"
+														iconProps={{
+															iconName:
+																"PhotoCollection"
+														}}
+														onClick={() => {
+															this.selectedId =
+																orthoCase._id;
+															this.viewWhich = 5;
+														}}
+													/>
+												</TooltipHost>
+
+												{API.user.currentUser
+													.canViewAppointments ? (
+													<TooltipHost
+														content={lang(
+															"Patient Appointments"
+														)}
+													>
+														<IconButton
+															className="action-button"
+															iconProps={{
+																iconName:
+																	"Calendar"
+															}}
+															onClick={() => {
+																this.selectedId =
+																	orthoCase._id;
+																this.viewWhich = 6;
+															}}
+														/>
+													</TooltipHost>
 												) : (
 													""
 												)}
-												<IconButton
-													className="action-button delete"
-													iconProps={{
-														iconName: "Trash"
-													}}
-													onClick={() =>
-														cases.deleteModal(
-															orthoCase._id
-														)
-													}
-													disabled={!this.canEdit}
-												/>
+												<TooltipHost
+													content={lang("Delete")}
+												>
+													<IconButton
+														className="action-button delete"
+														iconProps={{
+															iconName: "Trash"
+														}}
+														onClick={() =>
+															cases.deleteModal(
+																orthoCase._id
+															)
+														}
+														disabled={!this.canEdit}
+													/>
+												</TooltipHost>
 											</div>
 										),
 										className: "no-label"

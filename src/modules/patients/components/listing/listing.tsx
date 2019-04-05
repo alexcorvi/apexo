@@ -16,7 +16,8 @@ import {
 	Icon,
 	PersonaInitialsColor,
 	Panel,
-	PanelType
+	PanelType,
+	TooltipHost
 } from "office-ui-fabric-react";
 import setting from "../../../settings/data/data.settings";
 import { Row, Col } from "../../../../assets/components/grid";
@@ -73,10 +74,14 @@ export class PatientsListing extends React.Component<{}, {}> {
 														? lang("Dental History")
 														: ""}
 													{this.viewWhich === 3
-														? lang("Gallery")
+														? lang(
+																"Gallery and X-Rays"
+														  )
 														: ""}
 													{this.viewWhich === 4
-														? lang("Appointments")
+														? lang(
+																"Patient Appointments"
+														  )
 														: ""}
 												</div>
 											}
@@ -158,64 +163,91 @@ export class PatientsListing extends React.Component<{}, {}> {
 											size={3}
 										/>
 										<br />
-										<IconButton
-											className="action-button"
-											iconProps={{
-												iconName: "DietPlanNotebook"
-											}}
-											onClick={() => {
-												this.selectedId = patient._id;
-												this.viewWhich = 1;
-											}}
-										/>
-										<IconButton
-											className="action-button"
-											iconProps={{
-												iconName: "Teeth"
-											}}
-											onClick={() => {
-												this.selectedId = patient._id;
-												this.viewWhich = 2;
-											}}
-										/>
-										<IconButton
-											className="action-button"
-											iconProps={{
-												iconName: "PhotoCollection"
-											}}
-											onClick={() => {
-												this.selectedId = patient._id;
-												this.viewWhich = 3;
-											}}
-										/>
-										{API.user.currentUser
-											.canViewAppointments ? (
+
+										<TooltipHost
+											content={lang("Patient Details")}
+										>
 											<IconButton
 												className="action-button"
 												iconProps={{
-													iconName: "Calendar"
+													iconName: "DietPlanNotebook"
 												}}
 												onClick={() => {
 													this.selectedId =
 														patient._id;
-													this.viewWhich = 4;
+													this.viewWhich = 1;
 												}}
 											/>
+										</TooltipHost>
+
+										<TooltipHost
+											content={lang("Dental History")}
+										>
+											<IconButton
+												className="action-button"
+												iconProps={{
+													iconName: "Teeth"
+												}}
+												onClick={() => {
+													this.selectedId =
+														patient._id;
+													this.viewWhich = 2;
+												}}
+											/>
+										</TooltipHost>
+
+										<TooltipHost
+											content={lang("Gallery and X-Rays")}
+										>
+											<IconButton
+												className="action-button"
+												iconProps={{
+													iconName: "PhotoCollection"
+												}}
+												onClick={() => {
+													this.selectedId =
+														patient._id;
+													this.viewWhich = 3;
+												}}
+											/>
+										</TooltipHost>
+
+										{API.user.currentUser
+											.canViewAppointments ? (
+											<TooltipHost
+												content={lang(
+													"Patient Appointments"
+												)}
+											>
+												<IconButton
+													className="action-button"
+													iconProps={{
+														iconName: "Calendar"
+													}}
+													onClick={() => {
+														this.selectedId =
+															patient._id;
+														this.viewWhich = 4;
+													}}
+												/>
+											</TooltipHost>
 										) : (
 											""
 										)}
-										<IconButton
-											className="action-button delete"
-											iconProps={{
-												iconName: "Trash"
-											}}
-											onClick={() =>
-												patients.deleteModal(
-													patient._id
-												)
-											}
-											disabled={!this.canEdit}
-										/>
+										<TooltipHost content={lang("Delete")}>
+											<IconButton
+												className="action-button delete"
+												iconProps={{
+													iconName: "Trash"
+												}}
+												onClick={() =>
+													patients.deleteModal(
+														patient._id
+													)
+												}
+												disabled={!this.canEdit}
+											/>
+										</TooltipHost>
 									</div>
 								),
 								className: "no-label"
