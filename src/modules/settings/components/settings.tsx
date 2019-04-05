@@ -125,26 +125,30 @@ export class SettingsComponent extends React.Component<{}, {}> {
 				</Section>
 
 				<Section title={lang(`Financial Settings`)}>
-					<Input
-						element={
-							<TextField
-								label={lang("Time expenses (per hour)")}
-								type="number"
-								value={settings.getSetting("hourlyRate")}
-								onChange={(ev, newVal) => {
-									settings.setSetting(
-										"hourlyRate",
-										newVal!.toString()
-									);
-								}}
-								disabled={!this.canEdit}
-							/>
-						}
-						info={lang(
-							// tslint:disable-next-line:max-line-length
-							`When time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses So here you can put the electricity, rent, and other time dependent expenses`
-						)}
-					/>
+					{settings.getSetting("time_tracking") ? (
+						<Input
+							element={
+								<TextField
+									label={lang("Time expenses (per hour)")}
+									type="number"
+									value={settings.getSetting("hourlyRate")}
+									onChange={(ev, newVal) => {
+										settings.setSetting(
+											"hourlyRate",
+											newVal!.toString()
+										);
+									}}
+									disabled={!this.canEdit}
+								/>
+							}
+							info={lang(
+								// tslint:disable-next-line:max-line-length
+								`When time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses So here you can put the electricity, rent, and other time dependent expenses`
+							)}
+						/>
+					) : (
+						""
+					)}
 
 					<Input
 						element={
