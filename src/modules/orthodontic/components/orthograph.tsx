@@ -39,6 +39,7 @@ import { API } from "../../../core";
 import setting from "../../settings/data/data.settings";
 import { lang } from "../../../core/i18/i18";
 import { num } from "../../../assets/utils/num";
+import { modals } from "../../../core/modal/data.modal";
 
 const viewsTerms = [
 	"Frontal",
@@ -1100,11 +1101,23 @@ export class Orthograph extends React.Component<{
 																				"DeleteRows"
 																		}}
 																		onClick={() => {
-																			this.props.orthoCase.visits.splice(
-																				visitIndex,
-																				1
+																			modals.newModal(
+																				{
+																					message: lang(
+																						"This visit data will be deleted along with all photos and notes"
+																					),
+																					onConfirm: () => {
+																						this.props.orthoCase.visits.splice(
+																							visitIndex,
+																							1
+																						);
+																						this.tu();
+																					},
+																					showCancelButton: true,
+																					showConfirmButton: true,
+																					id: Math.random()
+																				}
 																			);
-																			this.tu();
 																		}}
 																	/>
 																</td>

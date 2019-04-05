@@ -200,6 +200,7 @@ export const ar: Language = {
 		"Are you sure you want to delete the prescription?": "",
 		"Are you sure you want to delete": "",
 		"will be deleted": "",
+		"This visit data will be deleted along with all photos and notes": "",
 
 		/**========================================
 		 * Messages

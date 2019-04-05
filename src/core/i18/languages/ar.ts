@@ -218,6 +218,8 @@ export const ar: Language = {
 			"هل انت متاكد من الحذف",
 		"Are you sure you want to delete": "هل انت متاكد من الحذف",
 		"will be deleted": "سيتم حذفه",
+		"This visit data will be deleted along with all photos and notes":
+			"ستم حذف هذه الزيارة من السجل مع جميع الصور والملاحظات التي عليها",
 
 		/**========================================
 		 * Messages
