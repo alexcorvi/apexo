@@ -14,7 +14,11 @@ import {
 	TagTypeToString,
 	stringToTagType
 } from "../../../assets/components/label/label.component";
-import { unifiedDateFormat, day } from "../../../assets/utils/date";
+import {
+	unifiedDateFormat,
+	day,
+	comparableTime
+} from "../../../assets/utils/date";
 
 export class Patient {
 	_id: string = generateID();
@@ -66,14 +70,14 @@ export class Patient {
 	@computed
 	get nextAppointment() {
 		return this.appointments
-			.filter(
-				appointment =>
-					appointment.isDone === false &&
-					appointment.date >
-						Math.round(new Date().getTime() / (day / 2)) *
-							(day / 2) -
-							day / 2
-			)
+			.filter(appointment => {
+				if (appointment.isDone) {
+					return false;
+				}
+				const t = comparableTime(new Date());
+				const a = comparableTime(new Date(appointment.date));
+				return t.y <= a.y && t.m <= a.m && t.d <= a.d;
+			})
 			.sort((a, b) => a.date - b.date)[0];
 	}
 
