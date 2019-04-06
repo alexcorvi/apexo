@@ -224,4 +224,19 @@
 			}
 		}
 	}
+	.calendar-component
+		.day-selector
+		.day-selector-wrapper
+		.day-col.weekend:not(:last-child) {
+		border-left: 1px dotted #e0e0e0;
+		padding-left: 13px;
+		margin-left: 10px;
+		border-right: none;
+		padding-right: inherit;
+		margin-right: inherit;
+	}
+
+	.calendar-component .full-day-col {
+		float: right;
+	}
 }

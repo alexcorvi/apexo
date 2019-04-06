@@ -1,3 +1,4 @@
+import { Appointment } from "./../../appointments/data/class.appointment";
 import { week, name } from "./../../../assets/utils/date";
 import { appointmentsData } from "../../appointments";
 import { computed, observable } from "mobx";
@@ -7,6 +8,8 @@ import { unifiedDateFormat } from "../../../assets/utils/date";
 
 export class StaffMember {
 	_id: string = generateID();
+
+	@observable triggerUpdate: number = 0;
 
 	@observable name: string = "";
 
@@ -38,14 +41,6 @@ export class StaffMember {
 	@observable onDutyDays: string[] = [];
 
 	@computed
-	get holidays() {
-		return name
-			.days(true)
-			.filter(day => this.onDutyDays.indexOf(day) === -1)
-			.map(day => name.days(true).indexOf(day));
-	}
-
-	@computed
 	get onDuty() {
 		return name
 			.days(true)
@@ -73,55 +68,27 @@ export class StaffMember {
 
 	@computed
 	get weeksAppointments() {
-		const weeksAppointments: {
-			[key: number]: appointmentsData.Appointment[];
+		const c = new appointmentsData.Calendar();
+		const appointments: {
+			[key: string]: Appointment[];
 		} = {};
-		const c = new appointmentsData.Calendar();
-		c.selectedWeek.forEach(day => {
-			const d = day.date;
+		c.selectedWeekDays.forEach(day => {
+			const d = day.dateNum;
 			const m = c.currentMonth;
 			const y = c.currentYear;
-			weeksAppointments[
-				day.weekDay.index
-			] = appointmentsData.appointments
-				.appointmentsForDay(y, m + 1, d + 1)
+			appointmentsData.appointments
+				.appointmentsForDay(y, m + 1, d)
 				.filter(
 					appointment => appointment.staffID.indexOf(this._id) !== -1
-				);
+				)
+				.forEach(appointment => {
+					if (!appointments[day.weekDay.dayLiteral]) {
+						appointments[day.weekDay.dayLiteral] = [];
+					}
+					appointments[day.weekDay.dayLiteral].push(appointment);
+				});
 		});
-		return weeksAppointments;
-	}
-
-	@computed
-	get nextWeekAppointments() {
-		const c = new appointmentsData.Calendar();
-		c.selectDayByTimeStamp(new Date().getTime() + week);
-		return c.selectedWeek.map(day => {
-			const d = day.date;
-			const m = c.currentMonth;
-			const y = c.currentYear;
-			return appointmentsData.appointments
-				.appointmentsForDay(y, m + 1, d + 1)
-				.filter(
-					appointment => appointment.staffID.indexOf(this._id) !== -1
-				);
-		});
-	}
-
-	@computed
-	get lastWeekAppointments() {
-		const c = new appointmentsData.Calendar();
-		c.selectDayByTimeStamp(new Date().getTime() - week);
-		return c.selectedWeek.map(day => {
-			const d = day.date;
-			const m = c.currentMonth;
-			const y = c.currentYear;
-			return appointmentsData.appointments
-				.appointmentsForDay(y, m + 1, d + 1)
-				.filter(
-					appointment => appointment.staffID.indexOf(this._id) !== -1
-				);
-		});
+		return appointments;
 	}
 
 	@computed

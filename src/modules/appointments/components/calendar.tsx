@@ -3,7 +3,7 @@ import { API } from "../../../core";
 import { Appointment, appointments, Calendar as CalendarClass } from "../data";
 import { AppointmentEditor } from "./appointment-editor";
 import { Col, Row } from "../../../assets/components/grid/index";
-import { observable } from "mobx";
+import { observable, computed } from "mobx";
 import { Icon, TextField, Toggle } from "office-ui-fabric-react";
 import { observer } from "mobx-react";
 import { patientsComponents } from "../../patients";
@@ -12,6 +12,7 @@ import "./calendar.scss";
 import { lang } from "../../../core/i18/i18";
 import { name } from "../../../assets/utils/date";
 import { num } from "../../../assets/utils/num";
+import setting from "../../settings/data/data.settings";
 
 @observer
 export class Calendar extends React.Component<{}, {}> {
@@ -32,7 +33,7 @@ export class Calendar extends React.Component<{}, {}> {
 		const dateArray = dateString.split(/\W/);
 		this.c.selectedYear = num(dateArray[0]);
 		this.c.selectedMonth = num(dateArray[1]) - 1;
-		this.c.selectedDay = num(dateArray[2]) - 1;
+		this.c.selectedDay = num(dateArray[2]);
 	}
 
 	componentDidUpdate() {
@@ -60,6 +61,7 @@ export class Calendar extends React.Component<{}, {}> {
 	}
 
 	render() {
+		console.log(this.c.selectedMonthCalendar);
 		return (
 			<div className="calendar-component container-fluid">
 				<div className="selector year-selector">
@@ -76,7 +78,7 @@ export class Calendar extends React.Component<{}, {}> {
 										onClick={() => {
 											this.c.selectedYear = year;
 											this.c.selectedMonth = 0;
-											this.c.selectedDay = 0;
+											this.c.selectedDay = 1;
 										}}
 										className={
 											(this.c.selectedYear === year
@@ -107,7 +109,7 @@ export class Calendar extends React.Component<{}, {}> {
 									<a
 										onClick={() => {
 											this.c.selectedMonth = index;
-											this.c.selectedDay = 0;
+											this.c.selectedDay = 1;
 										}}
 										className={
 											(this.c.selectedMonth === index
@@ -133,15 +135,15 @@ export class Calendar extends React.Component<{}, {}> {
 							{this.c.selectedMonthDays.map(day => {
 								return (
 									<div
-										key={day.date}
+										key={day.dateNum}
 										onClick={() => {
-											this.c.selectedDay = day.date;
+											this.c.selectedDay = day.dateNum;
 											setTimeout(() => {
 												scroll(
 													0,
 													this.findPos(
 														document.getElementById(
-															"day_" + day.date
+															"day_" + day.dateNum
 														)
 													)
 												);
@@ -149,26 +151,30 @@ export class Calendar extends React.Component<{}, {}> {
 										}}
 										className={
 											"day-col" +
-											(this.c.selectedDay === day.date
+											(this.c.selectedDay === day.dateNum
 												? " selected"
 												: "") +
-											(API.user.currentUser.holidays.indexOf(
-												day.weekDay.index
-											) > -1
+											(API.user.currentUser.onDutyDays.indexOf(
+												day.weekDay.dayLiteral
+											) === -1
 												? " holiday"
 												: "") +
-											(day.weekDay.index === 6
+											(day.weekDay.isWeekend
 												? " weekend"
 												: "")
 										}
 									>
 										<div className="day-name">
-											{day.weekDay.dayShort}
+											{lang(
+												day.weekDay.dayLiteralShort
+													.substr(0, 2)
+													.toUpperCase()
+											)}
 										</div>
 										<a
 											className={
 												"day-number info-row" +
-												(day.date ===
+												(day.dateNum ===
 													this.c.currentDay &&
 												this.c.currentMonth ===
 													this.c.selectedMonth &&
@@ -178,7 +184,7 @@ export class Calendar extends React.Component<{}, {}> {
 													: "")
 											}
 										>
-											{day.date + 1}
+											{day.dateNum}
 										</a>
 									</div>
 								);
@@ -189,7 +195,7 @@ export class Calendar extends React.Component<{}, {}> {
 								const number = appointments.appointmentsForDay(
 									this.c.selectedYear,
 									this.c.selectedMonth + 1,
-									day.date + 1,
+									day.dateNum,
 									undefined,
 									this.showAll
 										? undefined
@@ -197,19 +203,22 @@ export class Calendar extends React.Component<{}, {}> {
 								).length;
 								return (
 									<div
-										key={day.date}
+										key={day.dateNum}
 										onClick={() => {
-											this.c.selectedDay = day.date;
+											this.c.selectedDay = day.dateNum;
 										}}
 										className={
 											"day-col" +
-											(day.weekDay.index === 6
-												? " weekend"
+											(this.c.selectedDay === day.dateNum
+												? " selected"
 												: "") +
-											(API.user.currentUser.holidays.indexOf(
-												day.weekDay.index
-											) > -1
+											(API.user.currentUser.onDutyDays.indexOf(
+												day.weekDay.dayLiteral
+											) === -1
 												? " holiday"
+												: "") +
+											(day.weekDay.isWeekend
+												? " weekend"
 												: "")
 										}
 									>
@@ -251,44 +260,45 @@ export class Calendar extends React.Component<{}, {}> {
 						</Row>
 					</div>
 					<div id="full-day-cols">
-						{this.c.selectedWeek.map(day => {
+						{this.c.selectedWeekDays.map(day => {
 							return (
 								<div
-									key={day.date}
-									id={"day" + "_" + day.date}
+									key={day.dateNum}
+									id={"day" + "_" + day.dateNum}
 									className={
 										"full-day-col" +
-										(API.user.currentUser.holidays.indexOf(
-											day.weekDay.index
-										) > -1
+										(API.user.currentUser.onDutyDays.indexOf(
+											day.weekDay.dayLiteral
+										) === -1
 											? " holiday"
 											: "") +
-										(this.c.selectedDay === day.date
+										(this.c.selectedDay === day.dateNum
 											? " selected"
 											: "")
 									}
 									onClick={() => {
-										this.c.selectedDay = day.date;
+										this.c.selectedDay = day.dateNum;
 									}}
 									style={{
 										width:
 											(
-												100 / this.c.selectedWeek.length
+												100 /
+												this.c.selectedWeekDays.length
 											).toString() + "%"
 									}}
 								>
 									<h4>
-										<b>{day.date + 1}</b>
+										<b>{day.dateNum}</b>
 										&nbsp;&nbsp;&nbsp;
 										<span className="day-name">
-											{day.weekDay.day}
+											{lang(day.weekDay.dayLiteral)}
 										</span>
 									</h4>
 									{appointments
 										.appointmentsForDay(
 											this.c.selectedYear,
 											this.c.selectedMonth + 1,
-											day.date + 1,
+											day.dateNum,
 											this.filter,
 											this.showAll
 												? undefined

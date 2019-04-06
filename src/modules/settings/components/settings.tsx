@@ -25,7 +25,7 @@ import { API } from "../../../core/index";
 import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
 import { compact } from "../../../core/db/index";
 import { lang } from "../../../core/i18/i18";
-import { unifiedDateFormat, second } from "../../../assets/utils/date";
+import { unifiedDateFormat, second, name } from "../../../assets/utils/date";
 import { Section } from "../../../assets/components/section/section";
 
 @observer
@@ -95,6 +95,31 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						info={lang(
 							`Set the date format to be used across this application`
 						)}
+					/>
+
+					<Input
+						element={
+							<Dropdown
+								label={lang("Week ends on")}
+								options={name
+									.days(true)
+									.map((dayName, index) => ({
+										key: index.toString(),
+										text: lang(dayName)
+									}))}
+								defaultSelectedKey={settings.getSetting(
+									"weekend_num"
+								)}
+								onChange={(ev, v) => {
+									settings.setSetting(
+										"weekend_num",
+										v!.key.toString()
+									);
+								}}
+								disabled={!this.canEdit}
+							/>
+						}
+						info={lang(`On which day the week ends`)}
 					/>
 
 					<Input

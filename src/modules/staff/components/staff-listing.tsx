@@ -327,15 +327,7 @@ export class StaffListing extends React.Component<{}, {}> {
 					<Col lg={8}>
 						<table className="ms-table duty-table">
 							<tbody>
-								{[
-									"Sunday",
-									"Monday",
-									"Tuesday",
-									"Wednesday",
-									"Thursday",
-									"Friday",
-									"Saturday"
-								].map((dayName, index) => {
+								{dateUtils.name.days(true).map(dayName => {
 									return (
 										<tr key={dayName}>
 											<th className="day-name">
@@ -364,7 +356,7 @@ export class StaffListing extends React.Component<{}, {}> {
 																			(
 																				member
 																					.weeksAppointments[
-																					index
+																					dayName
 																				] ||
 																				[]
 																			)
@@ -469,7 +461,6 @@ export class StaffListing extends React.Component<{}, {}> {
 											{dateUtils.name
 												.days(true)
 												.map((day, i) => {
-													console.log(day);
 													return (
 														<Checkbox
 															key={day}
@@ -502,6 +493,8 @@ export class StaffListing extends React.Component<{}, {}> {
 																		1
 																	);
 																}
+																this.member
+																	.triggerUpdate++;
 															}}
 														/>
 													);

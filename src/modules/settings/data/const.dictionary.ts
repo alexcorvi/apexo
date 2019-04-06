@@ -9,5 +9,6 @@ export const dictionary = {
 	backup_retain: "backup_retain",
 	dropbox_accessToken: "dropbox_accessToken",
 	lang: "lang",
-	date_format: "date_format"
+	date_format: "date_format",
+	weekend_num: "weekend_num"
 };

@@ -317,6 +317,8 @@ export const ar: Language = {
 		"Space required": "",
 		Crowding: "",
 		Spacing: "",
+		"Week ends on": "",
+		"On which day the week ends": "",
 
 		/**========================================
 		 * Dropdown options

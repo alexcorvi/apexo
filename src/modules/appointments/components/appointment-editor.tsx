@@ -209,10 +209,15 @@ export class AppointmentEditor extends React.Component<
 											disabled={
 												!this.canEdit ||
 												(!checked &&
-													staff.onDuty.indexOf(
+													staff.onDutyDays.indexOf(
 														new Date(
 															this.props.appointment!.date
-														).getDay()
+														).toLocaleDateString(
+															"en-us",
+															{
+																weekday: "long"
+															}
+														)
 													) === -1)
 											}
 											checked={checked}

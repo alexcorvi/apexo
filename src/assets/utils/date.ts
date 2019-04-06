@@ -56,24 +56,17 @@ export function unifiedDateFormat(d: Date | number | undefined) {
 }
 
 export const name = {
-	daysShort: () => [
-		lang("SU"),
-		lang("MO"),
-		lang("TU"),
-		lang("WE"),
-		lang("TH"),
-		lang("FR"),
-		lang("SA")
-	],
+	daysShort: () =>
+		name.days(true).map(x => lang(x.substr(0, 2).toUpperCase())),
 
 	days: (skip?: boolean) => [
-		lang("Sunday" + (skip ? "_" : "")).replace("_", ""),
 		lang("Monday" + (skip ? "_" : "")).replace("_", ""),
 		lang("Tuesday" + (skip ? "_" : "")).replace("_", ""),
 		lang("Wednesday" + (skip ? "_" : "")).replace("_", ""),
 		lang("Thursday" + (skip ? "_" : "")).replace("_", ""),
 		lang("Friday" + (skip ? "_" : "")).replace("_", ""),
-		lang("Saturday" + (skip ? "_" : "")).replace("_", "")
+		lang("Saturday" + (skip ? "_" : "")).replace("_", ""),
+		lang("Sunday" + (skip ? "_" : "")).replace("_", "")
 	],
 	monthsShort: () => [
 		lang("Jan"),

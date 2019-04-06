@@ -336,6 +336,8 @@ export const ar: Language = {
 		"Space required": "المساحة المطلوبة",
 		Crowding: "تراكب",
 		Spacing: "فراغات",
+		"Week ends on": "ينتهي الإسبوع في",
+		"On which day the week ends": "في إي يوم من الأيام ينتهي الأسبوع",
 
 		/**========================================
 		 * Dropdown options

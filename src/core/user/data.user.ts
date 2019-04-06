@@ -17,7 +17,9 @@ class UserData {
 		} else if (!this.currentUser.weeksAppointments) {
 			return [];
 		} else {
-			return this.currentUser.weeksAppointments[new Date().getDay()];
+			return this.currentUser.weeksAppointments[
+				new Date().toLocaleDateString("en-us", { weekday: "long" })
+			];
 		}
 	}
 }
