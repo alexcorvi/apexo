@@ -1,5 +1,13 @@
 ## Changelog
 
+### 3.2.0
+
+-   New feature: Variable weekend
+-   Enhancement: Statistics command bar
+-   Enhancement: User panel
+-   Bug fix: Show hourly rate only when time tracking is enabled
+-   Bug fix: Better calculation of next appointment
+
 ### 3.1.0
 
 -   New feature: Selecting a date format from setting #67
