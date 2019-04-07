@@ -239,7 +239,7 @@ export function connectToDB(
 		resync.modules.push({
 			namespace: moduleNamespace,
 			resync: async () => {
-				console.log(`Resyncing ${moduleNamespace}`);
+				console.log(`Syncing ${moduleNamespace}`);
 				await localDatabase.sync(remoteDatabase);
 			}
 		});
