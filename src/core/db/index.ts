@@ -166,38 +166,70 @@ export function connectToDB(name: string, shouldLog: boolean = false) {
 				include_docs: true,
 				limit: 1
 			})
-			.on("change", function(change) {
-				// put the local and the remote in sync
-				localDatabase.sync(remoteDatabase);
+			.on("change", async function(change) {
 
-				// and since they will be in sync
-				// we might have changes in the local database coming from the remote one
-				// so we need to handle those
+				
+				// this function can be called either by a change in the remote DB
+				// that has just synced to the local DB
+				// and thus needs to be reflected on the MobX stores
+				// Remote DB ====> Local DB ===(this function)===> Mobx
+
+				// or by a change in the MobX store
+				// that has been done also in the local database
+				// and thus needs to be synced to the remote DB
+				// Remote DB <====(this function)=== Local DB <==== MobX
+
+				// first we'll try to detect if it's a remote change
 				const newDoc: any = change.doc;
 				const id = change.id;
 				const mobxIndex = data.list.findIndex(x => x._id === id);
 
-				const deletion = mobxIndex !== -1 && change.deleted;
-				const update = mobxIndex !== -1 && !change.deleted;
-				const addition = mobxIndex === -1 && !change.deleted;
-				data.ignoreObserver = true;
-				// if it's a deletion
-				if (deletion) {
-					data.list.splice(mobxIndex, 1);
-				} else if (addition) {
-					// if it's an addition
-					data.list.push(new Class(newDoc));
-				} else if (update) {
-					// if it's an update
-					// if there's another update that will carry on the same document
-					// don't update the MobX store just now
-					if (singleItemUpdateQue.find(x => x.id === id)) {
-					} else {
-						data.list[mobxIndex].fromJSON(newDoc);
-						observeItem(data.list[mobxIndex], data, methods);
+				const mobxDocHash =
+					mobxIndex !== -1
+						? Md5.hashStr(
+								JSON.stringify(data.list[mobxIndex].toJSON())
+						  ).toString()
+						: "";
+				const newDoHash = change.deleted
+					? ""
+					: Md5.hashStr(
+							JSON.stringify(new Class(change.doc).toJSON())
+					  ).toString();
+
+				// it's found in mobX but it's deleted
+				const remoteDeletion =
+					mobxIndex !== -1 && change.deleted === true;
+				// it's found in mobX, and it's not deleted, and the new document isn't equal to the old document
+				const remoteUpdate =
+					mobxIndex !== -1 &&
+					change.deleted !== true &&
+					mobxDocHash !== newDoHash;
+				// it's not found in mobx and it's not deleted
+				const remoteAddition =
+					mobxIndex === -1 && change.deleted !== true;
+
+				if (remoteAddition || remoteDeletion || remoteUpdate) {
+					data.ignoreObserver = true;
+					// if it's a deletion
+					if (remoteDeletion) {
+						data.list.splice(mobxIndex, 1);
+					} else if (remoteAddition) {
+						// if it's an addition
+						data.list.push(new Class(newDoc));
+					} else if (remoteUpdate) {
+						// if it's an update
+						// if there's another update that will carry on the same document
+						// don't update the MobX store just now
+						if (singleItemUpdateQue.find(x => x.id === id)) {
+						} else {
+							data.list[mobxIndex].fromJSON(newDoc);
+							observeItem(data.list[mobxIndex], data, methods);
+						}
 					}
+					data.ignoreObserver = false;
+				} else {
+					localDatabase.replicate.to(remoteDatabase);
 				}
-				data.ignoreObserver = false;
 			})
 			.on("error", err => log(name, "Error occurred", err));
 
