@@ -22,10 +22,10 @@ export const register = {
 			key: treatmentsData.namespace,
 			condition: () => API.user.currentUser.canViewTreatments
 		});
-		await (API.connectToDB(treatmentsData.namespace) as any)(
-			treatmentsData.Treatment,
-			treatmentsData.treatments
-		);
+		await (API.connectToDB(
+			treatmentsData.namespace,
+			treatmentsData.namespace
+		) as any)(treatmentsData.Treatment, treatmentsData.treatments);
 		return true;
 	},
 	order: 3

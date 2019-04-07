@@ -22,10 +22,11 @@ export const register = {
 			url: "",
 			condition: () => API.user.currentUser.canViewAppointments
 		});
-		await (API.connectToDB(appointmentsData.namespace, true) as any)(
-			appointmentsData.Appointment,
-			appointmentsData.appointments
-		);
+		await (API.connectToDB(
+			appointmentsData.namespace,
+			appointmentsData.namespace,
+			true
+		) as any)(appointmentsData.Appointment, appointmentsData.appointments);
 		return true;
 	},
 	order: 9

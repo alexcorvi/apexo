@@ -5,6 +5,7 @@ import { computed, observable } from "mobx";
 import { API } from "../";
 import { Home } from "./home";
 import { Route } from "./interface.route";
+import { resync } from "../db";
 
 class Router {
 	@observable reSyncing = false;
@@ -65,12 +66,23 @@ class Router {
 	}
 
 	constructor() {
-		setInterval(() => {
+		setInterval(async () => {
 			const newLocation = location.hash.substr(3);
 			if (newLocation !== this.currentLocation) {
 				this.currentLocation = location.hash.substr(3);
-				// resync this namespace database
-				// todo
+				const namespace = this.currentLocation.split("/")[0];
+				this.reSyncing = true;
+				try {
+					const resyncModule = resync.modules.find(
+						x => x.namespace === namespace
+					);
+					if (resyncModule) {
+						resyncModule.resync();
+					}
+				} catch (e) {
+					console.log(e);
+				}
+				this.reSyncing = false;
 			}
 		}, 20);
 

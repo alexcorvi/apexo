@@ -22,7 +22,7 @@ export const register = {
 			url: "",
 			condition: () => API.user.currentUser.canViewStaff
 		});
-		await (API.connectToDB("doctors", true) as any)(
+		await (API.connectToDB("doctors", staffData.namespace) as any)(
 			staffData.StaffMember,
 			staffData.staffMembers
 		);

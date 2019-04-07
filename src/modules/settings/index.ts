@@ -24,10 +24,10 @@ export const register = {
 			url: "",
 			condition: () => API.user.currentUser.canViewSettings
 		});
-		await (API.connectToDB(settingsData.namespace) as any)(
-			settingsData.SettingsItem,
-			settingsData.settings
-		);
+		await (API.connectToDB(
+			settingsData.namespace,
+			settingsData.namespace
+		) as any)(settingsData.SettingsItem, settingsData.settings);
 		return true;
 	},
 	order: 0

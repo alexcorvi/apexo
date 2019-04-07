@@ -28,10 +28,10 @@ export const register = {
 				API.user.currentUser.canViewOrtho &&
 				!!settingsData.settings.getSetting("module_orthodontics")
 		});
-		await (API.connectToDB(orthoData.namespace) as any)(
-			orthoData.OrthoCase,
-			orthoData.cases
-		);
+		await (API.connectToDB(
+			orthoData.namespace,
+			orthoData.namespace
+		) as any)(orthoData.OrthoCase, orthoData.cases);
 		return true;
 	},
 	order: 8

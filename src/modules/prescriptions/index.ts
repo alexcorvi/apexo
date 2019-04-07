@@ -27,7 +27,10 @@ export const register = {
 				API.user.currentUser.canViewPrescriptions &&
 				!!settingsData.settings.getSetting("module_prescriptions")
 		});
-		await (API.connectToDB(prescriptionsData.namespace) as any)(
+		await (API.connectToDB(
+			prescriptionsData.namespace,
+			prescriptionsData.namespace
+		) as any)(
 			prescriptionsData.PrescriptionItem,
 			prescriptionsData.prescriptions
 		);

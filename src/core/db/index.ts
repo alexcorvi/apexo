@@ -18,20 +18,21 @@ import { decrypt } from "../../assets/utils/encryption";
 import { store } from "../login/store";
 
 export const resync: {
-	resyncMethods: Array<() => Promise<void>>;
+	modules: Array<{ resync: () => Promise<void>; namespace: string }>;
 	resync: () => Promise<boolean>;
 } = {
-	resyncMethods: [],
+	modules: [],
 	resync: async function() {
 		return new Promise<boolean>(resolve => {
 			let done = 0;
-			this.resyncMethods.forEach(resyncMethod => {
-				resyncMethod()
+			this.modules.forEach(module => {
+				module
+					.resync()
 					.then(() => done++)
 					.catch(() => done++);
 			});
 			const checkInterval = setInterval(() => {
-				if (done === this.resyncMethods.length) {
+				if (done === this.modules.length) {
 					resolve(true);
 					clearInterval(checkInterval);
 				}
@@ -86,11 +87,15 @@ export const destroyLocal: {
 	}
 };
 
-export function connectToDB(name: string, shouldLog: boolean = false) {
+export function connectToDB(
+	dbName: string,
+	moduleNamespace: string,
+	shouldLog: boolean = false
+) {
 	const unique = Md5.hashStr(store.get("LSL_hash")).toString();
 
 	// prefixing local DB name
-	const localName = name + "_" + unique;
+	const localName = dbName + "_" + unique;
 
 	/**
 	 * Connection object
@@ -98,7 +103,7 @@ export function connectToDB(name: string, shouldLog: boolean = false) {
 	const localDatabase = new PouchDB(localName);
 	localDatabase.crypto(unique);
 
-	const remoteDatabase = new PouchDB(`${API.login.server}/${name}`, {
+	const remoteDatabase = new PouchDB(`${API.login.server}/${dbName}`, {
 		fetch: (url, opts) =>
 			PouchDB.fetch(url, {
 				...opts,
@@ -106,7 +111,7 @@ export function connectToDB(name: string, shouldLog: boolean = false) {
 			})
 	});
 
-	configs[name] = {
+	configs[dbName] = {
 		shouldLog: shouldLog
 	};
 
@@ -128,7 +133,7 @@ export function connectToDB(name: string, shouldLog: boolean = false) {
 			try {
 				await localDatabase.sync(remoteDatabase);
 			} catch (e) {
-				console.log("Sync", name, "Failed", e);
+				console.log("Sync", dbName, "Failed", e);
 			}
 		}
 		const response =
@@ -167,8 +172,6 @@ export function connectToDB(name: string, shouldLog: boolean = false) {
 				limit: 1
 			})
 			.on("change", async function(change) {
-
-				
 				// this function can be called either by a change in the remote DB
 				// that has just synced to the local DB
 				// and thus needs to be reflected on the MobX stores
@@ -231,21 +234,25 @@ export function connectToDB(name: string, shouldLog: boolean = false) {
 					localDatabase.replicate.to(remoteDatabase);
 				}
 			})
-			.on("error", err => log(name, "Error occurred", err));
+			.on("error", err => log(dbName, "Error occurred", err));
 
-		resync.resyncMethods.push(async () => {
-			await localDatabase.sync(remoteDatabase);
+		resync.modules.push({
+			namespace: moduleNamespace,
+			resync: async () => {
+				console.log(`Resyncing ${moduleNamespace}`);
+				await localDatabase.sync(remoteDatabase);
+			}
 		});
 
 		compact.compactMethods.push(async () => {
 			console.log(
 				"local compaction on",
-				name,
+				dbName,
 				await localDatabase.compact()
 			);
 			console.log(
 				"remote compaction on",
-				name,
+				dbName,
 				await remoteDatabase.compact()
 			);
 		});
