@@ -1,5 +1,12 @@
 ## Changelog
 
+### 3.2.1
+
+-   Lock scrolling when a panel is opened
+-   Fixed the buggy editable list
+-   Redesigned time picker to 3 dropdowns for better UX
+-   Resync a module when it's opened
+
 ### 3.2.0
 
 -   New feature: Variable weekend
