@@ -17,7 +17,8 @@ import {
 	Toggle,
 	Checkbox,
 	Slider,
-	DefaultButton
+	DefaultButton,
+	Label
 } from "office-ui-fabric-react";
 import { staffData } from "../../staff";
 import { Tag, TagType } from "../../../assets/components/label/label.component";
@@ -46,6 +47,36 @@ export class AppointmentEditor extends React.Component<
 	{}
 > {
 	@observable timerInputs: number[] = [];
+
+	@observable timeComb: {
+		hours: number;
+		minutes: string;
+		am: boolean;
+	} = {
+		hours: this.calcTime.hours,
+		minutes: this.calcTime.minutes,
+		am: this.calcTime.am
+	};
+
+	@computed get calcTime() {
+		if (!this.props.appointment) {
+			return {
+				hours: 12,
+				minutes: "00",
+				am: false
+			};
+		}
+		const timeString = new Date(
+			this.props.appointment.date
+		).toLocaleTimeString("en-US");
+
+		const obj = {
+			hours: Number(timeString.split(":")[0]),
+			minutes: Number(timeString.split(":")[1]) < 30 ? "00" : "30",
+			am: timeString.replace(/[^A-Z]/gi, "").toLowerCase() === "am"
+		};
+		return obj;
+	}
 
 	@computed
 	get otherAppointmentsNumber() {
@@ -79,6 +110,24 @@ export class AppointmentEditor extends React.Component<
 	@computed
 	get canEdit() {
 		return API.user.currentUser.canEditAppointments;
+	}
+
+	setTimeFromCombination() {
+		if (!this.props.appointment) {
+			return;
+		}
+		if (this.timeComb.hours === 12) {
+			this.timeComb.am = true;
+		}
+		const d = new Date(this.props.appointment.date);
+		d.setHours(
+			this.timeComb.am ? this.timeComb.hours : this.timeComb.hours + 12,
+			Number(this.timeComb.minutes),
+			0,
+			0
+		);
+		this.props.appointment.date = d.getTime();
+		this.forceUpdate();
 	}
 
 	render() {
@@ -165,30 +214,88 @@ export class AppointmentEditor extends React.Component<
 							<Col sm={12}>
 								<div className="appointment-input time">
 									<Row gutter={12}>
-										<Slider
-											label={lang("Time")}
-											min={this.props.appointment!.dateFloor.getTime()}
-											max={
-												this.props.appointment!.dateFloor.getTime() +
-												dateUtils.hour * 23.5
-											}
-											value={this.props.appointment!.date}
-											step={dateUtils.minute * 30}
-											onChange={val => {
-												if (
-													val >
-													this.props.appointment!.dateFloor.getTime()
-												) {
-													this.props.appointment!.date = val;
-												}
-											}}
-											showValue={true}
-											valueFormat={v =>
-												this.props.appointment!
-													.formattedTime
-											}
-											disabled={!this.canEdit}
-										/>
+										<Label>{lang("Time")}</Label>
+										<Row gutter={0}>
+											<Col span={8}>
+												<Dropdown
+													options={[
+														12,
+														1,
+														2,
+														3,
+														4,
+														5,
+														6,
+														7,
+														8,
+														9,
+														10,
+														11
+													].map(x => ({
+														key: x.toString(),
+														text:
+															x < 10
+																? `0${x.toString()}`
+																: x.toString()
+													}))}
+													selectedKey={this.calcTime.hours.toString()}
+													onChange={(ev, val) => {
+														if (val) {
+															this.timeComb.hours = Number(
+																val.key.toString()
+															);
+															this.setTimeFromCombination();
+														}
+													}}
+												/>
+											</Col>
+											<Col span={8}>
+												<Dropdown
+													options={["00", "30"].map(
+														x => ({
+															key: x,
+															text: x
+														})
+													)}
+													selectedKey={
+														this.calcTime.minutes
+													}
+													onChange={(ev, val) => {
+														if (val) {
+															this.timeComb.minutes = val.key.toString();
+															this.setTimeFromCombination();
+														}
+													}}
+												/>
+											</Col>
+											<Col span={8}>
+												<Dropdown
+													options={[
+														{
+															text: "am",
+															key: "am"
+														},
+														{
+															text: "pm",
+															key: "pm"
+														}
+													]}
+													selectedKey={
+														this.calcTime.am
+															? "am"
+															: "pm"
+													}
+													onChange={(ev, val) => {
+														if (val) {
+															this.timeComb.am =
+																val.key.toString() ===
+																"am";
+															this.setTimeFromCombination();
+														}
+													}}
+												/>
+											</Col>
+										</Row>
 									</Row>
 								</div>
 							</Col>
