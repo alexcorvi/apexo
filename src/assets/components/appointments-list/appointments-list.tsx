@@ -37,7 +37,6 @@ export class AppointmentsList extends React.Component<
 							label={lang("Filter")}
 							value={this.filter}
 							onChange={(e, v) => {
-								console.log(v);
 								this.filter = v!;
 							}}
 						/>
