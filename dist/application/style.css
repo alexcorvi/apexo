@@ -3384,7 +3384,7 @@
     min-height: auto !important;
     background: transparent; }
   .editable-list-component .ms-DetailsRow-cell {
-    border-bottom: 1px solid #f1f1f1; }
+    border-top: 1px solid #f1f1f1; }
     .editable-list-component .ms-DetailsRow-cell textarea {
       font-size: 13px;
       padding: 10px;
@@ -3395,6 +3395,10 @@
       top: 0;
       right: 0;
       border-left: 1px solid #e3e3e3; }
+  .editable-list-component .el-expander {
+    padding: 10px 0;
+    margin-top: -10px;
+    margin-bottom: -10px; }
 .cl-section {
   background: #fff;
   margin-top: 10px;
@@ -6803,6 +6807,9 @@ h5 {
 html,
 body {
   overflow-x: hidden !important; }
+  html.has-panel,
+  body.has-panel {
+    overflow: hidden; }
 
 body {
   background: #f5f5f5 !important;
