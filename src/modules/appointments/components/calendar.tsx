@@ -61,7 +61,6 @@ export class Calendar extends React.Component<{}, {}> {
 	}
 
 	render() {
-		console.log(this.c.selectedMonthCalendar);
 		return (
 			<div className="calendar-component container-fluid">
 				<div className="selector year-selector">
