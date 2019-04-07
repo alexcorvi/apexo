@@ -41,66 +41,24 @@ export function generateMethods(
 		},
 
 		async add(item: IClassStatic) {
-			let index = this.que.findIndex(x => x.id === item._id);
-			if (index === -1) {
-				index = this.que.length;
-			}
-			this.que[index] = {
-				id: item._id,
-				action: function() {
-					return db.put(item.toJSON());
-				}
-			};
+			const response = await db.put(item.toJSON());
+			return response;
 		},
 
 		async remove(_id: string) {
-			let index = this.que.findIndex(x => x.id === _id);
-			if (index === -1) {
-				index = this.que.length;
-			}
-			this.que[index] = {
-				id: _id,
-				action: async function() {
-					const doc = await db.get(_id);
-					return db.remove(doc._id, doc._rev || "");
-				}
-			};
+			const doc = await db.get(_id);
+			(doc as any)._deleted = true;
+			const response = await db.put(doc);
+			return response;
 		},
 
 		async update(_id: string, item: IClassStatic) {
-			let index = this.que.findIndex(x => x.id === _id);
-			if (index === -1) {
-				index = this.que.length;
-			}
-			this.que[index] = {
-				id: _id,
-				action: async function() {
-					const document = item.toJSON();
-					const doc = await db.get(_id);
-					document._rev = doc._rev;
-					return db.put(document);
-				}
-			};
-		},
-
-		que: []
-	};
-
-	setInterval(() => {
-		if (methods.que.length) {
-			const target = methods.que[0];
-			target
-				.action()
-				.then(() => {
-					const i = methods.que.findIndex(x => x.id === target.id);
-					methods.que.splice(i, 1);
-				})
-				.catch(() => {
-					const i = methods.que.findIndex(x => x.id === target.id);
-					methods.que.splice(i, 1);
-				});
+			const document = item.toJSON();
+			const doc = await db.get(_id);
+			document._rev = doc._rev;
+			const response = await db.put(document);
+			return response;
 		}
-	}, 100);
-
+	};
 	return methods;
 }
