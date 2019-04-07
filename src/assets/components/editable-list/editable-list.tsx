@@ -5,7 +5,8 @@ import {
 	TextField,
 	DetailsList,
 	SelectionMode,
-	IconButton
+	IconButton,
+	Link
 } from "office-ui-fabric-react";
 import { observer } from "mobx-react";
 import "./editable-list.scss";
@@ -98,9 +99,6 @@ export class EditableList extends React.Component<
 						<div className="items">
 							<DetailsList
 								compact
-								onActiveItemChanged={a => {
-									this.expandIndex = num(a[0].props.id);
-								}}
 								items={[
 									...this.props.value.map((x, i) => [
 										<div id={i.toString()}>
@@ -129,10 +127,18 @@ export class EditableList extends React.Component<
 														}}
 													/>
 												</div>
-											) : x.length > 30 ? (
-												x.substr(0, 25) + "..."
 											) : (
-												x
+												<div
+													className="el-expander"
+													onClick={() => {
+														this.expandIndex = i;
+													}}
+												>
+													{x.length > 30
+														? x.substr(0, 25) +
+														  "..."
+														: x}
+												</div>
 											)}
 											<IconButton
 												className="delete"
