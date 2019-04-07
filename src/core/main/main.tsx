@@ -57,6 +57,18 @@ export class MainComponent extends React.Component<{}, {}> {
 		console.log("Error");
 	}
 
+	componentDidMount() {
+		setInterval(() => {
+			if (document.querySelectorAll(".ms-Panel").length) {
+				document.querySelectorAll("html")[0].classList.add("has-panel");
+			} else {
+				document
+					.querySelectorAll("html")[0]
+					.classList.remove("has-panel");
+			}
+		}, 100);
+	}
+
 	render() {
 		if (API.login.step === API.LoginStep.allDone) {
 			return (

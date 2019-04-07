@@ -11,6 +11,9 @@
 html,
 body {
 	overflow-x: hidden !important;
+	&.has-panel {
+		overflow: hidden;
+	}
 }
 
 body {
