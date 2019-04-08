@@ -9,7 +9,6 @@ import { modals } from "../../core/modal/data.modal";
 import messages from "../../core/messages/data.messages";
 import { decrypt } from "./encryption";
 
-import pouchDB = require("pouchdb-browser");
 import { appointmentsData } from "../../modules/appointments";
 import { staffData } from "../../modules/staff";
 import { orthoData } from "../../modules/orthodontic";
@@ -18,6 +17,7 @@ import { prescriptionsData } from "../../modules/prescriptions";
 import { settingsData } from "../../modules/settings";
 import { treatmentsData } from "../../modules/treatments";
 import { lang } from "../../core/i18/i18";
+import * as pouchDB from "pouchdb-browser";
 const PouchDB: PouchDB.Static = (pouchDB as any).default;
 const ext = "apx";
 

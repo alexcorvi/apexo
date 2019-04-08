@@ -1,7 +1,7 @@
-import pouchDB = require("pouchdb-browser");
+import * as pouchDB from "pouchdb-browser";
 const PouchDB: PouchDB.Static = (pouchDB as any).default;
 import * as cryptoPouch from "crypto-pouch";
-import auth = require("pouchdb-authentication");
+import * as auth from "pouchdb-authentication";
 PouchDB.plugin(cryptoPouch);
 PouchDB.plugin((auth as any).default);
 import { API } from "../";

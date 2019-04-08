@@ -2,8 +2,8 @@ import * as PropTypes from "prop-types";
 import * as React from "react";
 import classNames from "classnames";
 import { Children, cloneElement } from "react";
-import enquire = require("enquire.js");
 import { observer } from "mobx-react";
+const enquire = require("enquire.js");
 
 export type Breakpoint = "xxl" | "xl" | "lg" | "md" | "sm" | "xs";
 export type BreakpointMap = Partial<Record<Breakpoint, string>>;

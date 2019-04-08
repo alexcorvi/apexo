@@ -12,7 +12,6 @@ import { observer } from "mobx-react";
 import "./login.scss";
 import { lang } from "../i18/i18";
 import { API } from "..";
-import { second } from "../../assets/utils/date";
 
 @observer
 export class LoginComponent extends React.Component<{}, {}> {

@@ -1,5 +1,5 @@
 import { DropboxFile } from "./../../assets/utils/backup";
-import pouchDB = require("pouchdb-browser");
+import * as pouchDB from "pouchdb-browser";
 const PouchDB: PouchDB.Static = (pouchDB as any).default;
 import { generateID } from "../../assets/utils/generate-id";
 import setting from "../../modules/settings/data/data.settings";
