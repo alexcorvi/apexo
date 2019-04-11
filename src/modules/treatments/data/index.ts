@@ -1,4 +1,4 @@
-export { Treatment } from './class.treatment';
-export { default as treatments } from './data.treatments';
-export { namespace } from './const.namespace';
-export { TreatmentJSON } from './interface.treatment-json';
+export * from "./class.treatment";
+export * from "./const.namespace";
+export * from "./data.treatments";
+export * from "./interface.treatment-json";

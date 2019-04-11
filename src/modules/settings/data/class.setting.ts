@@ -1,4 +1,4 @@
-import { SettingItemJSON } from "./interface.settingitem";
+import { SettingItemJSON } from "@modules";
 import { observable } from "mobx";
 export class SettingsItem {
 	@observable _id: string = "";

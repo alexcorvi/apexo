@@ -1,1 +1,1 @@
-export { StaffListing } from "./staff-listing";
+export * from "./staff-listing";

@@ -1,14 +1,21 @@
-import { hour } from "./../../../assets/utils/date";
-import * as dateUtils from "../../../assets/utils/date";
-import { AppointmentJSON } from "./index";
+import {
+	AppointmentJSON,
+	patients,
+	setting,
+	staff,
+	Treatment,
+	treatments
+	} from "@modules";
+import {
+	comparableTime,
+	generateID,
+	hour,
+	isToday,
+	isTomorrow,
+	isYesterday,
+	num
+	} from "@utils";
 import { computed, observable } from "mobx";
-import { staffData } from "../../staff";
-import { generateID } from "../../../assets/utils/generate-id";
-import { patientsData } from "../../patients";
-import { settingsData } from "../../settings";
-import { treatmentsData } from "../../treatments";
-import { Treatment } from "../../treatments/data/class.treatment";
-import { num } from "../../../assets/utils/num";
 
 export class Appointment {
 	_id: string = generateID();
@@ -21,9 +28,7 @@ export class Appointment {
 
 	@observable diagnosis: string = "";
 
-	@observable treatmentID: string = (
-		treatmentsData.treatments.list[0] || { _id: "" }
-	)._id;
+	@observable treatmentID: string = (treatments.list[0] || { _id: "" })._id;
 
 	@observable units: number = 1;
 
@@ -60,23 +65,19 @@ export class Appointment {
 
 	@computed
 	get operatingStaff() {
-		return staffData.staffMembers.list.filter(
+		return staff.list.filter(
 			member => this.staffID.indexOf(member._id) !== -1
 		);
 	}
 
 	@computed
 	get patient() {
-		return patientsData.patients.list[
-			patientsData.patients.findIndexByID(this.patientID)
-		];
+		return patients.list.find(x => x._id === this.patientID);
 	}
 
 	@computed
 	get treatment(): undefined | Treatment {
-		return treatmentsData.treatments.list[
-			treatmentsData.treatments.getIndexByID(this.treatmentID)
-		];
+		return treatments.list[treatments.getIndexByID(this.treatmentID)];
 	}
 
 	@computed
@@ -120,17 +121,17 @@ export class Appointment {
 
 	@computed
 	get dueToday() {
-		return dateUtils.isToday(this.date) && !this.isDone;
+		return isToday(this.date) && !this.isDone;
 	}
 
 	@computed
 	get dueTomorrow() {
-		return dateUtils.isTomorrow(this.date);
+		return isTomorrow(this.date);
 	}
 
 	@computed
 	get dueYesterday() {
-		return dateUtils.isYesterday(this.date);
+		return isYesterday(this.date);
 	}
 
 	@computed
@@ -153,7 +154,7 @@ export class Appointment {
 	}
 
 	@computed get dateFloor() {
-		const d = dateUtils.comparableTime(new Date(this.date));
+		const d = comparableTime(new Date(this.date));
 		return new Date(`${d.y}/${d.m + 1}/${d.d}`);
 	}
 
@@ -165,10 +166,7 @@ export class Appointment {
 
 	@computed
 	get spentTimeValue() {
-		return (
-			num(settingsData.settings.getSetting("hourlyRate")) *
-			(this.time / hour)
-		);
+		return num(setting.getSetting("hourlyRate")) * (this.time / hour);
 	}
 
 	@computed
@@ -185,7 +183,7 @@ export class Appointment {
                 ${this.dueToday ? "today" : ""}
 				${this.dueTomorrow ? "tomorrow" : ""}
 				${this.future ? "future" : ""}
-				${this.patient.name}
+				${(this.patient || { name: "" }).name}
 				${this.operatingStaff.map(x => x.name).join(" ")}
 				${this.notes}
 		`.toLowerCase();

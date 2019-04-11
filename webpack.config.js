@@ -5,6 +5,8 @@ var production = process.argv.find(x => x === "-p");
 var extractCSS = new ExtractTextPlugin("style.css");
 var extractHTML = new ExtractTextPlugin("index.html");
 
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+
 if (production) {
 	console.log("Building for production");
 }
@@ -16,13 +18,14 @@ module.exports = {
 		path: __dirname + "/dist/application"
 	},
 	resolve: {
-		extensions: [".ts", ".tsx", ".js", ".json", ".css", ".scss"]
+		extensions: [".ts", ".tsx", ".js", ".json", ".css", ".scss"],
+		plugins: [new TsconfigPathsPlugin({})]
 	},
 	mode: production ? "production" : "development",
 	module: {
 		rules: [
 			{
-				test: /tsx?$/,
+				test: /\.tsx?$/,
 				loader: "ts-loader"
 			},
 			{

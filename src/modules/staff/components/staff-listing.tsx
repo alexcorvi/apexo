@@ -1,52 +1,49 @@
-import * as dateUtils from "../../../assets/utils/date";
-import * as React from "react";
-import { API } from "../../../core";
-import { appointmentsData } from "../../appointments";
-import { AppointmentsList } from "../../../assets/components/appointments-list/appointments-list";
-import { Col, Row } from "../../../assets/components/grid/index";
+import "./staff-listing.scss";
 import {
+	Col,
+	DataTableComponent,
+	ProfileComponent,
+	ProfileSquaredComponent,
+	Row,
+	SectionComponent
+	} from "@common-components";
+import { lang, router, user } from "@core";
+import { AppointmentsList, setting, staff, StaffMember } from "@modules";
+import { dateNames, formatDate, num } from "@utils";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
+import {
+	Checkbox,
+	Icon,
 	IconButton,
-	Panel,
-	PanelType,
-	TextField,
-	Toggle,
 	MessageBar,
 	MessageBarType,
-	Checkbox,
+	Panel,
+	PanelType,
 	PersonaInitialsColor,
-	Icon,
+	TextField,
+	Toggle,
 	TooltipHost
-} from "office-ui-fabric-react";
-import { computed, observable } from "mobx";
-import { DataTable } from "../../../assets/components/data-table/data-table.component";
-import { StaffMember, staffMembers } from "../data";
-import { observer } from "mobx-react";
-import { Profile } from "../../../assets/components/profile/profile";
-import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
-import { Section } from "../../../assets/components/section/section";
-import { settings } from "../../settings/data";
-import setting from "../../settings/data/data.settings";
-import "./staff-listing.scss";
-import { lang } from "../../../core/i18/i18";
-import { num } from "../../../assets/utils/num";
+	} from "office-ui-fabric-react";
+import * as React from "react";
 
 @observer
-export class StaffListing extends React.Component<{}, {}> {
-	@observable selectedId: string = API.router.currentLocation.split("/")[1];
+export class StaffPage extends React.Component<{}, {}> {
+	@observable selectedId: string = router.currentLocation.split("/")[1];
 	@observable viewWhich: number = 1;
 
 	@computed get canEdit() {
-		return API.user.currentUser.canEditStaff;
+		return user.currentUser.canEditStaff;
 	}
 
 	@computed
 	get selectedMemberIndex() {
-		return staffMembers.getIndexByID(this.selectedId);
+		return staff.getIndexByID(this.selectedId);
 	}
 
 	@computed
 	get member() {
-		return staffMembers.list[this.selectedMemberIndex];
+		return staff.list[this.selectedMemberIndex];
 	}
 
 	render() {
@@ -54,14 +51,14 @@ export class StaffListing extends React.Component<{}, {}> {
 			<div className="staff-component p-15 p-l-10 p-r-10">
 				<Row gutter={16}>
 					<Col lg={16}>
-						<DataTable
+						<DataTableComponent
 							maxItemsOnLoad={15}
 							heads={[
 								lang("Staff Member"),
 								lang("Last/Next Appointment"),
 								lang("Contact Details")
 							]}
-							rows={staffMembers.list.map(member => ({
+							rows={staff.list.map(member => ({
 								id: member._id,
 								searchableString: member.searchableString,
 								cells: [
@@ -69,7 +66,7 @@ export class StaffListing extends React.Component<{}, {}> {
 										dataValue: member.name,
 										component: (
 											<div>
-												<Profile
+												<ProfileComponent
 													name={member.name}
 													secondaryElement={
 														<span>
@@ -124,7 +121,7 @@ export class StaffListing extends React.Component<{}, {}> {
 													/>
 												</TooltipHost>
 
-												{API.user.currentUser
+												{user.currentUser
 													.canViewAppointments ? (
 													<TooltipHost
 														content={lang(
@@ -156,7 +153,7 @@ export class StaffListing extends React.Component<{}, {}> {
 															iconName: "Trash"
 														}}
 														onClick={() =>
-															staffMembers.deleteModal(
+															staff.deleteModal(
 																member._id
 															)
 														}
@@ -176,7 +173,7 @@ export class StaffListing extends React.Component<{}, {}> {
 										).date,
 										component: (
 											<div>
-												<ProfileSquared
+												<ProfileSquaredComponent
 													text={
 														member.lastAppointment
 															? member
@@ -191,10 +188,13 @@ export class StaffListing extends React.Component<{}, {}> {
 													}
 													subText={
 														member.lastAppointment
-															? dateUtils.unifiedDateFormat(
+															? formatDate(
 																	member
 																		.lastAppointment
-																		.date
+																		.date,
+																	setting.getSetting(
+																		"date_format"
+																	)
 															  )
 															: lang(
 																	"No last appointment"
@@ -212,7 +212,7 @@ export class StaffListing extends React.Component<{}, {}> {
 													}
 												/>
 												<br />
-												<ProfileSquared
+												<ProfileSquaredComponent
 													text={
 														member.nextAppointment
 															? member
@@ -227,10 +227,13 @@ export class StaffListing extends React.Component<{}, {}> {
 													}
 													subText={
 														member.nextAppointment
-															? dateUtils.unifiedDateFormat(
+															? formatDate(
 																	member
 																		.nextAppointment
-																		.date
+																		.date,
+																	setting.getSetting(
+																		"date_format"
+																	)
 															  )
 															: lang(
 																	"No next appointment"
@@ -255,7 +258,7 @@ export class StaffListing extends React.Component<{}, {}> {
 										dataValue: member.phone || member.email,
 										component: (
 											<div>
-												<ProfileSquared
+												<ProfileSquaredComponent
 													text={member.phone}
 													subText={
 														member.phone
@@ -276,7 +279,7 @@ export class StaffListing extends React.Component<{}, {}> {
 															: PersonaInitialsColor.transparent
 													}
 												/>
-												<ProfileSquared
+												<ProfileSquaredComponent
 													text={member.email}
 													subText={
 														member.email
@@ -308,9 +311,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												name: lang("Add new"),
 												onClick: () => {
 													const member = new StaffMember();
-													staffMembers.list.push(
-														member
-													);
+													staff.list.push(member);
 													this.selectedId =
 														member._id;
 													this.viewWhich = 1;
@@ -327,14 +328,14 @@ export class StaffListing extends React.Component<{}, {}> {
 					<Col lg={8}>
 						<table className="ms-table duty-table">
 							<tbody>
-								{dateUtils.name.days(true).map(dayName => {
+								{dateNames.days(true).map(dayName => {
 									return (
 										<tr key={dayName}>
 											<th className="day-name">
 												{lang(dayName)}
 											</th>
 											<td>
-												{staffMembers.list
+												{staff.list
 													.filter(
 														member =>
 															member.onDutyDays.indexOf(
@@ -343,7 +344,7 @@ export class StaffListing extends React.Component<{}, {}> {
 													)
 													.map(member => {
 														return (
-															<Profile
+															<ProfileComponent
 																className="m-b-5"
 																size={3}
 																key={member._id}
@@ -400,7 +401,7 @@ export class StaffListing extends React.Component<{}, {}> {
 							<Row className="panel-heading">
 								<Col span={20}>
 									{this.member.name ? (
-										<Profile
+										<ProfileComponent
 											name={this.member.name}
 											secondaryElement={
 												<span>
@@ -442,7 +443,9 @@ export class StaffListing extends React.Component<{}, {}> {
 						<div className="staff-editor">
 							{this.viewWhich === 1 ? (
 								<div>
-									<Section title={lang(`Basic Info`)}>
+									<SectionComponent
+										title={lang(`Basic Info`)}
+									>
 										<div className="staff-input">
 											<TextField
 												label={lang("Name")}
@@ -458,7 +461,7 @@ export class StaffListing extends React.Component<{}, {}> {
 											<label>
 												{lang("Days on duty")}
 											</label>
-											{dateUtils.name
+											{dateNames
 												.days(true)
 												.map((day, i) => {
 													return (
@@ -468,7 +471,7 @@ export class StaffListing extends React.Component<{}, {}> {
 																!this.canEdit
 															}
 															label={
-																dateUtils.name.daysShort()[
+																dateNames.daysShort()[
 																	i
 																]
 															}
@@ -500,9 +503,11 @@ export class StaffListing extends React.Component<{}, {}> {
 													);
 												})}
 										</div>
-									</Section>
+									</SectionComponent>
 
-									<Section title={lang(`Contact Details`)}>
+									<SectionComponent
+										title={lang(`Contact Details`)}
+									>
 										<Row gutter={12}>
 											<Col sm={12}>
 												<div className="staff-input">
@@ -535,7 +540,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												</div>
 											</Col>
 										</Row>
-									</Section>
+									</SectionComponent>
 								</div>
 							) : (
 								""
@@ -544,8 +549,10 @@ export class StaffListing extends React.Component<{}, {}> {
 							{this.viewWhich === 2 ? (
 								<div>
 									{this.member._id ===
-									API.user.currentUser._id ? (
-										<Section title={lang(`Login PIN`)}>
+									user.currentUser._id ? (
+										<SectionComponent
+											title={lang(`Login PIN`)}
+										>
 											<div className="staff-input">
 												<TextField
 													label={lang("Login PIN")}
@@ -571,13 +578,15 @@ export class StaffListing extends React.Component<{}, {}> {
 													"Only you can edit this PIN, and it can only be 4 numbers"
 												)}
 											</MessageBar>
-										</Section>
+										</SectionComponent>
 									) : (
 										""
 									)}
-									<Section title={lang(`Permission`)}>
+									<SectionComponent
+										title={lang(`Permission`)}
+									>
 										{this.member._id ===
-										API.user.currentUser._id ? (
+										user.currentUser._id ? (
 											<div>
 												<MessageBar
 													messageBarType={
@@ -599,7 +608,7 @@ export class StaffListing extends React.Component<{}, {}> {
 											}
 											disabled={
 												this.member._id ===
-												API.user.currentUser._id
+												user.currentUser._id
 											}
 											onText={lang(
 												"Operates on patients"
@@ -618,7 +627,7 @@ export class StaffListing extends React.Component<{}, {}> {
 											}
 											disabled={
 												this.member._id ===
-												API.user.currentUser._id
+												user.currentUser._id
 											}
 											onText={lang("Can view staff page")}
 											offText={lang(
@@ -634,7 +643,7 @@ export class StaffListing extends React.Component<{}, {}> {
 											}
 											disabled={
 												this.member._id ===
-												API.user.currentUser._id
+												user.currentUser._id
 											}
 											onText={lang(
 												"Can view patients page"
@@ -655,7 +664,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												}
 												disabled={
 													this.member._id ===
-													API.user.currentUser._id
+													user.currentUser._id
 												}
 												onText={lang(
 													"Can view orthodontics page"
@@ -676,7 +685,7 @@ export class StaffListing extends React.Component<{}, {}> {
 											}
 											disabled={
 												this.member._id ===
-												API.user.currentUser._id
+												user.currentUser._id
 											}
 											onText={lang(
 												"Can view appointments page"
@@ -694,7 +703,7 @@ export class StaffListing extends React.Component<{}, {}> {
 											}
 											disabled={
 												this.member._id ===
-												API.user.currentUser._id
+												user.currentUser._id
 											}
 											onText={lang(
 												"Can view treatments page"
@@ -716,7 +725,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												}
 												disabled={
 													this.member._id ===
-													API.user.currentUser._id
+													user.currentUser._id
 												}
 												onText={lang(
 													"Can view prescriptions page"
@@ -740,7 +749,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												}
 												disabled={
 													this.member._id ===
-													API.user.currentUser._id
+													user.currentUser._id
 												}
 												onText={lang(
 													"Can view statistics page"
@@ -762,7 +771,7 @@ export class StaffListing extends React.Component<{}, {}> {
 											}
 											disabled={
 												this.member._id ===
-												API.user.currentUser._id
+												user.currentUser._id
 											}
 											onText={lang(
 												"Can view settings page"
@@ -782,7 +791,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												}
 												disabled={
 													this.member._id ===
-													API.user.currentUser._id
+													user.currentUser._id
 												}
 												onText={lang(
 													"Can edit staff page"
@@ -804,7 +813,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												}
 												disabled={
 													this.member._id ===
-													API.user.currentUser._id
+													user.currentUser._id
 												}
 												onText={lang(
 													"Can edit patients page"
@@ -820,7 +829,7 @@ export class StaffListing extends React.Component<{}, {}> {
 											""
 										)}
 
-										{settings.getSetting(
+										{setting.getSetting(
 											"module_orthodontics"
 										) && this.member.canViewOrtho ? (
 											<Toggle
@@ -829,7 +838,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												}
 												disabled={
 													this.member._id ===
-													API.user.currentUser._id
+													user.currentUser._id
 												}
 												onText={lang(
 													"Can edit orthodontics page"
@@ -853,7 +862,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												}
 												disabled={
 													this.member._id ===
-													API.user.currentUser._id
+													user.currentUser._id
 												}
 												onText={lang(
 													"Can edit appointments page"
@@ -877,7 +886,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												}
 												disabled={
 													this.member._id ===
-													API.user.currentUser._id
+													user.currentUser._id
 												}
 												onText={lang(
 													"Can edit treatments page"
@@ -904,7 +913,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												}
 												disabled={
 													this.member._id ===
-													API.user.currentUser._id
+													user.currentUser._id
 												}
 												onText={lang(
 													"Can edit prescriptions page"
@@ -927,7 +936,7 @@ export class StaffListing extends React.Component<{}, {}> {
 												}
 												disabled={
 													this.member._id ===
-													API.user.currentUser._id
+													user.currentUser._id
 												}
 												onText={lang(
 													"Can edit settings page"
@@ -942,14 +951,16 @@ export class StaffListing extends React.Component<{}, {}> {
 										) : (
 											""
 										)}
-									</Section>
+									</SectionComponent>
 								</div>
 							) : (
 								""
 							)}
 
 							{this.viewWhich === 3 ? (
-								<Section title={lang(`Upcoming Appointments`)}>
+								<SectionComponent
+									title={lang(`Upcoming Appointments`)}
+								>
 									{this.member.nextAppointments.length ? (
 										<AppointmentsList
 											list={this.member.nextAppointments}
@@ -963,7 +974,7 @@ export class StaffListing extends React.Component<{}, {}> {
 											)}
 										</MessageBar>
 									)}
-								</Section>
+								</SectionComponent>
 							) : (
 								""
 							)}

@@ -1,4 +1,4 @@
-import { ToothCondition } from './enum.toothCondition';
+import { ToothCondition } from "@modules";
 
 export interface ToothJSON {
 	ISO: number;

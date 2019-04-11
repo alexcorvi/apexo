@@ -1,18 +1,6 @@
-import {
-	ageBar,
-	appointmentsByDate,
-	financesByDate,
-	genderPie,
-	mostAppliedTreatments,
-	mostInvolvedTeeth,
-	treatments,
-	treatmentsByGender
-} from "../components/charts";
+import { appointments } from "@modules";
+import { day } from "@utils";
 import { computed, observable } from "mobx";
-
-import { Chart } from "./interface.chart";
-import { appointmentsData } from "../../appointments";
-import { day } from "../../../assets/utils/date";
 
 class Statistics {
 	@observable filterByMember: string = "";
@@ -24,18 +12,6 @@ class Statistics {
 	readonly todayStartsWith: number = this.getDayStartingPoint(
 		this.todayDateObject.getTime()
 	);
-
-	@observable
-	charts: Chart[] = [
-		appointmentsByDate,
-		financesByDate,
-		treatments,
-		mostAppliedTreatments,
-		genderPie,
-		ageBar,
-		treatmentsByGender,
-		mostInvolvedTeeth
-	];
 
 	@observable startingDate: number = this.todayStartsWith - this.msInDay * 31;
 
@@ -60,7 +36,7 @@ class Statistics {
 	@computed
 	private get _selectedAppointmentsByDay() {
 		return this.selectedDays.map(calDay =>
-			appointmentsData.appointments
+			appointments
 				.appointmentsForDay(
 					calDay.getFullYear(),
 					calDay.getMonth() + 1,
@@ -113,7 +89,7 @@ class Statistics {
 	@computed
 	get selectedFinances() {
 		return this.selectedAppointmentsByDay.map(date => {
-			const appointments = date.appointments.map(appointment => {
+			const appointmentsList = date.appointments.map(appointment => {
 				const paid = appointment.paidAmount;
 				const expenses = appointment.expenses;
 				const profit = appointment.profit;
@@ -129,7 +105,7 @@ class Statistics {
 			});
 			return {
 				day: date.day,
-				appointments
+				appointments: appointmentsList
 			};
 		});
 	}
@@ -161,4 +137,4 @@ class Statistics {
 	}
 }
 
-export default new Statistics();
+export const statistics = new Statistics();

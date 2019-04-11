@@ -1,35 +1,21 @@
-import * as React from "react";
+import {
+	Col,
+	fileTypes,
+	PickAndUploadComponent,
+	ProfileComponent,
+	Row,
+	SectionComponent
+	} from "@common-components";
+import { CEPHALOMETRIC_DIR, lang, status, user } from "@core";
+import { CephalometricEditorPanel, CephalometricItem, OrthoCase, PatientGalleryPanel, setting } from "@modules";
+import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
-import {
-	IconButton,
-	PrimaryButton,
-	MessageBar,
-	MessageBarType,
-	DefaultButton
-} from "office-ui-fabric-react";
-
-import { OrthoCase } from "../data/class.ortho";
 import { observer } from "mobx-react";
-import { Section } from "../../../assets/components/section/section";
-import { API } from "../../../core/index";
-import { SinglePatientGallery } from "../../patients/components/single/gallery/gallery";
-import { Row, Col } from "../../../assets/components/grid";
-import { Profile } from "../../../assets/components/profile/profile";
-import { unifiedDateFormat } from "../../../assets/utils/date";
-import {
-	PickAndUpload,
-	fileTypes
-} from "../../../assets/components/pick-files/pick-files";
-import dataOrtho from "../data/data.ortho";
-import { files, CEPHALOMETRIC_DIR } from "../../../core/files/files";
-import { orthoData } from "..";
-import { CephalometricItem } from "../data/interface.ortho-json";
-import { CephalometricEditor } from "./cephalometric";
-import setting from "../../settings/data/data.settings";
-import { lang } from "../../../core/i18/i18";
+import { DefaultButton, IconButton, MessageBar, MessageBarType } from "office-ui-fabric-react";
+import * as React from "react";
 
 @observer
-export class OrthoGallery extends React.Component<{
+export class OrthoGalleryPanel extends React.Component<{
 	orthoCase: OrthoCase;
 }> {
 	@observable openCephalometricItem:
@@ -39,7 +25,7 @@ export class OrthoGallery extends React.Component<{
 	@observable
 	cephalometricToViewIndex: number = -1;
 	@computed get canEdit() {
-		return API.user.currentUser.canEditOrtho;
+		return user.currentUser.canEditOrtho;
 	}
 
 	@computed
@@ -53,7 +39,7 @@ export class OrthoGallery extends React.Component<{
 		return (
 			<div>
 				{this.props.orthoCase.patient ? (
-					<SinglePatientGallery
+					<PatientGalleryPanel
 						patient={this.props.orthoCase.patient}
 					/>
 				) : (
@@ -61,7 +47,7 @@ export class OrthoGallery extends React.Component<{
 				)}
 
 				{this.openCephalometricItem ? (
-					<CephalometricEditor
+					<CephalometricEditorPanel
 						onDismiss={() => {
 							this.openCephalometricItem = undefined;
 							this.props.orthoCase.triggerUpdate++;
@@ -72,9 +58,9 @@ export class OrthoGallery extends React.Component<{
 					""
 				)}
 
-				<Section title={lang(`Cephalometric Analysis`)}>
-					{API.login.online ? (
-						API.login.dropboxActive ? (
+				<SectionComponent title={lang(`Cephalometric Analysis`)}>
+					{status.online ? (
+						status.dropboxActive ? (
 							<div>
 								{this.props.orthoCase.cephalometricHistory.map(
 									(c, i) => (
@@ -97,14 +83,17 @@ export class OrthoGallery extends React.Component<{
 													}}
 													key={i}
 												>
-													<Profile
+													<ProfileComponent
 														name={`${i + 1}: ${lang(
 															"Analysis"
 														)} #${i + 1}`}
 														secondaryElement={
 															<span>
-																{unifiedDateFormat(
-																	c.date
+																{formatDate(
+																	c.date,
+																	setting.getSetting(
+																		"date_format"
+																	)
 																)}
 															</span>
 														}
@@ -138,7 +127,7 @@ export class OrthoGallery extends React.Component<{
 										</Row>
 									)
 								)}
-								<PickAndUpload
+								<PickAndUploadComponent
 									allowMultiple={false}
 									accept={fileTypes.image}
 									onFinish={async res => {
@@ -163,7 +152,7 @@ export class OrthoGallery extends React.Component<{
 										iconProps={{ iconName: "Add" }}
 										text={lang("New analysis")}
 									/>
-								</PickAndUpload>
+								</PickAndUploadComponent>
 							</div>
 						) : (
 							<MessageBar messageBarType={MessageBarType.warning}>
@@ -179,7 +168,7 @@ export class OrthoGallery extends React.Component<{
 							)}
 						</MessageBar>
 					)}
-				</Section>
+				</SectionComponent>
 			</div>
 		);
 	}

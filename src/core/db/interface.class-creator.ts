@@ -1,6 +1,2 @@
-import { IClassStatic } from './interface.class-static';
-import { IDocumentJSON } from './interface.document-json';
-
-export interface IClassCreator {
-	new (json?: IDocumentJSON): IClassStatic;
-}
+import { IClassStatic, IDocumentJSON } from "@core";
+export type IClassCreator = new (json?: IDocumentJSON) => IClassStatic;

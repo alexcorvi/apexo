@@ -1,3 +1,5 @@
-export { Calendar } from "./calendar";
-export { DateLink } from "./link";
-export { AppointmentEditor } from "./appointment-editor";
+export * from "./appointment-editor";
+export * from "./appointment-thumb";
+export * from "./appointments-list";
+export * from "./calendar";
+export * from "./date-link";

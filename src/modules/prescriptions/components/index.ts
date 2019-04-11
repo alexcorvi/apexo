@@ -1,1 +1,1 @@
-export { PrescriptionsTable } from './prescriptions-table';
+export * from "./prescriptions-table";

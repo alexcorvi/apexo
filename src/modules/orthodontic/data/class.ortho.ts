@@ -1,16 +1,15 @@
-import t4mat from "t4mat";
+import { lang } from "@core";
 import {
 	CaseJSON,
 	CephalometricItem,
+	genderToString,
+	patients,
 	PhotoJSON,
+	setting,
 	VisitJSON
-} from "./interface.ortho-json";
+	} from "@modules";
+import { formatDate, generateID } from "@utils";
 import { computed, observable, observe } from "mobx";
-import { generateID } from "../../../assets/utils/generate-id";
-import { patientsData } from "../../patients/index";
-import { genderToString } from "../../patients/data";
-import { unifiedDateFormat } from "../../../assets/utils/date";
-import { lang } from "../../../core/i18/i18";
 
 export const Lips = {
 	competent: "competent lips",
@@ -103,7 +102,7 @@ export class OrthoCase {
 	@observable patientID: string = "";
 	@computed
 	get patient() {
-		return patientsData.patients.list.find(x => x._id === this.patientID);
+		return patients.list.find(x => x._id === this.patientID);
 	}
 
 	/**
@@ -298,7 +297,10 @@ export class OrthoCase {
 			}
 			${
 				this.patient.nextAppointment
-					? unifiedDateFormat(this.patient.nextAppointment.date)
+					? formatDate(
+							this.patient.nextAppointment.date,
+							setting.getSetting("date_format")
+					  )
 					: ""
 			}
 			${
@@ -309,7 +311,10 @@ export class OrthoCase {
 			}
 			${
 				this.patient.lastAppointment
-					? unifiedDateFormat(this.patient.lastAppointment.date)
+					? formatDate(
+							this.patient.lastAppointment.date,
+							setting.getSetting("date_format")
+					  )
 					: ""
 			}
 			${

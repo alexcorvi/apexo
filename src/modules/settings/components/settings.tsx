@@ -1,54 +1,51 @@
+import "./settings.scss";
+import { Col, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
 import {
 	backup,
-	restore,
+	compact,
 	downloadCurrent,
-	DropboxFile
-} from "../../../assets/utils/backup";
-import * as React from "react";
-import { Col, Row } from "../../../assets/components/grid/index";
-import { observable, computed } from "mobx";
+	lang,
+	restore,
+	status,
+	user
+	} from "@core";
+import { setting } from "@modules";
+import { dateNames, formatDate, second } from "@utils";
+import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
-	PrimaryButton,
-	TextField,
-	Toggle,
+	DefaultButton,
 	Dropdown,
 	IconButton,
 	MessageBar,
 	MessageBarType,
-	DefaultButton,
+	TextField,
+	Toggle,
 	TooltipHost
-} from "office-ui-fabric-react";
-import { settings } from "../data";
-import "./settings.scss";
-import { API } from "../../../core/index";
-import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
-import { compact } from "../../../core/db/index";
-import { lang } from "../../../core/i18/i18";
-import { unifiedDateFormat, second, name } from "../../../assets/utils/date";
-import { Section } from "../../../assets/components/section/section";
+	} from "office-ui-fabric-react";
+import * as React from "react";
 
 @observer
-export class SettingsComponent extends React.Component<{}, {}> {
+export class SettingsPage extends React.Component<{}, {}> {
 	@observable triggerUpdate: number = 0;
 
 	@observable inputEl: HTMLInputElement | null = null;
 
 	@computed get canEdit() {
-		return API.user.currentUser.canEditSettings;
+		return user.currentUser.canEditSettings;
 	}
 
 	@observable loading: boolean = false;
 
 	componentWillMount() {
-		setTimeout(() => settings.updateDropboxBackups(), second);
+		setTimeout(() => setting.updateDropboxBackups(), second);
 	}
 
 	render() {
 		return (
 			<div className="settings-component p-15 p-l-10 p-r-10">
-				<Section title={lang(`General Setting`)}>
-					<Input
+				<SectionComponent title={lang(`General Setting`)}>
+					<SettingInputComponent
 						element={
 							<Dropdown
 								label={lang("Language")}
@@ -56,9 +53,9 @@ export class SettingsComponent extends React.Component<{}, {}> {
 									{ key: "en", text: "English" },
 									{ key: "ar", text: "العربية" }
 								]}
-								defaultSelectedKey={settings.getSetting("lang")}
+								defaultSelectedKey={setting.getSetting("lang")}
 								onChange={(ev, v) => {
-									settings.setSetting(
+									setting.setSetting(
 										"lang",
 										v!.key.toString()
 									);
@@ -71,7 +68,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						)}
 					/>
 
-					<Input
+					<SettingInputComponent
 						element={
 							<Dropdown
 								label={lang("Date format")}
@@ -80,11 +77,11 @@ export class SettingsComponent extends React.Component<{}, {}> {
 									{ key: "mm/dd/yyyy", text: "mm/dd/yyyy" },
 									{ key: "dd MM 'YY", text: "dd MM 'YY" }
 								]}
-								defaultSelectedKey={settings.getSetting(
+								defaultSelectedKey={setting.getSetting(
 									"date_format"
 								)}
 								onChange={(ev, v) => {
-									settings.setSetting(
+									setting.setSetting(
 										"date_format",
 										v!.key.toString()
 									);
@@ -97,21 +94,21 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						)}
 					/>
 
-					<Input
+					<SettingInputComponent
 						element={
 							<Dropdown
 								label={lang("Week ends on")}
-								options={name
+								options={dateNames
 									.days(true)
 									.map((dayName, index) => ({
 										key: index.toString(),
 										text: lang(dayName)
 									}))}
-								defaultSelectedKey={settings.getSetting(
+								defaultSelectedKey={setting.getSetting(
 									"weekend_num"
 								)}
 								onChange={(ev, v) => {
-									settings.setSetting(
+									setting.setSetting(
 										"weekend_num",
 										v!.key.toString()
 									);
@@ -122,21 +119,21 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						info={lang(`On which day the week ends`)}
 					/>
 
-					<Input
+					<SettingInputComponent
 						element={
 							<TextField
-								value={settings.getSetting(
+								value={setting.getSetting(
 									"dropbox_accessToken"
 								)}
 								label={lang("Dropbox access token")}
 								onChange={(ev, val) => {
-									settings.setSetting(
+									setting.setSetting(
 										"dropbox_accessToken",
 										val!
 									);
 
 									setTimeout(
-										() => API.login.validateDropBoxToken(),
+										() => status.validateDropBoxToken(),
 										second / 2
 									);
 								}}
@@ -147,18 +144,18 @@ export class SettingsComponent extends React.Component<{}, {}> {
 							`This access token is used to store files across the application, like backups and images`
 						)}
 					/>
-				</Section>
+				</SectionComponent>
 
-				<Section title={lang(`Financial Settings`)}>
-					{settings.getSetting("time_tracking") ? (
-						<Input
+				<SectionComponent title={lang(`Financial Settings`)}>
+					{setting.getSetting("time_tracking") ? (
+						<SettingInputComponent
 							element={
 								<TextField
 									label={lang("Time expenses (per hour)")}
 									type="number"
-									value={settings.getSetting("hourlyRate")}
+									value={setting.getSetting("hourlyRate")}
 									onChange={(ev, newVal) => {
-										settings.setSetting(
+										setting.setSetting(
 											"hourlyRate",
 											newVal!.toString()
 										);
@@ -175,13 +172,13 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						""
 					)}
 
-					<Input
+					<SettingInputComponent
 						element={
 							<TextField
 								label={lang("Currency symbol")}
-								value={settings.getSetting("currencySymbol")}
+								value={setting.getSetting("currencySymbol")}
 								onChange={(ev, newVal) => {
-									settings.setSetting(
+									setting.setSetting(
 										"currencySymbol",
 										newVal!.toString()
 									);
@@ -193,17 +190,17 @@ export class SettingsComponent extends React.Component<{}, {}> {
 							`This symbol you enter here will be used across your application`
 						)}
 					/>
-				</Section>
+				</SectionComponent>
 
-				<Section title={lang(`Optional Modules and Features`)}>
+				<SectionComponent title={lang(`Optional Modules and Features`)}>
 					<Toggle
 						onText={lang("Prescriptions module enabled")}
 						offText={lang("Prescriptions module disabled")}
 						defaultChecked={
-							!!settings.getSetting("module_prescriptions")
+							!!setting.getSetting("module_prescriptions")
 						}
 						onChange={(ev, val) => {
-							settings.setSetting(
+							setting.setSetting(
 								"module_prescriptions",
 								val ? "enable" : ""
 							);
@@ -214,10 +211,10 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						onText={lang("Orthodontic module enabled")}
 						offText={lang("Orthodontic module disabled")}
 						defaultChecked={
-							!!settings.getSetting("module_orthodontics")
+							!!setting.getSetting("module_orthodontics")
 						}
 						onChange={(ev, val) => {
-							settings.setSetting(
+							setting.setSetting(
 								"module_orthodontics",
 								val ? "enable" : ""
 							);
@@ -228,10 +225,10 @@ export class SettingsComponent extends React.Component<{}, {}> {
 						onText={lang("Statistics module enabled")}
 						offText={lang("Statistics module disabled")}
 						defaultChecked={
-							!!settings.getSetting("module_statistics")
+							!!setting.getSetting("module_statistics")
 						}
 						onChange={(ev, val) => {
-							settings.setSetting(
+							setting.setSetting(
 								"module_statistics",
 								val ? "enable" : ""
 							);
@@ -241,19 +238,19 @@ export class SettingsComponent extends React.Component<{}, {}> {
 					<Toggle
 						onText={lang("Time tracking enabled")}
 						offText={lang("Time tracking disabled")}
-						defaultChecked={!!settings.getSetting("time_tracking")}
+						defaultChecked={!!setting.getSetting("time_tracking")}
 						onChange={(ev, val) => {
-							settings.setSetting(
+							setting.setSetting(
 								"time_tracking",
 								val ? "enable" : ""
 							);
 						}}
 						disabled={!this.canEdit}
 					/>
-				</Section>
+				</SectionComponent>
 
-				<Section title={lang(`Backup and Restore`)}>
-					{API.login.online ? (
+				<SectionComponent title={lang(`Backup and Restore`)}>
+					{status.online ? (
 						<div>
 							<DefaultButton
 								onClick={() => {
@@ -305,11 +302,11 @@ export class SettingsComponent extends React.Component<{}, {}> {
 							)}
 						</MessageBar>
 					)}
-				</Section>
+				</SectionComponent>
 
-				<Section title={lang(`Automated Backup and Restore`)}>
-					{API.login.online ? (
-						API.login.dropboxActive ? (
+				<SectionComponent title={lang(`Automated Backup and Restore`)}>
+					{status.online ? (
+						status.dropboxActive ? (
 							<div>
 								<Dropdown
 									label={lang("Backup frequency")}
@@ -319,11 +316,11 @@ export class SettingsComponent extends React.Component<{}, {}> {
 										{ key: "m", text: lang("Monthly") },
 										{ key: "n", text: lang("Never") }
 									]}
-									defaultSelectedKey={settings.getSetting(
+									defaultSelectedKey={setting.getSetting(
 										"backup_freq"
 									)}
 									onChange={(ev, v) => {
-										settings.setSetting(
+										setting.setSetting(
 											"backup_freq",
 											v!.key.toString()
 										);
@@ -332,10 +329,10 @@ export class SettingsComponent extends React.Component<{}, {}> {
 								/>
 
 								<TextField
-									value={settings.getSetting("backup_retain")}
+									value={setting.getSetting("backup_retain")}
 									label={lang("How many backups to retain")}
 									onChange={(ev, val) => {
-										settings.setSetting(
+										setting.setSetting(
 											"backup_retain",
 											val!
 										);
@@ -344,7 +341,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 									type="number"
 								/>
 
-								{settings.dropboxBackups.length ? (
+								{setting.dropboxBackups.length ? (
 									<table className="ms-table">
 										<thead>
 											<tr>
@@ -353,7 +350,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 											</tr>
 										</thead>
 										<tbody>
-											{settings.dropboxBackups.map(
+											{setting.dropboxBackups.map(
 												file => {
 													const date = new Date(
 														file.client_modified
@@ -362,7 +359,7 @@ export class SettingsComponent extends React.Component<{}, {}> {
 													return (
 														<tr key={file.id}>
 															<td>
-																<ProfileSquared
+																<ProfileSquaredComponent
 																	onRenderInitials={() => (
 																		<div
 																			style={{
@@ -375,8 +372,11 @@ export class SettingsComponent extends React.Component<{}, {}> {
 																				1}`}
 																		</div>
 																	)}
-																	text={unifiedDateFormat(
-																		date
+																	text={formatDate(
+																		date,
+																		setting.getSetting(
+																			"date_format"
+																		)
 																	)}
 																	subText={`${Math.round(
 																		file.size /
@@ -419,13 +419,13 @@ export class SettingsComponent extends React.Component<{}, {}> {
 																				.then(
 																					() => {
 																						this.loading = false;
-																						settings.updateDropboxBackups();
+																						setting.updateDropboxBackups();
 																					}
 																				)
 																				.catch(
 																					() => {
 																						this.loading = false;
-																						settings.updateDropboxBackups();
+																						setting.updateDropboxBackups();
 																					}
 																				);
 																		}}
@@ -498,13 +498,13 @@ export class SettingsComponent extends React.Component<{}, {}> {
 							)}
 						</MessageBar>
 					)}
-				</Section>
+				</SectionComponent>
 			</div>
 		);
 	}
 }
 @observer
-export class Input extends React.Component<{
+export class SettingInputComponent extends React.Component<{
 	element: React.ReactElement<any>;
 	info: string;
 }> {

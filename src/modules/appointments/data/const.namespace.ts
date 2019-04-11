@@ -1,1 +1,1 @@
-export const namespace = "appointments";
+export const appointmentsNamespace = "appointments";

@@ -1,9 +1,6 @@
+import { lang, modals } from "@core";
+import { appointments, Treatment } from "@modules";
 import { computed, observable } from "mobx";
-
-import { API } from "../../../core";
-import { Treatment } from "./class.treatment";
-import { appointmentsData } from "../../appointments";
-import { lang } from "../../../core/i18/i18";
 
 class TreatmentData {
 	ignoreObserver: boolean = false;
@@ -17,7 +14,7 @@ class TreatmentData {
 	deleteModal(id: string) {
 		const i = this.getIndexByID(id);
 		const treatment = this.list[i];
-		API.modals.newModal({
+		modals.newModal({
 			message: `${lang("Treatment")} "${treatment.type}" ${lang(
 				"will be deleted"
 			)}`,
@@ -34,14 +31,14 @@ class TreatmentData {
 	deleteByID(id: string) {
 		const i = this.getIndexByID(id);
 		const treatment = this.list.splice(i, 1)[0];
-		appointmentsData.appointments.list.forEach((appointment, index) => {
+		appointments.list.forEach((appointment, index) => {
 			if (appointment.treatmentID === treatment._id) {
-				appointmentsData.appointments.list[index].treatmentID = `${
-					treatment.type
-				}|${treatment.expenses}`;
+				appointments.list[index].treatmentID = `${treatment.type}|${
+					treatment.expenses
+				}`;
 			}
 		});
 	}
 }
 
-export default new TreatmentData();
+export const treatments = new TreatmentData();

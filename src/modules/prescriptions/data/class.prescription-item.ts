@@ -1,12 +1,7 @@
+import { lang } from "@core";
+import { itemFormToString, PrescriptionItemForm, PrescriptionItemJSON, stringToItemForm } from "@modules";
+import { generateID } from "@utils";
 import { computed, observable } from "mobx";
-import { generateID } from "../../../assets/utils/generate-id";
-import {
-	itemFormToString,
-	PrescriptionItemForm,
-	PrescriptionItemJSON,
-	stringToItemForm
-} from "./index";
-import { lang } from "../../../core/i18/i18";
 
 export class PrescriptionItem {
 	[key: string]: string | number | Function;

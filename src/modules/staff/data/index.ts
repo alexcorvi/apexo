@@ -1,4 +1,4 @@
-export { StaffMember } from "./class.member";
-export { default as staffMembers } from "./data.staff";
-export { StaffMemberJSON } from "./interface.member-json";
-export { namespace } from "./namespace.staff";
+export * from "./class.member";
+export * from "./data.staff";
+export * from "./interface.member-json";
+export * from "./const.namespace";

@@ -1,41 +1,44 @@
-import * as dateUtils from "../../../assets/utils/date";
-import * as React from "react";
-import { cases, OrthoCase } from "../data";
+import "./ortho-list.scss";
 import {
+	Col,
+	DataTableComponent,
+	ProfileComponent,
+	ProfileSquaredComponent,
+	Row,
+	TagInputComponent
+	} from "@common-components";
+import { lang, user } from "@core";
+import {
+	DentalHistoryPanel,
+	genderToString,
+	OrthoCase,
+	orthoCases,
+	OrthoCaseSheetPanel,
+	OrthoGalleryPanel,
+	OrthoRecordsPanel,
+	Patient,
+	PatientAppointmentsPanel,
+	PatientDetailsPanel,
+	patients,
+	setting
+	} from "@modules";
+import { formatDate } from "@utils";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
+import {
+	DefaultButton,
+	Icon,
+	IconButton,
 	Panel,
 	PanelType,
-	PrimaryButton,
-	TextField,
-	IconButton,
 	PersonaInitialsColor,
-	Icon,
-	DefaultButton,
+	TextField,
 	TooltipHost
-} from "office-ui-fabric-react";
-import { observable, computed } from "mobx";
-import { DataTable } from "../../../assets/components/data-table/data-table.component";
-import { genderToString } from "../../patients/data/enum.gender";
-import { observer } from "mobx-react";
-import { patientsData } from "../../patients";
-import { Profile } from "../../../assets/components/profile/profile";
-import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
-import { TagInput } from "../../../assets/components/tag-input/tag-input";
-import "./ortho-list.scss";
-import { API } from "../../../core/index";
-import { lang } from "../../../core/i18/i18";
-import setting from "../../settings/data/data.settings";
-import { Row, Col } from "../../../assets/components/grid";
-import {
-	PatientDetails,
-	DentalHistory,
-	PatientAppointments
-} from "../../patients/components";
-import { OrthoCaseSheet } from "./case-sheet";
-import { Orthograph } from "./orthograph";
-import { OrthoGallery } from "./ortho-gallery";
+	} from "office-ui-fabric-react";
+import * as React from "react";
 
 @observer
-export class OrthoList extends React.Component<{}, {}> {
+export class OrthoPage extends React.Component<{}, {}> {
 	@observable showAdditionPanel: boolean = false;
 	@observable newPatientName: string = "";
 
@@ -43,7 +46,9 @@ export class OrthoList extends React.Component<{}, {}> {
 	@observable viewWhich: number = 0;
 
 	@computed get selectedCase() {
-		return cases.list.find(orthoCase => orthoCase._id === this.selectedId);
+		return orthoCases.list.find(
+			orthoCase => orthoCase._id === this.selectedId
+		);
 	}
 
 	@computed get selectedPatient() {
@@ -55,13 +60,13 @@ export class OrthoList extends React.Component<{}, {}> {
 	}
 
 	@computed get canEdit() {
-		return API.user.currentUser.canEditOrtho;
+		return user.currentUser.canEditOrtho;
 	}
 
 	render() {
 		return (
 			<div className="orthodontic-cases-component p-15 p-l-10 p-r-10">
-				<DataTable
+				<DataTableComponent
 					maxItemsOnLoad={15}
 					className={"orthodontic-cases-data-table"}
 					heads={[
@@ -70,11 +75,10 @@ export class OrthoList extends React.Component<{}, {}> {
 						lang("Last/Next Appointment"),
 						lang("Total/Outstanding Payments")
 					]}
-					rows={cases.filtered
+					rows={orthoCases.filtered
 						.filter(orthoCase => orthoCase.patient)
 						.map(orthoCase => {
-							const patient =
-								orthoCase.patient || new patientsData.Patient();
+							const patient = orthoCase.patient || new Patient();
 							return {
 								id: orthoCase._id,
 								searchableString: orthoCase.searchableString,
@@ -83,7 +87,7 @@ export class OrthoList extends React.Component<{}, {}> {
 										dataValue: patient.name,
 										component: (
 											<div>
-												<Profile
+												<ProfileComponent
 													name={patient.name}
 													secondaryElement={
 														<span>
@@ -193,7 +197,7 @@ export class OrthoList extends React.Component<{}, {}> {
 													/>
 												</TooltipHost>
 
-												{API.user.currentUser
+												{user.currentUser
 													.canViewAppointments ? (
 													<TooltipHost
 														content={lang(
@@ -225,7 +229,7 @@ export class OrthoList extends React.Component<{}, {}> {
 															iconName: "Trash"
 														}}
 														onClick={() =>
-															cases.deleteModal(
+															orthoCases.deleteModal(
 																orthoCase._id
 															)
 														}
@@ -242,11 +246,14 @@ export class OrthoList extends React.Component<{}, {}> {
 											: orthoCase.startedDate,
 										component: (
 											<div>
-												<ProfileSquared
+												<ProfileSquaredComponent
 													text={
 														orthoCase.isStarted
-															? dateUtils.unifiedDateFormat(
-																	orthoCase.startedDate
+															? formatDate(
+																	orthoCase.startedDate,
+																	setting.getSetting(
+																		"date_format"
+																	)
 															  )
 															: ""
 													}
@@ -271,11 +278,14 @@ export class OrthoList extends React.Component<{}, {}> {
 													}
 												/>
 												<br />
-												<ProfileSquared
+												<ProfileSquaredComponent
 													text={
 														orthoCase.isFinished
-															? dateUtils.unifiedDateFormat(
-																	orthoCase.finishedDate
+															? formatDate(
+																	orthoCase.finishedDate,
+																	setting.getSetting(
+																		"date_format"
+																	)
 															  )
 															: ""
 													}
@@ -311,7 +321,7 @@ export class OrthoList extends React.Component<{}, {}> {
 										).date,
 										component: (
 											<div>
-												<ProfileSquared
+												<ProfileSquaredComponent
 													text={
 														patient.lastAppointment
 															? patient
@@ -326,10 +336,13 @@ export class OrthoList extends React.Component<{}, {}> {
 													}
 													subText={
 														patient.lastAppointment
-															? dateUtils.unifiedDateFormat(
+															? formatDate(
 																	patient
 																		.lastAppointment
-																		.date
+																		.date,
+																	setting.getSetting(
+																		"date_format"
+																	)
 															  )
 															: lang(
 																	"No last appointment"
@@ -347,7 +360,7 @@ export class OrthoList extends React.Component<{}, {}> {
 													}
 												/>
 												<br />
-												<ProfileSquared
+												<ProfileSquaredComponent
 													text={
 														patient.nextAppointment
 															? patient
@@ -362,10 +375,13 @@ export class OrthoList extends React.Component<{}, {}> {
 													}
 													subText={
 														patient.nextAppointment
-															? dateUtils.unifiedDateFormat(
+															? formatDate(
 																	patient
 																		.nextAppointment
-																		.date
+																		.date,
+																	setting.getSetting(
+																		"date_format"
+																	)
 															  )
 															: lang(
 																	"No next appointment"
@@ -390,7 +406,7 @@ export class OrthoList extends React.Component<{}, {}> {
 										dataValue: patient.totalPayments,
 										component: (
 											<div>
-												<ProfileSquared
+												<ProfileSquaredComponent
 													text={
 														setting.getSetting(
 															"currencySymbol"
@@ -413,7 +429,7 @@ export class OrthoList extends React.Component<{}, {}> {
 													}
 												/>
 												<br />
-												<ProfileSquared
+												<ProfileSquaredComponent
 													text={
 														setting.getSetting(
 															"currencySymbol"
@@ -488,18 +504,20 @@ export class OrthoList extends React.Component<{}, {}> {
 				>
 					<h4>{lang("Choose patient")}</h4>
 					<br />
-					<TagInput
+					<TagInputComponent
 						strict
 						value={[]}
-						options={cases.patientsWithNoOrtho.map(patient => ({
-							key: patient._id,
-							text: patient.name
-						}))}
+						options={orthoCases.patientsWithNoOrtho.map(
+							patient => ({
+								key: patient._id,
+								text: patient.name
+							})
+						)}
 						onAdd={val => {
 							this.showAdditionPanel = false;
 							const orthoCase = new OrthoCase();
 							orthoCase.patientID = val.key;
-							cases.list.push(orthoCase);
+							orthoCases.list.push(orthoCase);
 							this.selectedId = orthoCase._id;
 							this.viewWhich = 3;
 						}}
@@ -516,12 +534,12 @@ export class OrthoList extends React.Component<{}, {}> {
 					/>
 					<DefaultButton
 						onClick={() => {
-							const newPatient = new patientsData.Patient();
+							const newPatient = new Patient();
 							newPatient.name = this.newPatientName;
 							const orthoCase = new OrthoCase();
 							orthoCase.patientID = newPatient._id;
-							patientsData.patients.list.push(newPatient);
-							cases.list.push(orthoCase);
+							patients.list.push(newPatient);
+							orthoCases.list.push(orthoCase);
 							this.newPatientName = "";
 							this.selectedId = orthoCase._id;
 							this.viewWhich = 3;
@@ -558,7 +576,7 @@ export class OrthoList extends React.Component<{}, {}> {
 						return (
 							<Row className="panel-heading">
 								<Col span={22}>
-									<Profile
+									<ProfileComponent
 										name={this.selectedPatient!.name}
 										secondaryElement={
 											<span>
@@ -606,7 +624,7 @@ export class OrthoList extends React.Component<{}, {}> {
 						{this.selectedCase && this.selectedPatient ? (
 							<div className="ortho-single-component">
 								{this.viewWhich === 1 ? (
-									<PatientDetails
+									<PatientDetailsPanel
 										patient={this.selectedPatient}
 									/>
 								) : (
@@ -614,7 +632,7 @@ export class OrthoList extends React.Component<{}, {}> {
 								)}
 
 								{this.viewWhich === 2 ? (
-									<DentalHistory
+									<DentalHistoryPanel
 										patient={this.selectedPatient}
 									/>
 								) : (
@@ -622,7 +640,7 @@ export class OrthoList extends React.Component<{}, {}> {
 								)}
 
 								{this.viewWhich === 3 ? (
-									<OrthoCaseSheet
+									<OrthoCaseSheetPanel
 										orthoCase={this.selectedCase}
 									/>
 								) : (
@@ -630,13 +648,15 @@ export class OrthoList extends React.Component<{}, {}> {
 								)}
 
 								{this.viewWhich === 4 ? (
-									<Orthograph orthoCase={this.selectedCase} />
+									<OrthoRecordsPanel
+										orthoCase={this.selectedCase}
+									/>
 								) : (
 									""
 								)}
 
 								{this.viewWhich === 5 ? (
-									<OrthoGallery
+									<OrthoGalleryPanel
 										orthoCase={this.selectedCase}
 									/>
 								) : (
@@ -644,7 +664,7 @@ export class OrthoList extends React.Component<{}, {}> {
 								)}
 
 								{this.viewWhich === 6 ? (
-									<PatientAppointments
+									<PatientAppointmentsPanel
 										patient={this.selectedPatient}
 									/>
 								) : (

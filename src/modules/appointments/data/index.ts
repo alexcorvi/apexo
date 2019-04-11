@@ -1,5 +1,5 @@
-export { namespace } from './const.namespace';
-export { default as appointments } from './data.appointments';
-export { Appointment } from './class.appointment';
-export { AppointmentJSON } from './interface.appointment-json';
-export { Calendar } from './data.calendar';
+export * from "./calendar";
+export * from "./class.appointment";
+export * from "./data.appointments";
+export * from "./interface.appointment-json";
+export * from "./const.namespace";

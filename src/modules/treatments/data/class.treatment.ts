@@ -1,6 +1,6 @@
+import { TreatmentJSON } from "@modules";
+import { generateID } from "@utils";
 import { computed, observable } from "mobx";
-import { generateID } from "../../../assets/utils/generate-id";
-import { TreatmentJSON } from "./index";
 
 export class Treatment {
 	// Observables

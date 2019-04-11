@@ -1,16 +1,18 @@
-import { appointmentsData } from "../../modules/appointments";
-import { orthoData } from "../../modules/orthodontic";
-import { patientsData } from "../../modules/patients";
-import { prescriptionsData } from "../../modules/prescriptions";
-import { settingsData } from "../../modules/settings";
-import { treatmentsData } from "../../modules/treatments";
+import {
+	appointmentsNamespace,
+	orthoNamespace,
+	patientsNamespace,
+	prescriptionsNamespace,
+	settingsNamespace,
+	treatmentsNamespace
+	} from "@modules";
 
 export const DBsList = [
-	appointmentsData.namespace,
+	appointmentsNamespace,
 	"doctors",
-	orthoData.namespace,
-	patientsData.namespace,
-	prescriptionsData.namespace,
-	settingsData.namespace,
-	treatmentsData.namespace
+	orthoNamespace,
+	patientsNamespace,
+	prescriptionsNamespace,
+	settingsNamespace,
+	treatmentsNamespace
 ];

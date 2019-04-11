@@ -1,8 +1,7 @@
-import { API } from "../../../core";
-import { Appointment } from "./class.appointment";
+import { lang, modals } from "@core";
+import { Appointment } from "@modules";
+import { textualFilter } from "@utils";
 import { observable } from "mobx";
-import { textualFilter } from "../../../assets/utils/textual-filter";
-import { lang } from "../../../core/i18/i18";
 
 class AppointmentsData {
 	ignoreObserver: boolean = false;
@@ -47,7 +46,7 @@ class AppointmentsData {
 		return this.list.findIndex(x => x._id === id);
 	}
 	deleteModal(id: string) {
-		API.modals.newModal({
+		modals.newModal({
 			message: lang("Are you sure you want to delete this appointment?"),
 			onConfirm: () => this.deleteByID(id),
 			showCancelButton: true,
@@ -62,4 +61,4 @@ class AppointmentsData {
 	}
 }
 
-export default new AppointmentsData();
+export const appointments = new AppointmentsData();

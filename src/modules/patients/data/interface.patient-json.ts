@@ -1,4 +1,4 @@
-import { ToothJSON } from './interface.tooth-json';
+import { ToothJSON } from "@modules";
 
 export interface PatientJSON {
 	_id: string;

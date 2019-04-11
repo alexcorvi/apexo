@@ -1,4 +1,4 @@
-import { IClassStatic } from './interface.class-static';
+import { IClassStatic } from "./interface.class-static";
 
 export interface IMobXStore {
 	ignoreObserver: boolean;

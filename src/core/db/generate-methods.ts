@@ -1,9 +1,5 @@
+import { IClassCreator, IClassStatic, IMobXStore, InteractionMethods, observeItem } from "@core";
 import { diff } from "fast-array-diff";
-import { IClassCreator } from "./interface.class-creator";
-import { IClassStatic } from "./interface.class-static";
-import { IMobXStore } from "./interface.mobx-store";
-import { InteractionMethods } from "./interface.interaction-methods";
-import { observeItem } from "./observe-item";
 
 export function generateMethods(
 	db: PouchDB.Database,

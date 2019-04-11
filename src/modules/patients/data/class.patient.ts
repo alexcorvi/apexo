@@ -1,24 +1,18 @@
-import { appointmentsData } from "../../appointments";
-import { computed, observable, observe } from "mobx";
+import { stringToTagType, TagTypeToString } from "@common-components";
 import {
+	Appointment,
+	appointments,
 	Gender,
 	genderToString,
 	ISOTeeth,
 	Label,
 	PatientJSON,
+	setting,
 	stringToGender,
 	Tooth
-} from "./index";
-import { generateID } from "../../../assets/utils/generate-id";
-import {
-	TagTypeToString,
-	stringToTagType
-} from "../../../assets/components/label/label.component";
-import {
-	unifiedDateFormat,
-	day,
-	comparableTime
-} from "../../../assets/utils/date";
+	} from "@modules";
+import { comparableTime, formatDate, generateID } from "@utils";
+import { computed, observable, observe } from "mobx";
 
 export class Patient {
 	_id: string = generateID();
@@ -54,8 +48,8 @@ export class Patient {
 	}
 
 	@computed
-	get appointments(): appointmentsData.Appointment[] {
-		return appointmentsData.appointments.list.filter(
+	get appointments(): Appointment[] {
+		return appointments.list.filter(
 			appointment => appointment.patientID === this._id
 		);
 	}
@@ -136,13 +130,27 @@ export class Patient {
 					? (this.nextAppointment.treatment || { type: "" }).type
 					: ""
 			}
-			${this.nextAppointment ? unifiedDateFormat(this.nextAppointment.date) : ""}
+			${
+				this.nextAppointment
+					? formatDate(
+							this.nextAppointment.date,
+							setting.getSetting("date_format")
+					  )
+					: ""
+			}
 			${
 				this.lastAppointment
 					? (this.lastAppointment.treatment || { type: "" }).type
 					: ""
 			}
-			${this.lastAppointment ? unifiedDateFormat(this.lastAppointment.date) : ""}
+			${
+				this.lastAppointment
+					? formatDate(
+							this.lastAppointment.date,
+							setting.getSetting("date_format")
+					  )
+					: ""
+			}
 			${this.differenceAmount < 0 ? "outstanding " + this.outstandingAmount : ""}
 			${this.differenceAmount > 0 ? "Overpaid " + this.overpaidAmount : ""}
 		`.toLowerCase();

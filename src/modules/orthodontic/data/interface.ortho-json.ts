@@ -1,4 +1,4 @@
-import { FacialProfile, Lips, OralHygiene, Visit } from "./class.ortho";
+import { FacialProfile, Lips, OralHygiene, Visit } from "@modules";
 
 export interface CephalometricItem {
 	pointCoordinates: string;

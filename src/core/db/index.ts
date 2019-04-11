@@ -1,22 +1,23 @@
-import * as pouchDB from "pouchdb-browser";
-const PouchDB: PouchDB.Static = (pouchDB as any).default;
+import {
+	configs,
+	generateMethods,
+	IClassCreator,
+	IMobXStore,
+	log,
+	observeItem,
+	singleItemUpdateQue
+	} from "@core";
+import { status } from "@core";
+import { store } from "@utils";
 import * as cryptoPouch from "crypto-pouch";
+import { observe } from "mobx";
 import * as auth from "pouchdb-authentication";
+import * as pouchDB from "pouchdb-browser";
+import { Md5 } from "ts-md5";
+
+const PouchDB: PouchDB.Static = (pouchDB as any).default;
 PouchDB.plugin(cryptoPouch);
 PouchDB.plugin((auth as any).default);
-import { API } from "../";
-import { configs } from "./config";
-import { generateMethods } from "./generate-methods";
-import { IClassCreator } from "./interface.class-creator";
-import { IMobXStore } from "./interface.mobx-store";
-import { observe } from "mobx";
-import { log } from "./log";
-import { Md5 } from "ts-md5";
-import { observeItem } from "./observe-item";
-import { singleItemUpdateQue } from "./single-item-update-que";
-import { decrypt } from "../../assets/utils/encryption";
-import { store } from "../login/store";
-
 export const resync: {
 	modules: Array<{ resync: () => Promise<void>; namespace: string }>;
 	resync: () => Promise<boolean>;
@@ -103,7 +104,7 @@ export function connectToDB(
 	const localDatabase = new PouchDB(localName);
 	localDatabase.crypto(unique);
 
-	const remoteDatabase = new PouchDB(`${API.login.server}/${dbName}`, {
+	const remoteDatabase = new PouchDB(`${status.server}/${dbName}`, {
 		fetch: (url, opts) =>
 			PouchDB.fetch(url, {
 				...opts,
@@ -265,3 +266,15 @@ export function connectToDB(
 		return methods;
 	};
 }
+
+export * from "./list";
+export * from "./config";
+export * from "./generate-methods";
+export * from "./interface.class-creator";
+export * from "./interface.class-static";
+export * from "./interface.document-json";
+export * from "./interface.interaction-methods";
+export * from "./interface.mobx-store";
+export * from "./log";
+export * from "./observe-item";
+export * from "./single-item-update-que";

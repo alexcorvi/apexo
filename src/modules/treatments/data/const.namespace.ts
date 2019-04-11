@@ -1,1 +1,1 @@
-export const namespace = 'treatments';
+export const treatmentsNamespace = "treatments";

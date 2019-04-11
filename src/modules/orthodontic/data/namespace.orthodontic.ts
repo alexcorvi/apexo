@@ -1,1 +1,1 @@
-export const namespace = 'orthodontic';
+export const orthoNamespace = "orthodontic";

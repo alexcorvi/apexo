@@ -1,5 +1,5 @@
-export { default as settings } from './data.settings';
-export { namespace } from './const.namespace';
-export { SettingsItem } from './class.setting';
-export { SettingItemJSON } from './interface.settingitem';
-export { dictionary } from './const.dictionary';
+export * from "./class.setting";
+export * from "./const.dictionary";
+export * from "./const.namespace";
+export * from "./data.setting";
+export * from "./interface.settingitem";

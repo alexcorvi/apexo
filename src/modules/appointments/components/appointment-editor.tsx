@@ -1,44 +1,49 @@
-import * as dateUtils from "../../../assets/utils/date";
-import * as React from "react";
-import { API } from "../../../core";
-import { Appointment, appointments } from "../data";
-import { Col, Row } from "../../../assets/components/grid/index";
-import { computed, observable } from "mobx";
-import { convert } from "../../../assets/utils/teeth-numbering-systems";
+import "./appointment-editor.scss";
 import {
+	Col,
+	ProfileComponent,
+	ProfileSquaredComponent,
+	Row,
+	SectionComponent,
+	TagComponent,
+	TagInputComponent,
+	TagType
+} from "@common-components";
+import { lang, user } from "@core";
+import {
+	Appointment,
+	appointments,
+	ISOTeethArr,
+	itemFormToString,
+	Patient,
+	PrescriptionItem,
+	prescriptions,
+	setting,
+	staff,
+	Treatment,
+	treatments
+} from "@modules";
+import { convert, formatDate, num, round } from "@utils";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
+import {
+	Checkbox,
 	DatePicker,
+	DefaultButton,
 	Dropdown,
 	Icon,
 	IconButton,
+	Label,
 	Panel,
 	PanelType,
 	PrimaryButton,
 	TextField,
-	Toggle,
-	Checkbox,
-	Slider,
-	DefaultButton,
-	Label
+	Toggle
 } from "office-ui-fabric-react";
-import { staffData } from "../../staff";
-import { Tag, TagType } from "../../../assets/components/label/label.component";
-import { observer } from "mobx-react";
-import { patientsData } from "../../patients";
-import { prescriptionsData } from "../../prescriptions";
-import { Profile } from "../../../assets/components/profile/profile";
-import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
-import { round } from "../../../assets/utils/round";
-import { Section } from "../../../assets/components/section/section";
-import { settingsData } from "../../settings";
-import { TagInput } from "../../../assets/components/tag-input/tag-input";
-import { Treatment } from "../../treatments/data/class.treatment";
-import { treatmentsData } from "../../treatments";
-import "./appointment-editor.scss";
-import { lang } from "../../../core/i18/i18";
-import { num } from "../../../assets/utils/num";
+import * as React from "react";
 
 @observer
-export class AppointmentEditor extends React.Component<
+export class AppointmentEditorPanel extends React.Component<
 	{
 		appointment: Appointment | undefined | null;
 		onDismiss: () => void;
@@ -91,9 +96,7 @@ export class AppointmentEditor extends React.Component<
 
 	@computed
 	get treatmentOptions() {
-		const list: Treatment[] = JSON.parse(
-			JSON.stringify(treatmentsData.treatments.list)
-		);
+		const list: Treatment[] = JSON.parse(JSON.stringify(treatments.list));
 		if (
 			this.props.appointment &&
 			this.props.appointment.treatmentID.indexOf("|") > -1
@@ -109,7 +112,7 @@ export class AppointmentEditor extends React.Component<
 
 	@computed
 	get canEdit() {
-		return API.user.currentUser.canEditAppointments;
+		return user.currentUser.canEditAppointments;
 	}
 
 	setTimeFromCombination() {
@@ -141,11 +144,12 @@ export class AppointmentEditor extends React.Component<
 				onRenderNavigation={() => (
 					<Row className="panel-heading">
 						<Col span={22}>
-							<Profile
+							<ProfileComponent
 								secondaryElement={
 									<span>
-										{dateUtils.unifiedDateFormat(
-											this.props.appointment!.date
+										{formatDate(
+											this.props.appointment!.date,
+											setting.getSetting("date_format")
 										)}{" "}
 										/{" "}
 										{this.props.appointment
@@ -156,7 +160,13 @@ export class AppointmentEditor extends React.Component<
 											: ""}
 									</span>
 								}
-								name={this.props.appointment!.patient.name}
+								name={
+									(
+										this.props.appointment!.patient || {
+											name: ""
+										}
+									).name
+								}
 								size={3}
 							/>
 						</Col>
@@ -172,7 +182,7 @@ export class AppointmentEditor extends React.Component<
 				)}
 			>
 				<div className="appointment-editor">
-					<Section title={lang("Appointment")}>
+					<SectionComponent title={lang("Appointment")}>
 						<Row gutter={12}>
 							<Col sm={12}>
 								<div className="appointment-input date">
@@ -194,7 +204,12 @@ export class AppointmentEditor extends React.Component<
 											}
 										}}
 										formatDate={d =>
-											dateUtils.unifiedDateFormat(d || 0)
+											formatDate(
+												d || 0,
+												setting.getSetting(
+													"date_format"
+												)
+											)
 										}
 									/>
 									<p className="insight">
@@ -302,21 +317,21 @@ export class AppointmentEditor extends React.Component<
 						</Row>
 						<div className="appointment-input date">
 							<label>{lang("Operating staff")} </label>
-							{staffData.staffMembers.list
-								.filter(staff => staff.operates)
-								.map(staff => {
+							{staff.list
+								.filter(member => member.operates)
+								.map(member => {
 									const checked =
 										this.props.appointment!.staffID.indexOf(
-											staff._id
+											member._id
 										) > -1;
 									return (
 										<Checkbox
-											key={staff._id}
-											label={staff.name}
+											key={member._id}
+											label={member.name}
 											disabled={
 												!this.canEdit ||
 												(!checked &&
-													staff.onDutyDays.indexOf(
+													member.onDutyDays.indexOf(
 														new Date(
 															this.props.appointment!.date
 														).toLocaleDateString(
@@ -331,12 +346,12 @@ export class AppointmentEditor extends React.Component<
 											onChange={(ev, isChecked) => {
 												if (isChecked) {
 													this.props.appointment!.staffID.push(
-														staff._id
+														member._id
 													);
 												} else {
 													this.props.appointment!.staffID.splice(
 														this.props.appointment!.staffID.indexOf(
-															staff._id
+															member._id
 														),
 														1
 													);
@@ -348,9 +363,9 @@ export class AppointmentEditor extends React.Component<
 									);
 								})}
 						</div>
-					</Section>
+					</SectionComponent>
 
-					<Section title={lang("Case Details")}>
+					<SectionComponent title={lang("Case Details")}>
 						<TextField
 							multiline
 							disabled={!this.canEdit}
@@ -405,7 +420,7 @@ export class AppointmentEditor extends React.Component<
 							<Col span={24}>
 								{" "}
 								<div className="appointment-input involved-teeth">
-									<TagInput
+									<TagInputComponent
 										disabled={!this.canEdit}
 										placeholder={lang("Involved teeth")}
 										value={this.props.appointment!.involvedTeeth.map(
@@ -415,14 +430,12 @@ export class AppointmentEditor extends React.Component<
 											})
 										)}
 										strict={true}
-										options={patientsData.ISOTeethArr.map(
-											x => {
-												return {
-													key: x.toString(),
-													text: x.toString()
-												};
-											}
-										)}
+										options={ISOTeethArr.map(x => {
+											return {
+												key: x.toString(),
+												text: x.toString()
+											};
+										})}
 										formatText={x =>
 											`${x.toString()} - ${
 												convert(num(x)).Palmer
@@ -438,13 +451,11 @@ export class AppointmentEditor extends React.Component<
 							</Col>
 						</Row>
 
-						{settingsData.settings.getSetting(
-							"module_prescriptions"
-						) ? (
+						{setting.getSetting("module_prescriptions") ? (
 							<div>
 								<hr className="appointment-hr" />
 								<div className="appointment-input prescription">
-									<TagInput
+									<TagInputComponent
 										disabled={!this.canEdit}
 										className="prescription"
 										value={this.props.appointment!.prescriptions.map(
@@ -453,7 +464,7 @@ export class AppointmentEditor extends React.Component<
 												text: x.prescription
 											})
 										)}
-										options={prescriptionsData.prescriptions.list.map(
+										options={prescriptions.list.map(
 											this.prescriptionToTagInput
 										)}
 										onChange={newValue => {
@@ -471,13 +482,16 @@ export class AppointmentEditor extends React.Component<
 
 								<div id="prescription-items">
 									<div className="print-heading">
-										<h2>{API.user.currentUser.name}</h2>
+										<h2>{user.currentUser.name}</h2>
 										<hr />
 										<h3>
 											Patient:{" "}
 											{
-												this.props.appointment!.patient
-													.name
+												(
+													this.props.appointment!
+														.patient ||
+													new Patient()
+												).name
 											}
 										</h3>
 										<Row>
@@ -485,16 +499,23 @@ export class AppointmentEditor extends React.Component<
 												<h4>
 													Age:{" "}
 													{
-														this.props.appointment!
-															.patient.age
+														(
+															this.props
+																.appointment!
+																.patient ||
+															new Patient()
+														).age
 													}
 												</h4>
 											</Col>
 											<Col span={12}>
 												<h4>
 													Gender:{" "}
-													{this.props.appointment!
-														.patient.gender
+													{(
+														this.props.appointment!
+															.patient ||
+														new Patient()
+													).gender
 														? "Female"
 														: "Male"}
 												</h4>
@@ -510,7 +531,7 @@ export class AppointmentEditor extends React.Component<
 														span={20}
 														className="m-b-5"
 													>
-														<ProfileSquared
+														<ProfileSquaredComponent
 															text={
 																item.prescription.split(
 																	":"
@@ -570,14 +591,12 @@ export class AppointmentEditor extends React.Component<
 						) : (
 							""
 						)}
-					</Section>
+					</SectionComponent>
 
-					<Section title={lang("Expenses & Price")}>
+					<SectionComponent title={lang("Expenses & Price")}>
 						<Row gutter={12}>
 							<Col sm={16}>
-								{settingsData.settings.getSetting(
-									"time_tracking"
-								) ? (
+								{setting.getSetting("time_tracking") ? (
 									<div className="appointment-input time">
 										<label>
 											{lang(
@@ -670,11 +689,11 @@ export class AppointmentEditor extends React.Component<
 											/>
 										)}
 										<p className="payment-insight">
-											<Tag
+											<TagComponent
 												text={
 													lang("Time value") +
 													": " +
-													settingsData.settings.getSetting(
+													setting.getSetting(
 														"currencySymbol"
 													) +
 													round(
@@ -685,11 +704,11 @@ export class AppointmentEditor extends React.Component<
 												type={TagType.info}
 											/>
 											<br />
-											<Tag
+											<TagComponent
 												text={
 													lang("Expenses") +
 													": " +
-													settingsData.settings.getSetting(
+													setting.getSetting(
 														"currencySymbol"
 													) +
 													round(
@@ -719,7 +738,7 @@ export class AppointmentEditor extends React.Component<
 														newVal!
 													);
 												}}
-												prefix={settingsData.settings.getSetting(
+												prefix={setting.getSetting(
 													"currencySymbol"
 												)}
 											/>
@@ -735,7 +754,7 @@ export class AppointmentEditor extends React.Component<
 														newVal!
 													);
 												}}
-												prefix={settingsData.settings.getSetting(
+												prefix={setting.getSetting(
 													"currencySymbol"
 												)}
 											/>
@@ -764,18 +783,18 @@ export class AppointmentEditor extends React.Component<
 														? this.props.appointment!.overpaidAmount.toString()
 														: this.props.appointment!.outstandingAmount.toString()
 												}
-												prefix={settingsData.settings.getSetting(
+												prefix={setting.getSetting(
 													"currencySymbol"
 												)}
 											/>
 										</Col>
 									</Row>
 									<p className="payment-insight">
-										<Tag
+										<TagComponent
 											text={
 												lang("Profit") +
 												": " +
-												settingsData.settings.getSetting(
+												setting.getSetting(
 													"currencySymbol"
 												) +
 												round(
@@ -786,7 +805,7 @@ export class AppointmentEditor extends React.Component<
 											type={TagType.success}
 										/>
 										<br />
-										<Tag
+										<TagComponent
 											text={
 												lang("Profit percentage") +
 												": " +
@@ -817,7 +836,7 @@ export class AppointmentEditor extends React.Component<
 								/>
 							</Col>
 						</Row>
-					</Section>
+					</SectionComponent>
 
 					<br />
 
@@ -876,12 +895,12 @@ export class AppointmentEditor extends React.Component<
 		this.props.appointment!.time =
 			hours * msInHour + minutes * msInMinute + seconds * msInSecond;
 	}
-	prescriptionToTagInput(p: prescriptionsData.PrescriptionItem) {
+	prescriptionToTagInput(p: PrescriptionItem) {
 		return {
 			key: p._id,
 			text: `${p.name}: ${p.doseInMg}${lang("mg")} ${p.timesPerDay}X${
 				p.unitsPerTime
-			} ${lang(prescriptionsData.itemFormToString(p.form))}`
+			} ${lang(itemFormToString(p.form))}`
 		};
 	}
 }

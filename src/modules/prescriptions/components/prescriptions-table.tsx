@@ -1,34 +1,18 @@
-import * as React from "react";
-import { API } from "../../../core";
-import { Col, Row } from "../../../assets/components/grid/index";
-import { computed, observable } from "mobx";
-import { DataTable } from "../../../assets/components/data-table/data-table.component";
-import {
-	Dropdown,
-	IconButton,
-	Panel,
-	PanelType,
-	TextField
-} from "office-ui-fabric-react";
-import {
-	itemFormToString,
-	PrescriptionItem,
-	prescriptionItemForms,
-	prescriptions,
-	stringToItemForm
-} from "../data";
-import { observer } from "mobx-react";
-import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
-import { Section } from "../../../assets/components/section/section";
 import "./prescription-table.scss";
-import { lang } from "../../../core/i18/i18";
-import { num } from "../../../assets/utils/num";
+import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
+import { lang, router, user } from "@core";
+import { itemFormToString, PrescriptionItem, prescriptionItemForms, prescriptions, stringToItemForm } from "@modules";
+import { num } from "@utils";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
+import { Dropdown, IconButton, Panel, PanelType, TextField } from "office-ui-fabric-react";
+import * as React from "react";
 
 @observer
-export class PrescriptionsTable extends React.Component<{}, {}> {
+export class PrescriptionsPage extends React.Component<{}, {}> {
 	@observable showMenu: boolean = true;
 
-	@observable selectedID: string = API.router.currentLocation.split("/")[1];
+	@observable selectedID: string = router.currentLocation.split("/")[1];
 
 	@computed
 	get selectedIndex() {
@@ -41,13 +25,13 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 	}
 
 	@computed get canEdit() {
-		return API.user.currentUser.canEditPrescriptions;
+		return user.currentUser.canEditPrescriptions;
 	}
 
 	render() {
 		return (
 			<div className="prescriptions-component p-15 p-l-10 p-r-10">
-				<DataTable
+				<DataTableComponent
 					onDelete={
 						this.canEdit
 							? id => {
@@ -90,7 +74,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 								{
 									dataValue: prescription.name,
 									component: (
-										<ProfileSquared
+										<ProfileSquaredComponent
 											text={prescription.name}
 											subText={`${
 												prescription.doseInMg
@@ -161,7 +145,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 							<Row className="panel-heading">
 								<Col span={20}>
 									{this.selectedPrescription ? (
-										<ProfileSquared
+										<ProfileSquaredComponent
 											text={
 												this.selectedPrescription.name
 											}
@@ -197,7 +181,9 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 						)}
 					>
 						<div className="prescription-editor">
-							<Section title={lang("Prescription Details")}>
+							<SectionComponent
+								title={lang("Prescription Details")}
+							>
 								<TextField
 									label={lang("Item name")}
 									value={this.selectedPrescription.name}
@@ -271,7 +257,7 @@ export class PrescriptionsTable extends React.Component<{}, {}> {
 										);
 									}}
 								/>
-							</Section>
+							</SectionComponent>
 						</div>
 					</Panel>
 				) : (

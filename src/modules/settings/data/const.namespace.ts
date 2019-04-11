@@ -1,1 +1,1 @@
-export const namespace = "settings";
+export const settingsNamespace = "settings";

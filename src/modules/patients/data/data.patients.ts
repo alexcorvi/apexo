@@ -1,10 +1,6 @@
+import { files, lang, modals } from "@core";
+import { appointments, orthoCases, Patient } from "@modules";
 import { observable } from "mobx";
-
-import { API } from "../../../core";
-import { Patient } from "./index";
-import { appointmentsData } from "../../appointments";
-import { orthoData } from "../../orthodontic/index";
-import { lang } from "../../../core/i18/i18";
 
 class PatientsData {
 	ignoreObserver: boolean = false;
@@ -22,22 +18,22 @@ class PatientsData {
 
 		// delete appointments
 		patient.appointments.forEach(appointment => {
-			appointmentsData.appointments.deleteByID(appointment._id);
+			appointments.deleteByID(appointment._id);
 		});
 
 		// delete photos
 		patient.gallery.forEach(async fileID => {
-			await API.files.remove(fileID);
+			await files.remove(fileID);
 		});
 
 		// delete orthodontic case
-		orthoData.cases.deleteByPatientID(patient._id);
+		orthoCases.deleteByPatientID(patient._id);
 	}
 
 	deleteModal(id: string) {
 		const i = this.findIndexByID(id);
 
-		API.modals.newModal({
+		modals.newModal({
 			message: `${lang("All of the patient")} ${this.list[i].name}${lang(
 				"'s data will be deleted along with"
 			)} ${this.list[i].appointments.length} ${lang("of appointments")}.`,
@@ -50,4 +46,4 @@ class PatientsData {
 	}
 }
 
-export default new PatientsData();
+export const patients = new PatientsData();

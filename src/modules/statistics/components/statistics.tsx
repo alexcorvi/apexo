@@ -1,33 +1,56 @@
 import "./statistics.scss";
-
+import {
+	Col,
+	DataTableComponent,
+	ProfileComponent,
+	ProfileSquaredComponent,
+	Row,
+	SectionComponent,
+	TagComponent,
+	TagType
+	} from "@common-components";
+import { lang } from "@core";
+import {
+	ageBarChart,
+	Appointment,
+	AppointmentEditorPanel,
+	appointmentsByDateChart,
+	financesByDateChart,
+	genderPieChart,
+	mostAppliedTreatmentsChart,
+	mostInvolvedTeethChart,
+	Patient,
+	setting,
+	staff,
+	statistics,
+	treatmentsByGenderChart,
+	treatmentsNumberChart
+	} from "@modules";
+import { formatDate, round } from "@utils";
+import { observable } from "mobx";
+import { observer } from "mobx-react";
+import { DatePicker, Dropdown } from "office-ui-fabric-react";
 import * as React from "react";
 
-import { Tag, TagType } from "../../../assets/components/label/label.component";
-import { DatePicker, Dropdown } from "office-ui-fabric-react";
-import { Row, Col } from "../../../assets/components/grid/index";
-import { observer } from "mobx-react";
-import { round } from "../../../assets/utils/round";
-import { statistics } from "../data";
-import { data } from "../../";
-import { Section } from "../../../assets/components/section/section";
-import { lang } from "../../../core/i18/i18";
-import { DataTable } from "../../../assets/components/data-table/data-table.component";
-import { Profile } from "../../../assets/components/profile/profile";
-import * as dateUtils from "../../../assets/utils/date";
-import { AppointmentEditor } from "../../appointments/components";
-import { Appointment } from "../../appointments/data";
-import { observable } from "mobx";
-import { Calendar } from "../../appointments/data/data.calendar";
-import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
-
 @observer
-export class StatisticsComponent extends React.Component<{}, {}> {
+export class StatisticsPage extends React.Component<{}, {}> {
 	@observable appointment: Appointment | null = null;
+
+	@observable charts = [
+		appointmentsByDateChart,
+		financesByDateChart,
+		treatmentsNumberChart,
+		mostAppliedTreatmentsChart,
+		genderPieChart,
+		treatmentsByGenderChart,
+		mostInvolvedTeethChart,
+		ageBarChart
+	];
 
 	render() {
 		return (
 			<div className="statistics-component p-15 p-l-10 p-r-10">
-				<DataTable
+				<DataTableComponent
 					maxItemsOnLoad={15}
 					className={"appointments-data-table"}
 					heads={[
@@ -43,13 +66,18 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 						searchableString: appointment.searchableString,
 						cells: [
 							{
-								dataValue: appointment.patient.name,
+								dataValue: (
+									appointment.patient || new Patient()
+								).name,
 								component: (
-									<Profile
+									<ProfileComponent
 										secondaryElement={
 											<span>
-												{dateUtils.unifiedDateFormat(
-													appointment.date
+												{formatDate(
+													appointment.date,
+													setting.getSetting(
+														"date_format"
+													)
 												)}{" "}
 												/{" "}
 												{appointment.operatingStaff.map(
@@ -61,7 +89,12 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 												)}
 											</span>
 										}
-										name={appointment!.patient.name}
+										name={
+											(
+												appointment!.patient ||
+												new Patient()
+											).name
+										}
 										size={3}
 									/>
 								),
@@ -73,14 +106,15 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							{
 								dataValue: appointment.treatmentID,
 								component: (
-									<ProfileSquared
+									<ProfileSquaredComponent
 										text={
 											appointment.treatment
 												? appointment.treatment.type
 												: ""
 										}
-										subText={dateUtils.unifiedDateFormat(
-											appointment.date
+										subText={formatDate(
+											appointment.date,
+											setting.getSetting("date_format")
 										)}
 										size={3}
 										onClick={() => {}}
@@ -92,9 +126,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 								dataValue: appointment.paidAmount,
 								component: (
 									<span>
-										{data.settingsData.settings.getSetting(
-											"currencySymbol"
-										) +
+										{setting.getSetting("currencySymbol") +
 											round(
 												appointment.paidAmount
 											).toString()}
@@ -106,9 +138,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 								dataValue: appointment.outstandingAmount,
 								component: (
 									<span>
-										{data.settingsData.settings.getSetting(
-											"currencySymbol"
-										) +
+										{setting.getSetting("currencySymbol") +
 											round(
 												appointment.outstandingAmount
 											).toString()}
@@ -120,9 +150,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 								dataValue: appointment.expenses,
 								component: (
 									<span>
-										{data.settingsData.settings.getSetting(
-											"currencySymbol"
-										) +
+										{setting.getSetting("currencySymbol") +
 											round(
 												appointment.expenses
 											).toString()}
@@ -134,9 +162,7 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 								dataValue: appointment.profit,
 								component: (
 									<span>
-										{data.settingsData.settings.getSetting(
-											"currencySymbol"
-										) +
+										{setting.getSetting("currencySymbol") +
 											round(
 												appointment.profit
 											).toString()}
@@ -162,14 +188,12 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 												text: lang("All members")
 											}
 										].concat(
-											data.staffData.staffMembers.list.map(
-												member => {
-													return {
-														key: member._id,
-														text: member.name
-													};
-												}
-											)
+											staff.list.map(member => {
+												return {
+													key: member._id,
+													text: member.name
+												};
+											})
 										)}
 										onChange={(ev, member) => {
 											statistics.filterByMember = member!.key.toString();
@@ -197,10 +221,11 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 											new Date(statistics.startingDate)
 										}
 										formatDate={d =>
-											`${lang(
-												"From"
-											)}: ${dateUtils.unifiedDateFormat(
-												d
+											`${lang("From")}: ${formatDate(
+												d,
+												setting.getSetting(
+													"date_format"
+												)
 											)}`
 										}
 									/>
@@ -221,10 +246,11 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 										}}
 										value={new Date(statistics.endingDate)}
 										formatDate={d =>
-											`${lang(
-												"Until"
-											)}: ${dateUtils.unifiedDateFormat(
-												d
+											`${lang("Until")}: ${formatDate(
+												d,
+												setting.getSetting(
+													"date_format"
+												)
 											)}`
 										}
 									/>
@@ -234,19 +260,19 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 					]}
 				/>
 
-				<AppointmentEditor
+				<AppointmentEditorPanel
 					appointment={this.appointment}
 					onDismiss={() => (this.appointment = null)}
 					onDelete={() => (this.appointment = null)}
 				/>
 
 				<div className="container-fluid m-t-20 quick">
-					<Section title={lang("Quick stats")}>
+					<SectionComponent title={lang("Quick stats")}>
 						<Row>
 							<Col sm={6} xs={12}>
 								<label>
 									{lang("Appointments")}:{" "}
-									<Tag
+									<TagComponent
 										text={round(
 											statistics.selectedAppointments
 												.length
@@ -258,9 +284,9 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							<Col sm={6} xs={12}>
 								<label>
 									{lang("Payments")}:{" "}
-									<Tag
+									<TagComponent
 										text={
-											data.settingsData.settings.getSetting(
+											setting.getSetting(
 												"currencySymbol"
 											) +
 											round(
@@ -274,9 +300,9 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							<Col sm={6} xs={12}>
 								<label>
 									{lang("Expenses")}:{" "}
-									<Tag
+									<TagComponent
 										text={
-											data.settingsData.settings.getSetting(
+											setting.getSetting(
 												"currencySymbol"
 											) +
 											round(
@@ -290,9 +316,9 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 							<Col sm={6} xs={12}>
 								<label>
 									{lang("Profits")}:{" "}
-									<Tag
+									<TagComponent
 										text={
-											data.settingsData.settings.getSetting(
+											setting.getSetting(
 												"currencySymbol"
 											) +
 											round(
@@ -304,12 +330,12 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 								</label>
 							</Col>
 						</Row>
-					</Section>
+					</SectionComponent>
 				</div>
 
 				<div className="charts container-fluid">
 					<div className="row">
-						{statistics.charts.map((chart, index) => {
+						{this.charts.map((chart, index) => {
 							return (
 								<div
 									key={index + chart.name}
@@ -319,9 +345,9 @@ export class StatisticsComponent extends React.Component<{}, {}> {
 											"col-xs-12 col-md-5 col-lg-4")
 									}
 								>
-									<Section title={lang(chart.name)}>
+									<SectionComponent title={lang(chart.name)}>
 										<chart.Component />
-									</Section>
+									</SectionComponent>
 								</div>
 							);
 						})}

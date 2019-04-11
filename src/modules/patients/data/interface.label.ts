@@ -1,4 +1,4 @@
-import { TagType } from "../../../assets/components/label/label.component";
+import { TagType } from "@common-components";
 
 // patient labels interface
 export interface Label {

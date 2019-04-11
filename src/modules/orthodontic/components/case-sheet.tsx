@@ -1,42 +1,32 @@
-import * as React from "react";
+import { EditableListComponent, SectionComponent, TagInputComponent } from "@common-components";
+import { lang, user } from "@core";
+import { FacialProfile, ISOTeethArr, Lips, OralHygiene, OrthoCase } from "@modules";
+import { num } from "@utils";
 import { computed } from "mobx";
-import {
-	Dropdown,
-	TextField,
-	DetailsList,
-	ConstrainMode,
-	SelectionMode,
-	MessageBar,
-	MessageBarType
-} from "office-ui-fabric-react";
-
-import { EditableList } from "../../../assets/components/editable-list/editable-list";
-import {
-	FacialProfile,
-	Lips,
-	OralHygiene,
-	OrthoCase
-} from "../data/class.ortho";
 import { observer } from "mobx-react";
-import { patientsData } from "../../patients";
-import { Section } from "../../../assets/components/section/section";
-import { TagInput } from "../../../assets/components/tag-input/tag-input";
-import { API } from "../../../core/index";
-import { lang } from "../../../core/i18/i18";
-import { num } from "../../../assets/utils/num";
+import {
+	ConstrainMode,
+	DetailsList,
+	Dropdown,
+	MessageBar,
+	MessageBarType,
+	SelectionMode,
+	TextField
+	} from "office-ui-fabric-react";
+import * as React from "react";
 
 @observer
-export class OrthoCaseSheet extends React.Component<{
+export class OrthoCaseSheetPanel extends React.Component<{
 	orthoCase: OrthoCase;
 }> {
 	@computed get canEdit() {
-		return API.user.currentUser.canEditOrtho;
+		return user.currentUser.canEditOrtho;
 	}
 
 	render() {
 		return (
 			<div>
-				<Section title={lang(`Extra-Oral Features`)}>
+				<SectionComponent title={lang(`Extra-Oral Features`)}>
 					<Dropdown
 						disabled={!this.canEdit}
 						placeholder={lang("Lips competency")}
@@ -84,9 +74,9 @@ export class OrthoCaseSheet extends React.Component<{
 						type="number"
 						prefix={lang(`Nasio-labial angle`)}
 					/>
-				</Section>
+				</SectionComponent>
 
-				<Section title={lang(`Jaw-Jaw Relationships`)}>
+				<SectionComponent title={lang(`Jaw-Jaw Relationships`)}>
 					<Dropdown
 						disabled={!this.canEdit}
 						placeholder={lang(`Skeletal relationship`)}
@@ -129,9 +119,11 @@ export class OrthoCaseSheet extends React.Component<{
 							);
 						}}
 					/>
-				</Section>
+				</SectionComponent>
 
-				<Section title={lang(`Intercuspal-Interincisal Relationships`)}>
+				<SectionComponent
+					title={lang(`Intercuspal-Interincisal Relationships`)}
+				>
 					<TextField
 						disabled={!this.canEdit}
 						type="number"
@@ -150,11 +142,11 @@ export class OrthoCaseSheet extends React.Component<{
 							this.props.orthoCase.overBite = num(n!);
 						}}
 					/>
-					<TagInput
+					<TagInputComponent
 						disabled={!this.canEdit}
 						strict
 						placeholder={lang("Cross/scissors bite")}
-						options={patientsData.ISOTeethArr.map(x => {
+						options={ISOTeethArr.map(x => {
 							return {
 								key: x.toString(),
 								text: x.toString()
@@ -172,9 +164,9 @@ export class OrthoCaseSheet extends React.Component<{
 							);
 						}}
 					/>
-				</Section>
+				</SectionComponent>
 
-				<Section title={lang(`Upper Arch Space Analysis`)}>
+				<SectionComponent title={lang(`Upper Arch Space Analysis`)}>
 					<TextField
 						disabled={!this.canEdit}
 						type="number"
@@ -214,9 +206,9 @@ export class OrthoCaseSheet extends React.Component<{
 					) : (
 						""
 					)}
-				</Section>
+				</SectionComponent>
 
-				<Section title={lang(`Lower Arch Space Analysis`)}>
+				<SectionComponent title={lang(`Lower Arch Space Analysis`)}>
 					<TextField
 						type="number"
 						prefix={lang(`Space available`)}
@@ -256,10 +248,10 @@ export class OrthoCaseSheet extends React.Component<{
 					) : (
 						""
 					)}
-				</Section>
+				</SectionComponent>
 
-				<Section title={lang(`Problems`)}>
-					<EditableList
+				<SectionComponent title={lang(`Problems`)}>
+					<EditableListComponent
 						disabled={!this.canEdit}
 						label={lang("Patient concerns")}
 						value={this.props.orthoCase.problemsList}
@@ -290,7 +282,7 @@ export class OrthoCaseSheet extends React.Component<{
 							selectionMode={SelectionMode.none}
 						/>
 					)}
-				</Section>
+				</SectionComponent>
 			</div>
 		);
 	}

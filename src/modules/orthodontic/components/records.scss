@@ -1,0 +1,113 @@
+.ortho-records {
+	.ms-DetailsList {
+		overflow: hidden;
+	}
+	.album {
+		text-align: center;
+		table {
+			td {
+				position: relative;
+				overflow: hidden;
+			}
+
+			width: 100%;
+
+			.days-num {
+				font-size: 12px;
+				display: block;
+				border: 1px dashed #e3e3e3;
+				border-left: none;
+				border-right: 0;
+				padding: 10px 0;
+				text-align: center;
+			}
+
+			.term-initials {
+				font-size: 12px;
+				font-style: italic;
+				margin-bottom: 3px;
+				display: inline-block;
+				padding: 7px;
+				height: 27px;
+				width: 27px;
+				border-bottom: 1px solid #f1f1f1;
+			}
+			.photo {
+				position: relative;
+				cursor: pointer;
+				.hover-effect {
+					display: none;
+					position: absolute;
+					top: 0;
+					left: 0;
+					height: 100%;
+					width: 100%;
+					padding-top: 15%;
+					background: #0000005e;
+					color: #fff;
+				}
+				&:hover {
+					.hover-effect {
+						display: block;
+					}
+				}
+			}
+			.clickable-icon {
+				display: inline-block;
+				cursor: pointer;
+				text-align: center;
+				background: #f1f1f1;
+				&:hover {
+					background: #2196f3;
+					color: #fff;
+				}
+				&.delete-visit:hover {
+					background: #f44336;
+				}
+				&.add-photo:hover {
+					background: #00aba9;
+				}
+			}
+		}
+	}
+}
+
+.photo-dialog,
+.visit-dialog {
+	.ms-DetailsRow {
+		border-bottom: 1px solid #f1f1f1;
+	}
+	.ms-Dialog-main {
+		width: 350px;
+		overflow: hidden;
+	}
+	.ms-Dialog-inner {
+		padding: 0;
+		border-top: 1px solid #e3e3e3;
+		margin-top: 12px;
+		.ms-CommandBar {
+			.ms-Button {
+				font-size: 12px;
+				i {
+					font-size: 12px;
+				}
+			}
+			.active-button {
+				background: #e3e3e3;
+			}
+		}
+	}
+	.ms-Dialog-actions {
+		margin-top: 0;
+	}
+	.overlay-img {
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 100%;
+		width: 100%;
+		opacity: 0.6;
+		filter: saturate(2);
+		pointer-events: none;
+	}
+}

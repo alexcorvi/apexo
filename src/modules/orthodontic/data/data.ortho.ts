@@ -1,12 +1,7 @@
-import { files } from "./../../../core/files/files";
-import { CephalometricItem } from "./interface.ortho-json";
+import { files, lang, modals } from "@core";
+import { CephalometricItem, OrthoCase, patients } from "@modules";
+import { escapeRegExp } from "@utils";
 import { computed, observable } from "mobx";
-
-import { API } from "../../../core";
-import { OrthoCase } from "./class.ortho";
-import { escapeRegExp } from "../../../assets/utils/escape-regex";
-import { patientsData } from "../../patients/index";
-import { lang } from "../../../core/i18/i18";
 
 class OrthoCases {
 	@observable triggerUpdate: number = 0;
@@ -41,7 +36,7 @@ class OrthoCases {
 
 	@computed
 	get patientsWithNoOrtho() {
-		return patientsData.patients.list.filter(
+		return patients.list.filter(
 			patient => this.allPatientsIDs.indexOf(patient._id) === -1
 		);
 	}
@@ -87,7 +82,7 @@ class OrthoCases {
 	deleteModal(id: string) {
 		const i = this.getIndexByID(id);
 		const orthoCase = this.list[i];
-		API.modals.newModal({
+		modals.newModal({
 			message: lang(`Orthodontic case will be deleted`),
 			onConfirm: () => this.deleteByID(id),
 			showCancelButton: true,
@@ -98,4 +93,4 @@ class OrthoCases {
 	}
 }
 
-export default new OrthoCases();
+export const orthoCases = new OrthoCases();

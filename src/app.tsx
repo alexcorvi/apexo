@@ -1,11 +1,10 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-import { components } from "./core";
-import { Fabric } from "office-ui-fabric-react";
-import { initializeIcons as initializeIconsA } from "./core/icons-subset/subset-a";
-
 import "./index.html";
 import "./style.scss";
+import { initializeIcons as initializeIconsA } from "@core";
+import { MainView, MessagesView, ModalsView } from "@main-components";
+import { Fabric } from "office-ui-fabric-react";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 
 // generated from https://uifabricicons.azurewebsites.net/
 // 1. Download the subset
@@ -15,9 +14,9 @@ initializeIconsA("./fonts/");
 
 ReactDOM.render(
 	<Fabric>
-		<components.MainComponent />
-		<components.MessagesComponent />
-		<components.ModalsComponent />
+		<MainView />
+		<MessagesView />
+		<ModalsView />
 		<p className="version-num">version 3.2.1 </p>
 	</Fabric>,
 	document.getElementById("root")

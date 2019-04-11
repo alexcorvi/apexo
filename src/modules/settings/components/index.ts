@@ -1,1 +1,1 @@
-export { SettingsComponent } from "./settings";
+export * from "./settings";

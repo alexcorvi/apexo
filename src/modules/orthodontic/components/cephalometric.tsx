@@ -1,21 +1,14 @@
-import * as dateUtils from "../../../assets/utils/date";
-import * as React from "react";
-import { Col, Row } from "../../../assets/components/grid/index";
+import { Col, Row } from "@common-components";
+import { lang } from "@core";
+import { CephalometricItem, orthoCases, setting } from "@modules";
+import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
-import {
-	IconButton,
-	Panel,
-	PanelType,
-	DatePicker,
-	Icon
-} from "office-ui-fabric-react";
 import { observer } from "mobx-react";
-import { lang } from "../../../core/i18/i18";
-import { CephalometricItem } from "../data/interface.ortho-json";
-import { cases } from "../data";
+import { DatePicker, Icon, IconButton, Panel, PanelType } from "office-ui-fabric-react";
+import * as React from "react";
 
 @observer
-export class CephalometricEditor extends React.Component<{
+export class CephalometricEditorPanel extends React.Component<{
 	item: CephalometricItem;
 	onDismiss: () => void;
 }> {
@@ -24,7 +17,7 @@ export class CephalometricEditor extends React.Component<{
 		setTimeout(async () => {
 			const iFrame: any = document.getElementById("cephalometric");
 			iFrame.onload = () => {
-				cases.toCephString(this.props.item).then(cephString => {
+				orthoCases.toCephString(this.props.item).then(cephString => {
 					iFrame.contentWindow.postMessage(
 						"cephalometric-open:" + cephString,
 						"*"
@@ -37,12 +30,12 @@ export class CephalometricEditor extends React.Component<{
 			onmessage = e => {
 				if (e.data && typeof e.data === "string") {
 					if (e.data.startsWith("cephalometric-save:")) {
-						this.props.item.pointCoordinates = cases.getCephCoordinates(
+						this.props.item.pointCoordinates = orthoCases.getCephCoordinates(
 							e.data.split("cephalometric-save:")[1]
 						);
 
 						this.props.onDismiss();
-						cases.triggerUpdate++;
+						orthoCases.triggerUpdate++;
 					}
 				}
 			};
@@ -82,7 +75,10 @@ export class CephalometricEditor extends React.Component<{
 										}
 									}}
 									formatDate={d =>
-										dateUtils.unifiedDateFormat(d || 0)
+										formatDate(
+											d || 0,
+											setting.getSetting("date_format")
+										)
 									}
 								/>
 							</Col>

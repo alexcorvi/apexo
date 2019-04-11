@@ -14,7 +14,16 @@
 		"newLine": "LF",
 		"noImplicitThis": true,
 		"pretty": true,
-		"strict": true
+		"strict": true,
+		"importHelpers": true,
+		"baseUrl": "src",
+		"paths": {
+			"@core": ["core/index"],
+			"@main-components": ["main-components/index"],
+			"@common-components": ["common-components/index"],
+			"@modules": ["modules/index"],
+			"@utils": ["utils/index"]
+		}
 	},
 	"include": ["./src/**/*"],
 	"exclude": ["node_modules"]

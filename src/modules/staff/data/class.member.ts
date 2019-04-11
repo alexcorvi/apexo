@@ -1,10 +1,6 @@
-import { Appointment } from "./../../appointments/data/class.appointment";
-import { week, name } from "./../../../assets/utils/date";
-import { appointmentsData } from "../../appointments";
+import { Appointment, appointments, Calendar, setting, StaffMemberJSON } from "@modules";
+import { dateNames, formatDate, generateID } from "@utils";
 import { computed, observable } from "mobx";
-import { StaffMemberJSON } from "./interface.member-json";
-import { generateID } from "../../../assets/utils/generate-id";
-import { unifiedDateFormat } from "../../../assets/utils/date";
 
 export class StaffMember {
 	_id: string = generateID();
@@ -42,10 +38,10 @@ export class StaffMember {
 
 	@computed
 	get onDuty() {
-		return name
+		return dateNames
 			.days(true)
 			.filter(day => this.onDutyDays.indexOf(day) !== -1)
-			.map(day => name.days(true).indexOf(day));
+			.map(day => dateNames.days(true).indexOf(day));
 	}
 
 	@computed
@@ -54,41 +50,41 @@ export class StaffMember {
 			.slice()
 			.sort(
 				(dayA, dayB) =>
-					name.days(true).indexOf(dayA) -
-					name.days(true).indexOf(dayB)
+					dateNames.days(true).indexOf(dayA) -
+					dateNames.days(true).indexOf(dayB)
 			);
 	}
 
 	@computed
 	get appointments() {
-		return appointmentsData.appointments.list.filter(
+		return appointments.list.filter(
 			x => x.staffID.indexOf(this._id) !== -1
 		);
 	}
 
 	@computed
 	get weeksAppointments() {
-		const c = new appointmentsData.Calendar();
-		const appointments: {
+		const c = new Calendar();
+		const resAppointments: {
 			[key: string]: Appointment[];
 		} = {};
 		c.selectedWeekDays.forEach(day => {
 			const d = day.dateNum;
 			const m = c.currentMonth;
 			const y = c.currentYear;
-			appointmentsData.appointments
+			appointments
 				.appointmentsForDay(y, m + 1, d)
 				.filter(
 					appointment => appointment.staffID.indexOf(this._id) !== -1
 				)
 				.forEach(appointment => {
-					if (!appointments[day.weekDay.dayLiteral]) {
-						appointments[day.weekDay.dayLiteral] = [];
+					if (!resAppointments[day.weekDay.dayLiteral]) {
+						resAppointments[day.weekDay.dayLiteral] = [];
 					}
-					appointments[day.weekDay.dayLiteral].push(appointment);
+					resAppointments[day.weekDay.dayLiteral].push(appointment);
 				});
 		});
-		return appointments;
+		return resAppointments;
 	}
 
 	@computed
@@ -106,13 +102,27 @@ export class StaffMember {
 					? (this.nextAppointment.treatment || { type: "" }).type
 					: ""
 			}
-			${this.nextAppointment ? unifiedDateFormat(this.nextAppointment.date) : ""}
+			${
+				this.nextAppointment
+					? formatDate(
+							this.nextAppointment.date,
+							setting.getSetting("date_format")
+					  )
+					: ""
+			}
 			${
 				this.lastAppointment
 					? (this.lastAppointment.treatment || { type: "" }).type
 					: ""
 			}
-			${this.lastAppointment ? unifiedDateFormat(this.lastAppointment.date) : ""}
+			${
+				this.lastAppointment
+					? formatDate(
+							this.lastAppointment.date,
+							setting.getSetting("date_format")
+					  )
+					: ""
+			}
 		`.toLowerCase();
 	}
 

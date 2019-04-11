@@ -1,8 +1,6 @@
-import { PrescriptionItem } from "./index";
+import { lang, modals } from "@core";
+import { PrescriptionItem } from "@modules";
 import { observable } from "mobx";
-
-import { API } from "../../../core";
-import { lang } from "../../../core/i18/i18";
 
 class Prescriptions {
 	ignoreObserver: boolean = false;
@@ -21,7 +19,7 @@ class Prescriptions {
 	deleteModal(id: string) {
 		const i = this.findIndexByID(id);
 
-		API.modals.newModal({
+		modals.newModal({
 			message: lang(`Are you sure you want to delete the prescription?`),
 			onConfirm: () => this.deleteByID(id),
 			showCancelButton: true,
@@ -32,4 +30,4 @@ class Prescriptions {
 	}
 }
 
-export default new Prescriptions();
+export const prescriptions = new Prescriptions();

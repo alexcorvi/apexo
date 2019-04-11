@@ -1,1 +1,1 @@
-export const namespace = 'statistics';
+export const statsNamespace = "statistics";

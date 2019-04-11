@@ -1,5 +1,5 @@
-export { PrescriptionItem } from './class.prescription-item';
-export { namespace } from './const.namespace';
-export { default as prescriptions } from './data.prescriptions';
-export { PrescriptionItemJSON } from './interface.prescription-item-json';
-export { PrescriptionItemForm, itemFormToString, stringToItemForm, prescriptionItemForms } from './enum.form';
+export * from "./class.prescription-item";
+export * from "./const.namespace";
+export * from "./data.prescriptions";
+export * from "./enum.form";
+export * from "./interface.prescription-item-json";

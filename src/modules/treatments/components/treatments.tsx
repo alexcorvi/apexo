@@ -1,31 +1,20 @@
-import * as React from "react";
-import { API } from "../../../core";
-import { appointmentsData } from "../../appointments";
-import { Col, Row } from "../../../assets/components/grid/index";
-import { computed, observable } from "mobx";
-import { DataTable } from "../../../assets/components/data-table/data-table.component";
-import {
-	IconButton,
-	Panel,
-	PanelType,
-	TextField
-} from "office-ui-fabric-react";
-import { Treatment, treatments } from "../data";
-import { observer } from "mobx-react";
-import { ProfileSquared } from "../../../assets/components/profile/profile-squared";
-import { Section } from "../../../assets/components/section/section";
-import { settingsData } from "../../settings";
 import "./treatments.scss";
-import { lang } from "../../../core/i18/i18";
-import { num } from "../../../assets/utils/num";
+import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
+import { lang, router, user } from "@core";
+import { appointments, setting, Treatment, treatments } from "@modules";
+import { num } from "@utils";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
+import { IconButton, Panel, PanelType, TextField } from "office-ui-fabric-react";
+import * as React from "react";
 
 @observer
 export class Treatments extends React.Component<{}, {}> {
-	@observable selectedID: string = API.router.currentLocation.split("/")[1];
+	@observable selectedID: string = router.currentLocation.split("/")[1];
 
 	@computed
 	get canEdit() {
-		return API.user.currentUser.canEditTreatments;
+		return user.currentUser.canEditTreatments;
 	}
 
 	@computed
@@ -41,7 +30,7 @@ export class Treatments extends React.Component<{}, {}> {
 	render() {
 		return (
 			<div className="treatments-component p-15 p-l-10 p-r-10">
-				<DataTable
+				<DataTableComponent
 					onDelete={
 						this.canEdit
 							? id => {
@@ -79,14 +68,14 @@ export class Treatments extends React.Component<{}, {}> {
 						let done = 0;
 						let upcoming = 0;
 
-						const appointments = appointmentsData.appointments.list;
+						const appointmentsArr = appointments.list;
 
 						for (
 							let index = 0;
-							index < appointments.length;
+							index < appointmentsArr.length;
 							index++
 						) {
-							const appointment = appointments[index];
+							const appointment = appointmentsArr[index];
 							if (appointment.treatmentID !== treatment._id) {
 								continue;
 							}
@@ -105,11 +94,11 @@ export class Treatments extends React.Component<{}, {}> {
 								{
 									dataValue: treatment.type,
 									component: (
-										<ProfileSquared
+										<ProfileSquaredComponent
 											text={treatment.type}
 											subText={`${lang(
 												"Expenses"
-											)}: ${settingsData.settings.getSetting(
+											)}: ${setting.getSetting(
 												"currencySymbol"
 											)}${treatment.expenses} ${lang(
 												"per unit"
@@ -125,7 +114,7 @@ export class Treatments extends React.Component<{}, {}> {
 									dataValue: treatment.expenses,
 									component: (
 										<span>
-											{settingsData.settings.getSetting(
+											{setting.getSetting(
 												"currencySymbol"
 											)}
 											{treatment.expenses}
@@ -170,11 +159,11 @@ export class Treatments extends React.Component<{}, {}> {
 							<Row className="panel-heading">
 								<Col span={20}>
 									{this.selectedTreatment ? (
-										<ProfileSquared
+										<ProfileSquaredComponent
 											text={this.selectedTreatment.type}
 											subText={`${lang(
 												"Expenses"
-											)}: ${settingsData.settings.getSetting(
+											)}: ${setting.getSetting(
 												"currencySymbol"
 											)}${
 												this.selectedTreatment.expenses
@@ -196,7 +185,7 @@ export class Treatments extends React.Component<{}, {}> {
 						)}
 					>
 						<div className="treatment-editor">
-							<Section title={lang("Treatment Details")}>
+							<SectionComponent title={lang("Treatment Details")}>
 								<div className="treatment-input">
 									<TextField
 										label={lang("Treatment title")}
@@ -219,13 +208,13 @@ export class Treatments extends React.Component<{}, {}> {
 												this.selectedIndex
 											].expenses = num(val!))
 										}
-										prefix={settingsData.settings.getSetting(
+										prefix={setting.getSetting(
 											"currencySymbol"
 										)}
 										disabled={!this.canEdit}
 									/>
 								</div>
-							</Section>
+							</SectionComponent>
 						</div>
 					</Panel>
 				) : (

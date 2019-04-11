@@ -1,7 +1,6 @@
-import { ToothCondition, ToothJSON } from "./index";
+import { ToothCondition, ToothJSON } from "@modules";
+import { convert } from "@utils";
 import { computed, observable } from "mobx";
-
-import { convert } from "../../../assets/utils/teeth-numbering-systems";
 
 export class Tooth {
 	ISO: number = 11;
