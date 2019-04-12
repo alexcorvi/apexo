@@ -283,18 +283,4 @@ export class HomeView extends React.Component<{}, {}> {
 			</div>
 		);
 	}
-
-	componentDidMount() {
-		setInterval(async () => {
-			const d = new Date();
-			this.time = {
-				year: d.getFullYear(),
-				month: d.getMonth(),
-				day: d.getDate(),
-				monthName: d.toLocaleDateString("en-EN", { month: "long" }),
-				dayName: d.toLocaleDateString("en-EN", { weekday: "long" }),
-				time: d.toLocaleTimeString("en-EN", {})
-			};
-		}, 100);
-	}
 }
