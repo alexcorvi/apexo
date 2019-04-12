@@ -7,10 +7,6 @@ var extractHTML = new ExtractTextPlugin("index.html");
 
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
-if (production) {
-	console.log("Building for production");
-}
-
 module.exports = {
 	entry: "./src/app.tsx",
 	output: {
@@ -20,6 +16,9 @@ module.exports = {
 	resolve: {
 		extensions: [".ts", ".tsx", ".js", ".json", ".css", ".scss"],
 		plugins: [new TsconfigPathsPlugin({})]
+	},
+	externals: {
+		moment: "moment"
 	},
 	mode: production ? "production" : "development",
 	module: {
