@@ -4,7 +4,6 @@
 	"description": "Clinic Manager",
 	"author": "Ali Saleem",
 	"dependencies": {
-		"blob-util": "^2.0.2",
 		"chart.js": "^2.7.2",
 		"classnames": "^2.2.6",
 		"crypto-pouch": "^3.1.3",
