@@ -1,5 +1,5 @@
 import "./login.scss";
-import { lang, status } from "@core";
+import { status, text } from "@core";
 import { store } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -60,7 +60,7 @@ export class LoginView extends React.Component<{}, {}> {
 									<MessageBar
 										messageBarType={MessageBarType.warning}
 									>
-										{`${lang(
+										{`${text(
 											`You're offline. Use the latest username/password you've successfully used on this machine to login to this server`
 										)}:
 								${(this.serverFieldValue || "").replace(/([^\/])\/[^\/].+/, "$1")}.
@@ -82,7 +82,7 @@ export class LoginView extends React.Component<{}, {}> {
 									>
 										<TextField
 											name="server"
-											label={lang(`Server location`)}
+											label={text(`Server location`)}
 											value={this.serverFieldValue}
 											disabled={
 												this.disableInputs ||
@@ -109,7 +109,7 @@ export class LoginView extends React.Component<{}, {}> {
 								<hr />
 								<TextField
 									name="identification"
-									label={lang(`Username`)}
+									label={text(`Username`)}
 									disabled={this.disableInputs}
 									value={this.usernameFieldValue}
 									onChange={(e, v) =>
@@ -119,7 +119,7 @@ export class LoginView extends React.Component<{}, {}> {
 								<TextField
 									name="password"
 									type="Password"
-									label={lang(`Password`)}
+									label={text(`Password`)}
 									disabled={this.disableInputs}
 									value={this.passwordFieldValue}
 									onChange={(e, v) =>
@@ -127,7 +127,7 @@ export class LoginView extends React.Component<{}, {}> {
 									}
 								/>
 								<PrimaryButton
-									text={lang("Login")}
+									text={text("Login")}
 									disabled={this.disableInputs}
 									className="m-t-15 m-b-15"
 									onClick={async () => {
@@ -165,7 +165,7 @@ export class LoginView extends React.Component<{}, {}> {
 								/>
 								{status.tryOffline ? (
 									<PrimaryButton
-										text={lang("Access offline")}
+										text={text("Access offline")}
 										disabled={this.disableInputs}
 										className="m-t-15 m-b-15 m-l-5 m-r-5"
 										onClick={async () => {

@@ -7,7 +7,7 @@ import {
 	SectionComponent,
 	TagInputComponent
 	} from "@common-components";
-import { lang, user } from "@core";
+import { text, user } from "@core";
 import { Gender, Patient, patients } from "@modules";
 import { num } from "@utils";
 import { computed } from "mobx";
@@ -26,10 +26,10 @@ export class PatientDetailsPanel extends React.Component<{
 	render() {
 		return (
 			<div className="single-patient-details">
-				<SectionComponent title={lang(`Basic Info`)}>
+				<SectionComponent title={text(`Basic Info`)}>
 					<div className="name">
 						<TextField
-							label={lang(`Name`)}
+							label={text(`Name`)}
 							value={this.props.patient.name}
 							onChange={(ev, name) =>
 								(this.props.patient.name = name!)
@@ -41,7 +41,7 @@ export class PatientDetailsPanel extends React.Component<{
 						<Col sm={12}>
 							<div className="birth">
 								<TextField
-									label={lang("Birth year / age")}
+									label={text("Birth year / age")}
 									value={this.props.patient.birthYear.toString()}
 									onChange={(ev, year) =>
 										(this.props.patient.birthYear = num(
@@ -56,7 +56,7 @@ export class PatientDetailsPanel extends React.Component<{
 						<Col sm={12}>
 							<div className="gender">
 								<Dropdown
-									label={lang("Gender")}
+									label={text("Gender")}
 									selectedKey={
 										this.props.patient.gender ===
 										Gender.male
@@ -64,8 +64,8 @@ export class PatientDetailsPanel extends React.Component<{
 											: "female"
 									}
 									options={[
-										{ key: "male", text: lang("Male") },
-										{ key: "female", text: lang("Female") }
+										{ key: "male", text: text("Male") },
+										{ key: "female", text: text("Female") }
 									]}
 									onChange={(ev, val) => {
 										if (val!.key === "male") {
@@ -83,9 +83,9 @@ export class PatientDetailsPanel extends React.Component<{
 					</Row>
 				</SectionComponent>
 
-				<SectionComponent title={lang(`Contact Info`)}>
+				<SectionComponent title={text(`Contact Info`)}>
 					<TextField
-						label={lang("Phone")}
+						label={text("Phone")}
 						value={this.props.patient.phone}
 						onChange={(ev, phone) =>
 							(this.props.patient.phone = phone!)
@@ -95,7 +95,7 @@ export class PatientDetailsPanel extends React.Component<{
 					/>
 
 					<TextField
-						label={lang("Email")}
+						label={text("Email")}
 						value={this.props.patient.email}
 						onChange={(ev, email) =>
 							(this.props.patient.email = email!)
@@ -104,7 +104,7 @@ export class PatientDetailsPanel extends React.Component<{
 					/>
 
 					<TextField
-						label={lang("Address")}
+						label={text("Address")}
 						value={this.props.patient.address}
 						onChange={(ev, address) =>
 							(this.props.patient.address = address!)
@@ -113,14 +113,14 @@ export class PatientDetailsPanel extends React.Component<{
 					/>
 				</SectionComponent>
 
-				<SectionComponent title={lang(`Other Notes`)}>
+				<SectionComponent title={text(`Other Notes`)}>
 					<Row gutter={6}>
 						<Col md={12}>
 							{" "}
 							<TagInputComponent
 								disabled={!this.canEdit}
 								className="patient-tags"
-								placeholder={lang("Labels")}
+								placeholder={text("Labels")}
 								options={[""]
 									.concat(
 										...patients.list.map(patient =>
@@ -173,7 +173,7 @@ export class PatientDetailsPanel extends React.Component<{
 						<Col md={12}>
 							<div className="medical-history">
 								<EditableListComponent
-									label={lang("Notes")}
+									label={text("Notes")}
 									value={this.props.patient.medicalHistory}
 									onChange={newVal => {
 										this.props.patient.medicalHistory = newVal;

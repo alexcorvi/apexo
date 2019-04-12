@@ -1,6 +1,6 @@
 import "./gallery.scss";
 import { fileTypes, PickAndUploadComponent, SectionComponent } from "@common-components";
-import { files, GALLERIES_DIR, lang, status, user } from "@core";
+import { files, GALLERIES_DIR, status, text, user } from "@core";
 import { Patient, setting } from "@modules";
 import { diff } from "fast-array-diff";
 import { computed, observable, observe } from "mobx";
@@ -31,7 +31,7 @@ export class PatientGalleryPanel extends React.Component<
 
 	render() {
 		return (
-			<SectionComponent title={lang(`Patient Gallery`)}>
+			<SectionComponent title={text(`Patient Gallery`)}>
 				{status.online ? (
 					status.dropboxActive ? (
 						<div className="single-patient-gallery">
@@ -39,7 +39,7 @@ export class PatientGalleryPanel extends React.Component<
 								<MessageBar
 									messageBarType={MessageBarType.info}
 								>
-									{lang(
+									{text(
 										"This patient does not seem to have any photo record uploaded, press the plus sign button below to start uploading"
 									)}
 								</MessageBar>
@@ -75,7 +75,7 @@ export class PatientGalleryPanel extends React.Component<
 											}`}
 										>
 											<TooltipHost
-												content={lang("Add photo")}
+												content={text("Add photo")}
 											>
 												<IconButton
 													className={`add-photo`}
@@ -151,14 +151,14 @@ export class PatientGalleryPanel extends React.Component<
 						</div>
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							{lang(
+							{text(
 								"A valid DropBox access token is required for this section"
 							)}
 						</MessageBar>
 					)
 				) : (
 					<MessageBar messageBarType={MessageBarType.warning}>
-						{lang(
+						{text(
 							"You can not access patient gallery while offline"
 						)}
 					</MessageBar>

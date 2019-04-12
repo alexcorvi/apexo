@@ -7,7 +7,7 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import { lang, router, user } from "@core";
+import { router, text, user } from "@core";
 import { AppointmentsList, setting, staff, StaffMember } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
 import { computed, observable } from "mobx";
@@ -54,9 +54,9 @@ export class StaffPage extends React.Component<{}, {}> {
 						<DataTableComponent
 							maxItemsOnLoad={15}
 							heads={[
-								lang("Staff Member"),
-								lang("Last/Next Appointment"),
-								lang("Contact Details")
+								text("Staff Member"),
+								text("Last/Next Appointment"),
+								text("Contact Details")
 							]}
 							rows={staff.list.map(member => ({
 								id: member._id,
@@ -75,7 +75,7 @@ export class StaffPage extends React.Component<{}, {}> {
 																	.nextAppointments
 																	.length
 															}{" "}
-															{lang(
+															{text(
 																"upcoming appointments"
 															)}
 														</span>
@@ -84,7 +84,7 @@ export class StaffPage extends React.Component<{}, {}> {
 												/>
 												<br />
 												<TooltipHost
-													content={lang(
+													content={text(
 														"Staff Member Details"
 													)}
 												>
@@ -103,7 +103,7 @@ export class StaffPage extends React.Component<{}, {}> {
 												</TooltipHost>
 
 												<TooltipHost
-													content={lang(
+													content={text(
 														"Level and Permission"
 													)}
 												>
@@ -124,7 +124,7 @@ export class StaffPage extends React.Component<{}, {}> {
 												{user.currentUser
 													.canViewAppointments ? (
 													<TooltipHost
-														content={lang(
+														content={text(
 															"Upcoming Appointments"
 														)}
 													>
@@ -145,7 +145,7 @@ export class StaffPage extends React.Component<{}, {}> {
 													""
 												)}
 												<TooltipHost
-													content={lang("Delete")}
+													content={text("Delete")}
 												>
 													<IconButton
 														className="action-button delete"
@@ -196,7 +196,7 @@ export class StaffPage extends React.Component<{}, {}> {
 																		"date_format"
 																	)
 															  )
-															: lang(
+															: text(
 																	"No last appointment"
 															  )
 													}
@@ -235,7 +235,7 @@ export class StaffPage extends React.Component<{}, {}> {
 																		"date_format"
 																	)
 															  )
-															: lang(
+															: text(
 																	"No next appointment"
 															  )
 													}
@@ -262,10 +262,10 @@ export class StaffPage extends React.Component<{}, {}> {
 													text={member.phone}
 													subText={
 														member.phone
-															? lang(
+															? text(
 																	"Phone number"
 															  )
-															: lang(
+															: text(
 																	"No phone number"
 															  )
 													}
@@ -283,8 +283,8 @@ export class StaffPage extends React.Component<{}, {}> {
 													text={member.email}
 													subText={
 														member.email
-															? lang("Email")
-															: lang("No Email")
+															? text("Email")
+															: text("No Email")
 													}
 													size={3}
 													onRenderInitials={() => (
@@ -308,7 +308,7 @@ export class StaffPage extends React.Component<{}, {}> {
 											{
 												key: "addNew",
 												title: "Add new",
-												name: lang("Add new"),
+												name: text("Add new"),
 												onClick: () => {
 													const member = new StaffMember();
 													staff.list.push(member);
@@ -332,7 +332,7 @@ export class StaffPage extends React.Component<{}, {}> {
 									return (
 										<tr key={dayName}>
 											<th className="day-name">
-												{lang(dayName)}
+												{text(dayName)}
 											</th>
 											<td>
 												{staff.list
@@ -363,10 +363,10 @@ export class StaffPage extends React.Component<{}, {}> {
 																			)
 																				.length
 																		}{" "}
-																		{lang(
+																		{text(
 																			"appointments for"
 																		)}{" "}
-																		{lang(
+																		{text(
 																			dayName
 																		)}
 																	</span>
@@ -406,17 +406,17 @@ export class StaffPage extends React.Component<{}, {}> {
 											secondaryElement={
 												<span>
 													{this.viewWhich === 1
-														? lang(
+														? text(
 																"Staff Member Details"
 														  )
 														: ""}
 													{this.viewWhich === 2
-														? lang(
+														? text(
 																"Level and Permission"
 														  )
 														: ""}
 													{this.viewWhich === 3
-														? lang(
+														? text(
 																"Upcoming Appointments"
 														  )
 														: ""}
@@ -444,11 +444,11 @@ export class StaffPage extends React.Component<{}, {}> {
 							{this.viewWhich === 1 ? (
 								<div>
 									<SectionComponent
-										title={lang(`Basic Info`)}
+										title={text(`Basic Info`)}
 									>
 										<div className="staff-input">
 											<TextField
-												label={lang("Name")}
+												label={text("Name")}
 												value={this.member.name}
 												onChange={(ev, val) =>
 													(this.member.name = val!)
@@ -459,7 +459,7 @@ export class StaffPage extends React.Component<{}, {}> {
 
 										<div className="staff-input">
 											<label>
-												{lang("Days on duty")}
+												{text("Days on duty")}
 											</label>
 											{dateNames
 												.days(true)
@@ -506,13 +506,13 @@ export class StaffPage extends React.Component<{}, {}> {
 									</SectionComponent>
 
 									<SectionComponent
-										title={lang(`Contact Details`)}
+										title={text(`Contact Details`)}
 									>
 										<Row gutter={12}>
 											<Col sm={12}>
 												<div className="staff-input">
 													<TextField
-														label={lang(
+														label={text(
 															"Phone number"
 														)}
 														value={
@@ -528,7 +528,7 @@ export class StaffPage extends React.Component<{}, {}> {
 											<Col sm={12}>
 												<div className="staff-input">
 													<TextField
-														label={lang("Email")}
+														label={text("Email")}
 														value={
 															this.member.email
 														}
@@ -551,11 +551,11 @@ export class StaffPage extends React.Component<{}, {}> {
 									{this.member._id ===
 									user.currentUser._id ? (
 										<SectionComponent
-											title={lang(`Login PIN`)}
+											title={text(`Login PIN`)}
 										>
 											<div className="staff-input">
 												<TextField
-													label={lang("Login PIN")}
+													label={text("Login PIN")}
 													value={this.member.pin}
 													onChange={(ev, v) => {
 														if (num(v!) < 10000) {
@@ -574,7 +574,7 @@ export class StaffPage extends React.Component<{}, {}> {
 													MessageBarType.info
 												}
 											>
-												{lang(
+												{text(
 													"Only you can edit this PIN, and it can only be 4 numbers"
 												)}
 											</MessageBar>
@@ -583,7 +583,7 @@ export class StaffPage extends React.Component<{}, {}> {
 										""
 									)}
 									<SectionComponent
-										title={lang(`Permission`)}
+										title={text(`Permission`)}
 									>
 										{this.member._id ===
 										user.currentUser._id ? (
@@ -593,7 +593,7 @@ export class StaffPage extends React.Component<{}, {}> {
 														MessageBarType.warning
 													}
 												>
-													{lang(
+													{text(
 														"You can't edit your own level and permissions"
 													)}
 												</MessageBar>
@@ -610,10 +610,10 @@ export class StaffPage extends React.Component<{}, {}> {
 												this.member._id ===
 												user.currentUser._id
 											}
-											onText={lang(
+											onText={text(
 												"Operates on patients"
 											)}
-											offText={lang(
+											offText={text(
 												"Doesn't operate on patients"
 											)}
 											onChange={(ev, newVal) => {
@@ -629,8 +629,8 @@ export class StaffPage extends React.Component<{}, {}> {
 												this.member._id ===
 												user.currentUser._id
 											}
-											onText={lang("Can view staff page")}
-											offText={lang(
+											onText={text("Can view staff page")}
+											offText={text(
 												"Can not view staff page"
 											)}
 											onChange={(ev, newVal) => {
@@ -645,10 +645,10 @@ export class StaffPage extends React.Component<{}, {}> {
 												this.member._id ===
 												user.currentUser._id
 											}
-											onText={lang(
+											onText={text(
 												"Can view patients page"
 											)}
-											offText={lang(
+											offText={text(
 												"Can not view patients page"
 											)}
 											onChange={(ev, newVal) => {
@@ -666,10 +666,10 @@ export class StaffPage extends React.Component<{}, {}> {
 													this.member._id ===
 													user.currentUser._id
 												}
-												onText={lang(
+												onText={text(
 													"Can view orthodontics page"
 												)}
-												offText={lang(
+												offText={text(
 													"Can not view orthodontics page"
 												)}
 												onChange={(ev, newVal) => {
@@ -687,10 +687,10 @@ export class StaffPage extends React.Component<{}, {}> {
 												this.member._id ===
 												user.currentUser._id
 											}
-											onText={lang(
+											onText={text(
 												"Can view appointments page"
 											)}
-											offText={lang(
+											offText={text(
 												"Can not view appointments page"
 											)}
 											onChange={(ev, newVal) => {
@@ -705,10 +705,10 @@ export class StaffPage extends React.Component<{}, {}> {
 												this.member._id ===
 												user.currentUser._id
 											}
-											onText={lang(
+											onText={text(
 												"Can view treatments page"
 											)}
-											offText={lang(
+											offText={text(
 												"Can not view treatments page"
 											)}
 											onChange={(ev, newVal) => {
@@ -727,10 +727,10 @@ export class StaffPage extends React.Component<{}, {}> {
 													this.member._id ===
 													user.currentUser._id
 												}
-												onText={lang(
+												onText={text(
 													"Can view prescriptions page"
 												)}
-												offText={lang(
+												offText={text(
 													"Can not view prescriptions page"
 												)}
 												onChange={(ev, newVal) => {
@@ -751,10 +751,10 @@ export class StaffPage extends React.Component<{}, {}> {
 													this.member._id ===
 													user.currentUser._id
 												}
-												onText={lang(
+												onText={text(
 													"Can view statistics page"
 												)}
-												offText={lang(
+												offText={text(
 													"Can not view statistics page"
 												)}
 												onChange={(ev, newVal) => {
@@ -773,10 +773,10 @@ export class StaffPage extends React.Component<{}, {}> {
 												this.member._id ===
 												user.currentUser._id
 											}
-											onText={lang(
+											onText={text(
 												"Can view settings page"
 											)}
-											offText={lang(
+											offText={text(
 												"Can not view settings page"
 											)}
 											onChange={(ev, newVal) => {
@@ -793,10 +793,10 @@ export class StaffPage extends React.Component<{}, {}> {
 													this.member._id ===
 													user.currentUser._id
 												}
-												onText={lang(
+												onText={text(
 													"Can edit staff page"
 												)}
-												offText={lang(
+												offText={text(
 													"Can not edit staff page"
 												)}
 												onChange={(ev, newVal) => {
@@ -815,10 +815,10 @@ export class StaffPage extends React.Component<{}, {}> {
 													this.member._id ===
 													user.currentUser._id
 												}
-												onText={lang(
+												onText={text(
 													"Can edit patients page"
 												)}
-												offText={lang(
+												offText={text(
 													"Can not edit patients page"
 												)}
 												onChange={(ev, newVal) => {
@@ -840,10 +840,10 @@ export class StaffPage extends React.Component<{}, {}> {
 													this.member._id ===
 													user.currentUser._id
 												}
-												onText={lang(
+												onText={text(
 													"Can edit orthodontics page"
 												)}
-												offText={lang(
+												offText={text(
 													"Can not edit orthodontics page"
 												)}
 												onChange={(ev, newVal) => {
@@ -864,10 +864,10 @@ export class StaffPage extends React.Component<{}, {}> {
 													this.member._id ===
 													user.currentUser._id
 												}
-												onText={lang(
+												onText={text(
 													"Can edit appointments page"
 												)}
-												offText={lang(
+												offText={text(
 													"Can not edit appointments page"
 												)}
 												onChange={(ev, newVal) => {
@@ -888,10 +888,10 @@ export class StaffPage extends React.Component<{}, {}> {
 													this.member._id ===
 													user.currentUser._id
 												}
-												onText={lang(
+												onText={text(
 													"Can edit treatments page"
 												)}
-												offText={lang(
+												offText={text(
 													"Can not edit treatments page"
 												)}
 												onChange={(ev, newVal) => {
@@ -915,10 +915,10 @@ export class StaffPage extends React.Component<{}, {}> {
 													this.member._id ===
 													user.currentUser._id
 												}
-												onText={lang(
+												onText={text(
 													"Can edit prescriptions page"
 												)}
-												offText={lang(
+												offText={text(
 													"Can not edit prescriptions page"
 												)}
 												onChange={(ev, newVal) => {
@@ -938,10 +938,10 @@ export class StaffPage extends React.Component<{}, {}> {
 													this.member._id ===
 													user.currentUser._id
 												}
-												onText={lang(
+												onText={text(
 													"Can edit settings page"
 												)}
-												offText={lang(
+												offText={text(
 													"Can not edit settings page"
 												)}
 												onChange={(ev, newVal) => {
@@ -959,7 +959,7 @@ export class StaffPage extends React.Component<{}, {}> {
 
 							{this.viewWhich === 3 ? (
 								<SectionComponent
-									title={lang(`Upcoming Appointments`)}
+									title={text(`Upcoming Appointments`)}
 								>
 									{this.member.nextAppointments.length ? (
 										<AppointmentsList
@@ -969,7 +969,7 @@ export class StaffPage extends React.Component<{}, {}> {
 										<MessageBar
 											messageBarType={MessageBarType.info}
 										>
-											{lang(
+											{text(
 												"There are no upcoming appointments for this staff member"
 											)}
 										</MessageBar>

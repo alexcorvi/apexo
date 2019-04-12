@@ -1,4 +1,4 @@
-import { lang } from "@core";
+import { text } from "@core";
 
 export function comparableTime(date: Date) {
 	return {
@@ -55,44 +55,44 @@ export function formatDate(d: Date | number | undefined, dateFormat: string) {
 
 export const dateNames = {
 	daysShort: () =>
-		dateNames.days(true).map(x => lang(x.substr(0, 2).toUpperCase())),
+		dateNames.days(true).map(x => text(x.substr(0, 2).toUpperCase())),
 
 	days: (skip?: boolean) => [
-		lang("Monday" + (skip ? "_" : "")).replace("_", ""),
-		lang("Tuesday" + (skip ? "_" : "")).replace("_", ""),
-		lang("Wednesday" + (skip ? "_" : "")).replace("_", ""),
-		lang("Thursday" + (skip ? "_" : "")).replace("_", ""),
-		lang("Friday" + (skip ? "_" : "")).replace("_", ""),
-		lang("Saturday" + (skip ? "_" : "")).replace("_", ""),
-		lang("Sunday" + (skip ? "_" : "")).replace("_", "")
+		text("Monday" + (skip ? "_" : "")).replace("_", ""),
+		text("Tuesday" + (skip ? "_" : "")).replace("_", ""),
+		text("Wednesday" + (skip ? "_" : "")).replace("_", ""),
+		text("Thursday" + (skip ? "_" : "")).replace("_", ""),
+		text("Friday" + (skip ? "_" : "")).replace("_", ""),
+		text("Saturday" + (skip ? "_" : "")).replace("_", ""),
+		text("Sunday" + (skip ? "_" : "")).replace("_", "")
 	],
 	monthsShort: () => [
-		lang("Jan"),
-		lang("Feb"),
-		lang("Mar"),
-		lang("Apr"),
-		lang("May"),
-		lang("Jun"),
-		lang("Jul"),
-		lang("Aug"),
-		lang("Sep"),
-		lang("Oct"),
-		lang("Nov"),
-		lang("Dec")
+		text("Jan"),
+		text("Feb"),
+		text("Mar"),
+		text("Apr"),
+		text("May"),
+		text("Jun"),
+		text("Jul"),
+		text("Aug"),
+		text("Sep"),
+		text("Oct"),
+		text("Nov"),
+		text("Dec")
 	],
 	months: () => [
-		lang("January"),
-		lang("February"),
-		lang("March"),
-		lang("April"),
-		lang("May"),
-		lang("June"),
-		lang("July"),
-		lang("August"),
-		lang("September"),
-		lang("October"),
-		lang("November"),
-		lang("December")
+		text("January"),
+		text("February"),
+		text("March"),
+		text("April"),
+		text("May"),
+		text("June"),
+		text("July"),
+		text("August"),
+		text("September"),
+		text("October"),
+		text("November"),
+		text("December")
 	]
 };
 

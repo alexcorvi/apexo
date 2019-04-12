@@ -1,5 +1,5 @@
 import { PieChartComponent } from "@common-components";
-import { lang } from "@core";
+import { text } from "@core";
 import { Chart, colors, statistics, treatments } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";

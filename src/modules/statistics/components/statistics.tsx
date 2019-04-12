@@ -9,7 +9,7 @@ import {
 	TagComponent,
 	TagType
 	} from "@common-components";
-import { lang } from "@core";
+import { text } from "@core";
 import {
 	ageBarChart,
 	Appointment,
@@ -54,12 +54,12 @@ export class StatisticsPage extends React.Component<{}, {}> {
 					maxItemsOnLoad={15}
 					className={"appointments-data-table"}
 					heads={[
-						lang("Appointment"),
-						lang("Treatment"),
-						lang("Paid"),
-						lang("Outstanding"),
-						lang("Expenses"),
-						lang("Profits")
+						text("Appointment"),
+						text("Treatment"),
+						text("Paid"),
+						text("Outstanding"),
+						text("Expenses"),
+						text("Profits")
 					]}
 					rows={statistics.selectedAppointments.map(appointment => ({
 						id: appointment._id,
@@ -178,14 +178,14 @@ export class StatisticsPage extends React.Component<{}, {}> {
 							onRender: () => {
 								return (
 									<Dropdown
-										placeholder={lang(
+										placeholder={text(
 											"Filter by staff member"
 										)}
 										defaultValue=""
 										options={[
 											{
 												key: "",
-												text: lang("All members")
+												text: text("All members")
 											}
 										].concat(
 											staff.list.map(member => {
@@ -221,7 +221,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 											new Date(statistics.startingDate)
 										}
 										formatDate={d =>
-											`${lang("From")}: ${formatDate(
+											`${text("From")}: ${formatDate(
 												d,
 												setting.getSetting(
 													"date_format"
@@ -246,7 +246,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 										}}
 										value={new Date(statistics.endingDate)}
 										formatDate={d =>
-											`${lang("Until")}: ${formatDate(
+											`${text("Until")}: ${formatDate(
 												d,
 												setting.getSetting(
 													"date_format"
@@ -267,11 +267,11 @@ export class StatisticsPage extends React.Component<{}, {}> {
 				/>
 
 				<div className="container-fluid m-t-20 quick">
-					<SectionComponent title={lang("Quick stats")}>
+					<SectionComponent title={text("Quick stats")}>
 						<Row>
 							<Col sm={6} xs={12}>
 								<label>
-									{lang("Appointments")}:{" "}
+									{text("Appointments")}:{" "}
 									<TagComponent
 										text={round(
 											statistics.selectedAppointments
@@ -283,7 +283,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 							</Col>
 							<Col sm={6} xs={12}>
 								<label>
-									{lang("Payments")}:{" "}
+									{text("Payments")}:{" "}
 									<TagComponent
 										text={
 											setting.getSetting(
@@ -299,7 +299,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 							</Col>
 							<Col sm={6} xs={12}>
 								<label>
-									{lang("Expenses")}:{" "}
+									{text("Expenses")}:{" "}
 									<TagComponent
 										text={
 											setting.getSetting(
@@ -315,7 +315,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 							</Col>
 							<Col sm={6} xs={12}>
 								<label>
-									{lang("Profits")}:{" "}
+									{text("Profits")}:{" "}
 									<TagComponent
 										text={
 											setting.getSetting(
@@ -345,7 +345,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 											"col-xs-12 col-md-5 col-lg-4")
 									}
 								>
-									<SectionComponent title={lang(chart.name)}>
+									<SectionComponent title={text(chart.name)}>
 										<chart.Component />
 									</SectionComponent>
 								</div>

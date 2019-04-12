@@ -1,4 +1,4 @@
-import { lang, user } from "@core";
+import { text, user } from "@core";
 import { Appointment, AppointmentEditorPanel, appointments, AppointmentThumbComponent } from "@modules";
 import { textualFilter } from "@utils";
 import { computed, observable } from "mobx";
@@ -31,7 +31,7 @@ export class AppointmentsList extends React.Component<
 				{this.props.list.length > 0 ? (
 					<div className="main">
 						<TextField
-							label={lang("Filter")}
+							label={text("Filter")}
 							value={this.filter}
 							onChange={(e, v) => {
 								this.filter = v!;
@@ -46,8 +46,8 @@ export class AppointmentsList extends React.Component<
 								color: "#9E9E9E"
 							}}
 						>
-							{lang("Results")}: {this.filtered.length}{" "}
-							{lang("out of")} {this.props.list.length}
+							{text("Results")}: {this.filtered.length}{" "}
+							{text("out of")} {this.props.list.length}
 						</p>
 
 						{this.filtered.length ? (
@@ -68,7 +68,7 @@ export class AppointmentsList extends React.Component<
 								})
 						) : (
 							<p className="no-appointments">
-								{lang("Nothing found") + "..."}
+								{text("Nothing found") + "..."}
 							</p>
 						)}
 					</div>

@@ -1,6 +1,6 @@
 import "./user.scss";
 import { Col, ProfileComponent, Row, SectionComponent } from "@common-components";
-import { lang, status, user } from "@core";
+import { status, text, user } from "@core";
 import { Appointment, AppointmentEditorPanel, AppointmentThumbComponent } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -50,7 +50,7 @@ export class UserPanelView extends React.Component<{}, {}> {
 												status.logout();
 											}}
 										>
-											{lang("Logout")}
+											{text("Logout")}
 										</Link>
 										{" / "}
 										<Link
@@ -59,7 +59,7 @@ export class UserPanelView extends React.Component<{}, {}> {
 												status.resetUser();
 											}}
 										>
-											{lang("Switch user")}
+											{text("Switch user")}
 										</Link>
 									</div>
 								}
@@ -76,10 +76,10 @@ export class UserPanelView extends React.Component<{}, {}> {
 					</Row>
 				)}
 			>
-				<SectionComponent title={lang("Today's Appointments")}>
+				<SectionComponent title={text("Today's Appointments")}>
 					{this.todayAppointments.length === 0 ? (
 						<MessageBar messageBarType={MessageBarType.info}>
-							{lang("No appointments today")}
+							{text("No appointments today")}
 						</MessageBar>
 					) : (
 						<div className="appointments-listing">

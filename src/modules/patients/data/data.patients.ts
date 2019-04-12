@@ -1,4 +1,4 @@
-import { files, lang, modals } from "@core";
+import { files, modals, text } from "@core";
 import { appointments, orthoCases, Patient } from "@modules";
 import { observable } from "mobx";
 
@@ -34,9 +34,9 @@ class PatientsData {
 		const i = this.findIndexByID(id);
 
 		modals.newModal({
-			message: `${lang("All of the patient")} ${this.list[i].name}${lang(
+			message: `${text("All of the patient")} ${this.list[i].name}${text(
 				"'s data will be deleted along with"
-			)} ${this.list[i].appointments.length} ${lang("of appointments")}.`,
+			)} ${this.list[i].appointments.length} ${text("of appointments")}.`,
 			onConfirm: () => this.deleteByID(id),
 			showCancelButton: true,
 			showConfirmButton: true,

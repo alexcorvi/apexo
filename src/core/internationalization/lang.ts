@@ -1,25 +1,60 @@
-import { languages } from "@core";
 import { setting } from "@modules";
+import { observable } from "mobx";
 
-function setRTL() {
-	document.getElementsByTagName("html")[0].setAttribute("dir", "rtl");
-}
+class Translate {
+	languages: {
+		code: string;
+		RTL: boolean;
+		loadTerms: () => Promise<{ [key: string]: string }>;
+	}[] = [
+		{
+			code: "ar",
+			RTL: true,
+			loadTerms: async () => {
+				return (await import("./languages/ar")).default;
+			}
+		}
+	];
 
-function unsetRTL() {
-	document.getElementsByTagName("html")[0].setAttribute("dir", "ltr");
-}
+	@observable terms: { [key: string]: string } = {};
 
-export function lang(term: string) {
-	const currentLanguageCode = setting.getSetting("lang");
-	const currentLanguage = languages.find(
-		x => x.code === currentLanguageCode
-	) || { RTL: false, code: "", terms: {} };
+	@observable loadedCode: string = "en";
 
-	if (currentLanguage.RTL) {
-		setRTL();
-	} else {
-		unsetRTL();
+	constructor() {
+		setInterval(async () => {
+			const languageCode = setting.getSetting("lang");
+			if (languageCode !== this.loadedCode) {
+				this.loadedCode = languageCode;
+				const newLang = this.languages.find(
+					l => l.code === languageCode
+				);
+				if (newLang) {
+					if (newLang.RTL) {
+						this.setRTL();
+					} else {
+						this.unsetRTL();
+					}
+					this.terms = await newLang.loadTerms();
+				}
+			}
+		}, 100);
 	}
 
-	return currentLanguage.terms[term] || term;
+	private setRTL() {
+		document.getElementsByTagName("html")[0].setAttribute("dir", "rtl");
+	}
+
+	private unsetRTL() {
+		document.getElementsByTagName("html")[0].setAttribute("dir", "ltr");
+	}
+
+	text(term: string) {
+		return this.terms[term] || term;
+	}
+}
+
+export const translate = new Translate();
+
+export function text(term: string) {
+	return translate.text(term);
 }

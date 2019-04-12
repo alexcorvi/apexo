@@ -1,6 +1,6 @@
 import "./prescription-table.scss";
 import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
-import { lang, router, user } from "@core";
+import { router, text, user } from "@core";
 import { itemFormToString, PrescriptionItem, prescriptionItemForms, prescriptions, stringToItemForm } from "@modules";
 import { num } from "@utils";
 import { computed, observable } from "mobx";
@@ -45,7 +45,7 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: lang("Add new"),
+										name: text("Add new"),
 										onClick: () => {
 											const prescription = new PrescriptionItem();
 											prescriptions.list.push(
@@ -61,10 +61,10 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 							: []
 					}
 					heads={[
-						lang("Item name"),
-						lang("Dose"),
-						lang("Frequency"),
-						lang("Form")
+						text("Item name"),
+						text("Dose"),
+						text("Frequency"),
+						text("Form")
 					]}
 					rows={prescriptions.list.map(prescription => {
 						return {
@@ -78,11 +78,11 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 											text={prescription.name}
 											subText={`${
 												prescription.doseInMg
-											}${lang("mg")} ${
+											}${text("mg")} ${
 												prescription.timesPerDay
 											}X${
 												prescription.unitsPerTime
-											} ${lang(
+											} ${text(
 												itemFormToString(
 													prescription.form
 												)
@@ -98,7 +98,7 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 									dataValue: prescription.doseInMg,
 									component: (
 										<span>
-											{prescription.doseInMg} {lang("mg")}
+											{prescription.doseInMg} {text("mg")}
 										</span>
 									),
 									className: "hidden-xs"
@@ -117,7 +117,7 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 									dataValue: prescription.form,
 									component: (
 										<span>
-											{lang(
+											{text(
 												itemFormToString(
 													prescription.form
 												)
@@ -152,13 +152,13 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 											subText={`${
 												this.selectedPrescription
 													.doseInMg
-											}${lang("mg")} ${
+											}${text("mg")} ${
 												this.selectedPrescription
 													.timesPerDay
 											}X${
 												this.selectedPrescription
 													.unitsPerTime
-											} ${lang(
+											} ${text(
 												itemFormToString(
 													this.selectedPrescription
 														.form
@@ -182,10 +182,10 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 					>
 						<div className="prescription-editor">
 							<SectionComponent
-								title={lang("Prescription Details")}
+								title={text("Prescription Details")}
 							>
 								<TextField
-									label={lang("Item name")}
+									label={text("Item name")}
 									value={this.selectedPrescription.name}
 									onChange={(ev, val) =>
 										(prescriptions.list[
@@ -198,7 +198,7 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 								<Row gutter={6}>
 									<Col md={8}>
 										<TextField
-											label={lang("Dosage in mg")}
+											label={text("Dosage in mg")}
 											type="number"
 											value={this.selectedPrescription.doseInMg.toString()}
 											onChange={(ev, val) =>
@@ -211,7 +211,7 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 									</Col>
 									<Col md={8}>
 										<TextField
-											label={lang("Times per day")}
+											label={text("Times per day")}
 											type="number"
 											value={this.selectedPrescription.timesPerDay.toString()}
 											onChange={(ev, val) =>
@@ -224,7 +224,7 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 									</Col>
 									<Col md={8}>
 										<TextField
-											label={lang("Units per time")}
+											label={text("Units per time")}
 											type="number"
 											value={this.selectedPrescription.unitsPerTime.toString()}
 											onChange={(ev, val) =>
@@ -238,7 +238,7 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 								</Row>
 								<Dropdown
 									disabled={!this.canEdit}
-									label={lang("Item form")}
+									label={text("Item form")}
 									className="form-picker"
 									selectedKey={itemFormToString(
 										this.selectedPrescription.form
@@ -246,7 +246,7 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 									options={prescriptionItemForms.map(form => {
 										return {
 											key: form,
-											text: lang(form)
+											text: text(form)
 										};
 									})}
 									onChange={(ev, newValue) => {

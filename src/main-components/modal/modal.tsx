@@ -1,5 +1,5 @@
 import "./modal.scss";
-import { lang, modals } from "@core";
+import { modals, text } from "@core";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { DefaultButton, Panel, PanelType, PrimaryButton, TextField } from "office-ui-fabric-react";
@@ -43,7 +43,7 @@ export class ModalsView extends React.Component<{}, {}> {
 									modal.onConfirm(this.inputValue);
 								}}
 								iconProps={{ iconName: "CheckMark" }}
-								text={lang("Confirm")}
+								text={text("Confirm")}
 							/>
 						) : (
 							""
@@ -54,7 +54,7 @@ export class ModalsView extends React.Component<{}, {}> {
 									modals.activeModals.splice(index, 1)
 								}
 								iconProps={{ iconName: "Cancel" }}
-								text={lang("Cancel")}
+								text={text("Cancel")}
 							/>
 						) : (
 							""

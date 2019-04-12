@@ -1,6 +1,6 @@
 import "./crop.scss";
 import { Col, GridTableComponent, Row } from "@common-components";
-import { lang } from "@core";
+import { text } from "@core";
 import { generateID } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -69,13 +69,13 @@ export class CropComponent extends React.Component<{
 											onChange={v => {
 												this.zoom = v / 100;
 											}}
-											label={lang(`Zoom`)}
+											label={text(`Zoom`)}
 											showValue={false}
 										/>
 									</Col>
 									<Col span={4}>
 										<TooltipHost
-											content={lang("Flip horizontal")}
+											content={text("Flip horizontal")}
 										>
 											<IconButton
 												onClick={() => {
@@ -102,7 +102,7 @@ export class CropComponent extends React.Component<{
 									</Col>
 									<Col span={4}>
 										<TooltipHost
-											content={lang("Flip vertical")}
+											content={text("Flip vertical")}
 										>
 											<IconButton
 												onClick={() => {
@@ -141,13 +141,13 @@ export class CropComponent extends React.Component<{
 													this.addedRotation = v;
 												}
 											}}
-											label={lang(`Rotation`)}
+											label={text(`Rotation`)}
 											showValue={false}
 										/>
 									</Col>
 									<Col span={4}>
 										<TooltipHost
-											content={lang("Rotate clockwise")}
+											content={text("Rotate clockwise")}
 										>
 											<IconButton
 												onClick={() => {
@@ -186,7 +186,7 @@ export class CropComponent extends React.Component<{
 						items={[
 							{
 								key: "grid",
-								text: lang("Grid"),
+								text: text("Grid"),
 								iconProps: { iconName: "GridViewSmall" },
 								className: this.showGrid
 									? "active-button"
@@ -198,7 +198,7 @@ export class CropComponent extends React.Component<{
 							},
 							{
 								key: "overlay",
-								text: lang("Overlay"),
+								text: text("Overlay"),
 								iconProps: { iconName: "MapLayers" },
 								className: this.overlay
 									? "active-button"
@@ -212,7 +212,7 @@ export class CropComponent extends React.Component<{
 						farItems={[
 							{
 								key: "save",
-								text: lang("Save"),
+								text: text("Save"),
 								iconProps: { iconName: "save" },
 								classNames: "abc",
 								onClick: () => {
@@ -224,7 +224,7 @@ export class CropComponent extends React.Component<{
 							},
 							{
 								key: "cancel",
-								text: lang("Cancel"),
+								text: text("Cancel"),
 								iconProps: { iconName: "cancel" },
 								classNames: "abc",
 								onClick: () => {

@@ -1,4 +1,4 @@
-import { lang } from "@core";
+import { text } from "@core";
 import {
 	CaseJSON,
 	CephalometricItem,
@@ -178,20 +178,20 @@ export class OrthoCase {
 	get computedProblems() {
 		const computedProblemsArr: string[] = [];
 		if (this.lips !== "competent") {
-			computedProblemsArr.push(lang(Lips[this.lips]));
+			computedProblemsArr.push(text(Lips[this.lips]));
 		}
 
 		if (this.facialProfile !== "mesocephalic") {
-			computedProblemsArr.push(lang(FacialProfile[this.facialProfile]));
+			computedProblemsArr.push(text(FacialProfile[this.facialProfile]));
 		}
 
 		if (this.oralHygiene === "bad") {
-			computedProblemsArr.push(lang(OralHygiene[this.oralHygiene]));
+			computedProblemsArr.push(text(OralHygiene[this.oralHygiene]));
 		}
 
 		if (this.nasioLabialAngle < 90 || this.nasioLabialAngle > 93) {
 			computedProblemsArr.push(
-				`${lang("Nasio-labial angle")}: ${this.nasioLabialAngle} ${lang(
+				`${text("Nasio-labial angle")}: ${this.nasioLabialAngle} ${text(
 					"degrees"
 				)}`
 			);
@@ -199,7 +199,7 @@ export class OrthoCase {
 
 		if (this.skeletalRelationship !== 1) {
 			computedProblemsArr.push(
-				`${lang("Skeletal relationship: Class ")}${
+				`${text("Skeletal relationship: Class ")}${
 					this.skeletalRelationship
 				}`
 			);
@@ -207,7 +207,7 @@ export class OrthoCase {
 
 		if (this.molarsRelationship !== 1) {
 			computedProblemsArr.push(
-				`${lang("Molars relationship: Class ")}${
+				`${text("Molars relationship: Class ")}${
 					this.molarsRelationship
 				}`
 			);
@@ -215,7 +215,7 @@ export class OrthoCase {
 
 		if (this.canineRelationship !== 1) {
 			computedProblemsArr.push(
-				`${lang("Canine relationship: Class ")}${
+				`${text("Canine relationship: Class ")}${
 					this.canineRelationship
 				}`
 			);
@@ -223,19 +223,19 @@ export class OrthoCase {
 
 		if (this.overJet > 3 || this.overJet < 1) {
 			computedProblemsArr.push(
-				`${lang("Overjet")} :${this.overJet} ${lang("mm")}`
+				`${text("Overjet")} :${this.overJet} ${text("mm")}`
 			);
 		}
 
 		if (this.overBite > 4 || this.overBite < 2) {
 			computedProblemsArr.push(
-				`${lang("Overbite")} :${this.overBite} ${lang("mm")}`
+				`${text("Overbite")} :${this.overBite} ${text("mm")}`
 			);
 		}
 
 		if (this.crossScissorBite.length) {
 			computedProblemsArr.push(
-				`${lang("Cross/scissors bite")}: ${this.crossScissorBite.join(
+				`${text("Cross/scissors bite")}: ${this.crossScissorBite.join(
 					", "
 				)}`
 			);
@@ -243,7 +243,7 @@ export class OrthoCase {
 
 		if (this.u_crowding > 0) {
 			computedProblemsArr.push(
-				`${lang("Upper arch crowding by")} ${this.u_crowding}${lang(
+				`${text("Upper arch crowding by")} ${this.u_crowding}${text(
 					"mm"
 				)}`
 			);
@@ -251,7 +251,7 @@ export class OrthoCase {
 
 		if (this.u_spacing > 0) {
 			computedProblemsArr.push(
-				`${lang("Upper arch spacing by")} ${this.u_spacing}${lang(
+				`${text("Upper arch spacing by")} ${this.u_spacing}${text(
 					"mm"
 				)}`
 			);
@@ -259,7 +259,7 @@ export class OrthoCase {
 
 		if (this.l_crowding > 0) {
 			computedProblemsArr.push(
-				`${lang("Lower arch crowding by")} ${this.l_crowding}${lang(
+				`${text("Lower arch crowding by")} ${this.l_crowding}${text(
 					"mm"
 				)}`
 			);
@@ -267,7 +267,7 @@ export class OrthoCase {
 
 		if (this.l_spacing > 0) {
 			computedProblemsArr.push(
-				`${lang("Lower arch spacing by")} ${this.l_spacing}${lang(
+				`${text("Lower arch spacing by")} ${this.l_spacing}${text(
 					"mm"
 				)}`
 			);

@@ -1,4 +1,4 @@
-import { files, lang, modals } from "@core";
+import { files, modals, text } from "@core";
 import { CephalometricItem, OrthoCase, patients } from "@modules";
 import { escapeRegExp } from "@utils";
 import { computed, observable } from "mobx";
@@ -83,7 +83,7 @@ class OrthoCases {
 		const i = this.getIndexByID(id);
 		const orthoCase = this.list[i];
 		modals.newModal({
-			message: lang(`Orthodontic case will be deleted`),
+			message: text(`Orthodontic case will be deleted`),
 			onConfirm: () => this.deleteByID(id),
 			showCancelButton: true,
 			showConfirmButton: true,

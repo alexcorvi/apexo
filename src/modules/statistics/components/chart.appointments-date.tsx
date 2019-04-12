@@ -1,5 +1,5 @@
 import { BarChartComponent } from "@common-components";
-import { lang } from "@core";
+import { text } from "@core";
 import { Chart, setting, statistics } from "@modules";
 import { formatDate } from "@utils";
 import { computed } from "mobx";
@@ -43,15 +43,15 @@ class Component extends React.Component<{}, {}> {
 						xLabels: this.values.days,
 						bars: [
 							{
-								label: lang("Missed"),
+								label: text("Missed"),
 								data: this.values.missed
 							},
 							{
-								label: lang("Paid"),
+								label: text("Paid"),
 								data: this.values.paid
 							},
 							{
-								label: lang("Outstanding"),
+								label: text("Outstanding"),
 								data: this.values.outstanding
 							}
 						]

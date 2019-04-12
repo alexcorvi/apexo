@@ -1,6 +1,6 @@
 import "./patient-appointments.scss";
 import { SectionComponent } from "@common-components";
-import { lang, user } from "@core";
+import { text, user } from "@core";
 import { Appointment, appointments, AppointmentsList, Patient } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
@@ -28,7 +28,7 @@ export class PatientAppointmentsPanel extends React.Component<
 	render() {
 		return (
 			<div className="single-patient-appointments appointments">
-				<SectionComponent title={lang(`Patient Appointments`)}>
+				<SectionComponent title={text(`Patient Appointments`)}>
 					<AppointmentsList
 						ref={l => (this.l = l)}
 						list={this.appointments}
@@ -37,7 +37,7 @@ export class PatientAppointmentsPanel extends React.Component<
 						""
 					) : (
 						<MessageBar messageBarType={MessageBarType.info}>
-							{lang("This patient does not have any appointment")}
+							{text("This patient does not have any appointment")}
 						</MessageBar>
 					)}
 					<br />
@@ -53,7 +53,7 @@ export class PatientAppointmentsPanel extends React.Component<
 								}
 							}}
 							iconProps={{ iconName: "add" }}
-							text={lang("Book new appointment")}
+							text={text("Book new appointment")}
 						/>
 					) : (
 						""

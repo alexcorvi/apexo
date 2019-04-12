@@ -1,5 +1,5 @@
 import "./menu.scss";
-import { lang, menu, router } from "@core";
+import { menu, router, text } from "@core";
 import { observer } from "mobx-react";
 import { Icon, Nav, Panel, PanelType } from "office-ui-fabric-react";
 import * as React from "react";
@@ -23,7 +23,7 @@ export class MenuView extends React.Component<any, any> {
 								onClick={item.onClick}
 							>
 								<Icon iconName={item.icon} />
-								<span className="text">{lang(item.name)}</span>
+								<span className="text">{text(item.name)}</span>
 							</div>
 						);
 					})}
@@ -42,7 +42,7 @@ export class MenuView extends React.Component<any, any> {
 								links: menu.sortedItems.map(x => {
 									return {
 										icon: x.icon,
-										name: lang(x.name),
+										name: text(x.name),
 										key: x.key,
 										url: x.url,
 										onClick: x.onClick

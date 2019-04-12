@@ -1,6 +1,6 @@
 import "./home.scss";
 import { Col, ProfileComponent, ProfileSquaredComponent, Row } from "@common-components";
-import { lang, router, user } from "@core";
+import { router, text, user } from "@core";
 import { appointments, appointmentsByDateChart } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -41,7 +41,7 @@ export class HomeView extends React.Component<{}, {}> {
 			<div className="home p-l-10 p-r-10">
 				<div className="container">
 					<h2 className="m-b-20">
-						{lang("Welcome")}, {user.currentUser.name}
+						{text("Welcome")}, {user.currentUser.name}
 					</h2>
 					<hr />
 					<div>
@@ -50,14 +50,14 @@ export class HomeView extends React.Component<{}, {}> {
 					<Row gutter={12}>
 						<Col md={12}>
 							<h3 className="appointments-table-heading">
-								{lang("Today's Appointments")}
+								{text("Today's Appointments")}
 							</h3>
 							<br />
 							<table className="ms-table">
 								<thead>
 									<tr>
-										<th>{lang("Appointment")}</th>
-										<th>{lang("Operators")}</th>
+										<th>{text("Appointment")}</th>
+										<th>{text("Operators")}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -153,7 +153,7 @@ export class HomeView extends React.Component<{}, {}> {
 
 							{this.todayAppointments.length === 0 ? (
 								<p className="no-appointments">
-									{lang(
+									{text(
 										"There are no appointments for today"
 									)}
 								</p>
@@ -163,14 +163,14 @@ export class HomeView extends React.Component<{}, {}> {
 						</Col>
 						<Col md={12}>
 							<h3 className="appointments-table-heading">
-								{lang("Tomorrow's Appointments")}
+								{text("Tomorrow's Appointments")}
 							</h3>
 							<br />
 							<table className="ms-table">
 								<thead>
 									<tr>
-										<th>{lang("Appointment")}</th>
-										<th>{lang("Operators")}</th>
+										<th>{text("Appointment")}</th>
+										<th>{text("Operators")}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -270,7 +270,7 @@ export class HomeView extends React.Component<{}, {}> {
 							</table>
 							{this.tomorrowAppointments.length === 0 ? (
 								<p className="no-appointments">
-									{lang(
+									{text(
 										"There are no appointments for tomorrow"
 									)}
 								</p>

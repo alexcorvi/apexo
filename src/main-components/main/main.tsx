@@ -1,5 +1,5 @@
 import "./main.scss";
-import { lang, LoginStep, router, status } from "@core";
+import { LoginStep, router, status, text } from "@core";
 import { ChooseUserComponent, HeaderView, LoginView, MenuView } from "@main-components";
 import { UserPanelView } from "main-components/user/user";
 import { observable } from "mobx";
@@ -37,7 +37,7 @@ export class ErrorBoundaryView extends React.Component<{}> {
 							location.href = location.href.split("#")[0];
 							location.reload();
 						}}
-						text={lang("Reload")}
+						text={text("Reload")}
 					/>
 				</MessageBar>
 			);
@@ -87,7 +87,7 @@ export class MainView extends React.Component<{}, {}> {
 				<div className="spinner-container">
 					<Spinner
 						size={SpinnerSize.large}
-						label={lang(`Please wait`)}
+						label={text(`Please wait`)}
 					/>
 				</div>
 			);

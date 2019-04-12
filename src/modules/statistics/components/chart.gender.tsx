@@ -1,5 +1,5 @@
 import { PieChartComponent } from "@common-components";
-import { lang } from "@core";
+import { text } from "@core";
 import { appointments, Chart, Gender, Patient, statistics } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
@@ -21,8 +21,8 @@ class Component extends React.Component<{}, {}> {
 				height={400}
 				{...{
 					data: [
-						{ label: lang("Male"), value: this.malePercentile },
-						{ label: lang("Female"), value: this.femalePercentile }
+						{ label: text("Male"), value: this.malePercentile },
+						{ label: text("Female"), value: this.femalePercentile }
 					]
 				}}
 			/>

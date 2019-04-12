@@ -7,7 +7,7 @@ import {
 	Row,
 	TagComponent
 	} from "@common-components";
-import { lang, router, user } from "@core";
+import { router, text, user } from "@core";
 import {
 	DentalHistoryPanel,
 	genderToString,
@@ -71,20 +71,20 @@ export class PatientsPage extends React.Component<{}, {}> {
 											secondaryElement={
 												<div>
 													{this.viewWhich === 1
-														? lang(
+														? text(
 																"Patient Details"
 														  )
 														: ""}
 													{this.viewWhich === 2
-														? lang("Dental History")
+														? text("Dental History")
 														: ""}
 													{this.viewWhich === 3
-														? lang(
+														? text(
 																"Gallery and X-Rays"
 														  )
 														: ""}
 													{this.viewWhich === 4
-														? lang(
+														? text(
 																"Patient Appointments"
 														  )
 														: ""}
@@ -134,10 +134,10 @@ export class PatientsPage extends React.Component<{}, {}> {
 					maxItemsOnLoad={15}
 					className={"patients-data-table"}
 					heads={[
-						lang("Patient"),
-						lang("Last/Next Appointment"),
-						lang("Total/Outstanding Payments"),
-						lang("Label")
+						text("Patient"),
+						text("Last/Next Appointment"),
+						text("Total/Outstanding Payments"),
+						text("Label")
 					]}
 					rows={patients.list.map(patient => ({
 						id: patient._id,
@@ -156,13 +156,13 @@ export class PatientsPage extends React.Component<{}, {}> {
 											name={patient.name}
 											secondaryElement={
 												<span>
-													{lang(
+													{text(
 														genderToString(
 															patient.gender
 														)
 													)}{" "}
 													- {patient.age}{" "}
-													{lang("years old")}
+													{text("years old")}
 												</span>
 											}
 											size={3}
@@ -170,7 +170,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 										<br />
 
 										<TooltipHost
-											content={lang("Patient Details")}
+											content={text("Patient Details")}
 										>
 											<IconButton
 												className="action-button"
@@ -186,7 +186,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 										</TooltipHost>
 
 										<TooltipHost
-											content={lang("Dental History")}
+											content={text("Dental History")}
 										>
 											<IconButton
 												className="action-button"
@@ -202,7 +202,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 										</TooltipHost>
 
 										<TooltipHost
-											content={lang("Gallery and X-Rays")}
+											content={text("Gallery and X-Rays")}
 										>
 											<IconButton
 												className="action-button"
@@ -220,7 +220,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 										{user.currentUser
 											.canViewAppointments ? (
 											<TooltipHost
-												content={lang(
+												content={text(
 													"Patient Appointments"
 												)}
 											>
@@ -239,7 +239,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 										) : (
 											""
 										)}
-										<TooltipHost content={lang("Delete")}>
+										<TooltipHost content={text("Delete")}>
 											<IconButton
 												className="action-button delete"
 												iconProps={{
@@ -285,7 +285,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 																"date_format"
 															)
 													  )
-													: lang(
+													: text(
 															"No last appointment"
 													  )
 											}
@@ -322,7 +322,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 																"date_format"
 															)
 													  )
-													: lang(
+													: text(
 															"No next appointment"
 													  )
 											}
@@ -352,7 +352,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 												) +
 												patient.totalPayments.toString()
 											}
-											subText={lang("Payments made")}
+											subText={text("Payments made")}
 											size={3}
 											onRenderInitials={() => (
 												<Icon iconName="CheckMark" />
@@ -379,11 +379,11 @@ export class PatientsPage extends React.Component<{}, {}> {
 											}
 											subText={
 												patient.differenceAmount < 0
-													? lang("Outstanding amount")
+													? text("Outstanding amount")
 													: patient.differenceAmount >
 													  0
-													? lang("Overpaid amount")
-													: lang(
+													? text("Overpaid amount")
+													: text(
 															"No outstanding amount"
 													  )
 											}
@@ -429,7 +429,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: lang("Add new"),
+										name: text("Add new"),
 										onClick: () => {
 											const patient = new Patient();
 											patients.list.push(patient);

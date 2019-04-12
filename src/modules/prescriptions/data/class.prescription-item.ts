@@ -1,4 +1,4 @@
-import { lang } from "@core";
+import { text } from "@core";
 import { itemFormToString, PrescriptionItemForm, PrescriptionItemJSON, stringToItemForm } from "@modules";
 import { generateID } from "@utils";
 import { computed, observable } from "mobx";
@@ -21,7 +21,7 @@ export class PrescriptionItem {
 	@computed
 	get searchableString() {
 		return `
-			${this.name} ${this.doseInMg}${lang("mg")} ${this.doseInMg}
+			${this.name} ${this.doseInMg}${text("mg")} ${this.doseInMg}
 			${this.timesPerDay}X${this.unitsPerTime}
 			${itemFormToString(this.form)}
 		`.toLowerCase();

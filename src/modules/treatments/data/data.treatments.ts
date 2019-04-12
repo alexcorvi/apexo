@@ -1,4 +1,4 @@
-import { lang, modals } from "@core";
+import { modals, text } from "@core";
 import { appointments, Treatment } from "@modules";
 import { computed, observable } from "mobx";
 
@@ -15,7 +15,7 @@ class TreatmentData {
 		const i = this.getIndexByID(id);
 		const treatment = this.list[i];
 		modals.newModal({
-			message: `${lang("Treatment")} "${treatment.type}" ${lang(
+			message: `${text("Treatment")} "${treatment.type}" ${text(
 				"will be deleted"
 			)}`,
 			onConfirm: () => {

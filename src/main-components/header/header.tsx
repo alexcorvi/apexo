@@ -1,11 +1,11 @@
 import "./header.scss";
 import { Col, Row } from "@common-components";
 import {
-	lang,
 	menu,
 	resync,
 	router,
 	status,
+	text,
 	user
 	} from "@core";
 import { observer } from "mobx-react";
@@ -33,13 +33,13 @@ export class HeaderView extends React.Component<{}, {}> {
 					</Col>
 					<Col span={8}>
 						<section className="title">
-							{lang(router.currentNamespace || "Home")}
+							{text(router.currentNamespace || "Home")}
 						</section>
 					</Col>
 					<Col span={8}>
 						<section className="right-buttons">
 							{status.online ? (
-								<TooltipHost content={lang("Sync with server")}>
+								<TooltipHost content={text("Sync with server")}>
 									<IconButton
 										onClick={async () => {
 											router.reSyncing = true;
@@ -59,7 +59,7 @@ export class HeaderView extends React.Component<{}, {}> {
 								</span>
 							)}
 
-							<TooltipHost content={lang("User panel")}>
+							<TooltipHost content={text("User panel")}>
 								<IconButton
 									onClick={() => (user.visible = true)}
 									disabled={false}

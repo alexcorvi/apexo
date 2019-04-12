@@ -1,5 +1,5 @@
 import { BarChartComponent } from "@common-components";
-import { lang } from "@core";
+import { text } from "@core";
 import {
 	Chart,
 	Gender,
@@ -70,13 +70,13 @@ class Component extends React.Component<{}, {}> {
 							),
 							bars: [
 								{
-									label: lang("Male"),
+									label: text("Male"),
 									data: this.selectedTreatments.map(
 										x => x.male
 									)
 								},
 								{
-									label: lang("Female"),
+									label: text("Female"),
 									data: this.selectedTreatments.map(
 										x => x.female * -1
 									)

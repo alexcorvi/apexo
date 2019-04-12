@@ -1,5 +1,5 @@
 import "./data-table.scss";
-import { lang } from "@core";
+import { text } from "@core";
 import { textualFilter } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -104,7 +104,7 @@ export class DataTableComponent extends React.Component<Props, {}> {
 				key: "a",
 				onRender: () => (
 					<SearchBox
-						placeholder={lang("Search")}
+						placeholder={text("Search")}
 						onChange={(newVal: string) =>
 							(this.filterString = newVal)
 						}
@@ -126,7 +126,7 @@ export class DataTableComponent extends React.Component<Props, {}> {
 					{...{
 						className: "commandBar fixed m-b-15",
 						isSearchBoxVisible: !this.props.hideSearch,
-						elipisisAriaLabel: lang("More options"),
+						elipisisAriaLabel: text("More options"),
 						farItems: this.farItems,
 						items: this.props.commands || []
 					}}
@@ -237,7 +237,7 @@ export class DataTableComponent extends React.Component<Props, {}> {
 						style={{ marginTop: 20 }}
 						iconProps={{ iconName: "more" }}
 						onClick={() => (this.limit = this.limit + 10)}
-						text={lang("Load more")}
+						text={text("Load more")}
 					/>
 				) : (
 					""
@@ -245,13 +245,13 @@ export class DataTableComponent extends React.Component<Props, {}> {
 
 				{this.props.rows.length === 0 ? (
 					<MessageBar messageBarType={MessageBarType.info}>
-						{lang(
+						{text(
 							"No data in this section yet, you can add new data by clicking the button above"
 						)}
 					</MessageBar>
 				) : this.filteredRows.length === 0 ? (
 					<MessageBar messageBarType={MessageBarType.info}>
-						{lang(
+						{text(
 							"Did not find anything that matches your search criteria"
 						)}
 					</MessageBar>

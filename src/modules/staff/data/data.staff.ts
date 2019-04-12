@@ -1,4 +1,4 @@
-import { lang, modals, status, user } from "@core";
+import { modals, status, text, user } from "@core";
 import { appointments, StaffMember } from "@modules";
 import { observable } from "mobx";
 
@@ -14,7 +14,7 @@ class StaffData {
 	deleteModal(id: string) {
 		const i = this.getIndexByID(id);
 		modals.newModal({
-			message: `${lang("Are you sure you want to delete")} ${
+			message: `${text("Are you sure you want to delete")} ${
 				this.list[i].name
 			}`,
 			onConfirm: () => this.deleteByID(id),

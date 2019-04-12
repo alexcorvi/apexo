@@ -1,6 +1,6 @@
 import "./treatments.scss";
 import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
-import { lang, router, user } from "@core";
+import { router, text, user } from "@core";
 import { appointments, setting, Treatment, treatments } from "@modules";
 import { num } from "@utils";
 import { computed, observable } from "mobx";
@@ -44,7 +44,7 @@ export class Treatments extends React.Component<{}, {}> {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: lang("Add new"),
+										name: text("Add new"),
 										onClick: () => {
 											const treatment = new Treatment();
 											treatments.list.push(treatment);
@@ -58,10 +58,10 @@ export class Treatments extends React.Component<{}, {}> {
 							: []
 					}
 					heads={[
-						lang("Treatment"),
-						lang("Expenses/unit"),
-						lang("Done appointments"),
-						lang("Upcoming appointments")
+						text("Treatment"),
+						text("Expenses/unit"),
+						text("Done appointments"),
+						text("Upcoming appointments")
 					]}
 					rows={treatments.list.map(treatment => {
 						const now = new Date().getTime();
@@ -96,11 +96,11 @@ export class Treatments extends React.Component<{}, {}> {
 									component: (
 										<ProfileSquaredComponent
 											text={treatment.type}
-											subText={`${lang(
+											subText={`${text(
 												"Expenses"
 											)}: ${setting.getSetting(
 												"currencySymbol"
-											)}${treatment.expenses} ${lang(
+											)}${treatment.expenses} ${text(
 												"per unit"
 											)}`}
 										/>
@@ -126,7 +126,7 @@ export class Treatments extends React.Component<{}, {}> {
 									dataValue: done,
 									component: (
 										<span>
-											{done} {lang("done")}
+											{done} {text("done")}
 										</span>
 									),
 									className: "hidden-xs"
@@ -135,7 +135,7 @@ export class Treatments extends React.Component<{}, {}> {
 									dataValue: upcoming,
 									component: (
 										<span>
-											{upcoming} {lang("upcoming")}
+											{upcoming} {text("upcoming")}
 										</span>
 									),
 									className: "hidden-xs"
@@ -161,13 +161,13 @@ export class Treatments extends React.Component<{}, {}> {
 									{this.selectedTreatment ? (
 										<ProfileSquaredComponent
 											text={this.selectedTreatment.type}
-											subText={`${lang(
+											subText={`${text(
 												"Expenses"
 											)}: ${setting.getSetting(
 												"currencySymbol"
 											)}${
 												this.selectedTreatment.expenses
-											} ${lang("per unit")}`}
+											} ${text("per unit")}`}
 										/>
 									) : (
 										<p />
@@ -185,10 +185,10 @@ export class Treatments extends React.Component<{}, {}> {
 						)}
 					>
 						<div className="treatment-editor">
-							<SectionComponent title={lang("Treatment Details")}>
+							<SectionComponent title={text("Treatment Details")}>
 								<div className="treatment-input">
 									<TextField
-										label={lang("Treatment title")}
+										label={text("Treatment title")}
 										value={this.selectedTreatment.type}
 										onChange={(ev, val) =>
 											(treatments.list[
@@ -198,7 +198,7 @@ export class Treatments extends React.Component<{}, {}> {
 										disabled={!this.canEdit}
 									/>
 									<TextField
-										label={lang(
+										label={text(
 											"Treatment expenses (per unit)"
 										)}
 										type="number"

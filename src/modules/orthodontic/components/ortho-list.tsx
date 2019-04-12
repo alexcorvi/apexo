@@ -7,7 +7,7 @@ import {
 	Row,
 	TagInputComponent
 	} from "@common-components";
-import { lang, user } from "@core";
+import { text, user } from "@core";
 import {
 	DentalHistoryPanel,
 	genderToString,
@@ -70,10 +70,10 @@ export class OrthoPage extends React.Component<{}, {}> {
 					maxItemsOnLoad={15}
 					className={"orthodontic-cases-data-table"}
 					heads={[
-						lang("Orthodontic Patient"),
-						lang("Started/Finished Treatment"),
-						lang("Last/Next Appointment"),
-						lang("Total/Outstanding Payments")
+						text("Orthodontic Patient"),
+						text("Started/Finished Treatment"),
+						text("Last/Next Appointment"),
+						text("Total/Outstanding Payments")
 					]}
 					rows={orthoCases.filtered
 						.filter(orthoCase => orthoCase.patient)
@@ -91,20 +91,20 @@ export class OrthoPage extends React.Component<{}, {}> {
 													name={patient.name}
 													secondaryElement={
 														<span>
-															{lang(
+															{text(
 																genderToString(
 																	patient.gender
 																)
 															)}{" "}
 															- {patient.age}{" "}
-															{lang("years old")}
+															{text("years old")}
 														</span>
 													}
 													size={3}
 												/>
 												<br />
 												<TooltipHost
-													content={lang(
+													content={text(
 														"Patient Details"
 													)}
 												>
@@ -123,7 +123,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 												</TooltipHost>
 
 												<TooltipHost
-													content={lang(
+													content={text(
 														"Dental History"
 													)}
 												>
@@ -141,7 +141,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 												</TooltipHost>
 
 												<TooltipHost
-													content={lang(
+													content={text(
 														"Orthodontic Case Sheet"
 													)}
 												>
@@ -160,7 +160,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 												</TooltipHost>
 
 												<TooltipHost
-													content={lang(
+													content={text(
 														"Orthodontic Album"
 													)}
 												>
@@ -179,7 +179,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 												</TooltipHost>
 
 												<TooltipHost
-													content={lang(
+													content={text(
 														"Gallery and X-Rays"
 													)}
 												>
@@ -200,7 +200,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 												{user.currentUser
 													.canViewAppointments ? (
 													<TooltipHost
-														content={lang(
+														content={text(
 															"Patient Appointments"
 														)}
 													>
@@ -221,7 +221,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 													""
 												)}
 												<TooltipHost
-													content={lang("Delete")}
+													content={text("Delete")}
 												>
 													<IconButton
 														className="action-button delete"
@@ -259,10 +259,10 @@ export class OrthoPage extends React.Component<{}, {}> {
 													}
 													subText={
 														orthoCase.isStarted
-															? lang(
+															? text(
 																	"Started treatment"
 															  )
-															: lang(
+															: text(
 																	"Has not started yet"
 															  )
 													}
@@ -291,10 +291,10 @@ export class OrthoPage extends React.Component<{}, {}> {
 													}
 													subText={
 														orthoCase.isFinished
-															? lang(
+															? text(
 																	"Finished treatment"
 															  )
-															: lang(
+															: text(
 																	"Has not finished yet"
 															  )
 													}
@@ -344,7 +344,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 																		"date_format"
 																	)
 															  )
-															: lang(
+															: text(
 																	"No last appointment"
 															  )
 													}
@@ -383,7 +383,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 																		"date_format"
 																	)
 															  )
-															: lang(
+															: text(
 																	"No next appointment"
 															  )
 													}
@@ -413,7 +413,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 														) +
 														patient.totalPayments.toString()
 													}
-													subText={lang(
+													subText={text(
 														"Payments made"
 													)}
 													size={3}
@@ -445,15 +445,15 @@ export class OrthoPage extends React.Component<{}, {}> {
 													subText={
 														patient.differenceAmount <
 														0
-															? lang(
+															? text(
 																	"Outstanding amount"
 															  )
 															: patient.differenceAmount >
 															  0
-															? lang(
+															? text(
 																	"Overpaid amount"
 															  )
-															: lang(
+															: text(
 																	"No outstanding amount"
 															  )
 													}
@@ -482,7 +482,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: lang("Add new"),
+										name: text("Add new"),
 										onClick: () =>
 											(this.showAdditionPanel = true),
 										iconProps: {
@@ -502,7 +502,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 						this.showAdditionPanel = false;
 					}}
 				>
-					<h4>{lang("Choose patient")}</h4>
+					<h4>{text("Choose patient")}</h4>
 					<br />
 					<TagInputComponent
 						strict
@@ -521,14 +521,14 @@ export class OrthoPage extends React.Component<{}, {}> {
 							this.selectedId = orthoCase._id;
 							this.viewWhich = 3;
 						}}
-						placeholder={lang(`Type to select patient`)}
+						placeholder={text(`Type to select patient`)}
 					/>
 					<br />
 					<hr />
 					<h4>Or add new patient</h4>
 					<br />
 					<TextField
-						placeholder={lang(`Patient name`)}
+						placeholder={text(`Patient name`)}
 						value={this.newPatientName}
 						onChange={(e, v) => (this.newPatientName = v!)}
 					/>
@@ -547,7 +547,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 						iconProps={{
 							iconName: "add"
 						}}
-						text={lang("Add new")}
+						text={text("Add new")}
 					/>
 				</Panel>
 
@@ -581,24 +581,24 @@ export class OrthoPage extends React.Component<{}, {}> {
 										secondaryElement={
 											<span>
 												{this.viewWhich === 1
-													? lang("Patient Details")
+													? text("Patient Details")
 													: ""}
 												{this.viewWhich === 2
-													? lang("Dental History")
+													? text("Dental History")
 													: ""}
 												{this.viewWhich === 3
-													? lang(
+													? text(
 															"Orthodontic Case Sheet"
 													  )
 													: ""}
 												{this.viewWhich === 4
-													? lang("Orthodontic Album")
+													? text("Orthodontic Album")
 													: ""}
 												{this.viewWhich === 5
-													? lang("Gallery and X-Rays")
+													? text("Gallery and X-Rays")
 													: ""}
 												{this.viewWhich === 6
-													? lang(
+													? text(
 															"Patient Appointments"
 													  )
 													: ""}

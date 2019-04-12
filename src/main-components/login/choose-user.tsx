@@ -1,5 +1,5 @@
 import { ProfileComponent } from "@common-components";
-import { lang, Message, messages, modals, status } from "@core";
+import { Message, messages, modals, status, text } from "@core";
 import { staff, StaffMember } from "@modules";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -20,13 +20,13 @@ export class ChooseUserComponent extends React.Component<{}, {}> {
 								if (user.pin) {
 									modals.newModal({
 										id: Math.random(),
-										message: lang("Please enter your PIN"),
+										message: text("Please enter your PIN"),
 										onConfirm: providedPin => {
 											if (providedPin === user.pin) {
 												status.setUser(user._id);
 											} else {
 												const msg = new Message(
-													lang("Invalid PIN provided")
+													text("Invalid PIN provided")
 												);
 												messages.addMessage(msg);
 											}
@@ -57,7 +57,7 @@ export class ChooseUserComponent extends React.Component<{}, {}> {
 						<TextField
 							value={this.newDocName}
 							onChange={(ev, v) => (this.newDocName = v!)}
-							label={lang("Register as new staff member")}
+							label={text("Register as new staff member")}
 						/>
 						<PrimaryButton
 							onClick={() => {
@@ -67,7 +67,7 @@ export class ChooseUserComponent extends React.Component<{}, {}> {
 								staff.list.push(newDoc);
 								status.setUser(newDoc._id);
 							}}
-							text={lang("Register")}
+							text={text("Register")}
 						/>
 					</div>
 				) : (

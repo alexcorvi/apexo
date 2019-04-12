@@ -1,6 +1,6 @@
 import "./dental-history.scss";
 import { Col, EditableListComponent, ProfileComponent, Row, SectionComponent } from "@common-components";
-import { lang, user } from "@core";
+import { text, user } from "@core";
 import { conditionToColor, Patient, TeethDeciduousChartComponent, TeethPermanentChart, ToothCondition } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -29,8 +29,8 @@ export class DentalHistoryPanel extends React.Component<
 			<div className="dental-history teeth">
 				<Toggle
 					defaultChecked={true}
-					onText={lang("View graphic chart")}
-					offText={lang("View sorted table")}
+					onText={text("View graphic chart")}
+					offText={text("View sorted table")}
 					onChange={(ev, newVal) => {
 						this.viewChart = newVal!;
 					}}
@@ -38,7 +38,7 @@ export class DentalHistoryPanel extends React.Component<
 				<div className="m-t-20">
 					{this.viewChart ? (
 						<div className="chart">
-							<SectionComponent title={lang(`Permanent Teeth`)}>
+							<SectionComponent title={text(`Permanent Teeth`)}>
 								<TeethPermanentChart
 									teeth={this.props.patient.teeth}
 									onClick={number =>
@@ -46,7 +46,7 @@ export class DentalHistoryPanel extends React.Component<
 									}
 								/>
 							</SectionComponent>
-							<SectionComponent title={lang(`Deciduous Teeth`)}>
+							<SectionComponent title={text(`Deciduous Teeth`)}>
 								<TeethDeciduousChartComponent
 									teeth={this.props.patient.teeth}
 									onClick={number =>
@@ -57,7 +57,7 @@ export class DentalHistoryPanel extends React.Component<
 						</div>
 					) : (
 						<div className="tabulated">
-							<SectionComponent title={lang(`Permanent Teeth`)}>
+							<SectionComponent title={text(`Permanent Teeth`)}>
 								<table className="permanent">
 									<tbody>
 										<tr>
@@ -75,7 +75,7 @@ export class DentalHistoryPanel extends React.Component<
 									</tbody>
 								</table>
 							</SectionComponent>
-							<SectionComponent title={lang(`Deciduous Teeth`)}>
+							<SectionComponent title={text(`Deciduous Teeth`)}>
 								<table className="deciduous">
 									<tbody>
 										<tr>
@@ -151,7 +151,7 @@ export class DentalHistoryPanel extends React.Component<
 					{this.props.patient.teeth[this.viewToothISO] ? (
 						<div className="tooth-details">
 							<Dropdown
-								placeholder={lang(`Condition`)}
+								placeholder={text(`Condition`)}
 								onChange={(ev, newVal: any) => {
 									this.props.patient.teeth[
 										this.viewToothISO
@@ -166,12 +166,12 @@ export class DentalHistoryPanel extends React.Component<
 								className="single-tooth-condition"
 								options={Object.keys(ToothCondition).map(c => ({
 									key: c,
-									text: lang(c)
+									text: text(c)
 								}))}
 								disabled={!this.canEdit}
 							/>
 							<EditableListComponent
-								label={lang("History notes")}
+								label={text("History notes")}
 								value={
 									this.props.patient.teeth[this.viewToothISO]
 										.notes

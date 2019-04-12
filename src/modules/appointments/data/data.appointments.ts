@@ -1,4 +1,4 @@
-import { lang, modals } from "@core";
+import { modals, text } from "@core";
 import { Appointment } from "@modules";
 import { textualFilter } from "@utils";
 import { observable } from "mobx";
@@ -47,7 +47,7 @@ class AppointmentsData {
 	}
 	deleteModal(id: string) {
 		modals.newModal({
-			message: lang("Are you sure you want to delete this appointment?"),
+			message: text("Are you sure you want to delete this appointment?"),
 			onConfirm: () => this.deleteByID(id),
 			showCancelButton: true,
 			showConfirmButton: true,

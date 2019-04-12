@@ -6,7 +6,7 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import { CEPHALOMETRIC_DIR, lang, status, user } from "@core";
+import { CEPHALOMETRIC_DIR, status, text, user } from "@core";
 import { CephalometricEditorPanel, CephalometricItem, OrthoCase, PatientGalleryPanel, setting } from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
@@ -58,7 +58,7 @@ export class OrthoGalleryPanel extends React.Component<{
 					""
 				)}
 
-				<SectionComponent title={lang(`Cephalometric Analysis`)}>
+				<SectionComponent title={text(`Cephalometric Analysis`)}>
 					{status.online ? (
 						status.dropboxActive ? (
 							<div>
@@ -84,7 +84,7 @@ export class OrthoGalleryPanel extends React.Component<{
 													key={i}
 												>
 													<ProfileComponent
-														name={`${i + 1}: ${lang(
+														name={`${i + 1}: ${text(
 															"Analysis"
 														)} #${i + 1}`}
 														secondaryElement={
@@ -150,20 +150,20 @@ export class OrthoGalleryPanel extends React.Component<{
 								>
 									<DefaultButton
 										iconProps={{ iconName: "Add" }}
-										text={lang("New analysis")}
+										text={text("New analysis")}
 									/>
 								</PickAndUploadComponent>
 							</div>
 						) : (
 							<MessageBar messageBarType={MessageBarType.warning}>
-								{lang(
+								{text(
 									"A valid DropBox access token is required for this section"
 								)}
 							</MessageBar>
 						)
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							{lang(
+							{text(
 								"You can not access cephalometric data while offline"
 							)}
 						</MessageBar>

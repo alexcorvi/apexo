@@ -4,12 +4,12 @@ import {
 	DBsList,
 	destroyLocal,
 	files,
-	lang,
 	Message,
 	messages,
 	modals,
 	resync,
-	status
+	status,
+	text
 	} from "./";
 import { decode, encode } from "@utils";
 import { saveAs } from "file-saver";
@@ -157,7 +157,7 @@ export const restore = {
 				resolve();
 			} else {
 				modals.newModal({
-					message: lang(
+					message: text(
 						`All unsaved data will be lost. All data will be removed and replaced by the backup file. Type "yes" to confirm`
 					),
 					onConfirm: async (input: string) => {
@@ -167,7 +167,7 @@ export const restore = {
 							resolve();
 						} else {
 							const msg = new Message(
-								lang("Restoration cancelled")
+								text("Restoration cancelled")
 							);
 							messages.addMessage(msg);
 							return reject();
@@ -185,7 +185,7 @@ export const restore = {
 	fromFile: async function(file: Blob) {
 		return new Promise((resolve, reject) => {
 			function terminate() {
-				const msg = new Message(lang("Invalid file"));
+				const msg = new Message(text("Invalid file"));
 				messages.addMessage(msg);
 				return reject();
 			}
@@ -222,7 +222,7 @@ export async function downloadCurrent() {
 	return new Promise(resolve => {
 		modals.newModal({
 			id: Math.random(),
-			message: lang("Please enter file name"),
+			message: text("Please enter file name"),
 			onConfirm: fileName => {
 				saveAs(blob, `${fileName || "apexo-backup"}.${ext}`);
 				resolve();

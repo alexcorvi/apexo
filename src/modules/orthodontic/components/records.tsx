@@ -10,10 +10,10 @@ import {
 	} from "@common-components";
 import {
 	files,
-	lang,
 	modals,
 	ORTHO_RECORDS_DIR,
 	status,
+	text,
 	user
 	} from "@core";
 import { OrthoCase, Photo, setting, Visit } from "@modules";
@@ -141,11 +141,11 @@ export class OrthoRecordsPanel extends React.Component<{
 	render() {
 		return (
 			<div className="ortho-records">
-				<SectionComponent title={lang(`Problems`)}>
+				<SectionComponent title={text(`Problems`)}>
 					{this.props.orthoCase.computedProblems.length === 0 &&
 					this.props.orthoCase.problemsList.length === 0 ? (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							{lang(
+							{text(
 								"This patient does not seem to have any problems or concerns, have you filled the case sheet?"
 							)}
 						</MessageBar>
@@ -156,7 +156,7 @@ export class OrthoRecordsPanel extends React.Component<{
 								...[
 									...this.props.orthoCase.computedProblems,
 									...this.props.orthoCase.problemsList.map(
-										x => lang("Patient concern") + ": " + x
+										x => text("Patient concern") + ": " + x
 									)
 								].map((x, i) => [`${i + 1}. ${x}`])
 							]}
@@ -165,18 +165,18 @@ export class OrthoRecordsPanel extends React.Component<{
 						/>
 					)}
 				</SectionComponent>
-				<SectionComponent title={lang(`Treatment Plan`)}>
+				<SectionComponent title={text(`Treatment Plan`)}>
 					{this.props.orthoCase.treatmentPlan_appliance.length ? (
 						""
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							{lang(
+							{text(
 								"A treatment plan must be before starting the treatment"
 							)}
 						</MessageBar>
 					)}
 					<EditableListComponent
-						label={lang(`Add Plan`)}
+						label={text(`Add Plan`)}
 						value={this.props.orthoCase.treatmentPlan_appliance}
 						onChange={val => {
 							this.props.orthoCase.treatmentPlan_appliance = val;
@@ -185,12 +185,12 @@ export class OrthoRecordsPanel extends React.Component<{
 						disabled={!this.canEdit}
 					/>
 				</SectionComponent>
-				<SectionComponent title={lang(`Started/Finished`)}>
+				<SectionComponent title={text(`Started/Finished`)}>
 					<Row gutter={12}>
 						<Col span={12}>
 							<Toggle
-								onText={lang("Started")}
-								offText={lang("Not started yet")}
+								onText={text("Started")}
+								offText={text("Not started yet")}
 								checked={this.props.orthoCase.isStarted}
 								onChange={(ev, val) =>
 									(this.props.orthoCase.isStarted = val!)
@@ -228,8 +228,8 @@ export class OrthoRecordsPanel extends React.Component<{
 						</Col>{" "}
 						<Col span={12}>
 							<Toggle
-								onText={lang("Finished")}
-								offText={lang("Not finished yet")}
+								onText={text("Finished")}
+								offText={text("Not finished yet")}
 								checked={this.props.orthoCase.isFinished}
 								onChange={(ev, val) =>
 									(this.props.orthoCase.isFinished = val!)
@@ -267,7 +267,7 @@ export class OrthoRecordsPanel extends React.Component<{
 						</Col>
 					</Row>
 				</SectionComponent>
-				<SectionComponent title={lang(`Records`)}>
+				<SectionComponent title={text(`Records`)}>
 					{status.online ? (
 						status.dropboxActive ? (
 							<div className="album">
@@ -322,7 +322,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																	<br />
 
 																	<TooltipHost
-																		content={lang(
+																		content={text(
 																			"Zoom"
 																		)}
 																	>
@@ -353,7 +353,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																		.zoomedColumn ===
 																	index ? (
 																		<TooltipHost
-																			content={lang(
+																			content={text(
 																				"View grid"
 																			)}
 																		>
@@ -456,7 +456,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																							<TextField
 																								autoFocus
 																								type="number"
-																								label={lang(
+																								label={text(
 																									`Visit number`
 																								)}
 																								value={visit.visitNumber.toString()}
@@ -481,7 +481,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																								}}
 																							/>
 																						) : (
-																							`${lang(
+																							`${text(
 																								"Visit"
 																							)} #${
 																								visit.visitNumber
@@ -495,7 +495,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																							.expandedField ===
 																						"gf-date" ? (
 																							<Dropdown
-																								label={lang(
+																								label={text(
 																									`Visit date`
 																								)}
 																								selectedKey={visit.date.toString()}
@@ -536,7 +536,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																								}}
 																							/>
 																						) : (
-																							`${lang(
+																							`${text(
 																								"Date"
 																							)}: ${formatDate(
 																								visit.date,
@@ -554,7 +554,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																						"gf-appliance" ? (
 																							<TextField
 																								autoFocus
-																								label={lang(
+																								label={text(
 																									`Appliance`
 																								)}
 																								disabled={
@@ -580,12 +580,12 @@ export class OrthoRecordsPanel extends React.Component<{
 																								}}
 																							/>
 																						) : (
-																							`${lang(
+																							`${text(
 																								"Appliance"
 																							)}: ${
 																								visit.appliance
 																									? visit.appliance
-																									: lang(
+																									: text(
 																											"No appliance info"
 																									  )
 																							}`
@@ -768,7 +768,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																																	.canEdit
 																															}
 																															type="number"
-																															label={lang(
+																															label={text(
 																																`Visit number`
 																															)}
 																															value={visit.visitNumber.toString()}
@@ -789,7 +789,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																															}}
 																														/>
 																													) : (
-																														`${lang(
+																														`${text(
 																															"Visit"
 																														)} #${
 																															visit.visitNumber
@@ -803,7 +803,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																														.expandedField ===
 																													"gf-date" ? (
 																														<Dropdown
-																															label={lang(
+																															label={text(
 																																`Visit date`
 																															)}
 																															disabled={
@@ -844,7 +844,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																															}}
 																														/>
 																													) : (
-																														`${lang(
+																														`${text(
 																															"Date"
 																														)}: ${formatDate(
 																															visit.date,
@@ -862,7 +862,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																													"gf-appliance" ? (
 																														<TextField
 																															autoFocus
-																															label={lang(
+																															label={text(
 																																`Appliance`
 																															)}
 																															value={
@@ -888,12 +888,12 @@ export class OrthoRecordsPanel extends React.Component<{
 																															}}
 																														/>
 																													) : (
-																														`${lang(
+																														`${text(
 																															"Appliance"
 																														)}: ${
 																															visit.appliance
 																																? visit.appliance
-																																: lang(
+																																: text(
 																																		"No appliance info"
 																																  )
 																														}`
@@ -907,7 +907,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																													"gf-comment" ? (
 																														<TextField
 																															autoFocus
-																															label={lang(
+																															label={text(
 																																`Comment`
 																															)}
 																															disabled={
@@ -935,12 +935,12 @@ export class OrthoRecordsPanel extends React.Component<{
 																															}}
 																														/>
 																													) : (
-																														`${lang(
+																														`${text(
 																															"Comment"
 																														)}: ${
 																															photo.comment
 																																? photo.comment
-																																: lang(
+																																: text(
 																																		"no comment on this photo"
 																																  )
 																														}`
@@ -964,7 +964,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																											{
 																												key:
 																													"overlay prev",
-																												text: lang(
+																												text: text(
 																													"Overlay prev"
 																												),
 																												iconProps: {
@@ -991,7 +991,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																											{
 																												key:
 																													"overlay next",
-																												text: lang(
+																												text: text(
 																													"Overlay next"
 																												),
 																												iconProps: {
@@ -1020,7 +1020,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																											{
 																												key:
 																													"delete photo",
-																												text: lang(
+																												text: text(
 																													"Delete"
 																												),
 																												iconProps: {
@@ -1100,7 +1100,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																						}}
 																					>
 																						<TooltipHost
-																							content={lang(
+																							content={text(
 																								"Add photo"
 																							)}
 																						>
@@ -1124,7 +1124,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																)}
 																<td>
 																	<TooltipHost
-																		content={lang(
+																		content={text(
 																			"Delete visit"
 																		)}
 																	>
@@ -1144,7 +1144,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																			onClick={() => {
 																				modals.newModal(
 																					{
-																						message: lang(
+																						message: text(
 																							"This visit data will be deleted along with all photos and notes"
 																						),
 																						onConfirm: () => {
@@ -1181,7 +1181,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																					visit.date) /
 																					day
 																			)}{" "}
-																			{lang(
+																			{text(
 																				"days"
 																			)}
 																		</i>
@@ -1199,7 +1199,7 @@ export class OrthoRecordsPanel extends React.Component<{
 									<MessageBar
 										messageBarType={MessageBarType.info}
 									>
-										{lang(
+										{text(
 											"No visits recorded yet! add a new visit using the button below"
 										)}
 									</MessageBar>
@@ -1208,7 +1208,7 @@ export class OrthoRecordsPanel extends React.Component<{
 								<DefaultButton
 									disabled={!this.canEdit}
 									iconProps={{ iconName: "ExploreContent" }}
-									text={lang("Add visit")}
+									text={text("Add visit")}
 									onClick={() => {
 										const visitNumber = this.props.orthoCase
 											.visits.length
@@ -1229,22 +1229,22 @@ export class OrthoRecordsPanel extends React.Component<{
 							</div>
 						) : (
 							<MessageBar messageBarType={MessageBarType.warning}>
-								{lang(
+								{text(
 									"A valid DropBox access token is required for this section"
 								)}
 							</MessageBar>
 						)
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							{lang(
+							{text(
 								"You can not access orthodontic records while offline"
 							)}
 						</MessageBar>
 					)}
 				</SectionComponent>
-				<SectionComponent title={lang(`Notes for the next visit`)}>
+				<SectionComponent title={text(`Notes for the next visit`)}>
 					<EditableListComponent
-						label={lang(`Add note`)}
+						label={text(`Add note`)}
 						value={this.props.orthoCase.nextVisitNotes}
 						onChange={val => {
 							this.props.orthoCase.nextVisitNotes = val;

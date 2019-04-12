@@ -1,5 +1,5 @@
 import { Col, Row } from "@common-components";
-import { lang } from "@core";
+import { text } from "@core";
 import { CephalometricItem, orthoCases, setting } from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
@@ -65,7 +65,7 @@ export class CephalometricEditorPanel extends React.Component<{
 									}}
 								/>
 								<DatePicker
-									placeholder={lang("Select a date")}
+									placeholder={text("Select a date")}
 									value={new Date(this.props.item.date)}
 									onSelectDate={date => {
 										if (date) {

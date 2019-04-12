@@ -1,6 +1,6 @@
 import "./calendar.scss";
 import { Col, ProfileSquaredComponent, Row } from "@common-components";
-import { lang, router, user } from "@core";
+import { router, text, user } from "@core";
 import {
 	Appointment,
 	AppointmentEditorPanel,
@@ -165,7 +165,7 @@ export class CalendarPage extends React.Component<{}, {}> {
 										}
 									>
 										<div className="day-name">
-											{lang(
+											{text(
 												day.weekDay.dayLiteralShort
 													.substr(0, 2)
 													.toUpperCase()
@@ -243,8 +243,8 @@ export class CalendarPage extends React.Component<{}, {}> {
 							<Col sm={12} md={6} xs={24}>
 								<Toggle
 									defaultChecked={this.showAll}
-									onText={lang("All appointments")}
-									offText={lang("My appointments only")}
+									onText={text("All appointments")}
+									offText={text("My appointments only")}
 									onChange={(ev, newValue) => {
 										this.showAll = newValue!;
 									}}
@@ -252,7 +252,7 @@ export class CalendarPage extends React.Component<{}, {}> {
 							</Col>
 							<Col sm={12} md={18} xs={0} className="filter">
 								<TextField
-									placeholder={lang("Type to filter")}
+									placeholder={text("Type to filter")}
 									onChange={(ev, newVal) =>
 										(this.filter = newVal!)
 									}
@@ -292,7 +292,7 @@ export class CalendarPage extends React.Component<{}, {}> {
 										<b>{day.dateNum}</b>
 										&nbsp;&nbsp;&nbsp;
 										<span className="day-name">
-											{lang(day.weekDay.dayLiteral)}
+											{text(day.weekDay.dayLiteral)}
 										</span>
 									</h4>
 									{appointments

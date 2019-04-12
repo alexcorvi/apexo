@@ -1,5 +1,5 @@
 import { LineChartComponent } from "@common-components";
-import { lang } from "@core";
+import { text } from "@core";
 import { Chart, setting, statistics } from "@modules";
 import { formatDate, round } from "@utils";
 import { computed } from "mobx";
@@ -46,19 +46,19 @@ class Component extends React.Component<{}, {}> {
 						xLabels: this._unsortedValues.map(x => x.label),
 						lines: [
 							{
-								label: lang("Payments"),
+								label: text("Payments"),
 								data: this._unsortedValues.map(
 									x => x.totalPayments
 								)
 							},
 							{
-								label: lang("Expenses"),
+								label: text("Expenses"),
 								data: this._unsortedValues.map(
 									x => x.totalExpenses
 								)
 							},
 							{
-								label: lang("Profits"),
+								label: text("Profits"),
 								data: this._unsortedValues.map(
 									x => x.totalProfits
 								)

@@ -1,5 +1,5 @@
 import { BarChartComponent } from "@common-components";
-import { lang } from "@core";
+import { text } from "@core";
 import { Chart, statistics } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
@@ -45,7 +45,7 @@ class Component extends React.Component<{}, {}> {
 							bars: [
 								{
 									data: this.values.map(x => x.y),
-									label: lang("Age")
+									label: text("Age")
 								}
 							]
 						}

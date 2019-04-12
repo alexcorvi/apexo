@@ -4,9 +4,9 @@ import {
 	backup,
 	compact,
 	downloadCurrent,
-	lang,
 	restore,
 	status,
+	text,
 	user
 	} from "@core";
 import { setting } from "@modules";
@@ -44,11 +44,11 @@ export class SettingsPage extends React.Component<{}, {}> {
 	render() {
 		return (
 			<div className="settings-component p-15 p-l-10 p-r-10">
-				<SectionComponent title={lang(`General Setting`)}>
+				<SectionComponent title={text(`General Setting`)}>
 					<SettingInputComponent
 						element={
 							<Dropdown
-								label={lang("Language")}
+								label={text("Language")}
 								options={[
 									{ key: "en", text: "English" },
 									{ key: "ar", text: "العربية" }
@@ -63,7 +63,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 								disabled={!this.canEdit}
 							/>
 						}
-						info={lang(
+						info={text(
 							`Choose the main language of display menus and items`
 						)}
 					/>
@@ -71,7 +71,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 					<SettingInputComponent
 						element={
 							<Dropdown
-								label={lang("Date format")}
+								label={text("Date format")}
 								options={[
 									{ key: "dd/mm/yyyy", text: "dd/mm/yyyy" },
 									{ key: "mm/dd/yyyy", text: "mm/dd/yyyy" },
@@ -89,7 +89,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 								disabled={!this.canEdit}
 							/>
 						}
-						info={lang(
+						info={text(
 							`Set the date format to be used across this application`
 						)}
 					/>
@@ -97,12 +97,12 @@ export class SettingsPage extends React.Component<{}, {}> {
 					<SettingInputComponent
 						element={
 							<Dropdown
-								label={lang("Week ends on")}
+								label={text("Week ends on")}
 								options={dateNames
 									.days(true)
 									.map((dayName, index) => ({
 										key: index.toString(),
-										text: lang(dayName)
+										text: text(dayName)
 									}))}
 								defaultSelectedKey={setting.getSetting(
 									"weekend_num"
@@ -116,7 +116,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 								disabled={!this.canEdit}
 							/>
 						}
-						info={lang(`On which day the week ends`)}
+						info={text(`On which day the week ends`)}
 					/>
 
 					<SettingInputComponent
@@ -125,7 +125,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 								value={setting.getSetting(
 									"dropbox_accessToken"
 								)}
-								label={lang("Dropbox access token")}
+								label={text("Dropbox access token")}
 								onChange={(ev, val) => {
 									setting.setSetting(
 										"dropbox_accessToken",
@@ -140,18 +140,18 @@ export class SettingsPage extends React.Component<{}, {}> {
 								disabled={!this.canEdit}
 							/>
 						}
-						info={lang(
+						info={text(
 							`This access token is used to store files across the application, like backups and images`
 						)}
 					/>
 				</SectionComponent>
 
-				<SectionComponent title={lang(`Financial Settings`)}>
+				<SectionComponent title={text(`Financial Settings`)}>
 					{setting.getSetting("time_tracking") ? (
 						<SettingInputComponent
 							element={
 								<TextField
-									label={lang("Time expenses (per hour)")}
+									label={text("Time expenses (per hour)")}
 									type="number"
 									value={setting.getSetting("hourlyRate")}
 									onChange={(ev, newVal) => {
@@ -163,7 +163,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 									disabled={!this.canEdit}
 								/>
 							}
-							info={lang(
+							info={text(
 								// tslint:disable-next-line:max-line-length
 								`When time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses So here you can put the electricity, rent, and other time dependent expenses`
 							)}
@@ -175,7 +175,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 					<SettingInputComponent
 						element={
 							<TextField
-								label={lang("Currency symbol")}
+								label={text("Currency symbol")}
 								value={setting.getSetting("currencySymbol")}
 								onChange={(ev, newVal) => {
 									setting.setSetting(
@@ -186,16 +186,16 @@ export class SettingsPage extends React.Component<{}, {}> {
 								disabled={!this.canEdit}
 							/>
 						}
-						info={lang(
+						info={text(
 							`This symbol you enter here will be used across your application`
 						)}
 					/>
 				</SectionComponent>
 
-				<SectionComponent title={lang(`Optional Modules and Features`)}>
+				<SectionComponent title={text(`Optional Modules and Features`)}>
 					<Toggle
-						onText={lang("Prescriptions module enabled")}
-						offText={lang("Prescriptions module disabled")}
+						onText={text("Prescriptions module enabled")}
+						offText={text("Prescriptions module disabled")}
 						defaultChecked={
 							!!setting.getSetting("module_prescriptions")
 						}
@@ -208,8 +208,8 @@ export class SettingsPage extends React.Component<{}, {}> {
 						disabled={!this.canEdit}
 					/>
 					<Toggle
-						onText={lang("Orthodontic module enabled")}
-						offText={lang("Orthodontic module disabled")}
+						onText={text("Orthodontic module enabled")}
+						offText={text("Orthodontic module disabled")}
 						defaultChecked={
 							!!setting.getSetting("module_orthodontics")
 						}
@@ -222,8 +222,8 @@ export class SettingsPage extends React.Component<{}, {}> {
 						disabled={!this.canEdit}
 					/>
 					<Toggle
-						onText={lang("Statistics module enabled")}
-						offText={lang("Statistics module disabled")}
+						onText={text("Statistics module enabled")}
+						offText={text("Statistics module disabled")}
 						defaultChecked={
 							!!setting.getSetting("module_statistics")
 						}
@@ -236,8 +236,8 @@ export class SettingsPage extends React.Component<{}, {}> {
 						disabled={!this.canEdit}
 					/>
 					<Toggle
-						onText={lang("Time tracking enabled")}
-						offText={lang("Time tracking disabled")}
+						onText={text("Time tracking enabled")}
+						offText={text("Time tracking disabled")}
 						defaultChecked={!!setting.getSetting("time_tracking")}
 						onChange={(ev, val) => {
 							setting.setSetting(
@@ -249,7 +249,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 					/>
 				</SectionComponent>
 
-				<SectionComponent title={lang(`Backup and Restore`)}>
+				<SectionComponent title={text(`Backup and Restore`)}>
 					{status.online ? (
 						<div>
 							<DefaultButton
@@ -258,7 +258,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 								}}
 								iconProps={{ iconName: "ZipFolder" }}
 								className="m-l-5 m-t-5"
-								text={lang("Run compaction")}
+								text={text("Run compaction")}
 							/>
 
 							<DefaultButton
@@ -267,7 +267,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 								}}
 								className="m-l-5 m-t-5"
 								iconProps={{ iconName: "Database" }}
-								text={lang("Download a backup")}
+								text={text("Download a backup")}
 							/>
 
 							<DefaultButton
@@ -276,7 +276,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 								}
 								className="m-l-5 m-t-5"
 								iconProps={{ iconName: "DatabaseSync" }}
-								text={lang("Restore from file")}
+								text={text("Restore from file")}
 							/>
 							<input
 								ref={el => (this.inputEl = el)}
@@ -297,24 +297,24 @@ export class SettingsPage extends React.Component<{}, {}> {
 						</div>
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							{lang(
+							{text(
 								"Backup and restore functionality are not available while you're offline"
 							)}
 						</MessageBar>
 					)}
 				</SectionComponent>
 
-				<SectionComponent title={lang(`Automated Backup and Restore`)}>
+				<SectionComponent title={text(`Automated Backup and Restore`)}>
 					{status.online ? (
 						status.dropboxActive ? (
 							<div>
 								<Dropdown
-									label={lang("Backup frequency")}
+									label={text("Backup frequency")}
 									options={[
-										{ key: "d", text: lang("Daily") },
-										{ key: "w", text: lang("Weekly") },
-										{ key: "m", text: lang("Monthly") },
-										{ key: "n", text: lang("Never") }
+										{ key: "d", text: text("Daily") },
+										{ key: "w", text: text("Weekly") },
+										{ key: "m", text: text("Monthly") },
+										{ key: "n", text: text("Never") }
 									]}
 									defaultSelectedKey={setting.getSetting(
 										"backup_freq"
@@ -330,7 +330,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 
 								<TextField
 									value={setting.getSetting("backup_retain")}
-									label={lang("How many backups to retain")}
+									label={text("How many backups to retain")}
 									onChange={(ev, val) => {
 										setting.setSetting(
 											"backup_retain",
@@ -345,8 +345,8 @@ export class SettingsPage extends React.Component<{}, {}> {
 									<table className="ms-table">
 										<thead>
 											<tr>
-												<th>{lang("Backup")}</th>
-												<th>{lang("Actions")}</th>
+												<th>{text("Backup")}</th>
+												<th>{text("Actions")}</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -386,7 +386,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 															</td>
 															<td>
 																<TooltipHost
-																	content={lang(
+																	content={text(
 																		"Delete"
 																	)}
 																>
@@ -433,7 +433,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 																</TooltipHost>
 
 																<TooltipHost
-																	content={lang(
+																	content={text(
 																		"Restore"
 																	)}
 																>
@@ -493,7 +493,7 @@ export class SettingsPage extends React.Component<{}, {}> {
 						)
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							{lang(
+							{text(
 								"Backup and restore functionality are not available while you're offline"
 							)}
 						</MessageBar>
