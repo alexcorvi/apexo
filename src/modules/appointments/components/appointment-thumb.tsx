@@ -29,7 +29,7 @@ export class AppointmentThumbComponent extends React.Component<
 > {
 	@computed
 	get className() {
-		let className = "appointment-thumbnail-component";
+		let className = "atc-c";
 		className = className + " labeled";
 		if (this.props.appointment.dueToday) {
 			className = className + " today-due";

@@ -25,7 +25,7 @@ export class PatientDetailsPanel extends React.Component<{
 
 	render() {
 		return (
-			<div className="single-patient-details">
+			<div className="spd-pn">
 				<SectionComponent title={text(`Basic Info`)}>
 					<div className="name">
 						<TextField

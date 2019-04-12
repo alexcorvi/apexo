@@ -15,11 +15,11 @@
 	.header-component,
 	table.responsive tbody tr,
 	.calendar-component,
-	.statistics-component .charts .chart-wrapper .chart .graph,
-	.statistics-component .charts .chart-wrapper .chart,
+	.sc-pg .charts .chart-wrapper .chart .graph,
+	.sc-pg .charts .chart-wrapper .chart,
 	.quick .label,
 	.panel-heading,
-	.statistics-component .controls {
+	.sc-pg .controls {
 		box-shadow: none !important;
 	}
 
@@ -91,7 +91,7 @@
 		text-align: left !important;
 	}
 
-	.statistics-component .quick .label {
+	.sc-pg .quick .label {
 		background: #e3e3e3 !important;
 		color: inherit;
 	}

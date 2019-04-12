@@ -31,12 +31,12 @@
 		left: 7px;
 	}
 
-	.appointment-thumbnail-component .delete {
+	.atc-c .delete {
 		right: auto;
 		left: 12px;
 	}
 
-	.appointment-thumbnail-component.labeled:before {
+	.atc-c.labeled:before {
 		margin-right: auto;
 	}
 
@@ -209,14 +209,14 @@
 		margin-left: 0;
 	}
 
-	.editable-list-component .ms-DetailsRow-cell .delete {
+	.elc-c .ms-DetailsRow-cell .delete {
 		right: auto;
 		left: 0;
 		border-left: none;
 		border-right: 1px solid #e3e3e3;
 	}
 
-	.statistics-component {
+	.sc-pg {
 		.ms-CommandBar-primaryCommand {
 			& > div {
 				border-left: 1px solid #f4f4f4;

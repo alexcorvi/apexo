@@ -30,7 +30,7 @@ export class EditableListComponent extends React.Component<
 
 	render() {
 		return (
-			<div className="editable-list-component" style={this.props.style}>
+			<div className="elc-c" style={this.props.style}>
 				<div className="editable-list">
 					<div
 						className="input"

@@ -27,7 +27,7 @@ export class PatientAppointmentsPanel extends React.Component<
 
 	render() {
 		return (
-			<div className="single-patient-appointments appointments">
+			<div className="spa-panel appointments">
 				<SectionComponent title={text(`Patient Appointments`)}>
 					<AppointmentsList
 						ref={l => (this.l = l)}

@@ -34,7 +34,7 @@ export class PatientGalleryPanel extends React.Component<
 			<SectionComponent title={text(`Patient Gallery`)}>
 				{status.online ? (
 					status.dropboxActive ? (
-						<div className="single-patient-gallery">
+						<div className="spg-p">
 							{this.props.patient.gallery.length === 0 ? (
 								<MessageBar
 									messageBarType={MessageBarType.info}

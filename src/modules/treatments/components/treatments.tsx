@@ -29,7 +29,7 @@ export class Treatments extends React.Component<{}, {}> {
 
 	render() {
 		return (
-			<div className="treatments-component p-15 p-l-10 p-r-10">
+			<div className="tc-pg p-15 p-l-10 p-r-10">
 				<DataTableComponent
 					onDelete={
 						this.canEdit

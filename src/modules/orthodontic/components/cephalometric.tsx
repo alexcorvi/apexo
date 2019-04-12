@@ -52,7 +52,7 @@ export class CephalometricEditorPanel extends React.Component<{
 				onDismiss={() => {
 					this.props.onDismiss();
 				}}
-				className="external-service-panel"
+				className="ex-pnl"
 				onRenderNavigation={() => {
 					return (
 						<Row className="panel-heading">
