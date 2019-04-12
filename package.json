@@ -57,6 +57,8 @@
 		"upload": "bash scripts/upload.sh",
 		"deploy": "yarn run prod && yarn run upload",
 		"build-desktop": "bash scripts/build-desktop.sh",
-		"analyze": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json"
+		"analyze": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json /dist/application",
+		"analyze-prod": "webpack -p --env.production --mode production --profile --json > stats.json && webpack-bundle-analyzer stats.json dist/application/",
+		"list": "npm ls"
 	}
 }
