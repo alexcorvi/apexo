@@ -1,9 +1,6 @@
 import { DropboxFile } from "@core";
 import { setting } from "@modules";
 import { generateID } from "@utils";
-import * as pouchDB from "pouchdb-browser";
-
-const PouchDB: PouchDB.Static = (pouchDB as any).default;
 
 export const BACKUPS_DIR = "/backups";
 export const GALLERIES_DIR = "/galleries";
