@@ -68,7 +68,7 @@ class Router {
 	}
 
 	constructor() {
-		setInterval(async () => {
+		onhashchange = () => {
 			const newLocation = location.hash.substr(3);
 			if (newLocation !== this.currentLocation) {
 				this.currentLocation = location.hash.substr(3);
@@ -86,7 +86,7 @@ class Router {
 				}
 				this.reSyncing = false;
 			}
-		}, 20);
+		};
 
 		this.innerWidth = innerWidth;
 		addEventListener("resize", () => (this.innerWidth = innerWidth));
