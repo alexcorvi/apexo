@@ -1,6 +1,6 @@
 import { CropComponent } from "@common-components";
 import { files } from "@core";
-import { generateID } from "@utils";
+import { generateID, second } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Icon } from "office-ui-fabric-react";
@@ -106,7 +106,7 @@ export class PickAndUploadComponent extends React.Component<
 							}
 							this.props.onFinish(this.resultArr.filter(x => x));
 							clearInterval(checkInterval);
-						}, 100);
+						}, second / 2);
 					}}
 				/>
 				{this.loading ? (

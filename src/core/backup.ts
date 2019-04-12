@@ -11,7 +11,7 @@ import {
 	status,
 	text
 	} from "./";
-import { decode, encode } from "@utils";
+import { decode, encode, second } from "@utils";
 import { saveAs } from "file-saver";
 import * as pouchDB from "pouchdb-browser";
 const PouchDB: PouchDB.Static = (pouchDB as any).default;
@@ -72,7 +72,7 @@ export const backup = {
 					clearInterval(checkInterval);
 					resolve(dumps);
 				}
-			}, 500);
+			}, second / 2);
 		});
 	},
 
@@ -145,7 +145,7 @@ export const restore = {
 					await resync.resync();
 					location.reload();
 				}
-			});
+			}, second / 100);
 		});
 	},
 
