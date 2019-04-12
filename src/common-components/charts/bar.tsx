@@ -1,5 +1,4 @@
 import { colors } from "@common-components";
-import { Chart } from "chart.js";
 import { observer } from "mobx-react";
 import * as React from "react";
 
@@ -24,7 +23,9 @@ export class BarChartComponent extends React.Component<
 		Math.random()
 			.toString(32)
 			.substr(4);
-	private graph() {
+	private async graph() {
+		const ChartJS = await import("chart.js");
+		const Chart: typeof ChartJS = (ChartJS as any).default;
 		const ctx = (document.getElementById(
 			this.id
 		) as HTMLCanvasElement).getContext("2d") as CanvasRenderingContext2D;
