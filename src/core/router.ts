@@ -67,25 +67,31 @@ class Router {
 		history.go(location);
 	}
 
-	constructor() {
-		onhashchange = () => {
-			const newLocation = location.hash.substr(3);
-			if (newLocation !== this.currentLocation) {
-				this.currentLocation = location.hash.substr(3);
-				const namespace = this.currentLocation.split("/")[0];
-				this.reSyncing = true;
-				try {
-					const resyncModule = resync.modules.find(
-						x => x.namespace === namespace
-					);
-					if (resyncModule) {
-						resyncModule.resync();
-					}
-				} catch (e) {
-					console.log(e);
+	private async checkAndLoad() {
+		const newLocation = location.hash.substr(3);
+		if (newLocation !== this.currentLocation) {
+			this.currentLocation = location.hash.substr(3);
+			const namespace = this.currentLocation.split("/")[0];
+			this.reSyncing = true;
+			try {
+				const resyncModule = resync.modules.find(
+					x => x.namespace === namespace
+				);
+				if (resyncModule) {
+					resyncModule.resync();
 				}
-				this.reSyncing = false;
+			} catch (e) {
+				console.log(e);
 			}
+			this.reSyncing = false;
+		}
+	}
+
+	constructor() {
+		setTimeout(() => this.checkAndLoad(), 300);
+
+		onhashchange = () => {
+			this.checkAndLoad();
 		};
 
 		this.innerWidth = innerWidth;
