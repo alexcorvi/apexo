@@ -1,4 +1,5 @@
 import {
+	AsyncComponent,
 	Col,
 	fileTypes,
 	PickAndUploadComponent,
@@ -7,7 +8,7 @@ import {
 	SectionComponent
 	} from "@common-components";
 import { CEPHALOMETRIC_DIR, status, text, user } from "@core";
-import { CephalometricEditorPanel, CephalometricItem, OrthoCase, PatientGalleryPanel, setting } from "@modules";
+import { CephalometricItem, OrthoCase, PatientGalleryPanel, setting } from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -47,12 +48,23 @@ export class OrthoGalleryPanel extends React.Component<{
 				)}
 
 				{this.openCephalometricItem ? (
-					<CephalometricEditorPanel
-						onDismiss={() => {
-							this.openCephalometricItem = undefined;
-							this.props.orthoCase.triggerUpdate++;
+					<AsyncComponent
+						key="ortho-records"
+						loader={async () => {
+							const Component = (await import("./cephalometric"))
+								.CephalometricEditorPanel;
+							return this.openCephalometricItem ? (
+								<Component
+									onDismiss={() => {
+										this.openCephalometricItem = undefined;
+										this.props.orthoCase.triggerUpdate++;
+									}}
+									item={this.openCephalometricItem}
+								/>
+							) : (
+								<div />
+							);
 						}}
-						item={this.openCephalometricItem}
 					/>
 				) : (
 					""

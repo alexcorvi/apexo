@@ -13,8 +13,6 @@ import {
 	genderToString,
 	OrthoCase,
 	orthoCases,
-	OrthoCaseSheetPanel,
-	OrthoGalleryPanel,
 	Patient,
 	PatientAppointmentsPanel,
 	PatientDetailsPanel,
@@ -639,39 +637,63 @@ export class OrthoPage extends React.Component<{}, {}> {
 								)}
 
 								{this.viewWhich === 3 ? (
-									<OrthoCaseSheetPanel
-										orthoCase={this.selectedCase}
+									<AsyncComponent
+										key="ortho-case-sheet"
+										loader={async () => {
+											const Component = (await import("./case-sheet"))
+												.OrthoCaseSheetPanel;
+											return this.selectedCase ? (
+												<Component
+													orthoCase={
+														this.selectedCase
+													}
+												/>
+											) : (
+												<div />
+											);
+										}}
 									/>
 								) : (
 									""
 								)}
 
 								{this.viewWhich === 4 ? (
-									<div>
-										<AsyncComponent
-											key="ortho-records"
-											loader={async () => {
-												const Component = (await import("./records"))
-													.OrthoRecordsPanel;
-												return this.selectedCase ? (
-													<Component
-														orthoCase={
-															this.selectedCase
-														}
-													/>
-												) : (
-													<div />
-												);
-											}}
-										/>
-									</div>
+									<AsyncComponent
+										key="ortho-records"
+										loader={async () => {
+											const Component = (await import("./records"))
+												.OrthoRecordsPanel;
+											return this.selectedCase ? (
+												<Component
+													orthoCase={
+														this.selectedCase
+													}
+												/>
+											) : (
+												<div />
+											);
+										}}
+									/>
 								) : (
 									""
 								)}
 
 								{this.viewWhich === 5 ? (
-									<OrthoGalleryPanel
-										orthoCase={this.selectedCase}
+									<AsyncComponent
+										key="ortho-gallery"
+										loader={async () => {
+											const Component = (await import("./ortho-gallery"))
+												.OrthoGalleryPanel;
+											return this.selectedCase ? (
+												<Component
+													orthoCase={
+														this.selectedCase
+													}
+												/>
+											) : (
+												<div />
+											);
+										}}
 									/>
 								) : (
 									""
