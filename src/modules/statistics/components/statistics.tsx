@@ -51,7 +51,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 		return (
 			<div className="sc-pg p-15 p-l-10 p-r-10">
 				<DataTableComponent
-					maxItemsOnLoad={15}
+					maxItemsOnLoad={20}
 					className={"appointments-data-table"}
 					heads={[
 						text("Appointment"),

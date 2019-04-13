@@ -52,7 +52,7 @@ export class StaffPage extends React.Component<{}, {}> {
 				<Row gutter={16}>
 					<Col lg={16}>
 						<DataTableComponent
-							maxItemsOnLoad={15}
+							maxItemsOnLoad={10}
 							heads={[
 								text("Staff Member"),
 								text("Last/Next Appointment"),

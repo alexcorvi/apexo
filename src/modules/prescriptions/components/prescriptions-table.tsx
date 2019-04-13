@@ -129,7 +129,7 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 							]
 						};
 					})}
-					maxItemsOnLoad={15}
+					maxItemsOnLoad={20}
 				/>
 
 				{this.selectedPrescription ? (

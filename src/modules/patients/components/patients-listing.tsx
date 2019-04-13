@@ -131,7 +131,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 					""
 				)}
 				<DataTableComponent
-					maxItemsOnLoad={15}
+					maxItemsOnLoad={10}
 					className={"patients-data-table"}
 					heads={[
 						text("Patient"),

@@ -143,7 +143,7 @@ export class Treatments extends React.Component<{}, {}> {
 							]
 						};
 					})}
-					maxItemsOnLoad={30}
+					maxItemsOnLoad={20}
 				/>
 
 				{this.selectedTreatment ? (
