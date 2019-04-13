@@ -1,4 +1,5 @@
 import {
+	AsyncComponent,
 	Col,
 	DataTableComponent,
 	ProfileComponent,
@@ -12,7 +13,6 @@ import { text } from "@core";
 import {
 	ageBarChart,
 	Appointment,
-	AppointmentEditorPanel,
 	appointmentsByDateChart,
 	financesByDateChart,
 	genderPieChart,
@@ -259,11 +259,24 @@ export class StatisticsPage extends React.Component<{}, {}> {
 					]}
 				/>
 
-				<AppointmentEditorPanel
-					appointment={this.appointment}
-					onDismiss={() => (this.appointment = null)}
-					onDelete={() => (this.appointment = null)}
-				/>
+				{this.appointment ? (
+					<AsyncComponent
+						key="ae"
+						loader={async () => {
+							const AppointmentEditorPanel = (await import("../../appointments/components/appointment-editor"))
+								.AppointmentEditorPanel;
+							return (
+								<AppointmentEditorPanel
+									appointment={this.appointment}
+									onDismiss={() => (this.appointment = null)}
+									onDelete={() => (this.appointment = null)}
+								/>
+							);
+						}}
+					/>
+				) : (
+					""
+				)}
 
 				<div className="container-fluid m-t-20 quick">
 					<SectionComponent title={text("Quick stats")}>

@@ -1,15 +1,8 @@
-import { Col, ProfileSquaredComponent, Row } from "@common-components";
+import { AsyncComponent, Col, ProfileSquaredComponent, Row } from "@common-components";
 import { router, text, user } from "@core";
-import {
-	Appointment,
-	AppointmentEditorPanel,
-	appointments,
-	calendar,
-	Patient,
-	PatientLinkComponent
-	} from "@modules";
+import { Appointment, appointments, calendar, Patient, PatientLinkComponent } from "@modules";
 import { dateNames, num } from "@utils";
-import { computed, observable } from "mobx";
+import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Icon, TextField, Toggle } from "office-ui-fabric-react";
 import * as React from "react";
@@ -369,11 +362,24 @@ export class CalendarPage extends React.Component<{}, {}> {
 						})}
 					</div>
 				</div>
-				<AppointmentEditorPanel
-					appointment={this.appointment}
-					onDismiss={() => (this.appointment = null)}
-					onDelete={() => (this.appointment = null)}
-				/>
+				{this.appointment ? (
+					<AsyncComponent
+						key="ae"
+						loader={async () => {
+							const AppointmentEditorPanel = (await import("./appointment-editor"))
+								.AppointmentEditorPanel;
+							return (
+								<AppointmentEditorPanel
+									appointment={this.appointment}
+									onDismiss={() => (this.appointment = null)}
+									onDelete={() => (this.appointment = null)}
+								/>
+							);
+						}}
+					/>
+				) : (
+					""
+				)}
 			</div>
 		);
 	}

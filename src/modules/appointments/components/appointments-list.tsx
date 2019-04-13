@@ -1,5 +1,6 @@
+import { AsyncComponent } from "@common-components";
 import { text, user } from "@core";
-import { Appointment, AppointmentEditorPanel, appointments, AppointmentThumbComponent } from "@modules";
+import { Appointment, appointments, AppointmentThumbComponent } from "@modules";
 import { textualFilter } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -75,17 +76,36 @@ export class AppointmentsList extends React.Component<
 				) : (
 					""
 				)}
-				<AppointmentEditorPanel
-					onDismiss={() => (this.selectedAppointmentID = "")}
-					appointment={
-						appointments.list[
-							appointments.getIndexByID(
-								this.selectedAppointmentID
-							)
-						]
-					}
-					onDelete={() => (this.selectedAppointmentID = "")}
-				/>
+				{appointments.list[
+					appointments.getIndexByID(this.selectedAppointmentID)
+				] ? (
+					<AsyncComponent
+						key="ae"
+						loader={async () => {
+							const AppointmentEditorPanel = (await import("./appointment-editor"))
+								.AppointmentEditorPanel;
+							return (
+								<AppointmentEditorPanel
+									onDismiss={() =>
+										(this.selectedAppointmentID = "")
+									}
+									appointment={
+										appointments.list[
+											appointments.getIndexByID(
+												this.selectedAppointmentID
+											)
+										]
+									}
+									onDelete={() =>
+										(this.selectedAppointmentID = "")
+									}
+								/>
+							);
+						}}
+					/>
+				) : (
+					""
+				)}
 			</div>
 		);
 	}

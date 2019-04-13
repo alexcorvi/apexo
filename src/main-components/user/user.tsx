@@ -1,6 +1,6 @@
-import { Col, ProfileComponent, Row, SectionComponent } from "@common-components";
+import { AsyncComponent, Col, ProfileComponent, Row, SectionComponent } from "@common-components";
 import { status, text, user } from "@core";
-import { Appointment, AppointmentEditorPanel, AppointmentThumbComponent } from "@modules";
+import { Appointment, AppointmentThumbComponent } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
@@ -101,11 +101,24 @@ export class UserPanelView extends React.Component<{}, {}> {
 						</div>
 					)}
 				</SectionComponent>
-				<AppointmentEditorPanel
-					appointment={this.appointment}
-					onDismiss={() => (this.appointment = null)}
-					onDelete={() => (this.appointment = null)}
-				/>
+				{this.appointment ? (
+					<AsyncComponent
+						key="ae"
+						loader={async () => {
+							const AppointmentEditorPanel = (await import("../../modules/appointments/components/appointment-editor"))
+								.AppointmentEditorPanel;
+							return (
+								<AppointmentEditorPanel
+									appointment={this.appointment}
+									onDismiss={() => (this.appointment = null)}
+									onDelete={() => (this.appointment = null)}
+								/>
+							);
+						}}
+					/>
+				) : (
+					""
+				)}
 			</Panel>
 		);
 	}
