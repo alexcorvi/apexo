@@ -1,4 +1,3 @@
-import "./patient-link.scss";
 import { router } from "@core";
 import { patients } from "@modules";
 import { observer } from "mobx-react";

@@ -1,4 +1,3 @@
-import "./tag-input.scss";
 import { generateID } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";

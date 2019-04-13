@@ -1,4 +1,3 @@
-import "./login.scss";
 import { status, text } from "@core";
 import { store } from "@utils";
 import { computed, observable } from "mobx";

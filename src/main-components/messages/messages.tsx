@@ -1,4 +1,3 @@
-import "./messages.scss";
 import { messages } from "@core";
 import { observer } from "mobx-react";
 import { Icon } from "office-ui-fabric-react";

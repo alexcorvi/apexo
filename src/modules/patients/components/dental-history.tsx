@@ -1,4 +1,3 @@
-import "./dental-history.scss";
 import {
 	AsyncComponent,
 	Col,

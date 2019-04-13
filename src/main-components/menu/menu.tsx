@@ -1,4 +1,3 @@
-import "./menu.scss";
 import { menu, router, text } from "@core";
 import { observer } from "mobx-react";
 import { Icon, Nav, Panel, PanelType } from "office-ui-fabric-react";

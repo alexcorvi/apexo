@@ -1,0 +1,32 @@
+@import "./global-styles/shadows.scss";
+
+.confirmation-modal {
+	.ms-Panel-main {
+		box-shadow: 0px -20px 50px rgba(0, 0, 0, 0.14) !important;
+		height: 100px;
+		bottom: 0;
+		top: initial;
+		.ms-Panel-content {
+			padding-bottom: 0;
+			p {
+				margin-top: 20px;
+				margin-bottom: 15px;
+			}
+			.ms-Button {
+				margin-right: 10px;
+			}
+		}
+	}
+	.ms-Panel-content {
+		padding-top: 0;
+	}
+}
+
+.confirmation-modal.input-modal {
+	.ms-Panel-main {
+		box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.14) !important;
+		height: 160px;
+		bottom: initial;
+		top: 0;
+	}
+}

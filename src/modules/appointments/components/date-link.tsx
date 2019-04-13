@@ -1,4 +1,3 @@
-import "./date-link.scss";
 import { router } from "@core";
 import { setting } from "@modules";
 import { formatDate } from "@utils";

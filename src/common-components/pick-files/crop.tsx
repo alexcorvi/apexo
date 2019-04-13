@@ -1,4 +1,3 @@
-import "./crop.scss";
 import { Col, GridTableComponent, Row } from "@common-components";
 import { text } from "@core";
 import { generateID } from "@utils";

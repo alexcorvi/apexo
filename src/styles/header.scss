@@ -1,0 +1,59 @@
+@import "./global-styles/shadows.scss";
+@import "./global-styles/input-boxes.scss";
+
+.header-component {
+	padding-left: 10px;
+	padding-right: 10px;
+	position: fixed;
+	width: 100%;
+	top: 0;
+	background: #fff;
+	@include box_shadow(1);
+	section {
+		float: left;
+		padding: 10px 10px 0px;
+		width: 100%;
+		position: relative;
+	}
+	.notification {
+		.title,
+		.details {
+			padding: 7px;
+		}
+	}
+	.title {
+		position: relative;
+		margin-top: 10px;
+		margin-bottom: 15px;
+		text-align: center;
+		text-transform: capitalize;
+	}
+	.issue-bubble {
+		background: #e91e63;
+		width: 12px;
+		height: 12px;
+		display: inline-block;
+		position: absolute;
+		right: 47px;
+		top: 12px;
+		border-radius: 20px;
+		cursor: pointer;
+	}
+	.ms-OverflowSet {
+		display: inline-block;
+		margin-top: 9px;
+		.ms-Button-menuIcon {
+			font-size: 15px;
+		}
+	}
+	.right-buttons {
+		text-align: right;
+	}
+	.offline {
+		display: inline-block;
+		background: #ff5722;
+		color: #fff;
+		margin-right: 12px;
+		padding: 8px;
+	}
+}

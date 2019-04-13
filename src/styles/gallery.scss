@@ -1,0 +1,45 @@
+.spg-p {
+	.thumbs {
+		text-align: center;
+		border: 1px solid #f1f1f1;
+		padding: 5px;
+		width: 52px;
+		float: left;
+		.thumb {
+			height: 40px;
+			width: 40px;
+			background-size: cover;
+			display: inline-block;
+			margin-right: 5px;
+			&.selected {
+				border: 1px solid darkred;
+			}
+		}
+		.add-photo {
+			margin-bottom: 10px;
+		}
+		.placeholder {
+			padding: 13px;
+			background: #e3e3e3;
+			margin-bottom: 5px;
+		}
+	}
+	.viewport {
+		float: left;
+		margin-left: 5px;
+		border: 1px solid #f1f1f1;
+		padding: 5px;
+		width: calc(100% - 60px);
+		position: relative;
+		img {
+			width: 100%;
+		}
+		.delete-photo {
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			background: #fff;
+			border: 1px solid #f1f1f1;
+		}
+	}
+}

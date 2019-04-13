@@ -1,0 +1,9 @@
+.pc-pg {
+	table.responsive tbody tr td:not(.no-label):before {
+		display: none;
+	}
+
+	table.responsive tbody tr td.no-label {
+		text-align: left;
+	}
+}

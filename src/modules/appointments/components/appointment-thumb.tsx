@@ -1,4 +1,3 @@
-import "./appointment-thumb.scss";
 import { ProfileSquaredComponent } from "@common-components";
 import { Appointment, appointments, setting } from "@modules";
 import { PatientLinkComponent } from "@modules";

@@ -1,0 +1,29 @@
+@import "./global-styles/shadows.scss";
+
+.spd-pn {
+	.gender {
+		margin-bottom: 12px;
+	}
+	.patient-tags {
+		border: 1px solid #c8c8c8;
+		transition: 0.3s all;
+		&:hover {
+			border-color: #0078d7;
+		}
+	}
+	.avatar {
+		text-align: center;
+		font-size: 100px;
+		color: #0078d7;
+		border: 1px;
+	}
+	.buttons {
+		margin-top: 20px;
+		button {
+			width: 100%;
+		}
+		.delete {
+			position: static !important;
+		}
+	}
+}

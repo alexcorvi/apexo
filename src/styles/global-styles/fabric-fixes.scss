@@ -1,0 +1,214 @@
+@import "./shadows.scss";
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+	font-weight: 100;
+}
+
+.ms-Button--compound .ms-Button-icon {
+	padding-bottom: 8px;
+	font-size: 17px;
+}
+
+.ms-Nav-groupHeaderFontSize {
+	font-size: 14px !important;
+	font-weight: 400 !important;
+	.ms-Nav-chevron {
+		font-size: 10px !important;
+	}
+}
+
+.ms-table {
+	@include box_shadow(2);
+	width: 100%;
+	border-collapse: collapse;
+	thead tr th {
+		text-align: left;
+	}
+	th,
+	td {
+		border: none;
+		background: #fff;
+		padding: 12px;
+		font-size: 14px;
+	}
+	th {
+		font-weight: 300;
+		font-size: 13px;
+		padding: 12px 15px;
+		background: #fafafa;
+		.sort-indicators .positive,
+		.sort-indicators .negative {
+			display: none;
+		}
+		&.current {
+			background: #212121;
+			color: #fff;
+			.sort-indicators {
+				float: right;
+			}
+			&.positive {
+				.sort-indicators .positive {
+					display: block;
+				}
+			}
+			&.negative {
+				.sort-indicators .negative {
+					display: block;
+				}
+			}
+		}
+	}
+	.table-head-sort {
+		cursor: pointer;
+		&:hover {
+			background: #f5f5f5;
+			color: #212121;
+		}
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.ms-Panel-content {
+		padding-bottom: 40px;
+	}
+	#root {
+		padding-bottom: 40px;
+	}
+	.dental-history-toggle {
+		display: none;
+	}
+	.ms-CommandBarItem-commandText {
+		display: none !important;
+	}
+	table.responsive {
+		margin: 0;
+		padding: 0;
+		border: 1px solid transparent;
+		box-shadow: none !important;
+		thead {
+			display: none;
+		}
+		tbody {
+			tr {
+				background: #fff;
+				display: block;
+				margin: 0 auto;
+				margin-top: 15px;
+				td {
+					display: block;
+					text-align: right;
+					font-size: 14px;
+				}
+			}
+		}
+	}
+}
+.ms-BasePicker {
+	.ms-BasePicker-text {
+		border-color: #a6a6a6;
+	}
+	.ms-BasePicker-input {
+		height: auto;
+	}
+}
+
+.ms-Persona.treatment-link.ms-Persona--xxs {
+	height: 25px;
+	.ms-Persona-primaryText {
+		font-size: 12px;
+	}
+}
+
+.ms-Button--primary {
+	border-radius: 2px;
+	transition: 0.4s all;
+	&:hover {
+		@include box_shadow(3);
+	}
+	&.delete {
+		background: #f44336;
+		&:hover {
+			background: #c62828;
+		}
+	}
+}
+
+.ms-Toggle-stateText {
+	position: relative;
+	top: 2px;
+}
+
+.ms-Dropdown-container {
+	margin-bottom: 10px;
+}
+
+.ms-TextField {
+	margin-bottom: 10px !important;
+}
+
+.ms-Panel-content {
+	height: 100%;
+	padding-top: 35px;
+	padding-bottom: 35px;
+	overflow-y: auto;
+}
+
+
+
+html,
+body {
+	overflow-x: hidden !important;
+	&.has-panel {
+		overflow: hidden;
+	}
+}
+
+body {
+	background: #f5f5f5 !important;
+	font-family: "Segoe UI WestEuropean";
+
+	line-height: 1;
+	height: auto;
+}
+
+hr {
+	border: none;
+	margin-bottom: 20px;
+	border-top: 1px dotted #e0e0e0;
+}
+
+.hidden {
+	display: none;
+}
+
+.version-num {
+	font-size: 12px;
+	position: absolute;
+	color: rgb(227, 227, 227);
+	bottom: 5px;
+	right: 12px;
+	z-index: -1;
+}
+
+.ex-pnl {
+	.ms-Panel-main {
+		width: 100% !important;
+		left: 0 !important;
+
+		.ms-Panel-content {
+			padding-top: 70px;
+			margin-top: -70px;
+			height: 100vh;
+
+			iframe {
+				height: 100%;
+				width: 100%;
+				border: 0;
+			}
+		}
+	}
+}

@@ -1023,6 +1023,47 @@ h5 {
   padding-bottom: 35px;
   overflow-y: auto; }
 
+html,
+body {
+  overflow-x: hidden !important; }
+  html.has-panel,
+  body.has-panel {
+    overflow: hidden; }
+
+body {
+  background: #f5f5f5 !important;
+  font-family: "Segoe UI WestEuropean";
+  line-height: 1;
+  height: auto; }
+
+hr {
+  border: none;
+  margin-bottom: 20px;
+  border-top: 1px dotted #e0e0e0; }
+
+.hidden {
+  display: none; }
+
+.version-num {
+  font-size: 12px;
+  position: absolute;
+  color: #e3e3e3;
+  bottom: 5px;
+  right: 12px;
+  z-index: -1; }
+
+.ex-pnl .ms-Panel-main {
+  width: 100% !important;
+  left: 0 !important; }
+  .ex-pnl .ms-Panel-main .ms-Panel-content {
+    padding-top: 70px;
+    margin-top: -70px;
+    height: 100vh; }
+    .ex-pnl .ms-Panel-main .ms-Panel-content iframe {
+      height: 100%;
+      width: 100%;
+      border: 0; }
+
 .fs-10 {
   font-size: 10px; }
 
@@ -2296,362 +2337,6 @@ h5 {
 [dir="rtl"] .calendar-component .full-day-col {
   float: right; }
 
-html,
-body {
-  overflow-x: hidden !important; }
-  html.has-panel,
-  body.has-panel {
-    overflow: hidden; }
-
-body {
-  background: #f5f5f5 !important;
-  font-family: "Segoe UI WestEuropean";
-  line-height: 1;
-  height: auto; }
-
-hr {
-  border: none;
-  margin-bottom: 20px;
-  border-top: 1px dotted #e0e0e0; }
-
-.hidden {
-  display: none; }
-
-.version-num {
-  font-size: 12px;
-  position: absolute;
-  color: #e3e3e3;
-  bottom: 5px;
-  right: 12px;
-  z-index: -1; }
-
-.ex-pnl .ms-Panel-main {
-  width: 100% !important;
-  left: 0 !important; }
-  .ex-pnl .ms-Panel-main .ms-Panel-content {
-    padding-top: 70px;
-    margin-top: -70px;
-    height: 100vh; }
-    .ex-pnl .ms-Panel-main .ms-Panel-content iframe {
-      height: 100%;
-      width: 100%;
-      border: 0; }
-@media screen and (max-width: 800px) {
-  .patients-component {
-    padding: 10px; } }
-.pc-pg table.responsive tbody tr td:not(.no-label):before {
-  display: none; }
-
-.pc-pg table.responsive tbody tr td.no-label {
-  text-align: left; }
-.settings-component {
-  font-size: 13px; }
-  .settings-component .ms-MessageBar {
-    margin-top: 22px; }
-    .settings-component .ms-MessageBar .ms-MessageBar-innerText {
-      margin-top: 0 !important; }
-  .settings-component .form .ms-TextField-prefix {
-    font-size: 11px;
-    width: 90px; }
-  .settings-component hr {
-    border: none;
-    border-bottom: 1px solid #e3e3e3;
-    margin-bottom: 20px;
-    margin-top: 20px; }
-  .settings-component .hint {
-    margin-top: 17px;
-    font-size: 12px;
-    color: #424242;
-    line-height: 20px;
-    margin-bottom: 30px; }
-
-@media screen and (min-width: 992px) {
-  .settings-component {
-    margin-top: 67px;
-    margin-right: 15px;
-    border-radius: 3px; } }
-.sc-pg .ms-CommandBar-primaryCommand > div {
-  margin-top: 4px;
-  border-right: 1px solid #f4f4f4; }
-  .sc-pg .ms-CommandBar-primaryCommand > div.ms-OverflowSet-overflowButton {
-    margin-top: 0; }
-
-.sc-pg .commandBar .ms-TextField-fieldGroup,
-.sc-pg .commandBar .ms-Dropdown-title {
-  border: none; }
-
-.sc-pg .commandBar .ms-DatePicker input {
-  font-size: 13px;
-  padding: 0 10px; }
-
-.sc-pg .commandBar .ms-Dropdown-container {
-  margin-top: 4px; }
-
-.sc-pg .controls {
-  padding: 10px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  background: #fff; }
-
-.sc-pg .quick label {
-  font-size: 13px;
-  margin-bottom: 5px;
-  color: #757575;
-  display: block;
-  text-align: center; }
-
-.sc-pg .charts {
-  margin-top: 15px; }
-  .sc-pg .charts .chart-wrapper {
-    margin-bottom: 15px; }
-    .sc-pg .charts .chart-wrapper .chart {
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
-      background: #fff; }
-      .sc-pg .charts .chart-wrapper .chart .graph {
-        padding-top: 10px;
-        border-radius: 5px 5px 0 0;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
-      .sc-pg .charts .chart-wrapper .chart .name {
-        padding: 15px;
-        padding-bottom: 0;
-        border-top: 1px solid whitesmoke; }
-      .sc-pg .charts .chart-wrapper .chart .description {
-        color: #9e9e9e;
-        font-size: 12px;
-        display: inline-block;
-        margin-top: 10px;
-        padding: 15px;
-        padding-top: 0; }
-.tc-pg table.responsive tbody tr td:not(.no-label):before {
-  display: none; }
-
-.tc-pg table.responsive tbody tr td.no-label {
-  text-align: left; }
-.appointment-hr {
-  border: none;
-  margin-bottom: 20px;
-  border-top: 1px dotted #e0e0e0; }
-
-.appointment-top {
-  position: relative; }
-  .appointment-top .send-reminder {
-    position: absolute;
-    top: 25px;
-    right: 0; }
-
-.appointment-input {
-  margin-bottom: 20px;
-  position: relative; }
-  .appointment-input .time-input {
-    display: inline-block;
-    margin-bottom: 0;
-    width: 25%; }
-    .appointment-input .time-input:not(.seconds) .ms-TextField-wrapper div {
-      border-right: none; }
-  .appointment-input .appendage {
-    position: absolute; }
-    .appointment-input .appendage.stop {
-      background: #ff9800; }
-  .appointment-input label:not(.ms-Checkbox-label) {
-    display: block;
-    margin-bottom: 10px; }
-  .appointment-input .ms-Checkbox {
-    margin-bottom: 3px; }
-  .appointment-input .involved-teeth .ms-BasePicker-text,
-  .appointment-input .prescription .ms-BasePicker-text,
-  .appointment-input .treatment-type .ms-Dropdown-title {
-    border-color: #a6a6a6; }
-  .appointment-input .payment-insight {
-    margin-top: 8px; }
-  .appointment-input .payment-insight,
-  .appointment-input .insight {
-    font-size: 12px; }
-  .appointment-input .prescription .item {
-    display: none; }
-  .appointment-input .prescription .input {
-    border-bottom: none; }
-  .appointment-input .insight span {
-    padding: 2px 7px 3px;
-    border-radius: 20px;
-    background: #b71c1c; }
-    .appointment-input .insight span.num-0 {
-      color: #262626;
-      background: transparent; }
-    .appointment-input .insight span.num-1 {
-      background: #ffebee;
-      color: #262626; }
-    .appointment-input .insight span.num-2 {
-      background: #ffcdd2; }
-    .appointment-input .insight span.num-3 {
-      background: #ef9a9a; }
-    .appointment-input .insight span.num-4 {
-      background: #e57373; }
-    .appointment-input .insight span.num-5 {
-      background: #ef5350; }
-    .appointment-input .insight span.num-6 {
-      background: #f44336; }
-    .appointment-input .insight span.num-7 {
-      background: #e53935; }
-    .appointment-input .insight span.num-8 {
-      background: #d32f2f; }
-    .appointment-input .insight span.num-9 {
-      background: #c62828; }
-
-.print-heading {
-  display: none; }
-
-@media print {
-  html,
-  body {
-    overflow: hidden; }
-  .print-heading {
-    display: block; }
-  .ms-Panel-main {
-    width: 100% !important; }
-  .ms-Panel-commands {
-    display: none; }
-  #prescription-items {
-    background-color: white;
-    height: 100%;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    margin: 0;
-    padding: 30px;
-    font-size: 14px;
-    line-height: 18px;
-    z-index: 9999999; }
-  .ms-Persona-primaryText {
-    font-size: 17px; }
-  .ms-Persona-secondaryText {
-    font-size: 14px;
-    color: #000; }
-  .m-b-5 {
-    width: 100%;
-    padding-bottom: 15px;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #000; }
-  .ant-col-4 {
-    display: none; }
-  .ms-Panel-main {
-    width: 100%; }
-  @page {
-    size: auto;
-    /* auto is the initial value */
-    margin: 0mm;
-    /* this affects the margin in the printer settings */ }
-  .ms-Button-icon {
-    display: none; } }
-
-.ms-Slider-value {
-  margin: 0 5px 0 0;
-  font-size: 13px;
-  font-style: italic; }
-.elc-c {
-  margin-top: 10px;
-  font-size: 13px;
-  line-height: 1;
-  border: 1px solid #a6a6a6; }
-  .elc-c:hover {
-    border: 1px solid #121212; }
-  .elc-c .editable-list .new-item-input {
-    border: none;
-    background: #fff;
-    display: block;
-    width: 100%;
-    padding: 8px; }
-  .elc-c .input {
-    transition: 0.3s all;
-    background: #fff; }
-    .elc-c .input .input-icon {
-      padding: 9px;
-      color: #2196f3;
-      cursor: pointer; }
-    .elc-c .input .input-image {
-      color: #2196f3;
-      font-size: 20px;
-      padding: 6px 8px;
-      cursor: pointer; }
-    .elc-c .input .input-field {
-      border: none;
-      display: block;
-      width: 100%; }
-  .elc-c .ms-TextField-fieldGroup {
-    border: none;
-    min-height: auto !important;
-    background: transparent; }
-  .elc-c .ms-DetailsRow-cell {
-    border-top: 1px solid #f1f1f1; }
-    .elc-c .ms-DetailsRow-cell textarea {
-      font-size: 13px;
-      padding: 10px;
-      background: transparent;
-      margin-right: 35px; }
-    .elc-c .ms-DetailsRow-cell .delete {
-      position: absolute;
-      top: 0;
-      right: 0;
-      border-left: 1px solid #e3e3e3; }
-  .elc-c .el-expander {
-    padding: 10px 0;
-    margin-top: -10px;
-    margin-bottom: -10px; }
-.data-table .ms-CommandBar {
-  box-sizing: content-box;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  background-color: #fff !important;
-  border-bottom: 1px solid #e0e0e0; }
-
-.data-table .ms-table {
-  background: #fafafa; }
-  .data-table .ms-table td.clickable {
-    transition: 0.3s all;
-    cursor: pointer; }
-    .data-table .ms-table td.clickable:hover {
-      background: #f5f5f5; }
-
-.data-table tr {
-  border-bottom: 1px solid #f3f3f3; }
-
-.data-table .ms-SearchBox {
-  border: none;
-  margin-top: 4px; }
-
-.data-table .ms-CommandBar-secondaryCommand {
-  border-left: 1px solid #f3f3f3; }
-
-.data-table .ms-CommandBarItem-link {
-  background: #fff !important;
-  transition: 0.3s all; }
-
-.data-table .ms-CommandBarItem-link:hover {
-  background: #eeeeee !important; }
-
-.data-table .no-data {
-  text-align: center;
-  background: #424242;
-  padding: 15px;
-  color: #fff;
-  font-size: 13px; }
-
-.data-table .action-button {
-  background: #fff;
-  color: #212121;
-  border-radius: 3px;
-  border: 1px solid #f1f1f1;
-  margin-right: 5px;
-  margin-bottom: 5px; }
-  .data-table .action-button.delete:hover {
-    color: #fff;
-    background: #f44336;
-    border-color: #f44336; }
-  .data-table .action-button:hover {
-    border-color: #00bcd4; }
-
-.data-table .delete-td {
-  text-align: right;
-  padding-right: 12px; }
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
 /* stylelint-disable no-duplicate-selectors */
 /* stylelint-disable declaration-bang-space-before,no-duplicate-selectors */
@@ -5863,169 +5548,129 @@ hr {
     -webkit-order: 0;
     -ms-flex-order: 0;
     order: 0; } }
-.crop-dialog .ms-Dialog-inner {
-  padding: 0;
-  margin-top: 10px; }
 
-.crop-dialog .ms-Dialog-main {
-  max-width: none; }
+.appointment-hr {
+  border: none;
+  margin-bottom: 20px;
+  border-top: 1px dotted #e0e0e0; }
 
-.crop-dialog .editor {
+.appointment-top {
   position: relative; }
-  .crop-dialog .editor .grid {
+  .appointment-top .send-reminder {
     position: absolute;
+    top: 25px;
+    right: 0; }
+
+.appointment-input {
+  margin-bottom: 20px;
+  position: relative; }
+  .appointment-input .time-input {
+    display: inline-block;
+    margin-bottom: 0;
+    width: 25%; }
+    .appointment-input .time-input:not(.seconds) .ms-TextField-wrapper div {
+      border-right: none; }
+  .appointment-input .appendage {
+    position: absolute; }
+    .appointment-input .appendage.stop {
+      background: #ff9800; }
+  .appointment-input label:not(.ms-Checkbox-label) {
+    display: block;
+    margin-bottom: 10px; }
+  .appointment-input .ms-Checkbox {
+    margin-bottom: 3px; }
+  .appointment-input .involved-teeth .ms-BasePicker-text,
+  .appointment-input .prescription .ms-BasePicker-text,
+  .appointment-input .treatment-type .ms-Dropdown-title {
+    border-color: #a6a6a6; }
+  .appointment-input .payment-insight {
+    margin-top: 8px; }
+  .appointment-input .payment-insight,
+  .appointment-input .insight {
+    font-size: 12px; }
+  .appointment-input .prescription .item {
+    display: none; }
+  .appointment-input .prescription .input {
+    border-bottom: none; }
+  .appointment-input .insight span {
+    padding: 2px 7px 3px;
+    border-radius: 20px;
+    background: #b71c1c; }
+    .appointment-input .insight span.num-0 {
+      color: #262626;
+      background: transparent; }
+    .appointment-input .insight span.num-1 {
+      background: #ffebee;
+      color: #262626; }
+    .appointment-input .insight span.num-2 {
+      background: #ffcdd2; }
+    .appointment-input .insight span.num-3 {
+      background: #ef9a9a; }
+    .appointment-input .insight span.num-4 {
+      background: #e57373; }
+    .appointment-input .insight span.num-5 {
+      background: #ef5350; }
+    .appointment-input .insight span.num-6 {
+      background: #f44336; }
+    .appointment-input .insight span.num-7 {
+      background: #e53935; }
+    .appointment-input .insight span.num-8 {
+      background: #d32f2f; }
+    .appointment-input .insight span.num-9 {
+      background: #c62828; }
+
+.print-heading {
+  display: none; }
+
+@media print {
+  html,
+  body {
+    overflow: hidden; }
+  .print-heading {
+    display: block; }
+  .ms-Panel-main {
+    width: 100% !important; }
+  .ms-Panel-commands {
+    display: none; }
+  #prescription-items {
+    background-color: white;
     height: 100%;
     width: 100%;
-    z-index: 9999;
-    pointer-events: none;
-    background-size: 30px 100%, 100% 30px;
-    background-image: linear-gradient(to right, #fff 0%, transparent 2%, transparent 100%), linear-gradient(to bottom, #fff 0%, transparent 2%, transparent 100%); }
-  .crop-dialog .editor .prev-overlay {
-    position: absolute;
-    left: 0;
+    position: fixed;
     top: 0;
-    opacity: 0.6;
-    filter: saturate(2);
-    pointer-events: none;
+    left: 0;
+    margin: 0;
+    padding: 30px;
+    font-size: 14px;
+    line-height: 18px;
+    z-index: 9999999; }
+  .ms-Persona-primaryText {
+    font-size: 17px; }
+  .ms-Persona-secondaryText {
+    font-size: 14px;
+    color: #000; }
+  .m-b-5 {
+    width: 100%;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #000; }
+  .ant-col-4 {
+    display: none; }
+  .ms-Panel-main {
     width: 100%; }
+  @page {
+    size: auto;
+    /* auto is the initial value */
+    margin: 0mm;
+    /* this affects the margin in the printer settings */ }
+  .ms-Button-icon {
+    display: none; } }
 
-.crop-dialog .crop-controls {
-  padding: 10px;
-  padding: 10px;
-  background: #f1f1f1;
-  border-bottom: 1px solid #e3e3e3; }
-  .crop-dialog .crop-controls .ms-Button {
-    margin-top: 10px;
-    background: #e3e3e3; }
+.ms-Slider-value {
+  margin: 0 5px 0 0;
+  font-size: 13px;
+  font-style: italic; }
 
-.crop-dialog .active-button {
-  background: #e3e3e3; }
-.profile-squared {
-  display: inline-flex !important; }
-  .profile-squared .ms-Persona-initials {
-    border-radius: 0;
-    font-size: 14px; }
-  .profile-squared .ms-Persona-details {
-    line-height: 1.5; }
-  .profile-squared.size-3 .ms-Persona-initials {
-    font-size: 16px; }
-.cl-section {
-  background: #fff;
-  margin-top: 10px;
-  padding: 15px;
-  border-radius: 3px;
-  border: 1px solid #e3e3e3;
-  position: relative; }
-  .cl-section h3 {
-    margin-bottom: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px dotted #e0e0e0;
-    margin-top: 0; }
-  .cl-section .chevron {
-    position: absolute;
-    top: 7px;
-    right: 7px; }
-  .cl-section .cl-section-title {
-    cursor: pointer; }
-    .cl-section .cl-section-title:hover {
-      color: #004578; }
-    .cl-section .cl-section-title.only-title {
-      margin-bottom: 0;
-      padding: 0;
-      border: none; }
-.tag-input-component {
-  position: relative;
-  background: #fff;
-  padding: 3px 5px;
-  font-size: 13px;
-  border: 1px solid #a6a6a6; }
-  .tag-input-component .input {
-    border: none;
-    background: #fff;
-    display: block;
-    width: 100%;
-    padding: 5px;
-    border-bottom: 1px dotted #a6a6a6; }
-  .tag-input-component .show-all {
-    position: absolute;
-    top: 9px;
-    right: 12px;
-    cursor: pointer; }
-  .tag-input-component .item {
-    background: #eee;
-    padding: 5px;
-    display: inline-block;
-    margin-right: 5px;
-    margin-top: 5px; }
-  .tag-input-component .delete-tag-input-item {
-    font-size: 10px;
-    padding: 5px;
-    margin-left: 5px;
-    cursor: pointer; }
-    .tag-input-component .delete-tag-input-item:hover {
-      background: #e0e0e0; }
-  .tag-input-component .options-menu {
-    z-index: 999;
-    display: block;
-    position: absolute;
-    background: #fff;
-    width: 100%;
-    right: 0;
-    top: 34px;
-    max-height: 200px;
-    overflow-y: auto;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
-    .tag-input-component .options-menu .options-item {
-      display: block;
-      background: #f5f5f5;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-top: 1px solid #e0e0e0; }
-      .tag-input-component .options-menu .options-item:hover, .tag-input-component .options-menu .options-item.selected {
-        background: #e3e3e3; }
-.grid-table {
-  position: absolute;
-  z-index: 99;
-  width: 100%;
-  height: 100%;
-  text-align: right;
-  color: #fff;
-  opacity: 0.5;
-  pointer-events: none;
-  border-spacing: 0;
-  border-collapse: collapse; }
-  .grid-table td {
-    padding-right: 3px;
-    border-right: 1px solid #fff;
-    border-bottom: 1px solid #fff;
-    font-size: 8px; }
-.label {
-  background: #fff;
-  padding: 5px 10px 7px;
-  color: #000;
-  border-radius: 2px;
-  font-size: 13px;
-  margin-right: 3px;
-  margin-bottom: 3px;
-  display: inline-block;
-  border: 1px solid #e3e3e3; }
-  .label.clickable {
-    cursor: pointer; }
-  .label.warning {
-    border-color: #fb8c00;
-    color: #fb8c00; }
-  .label.primary {
-    border-color: #3f51b5;
-    color: #3f51b5; }
-  .label.danger {
-    border-color: #e91e63;
-    color: #e91e63; }
-  .label.success {
-    border-color: #4caf50;
-    color: #4caf50; }
-  .label.info {
-    border-color: #212121;
-    color: #212121; }
 .atc-c {
   position: relative;
   transition: 0.4s all; }
@@ -6124,231 +5769,7 @@ hr {
       box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
     .atc-c .appointment-patient-link i {
       display: none; }
-.date-link a {
-  font-size: 12px;
-  color: #2196F3;
-  cursor: pointer;
-  border-bottom: 1px dashed #2196F3;
-  padding-bottom: 3px; }
-  .date-link a .icon {
-    margin-right: 5px;
-    position: relative;
-    top: 1px; }
-.ortho-records .ms-DetailsList {
-  overflow: hidden; }
 
-.ortho-records .album {
-  text-align: center; }
-  .ortho-records .album table {
-    width: 100%; }
-    .ortho-records .album table td {
-      position: relative;
-      overflow: hidden; }
-    .ortho-records .album table .days-num {
-      font-size: 12px;
-      display: block;
-      border: 1px dashed #e3e3e3;
-      border-left: none;
-      border-right: 0;
-      padding: 10px 0;
-      text-align: center; }
-    .ortho-records .album table .term-initials {
-      font-size: 12px;
-      font-style: italic;
-      margin-bottom: 3px;
-      display: inline-block;
-      padding: 7px;
-      height: 27px;
-      width: 27px;
-      border-bottom: 1px solid #f1f1f1; }
-    .ortho-records .album table .photo {
-      position: relative;
-      cursor: pointer; }
-      .ortho-records .album table .photo .hover-effect {
-        display: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        padding-top: 15%;
-        background: #0000005e;
-        color: #fff; }
-      .ortho-records .album table .photo:hover .hover-effect {
-        display: block; }
-    .ortho-records .album table .clickable-icon {
-      display: inline-block;
-      cursor: pointer;
-      text-align: center;
-      background: #f1f1f1; }
-      .ortho-records .album table .clickable-icon:hover {
-        background: #2196f3;
-        color: #fff; }
-      .ortho-records .album table .clickable-icon.delete-visit:hover {
-        background: #f44336; }
-      .ortho-records .album table .clickable-icon.add-photo:hover {
-        background: #00aba9; }
-
-.photo-dialog .ms-DetailsRow,
-.visit-dialog .ms-DetailsRow {
-  border-bottom: 1px solid #f1f1f1; }
-
-.photo-dialog .ms-Dialog-main,
-.visit-dialog .ms-Dialog-main {
-  width: 350px;
-  overflow: hidden; }
-
-.photo-dialog .ms-Dialog-inner,
-.visit-dialog .ms-Dialog-inner {
-  padding: 0;
-  border-top: 1px solid #e3e3e3;
-  margin-top: 12px; }
-  .photo-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button,
-  .visit-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button {
-    font-size: 12px; }
-    .photo-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button i,
-    .visit-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button i {
-      font-size: 12px; }
-  .photo-dialog .ms-Dialog-inner .ms-CommandBar .active-button,
-  .visit-dialog .ms-Dialog-inner .ms-CommandBar .active-button {
-    background: #e3e3e3; }
-
-.photo-dialog .ms-Dialog-actions,
-.visit-dialog .ms-Dialog-actions {
-  margin-top: 0; }
-
-.photo-dialog .overlay-img,
-.visit-dialog .overlay-img {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  opacity: 0.6;
-  filter: saturate(2);
-  pointer-events: none; }
-.dental-history .chart {
-  direction: ltr !important; }
-
-.dental-history table {
-  direction: ltr !important;
-  margin-bottom: 20px;
-  width: 100%;
-  border-collapse: collapse; }
-  .dental-history table.permanent tr td:nth-child(8) {
-    border-right: 2px solid #000; }
-  .dental-history table.permanent tr td:nth-child(9) {
-    border-left: 2px solid #000; }
-  .dental-history table.deciduous tr td:nth-child(5) {
-    border-right: 2px solid #000; }
-  .dental-history table.deciduous tr td:nth-child(6) {
-    border-left: 2px solid #000; }
-  .dental-history table tr td {
-    position: relative;
-    background: #fff;
-    transition: 0.4s all;
-    cursor: pointer;
-    text-align: center;
-    padding: 10px;
-    color: #000;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
-    .dental-history table tr td .has-notes {
-      transition: 0.4s all;
-      background: #2196f3;
-      height: 10px;
-      width: 10px;
-      display: inline-block;
-      position: absolute;
-      top: 5px;
-      left: 5px;
-      border-radius: 5px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
-    .dental-history table tr td:hover {
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
-    .dental-history table tr td.filled {
-      background: #ffc107;
-      color: #fff; }
-      .dental-history table tr td.filled .has-notes {
-        background: #ff6f00; }
-    .dental-history table tr td.compromised {
-      background: #f44336;
-      color: #fff; }
-      .dental-history table tr td.compromised .has-notes {
-        background: #b71c1c; }
-    .dental-history table tr td.endo {
-      background: #673ab7;
-      color: #fff; }
-      .dental-history table tr td.endo .has-notes {
-        background: #9575cd; }
-    .dental-history table tr td.missing {
-      color: #eee;
-      background: #bdbdbd; }
-      .dental-history table tr td.missing .has-notes {
-        background: #757575; }
-
-.dental-history .tooth-details {
-  background: #fff;
-  border-radius: 3px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  padding: 30px; }
-  .dental-history .tooth-details h4 {
-    color: #616161; }
-  .dental-history .tooth-details .tooth-name {
-    font-size: 17px;
-    text-transform: capitalize;
-    margin-bottom: 25px; }
-  .dental-history .tooth-details .close-details {
-    position: absolute;
-    top: 0px;
-    right: 10px;
-    padding: 5px 5px 3px;
-    border-radius: 2px;
-    font-size: 10px;
-    cursor: pointer;
-    transition: 0.4s all; }
-    .dental-history .tooth-details .close-details:hover {
-      background: #3e50b3;
-      color: #fff;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-
-.single-tooth-condition {
-  margin-top: 10px; }
-.spg-p .thumbs {
-  text-align: center;
-  border: 1px solid #f1f1f1;
-  padding: 5px;
-  width: 52px;
-  float: left; }
-  .spg-p .thumbs .thumb {
-    height: 40px;
-    width: 40px;
-    background-size: cover;
-    display: inline-block;
-    margin-right: 5px; }
-    .spg-p .thumbs .thumb.selected {
-      border: 1px solid darkred; }
-  .spg-p .thumbs .add-photo {
-    margin-bottom: 10px; }
-  .spg-p .thumbs .placeholder {
-    padding: 13px;
-    background: #e3e3e3;
-    margin-bottom: 5px; }
-
-.spg-p .viewport {
-  float: left;
-  margin-left: 5px;
-  border: 1px solid #f1f1f1;
-  padding: 5px;
-  width: calc(100% - 60px);
-  position: relative; }
-  .spg-p .viewport img {
-    width: 100%; }
-  .spg-p .viewport .delete-photo {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: #fff;
-    border: 1px solid #f1f1f1; }
 .calendar-component {
   background: #fff;
   min-height: 500px;
@@ -6539,32 +5960,303 @@ hr {
   .calendar-component .full-day-col {
     width: 100% !important;
     min-height: 50px; } }
-.spd-pn .gender {
-  margin-bottom: 12px; }
 
-.spd-pn .patient-tags {
-  border: 1px solid #c8c8c8;
-  transition: 0.3s all; }
-  .spd-pn .patient-tags:hover {
-    border-color: #0078d7; }
+.crop-dialog .ms-Dialog-inner {
+  padding: 0;
+  margin-top: 10px; }
 
-.spd-pn .avatar {
-  text-align: center;
-  font-size: 100px;
-  color: #0078d7;
-  border: 1px; }
+.crop-dialog .ms-Dialog-main {
+  max-width: none; }
 
-.spd-pn .buttons {
-  margin-top: 20px; }
-  .spd-pn .buttons button {
+.crop-dialog .editor {
+  position: relative; }
+  .crop-dialog .editor .grid {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 9999;
+    pointer-events: none;
+    background-size: 30px 100%, 100% 30px;
+    background-image: linear-gradient(to right, #fff 0%, transparent 2%, transparent 100%), linear-gradient(to bottom, #fff 0%, transparent 2%, transparent 100%); }
+  .crop-dialog .editor .prev-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0.6;
+    filter: saturate(2);
+    pointer-events: none;
     width: 100%; }
-  .spd-pn .buttons .delete {
-    position: static !important; }
-.plk-c {
-  cursor: pointer; }
-  .plk-c .icon {
+
+.crop-dialog .crop-controls {
+  padding: 10px;
+  padding: 10px;
+  background: #f1f1f1;
+  border-bottom: 1px solid #e3e3e3; }
+  .crop-dialog .crop-controls .ms-Button {
+    margin-top: 10px;
+    background: #e3e3e3; }
+
+.crop-dialog .active-button {
+  background: #e3e3e3; }
+
+.data-table .ms-CommandBar {
+  box-sizing: content-box;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  background-color: #fff !important;
+  border-bottom: 1px solid #e0e0e0; }
+
+.data-table .ms-table {
+  background: #fafafa; }
+  .data-table .ms-table td.clickable {
+    transition: 0.3s all;
+    cursor: pointer; }
+    .data-table .ms-table td.clickable:hover {
+      background: #f5f5f5; }
+
+.data-table tr {
+  border-bottom: 1px solid #f3f3f3; }
+
+.data-table .ms-SearchBox {
+  border: none;
+  margin-top: 4px; }
+
+.data-table .ms-CommandBar-secondaryCommand {
+  border-left: 1px solid #f3f3f3; }
+
+.data-table .ms-CommandBarItem-link {
+  background: #fff !important;
+  transition: 0.3s all; }
+
+.data-table .ms-CommandBarItem-link:hover {
+  background: #eeeeee !important; }
+
+.data-table .no-data {
+  text-align: center;
+  background: #424242;
+  padding: 15px;
+  color: #fff;
+  font-size: 13px; }
+
+.data-table .action-button {
+  background: #fff;
+  color: #212121;
+  border-radius: 3px;
+  border: 1px solid #f1f1f1;
+  margin-right: 5px;
+  margin-bottom: 5px; }
+  .data-table .action-button.delete:hover {
+    color: #fff;
+    background: #f44336;
+    border-color: #f44336; }
+  .data-table .action-button:hover {
+    border-color: #00bcd4; }
+
+.data-table .delete-td {
+  text-align: right;
+  padding-right: 12px; }
+
+.date-link a {
+  font-size: 12px;
+  color: #2196F3;
+  cursor: pointer;
+  border-bottom: 1px dashed #2196F3;
+  padding-bottom: 3px; }
+  .date-link a .icon {
+    margin-right: 5px;
     position: relative;
-    top: 2px; }
+    top: 1px; }
+
+.dental-history .chart {
+  direction: ltr !important; }
+
+.dental-history table {
+  direction: ltr !important;
+  margin-bottom: 20px;
+  width: 100%;
+  border-collapse: collapse; }
+  .dental-history table.permanent tr td:nth-child(8) {
+    border-right: 2px solid #000; }
+  .dental-history table.permanent tr td:nth-child(9) {
+    border-left: 2px solid #000; }
+  .dental-history table.deciduous tr td:nth-child(5) {
+    border-right: 2px solid #000; }
+  .dental-history table.deciduous tr td:nth-child(6) {
+    border-left: 2px solid #000; }
+  .dental-history table tr td {
+    position: relative;
+    background: #fff;
+    transition: 0.4s all;
+    cursor: pointer;
+    text-align: center;
+    padding: 10px;
+    color: #000;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
+    .dental-history table tr td .has-notes {
+      transition: 0.4s all;
+      background: #2196f3;
+      height: 10px;
+      width: 10px;
+      display: inline-block;
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      border-radius: 5px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
+    .dental-history table tr td:hover {
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
+    .dental-history table tr td.filled {
+      background: #ffc107;
+      color: #fff; }
+      .dental-history table tr td.filled .has-notes {
+        background: #ff6f00; }
+    .dental-history table tr td.compromised {
+      background: #f44336;
+      color: #fff; }
+      .dental-history table tr td.compromised .has-notes {
+        background: #b71c1c; }
+    .dental-history table tr td.endo {
+      background: #673ab7;
+      color: #fff; }
+      .dental-history table tr td.endo .has-notes {
+        background: #9575cd; }
+    .dental-history table tr td.missing {
+      color: #eee;
+      background: #bdbdbd; }
+      .dental-history table tr td.missing .has-notes {
+        background: #757575; }
+
+.dental-history .tooth-details {
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px; }
+  .dental-history .tooth-details h4 {
+    color: #616161; }
+  .dental-history .tooth-details .tooth-name {
+    font-size: 17px;
+    text-transform: capitalize;
+    margin-bottom: 25px; }
+  .dental-history .tooth-details .close-details {
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    padding: 5px 5px 3px;
+    border-radius: 2px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: 0.4s all; }
+    .dental-history .tooth-details .close-details:hover {
+      background: #3e50b3;
+      color: #fff;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+
+.single-tooth-condition {
+  margin-top: 10px; }
+
+.elc-c {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1;
+  border: 1px solid #a6a6a6; }
+  .elc-c:hover {
+    border: 1px solid #121212; }
+  .elc-c .editable-list .new-item-input {
+    border: none;
+    background: #fff;
+    display: block;
+    width: 100%;
+    padding: 8px; }
+  .elc-c .input {
+    transition: 0.3s all;
+    background: #fff; }
+    .elc-c .input .input-icon {
+      padding: 9px;
+      color: #2196f3;
+      cursor: pointer; }
+    .elc-c .input .input-image {
+      color: #2196f3;
+      font-size: 20px;
+      padding: 6px 8px;
+      cursor: pointer; }
+    .elc-c .input .input-field {
+      border: none;
+      display: block;
+      width: 100%; }
+  .elc-c .ms-TextField-fieldGroup {
+    border: none;
+    min-height: auto !important;
+    background: transparent; }
+  .elc-c .ms-DetailsRow-cell {
+    border-top: 1px solid #f1f1f1; }
+    .elc-c .ms-DetailsRow-cell textarea {
+      font-size: 13px;
+      padding: 10px;
+      background: transparent;
+      margin-right: 35px; }
+    .elc-c .ms-DetailsRow-cell .delete {
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-left: 1px solid #e3e3e3; }
+  .elc-c .el-expander {
+    padding: 10px 0;
+    margin-top: -10px;
+    margin-bottom: -10px; }
+
+.spg-p .thumbs {
+  text-align: center;
+  border: 1px solid #f1f1f1;
+  padding: 5px;
+  width: 52px;
+  float: left; }
+  .spg-p .thumbs .thumb {
+    height: 40px;
+    width: 40px;
+    background-size: cover;
+    display: inline-block;
+    margin-right: 5px; }
+    .spg-p .thumbs .thumb.selected {
+      border: 1px solid darkred; }
+  .spg-p .thumbs .add-photo {
+    margin-bottom: 10px; }
+  .spg-p .thumbs .placeholder {
+    padding: 13px;
+    background: #e3e3e3;
+    margin-bottom: 5px; }
+
+.spg-p .viewport {
+  float: left;
+  margin-left: 5px;
+  border: 1px solid #f1f1f1;
+  padding: 5px;
+  width: calc(100% - 60px);
+  position: relative; }
+  .spg-p .viewport img {
+    width: 100%; }
+  .spg-p .viewport .delete-photo {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #fff;
+    border: 1px solid #f1f1f1; }
+
+.grid-table {
+  position: absolute;
+  z-index: 99;
+  width: 100%;
+  height: 100%;
+  text-align: right;
+  color: #fff;
+  opacity: 0.5;
+  pointer-events: none;
+  border-spacing: 0;
+  border-collapse: collapse; }
+  .grid-table td {
+    padding-right: 3px;
+    border-right: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    font-size: 8px; }
+
 .header-component {
   padding-left: 10px;
   padding-right: 10px;
@@ -6610,6 +6302,58 @@ hr {
     color: #fff;
     margin-right: 12px;
     padding: 8px; }
+
+.home .home-td {
+  border-bottom: 1px solid whitesmoke; }
+
+.home .no-appointments {
+  font-size: 13px;
+  text-align: center;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  background: #ffffff;
+  margin-top: 0px;
+  z-index: -10;
+  font-style: italic; }
+
+.home .appointments-table-heading {
+  background: #fff;
+  margin: 0;
+  margin-top: 15px;
+  padding: 12px; }
+
+#router-outlet {
+  margin-top: 50px;
+  padding-bottom: 20px; }
+
+.label {
+  background: #fff;
+  padding: 5px 10px 7px;
+  color: #000;
+  border-radius: 2px;
+  font-size: 13px;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  display: inline-block;
+  border: 1px solid #e3e3e3; }
+  .label.clickable {
+    cursor: pointer; }
+  .label.warning {
+    border-color: #fb8c00;
+    color: #fb8c00; }
+  .label.primary {
+    border-color: #3f51b5;
+    color: #3f51b5; }
+  .label.danger {
+    border-color: #e91e63;
+    color: #e91e63; }
+  .label.success {
+    border-color: #4caf50;
+    color: #4caf50; }
+  .label.info {
+    border-color: #212121;
+    color: #212121; }
+
 .login-component {
   margin: 50px auto;
   max-width: 400px;
@@ -6628,6 +6372,7 @@ hr {
 .edit-server-location {
   display: inline-block;
   margin-top: 23px; }
+
 .spinner-container {
   margin-top: 300px; }
 
@@ -6655,6 +6400,7 @@ hr {
     left: 15px;
     bottom: 15px;
     background: #b71c1c; }
+
 .menu .ms-Nav ul {
   padding-top: 5px; }
   .menu .ms-Nav ul .is-selected {
@@ -6696,6 +6442,7 @@ hr {
         bottom: 3px;
         display: block;
         text-transform: capitalize; } }
+
 .messages-component {
   position: fixed;
   bottom: 0;
@@ -6733,6 +6480,7 @@ hr {
         margin-left: 0; }
       .messages-component .message .button i {
         font-size: 11px; }
+
 .confirmation-modal .ms-Panel-main {
   box-shadow: 0px -20px 50px rgba(0, 0, 0, 0.14) !important;
   height: 100px;
@@ -6754,28 +6502,7 @@ hr {
   height: 160px;
   bottom: initial;
   top: 0; }
-.home .home-td {
-  border-bottom: 1px solid whitesmoke; }
 
-.home .no-appointments {
-  font-size: 13px;
-  text-align: center;
-  padding-bottom: 15px;
-  padding-top: 15px;
-  background: #ffffff;
-  margin-top: 0px;
-  z-index: -10;
-  font-style: italic; }
-
-.home .appointments-table-heading {
-  background: #fff;
-  margin: 0;
-  margin-top: 15px;
-  padding: 12px; }
-
-#router-outlet {
-  margin-top: 50px;
-  padding-bottom: 20px; }
 .spa-panel {
   position: relative; }
   .spa-panel .add-new {
@@ -6800,3 +6527,352 @@ hr {
   .spa-panel .no-appointments {
     color: #757575;
     margin: 15px 0px 7px; }
+
+.spd-pn .gender {
+  margin-bottom: 12px; }
+
+.spd-pn .patient-tags {
+  border: 1px solid #c8c8c8;
+  transition: 0.3s all; }
+  .spd-pn .patient-tags:hover {
+    border-color: #0078d7; }
+
+.spd-pn .avatar {
+  text-align: center;
+  font-size: 100px;
+  color: #0078d7;
+  border: 1px; }
+
+.spd-pn .buttons {
+  margin-top: 20px; }
+  .spd-pn .buttons button {
+    width: 100%; }
+  .spd-pn .buttons .delete {
+    position: static !important; }
+
+.plk-c {
+  cursor: pointer; }
+  .plk-c .icon {
+    position: relative;
+    top: 2px; }
+
+@media screen and (max-width: 800px) {
+  .patients-component {
+    padding: 10px; } }
+
+.pc-pg table.responsive tbody tr td:not(.no-label):before {
+  display: none; }
+
+.pc-pg table.responsive tbody tr td.no-label {
+  text-align: left; }
+
+.profile-squared {
+  display: inline-flex !important; }
+  .profile-squared .ms-Persona-initials {
+    border-radius: 0;
+    font-size: 14px; }
+  .profile-squared .ms-Persona-details {
+    line-height: 1.5; }
+  .profile-squared.size-3 .ms-Persona-initials {
+    font-size: 16px; }
+
+.ortho-records .ms-DetailsList {
+  overflow: hidden; }
+
+.ortho-records .album {
+  text-align: center; }
+  .ortho-records .album table {
+    width: 100%; }
+    .ortho-records .album table td {
+      position: relative;
+      overflow: hidden; }
+    .ortho-records .album table .days-num {
+      font-size: 12px;
+      display: block;
+      border: 1px dashed #e3e3e3;
+      border-left: none;
+      border-right: 0;
+      padding: 10px 0;
+      text-align: center; }
+    .ortho-records .album table .term-initials {
+      font-size: 12px;
+      font-style: italic;
+      margin-bottom: 3px;
+      display: inline-block;
+      padding: 7px;
+      height: 27px;
+      width: 27px;
+      border-bottom: 1px solid #f1f1f1; }
+    .ortho-records .album table .photo {
+      position: relative;
+      cursor: pointer; }
+      .ortho-records .album table .photo .hover-effect {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        padding-top: 15%;
+        background: #0000005e;
+        color: #fff; }
+      .ortho-records .album table .photo:hover .hover-effect {
+        display: block; }
+    .ortho-records .album table .clickable-icon {
+      display: inline-block;
+      cursor: pointer;
+      text-align: center;
+      background: #f1f1f1; }
+      .ortho-records .album table .clickable-icon:hover {
+        background: #2196f3;
+        color: #fff; }
+      .ortho-records .album table .clickable-icon.delete-visit:hover {
+        background: #f44336; }
+      .ortho-records .album table .clickable-icon.add-photo:hover {
+        background: #00aba9; }
+
+.photo-dialog .ms-DetailsRow,
+.visit-dialog .ms-DetailsRow {
+  border-bottom: 1px solid #f1f1f1; }
+
+.photo-dialog .ms-Dialog-main,
+.visit-dialog .ms-Dialog-main {
+  width: 350px;
+  overflow: hidden; }
+
+.photo-dialog .ms-Dialog-inner,
+.visit-dialog .ms-Dialog-inner {
+  padding: 0;
+  border-top: 1px solid #e3e3e3;
+  margin-top: 12px; }
+  .photo-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button,
+  .visit-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button {
+    font-size: 12px; }
+    .photo-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button i,
+    .visit-dialog .ms-Dialog-inner .ms-CommandBar .ms-Button i {
+      font-size: 12px; }
+  .photo-dialog .ms-Dialog-inner .ms-CommandBar .active-button,
+  .visit-dialog .ms-Dialog-inner .ms-CommandBar .active-button {
+    background: #e3e3e3; }
+
+.photo-dialog .ms-Dialog-actions,
+.visit-dialog .ms-Dialog-actions {
+  margin-top: 0; }
+
+.photo-dialog .overlay-img,
+.visit-dialog .overlay-img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0.6;
+  filter: saturate(2);
+  pointer-events: none; }
+
+.cl-section {
+  background: #fff;
+  margin-top: 10px;
+  padding: 15px;
+  border-radius: 3px;
+  border: 1px solid #e3e3e3;
+  position: relative; }
+  .cl-section h3 {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px dotted #e0e0e0;
+    margin-top: 0; }
+  .cl-section .chevron {
+    position: absolute;
+    top: 7px;
+    right: 7px; }
+  .cl-section .cl-section-title {
+    cursor: pointer; }
+    .cl-section .cl-section-title:hover {
+      color: #004578; }
+    .cl-section .cl-section-title.only-title {
+      margin-bottom: 0;
+      padding: 0;
+      border: none; }
+
+.settings-component {
+  font-size: 13px; }
+  .settings-component .ms-MessageBar {
+    margin-top: 22px; }
+    .settings-component .ms-MessageBar .ms-MessageBar-innerText {
+      margin-top: 0 !important; }
+  .settings-component .form .ms-TextField-prefix {
+    font-size: 11px;
+    width: 90px; }
+  .settings-component hr {
+    border: none;
+    border-bottom: 1px solid #e3e3e3;
+    margin-bottom: 20px;
+    margin-top: 20px; }
+  .settings-component .hint {
+    margin-top: 17px;
+    font-size: 12px;
+    color: #424242;
+    line-height: 20px;
+    margin-bottom: 30px; }
+
+@media screen and (min-width: 992px) {
+  .settings-component {
+    margin-top: 67px;
+    margin-right: 15px;
+    border-radius: 3px; } }
+
+@media screen and (max-width: 800px) {
+  .staff-component {
+    padding: 10px; } }
+
+.staff-editor .staff-input {
+  margin-bottom: 15px; }
+  .staff-editor .staff-input label:not(.ms-Checkbox-label) {
+    padding-bottom: 5px;
+    display: block; }
+
+.staff-editor .ms-Checkbox {
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border: 1px solid #ececec;
+  min-width: 70px;
+  text-align: left;
+  padding: 5px; }
+
+.staff-editor .ms-Checkbox-text {
+  font-size: 12px; }
+
+.duty-table tr {
+  border: 1px solid #eeeeee; }
+
+.appointments-listing {
+  padding-top: 13px;
+  padding-bottom: 20px; }
+
+.panel-heading {
+  padding: 15px 25px;
+  background: #fff;
+  z-index: 9999;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+  .panel-heading .close {
+    text-align: right; }
+
+@media (max-width: 1200px) {
+  .duty-table {
+    margin-top: 15px; } }
+
+@media (max-width: 435px) {
+  .duty-table {
+    display: none; } }
+
+.sc-pg .ms-CommandBar-primaryCommand > div {
+  margin-top: 4px;
+  border-right: 1px solid #f4f4f4; }
+  .sc-pg .ms-CommandBar-primaryCommand > div.ms-OverflowSet-overflowButton {
+    margin-top: 0; }
+
+.sc-pg .commandBar .ms-TextField-fieldGroup,
+.sc-pg .commandBar .ms-Dropdown-title {
+  border: none; }
+
+.sc-pg .commandBar .ms-DatePicker input {
+  font-size: 13px;
+  padding: 0 10px; }
+
+.sc-pg .commandBar .ms-Dropdown-container {
+  margin-top: 4px; }
+
+.sc-pg .controls {
+  padding: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  background: #fff; }
+
+.sc-pg .quick label {
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: #757575;
+  display: block;
+  text-align: center; }
+
+.sc-pg .charts {
+  margin-top: 15px; }
+  .sc-pg .charts .chart-wrapper {
+    margin-bottom: 15px; }
+    .sc-pg .charts .chart-wrapper .chart {
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      background: #fff; }
+      .sc-pg .charts .chart-wrapper .chart .graph {
+        padding-top: 10px;
+        border-radius: 5px 5px 0 0;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
+      .sc-pg .charts .chart-wrapper .chart .name {
+        padding: 15px;
+        padding-bottom: 0;
+        border-top: 1px solid whitesmoke; }
+      .sc-pg .charts .chart-wrapper .chart .description {
+        color: #9e9e9e;
+        font-size: 12px;
+        display: inline-block;
+        margin-top: 10px;
+        padding: 15px;
+        padding-top: 0; }
+
+.tag-input-component {
+  position: relative;
+  background: #fff;
+  padding: 3px 5px;
+  font-size: 13px;
+  border: 1px solid #a6a6a6; }
+  .tag-input-component .input {
+    border: none;
+    background: #fff;
+    display: block;
+    width: 100%;
+    padding: 5px;
+    border-bottom: 1px dotted #a6a6a6; }
+  .tag-input-component .show-all {
+    position: absolute;
+    top: 9px;
+    right: 12px;
+    cursor: pointer; }
+  .tag-input-component .item {
+    background: #eee;
+    padding: 5px;
+    display: inline-block;
+    margin-right: 5px;
+    margin-top: 5px; }
+  .tag-input-component .delete-tag-input-item {
+    font-size: 10px;
+    padding: 5px;
+    margin-left: 5px;
+    cursor: pointer; }
+    .tag-input-component .delete-tag-input-item:hover {
+      background: #e0e0e0; }
+  .tag-input-component .options-menu {
+    z-index: 999;
+    display: block;
+    position: absolute;
+    background: #fff;
+    width: 100%;
+    right: 0;
+    top: 34px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
+    .tag-input-component .options-menu .options-item {
+      display: block;
+      background: #f5f5f5;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-top: 1px solid #e0e0e0; }
+      .tag-input-component .options-menu .options-item:hover, .tag-input-component .options-menu .options-item.selected {
+        background: #e3e3e3; }
+
+.tc-pg table.responsive tbody tr td:not(.no-label):before {
+  display: none; }
+
+.tc-pg table.responsive tbody tr td.no-label {
+  text-align: left; }

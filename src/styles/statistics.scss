@@ -1,0 +1,72 @@
+@import "./global-styles/shadows.scss";
+.sc-pg {
+	.ms-CommandBar-primaryCommand {
+		& > div {
+			margin-top: 4px;
+			border-right: 1px solid #f4f4f4;
+			&.ms-OverflowSet-overflowButton {
+				margin-top: 0;
+			}
+		}
+	}
+
+	.commandBar {
+		.ms-TextField-fieldGroup,
+		.ms-Dropdown-title {
+			border: none;
+		}
+		.ms-DatePicker {
+			input {
+				font-size: 13px;
+				padding: 0 10px;
+			}
+		}
+		.ms-Dropdown-container {
+			margin-top: 4px;
+		}
+	}
+
+	.controls {
+		padding: 10px;
+		@include box_shadow(2);
+		background: #fff;
+	}
+	.quick {
+		label {
+			font-size: 13px;
+			margin-bottom: 5px;
+			color: #757575;
+			display: block;
+			text-align: center;
+		}
+	}
+	.charts {
+		margin-top: 15px;
+		.chart-wrapper {
+			margin-bottom: 15px;
+			.chart {
+				@include box_shadow(2);
+				border-radius: 5px;
+				background: #fff;
+				.graph {
+					padding-top: 10px;
+					border-radius: 5px 5px 0 0;
+					@include box_shadow(1);
+				}
+				.name {
+					padding: 15px;
+					padding-bottom: 0;
+					border-top: 1px solid whitesmoke;
+				}
+				.description {
+					color: #9e9e9e;
+					font-size: 12px;
+					display: inline-block;
+					margin-top: 10px;
+					padding: 15px;
+					padding-top: 0;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,179 @@
+@import "./global-styles/shadows.scss";
+
+.appointment-hr {
+	border: none;
+	margin-bottom: 20px;
+	border-top: 1px dotted #e0e0e0;
+}
+
+.appointment-top {
+	position: relative;
+	.send-reminder {
+		position: absolute;
+		top: 25px;
+		right: 0;
+	}
+}
+
+.appointment-input {
+	margin-bottom: 20px;
+	position: relative;
+
+	.time-input {
+		display: inline-block;
+		margin-bottom: 0;
+		width: 25%;
+		&:not(.seconds) .ms-TextField-wrapper div {
+			border-right: none;
+		}
+	}
+	.appendage {
+		position: absolute;
+		&.stop {
+			background: #ff9800;
+		}
+	}
+	label:not(.ms-Checkbox-label) {
+		display: block;
+		margin-bottom: 10px;
+	}
+
+	.ms-Checkbox {
+		margin-bottom: 3px;
+	}
+
+	.involved-teeth .ms-BasePicker-text,
+	.prescription .ms-BasePicker-text,
+	.treatment-type .ms-Dropdown-title {
+		border-color: #a6a6a6;
+	}
+	.payment-insight {
+		margin-top: 8px;
+	}
+	.payment-insight,
+	.insight {
+		font-size: 12px;
+	}
+
+	.prescription {
+		.item {
+			display: none;
+		}
+		.input {
+			border-bottom: none;
+		}
+	}
+
+	.insight {
+		span {
+			padding: 2px 7px 3px;
+			border-radius: 20px;
+			&.num-0 {
+				color: #262626;
+				background: transparent;
+			}
+			&.num-1 {
+				background: #ffebee;
+				color: #262626;
+			}
+			&.num-2 {
+				background: #ffcdd2;
+			}
+			&.num-3 {
+				background: #ef9a9a;
+			}
+			&.num-4 {
+				background: #e57373;
+			}
+			&.num-5 {
+				background: #ef5350;
+			}
+			&.num-6 {
+				background: #f44336;
+			}
+			&.num-7 {
+				background: #e53935;
+			}
+			&.num-8 {
+				background: #d32f2f;
+			}
+			&.num-9 {
+				background: #c62828;
+			}
+			// more than 9
+			background: #b71c1c;
+		}
+	}
+}
+
+.print-heading {
+	display: none;
+}
+
+@media print {
+	html,
+	body {
+		overflow: hidden;
+	}
+
+	.print-heading {
+		display: block;
+	}
+
+	.ms-Panel-main {
+		width: 100% !important;
+	}
+
+	.ms-Panel-commands {
+		display: none;
+	}
+	#prescription-items {
+		background-color: white;
+		height: 100%;
+		width: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		margin: 0;
+		padding: 30px;
+		font-size: 14px;
+		line-height: 18px;
+		z-index: 9999999;
+	}
+
+	.ms-Persona-primaryText {
+		font-size: 17px;
+	}
+
+	.ms-Persona-secondaryText {
+		font-size: 14px;
+		color: #000;
+	}
+
+	.m-b-5 {
+		width: 100%;
+		padding-bottom: 15px;
+		margin-bottom: 15px;
+		border-bottom: 1px solid #000;
+	}
+
+	.ant-col-4 {
+		display: none;
+	}
+	.ms-Panel-main {
+		width: 100%;
+	}
+	@page {
+		size: auto; /* auto is the initial value */
+		margin: 0mm; /* this affects the margin in the printer settings */
+	}
+	.ms-Button-icon {
+		display: none;
+	}
+}
+
+.ms-Slider-value {
+	margin: 0 5px 0 0;
+	font-size: 13px;
+	font-style: italic;
+}

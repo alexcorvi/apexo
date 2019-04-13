@@ -1,0 +1,61 @@
+@import "./global-styles/shadows.scss";
+.tag-input-component {
+	position: relative;
+	background: #fff;
+	padding: 3px 5px;
+	font-size: 13px;
+	border: 1px solid #a6a6a6;
+	.input {
+		border: none;
+		background: #fff;
+		display: block;
+		width: 100%;
+		padding: 5px;
+		border-bottom: 1px dotted #a6a6a6;
+	}
+	.show-all {
+		position: absolute;
+		top: 9px;
+		right: 12px;
+		cursor: pointer;
+	}
+	.item {
+		background: #eee;
+		padding: 5px;
+		display: inline-block;
+		margin-right: 5px;
+		margin-top: 5px;
+	}
+	.delete-tag-input-item {
+		font-size: 10px;
+		padding: 5px;
+		margin-left: 5px;
+		cursor: pointer;
+		&:hover {
+			background: #e0e0e0;
+		}
+	}
+	.options-menu {
+		z-index: 999;
+		display: block;
+		position: absolute;
+		background: #fff;
+		width: 100%;
+		right: 0;
+		top: 34px;
+		max-height: 200px;
+		overflow-y: auto;
+		@include box_shadow(5);
+		.options-item {
+			display: block;
+			background: #f5f5f5;
+			padding: 10px 15px;
+			cursor: pointer;
+			border-top: 1px solid #e0e0e0;
+			&:hover,
+			&.selected {
+				background: #e3e3e3;
+			}
+		}
+	}
+}

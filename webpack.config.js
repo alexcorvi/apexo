@@ -1,9 +1,20 @@
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var webpack = require("webpack");
 var production = process.argv.find(x => x === "-p");
+var exec = require("child_process").exec;
 
-var extractCSS = new ExtractTextPlugin("style.css");
-var extractHTML = new ExtractTextPlugin("index.html");
+var processHTML = {
+	apply: compiler => {
+		compiler.hooks.afterEmit.tap("AfterEmitPlugin", compilation => {
+			exec(
+				`cp ./src/index.html ./dist/application/index.html`,
+				(err, stdout, stderr) => {
+					if (stdout) process.stdout.write(stdout);
+					if (stderr) process.stderr.write(stderr);
+				}
+			);
+		});
+	}
+};
 
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
@@ -31,29 +42,16 @@ module.exports = {
 				enforce: "pre",
 				test: /\.js$/,
 				loader: "source-map-loader"
-			},
-			{
-				test: /\.(s)?css$/,
-				use: extractCSS.extract({
-					use: ["css-loader", "sass-loader"]
-				})
-			},
-			{
-				test: /\.html?$/,
-				use: extractHTML.extract({
-					use: ["raw-loader"]
-				})
 			}
 		]
 	},
 
 	plugins: production
 		? [
-				extractCSS,
-				extractHTML,
+				processHTML,
 				new webpack.DefinePlugin({
 					"process.env.NODE_ENV": JSON.stringify("production")
 				})
 		  ]
-		: [extractCSS, extractHTML]
+		: [processHTML]
 };

@@ -1,0 +1,23 @@
+.login-component {
+	margin: 50px auto;
+	max-width: 400px;
+	padding: 0 20px;
+	.user-chooser {
+		border-bottom: 1px solid transparent;
+		&:hover {
+			border-color: #c5cae9;
+			border-radius: 5px;
+		}
+	}
+}
+
+.no-server-mode {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+}
+
+.edit-server-location {
+	display: inline-block;
+	margin-top: 23px;
+}

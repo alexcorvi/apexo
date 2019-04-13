@@ -1,0 +1,57 @@
+.crop-dialog {
+	.ms-Dialog-inner {
+		padding: 0;
+		margin-top: 10px;
+	}
+	.ms-Dialog-main {
+		max-width: none;
+	}
+
+	.editor {
+		position: relative;
+		.grid {
+			position: absolute;
+			height: 100%;
+			width: 100%;
+			z-index: 9999;
+			pointer-events: none;
+			background-size: 30px 100%, 100% 30px;
+			background-image: linear-gradient(
+					to right,
+					#fff 0%,
+					transparent 2%,
+					transparent 100%
+				),
+				linear-gradient(
+					to bottom,
+					#fff 0%,
+					transparent 2%,
+					transparent 100%
+				);
+		}
+		.prev-overlay {
+			position: absolute;
+			left: 0;
+			top: 0;
+			opacity: 0.6;
+			filter: saturate(2);
+			pointer-events: none;
+			width: 100%;
+		}
+	}
+
+	.crop-controls {
+		padding: 10px;
+		padding: 10px;
+		background: #f1f1f1;
+		border-bottom: 1px solid #e3e3e3;
+		.ms-Button {
+			margin-top: 10px;
+			background: #e3e3e3;
+		}
+	}
+
+	.active-button {
+		background: #e3e3e3;
+	}
+}

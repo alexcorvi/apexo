@@ -1,4 +1,3 @@
-import "./gallery.scss";
 import { fileTypes, PickAndUploadComponent, SectionComponent } from "@common-components";
 import { files, GALLERIES_DIR, status, text, user } from "@core";
 import { Patient, setting } from "@modules";

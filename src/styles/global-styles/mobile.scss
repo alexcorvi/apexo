@@ -1,0 +1,98 @@
+@media (max-width: 767px) {
+	#router-outlet > div {
+		padding: 0;
+	}
+
+	.commandBar {
+		margin-bottom: -1px;
+	}
+
+	.data-table tr {
+		margin-top: 0 !important;
+	}
+
+	.ms-CommandBar.fixed,
+	.header-component,
+	table.responsive tbody tr,
+	.calendar-component,
+	.sc-pg .charts .chart-wrapper .chart .graph,
+	.sc-pg .charts .chart-wrapper .chart,
+	.quick .label,
+	.panel-heading,
+	.sc-pg .controls {
+		box-shadow: none !important;
+	}
+
+	.header-component,
+	.ms-CommandBar.fixed,
+	table.responsive tbody tr,
+	.panel-heading {
+		border-bottom: 1px solid #f3f3f3;
+	}
+
+	table.responsive tbody tr td:not(.no-label):before {
+		background: transparent;
+	}
+
+	.data-table tr {
+		position: relative;
+	}
+
+	.data-table .delete-td {
+		position: absolute;
+		top: 0;
+		right: 0;
+		background: transparent;
+	}
+
+	.no-data {
+		margin: 0;
+	}
+
+	.settings-component,
+	.calendar-component {
+		padding: 15px !important;
+	}
+
+	html body {
+		background: #fff !important;
+	}
+
+	.calendar-component .full-day-col h4 {
+		padding: 12px;
+		border-bottom: none;
+		background: #fff1ce;
+	}
+
+	.calendar-component .full-day-col.selected {
+		background: #fff1ce;
+	}
+
+	.calendar-component .full-day-col.selected h4 {
+		background: #f3e6c5;
+	}
+
+	.calendar-component .full-day-col .appointment a {
+		color: #000;
+	}
+
+	.duty-table {
+		display: none;
+	}
+
+	.quick {
+		border-top: 1px solid #f3f3f3;
+		border-bottom: 1px solid #f3f3f3;
+		padding-top: 15px;
+		padding-bottom: 15px;
+	}
+
+	.statist-ics-component .quick label {
+		text-align: left !important;
+	}
+
+	.sc-pg .quick .label {
+		background: #e3e3e3 !important;
+		color: inherit;
+	}
+}

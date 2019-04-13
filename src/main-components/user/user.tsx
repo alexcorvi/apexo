@@ -1,4 +1,3 @@
-import "./user.scss";
 import { Col, ProfileComponent, Row, SectionComponent } from "@common-components";
 import { status, text, user } from "@core";
 import { Appointment, AppointmentEditorPanel, AppointmentThumbComponent } from "@modules";

@@ -1,4 +1,3 @@
-import "./main.scss";
 import { AsyncComponent } from "@common-components";
 import { LoginStep, router, status, text } from "@core";
 import { ChooseUserComponent, HeaderView, LoginView, MenuView, UserPanelView } from "@main-components";

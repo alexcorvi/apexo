@@ -1,4 +1,3 @@
-import "./appointment-editor.scss";
 import {
 	Col,
 	ProfileComponent,

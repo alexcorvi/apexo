@@ -1,4 +1,3 @@
-import "./section.scss";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { IconButton } from "office-ui-fabric-react";

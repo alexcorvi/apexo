@@ -1,0 +1,67 @@
+@import "./global-styles/shadows.scss";
+
+.elc-c {
+	margin-top: 10px;
+	font-size: 13px;
+	line-height: 1;
+	border: 1px solid #a6a6a6;
+	&:hover {
+		border: 1px solid #121212;
+	}
+	.editable-list {
+		.new-item-input {
+			border: none;
+			background: #fff;
+			display: block;
+			width: 100%;
+			padding: 8px;
+		}
+	}
+	.input {
+		transition: 0.3s all;
+		background: #fff;
+
+		.input-icon {
+			padding: 9px;
+			color: #2196f3;
+			cursor: pointer;
+		}
+		.input-image {
+			color: #2196f3;
+			font-size: 20px;
+			padding: 6px 8px;
+			cursor: pointer;
+		}
+		.input-field {
+			border: none;
+			display: block;
+			width: 100%;
+		}
+	}
+
+	.ms-TextField-fieldGroup {
+		border: none;
+		min-height: auto !important;
+		background: transparent;
+	}
+	.ms-DetailsRow-cell {
+		border-top: 1px solid #f1f1f1;
+		textarea {
+			font-size: 13px;
+			padding: 10px;
+			background: transparent;
+			margin-right: 35px;
+		}
+		.delete {
+			position: absolute;
+			top: 0;
+			right: 0;
+			border-left: 1px solid #e3e3e3;
+		}
+	}
+	.el-expander {
+		padding: 10px 0;
+		margin-top: -10px;
+		margin-bottom: -10px;
+	}
+}

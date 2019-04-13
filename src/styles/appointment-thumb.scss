@@ -1,0 +1,129 @@
+@import "./global-styles/shadows.scss";
+
+.atc-c {
+	position: relative;
+	transition: 0.4s all;
+	.ms-Persona {
+		transition: 0.4s all;
+	}
+	.delete {
+		cursor: pointer;
+		position: absolute;
+		right: 12px;
+		top: 12px;
+		font-size: 16px;
+		color: #262626;
+		background: #e3e3e3;
+		padding: 7px;
+		border-radius: 3px;
+		&:hover {
+			color: #fff;
+			background: #f44336;
+		}
+	}
+	&.to-delete {
+		border-color: #f44336 !important;
+	}
+
+	&.clickable {
+		cursor: pointer;
+		&:hover {
+			@include box_shadow(2);
+			border-color: #0078d7;
+		}
+	}
+
+	&.labeled {
+		border-bottom: 1px solid #e0e0e0;
+		border-radius: 2px;
+		padding: 6px 6px 0;
+		margin-bottom: 10px;
+		background: #fafafa;
+		.date-link {
+			display: inline-block;
+			a {
+				border: none;
+				margin-bottom: 5px;
+				display: inline-block;
+			}
+		}
+		&:before {
+			content: "PAST";
+			background: #e0e0e0;
+			display: inline-block;
+			margin-right: 6px;
+			padding: 6px 5px 7px;
+			border-radius: 0;
+			font-size: 10px;
+			margin-bottom: 5px;
+			min-width: 80px;
+		}
+		&.today-due {
+			border-color: #b2ebf2;
+			&:before {
+				content: "TODAY";
+				background: #b2ebf2;
+			}
+		}
+		&.tomorrow-due {
+			border-color: #ffccbc;
+			&:before {
+				content: "TOMORROW";
+				background: #ffccbc;
+			}
+		}
+		&.missed {
+			border-color: #d1c4e9;
+			&:before {
+				content: "MISSED";
+				background: #d1c4e9;
+			}
+		}
+		&.to-be-paid {
+			border-color: #ef9a99;
+			&:before {
+				content: "OUTSTANDING";
+				background: #ef9a99;
+			}
+		}
+		&.over-paid {
+			border-color: #bbdefb;
+			&:before {
+				content: "OVER-PAID";
+				background: #bbdefb;
+			}
+		}
+		&.future {
+			border-color: #dcedc8;
+			&:before {
+				content: "FUTURE";
+				background: #dcedc8;
+			}
+		}
+	}
+	.appointment-patient-link {
+		display: inline-block;
+		margin-bottom: 7px;
+		font-size: 12px;
+		padding: 5px;
+		background: #eee;
+		transition: 0.4s all;
+		position: relative;
+		top: 1px;
+		&:before {
+			content: "Patient";
+			background: #e0e0e0;
+			color: #3f3f3f;
+			padding: 3px 10px 4px;
+			margin-left: -5px;
+			margin-right: 5px;
+		}
+		&:hover {
+			background: #fff;
+			@include box_shadow(2);
+		}
+		i {
+			display: none;
+		}
+	}
+}

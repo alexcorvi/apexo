@@ -1,4 +1,3 @@
-import "./data-table.scss";
 import { text } from "@core";
 import { textualFilter } from "@utils";
 import { computed, observable } from "mobx";

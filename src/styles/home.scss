@@ -1,0 +1,28 @@
+@import "./global-styles/shadows.scss";
+
+.home {
+	.home-td {
+		border-bottom: 1px solid rgb(245, 245, 245);
+	}
+	.no-appointments {
+		font-size: 13px;
+		text-align: center;
+		padding-bottom: 15px;
+		padding-top: 15px;
+		background: #ffffff;
+		margin-top: 0px;
+		z-index: -10;
+		font-style: italic;
+	}
+	.appointments-table-heading {
+		background: #fff;
+		margin: 0;
+		margin-top: 15px;
+		padding: 12px;
+	}
+}
+
+#router-outlet {
+	margin-top: 50px;
+	padding-bottom: 20px;
+}

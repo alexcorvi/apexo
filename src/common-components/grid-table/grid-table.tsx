@@ -1,4 +1,3 @@
-import "./grid-table.scss";
 import { observer } from "mobx-react";
 import * as React from "react";
 @observer

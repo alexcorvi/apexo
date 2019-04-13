@@ -1,0 +1,48 @@
+@import "./global-styles/shadows.scss";
+
+.messages-component {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	padding: 15px;
+	.message {
+		@include box_shadow(5);
+		transition: 0.4s all;
+		display: table;
+		background: #fff;
+		color: #000;
+		font-size: 14px;
+		padding: 10px;
+		border-radius: 2px;
+		margin-top: 15px;
+		i {
+			margin-right: 5px;
+		}
+		> i {
+			padding: 5px;
+			border-radius: 50px;
+			font-weight: bold;
+		}
+		.message-inner {
+			margin-right: 10px;
+		}
+		.button {
+			border-radius: 2px;
+			transition: 0.4s all;
+			border-left: 1px solid #fafafa;
+			padding: 15px 15px 12px;
+			margin-left: 10px;
+			cursor: pointer;
+			&:hover {
+				background: #f5f5f5;
+			}
+			&:last-child {
+				margin-right: -11px;
+				margin-left: 0;
+			}
+			i {
+				font-size: 11px;
+			}
+		}
+	}
+}

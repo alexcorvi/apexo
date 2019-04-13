@@ -1,4 +1,3 @@
-import "./patient-appointments.scss";
 import { SectionComponent } from "@common-components";
 import { text, user } from "@core";
 import { Appointment, appointments, AppointmentsList, Patient } from "@modules";

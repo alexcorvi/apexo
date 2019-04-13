@@ -1,4 +1,3 @@
-import "./header.scss";
 import { Col, Row } from "@common-components";
 import {
 	menu,

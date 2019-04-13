@@ -1,4 +1,3 @@
-import "./patient-details.scss";
 import {
 	Col,
 	EditableListComponent,

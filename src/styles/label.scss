@@ -1,0 +1,35 @@
+.label {
+	background: #fff;
+	padding: 5px 10px 7px;
+	color: #000;
+	border-radius: 2px;
+	font-size: 13px;
+	margin-right: 3px;
+	margin-bottom: 3px;
+	display: inline-block;
+	border: 1px solid #e3e3e3;
+
+	&.clickable {
+		cursor: pointer;
+	}
+	&.warning {
+		border-color: #fb8c00;
+		color: #fb8c00;
+	}
+	&.primary {
+		border-color: #3f51b5;
+		color: #3f51b5;
+	}
+	&.danger {
+		border-color: #e91e63;
+		color: #e91e63;
+	}
+	&.success {
+		border-color: #4caf50;
+		color: #4caf50;
+	}
+	&.info {
+		border-color: #212121;
+		color: #212121;
+	}
+}

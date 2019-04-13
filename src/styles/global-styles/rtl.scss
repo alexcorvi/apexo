@@ -1,0 +1,242 @@
+[dir="rtl"] {
+	body {
+		direction: rtl;
+		text-align: right;
+	}
+
+	.header-component .right-buttons {
+		text-align: left;
+	}
+
+	.data-table .ms-CommandBar-secondaryCommand {
+		border-left: none;
+		border-right: 1px solid #f3f3f3;
+	}
+
+	.ms-table thead tr th {
+		text-align: right;
+	}
+
+	.ms-table th.current .sort-indicators {
+		float: left;
+	}
+
+	.ms-Persona-details {
+		text-align: right;
+	}
+
+	.cl-section .chevron {
+		position: absolute;
+		right: auto;
+		left: 7px;
+	}
+
+	.atc-c .delete {
+		right: auto;
+		left: 12px;
+	}
+
+	.atc-c.labeled:before {
+		margin-right: auto;
+	}
+
+	.ant-col-1,
+	.ant-col-2,
+	.ant-col-3,
+	.ant-col-4,
+	.ant-col-5,
+	.ant-col-6,
+	.ant-col-7,
+	.ant-col-8,
+	.ant-col-9,
+	.ant-col-10,
+	.ant-col-11,
+	.ant-col-12,
+	.ant-col-13,
+	.ant-col-14,
+	.ant-col-15,
+	.ant-col-16,
+	.ant-col-17,
+	.ant-col-18,
+	.ant-col-19,
+	.ant-col-20,
+	.ant-col-21,
+	.ant-col-22,
+	.ant-col-23,
+	.ant-col-24 {
+		float: right;
+	}
+	@media (min-width: 768px) {
+		.ant-col-md-1,
+		.ant-col-md-2,
+		.ant-col-md-3,
+		.ant-col-md-4,
+		.ant-col-md-5,
+		.ant-col-md-6,
+		.ant-col-md-7,
+		.ant-col-md-8,
+		.ant-col-md-9,
+		.ant-col-md-10,
+		.ant-col-md-11,
+		.ant-col-md-12,
+		.ant-col-md-13,
+		.ant-col-md-14,
+		.ant-col-md-15,
+		.ant-col-md-16,
+		.ant-col-md-17,
+		.ant-col-md-18,
+		.ant-col-md-19,
+		.ant-col-md-20,
+		.ant-col-md-21,
+		.ant-col-md-22,
+		.ant-col-md-23,
+		.ant-col-md-24 {
+			float: right;
+		}
+	}
+
+	@media (min-width: 992px) {
+		.ant-col-lg-1,
+		.ant-col-lg-2,
+		.ant-col-lg-3,
+		.ant-col-lg-4,
+		.ant-col-lg-5,
+		.ant-col-lg-6,
+		.ant-col-lg-7,
+		.ant-col-lg-8,
+		.ant-col-lg-9,
+		.ant-col-lg-10,
+		.ant-col-lg-11,
+		.ant-col-lg-12,
+		.ant-col-lg-13,
+		.ant-col-lg-14,
+		.ant-col-lg-15,
+		.ant-col-lg-16,
+		.ant-col-lg-17,
+		.ant-col-lg-18,
+		.ant-col-lg-19,
+		.ant-col-lg-20,
+		.ant-col-lg-21,
+		.ant-col-lg-22,
+		.ant-col-lg-23,
+		.ant-col-lg-24 {
+			float: right;
+		}
+	}
+
+	@media (min-width: 576px) {
+		.ant-col-sm-1,
+		.ant-col-sm-2,
+		.ant-col-sm-3,
+		.ant-col-sm-4,
+		.ant-col-sm-5,
+		.ant-col-sm-6,
+		.ant-col-sm-7,
+		.ant-col-sm-8,
+		.ant-col-sm-9,
+		.ant-col-sm-10,
+		.ant-col-sm-11,
+		.ant-col-sm-12,
+		.ant-col-sm-13,
+		.ant-col-sm-14,
+		.ant-col-sm-15,
+		.ant-col-sm-16,
+		.ant-col-sm-17,
+		.ant-col-sm-18,
+		.ant-col-sm-19,
+		.ant-col-sm-20,
+		.ant-col-sm-21,
+		.ant-col-sm-22,
+		.ant-col-sm-23,
+		.ant-col-sm-24 {
+			float: right;
+			-webkit-box-flex: 0;
+			-webkit-flex: 0 0 auto;
+			-ms-flex: 0 0 auto;
+			flex: 0 0 auto;
+		}
+	}
+
+	.panel-heading .close {
+		text-align: left;
+	}
+
+	.tag-input-component .show-all {
+		right: auto;
+		left: 12px;
+	}
+
+	.appointment-input .appendage {
+		right: auto;
+		left: 0;
+	}
+
+	@media (max-width: 767px) {
+		.data-table .delete-td {
+			right: auto;
+			left: 0;
+		}
+	}
+
+	@media (min-width: 992px) {
+		.icon-list {
+			right: 0;
+			left: auto;
+			margin-left: auto;
+			margin-right: 12px;
+		}
+		#router-outlet {
+			margin-right: 85px;
+			margin-left: auto;
+			margin-top: 53px;
+		}
+	}
+
+	table.responsive tbody tr td.no-label {
+		text-align: right;
+	}
+
+	.profile-squared {
+		display: flex !important;
+	}
+
+	.data-table .delete-td {
+		text-align: left;
+	}
+
+	.ms-MessageBar-icon {
+		margin-right: 16px;
+		margin-left: 0;
+	}
+
+	.elc-c .ms-DetailsRow-cell .delete {
+		right: auto;
+		left: 0;
+		border-left: none;
+		border-right: 1px solid #e3e3e3;
+	}
+
+	.sc-pg {
+		.ms-CommandBar-primaryCommand {
+			& > div {
+				border-left: 1px solid #f4f4f4;
+				border-right: none;
+			}
+		}
+	}
+	.calendar-component
+		.day-selector
+		.day-selector-wrapper
+		.day-col.weekend:not(:last-child) {
+		border-left: 1px dotted #e0e0e0;
+		padding-left: 13px;
+		margin-left: 10px;
+		border-right: none;
+		padding-right: inherit;
+		margin-right: inherit;
+	}
+
+	.calendar-component .full-day-col {
+		float: right;
+	}
+}

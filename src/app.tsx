@@ -1,5 +1,3 @@
-import "./index.html";
-import "./style.scss";
 import { initializeIcons as initializeIconsA } from "@core";
 import { MainView, MessagesView, ModalsView } from "@main-components";
 import { Fabric } from "office-ui-fabric-react";

@@ -1,4 +1,3 @@
-import "./label.scss";
 import { num } from "@utils";
 import { observer } from "mobx-react";
 import * as React from "react";

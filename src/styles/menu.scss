@@ -1,0 +1,58 @@
+@import "./global-styles/shadows.scss";
+
+.menu {
+	.ms-Nav {
+		ul {
+			padding-top: 5px;
+			.is-selected {
+				background: #e1f5fe;
+			}
+			.ms-Nav-link {
+				padding-left: 0 !important;
+				text-transform: capitalize;
+			}
+		}
+	}
+}
+
+@media (min-width: 992px) {
+	#router-outlet {
+		margin-left: 117px;
+	}
+	.icon-list {
+		position: fixed;
+		top: 52px;
+		left: 0;
+		margin-top: 15px;
+		margin-left: 15px;
+		cursor: pointer;
+		.item {
+			transition: 0.2s all;
+			box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+			background: #fff;
+			padding: 10px;
+			font-size: 17px;
+			text-align: center;
+
+			&:hover {
+				@include box_shadow(4);
+				background: #757575;
+				color: #fff;
+			}
+			&.selected {
+				background: #00bcd4;
+				color: #fff;
+				cursor: initial;
+				@include box_shadow(2);
+			}
+			.text {
+				margin-top: 5px;
+				font-size: 11px;
+				position: relative;
+				bottom: 3px;
+				display: block;
+				text-transform: capitalize;
+			}
+		}
+	}
+}

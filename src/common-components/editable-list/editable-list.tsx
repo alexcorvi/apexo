@@ -1,4 +1,3 @@
-import "./editable-list.scss";
 import { Col, Row } from "@common-components";
 import { observable } from "mobx";
 import { observer } from "mobx-react";

@@ -1,4 +1,3 @@
-import "./profile-squared.scss";
 import { observer } from "mobx-react";
 import { Persona, PersonaInitialsColor } from "office-ui-fabric-react";
 import * as React from "react";

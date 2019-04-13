@@ -1,4 +1,3 @@
-import "./modal.scss";
 import { modals, text } from "@core";
 import { observable } from "mobx";
 import { observer } from "mobx-react";

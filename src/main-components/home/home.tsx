@@ -1,4 +1,3 @@
-import "./home.scss";
 import { Col, ProfileComponent, ProfileSquaredComponent, Row } from "@common-components";
 import { router, text, user } from "@core";
 import { appointments, appointmentsByDateChart } from "@modules";

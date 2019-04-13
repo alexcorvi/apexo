@@ -1,0 +1,46 @@
+// Global styles
+@import "./global-styles/normalize.scss";
+@import "./global-styles/margin-helpers.scss";
+@import "./global-styles/padding-helpers.scss";
+@import "./global-styles/fabric-fixes.scss";
+@import "./global-styles/text-helpers.scss";
+@import "./global-styles/grid-system.scss";
+@import "./global-styles/animations.scss";
+@import "./global-styles/mobile.scss";
+@import "./global-styles/rtl.scss";
+
+// component styling
+@import "./grid.scss";
+@import "./appointment-editor.scss";
+@import "./appointment-thumb.scss";
+@import "./calendar.scss";
+@import "./crop.scss";
+@import "./data-table.scss";
+@import "./date-link.scss";
+@import "./dental-history.scss";
+@import "./editable-list.scss";
+@import "./gallery.scss";
+@import "./grid-table.scss";
+@import "./header.scss";
+@import "./home.scss";
+@import "./label.scss";
+@import "./login.scss";
+@import "./main.scss";
+@import "./menu.scss";
+@import "./messages.scss";
+@import "./modal.scss";
+@import "./ortho-list.scss";
+@import "./patient-appointments.scss";
+@import "./patient-details.scss";
+@import "./patient-link.scss";
+@import "./patients-listing.scss";
+@import "./prescription-table.scss";
+@import "./profile-squared.scss";
+@import "./records.scss";
+@import "./section.scss";
+@import "./settings.scss";
+@import "./staff-listing.scss";
+@import "./statistics.scss";
+@import "./tag-input.scss";
+@import "./treatments.scss";
+@import "./user.scss";
