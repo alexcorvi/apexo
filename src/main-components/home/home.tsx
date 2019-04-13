@@ -1,6 +1,6 @@
 import { Col, ProfileComponent, ProfileSquaredComponent, Row } from "@common-components";
 import { router, text, user } from "@core";
-import { appointments, appointmentsByDateChart } from "@modules";
+import { appointments, appointmentsByDateChart, setting } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
@@ -44,7 +44,11 @@ export class HomeView extends React.Component<{}, {}> {
 					</h2>
 					<hr />
 					<div>
-						<appointmentsByDateChart.Component />
+						{setting.getSetting("module_statistics") ? (
+							<appointmentsByDateChart.Component />
+						) : (
+							""
+						)}
 					</div>
 					<Row gutter={12}>
 						<Col md={12}>
