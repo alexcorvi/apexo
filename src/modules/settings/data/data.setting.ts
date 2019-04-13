@@ -1,12 +1,14 @@
 import { backup, DropboxFile, status } from "@core";
 import { dictionary, SettingsItem } from "@modules";
 import { day, generateID, minute, num } from "@utils";
-import { observable } from "mobx";
+import { observable, observe } from "mobx";
 
 class Settings {
 	ignoreObserver: boolean = false;
 	@observable list: SettingsItem[] = [];
 	@observable dropboxBackups: DropboxFile[] = [];
+
+	private settingChangeCallbacks: (() => void)[] = [];
 
 	getSetting(id: keyof typeof dictionary): string {
 		return (this.list.find(x => x._id.endsWith(id)) || { val: "" }).val;
@@ -21,6 +23,11 @@ class Settings {
 			// update
 			this.list[i].val = val;
 		}
+		this.settingChangeCallbacks.forEach(callback => callback());
+	}
+
+	onSettingChange(callback: () => void) {
+		this.settingChangeCallbacks.push(callback);
 	}
 
 	async updateDropboxBackups() {

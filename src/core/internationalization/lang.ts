@@ -13,6 +13,13 @@ class Translate {
 			loadTerms: async () => {
 				return (await import("./languages/ar")).default;
 			}
+		},
+		{
+			code: "en",
+			RTL: false,
+			loadTerms: async () => {
+				return {};
+			}
 		}
 	];
 
@@ -21,23 +28,26 @@ class Translate {
 	@observable loadedCode: string = "en";
 
 	constructor() {
-		setInterval(async () => {
-			const languageCode = setting.getSetting("lang");
-			if (languageCode !== this.loadedCode) {
-				this.loadedCode = languageCode;
-				const newLang = this.languages.find(
-					l => l.code === languageCode
-				);
-				if (newLang) {
-					if (newLang.RTL) {
-						this.setRTL();
-					} else {
-						this.unsetRTL();
-					}
-					this.terms = await newLang.loadTerms();
+		setTimeout(() => {
+			this.checkLang();
+		}, 500);
+		setting.onSettingChange(() => this.checkLang());
+	}
+
+	private async checkLang() {
+		const languageCode = setting.getSetting("lang");
+		if (languageCode !== this.loadedCode) {
+			const newLang = this.languages.find(l => l.code === languageCode);
+			if (newLang) {
+				if (newLang.RTL) {
+					this.setRTL();
+				} else {
+					this.unsetRTL();
 				}
+				this.loadedCode = languageCode;
+				this.terms = await newLang.loadTerms();
 			}
-		}, 100);
+		}
 	}
 
 	private setRTL() {
@@ -49,6 +59,7 @@ class Translate {
 	}
 
 	text(term: string) {
+		this.checkLang();
 		return this.terms[term] || term;
 	}
 }
