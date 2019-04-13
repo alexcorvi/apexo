@@ -1,7 +1,14 @@
 import "./dental-history.scss";
-import { Col, EditableListComponent, ProfileComponent, Row, SectionComponent } from "@common-components";
+import {
+	AsyncComponent,
+	Col,
+	EditableListComponent,
+	ProfileComponent,
+	Row,
+	SectionComponent
+	} from "@common-components";
 import { text, user } from "@core";
-import { conditionToColor, Patient, TeethDeciduousChartComponent, TeethPermanentChart, ToothCondition } from "@modules";
+import { conditionToColor, Patient, ToothCondition } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Dropdown, IconButton, Panel, PanelType, Toggle } from "office-ui-fabric-react";
@@ -39,19 +46,37 @@ export class DentalHistoryPanel extends React.Component<
 					{this.viewChart ? (
 						<div className="chart">
 							<SectionComponent title={text(`Permanent Teeth`)}>
-								<TeethPermanentChart
-									teeth={this.props.patient.teeth}
-									onClick={number =>
-										(this.viewToothISO = number)
-									}
+								<AsyncComponent
+									key="teeth-permanent"
+									loader={async () => {
+										const Component = (await import("./teeth-permanent"))
+											.TeethPermanentChart;
+										return (
+											<Component
+												teeth={this.props.patient.teeth}
+												onClick={number =>
+													(this.viewToothISO = number)
+												}
+											/>
+										);
+									}}
 								/>
 							</SectionComponent>
 							<SectionComponent title={text(`Deciduous Teeth`)}>
-								<TeethDeciduousChartComponent
-									teeth={this.props.patient.teeth}
-									onClick={number =>
-										(this.viewToothISO = number)
-									}
+								<AsyncComponent
+									key="teeth-primary"
+									loader={async () => {
+										const Component = (await import("./teeth-deciduous"))
+											.TeethDeciduousChart;
+										return (
+											<Component
+												teeth={this.props.patient.teeth}
+												onClick={number =>
+													(this.viewToothISO = number)
+												}
+											/>
+										);
+									}}
 								/>
 							</SectionComponent>
 						</div>

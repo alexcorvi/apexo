@@ -3,5 +3,3 @@ export * from "./gallery";
 export * from "./patient-appointments";
 export * from "./patient-details";
 export * from "./patient-link";
-export * from "./teeth-deciduous";
-export * from "./teeth-permanent";

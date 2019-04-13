@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import * as React from "react";
 
 @observer
-export class TeethDeciduousChartComponent extends React.Component<
+export class TeethDeciduousChart extends React.Component<
 	{
 		teeth: Tooth[];
 		onClick: (ISONumber: number) => void;
