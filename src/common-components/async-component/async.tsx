@@ -5,6 +5,7 @@ import * as React from "react";
 
 @observer
 export class AsyncComponent extends React.Component<{
+	key: string;
 	loader: () => Promise<React.ReactElement<any>>;
 }> {
 	@observable componentToRender: React.ReactElement = <Shimmer />;
