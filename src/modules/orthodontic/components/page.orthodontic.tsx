@@ -1,4 +1,5 @@
 import {
+	AsyncComponent,
 	Col,
 	DataTableComponent,
 	ProfileComponent,
@@ -14,7 +15,6 @@ import {
 	orthoCases,
 	OrthoCaseSheetPanel,
 	OrthoGalleryPanel,
-	OrthoRecordsPanel,
 	Patient,
 	PatientAppointmentsPanel,
 	PatientDetailsPanel,
@@ -647,9 +647,24 @@ export class OrthoPage extends React.Component<{}, {}> {
 								)}
 
 								{this.viewWhich === 4 ? (
-									<OrthoRecordsPanel
-										orthoCase={this.selectedCase}
-									/>
+									<div>
+										<AsyncComponent
+											key="ortho-records"
+											loader={async () => {
+												const Component = (await import("./records"))
+													.OrthoRecordsPanel;
+												return this.selectedCase ? (
+													<Component
+														orthoCase={
+															this.selectedCase
+														}
+													/>
+												) : (
+													<div />
+												);
+											}}
+										/>
+									</div>
 								) : (
 									""
 								)}

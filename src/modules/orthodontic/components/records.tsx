@@ -1,4 +1,3 @@
-import "./records.scss";
 import {
 	Col,
 	EditableListComponent,

@@ -1,11 +1,12 @@
 import "./appointments/components/calendar.scss";
 import "./orthodontic/components/ortho-list.scss";
+import "./orthodontic/components/records.scss";
 import "./patients/components/patients-listing.scss";
 import "./prescriptions/components/prescription-table";
 import "./settings/components/settings.scss";
 import "./statistics/components/statistics.scss";
 import "./treatments/components/treatments.scss";
-// ^ pages (dynamically imported) styles
+// ^ dynamically imported (code-splitting) styles
 
 export * from "./appointments";
 export * from "./orthodontic";
