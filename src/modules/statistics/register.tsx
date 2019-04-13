@@ -1,16 +1,21 @@
 import { menu, router, user } from "@core";
-import { setting, StatisticsPage, statsNamespace } from "@modules";
+import { setting, statsNamespace } from "@modules";
+import * as React from "react";
 
 export const registerStats = {
 	async register() {
-		router.register(
-			statsNamespace,
-			/^statistics\/?$/,
-			StatisticsPage,
-			() =>
+		router.register({
+			namespace: statsNamespace,
+			regex: /^statistics/,
+			component: async () => {
+				const Component = (await import("./components/page.statistics"))
+					.StatisticsPage;
+				return <Component />;
+			},
+			condition: () =>
 				!!setting.getSetting("module_statistics") &&
 				user.currentUser.canViewStats
-		);
+		});
 		menu.items.push({
 			icon: "Chart",
 			name: statsNamespace,

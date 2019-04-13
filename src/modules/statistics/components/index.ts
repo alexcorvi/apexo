@@ -6,4 +6,3 @@ export * from "./chart.most-applied-treatments";
 export * from "./chart.most-involved-teeth";
 export * from "./chart.treatments-gender";
 export * from "./chart.treatments-number";
-export * from "./statistics";

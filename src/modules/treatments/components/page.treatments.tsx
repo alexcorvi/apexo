@@ -1,4 +1,3 @@
-import "./treatments.scss";
 import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
 import { router, text, user } from "@core";
 import { appointments, setting, Treatment, treatments } from "@modules";

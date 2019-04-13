@@ -1,16 +1,20 @@
 import { connectToDB, menu, router, user } from "@core";
-import { OrthoCase, orthoCases, orthoNamespace, OrthoPage, setting } from "@modules";
-
+import { OrthoCase, orthoCases, orthoNamespace, setting } from "@modules";
+import * as React from "react";
 export const registerOrthodontic = {
 	async register() {
-		router.register(
-			orthoNamespace,
-			/^orthodontic/,
-			OrthoPage,
-			() =>
+		router.register({
+			namespace: orthoNamespace,
+			regex: /^orthodontic/,
+			component: async () => {
+				const Component = (await import("./components/page.orthodontic"))
+					.OrthoPage;
+				return <Component />;
+			},
+			condition: () =>
 				!!setting.getSetting("module_orthodontics") &&
 				user.currentUser.canViewOrtho
-		);
+		});
 		menu.items.push({
 			icon: "MiniLink",
 			name: orthoNamespace,

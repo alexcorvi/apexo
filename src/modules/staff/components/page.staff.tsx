@@ -1,4 +1,3 @@
-import "./staff-listing.scss";
 import {
 	Col,
 	DataTableComponent,

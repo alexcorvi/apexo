@@ -1,14 +1,19 @@
 import { connectToDB, menu, router, user } from "@core";
-import { Appointment, appointments, appointmentsNamespace, CalendarPage } from "@modules";
+import { Appointment, appointments, appointmentsNamespace } from "@modules";
+import * as React from "react";
 
 export const registerAppointments = {
 	async register() {
-		router.register(
-			appointmentsNamespace,
-			/^appointments/,
-			CalendarPage,
-			() => user.currentUser.canViewAppointments
-		);
+		router.register({
+			namespace: appointmentsNamespace,
+			regex: /^appointments/,
+			component: async () => {
+				const Component = (await import("./components/page.calendar"))
+					.CalendarPage;
+				return <Component />;
+			},
+			condition: () => user.currentUser.canViewAppointments
+		});
 		menu.items.push({
 			icon: "Calendar",
 			name: appointmentsNamespace,

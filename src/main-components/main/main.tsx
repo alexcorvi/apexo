@@ -1,10 +1,10 @@
 import "./main.scss";
+import { AsyncComponent } from "@common-components";
 import { LoginStep, router, status, text } from "@core";
-import { ChooseUserComponent, HeaderView, LoginView, MenuView } from "@main-components";
-import { UserPanelView } from "main-components/user/user";
+import { ChooseUserComponent, HeaderView, LoginView, MenuView, UserPanelView } from "@main-components";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { MessageBar, PrimaryButton, Spinner, SpinnerSize } from "office-ui-fabric-react";
+import { Async, MessageBar, PrimaryButton, Spinner, SpinnerSize } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
@@ -70,7 +70,13 @@ export class MainView extends React.Component<{}, {}> {
 				<ErrorBoundaryView>
 					<div className="main-component">
 						<div id="router-outlet">
-							<router.currentComponent />
+							<AsyncComponent
+								key={router.currentNamespace}
+								loader={async () => {
+									await router.currentLoader();
+									return await router.currentComponent();
+								}}
+							/>
 						</div>
 						<HeaderView />
 						<UserPanelView />

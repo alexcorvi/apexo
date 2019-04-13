@@ -1,1 +1,0 @@
-export * from "./prescriptions-table";

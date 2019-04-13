@@ -1,4 +1,3 @@
-import "./prescription-table.scss";
 import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
 import { router, text, user } from "@core";
 import { itemFormToString, PrescriptionItem, prescriptionItemForms, prescriptions, stringToItemForm } from "@modules";

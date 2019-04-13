@@ -1,4 +1,3 @@
-import "./ortho-list.scss";
 import {
 	Col,
 	DataTableComponent,

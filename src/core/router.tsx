@@ -1,10 +1,11 @@
 import { menu, resync } from "@core";
 import { HomeView } from "@main-components";
 import { computed, observable } from "mobx";
+import * as React from "react";
 
 export interface Route {
 	regex: RegExp;
-	component: React.ComponentClass<any>;
+	component: () => Promise<React.ReactElement<any>>;
 	namespace: string;
 	condition?: () => boolean;
 }
@@ -16,14 +17,20 @@ class Router {
 
 	@observable innerWidth = 0;
 
-	@computed get currentRoute() {
+	@observable directory: Route[] = [];
+
+	@computed get currentRoute(): Route {
 		return (
 			this.directory.find(route => {
 				return (
 					(!route.condition || route.condition()) &&
 					route.regex.test(this.currentLocation)
 				);
-			}) || { component: HomeView, namespace: "Home" }
+			}) || {
+				component: async () => <HomeView />,
+				namespace: "Home",
+				regex: /a/
+			}
 		);
 	}
 
@@ -37,22 +44,32 @@ class Router {
 		return this.currentRoute.namespace;
 	}
 
-	directory: Route[] = [];
+	async currentLoader() {
+		const namespace = this.currentLocation.split("/")[0];
+		this.reSyncing = true;
+		try {
+			const resyncModule = resync.modules.find(
+				x => x.namespace === namespace
+			);
+			if (resyncModule) {
+				await resyncModule.resync();
+			}
+		} catch (e) {
+			console.log(e);
+		}
+		this.reSyncing = false;
+		return true;
+	}
 
-	register(
-		name: string,
-		regex: RegExp,
-		component: React.ComponentClass<any>,
-		condition?: () => boolean
-	) {
-		if (this.directory.find(x => x.namespace === name)) {
-			console.log(name, "route name already registered, skipping");
+	register({ regex, component, namespace, condition }: Route) {
+		if (this.directory.find(x => x.namespace === namespace)) {
+			console.log(namespace, "route name already registered, skipping");
 			return;
 		}
 		this.directory.push({
 			regex: regex,
 			component: component,
-			namespace: name,
+			namespace: namespace,
 			condition
 		});
 	}
@@ -71,19 +88,6 @@ class Router {
 		const newLocation = location.hash.substr(3);
 		if (newLocation !== this.currentLocation) {
 			this.currentLocation = location.hash.substr(3);
-			const namespace = this.currentLocation.split("/")[0];
-			this.reSyncing = true;
-			try {
-				const resyncModule = resync.modules.find(
-					x => x.namespace === namespace
-				);
-				if (resyncModule) {
-					resyncModule.resync();
-				}
-			} catch (e) {
-				console.log(e);
-			}
-			this.reSyncing = false;
 		}
 	}
 

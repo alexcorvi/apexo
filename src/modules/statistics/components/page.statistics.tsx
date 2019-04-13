@@ -1,4 +1,3 @@
-import "./statistics.scss";
 import {
 	Col,
 	DataTableComponent,

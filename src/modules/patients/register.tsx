@@ -1,14 +1,20 @@
 import { connectToDB, menu, router, user } from "@core";
-import { Patient, patients, patientsNamespace, PatientsPage } from "@modules";
+import { Patient, patients, patientsNamespace } from "@modules";
+import * as React from "react";
 
 export const registerPatients = {
 	async register() {
-		router.register(
-			patientsNamespace,
-			/^patients\/?/,
-			PatientsPage,
-			() => user.currentUser.canViewPatients
-		);
+		router.register({
+			namespace: patientsNamespace,
+			regex: /^patients/,
+			component: async () => {
+				const Component = (await import("./components/page.patients"))
+					.PatientsPage;
+				return <Component />;
+			},
+			condition: () => user.currentUser.canViewPatients
+		});
+
 		menu.items.push({
 			icon: "ContactCard",
 			name: patientsNamespace,

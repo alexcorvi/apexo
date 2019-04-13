@@ -1,4 +1,3 @@
-import "./settings.scss";
 import { Col, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
 import {
 	backup,

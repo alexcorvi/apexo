@@ -1,4 +1,3 @@
-import "./patients-listing.scss";
 import {
 	Col,
 	DataTableComponent,

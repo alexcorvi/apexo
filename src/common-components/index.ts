@@ -9,3 +9,4 @@ export * from "./section/section";
 export * from "./tag-input/tag-input";
 export * from "./grid-table/grid-table";
 export * from "./label/label";
+export * from "./async-component/async";

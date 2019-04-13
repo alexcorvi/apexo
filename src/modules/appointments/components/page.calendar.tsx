@@ -1,4 +1,3 @@
-import "./calendar.scss";
 import { Col, ProfileSquaredComponent, Row } from "@common-components";
 import { router, text, user } from "@core";
 import {
