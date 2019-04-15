@@ -105,7 +105,7 @@ export class UserPanelView extends React.Component<{}, {}> {
 					<AsyncComponent
 						key="ae"
 						loader={async () => {
-							const AppointmentEditorPanel = (await import("../../modules/appointments/components/appointment-editor"))
+							const AppointmentEditorPanel = (await import("../modules/appointments/components/appointment-editor"))
 								.AppointmentEditorPanel;
 							return (
 								<AppointmentEditorPanel
