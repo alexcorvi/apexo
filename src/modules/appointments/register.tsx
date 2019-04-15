@@ -25,11 +25,11 @@ export const registerAppointments = {
 			url: "",
 			condition: () => user.currentUser.canViewAppointments
 		});
-		await (connectToDB(
+		await ((await connectToDB(
 			appointmentsNamespace,
 			appointmentsNamespace,
 			true
-		) as any)(Appointment, appointments);
+		)) as any)(Appointment, appointments);
 		return true;
 	},
 	order: 9

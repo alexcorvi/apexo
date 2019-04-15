@@ -26,10 +26,10 @@ export const registerPatients = {
 			url: "",
 			condition: () => user.currentUser.canViewPatients
 		});
-		await (connectToDB(patientsNamespace, patientsNamespace) as any)(
-			Patient,
-			patients
-		);
+		await ((await connectToDB(
+			patientsNamespace,
+			patientsNamespace
+		)) as any)(Patient, patients);
 		return true;
 	},
 	order: 4

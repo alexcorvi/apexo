@@ -25,10 +25,10 @@ export const registerTreatments = {
 			key: treatmentsNamespace,
 			condition: () => user.currentUser.canViewTreatments
 		});
-		await (connectToDB(treatmentsNamespace, treatmentsNamespace) as any)(
-			Treatment,
-			treatments
-		);
+		await ((await connectToDB(
+			treatmentsNamespace,
+			treatmentsNamespace
+		)) as any)(Treatment, treatments);
 		return true;
 	},
 	order: 3

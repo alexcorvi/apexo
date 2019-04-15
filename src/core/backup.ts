@@ -13,8 +13,6 @@ import {
 	} from "./";
 import { decode, encode, second } from "@utils";
 import { saveAs } from "file-saver";
-import * as pouchDB from "pouchdb-browser";
-const PouchDB: PouchDB.Static = (pouchDB as any).default;
 const ext = "apx";
 
 export interface DropboxFile {
@@ -33,6 +31,9 @@ export interface DatabaseDump {
 export const backup = {
 	toJSON: function() {
 		return new Promise(async (resolve, reject) => {
+			const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
+				.default;
+
 			await compact.compact();
 
 			const dumps: DatabaseDump[] = [];
@@ -105,10 +106,13 @@ export const backup = {
 
 export const restore = {
 	fromJSON: async function(json: DatabaseDump[]) {
-		status.resetUser();
-		let done = 0;
+		return new Promise(async (resolve, reject) => {
+			const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
+				.default;
 
-		return new Promise((resolve, reject) => {
+			status.resetUser();
+			let done = 0;
+
 			json.forEach(async dump => {
 				const dbName = dump.dbName;
 

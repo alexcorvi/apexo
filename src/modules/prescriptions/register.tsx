@@ -29,10 +29,10 @@ export const registerPrescriptions = {
 				user.currentUser.canViewPrescriptions &&
 				!!setting.getSetting("module_prescriptions")
 		});
-		await (connectToDB(
+		await ((await connectToDB(
 			prescriptionsNamespace,
 			prescriptionsNamespace
-		) as any)(PrescriptionItem, prescriptions);
+		)) as any)(PrescriptionItem, prescriptions);
 		return true;
 	},
 	order: 5

@@ -9,11 +9,7 @@ import {
 	store
 	} from "@utils";
 import { observable } from "mobx";
-import * as auth from "pouchdb-authentication";
-import * as pouchDB from "pouchdb-browser";
 import { Md5 } from "ts-md5";
-const PouchDB: PouchDB.Static = (pouchDB as any).default;
-PouchDB.plugin((auth as any).default);
 
 const demoHosts: string[] = [
 	// "localhost:8000",
@@ -128,6 +124,12 @@ class Status {
 		password: string;
 		server: string;
 	}) {
+		const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
+			.default;
+		const auth: PouchDB.Plugin = ((await import("pouchdb-authentication")) as any)
+			.default;
+		PouchDB.plugin(auth);
+
 		try {
 			await new PouchDB(server, { skip_setup: true }).logIn(
 				username,
@@ -193,6 +195,11 @@ class Status {
 		}
 	}
 	async logout() {
+		const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
+			.default;
+		const auth: PouchDB.Plugin = ((await import("pouchdb-authentication")) as any)
+			.default;
+		PouchDB.plugin(auth);
 		if (navigator.onLine && !this.keepOffline) {
 			try {
 				await new PouchDB(this.server, { skip_setup: true }).logOut();
@@ -236,6 +243,11 @@ class Status {
 	}
 
 	async activeSession(server: string) {
+		const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
+			.default;
+		const auth: PouchDB.Plugin = ((await import("pouchdb-authentication")) as any)
+			.default;
+		PouchDB.plugin(auth);
 		try {
 			if (navigator.onLine && (await isOnline(server))) {
 				return !!(await new PouchDB(server, {

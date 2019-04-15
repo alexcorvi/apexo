@@ -9,15 +9,9 @@ import {
 	} from "@core";
 import { status } from "@core";
 import { store } from "@utils";
-import * as cryptoPouch from "crypto-pouch";
 import { observe } from "mobx";
-import * as auth from "pouchdb-authentication";
-import * as pouchDB from "pouchdb-browser";
 import { Md5 } from "ts-md5";
 
-const PouchDB: PouchDB.Static = (pouchDB as any).default;
-PouchDB.plugin(cryptoPouch);
-PouchDB.plugin((auth as any).default);
 export const resync: {
 	modules: Array<{ resync: () => Promise<void>; namespace: string }>;
 	resync: () => Promise<boolean>;
@@ -88,11 +82,17 @@ export const destroyLocal: {
 	}
 };
 
-export function connectToDB(
+export async function connectToDB(
 	dbName: string,
 	moduleNamespace: string,
 	shouldLog: boolean = false
 ) {
+	const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
+		.default;
+	const cryptoPouch: PouchDB.Plugin = ((await import("crypto-pouch")) as any)
+		.default;
+	PouchDB.plugin(cryptoPouch);
+
 	const unique = Md5.hashStr(store.get("LSL_hash")).toString();
 
 	// prefixing local DB name

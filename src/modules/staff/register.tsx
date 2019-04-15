@@ -24,7 +24,7 @@ export const registerStaff = {
 			url: "",
 			condition: () => user.currentUser.canViewStaff
 		});
-		await (connectToDB("doctors", staffNamespace) as any)(
+		await ((await connectToDB("doctors", staffNamespace)) as any)(
 			StaffMember,
 			staff
 		);

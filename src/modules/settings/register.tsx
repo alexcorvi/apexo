@@ -28,10 +28,10 @@ export const registerSettings = {
 			url: "",
 			condition: () => user.currentUser.canViewSettings
 		});
-		await (connectToDB(settingsNamespace, settingsNamespace) as any)(
-			SettingsItem,
-			setting
-		);
+		await ((await connectToDB(
+			settingsNamespace,
+			settingsNamespace
+		)) as any)(SettingsItem, setting);
 		return true;
 	},
 	order: 0

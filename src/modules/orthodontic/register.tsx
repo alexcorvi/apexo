@@ -29,7 +29,7 @@ export const registerOrthodontic = {
 				user.currentUser.canViewOrtho &&
 				!!setting.getSetting("module_orthodontics")
 		});
-		await (connectToDB(orthoNamespace, orthoNamespace) as any)(
+		await ((await connectToDB(orthoNamespace, orthoNamespace)) as any)(
 			OrthoCase,
 			orthoCases
 		);
