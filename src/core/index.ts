@@ -1,6 +1,5 @@
 export * from "./backup";
 export * from "./db";
-export * from "./demo";
 export * from "./files";
 export * from "./status";
 export * from "./internationalization";

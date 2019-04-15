@@ -1,4 +1,4 @@
-import { files, loadDemoData, resync } from "@core";
+import { files, resync } from "@core";
 import { registerModules, staff } from "@modules";
 import {
 	day,
@@ -166,7 +166,7 @@ class Status {
 
 	async startDemoServer() {
 		await this.startNoServer();
-		await loadDemoData();
+		(await import("core/demo")).loadDemoData();
 	}
 
 	async startNoServer() {

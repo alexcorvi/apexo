@@ -33,10 +33,6 @@ function randomFromArray<T>(array: T[], canBeUndefined: boolean): T {
 	return array[randomInRange(0, array.length - 1)];
 }
 
-function randomUserIndex() {
-	return Math.floor(Math.random() * 5);
-}
-
 function randomLabels(): Label[] {
 	const labels = [
 		"VIP",
