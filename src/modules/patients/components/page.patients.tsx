@@ -1,4 +1,5 @@
 import {
+	AsyncComponent,
 	Col,
 	DataTableComponent,
 	ProfileComponent,
@@ -8,11 +9,9 @@ import {
 	} from "@common-components";
 import { router, text, user } from "@core";
 import {
-	DentalHistoryPanel,
 	genderToString,
 	Patient,
 	PatientAppointmentsPanel,
-	PatientDetailsPanel,
 	PatientGalleryPanel,
 	patients,
 	setting
@@ -106,12 +105,34 @@ export class PatientsPage extends React.Component<{}, {}> {
 						}}
 					>
 						{this.viewWhich === 1 ? (
-							<PatientDetailsPanel patient={this.patient} />
+							<AsyncComponent
+								key=""
+								loader={async () => {
+									const PatientDetailsPanel = (await import("./patient-details"))
+										.PatientDetailsPanel;
+									return (
+										<PatientDetailsPanel
+											patient={this.patient!}
+										/>
+									);
+								}}
+							/>
 						) : (
 							""
 						)}
 						{this.viewWhich === 2 ? (
-							<DentalHistoryPanel patient={this.patient} />
+							<AsyncComponent
+								key=""
+								loader={async () => {
+									const DentalHistoryPanel = (await import("./dental-history"))
+										.DentalHistoryPanel;
+									return (
+										<DentalHistoryPanel
+											patient={this.patient!}
+										/>
+									);
+								}}
+							/>
 						) : (
 							""
 						)}

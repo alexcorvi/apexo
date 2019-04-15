@@ -1,11 +1,5 @@
-import {
-	Col,
-	EditableListComponent,
-	getRandomTagType,
-	Row,
-	SectionComponent,
-	TagInputComponent
-	} from "@common-components";
+import { EditableListComponent } from "../../../common-components/editable-list/editable-list";
+import { Col, getRandomTagType, Row, SectionComponent, TagInputComponent } from "@common-components";
 import { text, user } from "@core";
 import { Gender, Patient, patients } from "@modules";
 import { num } from "@utils";

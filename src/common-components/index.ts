@@ -1,5 +1,4 @@
 export * from "./charts";
-export * from "./editable-list/editable-list";
 export * from "./data-table/data-table";
 export * from "./grid";
 export * from "./pick-files/pick-files";

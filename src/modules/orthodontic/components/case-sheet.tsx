@@ -1,7 +1,8 @@
-import { EditableListComponent, SectionComponent, TagInputComponent } from "@common-components";
+import { SectionComponent, TagInputComponent } from "@common-components";
 import { text, user } from "@core";
 import { FacialProfile, ISOTeethArr, Lips, OralHygiene, OrthoCase } from "@modules";
 import { num } from "@utils";
+import { EditableListComponent } from "common-components/editable-list/editable-list";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import {

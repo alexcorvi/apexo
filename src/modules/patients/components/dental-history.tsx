@@ -1,13 +1,7 @@
-import {
-	AsyncComponent,
-	Col,
-	EditableListComponent,
-	ProfileComponent,
-	Row,
-	SectionComponent
-	} from "@common-components";
+import { AsyncComponent, Col, ProfileComponent, Row, SectionComponent } from "@common-components";
 import { text, user } from "@core";
 import { conditionToColor, Patient, ToothCondition } from "@modules";
+import { EditableListComponent } from "common-components/editable-list/editable-list";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Dropdown, IconButton, Panel, PanelType, Toggle } from "office-ui-fabric-react";

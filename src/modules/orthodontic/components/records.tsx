@@ -1,6 +1,5 @@
 import {
 	Col,
-	EditableListComponent,
 	fileTypes,
 	GridTableComponent,
 	PickAndUploadComponent,
@@ -17,6 +16,7 @@ import {
 	} from "@core";
 import { OrthoCase, Photo, setting, Visit } from "@modules";
 import { day, formatDate, num } from "@utils";
+import { EditableListComponent } from "common-components/editable-list/editable-list";
 import { diff } from "fast-array-diff";
 import { computed, observable, observe } from "mobx";
 import { observer } from "mobx-react";

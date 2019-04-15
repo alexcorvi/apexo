@@ -9,13 +9,11 @@ import {
 	} from "@common-components";
 import { text, user } from "@core";
 import {
-	DentalHistoryPanel,
 	genderToString,
 	OrthoCase,
 	orthoCases,
 	Patient,
 	PatientAppointmentsPanel,
-	PatientDetailsPanel,
 	patients,
 	setting
 	} from "@modules";
@@ -621,16 +619,38 @@ export class OrthoPage extends React.Component<{}, {}> {
 						{this.selectedCase && this.selectedPatient ? (
 							<div className="ortho-single-component">
 								{this.viewWhich === 1 ? (
-									<PatientDetailsPanel
-										patient={this.selectedPatient}
+									<AsyncComponent
+										key="patient-detail"
+										loader={async () => {
+											const PatientDetailsPanel = (await import("../../patients/components/patient-details"))
+												.PatientDetailsPanel;
+											return (
+												<PatientDetailsPanel
+													patient={
+														this.selectedPatient!
+													}
+												/>
+											);
+										}}
 									/>
 								) : (
 									""
 								)}
 
 								{this.viewWhich === 2 ? (
-									<DentalHistoryPanel
-										patient={this.selectedPatient}
+									<AsyncComponent
+										key="patient-detail"
+										loader={async () => {
+											const DentalHistoryPanel = (await import("../../patients/components/dental-history"))
+												.DentalHistoryPanel;
+											return (
+												<DentalHistoryPanel
+													patient={
+														this.selectedPatient!
+													}
+												/>
+											);
+										}}
 									/>
 								) : (
 									""
