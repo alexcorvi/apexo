@@ -1,7 +1,7 @@
 import { Col, GridTableComponent, Row } from "@common-components";
 import { text } from "@core";
 import { generateID } from "@utils";
-import { computed, observable } from "mobx";
+import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { CommandBar, Dialog, IconButton, Slider, TooltipHost } from "office-ui-fabric-react";
 import * as React from "react";

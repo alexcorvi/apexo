@@ -2,7 +2,6 @@ export * from "./charts";
 export * from "./data-table/data-table";
 export * from "./grid";
 export * from "./pick-files/pick-files";
-export * from "./pick-files/crop";
 export * from "./profile";
 export * from "./section/section";
 export * from "./tag-input/tag-input";

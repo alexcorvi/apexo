@@ -1,4 +1,4 @@
-import { CropComponent } from "@common-components";
+import { AsyncComponent } from "@common-components";
 import { files } from "@core";
 import { generateID, second } from "@utils";
 import { observable } from "mobx";
@@ -114,17 +114,28 @@ export class PickAndUploadComponent extends React.Component<
 						<Icon iconName="sync" className="rotate" />
 						{Object.keys(this.toCrop).map(id => {
 							return (
-								<CropComponent
-									key={id}
-									src={this.toCrop[id]}
-									prevSrc={this.props.prevSrc || ""}
-									onSave={result => {
-										this.saveBase64(result);
-										delete this.toCrop[id];
-									}}
-									onDismiss={() => {
-										this.filesNumber--;
-										delete this.toCrop[id];
+								<AsyncComponent
+									key=""
+									loader={async () => {
+										const CropComponent = (await import("./crop"))
+											.CropComponent;
+										return (
+											<CropComponent
+												key={id}
+												src={this.toCrop[id]}
+												prevSrc={
+													this.props.prevSrc || ""
+												}
+												onSave={result => {
+													this.saveBase64(result);
+													delete this.toCrop[id];
+												}}
+												onDismiss={() => {
+													this.filesNumber--;
+													delete this.toCrop[id];
+												}}
+											/>
+										);
 									}}
 								/>
 							);
