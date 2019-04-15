@@ -1,16 +1,32 @@
 var webpack = require("webpack");
 var production = process.argv.find(x => x === "-p");
-var exec = require("child_process").exec;
+var fs = require("fs");
+
+var nonJSAssets = [
+	"style.css",
+	"fonts/fabric-icons-d40e9e78.woff",
+	"fonts/segoeui-westeuropean/segoeui-light.woff",
+	"fonts/segoeui-westeuropean/segoeui-light.woff2",
+	"fonts/segoeui-westeuropean/segoeui-regular.woff",
+	"fonts/segoeui-westeuropean/segoeui-regular.woff2",
+	"fonts/segoeui-westeuropean/segoeui-semibold.woff",
+	"fonts/segoeui-westeuropean/segoeui-semibold.woff2",
+	"fonts/segoeui-westeuropean/segoeui-semilight.woff",
+	"fonts/segoeui-westeuropean/segoeui-semilight.woff2"
+];
 
 var processHTML = {
 	apply: compiler => {
 		compiler.hooks.afterEmit.tap("AfterEmitPlugin", compilation => {
-			exec(
-				`cp ./src/index.html ./dist/application/index.html`,
-				(err, stdout, stderr) => {
-					if (stdout) process.stdout.write(stdout);
-					if (stderr) process.stderr.write(stderr);
-				}
+			const assets = JSON.stringify(
+				Object.keys(compilation.assets).concat(nonJSAssets)
+			).replace(/\[|\]/g, "");
+			const HTMLFile = fs.readFileSync("./src/index.html", {
+				encoding: "utf8"
+			});
+			fs.writeFileSync(
+				"./dist/application/index.html",
+				HTMLFile.replace("/*ASSETS_PLACEHOLDER*/", assets)
 			);
 		});
 	}
