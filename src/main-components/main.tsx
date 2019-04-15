@@ -51,7 +51,7 @@ export class MainView extends React.Component<{}, {}> {
 			return (
 				<div className="main-component">
 					<AsyncComponent
-						key="main-component"
+						key={router.currentNamespace}
 						loader={async () => {
 							const HeaderView = (await import("./header"))
 								.HeaderView;
@@ -60,7 +60,7 @@ export class MainView extends React.Component<{}, {}> {
 							const MenuView = (await import("./menu")).MenuView;
 							return (
 								<div>
-									<div id="router-outlet">
+									<div key="router" id="router-outlet">
 										<AsyncComponent
 											key={router.currentNamespace}
 											loader={async () => {
@@ -69,9 +69,9 @@ export class MainView extends React.Component<{}, {}> {
 											}}
 										/>
 									</div>
-									<HeaderView />
-									<UserPanelView />
-									<MenuView />
+									<HeaderView key="header" />
+									<UserPanelView key="user" />
+									<MenuView key="menu" />
 								</div>
 							);
 						}}
@@ -128,6 +128,8 @@ export class MainView extends React.Component<{}, {}> {
 	}
 
 	render() {
-		return <ErrorBoundaryView>{this.view}</ErrorBoundaryView>;
+		return (
+			<ErrorBoundaryView key={status.step}>{this.view}</ErrorBoundaryView>
+		);
 	}
 }
