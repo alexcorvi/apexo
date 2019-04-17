@@ -82,13 +82,15 @@ export class MainView extends React.Component<{}, {}> {
 										/>
 									</div>
 									<HeaderView
-										onExpandMenu={menu.show}
-										onExpandUser={user.show}
+										onExpandMenu={() => {
+											menu.show();
+										}}
+										onExpandUser={() => user.show()}
 										currentNamespace={
 											router.currentNamespace
 										}
 										isOnline={status.online}
-										resync={resync.resync}
+										resync={() => resync.resync()}
 										onStartReSyncing={() =>
 											(router.reSyncing = true)
 										}
@@ -140,8 +142,8 @@ export class MainView extends React.Component<{}, {}> {
 									newStaffMember.name = name;
 									status.setUser(newStaffMember._id);
 								}}
-								showMessage={messages.newMessage}
-								showModal={modals.newModal}
+								showMessage={obj => messages.newMessage(obj)}
+								showModal={obj => modals.newModal(obj)}
 							/>
 						);
 					}}
@@ -156,14 +158,16 @@ export class MainView extends React.Component<{}, {}> {
 						return (
 							<LoginView
 								tryOffline={status.tryOffline}
-								initialCheck={status.initialCheck}
-								loginWithCredentials={
-									status.loginWithCredentials
+								initialCheck={server =>
+									status.initialCheck(server)
 								}
-								loginWithCredentialsOffline={
-									status.loginWithCredentialsOffline
+								loginWithCredentials={obj =>
+									status.loginWithCredentials(obj)
 								}
-								startNoServer={status.startNoServer}
+								loginWithCredentialsOffline={obj =>
+									status.loginWithCredentialsOffline(obj)
+								}
+								startNoServer={() => status.startNoServer()}
 							/>
 						);
 					}}
@@ -203,7 +207,7 @@ export class MainView extends React.Component<{}, {}> {
 				<div>
 					<ModalsView
 						activeModals={modals.activeModals}
-						onDismiss={modals.deleteModal}
+						onDismiss={index => modals.deleteModal(index)}
 					/>
 					<MessagesView messages={messages.list} />
 				</div>
