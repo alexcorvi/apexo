@@ -1,5 +1,5 @@
 import { ProfileSquaredComponent } from "@common-components";
-import { Appointment, appointments, setting } from "@modules";
+import { Appointment } from "@modules";
 import { PatientLinkComponent } from "@modules";
 import { formatDate } from "@utils";
 import { computed } from "mobx";
@@ -11,9 +11,7 @@ import * as React from "react";
 export class AppointmentThumbComponent extends React.Component<
 	{
 		appointment: Appointment;
-
-		onClick?: () => void;
-
+		dateFormat: string;
 		canDelete?: boolean;
 
 		className?: string;
@@ -23,6 +21,8 @@ export class AppointmentThumbComponent extends React.Component<
 		showPatient?: boolean;
 
 		hideTreatment?: boolean;
+		onClick?: () => void;
+		onDelete: (id: string) => void;
 	},
 	{}
 > {
@@ -79,7 +79,7 @@ export class AppointmentThumbComponent extends React.Component<
 						}
 						subText={formatDate(
 							this.props.appointment.date,
-							setting.getSetting("date_format")
+							this.props.dateFormat
 						)}
 						size={3}
 					/>
@@ -98,9 +98,7 @@ export class AppointmentThumbComponent extends React.Component<
 							).join("");
 						}}
 						onClick={ev => {
-							appointments.deleteModal(
-								this.props.appointment._id
-							);
+							this.props.onDelete(this.props.appointment._id);
 							ev.stopPropagation();
 						}}
 					/>
