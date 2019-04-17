@@ -18,7 +18,7 @@ export class MenuView extends React.Component<{
 }> {
 	public render() {
 		return (
-			<div>
+			<div className="menu-component">
 				<div className="visible-lg visible-md icon-list">
 					{this.props.items.map((item, index) => {
 						return (
