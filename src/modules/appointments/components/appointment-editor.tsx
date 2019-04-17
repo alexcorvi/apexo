@@ -8,21 +8,19 @@ import {
 	TagInputComponent,
 	TagType
 	} from "@common-components";
-import { text, user } from "@core";
+import { text } from "@core";
 import {
 	Appointment,
-	appointments,
 	ISOTeethArr,
 	itemFormToString,
 	Patient,
 	PrescriptionItem,
-	prescriptions,
 	setting,
 	staff,
-	Treatment,
-	treatments
+	StaffMember,
+	Treatment
 	} from "@modules";
-import { convert, formatDate, num, round } from "@utils";
+import { convert, formatDate, num, round, second } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
@@ -45,8 +43,18 @@ import * as React from "react";
 export class AppointmentEditorPanel extends React.Component<
 	{
 		appointment: Appointment | undefined | null;
+		availableTreatments: { _id: string; expenses: number; type: string };
+		availablePrescriptions: PrescriptionItem[];
+		currentUser: StaffMember;
+		appointmentsForDay: (
+			year: number,
+			month: number,
+			day: number,
+			filter?: string | undefined,
+			operatorID?: string | undefined
+		) => Appointment[];
 		onDismiss: () => void;
-		onDelete: () => void;
+		onDelete: (_id: string) => void;
 	},
 	{}
 > {
@@ -88,14 +96,16 @@ export class AppointmentEditorPanel extends React.Component<
 		if (!appointment) {
 			return [].length - 1;
 		}
-		return appointments
+		return this.props
 			.appointmentsForDay(appointment.date, 0, 0)
 			.filter(a => a._id !== appointment._id).length;
 	}
 
 	@computed
 	get treatmentOptions() {
-		const list: Treatment[] = JSON.parse(JSON.stringify(treatments.list));
+		const list: Treatment[] = JSON.parse(
+			JSON.stringify(this.props.availableTreatments)
+		);
 		if (
 			this.props.appointment &&
 			this.props.appointment.treatmentID.indexOf("|") > -1
@@ -111,7 +121,7 @@ export class AppointmentEditorPanel extends React.Component<
 
 	@computed
 	get canEdit() {
-		return user.currentUser.canEditAppointments;
+		return this.props.currentUser.canEditAppointments;
 	}
 
 	setTimeFromCombination() {
@@ -128,7 +138,7 @@ export class AppointmentEditorPanel extends React.Component<
 			0,
 			0
 		);
-		this.props.appointment.date = d.getTime();
+		this.props.appointment.setDate(d.getTime());
 		this.forceUpdate();
 	}
 
@@ -344,15 +354,12 @@ export class AppointmentEditorPanel extends React.Component<
 											checked={checked}
 											onChange={(ev, isChecked) => {
 												if (isChecked) {
-													this.props.appointment!.staffID.push(
+													this.props.appointment!.addStaff(
 														member._id
 													);
 												} else {
-													this.props.appointment!.staffID.splice(
-														this.props.appointment!.staffID.indexOf(
-															member._id
-														),
-														1
+													this.props.appointment!.removeStaff(
+														member._id
 													);
 												}
 												this.props.appointment!
@@ -444,6 +451,8 @@ export class AppointmentEditorPanel extends React.Component<
 											this.props.appointment!.involvedTeeth = newValue.map(
 												x => num(x.key)
 											);
+											this.props.appointment!
+												.triggerUpdate++;
 										}}
 									/>
 								</div>
@@ -463,7 +472,7 @@ export class AppointmentEditorPanel extends React.Component<
 												text: x.prescription
 											})
 										)}
-										options={prescriptions.list.map(
+										options={this.props.availablePrescriptions.map(
 											this.prescriptionToTagInput
 										)}
 										onChange={newValue => {
@@ -473,6 +482,8 @@ export class AppointmentEditorPanel extends React.Component<
 													prescription: x.text
 												})
 											);
+											this.props.appointment!
+												.triggerUpdate++;
 										}}
 										strict={true}
 										placeholder={text("Prescription")}
@@ -481,7 +492,7 @@ export class AppointmentEditorPanel extends React.Component<
 
 								<div id="prescription-items">
 									<div className="print-heading">
-										<h2>{user.currentUser.name}</h2>
+										<h2>{this.props.currentUser.name}</h2>
 										<hr />
 										<h3>
 											Patient:{" "}
@@ -670,19 +681,11 @@ export class AppointmentEditorPanel extends React.Component<
 												className="appendage"
 												text={text("Start")}
 												onClick={() => {
-													const i = appointments.getIndexByID(
-														this.props.appointment!
-															._id
-													);
-													const appointment =
-														appointments.list[i];
 													this.props.appointment!.timer = window.setInterval(
 														() => {
-															appointment.time =
-																appointment.time +
-																1000;
+															this.props.appointment!.timerAddOneSecond();
 														},
-														1000
+														second
 													);
 												}}
 											/>
@@ -847,9 +850,9 @@ export class AppointmentEditorPanel extends React.Component<
 							}}
 							text={text("Delete")}
 							onClick={() => {
-								const appointment = this.props.appointment;
-								appointments.deleteModal(appointment!._id);
-								this.props.onDelete();
+								this.props.onDelete(
+									this.props.appointment!._id
+								);
 							}}
 						/>
 					) : (

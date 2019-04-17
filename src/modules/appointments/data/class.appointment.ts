@@ -13,7 +13,8 @@ import {
 	isToday,
 	isTomorrow,
 	isYesterday,
-	num
+	num,
+	second
 	} from "@utils";
 import { computed, observable } from "mobx";
 
@@ -243,6 +244,17 @@ Diagnosis: ${json.diagnosis}`
 
 	setDate(value: number) {
 		this.date = value;
-		this.staffID = [];
+	}
+
+	timerAddOneSecond() {
+		this.time = this.time + second;
+	}
+
+	addStaff(id: string) {
+		this.staffID.push(id);
+	}
+
+	removeStaff(id: string) {
+		this.staffID.splice(this.staffID.indexOf(id), 1);
 	}
 }
