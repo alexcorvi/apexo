@@ -1,5 +1,4 @@
 import {
-	AsyncComponent,
 	Col,
 	DataTableComponent,
 	ProfileComponent,
@@ -25,9 +24,24 @@ import {
 	Panel,
 	PanelType,
 	PersonaInitialsColor,
+	Shimmer,
 	TooltipHost
 	} from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const PatientDetailsPanel = loadable({
+	loader: async () =>
+		(await import("modules/patients/components/patient-details"))
+			.PatientDetailsPanel,
+	loading: () => <Shimmer />
+});
+const DentalHistoryPanel = loadable({
+	loader: async () =>
+		(await import("modules/patients/components/dental-history"))
+			.DentalHistoryPanel,
+	loading: () => <Shimmer />
+});
 
 @observer
 export class PatientsPage extends React.Component<{}, {}> {
@@ -105,34 +119,12 @@ export class PatientsPage extends React.Component<{}, {}> {
 						}}
 					>
 						{this.viewWhich === 1 ? (
-							<AsyncComponent
-								key=""
-								loader={async () => {
-									const PatientDetailsPanel = (await import("./patient-details"))
-										.PatientDetailsPanel;
-									return (
-										<PatientDetailsPanel
-											patient={this.patient!}
-										/>
-									);
-								}}
-							/>
+							<PatientDetailsPanel patient={this.patient!} />
 						) : (
 							""
 						)}
 						{this.viewWhich === 2 ? (
-							<AsyncComponent
-								key=""
-								loader={async () => {
-									const DentalHistoryPanel = (await import("./dental-history"))
-										.DentalHistoryPanel;
-									return (
-										<DentalHistoryPanel
-											patient={this.patient!}
-										/>
-									);
-								}}
-							/>
+							<DentalHistoryPanel patient={this.patient!} />
 						) : (
 							""
 						)}

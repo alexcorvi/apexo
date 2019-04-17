@@ -1,11 +1,18 @@
-import { AsyncComponent } from "@common-components";
 import { text, user } from "@core";
 import { Appointment, appointments, AppointmentThumbComponent } from "@modules";
 import { textualFilter } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { TextField } from "office-ui-fabric-react";
+import { Shimmer, TextField } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const AppointmentEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/appointments/components/appointment-editor"))
+			.AppointmentEditorPanel,
+	loading: () => <Shimmer />
+});
 
 @observer
 export class AppointmentsList extends React.Component<
@@ -79,29 +86,16 @@ export class AppointmentsList extends React.Component<
 				{appointments.list[
 					appointments.getIndexByID(this.selectedAppointmentID)
 				] ? (
-					<AsyncComponent
-						key="ae"
-						loader={async () => {
-							const AppointmentEditorPanel = (await import("./appointment-editor"))
-								.AppointmentEditorPanel;
-							return (
-								<AppointmentEditorPanel
-									onDismiss={() =>
-										(this.selectedAppointmentID = "")
-									}
-									appointment={
-										appointments.list[
-											appointments.getIndexByID(
-												this.selectedAppointmentID
-											)
-										]
-									}
-									onDelete={() =>
-										(this.selectedAppointmentID = "")
-									}
-								/>
-							);
-						}}
+					<AppointmentEditorPanel
+						onDismiss={() => (this.selectedAppointmentID = "")}
+						appointment={
+							appointments.list[
+								appointments.getIndexByID(
+									this.selectedAppointmentID
+								)
+							]
+						}
+						onDelete={() => (this.selectedAppointmentID = "")}
 					/>
 				) : (
 					""

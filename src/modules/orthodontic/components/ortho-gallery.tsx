@@ -1,5 +1,4 @@
 import {
-	AsyncComponent,
 	Col,
 	fileTypes,
 	PickAndUploadComponent,
@@ -12,9 +11,16 @@ import { CephalometricItem, OrthoCase, PatientGalleryPanel, setting } from "@mod
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { DefaultButton, IconButton, MessageBar, MessageBarType } from "office-ui-fabric-react";
+import { DefaultButton, IconButton, MessageBar, MessageBarType, Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
 
+const CephalometricEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/orthodontic/components/cephalometric"))
+			.CephalometricEditorPanel,
+	loading: () => <Shimmer />
+});
 @observer
 export class OrthoGalleryPanel extends React.Component<{
 	orthoCase: OrthoCase;
@@ -48,23 +54,12 @@ export class OrthoGalleryPanel extends React.Component<{
 				)}
 
 				{this.openCephalometricItem ? (
-					<AsyncComponent
-						key="ortho-records"
-						loader={async () => {
-							const Component = (await import("./cephalometric"))
-								.CephalometricEditorPanel;
-							return this.openCephalometricItem ? (
-								<Component
-									onDismiss={() => {
-										this.openCephalometricItem = undefined;
-										this.props.orthoCase.triggerUpdate++;
-									}}
-									item={this.openCephalometricItem}
-								/>
-							) : (
-								<div />
-							);
+					<CephalometricEditorPanel
+						onDismiss={() => {
+							this.openCephalometricItem = undefined;
+							this.props.orthoCase.triggerUpdate++;
 						}}
+						item={this.openCephalometricItem}
 					/>
 				) : (
 					""

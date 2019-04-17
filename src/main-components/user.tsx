@@ -1,4 +1,4 @@
-import { AsyncComponent, Col, ProfileComponent, Row, SectionComponent } from "@common-components";
+import { Col, ProfileComponent, Row, SectionComponent } from "@common-components";
 import { text } from "@core";
 import { Appointment, AppointmentThumbComponent } from "@modules";
 import { observable } from "mobx";
@@ -9,9 +9,18 @@ import {
 	MessageBar,
 	MessageBarType,
 	Panel,
-	PanelType
+	PanelType,
+	Shimmer
 	} from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const AppointmentEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/appointments/components/appointment-editor"))
+			.AppointmentEditorPanel,
+	loading: () => <Shimmer />
+});
 
 @observer
 export class UserPanelView extends React.Component<{
@@ -98,19 +107,10 @@ export class UserPanelView extends React.Component<{
 					)}
 				</SectionComponent>
 				{this.appointment ? (
-					<AsyncComponent
-						key="ae"
-						loader={async () => {
-							const AppointmentEditorPanel = (await import("../modules/appointments/components/appointment-editor"))
-								.AppointmentEditorPanel;
-							return (
-								<AppointmentEditorPanel
-									appointment={this.appointment}
-									onDismiss={() => (this.appointment = null)}
-									onDelete={() => (this.appointment = null)}
-								/>
-							);
-						}}
+					<AppointmentEditorPanel
+						appointment={this.appointment}
+						onDismiss={() => (this.appointment = null)}
+						onDelete={() => (this.appointment = null)}
 					/>
 				) : (
 					""

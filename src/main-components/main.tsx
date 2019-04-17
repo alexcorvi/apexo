@@ -1,4 +1,4 @@
-import { AsyncComponent } from "@common-components";
+import { PageLoader } from "@common-components";
 import {
 	LoginStep,
 	menu,
@@ -14,8 +14,34 @@ import { MessagesView, ModalsView } from "@main-components";
 import { staff, StaffMember } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { MessageBar, PrimaryButton, Spinner, SpinnerSize } from "office-ui-fabric-react";
+import { MessageBar, PrimaryButton, Shimmer, Spinner, SpinnerSize } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const MenuView = loadable({
+	loader: async () => (await import("./menu")).MenuView,
+	loading: () => <Shimmer />
+});
+
+const HeaderView = loadable({
+	loader: async () => (await import("./header")).HeaderView,
+	loading: () => <Shimmer />
+});
+
+const UserPanelView = loadable({
+	loader: async () => (await import("./user")).UserPanelView,
+	loading: () => <Shimmer />
+});
+
+const ChooseUserComponent = loadable({
+	loader: async () => (await import("./choose-user")).ChooseUserComponent,
+	loading: () => <Shimmer />
+});
+
+const LoginView = loadable({
+	loader: async () => (await import("./login")).LoginView,
+	loading: () => <Shimmer />
+});
 
 @observer
 export class ErrorBoundaryView extends React.Component<{}> {
@@ -62,115 +88,71 @@ export class MainView extends React.Component<{}, {}> {
 		if (status.step === LoginStep.allDone) {
 			return (
 				<div className="main-component">
-					<AsyncComponent
-						key={router.currentNamespace}
-						loader={async () => {
-							const HeaderView = (await import("./header"))
-								.HeaderView;
-							const UserPanelView = (await import("./user"))
-								.UserPanelView;
-							const MenuView = (await import("./menu")).MenuView;
-							return (
-								<div>
-									<div key="router" id="router-outlet">
-										<AsyncComponent
-											key={router.currentNamespace}
-											loader={async () => {
-												await router.currentLoader();
-												return await router.currentComponent();
-											}}
-										/>
-									</div>
-									<HeaderView
-										onExpandMenu={() => {
-											menu.show();
-										}}
-										onExpandUser={() => user.show()}
-										currentNamespace={
-											router.currentNamespace
-										}
-										isOnline={status.online}
-										resync={() => resync.resync()}
-										onStartReSyncing={() =>
-											(router.reSyncing = true)
-										}
-										onFinishReSyncing={() =>
-											(router.reSyncing = false)
-										}
-										isCurrentlyReSyncing={router.reSyncing}
-									/>
-									<UserPanelView
-										staffName={
-											(user.currentUser || { name: "" })
-												.name
-										}
-										todayAppointments={
-											user.todayAppointments
-										}
-										isOpen={user.visible}
-										onDismiss={() => user.hide()}
-										onLogout={() => status.logout()}
-										onResetUser={() => status.resetUser()}
-										key="user"
-									/>
-									<MenuView
-										items={menu.items}
-										isVisible={menu.visible}
-										currentName={router.currentNamespace}
-										onDismiss={() => (menu.visible = false)}
-										key="menu"
-									/>
-								</div>
-							);
+					<div key="router" id="router-outlet">
+						<PageLoader
+							key={router.currentNamespace}
+							pageComponent={async () => {
+								await router.currentLoader();
+								return await router.currentComponent();
+							}}
+						/>
+					</div>
+					<HeaderView
+						onExpandMenu={() => {
+							menu.show();
 						}}
+						onExpandUser={() => user.show()}
+						currentNamespace={router.currentNamespace}
+						isOnline={status.online}
+						resync={() => resync.resync()}
+						onStartReSyncing={() => (router.reSyncing = true)}
+						onFinishReSyncing={() => (router.reSyncing = false)}
+						isCurrentlyReSyncing={router.reSyncing}
+					/>
+					<UserPanelView
+						staffName={(user.currentUser || { name: "" }).name}
+						todayAppointments={user.todayAppointments}
+						isOpen={user.visible}
+						onDismiss={() => user.hide()}
+						onLogout={() => status.logout()}
+						onResetUser={() => status.resetUser()}
+						key="user"
+					/>
+					<MenuView
+						items={menu.sortedItems}
+						isVisible={menu.visible}
+						currentName={router.currentNamespace}
+						onDismiss={() => (menu.visible = false)}
+						key="menu"
 					/>
 				</div>
 			);
 		} else if (status.step === LoginStep.chooseUser) {
 			return (
-				<AsyncComponent
-					key="choose-user"
-					loader={async () => {
-						const ChooseUserComponent = (await import("./choose-user"))
-							.ChooseUserComponent;
-						return (
-							<ChooseUserComponent
-								users={staff.list}
-								onChoosing={id => status.setUser(id)}
-								onCreatingNew={name => {
-									const newStaffMember = new StaffMember();
-									newStaffMember.name = name;
-									status.setUser(newStaffMember._id);
-								}}
-								showMessage={obj => messages.newMessage(obj)}
-								showModal={obj => modals.newModal(obj)}
-							/>
-						);
+				<ChooseUserComponent
+					users={staff.list}
+					onChoosing={id => status.setUser(id)}
+					onCreatingNew={name => {
+						const newStaffMember = new StaffMember();
+						newStaffMember.name = name;
+						status.setUser(newStaffMember._id);
 					}}
+					showMessage={obj => messages.newMessage(obj)}
+					showModal={obj => modals.newModal(obj)}
 				/>
 			);
 		} else if (status.step === LoginStep.initial) {
 			return (
-				<AsyncComponent
-					key="choose-user"
-					loader={async () => {
-						const LoginView = (await import("./login")).LoginView;
-						return (
-							<LoginView
-								tryOffline={status.tryOffline}
-								initialCheck={server =>
-									status.initialCheck(server)
-								}
-								loginWithCredentials={obj =>
-									status.loginWithCredentials(obj)
-								}
-								loginWithCredentialsOffline={obj =>
-									status.loginWithCredentialsOffline(obj)
-								}
-								startNoServer={() => status.startNoServer()}
-							/>
-						);
-					}}
+				<LoginView
+					tryOffline={status.tryOffline}
+					initialCheck={server => status.initialCheck(server)}
+					loginWithCredentials={obj =>
+						status.loginWithCredentials(obj)
+					}
+					loginWithCredentialsOffline={obj =>
+						status.loginWithCredentialsOffline(obj)
+					}
+					startNoServer={() => status.startNoServer()}
 				/>
 			);
 		} else {

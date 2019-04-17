@@ -1,10 +1,14 @@
-import { AsyncComponent } from "@common-components";
 import { files } from "@core";
 import { generateID, second } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { Icon } from "office-ui-fabric-react";
+import { Icon, Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+const CropComponent = loadable({
+	loader: async () => (await import("./crop")).CropComponent,
+	loading: () => <Shimmer />
+});
 
 function dataURItoBlob(dataURI: string) {
 	const byteString = atob(dataURI.split(",")[1]);
@@ -114,28 +118,17 @@ export class PickAndUploadComponent extends React.Component<
 						<Icon iconName="sync" className="rotate" />
 						{Object.keys(this.toCrop).map(id => {
 							return (
-								<AsyncComponent
-									key=""
-									loader={async () => {
-										const CropComponent = (await import("./crop"))
-											.CropComponent;
-										return (
-											<CropComponent
-												key={id}
-												src={this.toCrop[id]}
-												prevSrc={
-													this.props.prevSrc || ""
-												}
-												onSave={result => {
-													this.saveBase64(result);
-													delete this.toCrop[id];
-												}}
-												onDismiss={() => {
-													this.filesNumber--;
-													delete this.toCrop[id];
-												}}
-											/>
-										);
+								<CropComponent
+									key={id}
+									src={this.toCrop[id]}
+									prevSrc={this.props.prevSrc || ""}
+									onSave={result => {
+										this.saveBase64(result);
+										delete this.toCrop[id];
+									}}
+									onDismiss={() => {
+										this.filesNumber--;
+										delete this.toCrop[id];
 									}}
 								/>
 							);

@@ -1,11 +1,33 @@
-import { AsyncComponent, Col, ProfileComponent, Row, SectionComponent } from "@common-components";
+import { Col, ProfileComponent, Row, SectionComponent } from "@common-components";
 import { text, user } from "@core";
 import { conditionToColor, Patient, ToothCondition } from "@modules";
 import { EditableListComponent } from "common-components/editable-list/editable-list";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { Dropdown, IconButton, Panel, PanelType, Toggle } from "office-ui-fabric-react";
+import {
+	Dropdown,
+	IconButton,
+	Panel,
+	PanelType,
+	Shimmer,
+	Toggle
+	} from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const TeethDeciduousChart = loadable({
+	loader: async () =>
+		(await import("modules/patients/components/teeth-deciduous"))
+			.TeethDeciduousChart,
+	loading: () => <Shimmer />
+});
+
+const TeethPermanentChart = loadable({
+	loader: async () =>
+		(await import("modules/patients/components/teeth-permanent"))
+			.TeethPermanentChart,
+	loading: () => <Shimmer />
+});
 
 @observer
 export class DentalHistoryPanel extends React.Component<
@@ -39,37 +61,19 @@ export class DentalHistoryPanel extends React.Component<
 					{this.viewChart ? (
 						<div className="chart">
 							<SectionComponent title={text(`Permanent Teeth`)}>
-								<AsyncComponent
-									key="teeth-permanent"
-									loader={async () => {
-										const Component = (await import("./teeth-permanent"))
-											.TeethPermanentChart;
-										return (
-											<Component
-												teeth={this.props.patient.teeth}
-												onClick={number =>
-													(this.viewToothISO = number)
-												}
-											/>
-										);
-									}}
+								<TeethPermanentChart
+									teeth={this.props.patient.teeth}
+									onClick={number =>
+										(this.viewToothISO = number)
+									}
 								/>
 							</SectionComponent>
 							<SectionComponent title={text(`Deciduous Teeth`)}>
-								<AsyncComponent
-									key="teeth-primary"
-									loader={async () => {
-										const Component = (await import("./teeth-deciduous"))
-											.TeethDeciduousChart;
-										return (
-											<Component
-												teeth={this.props.patient.teeth}
-												onClick={number =>
-													(this.viewToothISO = number)
-												}
-											/>
-										);
-									}}
+								<TeethDeciduousChart
+									teeth={this.props.patient.teeth}
+									onClick={number =>
+										(this.viewToothISO = number)
+									}
 								/>
 							</SectionComponent>
 						</div>

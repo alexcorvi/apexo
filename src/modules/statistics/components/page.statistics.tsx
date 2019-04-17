@@ -1,5 +1,4 @@
 import {
-	AsyncComponent,
 	Col,
 	DataTableComponent,
 	ProfileComponent,
@@ -28,8 +27,15 @@ import {
 import { formatDate, round } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { DatePicker, Dropdown } from "office-ui-fabric-react";
+import { DatePicker, Dropdown, Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+const AppointmentEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/appointments/components/appointment-editor"))
+			.AppointmentEditorPanel,
+	loading: () => <Shimmer />
+});
 
 @observer
 export class StatisticsPage extends React.Component<{}, {}> {
@@ -260,19 +266,10 @@ export class StatisticsPage extends React.Component<{}, {}> {
 				/>
 
 				{this.appointment ? (
-					<AsyncComponent
-						key="ae"
-						loader={async () => {
-							const AppointmentEditorPanel = (await import("../../appointments/components/appointment-editor"))
-								.AppointmentEditorPanel;
-							return (
-								<AppointmentEditorPanel
-									appointment={this.appointment}
-									onDismiss={() => (this.appointment = null)}
-									onDelete={() => (this.appointment = null)}
-								/>
-							);
-						}}
+					<AppointmentEditorPanel
+						appointment={this.appointment}
+						onDismiss={() => (this.appointment = null)}
+						onDelete={() => (this.appointment = null)}
 					/>
 				) : (
 					""
