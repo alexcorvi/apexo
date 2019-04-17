@@ -6,7 +6,7 @@ class UserData {
 	@observable visible: boolean = false;
 	@computed
 	get currentUser() {
-		return staff.list[staff.getIndexByID(status.currentUserID)];
+		return staff.list.find(x => x._id === status.currentUserID);
 	}
 	@computed
 	get todayAppointments() {
@@ -15,9 +15,11 @@ class UserData {
 		} else if (!this.currentUser.weeksAppointments) {
 			return [];
 		} else {
-			return this.currentUser.weeksAppointments[
-				new Date().toLocaleDateString("en-us", { weekday: "long" })
-			];
+			return (
+				this.currentUser.weeksAppointments[
+					new Date().toLocaleDateString("en-us", { weekday: "long" })
+				] || []
+			);
 		}
 	}
 	show() {

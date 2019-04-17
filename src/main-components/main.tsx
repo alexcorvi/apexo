@@ -97,7 +97,20 @@ export class MainView extends React.Component<{}, {}> {
 										}
 										isCurrentlyReSyncing={router.reSyncing}
 									/>
-									<UserPanelView key="user" />
+									<UserPanelView
+										staffName={
+											(user.currentUser || { name: "" })
+												.name
+										}
+										todayAppointments={
+											user.todayAppointments
+										}
+										isOpen={user.visible}
+										onDismiss={() => user.hide()}
+										onLogout={() => status.logout()}
+										onResetUser={() => status.resetUser()}
+										key="user"
+									/>
 									<MenuView
 										items={menu.items}
 										isVisible={menu.visible}
