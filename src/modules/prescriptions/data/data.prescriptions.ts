@@ -20,7 +20,7 @@ class Prescriptions {
 		const i = this.findIndexByID(id);
 
 		modals.newModal({
-			message: text(`Are you sure you want to delete the prescription?`),
+			text: text(`Are you sure you want to delete the prescription?`),
 			onConfirm: () => this.deleteByID(id),
 			showCancelButton: true,
 			showConfirmButton: true,

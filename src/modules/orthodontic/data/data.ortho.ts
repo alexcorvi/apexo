@@ -83,7 +83,7 @@ class OrthoCases {
 		const i = this.getIndexByID(id);
 		const orthoCase = this.list[i];
 		modals.newModal({
-			message: text(`Orthodontic case will be deleted`),
+			text: text(`Orthodontic case will be deleted`),
 			onConfirm: () => this.deleteByID(id),
 			showCancelButton: true,
 			showConfirmButton: true,

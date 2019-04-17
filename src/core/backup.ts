@@ -11,7 +11,7 @@ import {
 	status,
 	text
 	} from "./";
-import { decode, encode, second } from "@utils";
+import { decode, encode, generateID, second } from "@utils";
 import { saveAs } from "file-saver";
 const ext = "apx";
 
@@ -161,7 +161,7 @@ export const restore = {
 				resolve();
 			} else {
 				modals.newModal({
-					message: text(
+					text: text(
 						`All unsaved data will be lost. All data will be removed and replaced by the backup file. Type "yes" to confirm`
 					),
 					onConfirm: async (input: string) => {
@@ -173,14 +173,14 @@ export const restore = {
 							const msg = new Message(
 								text("Restoration cancelled")
 							);
-							messages.addMessage(msg);
+							messages.newMessage(msg);
 							return reject();
 						}
 					},
 					input: true,
 					showCancelButton: false,
 					showConfirmButton: true,
-					id: Math.random()
+					id: generateID()
 				});
 			}
 		});
@@ -190,7 +190,7 @@ export const restore = {
 		return new Promise((resolve, reject) => {
 			function terminate() {
 				const msg = new Message(text("Invalid file"));
-				messages.addMessage(msg);
+				messages.newMessage(msg);
 				return reject();
 			}
 			const reader = new FileReader();
@@ -225,8 +225,8 @@ export async function downloadCurrent() {
 	const blob = await backup.toBlob();
 	return new Promise(resolve => {
 		modals.newModal({
-			id: Math.random(),
-			message: text("Please enter file name"),
+			id: generateID(),
+			text: text("Please enter file name"),
 			onConfirm: fileName => {
 				saveAs(blob, `${fileName || "apexo-backup"}.${ext}`);
 				resolve();

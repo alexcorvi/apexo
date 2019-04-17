@@ -1,5 +1,5 @@
 import { initializeIcons as initializeIconsA } from "@core";
-import { MainView, MessagesView, ModalsView } from "@main-components";
+import { MainView } from "@main-components";
 import { Fabric } from "office-ui-fabric-react";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -13,8 +13,6 @@ initializeIconsA("./fonts/");
 ReactDOM.render(
 	<Fabric>
 		<MainView />
-		<MessagesView />
-		<ModalsView />
 		<p className="version-num">version 3.2.1 </p>
 	</Fabric>,
 	document.getElementById("root")

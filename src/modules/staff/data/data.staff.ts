@@ -14,7 +14,7 @@ class StaffData {
 	deleteModal(id: string) {
 		const i = this.getIndexByID(id);
 		modals.newModal({
-			message: `${text("Are you sure you want to delete")} ${
+			text: `${text("Are you sure you want to delete")} ${
 				this.list[i].name
 			}`,
 			onConfirm: () => this.deleteByID(id),

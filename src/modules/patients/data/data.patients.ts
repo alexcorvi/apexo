@@ -34,7 +34,7 @@ class PatientsData {
 		const i = this.findIndexByID(id);
 
 		modals.newModal({
-			message: `${text("All of the patient")} ${this.list[i].name}${text(
+			text: `${text("All of the patient")} ${this.list[i].name}${text(
 				"'s data will be deleted along with"
 			)} ${this.list[i].appointments.length} ${text("of appointments")}.`,
 			onConfirm: () => this.deleteByID(id),

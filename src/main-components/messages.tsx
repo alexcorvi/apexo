@@ -1,18 +1,19 @@
-import { messages } from "@core";
 import { observer } from "mobx-react";
 import { Icon } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
-export class MessagesView extends React.Component<{}, {}> {
+export class MessagesView extends React.Component<{
+	messages: { id: string; text: string }[];
+}> {
 	render() {
 		return (
 			<div className="messages-component">
-				{messages.messages.map(msg => {
+				{this.props.messages.map(msg => {
 					return (
 						<div key={msg.id} className="message bottom-bounce">
 							<Icon iconName={"Important"} />
-							<span className="message-inner">{msg.string}</span>
+							<span className="message-inner">{msg.text}</span>
 						</div>
 					);
 				})}

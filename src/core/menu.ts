@@ -42,13 +42,6 @@ class MenuData {
 			.filter(item => !item.condition || item.condition());
 	}
 
-	@computed
-	get currentIndex() {
-		return this.sortedItems.findIndex(
-			x => x.name === router.currentNamespace
-		);
-	}
-
 	hide() {
 		this.visible = false;
 	}

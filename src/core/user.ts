@@ -8,6 +8,7 @@ class UserData {
 	get currentUser() {
 		return staff.list[staff.getIndexByID(status.currentUserID)];
 	}
+	@computed
 	get todayAppointments() {
 		if (!this.currentUser) {
 			return [];
@@ -18,6 +19,12 @@ class UserData {
 				new Date().toLocaleDateString("en-us", { weekday: "long" })
 			];
 		}
+	}
+	show() {
+		this.visible = true;
+	}
+	hide() {
+		this.visible = false;
 	}
 }
 

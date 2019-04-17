@@ -1,21 +1,32 @@
-import { menu, router, text } from "@core";
+import { text } from "@core";
 import { observer } from "mobx-react";
 import { Icon, Nav, Panel, PanelType } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
-export class MenuView extends React.Component<any, any> {
+export class MenuView extends React.Component<{
+	items: {
+		name: string;
+		onClick: () => void;
+		icon: string;
+		key: string;
+		url: string;
+	}[];
+	isVisible: boolean;
+	currentName: string;
+	onDismiss: () => void;
+}> {
 	public render() {
 		return (
 			<div>
 				<div className="visible-lg visible-md icon-list">
-					{menu.sortedItems.map((item, index) => {
+					{this.props.items.map((item, index) => {
 						return (
 							<div
 								key={index}
 								className={
 									"item " +
-									(menu.currentIndex === index
+									(item.name === this.props.currentName
 										? "selected"
 										: "")
 								}
@@ -30,15 +41,15 @@ export class MenuView extends React.Component<any, any> {
 				<Panel
 					className="menu"
 					isLightDismiss={true}
-					isOpen={menu.visible}
+					isOpen={this.props.isVisible}
 					type={PanelType.smallFixedNear}
-					onDismiss={() => (menu.visible = false)}
+					onDismiss={this.props.onDismiss}
 					hasCloseButton={false}
 				>
 					<Nav
 						groups={[
 							{
-								links: menu.sortedItems.map(x => {
+								links: this.props.items.map(x => {
 									return {
 										icon: x.icon,
 										name: text(x.name),
@@ -49,7 +60,7 @@ export class MenuView extends React.Component<any, any> {
 								})
 							}
 						]}
-						selectedKey={router.currentNamespace}
+						selectedKey={this.props.currentName}
 					/>
 				</Panel>
 			</div>

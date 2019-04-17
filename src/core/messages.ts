@@ -1,37 +1,32 @@
-import { generateID } from "@utils";
+import { generateID, second } from "@utils";
 import { observable } from "mobx";
 
-export class Message {
-	id: string = generateID();
+export interface MessageInterface {
+	id: string;
 
-	@observable string: string = "";
-	expiresIn: number = 10000;
+	text: string;
+	expiresIn?: number;
 
-	onExpire: () => void = () => {};
-
-	constructor(string: string) {
-		this.string = string;
-	}
+	onExpire?: () => void;
 }
 
 class Messages {
-	@observable messages: Message[] = [];
-
-	public addMessage(msg: Message) {
-		this.messages.push(msg);
+	@observable list: MessageInterface[] = [];
+	public newMessage(msg: MessageInterface) {
+		this.list.push(msg);
 		setTimeout(() => {
 			if (this.removeMsgByID(msg.id)) {
-				msg.onExpire();
+				(msg.onExpire || (() => {}))();
 			}
-		}, msg.expiresIn);
+		}, msg.expiresIn || 10 * second);
 	}
 
 	public removeMsgByID(id: string): boolean {
-		const i = this.messages.findIndex(x => x.id === id);
+		const i = this.list.findIndex(x => x.id === id);
 		if (i === -1) {
 			return false;
 		} else {
-			this.messages.splice(i, 1);
+			this.list.splice(i, 1);
 			return true;
 		}
 	}

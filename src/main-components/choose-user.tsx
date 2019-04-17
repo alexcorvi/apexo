@@ -1,34 +1,45 @@
 import { ProfileComponent } from "@common-components";
-import { Message, messages, modals, status, text } from "@core";
-import { staff, StaffMember } from "@modules";
+import { MessageInterface, ModalInterface, text } from "@core";
+import { generateID } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { PrimaryButton, TextField } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
-export class ChooseUserComponent extends React.Component<{}, {}> {
+export class ChooseUserComponent extends React.Component<
+	{
+		showMessage: (message: MessageInterface) => void;
+		showModal: (modal: ModalInterface) => void;
+		onChoosing: (id: string) => void;
+		onCreatingNew: (name: string) => void;
+		users: { name: string; _id: string; pin: string | undefined }[];
+	},
+	{}
+> {
 	@observable newDocName: string = "";
 	render() {
 		return (
 			<div className="login-component">
 				<div className="m-b-5">
-					{staff.list.map(user => (
+					{this.props.users.map(user => (
 						<div
 							className="m-t-5 p-5 user-chooser pointer"
 							onClick={() => {
 								if (user.pin) {
-									modals.newModal({
-										id: Math.random(),
-										message: text("Please enter your PIN"),
+									this.props.showModal({
+										id: generateID(),
+										text: text("Please enter your PIN"),
 										onConfirm: providedPin => {
 											if (providedPin === user.pin) {
-												status.setUser(user._id);
+												this.props.onChoosing(user._id);
 											} else {
-												const msg = new Message(
-													text("Invalid PIN provided")
-												);
-												messages.addMessage(msg);
+												this.props.showMessage({
+													id: generateID(),
+													text: text(
+														`Invalid PIN provided`
+													)
+												});
 											}
 										},
 										input: true,
@@ -36,23 +47,15 @@ export class ChooseUserComponent extends React.Component<{}, {}> {
 										showConfirmButton: true
 									});
 								} else {
-									status.setUser(user._id);
+									this.props.onChoosing(user._id);
 								}
 							}}
 							key={user._id}
-						>
-							<ProfileComponent
-								size={3}
-								name={user.name}
-								secondaryElement={
-									<span>{user.sortedDays.join(", ")}</span>
-								}
-							/>
-						</div>
+						/>
 					))}
 				</div>
 				<hr />
-				{staff.list.length === 0 ? (
+				{this.props.users.length === 0 ? (
 					<div>
 						<TextField
 							value={this.newDocName}
@@ -61,11 +64,7 @@ export class ChooseUserComponent extends React.Component<{}, {}> {
 						/>
 						<PrimaryButton
 							onClick={() => {
-								const newDoc = new StaffMember();
-								newDoc.name = this.newDocName;
-								this.newDocName = "";
-								staff.list.push(newDoc);
-								status.setUser(newDoc._id);
+								this.props.onCreatingNew(this.newDocName);
 							}}
 							text={text("Register")}
 						/>

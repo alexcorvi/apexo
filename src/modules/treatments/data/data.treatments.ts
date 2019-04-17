@@ -15,7 +15,7 @@ class TreatmentData {
 		const i = this.getIndexByID(id);
 		const treatment = this.list[i];
 		modals.newModal({
-			message: `${text("Treatment")} "${treatment.type}" ${text(
+			text: `${text("Treatment")} "${treatment.type}" ${text(
 				"will be deleted"
 			)}`,
 			onConfirm: () => {

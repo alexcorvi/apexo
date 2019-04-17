@@ -1,5 +1,17 @@
 import { AsyncComponent } from "@common-components";
-import { LoginStep, router, status, text } from "@core";
+import {
+	LoginStep,
+	menu,
+	messages,
+	modals,
+	resync,
+	router,
+	status,
+	text,
+	user
+	} from "@core";
+import { MessagesView, ModalsView } from "@main-components";
+import { staff, StaffMember } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { MessageBar, PrimaryButton, Spinner, SpinnerSize } from "office-ui-fabric-react";
@@ -46,7 +58,7 @@ export class ErrorBoundaryView extends React.Component<{}> {
 
 @observer
 export class MainView extends React.Component<{}, {}> {
-	@computed get view() {
+	@computed get conditionalView() {
 		if (status.step === LoginStep.allDone) {
 			return (
 				<div className="main-component">
@@ -69,9 +81,30 @@ export class MainView extends React.Component<{}, {}> {
 											}}
 										/>
 									</div>
-									<HeaderView key="header" />
+									<HeaderView
+										onExpandMenu={menu.show}
+										onExpandUser={user.show}
+										currentNamespace={
+											router.currentNamespace
+										}
+										isOnline={status.online}
+										resync={resync.resync}
+										onStartReSyncing={() =>
+											(router.reSyncing = true)
+										}
+										onFinishReSyncing={() =>
+											(router.reSyncing = false)
+										}
+										isCurrentlyReSyncing={router.reSyncing}
+									/>
 									<UserPanelView key="user" />
-									<MenuView key="menu" />
+									<MenuView
+										items={menu.items}
+										isVisible={menu.visible}
+										currentName={router.currentNamespace}
+										onDismiss={() => (menu.visible = false)}
+										key="menu"
+									/>
 								</div>
 							);
 						}}
@@ -85,7 +118,19 @@ export class MainView extends React.Component<{}, {}> {
 					loader={async () => {
 						const ChooseUserComponent = (await import("./choose-user"))
 							.ChooseUserComponent;
-						return <ChooseUserComponent />;
+						return (
+							<ChooseUserComponent
+								users={staff.list}
+								onChoosing={id => status.setUser(id)}
+								onCreatingNew={name => {
+									const newStaffMember = new StaffMember();
+									newStaffMember.name = name;
+									status.setUser(newStaffMember._id);
+								}}
+								showMessage={messages.newMessage}
+								showModal={modals.newModal}
+							/>
+						);
 					}}
 				/>
 			);
@@ -95,7 +140,19 @@ export class MainView extends React.Component<{}, {}> {
 					key="choose-user"
 					loader={async () => {
 						const LoginView = (await import("./login")).LoginView;
-						return <LoginView />;
+						return (
+							<LoginView
+								tryOffline={status.tryOffline}
+								initialCheck={status.initialCheck}
+								loginWithCredentials={
+									status.loginWithCredentials
+								}
+								loginWithCredentialsOffline={
+									status.loginWithCredentialsOffline
+								}
+								startNoServer={status.startNoServer}
+							/>
+						);
 					}}
 				/>
 			);
@@ -129,7 +186,16 @@ export class MainView extends React.Component<{}, {}> {
 
 	render() {
 		return (
-			<ErrorBoundaryView key={status.step}>{this.view}</ErrorBoundaryView>
+			<ErrorBoundaryView key={status.step}>
+				<div>
+					<ModalsView
+						activeModals={modals.activeModals}
+						onDismiss={modals.deleteModal}
+					/>
+					<MessagesView messages={messages.list} />
+				</div>
+				{this.conditionalView}
+			</ErrorBoundaryView>
 		);
 	}
 }

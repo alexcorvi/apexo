@@ -1143,7 +1143,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																			onClick={() => {
 																				modals.newModal(
 																					{
-																						message: text(
+																						text: text(
 																							"This visit data will be deleted along with all photos and notes"
 																						),
 																						onConfirm: () => {

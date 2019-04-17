@@ -1,5 +1,6 @@
-import { menu, resync } from "@core";
+import { menu, resync, user } from "@core";
 import { HomeView } from "@main-components";
+import { appointments, setting } from "@modules";
 import { computed, observable } from "mobx";
 import * as React from "react";
 
@@ -27,7 +28,22 @@ class Router {
 					route.regex.test(this.currentLocation)
 				);
 			}) || {
-				component: async () => <HomeView />,
+				component: async () => (
+					<HomeView
+						currentUsername={user.currentUser.name}
+						todayAppointments={appointments.appointmentsForDay(
+							new Date().getTime(),
+							0,
+							0
+						)}
+						tomorrowAppointments={appointments.appointmentsForDay(
+							new Date().getTime() + 86400000,
+							0,
+							0
+						)}
+						showChart={!!setting.getSetting("module_statistics")}
+					/>
+				),
 				namespace: "Home",
 				regex: /a/
 			}

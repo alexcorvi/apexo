@@ -1,4 +1,4 @@
-import { status, text } from "@core";
+import { text } from "@core";
 import { store } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -6,7 +6,29 @@ import { DefaultButton, MessageBar, MessageBarType, PrimaryButton, TextField } f
 import * as React from "react";
 
 @observer
-export class LoginView extends React.Component<{}, {}> {
+export class LoginView extends React.Component<{
+	tryOffline: boolean;
+	initialCheck(server: string): Promise<void>;
+	loginWithCredentials({
+		username,
+		password,
+		server
+	}: {
+		username: string;
+		password: string;
+		server: string;
+	}): Promise<boolean | string>;
+	loginWithCredentialsOffline({
+		username,
+		password,
+		server
+	}: {
+		username: string;
+		password: string;
+		server: string;
+	}): Promise<boolean | string>;
+	startNoServer(): Promise<void>;
+}> {
 	@observable usernameFieldValue = "";
 	@observable passwordFieldValue = "";
 	@observable serverFieldValue =
@@ -27,7 +49,7 @@ export class LoginView extends React.Component<{}, {}> {
 	}
 
 	componentWillMount() {
-		status
+		this.props
 			.initialCheck(this.serverFieldValue)
 			.then(() => (this.initiallyChecked = true));
 	}
@@ -142,7 +164,7 @@ export class LoginView extends React.Component<{}, {}> {
 											return;
 										}
 										this.errorMessage = "";
-										const result = await status.loginWithCredentials(
+										const result = await this.props.loginWithCredentials(
 											{
 												username: this
 													.usernameFieldValue,
@@ -154,15 +176,12 @@ export class LoginView extends React.Component<{}, {}> {
 												)
 											}
 										);
-										if (
-											typeof result !== "boolean" ||
-											result !== true
-										) {
+										if (typeof result !== "boolean") {
 											this.errorMessage = result;
 										}
 									}}
 								/>
-								{status.tryOffline ? (
+								{this.props.tryOffline ? (
 									<PrimaryButton
 										text={text("Access offline")}
 										disabled={this.disableInputs}
@@ -180,7 +199,7 @@ export class LoginView extends React.Component<{}, {}> {
 												return;
 											}
 											this.errorMessage = "";
-											const result = await status.loginWithCredentialsOffline(
+											const result = await this.props.loginWithCredentialsOffline(
 												{
 													username: this
 														.usernameFieldValue,
@@ -192,10 +211,7 @@ export class LoginView extends React.Component<{}, {}> {
 													)
 												}
 											);
-											if (
-												typeof result !== "boolean" ||
-												result !== true
-											) {
+											if (typeof result !== "boolean") {
 												this.errorMessage = result;
 											}
 										}}
@@ -204,9 +220,7 @@ export class LoginView extends React.Component<{}, {}> {
 									""
 								)}
 								<DefaultButton
-									onClick={() => {
-										status.startNoServer();
-									}}
+									onClick={this.props.startNoServer}
 									className="no-server-mode"
 								>
 									no-server mode

@@ -47,7 +47,7 @@ class AppointmentsData {
 	}
 	deleteModal(id: string) {
 		modals.newModal({
-			message: text("Are you sure you want to delete this appointment?"),
+			text: text("Are you sure you want to delete this appointment?"),
 			onConfirm: () => this.deleteByID(id),
 			showCancelButton: true,
 			showConfirmButton: true,
