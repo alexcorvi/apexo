@@ -66,7 +66,7 @@ export class StaffMember {
 	get weeksAppointments() {
 		const c = new Calendar();
 		const resAppointments: {
-			[key: string]: Appointment[];
+			[key: string]: Appointment[] | undefined;
 		} = {};
 		c.selectedWeekDays.forEach(day => {
 			const d = day.dateNum;
@@ -81,7 +81,7 @@ export class StaffMember {
 					if (!resAppointments[day.weekDay.dayLiteral]) {
 						resAppointments[day.weekDay.dayLiteral] = [];
 					}
-					resAppointments[day.weekDay.dayLiteral].push(appointment);
+					resAppointments[day.weekDay.dayLiteral]!.push(appointment);
 				});
 		});
 		return resAppointments;
