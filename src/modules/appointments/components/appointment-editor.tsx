@@ -15,8 +15,6 @@ import {
 	itemFormToString,
 	Patient,
 	PrescriptionItem,
-	setting,
-	staff,
 	StaffMember,
 	Treatment
 	} from "@modules";
@@ -55,6 +53,11 @@ export class AppointmentEditorPanel extends React.Component<
 		) => Appointment[];
 		onDismiss: () => void;
 		onDelete: (_id: string) => void;
+		dateFormat: string;
+		currencySymbol: string;
+		prescriptionsEnabled: boolean;
+		timeTrackingEnabled: boolean;
+		operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
 	},
 	{}
 > {
@@ -158,7 +161,7 @@ export class AppointmentEditorPanel extends React.Component<
 									<span>
 										{formatDate(
 											this.props.appointment!.date,
-											setting.getSetting("date_format")
+											this.props.dateFormat
 										)}{" "}
 										/{" "}
 										{this.props.appointment
@@ -215,9 +218,7 @@ export class AppointmentEditorPanel extends React.Component<
 										formatDate={d =>
 											formatDate(
 												d || 0,
-												setting.getSetting(
-													"date_format"
-												)
+												this.props.dateFormat
 											)
 										}
 									/>
@@ -326,48 +327,46 @@ export class AppointmentEditorPanel extends React.Component<
 						</Row>
 						<div className="appointment-input date">
 							<label>{text("Operating staff")} </label>
-							{staff.list
-								.filter(member => member.operates)
-								.map(member => {
-									const checked =
-										this.props.appointment!.staffID.indexOf(
-											member._id
-										) > -1;
-									return (
-										<Checkbox
-											key={member._id}
-											label={member.name}
-											disabled={
-												!this.canEdit ||
-												(!checked &&
-													member.onDutyDays.indexOf(
-														new Date(
-															this.props.appointment!.date
-														).toLocaleDateString(
-															"en-us",
-															{
-																weekday: "long"
-															}
-														)
-													) === -1)
+							{this.props.operatingStaff.map(member => {
+								const checked =
+									this.props.appointment!.staffID.indexOf(
+										member._id
+									) > -1;
+								return (
+									<Checkbox
+										key={member._id}
+										label={member.name}
+										disabled={
+											!this.canEdit ||
+											(!checked &&
+												member.onDutyDays.indexOf(
+													new Date(
+														this.props.appointment!.date
+													).toLocaleDateString(
+														"en-us",
+														{
+															weekday: "long"
+														}
+													)
+												) === -1)
+										}
+										checked={checked}
+										onChange={(ev, isChecked) => {
+											if (isChecked) {
+												this.props.appointment!.addStaff(
+													member._id
+												);
+											} else {
+												this.props.appointment!.removeStaff(
+													member._id
+												);
 											}
-											checked={checked}
-											onChange={(ev, isChecked) => {
-												if (isChecked) {
-													this.props.appointment!.addStaff(
-														member._id
-													);
-												} else {
-													this.props.appointment!.removeStaff(
-														member._id
-													);
-												}
-												this.props.appointment!
-													.triggerUpdate++;
-											}}
-										/>
-									);
-								})}
+											this.props.appointment!
+												.triggerUpdate++;
+										}}
+									/>
+								);
+							})}
 						</div>
 					</SectionComponent>
 
@@ -459,7 +458,7 @@ export class AppointmentEditorPanel extends React.Component<
 							</Col>
 						</Row>
 
-						{setting.getSetting("module_prescriptions") ? (
+						{this.props.prescriptionsEnabled ? (
 							<div>
 								<hr className="appointment-hr" />
 								<div className="appointment-input prescription">
@@ -606,7 +605,7 @@ export class AppointmentEditorPanel extends React.Component<
 					<SectionComponent title={text("Expenses & Price")}>
 						<Row gutter={12}>
 							<Col sm={16}>
-								{setting.getSetting("time_tracking") ? (
+								{this.props.timeTrackingEnabled ? (
 									<div className="appointment-input time">
 										<label>
 											{text(
@@ -695,9 +694,7 @@ export class AppointmentEditorPanel extends React.Component<
 												text={
 													text("Time value") +
 													": " +
-													setting.getSetting(
-														"currencySymbol"
-													) +
+													this.props.currencySymbol +
 													round(
 														this.props.appointment!
 															.spentTimeValue
@@ -710,9 +707,7 @@ export class AppointmentEditorPanel extends React.Component<
 												text={
 													text("Expenses") +
 													": " +
-													setting.getSetting(
-														"currencySymbol"
-													) +
+													this.props.currencySymbol +
 													round(
 														this.props.appointment!
 															.expenses
@@ -740,9 +735,9 @@ export class AppointmentEditorPanel extends React.Component<
 														newVal!
 													);
 												}}
-												prefix={setting.getSetting(
-													"currencySymbol"
-												)}
+												prefix={
+													this.props.currencySymbol
+												}
 											/>
 										</Col>
 										<Col sm={8}>
@@ -756,9 +751,9 @@ export class AppointmentEditorPanel extends React.Component<
 														newVal!
 													);
 												}}
-												prefix={setting.getSetting(
-													"currencySymbol"
-												)}
+												prefix={
+													this.props.currencySymbol
+												}
 											/>
 										</Col>
 										<Col sm={8}>
@@ -785,9 +780,9 @@ export class AppointmentEditorPanel extends React.Component<
 														? this.props.appointment!.overpaidAmount.toString()
 														: this.props.appointment!.outstandingAmount.toString()
 												}
-												prefix={setting.getSetting(
-													"currencySymbol"
-												)}
+												prefix={
+													this.props.currencySymbol
+												}
 											/>
 										</Col>
 									</Row>
@@ -796,9 +791,7 @@ export class AppointmentEditorPanel extends React.Component<
 											text={
 												text("Profit") +
 												": " +
-												setting.getSetting(
-													"currencySymbol"
-												) +
+												this.props.currencySymbol +
 												round(
 													this.props.appointment!
 														.profit
