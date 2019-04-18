@@ -1,5 +1,5 @@
-import { text, user } from "@core";
-import { Appointment, appointments, AppointmentThumbComponent } from "@modules";
+import { text } from "@core";
+import { Appointment, AppointmentThumbComponent, StaffMember } from "@modules";
 import { textualFilter } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -16,7 +16,10 @@ const AppointmentEditorPanel = loadable({
 
 @observer
 export class AppointmentsList extends React.Component<
-	{ list: Appointment[] },
+	{
+		list: Appointment[];
+		currentUser: StaffMember;
+	},
 	{}
 > {
 	@observable filter: string = "";
@@ -30,7 +33,11 @@ export class AppointmentsList extends React.Component<
 			: this.props.list;
 	}
 	@computed get canEdit() {
-		return user.currentUser.canEditOrtho;
+		return this.props.currentUser.canEditAppointments;
+	}
+
+	@computed get selectedAppointment() {
+		return this.props.list.find(x => x._id === this.selectedAppointmentID);
 	}
 
 	render() {
@@ -83,18 +90,10 @@ export class AppointmentsList extends React.Component<
 				) : (
 					""
 				)}
-				{appointments.list[
-					appointments.getIndexByID(this.selectedAppointmentID)
-				] ? (
+				{this.selectedAppointment ? (
 					<AppointmentEditorPanel
 						onDismiss={() => (this.selectedAppointmentID = "")}
-						appointment={
-							appointments.list[
-								appointments.getIndexByID(
-									this.selectedAppointmentID
-								)
-							]
-						}
+						appointment={this.selectedAppointment}
 						onDelete={() => (this.selectedAppointmentID = "")}
 					/>
 				) : (
