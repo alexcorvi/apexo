@@ -1,6 +1,6 @@
 import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
-import { router, text, user } from "@core";
-import { appointments, setting, Treatment, treatments } from "@modules";
+import { text } from "@core";
+import { Appointment, StaffMember, Treatment } from "@modules";
 import { num } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -8,22 +8,25 @@ import { IconButton, Panel, PanelType, TextField } from "office-ui-fabric-react"
 import * as React from "react";
 
 @observer
-export class Treatments extends React.Component<{}, {}> {
-	@observable selectedID: string = router.currentLocation.split("/")[1];
+export class Treatments extends React.Component<{
+	currentUser: StaffMember;
+	currentLocation: string;
+	treatments: Treatment[];
+	appointments: Appointment[];
+	currencySymbol: string;
+	onDelete: (id: string) => void;
+	onAdd: (treatment: Treatment) => void;
+}> {
+	@observable selectedID: string = this.props.currentLocation.split("/")[1];
 
 	@computed
 	get canEdit() {
-		return user.currentUser.canEditTreatments;
-	}
-
-	@computed
-	get selectedIndex() {
-		return treatments.list.findIndex(x => x._id === this.selectedID);
+		return this.props.currentUser.canEditTreatments;
 	}
 
 	@computed
 	get selectedTreatment() {
-		return treatments.list[this.selectedIndex];
+		return this.props.treatments.find(x => x._id === this.selectedID);
 	}
 
 	render() {
@@ -33,7 +36,7 @@ export class Treatments extends React.Component<{}, {}> {
 					onDelete={
 						this.canEdit
 							? id => {
-									treatments.deleteModal(id);
+									this.props.onDelete(id);
 							  }
 							: undefined
 					}
@@ -46,7 +49,7 @@ export class Treatments extends React.Component<{}, {}> {
 										name: text("Add new"),
 										onClick: () => {
 											const treatment = new Treatment();
-											treatments.list.push(treatment);
+											this.props.onAdd(treatment);
 											this.selectedID = treatment._id;
 										},
 										iconProps: {
@@ -62,12 +65,12 @@ export class Treatments extends React.Component<{}, {}> {
 						text("Done appointments"),
 						text("Upcoming appointments")
 					]}
-					rows={treatments.list.map(treatment => {
+					rows={this.props.treatments.map(treatment => {
 						const now = new Date().getTime();
 						let done = 0;
 						let upcoming = 0;
 
-						const appointmentsArr = appointments.list;
+						const appointmentsArr = this.props.appointments;
 
 						for (
 							let index = 0;
@@ -95,11 +98,9 @@ export class Treatments extends React.Component<{}, {}> {
 									component: (
 										<ProfileSquaredComponent
 											text={treatment.type}
-											subText={`${text(
-												"Expenses"
-											)}: ${setting.getSetting(
-												"currencySymbol"
-											)}${treatment.expenses} ${text(
+											subText={`${text("Expenses")}: ${
+												this.props.currencySymbol
+											}${treatment.expenses} ${text(
 												"per unit"
 											)}`}
 										/>
@@ -113,9 +114,7 @@ export class Treatments extends React.Component<{}, {}> {
 									dataValue: treatment.expenses,
 									component: (
 										<span>
-											{setting.getSetting(
-												"currencySymbol"
-											)}
+											{this.props.currencySymbol}
 											{treatment.expenses}
 										</span>
 									),
@@ -160,11 +159,9 @@ export class Treatments extends React.Component<{}, {}> {
 									{this.selectedTreatment ? (
 										<ProfileSquaredComponent
 											text={this.selectedTreatment.type}
-											subText={`${text(
-												"Expenses"
-											)}: ${setting.getSetting(
-												"currencySymbol"
-											)}${
+											subText={`${text("Expenses")}: ${
+												this.props.currencySymbol
+											}${
 												this.selectedTreatment.expenses
 											} ${text("per unit")}`}
 										/>
@@ -190,9 +187,7 @@ export class Treatments extends React.Component<{}, {}> {
 										label={text("Treatment title")}
 										value={this.selectedTreatment.type}
 										onChange={(ev, val) =>
-											(treatments.list[
-												this.selectedIndex
-											].type = val!)
+											(this.selectedTreatment!.type = val!)
 										}
 										disabled={!this.canEdit}
 									/>
@@ -203,13 +198,11 @@ export class Treatments extends React.Component<{}, {}> {
 										type="number"
 										value={this.selectedTreatment.expenses.toString()}
 										onChange={(ev, val) =>
-											(treatments.list[
-												this.selectedIndex
-											].expenses = num(val!))
+											(this.selectedTreatment!.expenses = num(
+												val!
+											))
 										}
-										prefix={setting.getSetting(
-											"currencySymbol"
-										)}
+										prefix={this.props.currencySymbol}
 										disabled={!this.canEdit}
 									/>
 								</div>
