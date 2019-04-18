@@ -6,8 +6,8 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import { router, text, user } from "@core";
-import { AppointmentsList, setting, staff, StaffMember } from "@modules";
+import { text } from "@core";
+import { AppointmentsList, StaffMember } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -27,22 +27,34 @@ import {
 import * as React from "react";
 
 @observer
-export class StaffPage extends React.Component<{}, {}> {
-	@observable selectedId: string = router.currentLocation.split("/")[1];
+export class StaffPage extends React.Component<{
+	currentUser: StaffMember;
+	currentLocation: string;
+	staffMembers: StaffMember[];
+	dateFormat: string;
+	onDelete: (id: string) => void;
+	onAdd: (member: StaffMember) => void;
+	enabledPrescriptions: boolean;
+	enabledStatistics: boolean;
+	enabledOrthodontics: boolean;
+}> {
+	@observable selectedId: string = this.props.currentLocation.split("/")[1];
 	@observable viewWhich: number = 1;
 
 	@computed get canEdit() {
-		return user.currentUser.canEditStaff;
+		return this.props.currentUser.canEditStaff;
+	}
+
+	@computed get sameUser() {
+		return (
+			this.props.currentUser._id ===
+			(this.selectedMember || { _id: "" })._id
+		);
 	}
 
 	@computed
-	get selectedMemberIndex() {
-		return staff.getIndexByID(this.selectedId);
-	}
-
-	@computed
-	get member() {
-		return staff.list[this.selectedMemberIndex];
+	get selectedMember() {
+		return this.props.staffMembers.find(x => x._id === this.selectedId);
 	}
 
 	render() {
@@ -57,7 +69,7 @@ export class StaffPage extends React.Component<{}, {}> {
 								text("Last/Next Appointment"),
 								text("Contact Details")
 							]}
-							rows={staff.list.map(member => ({
+							rows={this.props.staffMembers.map(member => ({
 								id: member._id,
 								searchableString: member.searchableString,
 								cells: [
@@ -120,7 +132,7 @@ export class StaffPage extends React.Component<{}, {}> {
 													/>
 												</TooltipHost>
 
-												{user.currentUser
+												{this.props.currentUser
 													.canViewAppointments ? (
 													<TooltipHost
 														content={text(
@@ -152,7 +164,7 @@ export class StaffPage extends React.Component<{}, {}> {
 															iconName: "Trash"
 														}}
 														onClick={() =>
-															staff.deleteModal(
+															this.props.onDelete(
 																member._id
 															)
 														}
@@ -191,9 +203,8 @@ export class StaffPage extends React.Component<{}, {}> {
 																	member
 																		.lastAppointment
 																		.date,
-																	setting.getSetting(
-																		"date_format"
-																	)
+																	this.props
+																		.dateFormat
 															  )
 															: text(
 																	"No last appointment"
@@ -230,9 +241,8 @@ export class StaffPage extends React.Component<{}, {}> {
 																	member
 																		.nextAppointment
 																		.date,
-																	setting.getSetting(
-																		"date_format"
-																	)
+																	this.props
+																		.dateFormat
 															  )
 															: text(
 																	"No next appointment"
@@ -310,7 +320,7 @@ export class StaffPage extends React.Component<{}, {}> {
 												name: text("Add new"),
 												onClick: () => {
 													const member = new StaffMember();
-													staff.list.push(member);
+													this.props.onAdd(member);
 													this.selectedId =
 														member._id;
 													this.viewWhich = 1;
@@ -334,7 +344,7 @@ export class StaffPage extends React.Component<{}, {}> {
 												{text(dayName)}
 											</th>
 											<td>
-												{staff.list
+												{this.props.staffMembers
 													.filter(
 														member =>
 															member.onDutyDays.indexOf(
@@ -386,9 +396,9 @@ export class StaffPage extends React.Component<{}, {}> {
 					</Col>
 				</Row>
 
-				{this.member && this.viewWhich ? (
+				{this.selectedMember && this.viewWhich ? (
 					<Panel
-						isOpen={!!this.member}
+						isOpen={!!this.selectedMember}
 						type={PanelType.medium}
 						closeButtonAriaLabel="Close"
 						isLightDismiss={true}
@@ -399,9 +409,9 @@ export class StaffPage extends React.Component<{}, {}> {
 						onRenderNavigation={() => (
 							<Row className="panel-heading">
 								<Col span={20}>
-									{this.member.name ? (
+									{this.selectedMember!.name ? (
 										<ProfileComponent
-											name={this.member.name}
+											name={this.selectedMember!.name}
 											secondaryElement={
 												<span>
 													{this.viewWhich === 1
@@ -421,7 +431,9 @@ export class StaffPage extends React.Component<{}, {}> {
 														: ""}
 												</span>
 											}
-											tertiaryText={this.member.phone}
+											tertiaryText={
+												this.selectedMember!.phone
+											}
 											size={3}
 										/>
 									) : (
@@ -448,9 +460,9 @@ export class StaffPage extends React.Component<{}, {}> {
 										<div className="staff-input">
 											<TextField
 												label={text("Name")}
-												value={this.member.name}
+												value={this.selectedMember.name}
 												onChange={(ev, val) =>
-													(this.member.name = val!)
+													(this.selectedMember!.name = val!)
 												}
 												disabled={!this.canEdit}
 											/>
@@ -475,7 +487,7 @@ export class StaffPage extends React.Component<{}, {}> {
 																]
 															}
 															checked={
-																this.member.onDutyDays.indexOf(
+																this.selectedMember!.onDutyDays.indexOf(
 																	day
 																) > -1
 															}
@@ -484,18 +496,19 @@ export class StaffPage extends React.Component<{}, {}> {
 																checked
 															) => {
 																if (checked) {
-																	this.member.onDutyDays.push(
+																	this.selectedMember!.onDutyDays.push(
 																		day
 																	);
 																} else {
-																	this.member.onDutyDays.splice(
-																		this.member.onDutyDays.indexOf(
+																	this.selectedMember!.onDutyDays.splice(
+																		this.selectedMember!.onDutyDays.indexOf(
 																			day
 																		),
 																		1
 																	);
 																}
-																this.member
+																this
+																	.selectedMember!
 																	.triggerUpdate++;
 															}}
 														/>
@@ -515,10 +528,11 @@ export class StaffPage extends React.Component<{}, {}> {
 															"Phone number"
 														)}
 														value={
-															this.member.phone
+															this.selectedMember
+																.phone
 														}
 														onChange={(ev, val) =>
-															(this.member.phone = val!)
+															(this.selectedMember!.phone = val!)
 														}
 														disabled={!this.canEdit}
 													/>
@@ -529,10 +543,11 @@ export class StaffPage extends React.Component<{}, {}> {
 													<TextField
 														label={text("Email")}
 														value={
-															this.member.email
+															this.selectedMember
+																.email
 														}
 														onChange={(ev, val) =>
-															(this.member.email = val!)
+															(this.selectedMember!.email = val!)
 														}
 														disabled={!this.canEdit}
 													/>
@@ -547,18 +562,20 @@ export class StaffPage extends React.Component<{}, {}> {
 
 							{this.viewWhich === 2 ? (
 								<div>
-									{this.member._id ===
-									user.currentUser._id ? (
+									{this.selectedMember._id ===
+									this.props.currentUser._id ? (
 										<SectionComponent
 											title={text(`Login PIN`)}
 										>
 											<div className="staff-input">
 												<TextField
 													label={text("Login PIN")}
-													value={this.member.pin}
+													value={
+														this.selectedMember.pin
+													}
 													onChange={(ev, v) => {
 														if (num(v!) < 10000) {
-															this.member.pin = v!.toString();
+															this.selectedMember!.pin = v!.toString();
 														} else {
 															this.forceUpdate();
 														}
@@ -584,8 +601,7 @@ export class StaffPage extends React.Component<{}, {}> {
 									<SectionComponent
 										title={text(`Permission`)}
 									>
-										{this.member._id ===
-										user.currentUser._id ? (
+										{this.sameUser ? (
 											<div>
 												<MessageBar
 													messageBarType={
@@ -603,11 +619,10 @@ export class StaffPage extends React.Component<{}, {}> {
 										)}
 										<Toggle
 											defaultChecked={
-												this.member.operates
+												this.selectedMember.operates
 											}
 											disabled={
-												this.member._id ===
-												user.currentUser._id
+												this.sameUser || !this.canEdit
 											}
 											onText={text(
 												"Operates on patients"
@@ -616,33 +631,32 @@ export class StaffPage extends React.Component<{}, {}> {
 												"Doesn't operate on patients"
 											)}
 											onChange={(ev, newVal) => {
-												this.member.operates = newVal!;
+												this.selectedMember!.operates = newVal!;
 											}}
 										/>
 
 										<Toggle
 											defaultChecked={
-												this.member.canViewStaff
+												this.selectedMember.canViewStaff
 											}
 											disabled={
-												this.member._id ===
-												user.currentUser._id
+												this.sameUser || !this.canEdit
 											}
 											onText={text("Can view staff page")}
 											offText={text(
 												"Can not view staff page"
 											)}
 											onChange={(ev, newVal) => {
-												this.member.canViewStaff = newVal!;
+												this.selectedMember!.canViewStaff = newVal!;
 											}}
 										/>
 										<Toggle
 											defaultChecked={
-												this.member.canViewPatients
+												this.selectedMember
+													.canViewPatients
 											}
 											disabled={
-												this.member._id ===
-												user.currentUser._id
+												this.sameUser || !this.canEdit
 											}
 											onText={text(
 												"Can view patients page"
@@ -651,19 +665,18 @@ export class StaffPage extends React.Component<{}, {}> {
 												"Can not view patients page"
 											)}
 											onChange={(ev, newVal) => {
-												this.member.canViewPatients = newVal!;
+												this.selectedMember!.canViewPatients = newVal!;
 											}}
 										/>
-										{setting.getSetting(
-											"module_orthodontics"
-										) ? (
+										{this.props.enabledOrthodontics ? (
 											<Toggle
 												defaultChecked={
-													this.member.canViewOrtho
+													this.selectedMember
+														.canViewOrtho
 												}
 												disabled={
-													this.member._id ===
-													user.currentUser._id
+													this.sameUser ||
+													!this.canEdit
 												}
 												onText={text(
 													"Can view orthodontics page"
@@ -672,7 +685,7 @@ export class StaffPage extends React.Component<{}, {}> {
 													"Can not view orthodontics page"
 												)}
 												onChange={(ev, newVal) => {
-													this.member.canViewOrtho = newVal!;
+													this.selectedMember!.canViewOrtho = newVal!;
 												}}
 											/>
 										) : (
@@ -680,11 +693,11 @@ export class StaffPage extends React.Component<{}, {}> {
 										)}
 										<Toggle
 											defaultChecked={
-												this.member.canViewAppointments
+												this.selectedMember
+													.canViewAppointments
 											}
 											disabled={
-												this.member._id ===
-												user.currentUser._id
+												this.sameUser || !this.canEdit
 											}
 											onText={text(
 												"Can view appointments page"
@@ -693,16 +706,16 @@ export class StaffPage extends React.Component<{}, {}> {
 												"Can not view appointments page"
 											)}
 											onChange={(ev, newVal) => {
-												this.member.canViewAppointments = newVal!;
+												this.selectedMember!.canViewAppointments = newVal!;
 											}}
 										/>
 										<Toggle
 											defaultChecked={
-												this.member.canViewTreatments
+												this.selectedMember
+													.canViewTreatments
 											}
 											disabled={
-												this.member._id ===
-												user.currentUser._id
+												this.sameUser || !this.canEdit
 											}
 											onText={text(
 												"Can view treatments page"
@@ -711,20 +724,18 @@ export class StaffPage extends React.Component<{}, {}> {
 												"Can not view treatments page"
 											)}
 											onChange={(ev, newVal) => {
-												this.member.canViewTreatments = newVal!;
+												this.selectedMember!.canViewTreatments = newVal!;
 											}}
 										/>
-										{setting.getSetting(
-											"module_prescriptions"
-										) ? (
+										{this.props.enabledPrescriptions ? (
 											<Toggle
 												defaultChecked={
-													this.member
+													this.selectedMember
 														.canViewPrescriptions
 												}
 												disabled={
-													this.member._id ===
-													user.currentUser._id
+													this.sameUser ||
+													!this.canEdit
 												}
 												onText={text(
 													"Can view prescriptions page"
@@ -733,22 +744,21 @@ export class StaffPage extends React.Component<{}, {}> {
 													"Can not view prescriptions page"
 												)}
 												onChange={(ev, newVal) => {
-													this.member.canViewPrescriptions = newVal!;
+													this.selectedMember!.canViewPrescriptions = newVal!;
 												}}
 											/>
 										) : (
 											""
 										)}
-										{setting.getSetting(
-											"module_statistics"
-										) ? (
+										{this.props.enabledStatistics ? (
 											<Toggle
 												defaultChecked={
-													this.member.canViewStats
+													this.selectedMember
+														.canViewStats
 												}
 												disabled={
-													this.member._id ===
-													user.currentUser._id
+													this.sameUser ||
+													!this.canEdit
 												}
 												onText={text(
 													"Can view statistics page"
@@ -757,7 +767,7 @@ export class StaffPage extends React.Component<{}, {}> {
 													"Can not view statistics page"
 												)}
 												onChange={(ev, newVal) => {
-													this.member.canViewStats = newVal!;
+													this.selectedMember!.canViewStats = newVal!;
 												}}
 											/>
 										) : (
@@ -766,11 +776,11 @@ export class StaffPage extends React.Component<{}, {}> {
 
 										<Toggle
 											defaultChecked={
-												this.member.canViewSettings
+												this.selectedMember
+													.canViewSettings
 											}
 											disabled={
-												this.member._id ===
-												user.currentUser._id
+												this.sameUser || !this.canEdit
 											}
 											onText={text(
 												"Can view settings page"
@@ -779,18 +789,19 @@ export class StaffPage extends React.Component<{}, {}> {
 												"Can not view settings page"
 											)}
 											onChange={(ev, newVal) => {
-												this.member.canViewSettings = newVal!;
+												this.selectedMember!.canViewSettings = newVal!;
 											}}
 										/>
 
-										{this.member.canViewStaff ? (
+										{this.selectedMember.canViewStaff ? (
 											<Toggle
 												defaultChecked={
-													this.member.canEditStaff
+													this.selectedMember
+														.canEditStaff
 												}
 												disabled={
-													this.member._id ===
-													user.currentUser._id
+													this.sameUser ||
+													!this.canEdit
 												}
 												onText={text(
 													"Can edit staff page"
@@ -799,20 +810,21 @@ export class StaffPage extends React.Component<{}, {}> {
 													"Can not edit staff page"
 												)}
 												onChange={(ev, newVal) => {
-													this.member.canEditStaff = newVal!;
+													this.selectedMember!.canEditStaff = newVal!;
 												}}
 											/>
 										) : (
 											""
 										)}
-										{this.member.canViewPatients ? (
+										{this.selectedMember.canViewPatients ? (
 											<Toggle
 												defaultChecked={
-													this.member.canEditPatients
+													this.selectedMember
+														.canEditPatients
 												}
 												disabled={
-													this.member._id ===
-													user.currentUser._id
+													this.sameUser ||
+													!this.canEdit
 												}
 												onText={text(
 													"Can edit patients page"
@@ -821,23 +833,23 @@ export class StaffPage extends React.Component<{}, {}> {
 													"Can not edit patients page"
 												)}
 												onChange={(ev, newVal) => {
-													this.member.canEditPatients = newVal!;
+													this.selectedMember!.canEditPatients = newVal!;
 												}}
 											/>
 										) : (
 											""
 										)}
 
-										{setting.getSetting(
-											"module_orthodontics"
-										) && this.member.canViewOrtho ? (
+										{this.props.enabledOrthodontics &&
+										this.selectedMember.canViewOrtho ? (
 											<Toggle
 												defaultChecked={
-													this.member.canEditOrtho
+													this.selectedMember
+														.canEditOrtho
 												}
 												disabled={
-													this.member._id ===
-													user.currentUser._id
+													this.sameUser ||
+													!this.canEdit
 												}
 												onText={text(
 													"Can edit orthodontics page"
@@ -846,22 +858,23 @@ export class StaffPage extends React.Component<{}, {}> {
 													"Can not edit orthodontics page"
 												)}
 												onChange={(ev, newVal) => {
-													this.member.canEditOrtho = newVal!;
+													this.selectedMember!.canEditOrtho = newVal!;
 												}}
 											/>
 										) : (
 											""
 										)}
 
-										{this.member.canViewAppointments ? (
+										{this.selectedMember
+											.canViewAppointments ? (
 											<Toggle
 												defaultChecked={
-													this.member
+													this.selectedMember
 														.canEditAppointments
 												}
 												disabled={
-													this.member._id ===
-													user.currentUser._id
+													this.sameUser ||
+													!this.canEdit
 												}
 												onText={text(
 													"Can edit appointments page"
@@ -870,22 +883,23 @@ export class StaffPage extends React.Component<{}, {}> {
 													"Can not edit appointments page"
 												)}
 												onChange={(ev, newVal) => {
-													this.member.canEditAppointments = newVal!;
+													this.selectedMember!.canEditAppointments = newVal!;
 												}}
 											/>
 										) : (
 											""
 										)}
 
-										{this.member.canViewTreatments ? (
+										{this.selectedMember
+											.canViewTreatments ? (
 											<Toggle
 												defaultChecked={
-													this.member
+													this.selectedMember
 														.canEditTreatments
 												}
 												disabled={
-													this.member._id ===
-													user.currentUser._id
+													this.sameUser ||
+													!this.canEdit
 												}
 												onText={text(
 													"Can edit treatments page"
@@ -894,25 +908,24 @@ export class StaffPage extends React.Component<{}, {}> {
 													"Can not edit treatments page"
 												)}
 												onChange={(ev, newVal) => {
-													this.member.canEditTreatments = newVal!;
+													this.selectedMember!.canEditTreatments = newVal!;
 												}}
 											/>
 										) : (
 											""
 										)}
 
-										{setting.getSetting(
-											"module_prescriptions"
-										) &&
-										this.member.canViewPrescriptions ? (
+										{this.props.enabledPrescriptions &&
+										this.selectedMember
+											.canViewPrescriptions ? (
 											<Toggle
 												defaultChecked={
-													this.member
+													this.selectedMember
 														.canEditPrescriptions
 												}
 												disabled={
-													this.member._id ===
-													user.currentUser._id
+													this.sameUser ||
+													!this.canEdit
 												}
 												onText={text(
 													"Can edit prescriptions page"
@@ -921,21 +934,22 @@ export class StaffPage extends React.Component<{}, {}> {
 													"Can not edit prescriptions page"
 												)}
 												onChange={(ev, newVal) => {
-													this.member.canEditPrescriptions = newVal!;
+													this.selectedMember!.canEditPrescriptions = newVal!;
 												}}
 											/>
 										) : (
 											""
 										)}
 
-										{this.member.canViewSettings ? (
+										{this.selectedMember.canViewSettings ? (
 											<Toggle
 												defaultChecked={
-													this.member.canEditSettings
+													this.selectedMember
+														.canEditSettings
 												}
 												disabled={
-													this.member._id ===
-													user.currentUser._id
+													this.sameUser ||
+													!this.canEdit
 												}
 												onText={text(
 													"Can edit settings page"
@@ -944,7 +958,7 @@ export class StaffPage extends React.Component<{}, {}> {
 													"Can not edit settings page"
 												)}
 												onChange={(ev, newVal) => {
-													this.member.canEditSettings = newVal!;
+													this.selectedMember!.canEditSettings = newVal!;
 												}}
 											/>
 										) : (
@@ -960,9 +974,13 @@ export class StaffPage extends React.Component<{}, {}> {
 								<SectionComponent
 									title={text(`Upcoming Appointments`)}
 								>
-									{this.member.nextAppointments.length ? (
+									{this.selectedMember.nextAppointments
+										.length ? (
 										<AppointmentsList
-											list={this.member.nextAppointments}
+											list={
+												this.selectedMember
+													.nextAppointments
+											}
 										/>
 									) : (
 										<MessageBar
