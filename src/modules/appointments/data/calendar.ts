@@ -92,6 +92,26 @@ export class Calendar {
 		return week;
 	}
 
+	select({
+		year,
+		month,
+		day
+	}: {
+		year?: number;
+		month?: number;
+		day?: number;
+	}) {
+		if (year) {
+			this.selectedYear = year;
+		}
+		if (month) {
+			this.selectedMonth = month;
+		}
+		if (day) {
+			this.selectedDay = day;
+		}
+	}
+
 	numberOfDays(month: number, year: number): number {
 		let numberOfDays = 28;
 		for (; numberOfDays < 32; numberOfDays++) {

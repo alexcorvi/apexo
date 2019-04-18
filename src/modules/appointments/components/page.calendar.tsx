@@ -1,6 +1,6 @@
 import { Col, ProfileSquaredComponent, Row } from "@common-components";
-import { router, text, user } from "@core";
-import { Appointment, appointments, calendar, Patient, PatientLinkComponent } from "@modules";
+import { text } from "@core";
+import { Appointment, DayInfo, Patient, PatientLinkComponent, StaffMember } from "@modules";
 import { dateNames, num } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -15,7 +15,34 @@ const AppointmentEditorPanel = loadable({
 	loading: () => <Shimmer />
 });
 @observer
-export class CalendarPage extends React.Component<{}, {}> {
+export class CalendarPage extends React.Component<{
+	currentUser: StaffMember;
+	currentLocation: string;
+	currentYear: number;
+	currentMonth: number;
+	currentDay: number;
+	selectedYear: number;
+	selectedMonth: number;
+	selectedDay: number;
+	selectedMonthDays: DayInfo[];
+	selectedWeekDays: DayInfo[];
+	onSelectDate: ({
+		year,
+		month,
+		day
+	}: {
+		year?: number | undefined;
+		month?: number | undefined;
+		day?: number | undefined;
+	}) => void;
+	appointmentsForDay: (
+		year: number,
+		month: number,
+		day: number,
+		filter?: string | undefined,
+		operatorID?: string | undefined
+	) => Appointment[];
+}> {
 	@observable filter: string = "";
 
 	@observable appointment: Appointment | null = null;
@@ -25,14 +52,14 @@ export class CalendarPage extends React.Component<{}, {}> {
 	componentDidMount() {
 		this.unifyHeight();
 
-		const dateString = router.currentLocation.split("/")[1];
+		const dateString = this.props.currentLocation.split("/")[1];
 		if (!dateString) {
 			return;
 		}
 		const dateArray = dateString.split(/\W/);
-		calendar.selectedYear = num(dateArray[0]);
-		calendar.selectedMonth = num(dateArray[1]) - 1;
-		calendar.selectedDay = num(dateArray[2]);
+		this.props.onSelectDate({ year: num(dateArray[0]) });
+		this.props.onSelectDate({ month: num(dateArray[1]) - 1 });
+		this.props.onSelectDate({ day: num(dateArray[2]) });
 	}
 
 	componentDidUpdate() {
@@ -65,24 +92,26 @@ export class CalendarPage extends React.Component<{}, {}> {
 				<div className="selector year-selector">
 					<Row>
 						{[
-							calendar.currentYear - 2,
-							calendar.currentYear - 1,
-							calendar.currentYear,
-							calendar.currentYear + 1
+							this.props.currentYear - 2,
+							this.props.currentYear - 1,
+							this.props.currentYear,
+							this.props.currentYear + 1
 						].map(year => {
 							return (
 								<Col key={year} span={6} className="centered">
 									<a
 										onClick={() => {
-											calendar.selectedYear = year;
-											calendar.selectedMonth = 0;
-											calendar.selectedDay = 1;
+											this.props.onSelectDate({
+												year,
+												month: 0,
+												day: 1
+											});
 										}}
 										className={
-											(calendar.selectedYear === year
+											(this.props.selectedYear === year
 												? "selected"
 												: "") +
-											(calendar.currentYear === year
+											(this.props.currentYear === year
 												? " current"
 												: "")
 										}
@@ -106,16 +135,19 @@ export class CalendarPage extends React.Component<{}, {}> {
 								>
 									<a
 										onClick={() => {
-											calendar.selectedMonth = index;
-											calendar.selectedDay = 1;
+											this.props.onSelectDate({
+												month: index,
+												day: 1
+											});
 										}}
 										className={
-											(calendar.selectedMonth === index
+											(this.props.selectedMonth === index
 												? "selected"
 												: "") +
-											(calendar.currentMonth === index &&
-											calendar.currentYear ===
-												calendar.selectedYear
+											(this.props.currentMonth ===
+												index &&
+											this.props.currentYear ===
+												this.props.selectedYear
 												? " current"
 												: "")
 										}
@@ -130,12 +162,14 @@ export class CalendarPage extends React.Component<{}, {}> {
 				<div className="selector day-selector">
 					<div className="day-selector-wrapper">
 						<div>
-							{calendar.selectedMonthDays.map(day => {
+							{this.props.selectedMonthDays.map(day => {
 								return (
 									<div
 										key={day.dateNum}
 										onClick={() => {
-											calendar.selectedDay = day.dateNum;
+											this.props.onSelectDate({
+												day: day.dateNum
+											});
 											setTimeout(() => {
 												scroll(
 													0,
@@ -149,11 +183,11 @@ export class CalendarPage extends React.Component<{}, {}> {
 										}}
 										className={
 											"day-col" +
-											(calendar.selectedDay ===
+											(this.props.selectedDay ===
 											day.dateNum
 												? " selected"
 												: "") +
-											(user.currentUser.onDutyDays.indexOf(
+											(this.props.currentUser.onDutyDays.indexOf(
 												day.weekDay.dayLiteral
 											) === -1
 												? " holiday"
@@ -174,11 +208,11 @@ export class CalendarPage extends React.Component<{}, {}> {
 											className={
 												"day-number info-row" +
 												(day.dateNum ===
-													calendar.currentDay &&
-												calendar.currentMonth ===
-													calendar.selectedMonth &&
-												calendar.selectedYear ===
-													calendar.currentYear
+													this.props.currentDay &&
+												this.props.currentMonth ===
+													this.props.selectedMonth &&
+												this.props.selectedYear ===
+													this.props.currentYear
 													? " current"
 													: "")
 											}
@@ -190,29 +224,31 @@ export class CalendarPage extends React.Component<{}, {}> {
 							})}
 						</div>
 						<div>
-							{calendar.selectedMonthDays.map(day => {
-								const number = appointments.appointmentsForDay(
-									calendar.selectedYear,
-									calendar.selectedMonth + 1,
+							{this.props.selectedMonthDays.map(day => {
+								const number = this.props.appointmentsForDay(
+									this.props.selectedYear,
+									this.props.selectedMonth + 1,
 									day.dateNum,
 									undefined,
 									this.showAll
 										? undefined
-										: user.currentUser._id
+										: this.props.currentUser._id
 								).length;
 								return (
 									<div
 										key={day.dateNum}
 										onClick={() => {
-											calendar.selectedDay = day.dateNum;
+											this.props.onSelectDate({
+												day: day.dateNum
+											});
 										}}
 										className={
 											"day-col" +
-											(calendar.selectedDay ===
+											(this.props.selectedDay ===
 											day.dateNum
 												? " selected"
 												: "") +
-											(user.currentUser.onDutyDays.indexOf(
+											(this.props.currentUser.onDutyDays.indexOf(
 												day.weekDay.dayLiteral
 											) === -1
 												? " holiday"
@@ -260,30 +296,33 @@ export class CalendarPage extends React.Component<{}, {}> {
 						</Row>
 					</div>
 					<div id="full-day-cols">
-						{calendar.selectedWeekDays.map(day => {
+						{this.props.selectedWeekDays.map(day => {
 							return (
 								<div
 									key={day.dateNum}
 									id={"day" + "_" + day.dateNum}
 									className={
 										"full-day-col" +
-										(user.currentUser.onDutyDays.indexOf(
+										(this.props.currentUser.onDutyDays.indexOf(
 											day.weekDay.dayLiteral
 										) === -1
 											? " holiday"
 											: "") +
-										(calendar.selectedDay === day.dateNum
+										(this.props.selectedDay === day.dateNum
 											? " selected"
 											: "")
 									}
 									onClick={() => {
-										calendar.selectedDay = day.dateNum;
+										this.props.onSelectDate({
+											day: day.dateNum
+										});
 									}}
 									style={{
 										width:
 											(
 												100 /
-												calendar.selectedWeekDays.length
+												this.props.selectedWeekDays
+													.length
 											).toString() + "%"
 									}}
 								>
@@ -294,15 +333,15 @@ export class CalendarPage extends React.Component<{}, {}> {
 											{text(day.weekDay.dayLiteral)}
 										</span>
 									</h4>
-									{appointments
+									{this.props
 										.appointmentsForDay(
-											calendar.selectedYear,
-											calendar.selectedMonth + 1,
+											this.props.selectedYear,
+											this.props.selectedMonth + 1,
 											day.dateNum,
 											this.filter,
 											this.showAll
 												? undefined
-												: user.currentUser._id
+												: this.props.currentUser._id
 										)
 										.sort((a, b) => a.date - b.date)
 										.map(appointment => {
@@ -310,14 +349,9 @@ export class CalendarPage extends React.Component<{}, {}> {
 												<div
 													key={appointment._id}
 													className="appointment"
-													onClick={() => {
-														this.appointment =
-															appointments.list[
-																appointments.getIndexByID(
-																	appointment._id
-																)
-															];
-													}}
+													onClick={() =>
+														(this.appointment = appointment)
+													}
 												>
 													<div className="time">
 														{
@@ -383,12 +417,12 @@ export class CalendarPage extends React.Component<{}, {}> {
 	}
 
 	findPos(obj: HTMLElement | null) {
-		let curtop = 0;
+		let currentTop = 0;
 		if (obj && obj.offsetParent) {
 			do {
-				curtop += obj.offsetTop;
+				currentTop += obj.offsetTop;
 			} while ((obj = obj.offsetParent as HTMLElement));
-			return curtop - 70;
+			return currentTop - 70;
 		}
 		return 0;
 	}
