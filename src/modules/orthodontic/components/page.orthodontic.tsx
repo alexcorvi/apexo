@@ -1,3 +1,4 @@
+import { StaffMember } from "../../staff/data/class.member";
 import {
 	Col,
 	DataTableComponent,
@@ -6,16 +7,8 @@ import {
 	Row,
 	TagInputComponent
 	} from "@common-components";
-import { text, user } from "@core";
-import {
-	genderToString,
-	OrthoCase,
-	orthoCases,
-	Patient,
-	PatientAppointmentsPanel,
-	patients,
-	setting
-	} from "@modules";
+import { text } from "@core";
+import { genderToString, OrthoCase, Patient, PatientAppointmentsPanel } from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -65,15 +58,29 @@ const OrthoGalleryPanel = loadable({
 });
 
 @observer
-export class OrthoPage extends React.Component<{}, {}> {
+export class OrthoPage extends React.Component<{
+	dateFormat: string;
+	currencySymbol: string;
+	cases: OrthoCase[];
+	filteredCases: OrthoCase[];
+	currentUser: StaffMember;
+	patientsWithNoOrtho: Patient[];
+	onDelete: (id: string) => void;
+	onAdd: ({
+		orthoCase,
+		patient
+	}: {
+		orthoCase: OrthoCase;
+		patient?: Patient;
+	}) => void;
+}> {
 	@observable showAdditionPanel: boolean = false;
 	@observable newPatientName: string = "";
-
 	@observable selectedId: string = "";
 	@observable viewWhich: number = 0;
 
 	@computed get selectedCase() {
-		return orthoCases.list.find(
+		return this.props.cases.find(
 			orthoCase => orthoCase._id === this.selectedId
 		);
 	}
@@ -87,7 +94,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 	}
 
 	@computed get canEdit() {
-		return user.currentUser.canEditOrtho;
+		return this.props.currentUser.canEditOrtho;
 	}
 
 	render() {
@@ -102,7 +109,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 						text("Last/Next Appointment"),
 						text("Total/Outstanding Payments")
 					]}
-					rows={orthoCases.filtered
+					rows={this.props.filteredCases
 						.filter(orthoCase => orthoCase.patient)
 						.map(orthoCase => {
 							const patient = orthoCase.patient || new Patient();
@@ -224,7 +231,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 													/>
 												</TooltipHost>
 
-												{user.currentUser
+												{this.props.currentUser
 													.canViewAppointments ? (
 													<TooltipHost
 														content={text(
@@ -256,7 +263,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 															iconName: "Trash"
 														}}
 														onClick={() =>
-															orthoCases.deleteModal(
+															this.props.onDelete(
 																orthoCase._id
 															)
 														}
@@ -278,9 +285,8 @@ export class OrthoPage extends React.Component<{}, {}> {
 														orthoCase.isStarted
 															? formatDate(
 																	orthoCase.startedDate,
-																	setting.getSetting(
-																		"date_format"
-																	)
+																	this.props
+																		.dateFormat
 															  )
 															: ""
 													}
@@ -310,9 +316,8 @@ export class OrthoPage extends React.Component<{}, {}> {
 														orthoCase.isFinished
 															? formatDate(
 																	orthoCase.finishedDate,
-																	setting.getSetting(
-																		"date_format"
-																	)
+																	this.props
+																		.dateFormat
 															  )
 															: ""
 													}
@@ -367,9 +372,8 @@ export class OrthoPage extends React.Component<{}, {}> {
 																	patient
 																		.lastAppointment
 																		.date,
-																	setting.getSetting(
-																		"date_format"
-																	)
+																	this.props
+																		.dateFormat
 															  )
 															: text(
 																	"No last appointment"
@@ -406,9 +410,8 @@ export class OrthoPage extends React.Component<{}, {}> {
 																	patient
 																		.nextAppointment
 																		.date,
-																	setting.getSetting(
-																		"date_format"
-																	)
+																	this.props
+																		.dateFormat
 															  )
 															: text(
 																	"No next appointment"
@@ -435,9 +438,8 @@ export class OrthoPage extends React.Component<{}, {}> {
 											<div>
 												<ProfileSquaredComponent
 													text={
-														setting.getSetting(
-															"currencySymbol"
-														) +
+														this.props
+															.currencySymbol +
 														patient.totalPayments.toString()
 													}
 													subText={text(
@@ -458,9 +460,8 @@ export class OrthoPage extends React.Component<{}, {}> {
 												<br />
 												<ProfileSquaredComponent
 													text={
-														setting.getSetting(
-															"currencySymbol"
-														) +
+														this.props
+															.currencySymbol +
 														(patient.differenceAmount <
 														0
 															? patient.outstandingAmount.toString()
@@ -534,7 +535,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 					<TagInputComponent
 						strict
 						value={[]}
-						options={orthoCases.patientsWithNoOrtho.map(
+						options={this.props.patientsWithNoOrtho.map(
 							patient => ({
 								key: patient._id,
 								text: patient.name
@@ -544,7 +545,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 							this.showAdditionPanel = false;
 							const orthoCase = new OrthoCase();
 							orthoCase.patientID = val.key;
-							orthoCases.list.push(orthoCase);
+							this.props.onAdd({ orthoCase: orthoCase });
 							this.selectedId = orthoCase._id;
 							this.viewWhich = 3;
 						}}
@@ -565,8 +566,10 @@ export class OrthoPage extends React.Component<{}, {}> {
 							newPatient.name = this.newPatientName;
 							const orthoCase = new OrthoCase();
 							orthoCase.patientID = newPatient._id;
-							patients.list.push(newPatient);
-							orthoCases.list.push(orthoCase);
+							this.props.onAdd({
+								orthoCase: orthoCase,
+								patient: newPatient
+							});
 							this.newPatientName = "";
 							this.selectedId = orthoCase._id;
 							this.viewWhich = 3;

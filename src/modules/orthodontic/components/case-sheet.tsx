@@ -1,8 +1,14 @@
-import { SectionComponent, TagInputComponent } from "@common-components";
-import { text, user } from "@core";
-import { FacialProfile, ISOTeethArr, Lips, OralHygiene, OrthoCase } from "@modules";
+import { EditableListComponent, SectionComponent, TagInputComponent } from "@common-components";
+import { text } from "@core";
+import {
+	FacialProfile,
+	ISOTeethArr,
+	Lips,
+	OralHygiene,
+	OrthoCase,
+	StaffMember
+	} from "@modules";
 import { num } from "@utils";
-import { EditableListComponent } from "common-components/editable-list/editable-list";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import {
@@ -19,9 +25,10 @@ import * as React from "react";
 @observer
 export class OrthoCaseSheetPanel extends React.Component<{
 	orthoCase: OrthoCase;
+	currentUser: StaffMember;
 }> {
 	@computed get canEdit() {
-		return user.currentUser.canEditOrtho;
+		return this.props.currentUser.canEditOrtho;
 	}
 
 	render() {

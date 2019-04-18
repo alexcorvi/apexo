@@ -6,15 +6,8 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import {
-	files,
-	modals,
-	ORTHO_RECORDS_DIR,
-	status,
-	text,
-	user
-	} from "@core";
-import { OrthoCase, Photo, setting, Visit } from "@modules";
+import { ModalInterface, ORTHO_RECORDS_DIR, text } from "@core";
+import { OrthoCase, Photo, StaffMember, Visit } from "@modules";
 import { day, formatDate, num } from "@utils";
 import { EditableListComponent } from "common-components/editable-list/editable-list";
 import { diff } from "fast-array-diff";
@@ -48,6 +41,13 @@ const viewsTerms = [
 @observer
 export class OrthoRecordsPanel extends React.Component<{
 	orthoCase: OrthoCase;
+	currentUser: StaffMember;
+	isOnline: boolean;
+	isDropboxActive: boolean;
+	dateFormat: string;
+	getFile: (path: string) => Promise<string>;
+	removeFile: (path: string) => Promise<any>;
+	addModal: (modal: ModalInterface) => void;
 }> {
 	@observable selectedPhotoId: string = "";
 	@observable zoomedColumn: number = -1;
@@ -66,7 +66,7 @@ export class OrthoRecordsPanel extends React.Component<{
 	@observable openCallouts: string[] = [];
 
 	@computed get canEdit() {
-		return user.currentUser.canEditOrtho;
+		return this.props.currentUser.canEditOrtho;
 	}
 
 	@computed get dates() {
@@ -109,13 +109,13 @@ export class OrthoRecordsPanel extends React.Component<{
 
 	async addImage(path: string) {
 		this.imagesTable[path] = "";
-		const uri = await files.get(path);
+		const uri = await this.props.getFile(path);
 		this.imagesTable[path] = uri;
 		return;
 	}
 
 	async removeImage(path: string) {
-		await files.remove(path);
+		await this.props.removeFile(path);
 		delete this.imagesTable[path];
 		return;
 	}
@@ -204,9 +204,7 @@ export class OrthoRecordsPanel extends React.Component<{
 											key: date.date.toString(),
 											text: `${formatDate(
 												date.date,
-												setting.getSetting(
-													"date_format"
-												)
+												this.props.dateFormat
 											)} ${
 												date.treatmentType
 													? `, ${date.treatmentType}`
@@ -243,9 +241,7 @@ export class OrthoRecordsPanel extends React.Component<{
 											key: date.date.toString(),
 											text: `${formatDate(
 												date.date,
-												setting.getSetting(
-													"date_format"
-												)
+												this.props.dateFormat
 											)} ${
 												date.treatmentType
 													? `, ${date.treatmentType}`
@@ -267,8 +263,8 @@ export class OrthoRecordsPanel extends React.Component<{
 					</Row>
 				</SectionComponent>
 				<SectionComponent title={text(`Records`)}>
-					{status.online ? (
-						status.dropboxActive ? (
+					{this.props.isOnline ? (
+						this.props.isDropboxActive ? (
 							<div className="album">
 								{this.props.orthoCase.visits.length ? (
 									<table>
@@ -407,9 +403,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																			visit.visitNumber
 																		}, ${formatDate(
 																			visit.date,
-																			setting.getSetting(
-																				"date_format"
-																			)
+																			this
+																				.props
+																				.dateFormat
 																		)}`}
 																	>
 																		<IconButton
@@ -508,9 +504,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																											key: date.date.toString(),
 																											text: `${formatDate(
 																												date.date,
-																												setting.getSetting(
-																													"date_format"
-																												)
+																												this
+																													.props
+																													.dateFormat
 																											)} ${
 																												date.treatmentType
 																													? `, ${
@@ -539,9 +535,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																								"Date"
 																							)}: ${formatDate(
 																								visit.date,
-																								setting.getSetting(
-																									"date_format"
-																								)
+																								this
+																									.props
+																									.dateFormat
 																							)}`
 																						)}
 																					</div>
@@ -816,9 +812,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																																		key: date.date.toString(),
 																																		text: `${formatDate(
 																																			date.date,
-																																			setting.getSetting(
-																																				"date_format"
-																																			)
+																																			this
+																																				.props
+																																				.dateFormat
 																																		)} ${
 																																			date.treatmentType
 																																				? `, ${
@@ -847,9 +843,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																															"Date"
 																														)}: ${formatDate(
 																															visit.date,
-																															setting.getSetting(
-																																"date_format"
-																															)
+																															this
+																																.props
+																																.dateFormat
 																														)}`
 																													)}
 																												</div>
@@ -1141,7 +1137,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																					"DeleteRows"
 																			}}
 																			onClick={() => {
-																				modals.newModal(
+																				this.props.addModal(
 																					{
 																						text: text(
 																							"This visit data will be deleted along with all photos and notes"

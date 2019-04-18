@@ -1,7 +1,7 @@
 import { text } from "@core";
 import {
 	CaseJSON,
-	CephalometricItem,
+	CephalometricItemInterface,
 	genderToString,
 	patients,
 	PhotoJSON,
@@ -164,7 +164,7 @@ export class OrthoCase {
 
 	@observable orthoGallery: string[] = [];
 
-	@observable cephalometricHistory: CephalometricItem[] = [];
+	@observable cephalometricHistory: CephalometricItemInterface[] = [];
 
 	@observable isFinished: boolean = false;
 	@observable isStarted: boolean = false;

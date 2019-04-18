@@ -1,5 +1,5 @@
 import { files, modals, text } from "@core";
-import { CephalometricItem, OrthoCase, patients } from "@modules";
+import { CephalometricItemInterface, OrthoCase, patients } from "@modules";
 import { escapeRegExp } from "@utils";
 import { computed, observable } from "mobx";
 
@@ -41,7 +41,7 @@ class OrthoCases {
 		);
 	}
 
-	toCephString(obj: CephalometricItem): Promise<string> {
+	toCephString(obj: CephalometricItemInterface): Promise<string> {
 		return new Promise(async (resolve, reject) => {
 			const img = await files.get(obj.imgPath);
 			const i = new Image();
@@ -57,10 +57,6 @@ class OrthoCases {
 			};
 			i.src = img;
 		});
-	}
-
-	getCephCoordinates(string: string): string {
-		return JSON.stringify(JSON.parse(string).pointCoordinates);
 	}
 
 	getIndexByID(id: string) {

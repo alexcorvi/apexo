@@ -8,3 +8,4 @@ export * from "./tag-input/tag-input";
 export * from "./grid-table/grid-table";
 export * from "./label/label";
 export * from "./async-component/async";
+export * from "./editable-list/editable-list";

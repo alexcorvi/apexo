@@ -1,6 +1,6 @@
 import { FacialProfile, Lips, OralHygiene, Visit } from "@modules";
 
-export interface CephalometricItem {
+export interface CephalometricItemInterface {
 	pointCoordinates: string;
 	date: number;
 	imgPath: string;
@@ -40,7 +40,7 @@ export interface CaseJSON {
 	treatmentPlan_appliance: string[];
 	crossScissorBite: number[];
 	orthoGallery: string[];
-	cephalometricHistory: CephalometricItem[];
+	cephalometricHistory: CephalometricItemInterface[];
 	isFinished: boolean;
 	isStarted: boolean;
 	startedDate: number;

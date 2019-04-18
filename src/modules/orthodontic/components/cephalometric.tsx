@@ -1,23 +1,26 @@
 import { Col, Row } from "@common-components";
 import { text } from "@core";
-import { CephalometricItem, orthoCases, setting } from "@modules";
+import { CephalometricItemInterface } from "@modules";
 import { formatDate } from "@utils";
-import { computed, observable } from "mobx";
+import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { DatePicker, Icon, IconButton, Panel, PanelType } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
 export class CephalometricEditorPanel extends React.Component<{
-	item: CephalometricItem;
+	item: CephalometricItemInterface;
+	dateFormat: string;
+	itemLoader: () => Promise<CephalometricItemInterface>;
 	onDismiss: () => void;
+	onSave: (coordinates: string) => void;
 }> {
 	@observable loading: boolean = true;
 	componentDidMount() {
 		setTimeout(async () => {
 			const iFrame: any = document.getElementById("cephalometric");
 			iFrame.onload = () => {
-				orthoCases.toCephString(this.props.item).then(cephString => {
+				this.props.itemLoader().then(cephString => {
 					iFrame.contentWindow.postMessage(
 						"cephalometric-open:" + cephString,
 						"*"
@@ -30,12 +33,11 @@ export class CephalometricEditorPanel extends React.Component<{
 			onmessage = e => {
 				if (e.data && typeof e.data === "string") {
 					if (e.data.startsWith("cephalometric-save:")) {
-						this.props.item.pointCoordinates = orthoCases.getCephCoordinates(
-							e.data.split("cephalometric-save:")[1]
+						this.props.onSave(
+							JSON.parse(e.data.split("cephalometric-save:")[1])
+								.pointCoordinates
 						);
-
 						this.props.onDismiss();
-						orthoCases.triggerUpdate++;
 					}
 				}
 			};
@@ -77,7 +79,7 @@ export class CephalometricEditorPanel extends React.Component<{
 									formatDate={d =>
 										formatDate(
 											d || 0,
-											setting.getSetting("date_format")
+											this.props.dateFormat
 										)
 									}
 								/>

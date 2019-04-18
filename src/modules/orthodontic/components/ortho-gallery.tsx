@@ -6,8 +6,8 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import { CEPHALOMETRIC_DIR, status, text, user } from "@core";
-import { CephalometricItem, OrthoCase, PatientGalleryPanel, setting } from "@modules";
+import { CEPHALOMETRIC_DIR, text } from "@core";
+import { CephalometricItemInterface, OrthoCase, PatientGalleryPanel, StaffMember } from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -24,15 +24,19 @@ const CephalometricEditorPanel = loadable({
 @observer
 export class OrthoGalleryPanel extends React.Component<{
 	orthoCase: OrthoCase;
+	currentUser: StaffMember;
+	isOnline: boolean;
+	isDropboxActive: boolean;
+	dateFormat: string;
 }> {
 	@observable openCephalometricItem:
-		| CephalometricItem
+		| CephalometricItemInterface
 		| undefined = undefined;
 
 	@observable
 	cephalometricToViewIndex: number = -1;
 	@computed get canEdit() {
-		return user.currentUser.canEditOrtho;
+		return this.props.currentUser.canEditOrtho;
 	}
 
 	@computed
@@ -66,8 +70,8 @@ export class OrthoGalleryPanel extends React.Component<{
 				)}
 
 				<SectionComponent title={text(`Cephalometric Analysis`)}>
-					{status.online ? (
-						status.dropboxActive ? (
+					{this.props.isOnline ? (
+						this.props.isDropboxActive ? (
 							<div>
 								{this.props.orthoCase.cephalometricHistory.map(
 									(c, i) => (
@@ -98,9 +102,8 @@ export class OrthoGalleryPanel extends React.Component<{
 															<span>
 																{formatDate(
 																	c.date,
-																	setting.getSetting(
-																		"date_format"
-																	)
+																	this.props
+																		.dateFormat
 																)}
 															</span>
 														}
@@ -129,6 +132,7 @@ export class OrthoGalleryPanel extends React.Component<{
 															1
 														)
 													}
+													disabled={this.canEdit}
 												/>
 											</Col>
 										</Row>
