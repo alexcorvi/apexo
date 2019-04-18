@@ -1,15 +1,15 @@
 import { BarChartComponent } from "@common-components";
 import { text } from "@core";
-import { Chart, statistics } from "@modules";
+import { Chart, Patient } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 @observer
-class Component extends React.Component<{}, {}> {
+class Component extends React.Component<{ selectedPatients: Patient[] }> {
 	@computed
 	get values() {
-		return statistics.selectedPatients
+		return this.props.selectedPatients
 			.filter(x => x && x.birthYear)
 			.map(x => {
 				if (!x || x.birthYear === 0) {

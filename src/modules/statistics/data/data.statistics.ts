@@ -1,4 +1,4 @@
-import { appointments } from "@modules";
+import { appointments, Gender, Patient, Treatment } from "@modules";
 import { day } from "@utils";
 import { computed, observable } from "mobx";
 
@@ -31,6 +31,55 @@ class Statistics {
 			i++;
 		}
 		return days;
+	}
+
+	@computed
+	get selectedTreatments() {
+		const selectedTreatments: {
+			treatment: Treatment;
+			male: number;
+			female: number;
+			profit: number;
+			times: number;
+		}[] = [];
+		statistics.selectedAppointments.forEach(appointment => {
+			if (appointment.treatment) {
+				const i = selectedTreatments.findIndex(
+					t => t.treatment._id === appointment.treatment!._id
+				);
+				let male = 0;
+				let female = 0;
+				if (
+					(appointment.patient || new Patient()).gender ===
+					Gender.female
+				) {
+					female++;
+				} else {
+					male++;
+				}
+
+				if (i === -1) {
+					// add new
+					selectedTreatments.push({
+						treatment: appointment.treatment,
+						male,
+						female,
+						profit: appointment.profit,
+						times: 1
+					});
+				} else {
+					// just increment
+					selectedTreatments[i].male =
+						selectedTreatments[i].male + male;
+					selectedTreatments[i].female =
+						selectedTreatments[i].female + female;
+					selectedTreatments[i].times++;
+					selectedTreatments[i].profit =
+						selectedTreatments[i].profit + appointment.profit;
+				}
+			}
+		});
+		return selectedTreatments;
 	}
 
 	@computed
@@ -87,7 +136,7 @@ class Statistics {
 	}
 
 	@computed
-	get selectedFinances() {
+	get selectedFinancesByDay() {
 		return this.selectedAppointmentsByDay.map(date => {
 			const appointmentsList = date.appointments.map(appointment => {
 				const paid = appointment.paidAmount;

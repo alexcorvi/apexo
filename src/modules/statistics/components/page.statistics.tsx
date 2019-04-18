@@ -18,9 +18,6 @@ import {
 	mostAppliedTreatmentsChart,
 	mostInvolvedTeethChart,
 	Patient,
-	setting,
-	staff,
-	statistics,
 	treatmentsByGenderChart,
 	treatmentsNumberChart
 	} from "@modules";
@@ -38,7 +35,20 @@ const AppointmentEditorPanel = loadable({
 });
 
 @observer
-export class StatisticsPage extends React.Component<{}, {}> {
+export class StatisticsPage extends React.Component<{
+	selectedAppointments: Appointment[];
+	dateFormat: string;
+	currencySymbol: string;
+	onChooseStaffMember: (id: string) => void;
+	staffList: { name: string; _id: string }[];
+	startingDate: number;
+	setStartingDate: (timestamp: number) => void;
+	endingDate: number;
+	setEndingDate: (timestamp: number) => void;
+	totalPayments: number;
+	totalExpenses: number;
+	totalProfits: number;
+}> {
 	@observable appointment: Appointment | null = null;
 
 	@observable charts = [
@@ -66,7 +76,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 						text("Expenses"),
 						text("Profits")
 					]}
-					rows={statistics.selectedAppointments.map(appointment => ({
+					rows={this.props.selectedAppointments.map(appointment => ({
 						id: appointment._id,
 						searchableString: appointment.searchableString,
 						cells: [
@@ -80,9 +90,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 											<span>
 												{formatDate(
 													appointment.date,
-													setting.getSetting(
-														"date_format"
-													)
+													this.props.dateFormat
 												)}{" "}
 												/{" "}
 												{appointment.operatingStaff.map(
@@ -119,7 +127,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 										}
 										subText={formatDate(
 											appointment.date,
-											setting.getSetting("date_format")
+											this.props.dateFormat
 										)}
 										size={3}
 										onClick={() => {}}
@@ -131,7 +139,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 								dataValue: appointment.paidAmount,
 								component: (
 									<span>
-										{setting.getSetting("currencySymbol") +
+										{this.props.currencySymbol +
 											round(
 												appointment.paidAmount
 											).toString()}
@@ -143,7 +151,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 								dataValue: appointment.outstandingAmount,
 								component: (
 									<span>
-										{setting.getSetting("currencySymbol") +
+										{this.props.currencySymbol +
 											round(
 												appointment.outstandingAmount
 											).toString()}
@@ -155,7 +163,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 								dataValue: appointment.expenses,
 								component: (
 									<span>
-										{setting.getSetting("currencySymbol") +
+										{this.props.currencySymbol +
 											round(
 												appointment.expenses
 											).toString()}
@@ -167,7 +175,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 								dataValue: appointment.profit,
 								component: (
 									<span>
-										{setting.getSetting("currencySymbol") +
+										{this.props.currencySymbol +
 											round(
 												appointment.profit
 											).toString()}
@@ -193,7 +201,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 												text: text("All members")
 											}
 										].concat(
-											staff.list.map(member => {
+											this.props.staffList.map(member => {
 												return {
 													key: member._id,
 													text: member.name
@@ -201,7 +209,9 @@ export class StatisticsPage extends React.Component<{}, {}> {
 											})
 										)}
 										onChange={(ev, member) => {
-											statistics.filterByMember = member!.key.toString();
+											this.props.onChooseStaffMember(
+												member!.key.toString()
+											);
 										}}
 									/>
 								);
@@ -217,20 +227,19 @@ export class StatisticsPage extends React.Component<{}, {}> {
 									<DatePicker
 										onSelectDate={date => {
 											if (date) {
-												statistics.startingDate = statistics.getDayStartingPoint(
+												date.setHours(0, 0, 0, 0);
+												this.props.setStartingDate(
 													date.getTime()
 												);
 											}
 										}}
 										value={
-											new Date(statistics.startingDate)
+											new Date(this.props.startingDate)
 										}
 										formatDate={d =>
 											`${text("From")}: ${formatDate(
 												d,
-												setting.getSetting(
-													"date_format"
-												)
+												this.props.dateFormat
 											)}`
 										}
 									/>
@@ -244,18 +253,17 @@ export class StatisticsPage extends React.Component<{}, {}> {
 									<DatePicker
 										onSelectDate={date => {
 											if (date) {
-												statistics.endingDate = statistics.getDayStartingPoint(
+												date.setHours(0, 0, 0, 0);
+												this.props.setEndingDate(
 													date.getTime()
 												);
 											}
 										}}
-										value={new Date(statistics.endingDate)}
+										value={new Date(this.props.endingDate)}
 										formatDate={d =>
 											`${text("Until")}: ${formatDate(
 												d,
-												setting.getSetting(
-													"date_format"
-												)
+												this.props.dateFormat
 											)}`
 										}
 									/>
@@ -283,7 +291,7 @@ export class StatisticsPage extends React.Component<{}, {}> {
 									{text("Appointments")}:{" "}
 									<TagComponent
 										text={round(
-											statistics.selectedAppointments
+											this.props.selectedAppointments
 												.length
 										).toString()}
 										type={TagType.primary}
@@ -295,11 +303,9 @@ export class StatisticsPage extends React.Component<{}, {}> {
 									{text("Payments")}:{" "}
 									<TagComponent
 										text={
-											setting.getSetting(
-												"currencySymbol"
-											) +
+											this.props.currencySymbol +
 											round(
-												statistics.totalPayments
+												this.props.totalPayments
 											).toString()
 										}
 										type={TagType.warning}
@@ -311,11 +317,9 @@ export class StatisticsPage extends React.Component<{}, {}> {
 									{text("Expenses")}:{" "}
 									<TagComponent
 										text={
-											setting.getSetting(
-												"currencySymbol"
-											) +
+											this.props.currencySymbol +
 											round(
-												statistics.totalExpenses
+												this.props.totalExpenses
 											).toString()
 										}
 										type={TagType.danger}
@@ -327,11 +331,9 @@ export class StatisticsPage extends React.Component<{}, {}> {
 									{text("Profits")}:{" "}
 									<TagComponent
 										text={
-											setting.getSetting(
-												"currencySymbol"
-											) +
+											this.props.currencySymbol +
 											round(
-												statistics.totalProfits
+												this.props.totalProfits
 											).toString()
 										}
 										type={TagType.success}

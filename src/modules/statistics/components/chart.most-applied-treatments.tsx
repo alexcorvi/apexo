@@ -1,18 +1,18 @@
 import { PieChartComponent } from "@common-components";
-import { text } from "@core";
-import { Chart, colors, statistics, treatments } from "@modules";
+import { Appointment, Chart, colors } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 @observer
-class Component extends React.Component<{}, {}> {
+class Component extends React.Component<{
+	selectedAppointments: Appointment[];
+}> {
 	@computed
 	get data() {
-		return statistics.selectedAppointments
-			.map(x => x.treatmentID)
-			.reduce((result: { label: string; value: number }[], id) => {
-				const treatment = treatments.list[treatments.getIndexByID(id)];
+		return this.props.selectedAppointments
+			.map(x => x.treatment)
+			.reduce((result: { label: string; value: number }[], treatment) => {
 				if (!treatment) {
 					return result;
 				}

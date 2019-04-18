@@ -1,12 +1,12 @@
 import { PieChartComponent } from "@common-components";
 import { text } from "@core";
-import { appointments, Chart, Gender, Patient, statistics } from "@modules";
+import { Chart, Gender, Patient } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 @observer
-class Component extends React.Component<{}, {}> {
+class Component extends React.Component<{ selectedPatients: Patient[] }> {
 	@computed
 	get malePercentile() {
 		return this.calculateGenderPercentile(Gender.male);
@@ -28,23 +28,11 @@ class Component extends React.Component<{}, {}> {
 			/>
 		);
 	}
-	calculateGenderPercentile(gender: Gender) {
-		return statistics.selectedDays
-			.map(
-				day =>
-					appointments
-						.appointmentsForDay(
-							day.getFullYear(),
-							day.getMonth() + 1,
-							day.getDate()
-						)
-						.filter(
-							appointment =>
-								(appointment.patient || new Patient())
-									.gender === gender
-						).length
-			)
-			.reduce((total, males) => (total = total + males), 0);
+	calculateGenderPercentile(requiredG: Gender) {
+		return this.props.selectedPatients
+			.map(patient => patient.gender)
+			.filter(patientG => patientG === requiredG)
+			.reduce((total, patientG) => (total = total + patientG), 0);
 	}
 }
 
