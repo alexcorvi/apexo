@@ -1,6 +1,6 @@
 import { Col, ProfileComponent, Row, SectionComponent } from "@common-components";
-import { text, user } from "@core";
-import { conditionToColor, Patient, ToothCondition } from "@modules";
+import { text } from "@core";
+import { conditionToColor, Patient, StaffMember, ToothCondition } from "@modules";
 import { EditableListComponent } from "common-components/editable-list/editable-list";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -31,7 +31,10 @@ const TeethPermanentChart = loadable({
 
 @observer
 export class DentalHistoryPanel extends React.Component<
-	{ patient: Patient },
+	{
+		currentUser: StaffMember;
+		patient: Patient;
+	},
 	{}
 > {
 	@observable viewChart: boolean = true;
@@ -39,7 +42,7 @@ export class DentalHistoryPanel extends React.Component<
 	@observable triggerUpdate: number = 0;
 
 	@computed get canEdit() {
-		return user.currentUser.canEditPatients;
+		return this.props.currentUser.canEditPatients;
 	}
 
 	componentWillMount() {

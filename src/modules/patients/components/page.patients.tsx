@@ -6,15 +6,8 @@ import {
 	Row,
 	TagComponent
 	} from "@common-components";
-import { router, text, user } from "@core";
-import {
-	genderToString,
-	Patient,
-	PatientAppointmentsPanel,
-	PatientGalleryPanel,
-	patients,
-	setting
-	} from "@modules";
+import { text } from "@core";
+import { genderToString, Patient, PatientAppointmentsPanel, PatientGalleryPanel, StaffMember } from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -44,20 +37,30 @@ const DentalHistoryPanel = loadable({
 });
 
 @observer
-export class PatientsPage extends React.Component<{}, {}> {
-	@observable selectedId: string = router.currentLocation.split("/")[1];
+export class PatientsPage extends React.Component<{
+	patients: Patient[];
+	currentUser: StaffMember;
+	dateFormat: string;
+	currencySymbol: string;
+	currentLocation: string;
+	onDelete: (id: string) => void;
+	onAdd: (patient: Patient) => void;
+}> {
+	@observable selectedId: string = this.props.currentLocation.split("/")[1];
 
-	@observable viewWhich: number = router.currentLocation.split("/")[1]
+	@observable viewWhich: number = this.props.currentLocation.split("/")[1]
 		? 1
 		: 0;
 
 	@computed
 	get patient() {
-		return patients.list.find(patient => patient._id === this.selectedId);
+		return this.props.patients.find(
+			patient => patient._id === this.selectedId
+		);
 	}
 
 	@computed get canEdit() {
-		return user.currentUser.canEditPatients;
+		return this.props.currentUser.canEditPatients;
 	}
 
 	render() {
@@ -151,7 +154,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 						text("Total/Outstanding Payments"),
 						text("Label")
 					]}
-					rows={patients.list.map(patient => ({
+					rows={this.props.patients.map(patient => ({
 						id: patient._id,
 						searchableString: patient.searchableString,
 						cells: [
@@ -229,7 +232,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 											/>
 										</TooltipHost>
 
-										{user.currentUser
+										{this.props.currentUser
 											.canViewAppointments ? (
 											<TooltipHost
 												content={text(
@@ -258,7 +261,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 													iconName: "Trash"
 												}}
 												onClick={() =>
-													patients.deleteModal(
+													this.props.onDelete(
 														patient._id
 													)
 												}
@@ -293,9 +296,8 @@ export class PatientsPage extends React.Component<{}, {}> {
 															patient
 																.lastAppointment
 																.date,
-															setting.getSetting(
-																"date_format"
-															)
+															this.props
+																.dateFormat
 													  )
 													: text(
 															"No last appointment"
@@ -330,9 +332,8 @@ export class PatientsPage extends React.Component<{}, {}> {
 															patient
 																.nextAppointment
 																.date,
-															setting.getSetting(
-																"date_format"
-															)
+															this.props
+																.dateFormat
 													  )
 													: text(
 															"No next appointment"
@@ -359,9 +360,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 									<div>
 										<ProfileSquaredComponent
 											text={
-												setting.getSetting(
-													"currencySymbol"
-												) +
+												this.props.currencySymbol +
 												patient.totalPayments.toString()
 											}
 											subText={text("Payments made")}
@@ -379,9 +378,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 										<br />
 										<ProfileSquaredComponent
 											text={
-												setting.getSetting(
-													"currencySymbol"
-												) +
+												this.props.currencySymbol +
 												(patient.differenceAmount < 0
 													? patient.outstandingAmount.toString()
 													: patient.differenceAmount >
@@ -444,7 +441,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 										name: text("Add new"),
 										onClick: () => {
 											const patient = new Patient();
-											patients.list.push(patient);
+											this.props.onAdd(patient);
 											this.selectedId = patient._id;
 											this.viewWhich = 1;
 										},

@@ -1,6 +1,6 @@
 import { fileTypes, PickAndUploadComponent, SectionComponent } from "@common-components";
-import { files, GALLERIES_DIR, status, text, user } from "@core";
-import { Patient, setting } from "@modules";
+import { GALLERIES_DIR, text } from "@core";
+import { Patient, setting, StaffMember } from "@modules";
 import { diff } from "fast-array-diff";
 import { computed, observable, observe } from "mobx";
 import { observer } from "mobx-react";
@@ -9,11 +9,18 @@ import * as React from "react";
 
 @observer
 export class PatientGalleryPanel extends React.Component<
-	{ patient: Patient },
+	{
+		patient: Patient;
+		currentUser: StaffMember;
+		isOnline: boolean;
+		isDropboxActive: boolean;
+		getFile: (path: string) => Promise<string>;
+		removeFile: (path: string) => Promise<any>;
+	},
 	{}
 > {
 	@computed get canEdit() {
-		return user.currentUser.canEditPatients;
+		return this.props.currentUser.canEditPatients;
 	}
 
 	@observable uploading: boolean = false;
@@ -31,8 +38,8 @@ export class PatientGalleryPanel extends React.Component<
 	render() {
 		return (
 			<SectionComponent title={text(`Patient Gallery`)}>
-				{status.online ? (
-					status.dropboxActive ? (
+				{this.props.isOnline ? (
+					this.props.isDropboxActive ? (
 						<div className="spg-p">
 							{this.props.patient.gallery.length === 0 ? (
 								<MessageBar
@@ -180,13 +187,13 @@ export class PatientGalleryPanel extends React.Component<
 
 	async addImage(path: string) {
 		this.imagesTable[path] = "";
-		const uri = await files.get(path);
+		const uri = await this.props.getFile(path);
 		this.imagesTable[path] = uri;
 		return;
 	}
 
 	async removeImage(path: string) {
-		await files.remove(this.selectedImagePath);
+		await this.props.removeFile(this.selectedImagePath);
 		const selectedImageIndex = this.props.patient.gallery.indexOf(
 			this.selectedImagePath
 		);

@@ -1,7 +1,13 @@
-import { EditableListComponent } from "../../../common-components/editable-list/editable-list";
-import { Col, getRandomTagType, Row, SectionComponent, TagInputComponent } from "@common-components";
-import { text, user } from "@core";
-import { Gender, Patient, patients } from "@modules";
+import {
+	Col,
+	EditableListComponent,
+	getRandomTagType,
+	Row,
+	SectionComponent,
+	TagInputComponent
+	} from "@common-components";
+import { text } from "@core";
+import { Gender, Patient, StaffMember } from "@modules";
 import { num } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
@@ -11,9 +17,11 @@ import * as React from "react";
 @observer
 export class PatientDetailsPanel extends React.Component<{
 	patient: Patient;
+	currentUser: StaffMember;
+	usedLabels: string[];
 }> {
 	@computed get canEdit() {
-		return user.currentUser.canEditPatients;
+		return this.props.currentUser.canEditPatients;
 	}
 
 	render() {
@@ -115,13 +123,7 @@ export class PatientDetailsPanel extends React.Component<{
 								className="patient-tags"
 								placeholder={text("Labels")}
 								options={[""]
-									.concat(
-										...patients.list.map(patient =>
-											patient.labels.map(
-												label => label.text
-											)
-										)
-									)
+									.concat(this.props.usedLabels)
 									.map(x => ({
 										key: x,
 										text: x

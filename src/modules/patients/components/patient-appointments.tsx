@@ -1,25 +1,30 @@
 import { SectionComponent } from "@common-components";
-import { text, user } from "@core";
-import { Appointment, appointments, AppointmentsList, Patient } from "@modules";
+import { text } from "@core";
+import { Appointment, AppointmentsList, Patient, StaffMember } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
-import { DefaultButton, MessageBar, MessageBarType, PrimaryButton } from "office-ui-fabric-react";
+import { DefaultButton, MessageBar, MessageBarType } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
 export class PatientAppointmentsPanel extends React.Component<
-	{ patient: Patient },
+	{
+		patient: Patient;
+		onAdd: (appointment: Appointment) => void;
+		appointments: Appointment[];
+		currentUser: StaffMember;
+	},
 	{}
 > {
 	@computed
 	get appointments() {
-		return appointments.list.filter(item => {
+		return this.props.appointments.filter(item => {
 			return item.patientID === this.props.patient._id;
 		});
 	}
 
 	@computed get canEdit() {
-		return user.currentUser.canEditPatients;
+		return this.props.currentUser.canEditPatients;
 	}
 
 	l: AppointmentsList | null = null;
@@ -46,7 +51,7 @@ export class PatientAppointmentsPanel extends React.Component<
 								const apt = new Appointment();
 								apt.patientID = this.props.patient._id;
 								apt.date = new Date().getTime();
-								appointments.list.push(apt);
+								this.props.onAdd(apt);
 								if (this.l) {
 									this.l.selectedAppointmentID = apt._id;
 								}
