@@ -1,4 +1,4 @@
 export * from "./class.treatment";
-export * from "./const.namespace";
+export * from "./namespace.treatments";
 export * from "./data.treatments";
 export * from "./interface.treatment-json";

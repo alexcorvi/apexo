@@ -1,5 +1,3 @@
-// ^ dynamically imported (code-splitting) styles
-
 export * from "./appointments";
 export * from "./orthodontic";
 export * from "./patients";
