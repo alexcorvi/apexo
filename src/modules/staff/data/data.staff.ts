@@ -1,6 +1,6 @@
 import { modals, status, text, user } from "@core";
 import { appointments, StaffMember } from "@modules";
-import { computed, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 
 class StaffData {
 	ignoreObserver: boolean = false;

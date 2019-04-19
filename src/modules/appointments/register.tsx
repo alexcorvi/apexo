@@ -16,14 +16,6 @@ export const registerAppointments = {
 							core.user.currentUser || new modules.StaffMember()
 						}
 						currentLocation={core.router.currentLocation}
-						currentDay={modules.calendar.currentDay}
-						currentMonth={modules.calendar.currentMonth}
-						currentYear={modules.calendar.currentYear}
-						selectedDay={modules.calendar.selectedDay}
-						selectedMonth={modules.calendar.selectedMonth}
-						selectedYear={modules.calendar.selectedYear}
-						selectedMonthDays={modules.calendar.selectedMonthDays}
-						selectedWeekDays={modules.calendar.selectedWeekDays}
 						dateFormat={modules.setting.getSetting("date_format")}
 						currencySymbol={modules.setting.getSetting(
 							"currencySymbol"
@@ -37,7 +29,6 @@ export const registerAppointments = {
 						availableTreatments={modules.treatments.list}
 						availablePrescriptions={modules.prescriptions.list}
 						operatingStaff={modules.staff.operatingStaff}
-						onSelectDate={obj => modules.calendar.select(obj)}
 						appointmentsForDay={(...args) =>
 							modules.appointments.appointmentsForDay(...args)
 						}

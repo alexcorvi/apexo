@@ -1,6 +1,6 @@
 import { setting } from "@modules";
 import { dateNames } from "@utils";
-import { computed, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 
 export interface WeekDayInfo {
 	dayLiteral: string;
@@ -19,10 +19,11 @@ export class Calendar {
 	currentMonth: number = new Date().getMonth();
 	currentDay: number = new Date().getDate();
 
-	// selected
-	@observable selectedYear: number = this.currentYear;
-	@observable selectedMonth: number = this.currentMonth;
-	@observable selectedDay: number = this.currentDay;
+	@observable selected: { year: number; month: number; day: number } = {
+		year: this.currentYear,
+		month: this.currentMonth,
+		day: this.currentDay
+	};
 
 	@computed get weekendsOn(): number {
 		return isNaN(Number(setting.getSetting("weekend_num")))
@@ -34,14 +35,14 @@ export class Calendar {
 		const month: DayInfo[][] = [[]];
 
 		const numberOfDays = this.numberOfDays(
-			this.selectedMonth,
-			this.selectedYear
+			this.selected.month,
+			this.selected.year
 		);
 
 		for (let date = 0; date < numberOfDays; date++) {
 			const obj = new Date(
-				this.selectedYear,
-				this.selectedMonth,
+				this.selected.year,
+				this.selected.month,
 				date + 1
 			);
 			const dayLiteral = obj.toLocaleDateString("en-us", {
@@ -83,7 +84,7 @@ export class Calendar {
 			const w = this.selectedMonthCalendar[wi];
 			for (let di = 0; di < w.length; di++) {
 				const d = w[di];
-				if (d.dateNum === this.selectedDay) {
+				if (d.dateNum === this.selected.day) {
 					week = w;
 					return week;
 				}
@@ -101,15 +102,16 @@ export class Calendar {
 		month?: number;
 		day?: number;
 	}) {
-		if (year) {
-			this.selectedYear = year;
+		if (typeof year === "number") {
+			this.selected.year = year;
 		}
-		if (month) {
-			this.selectedMonth = month;
+		if (typeof month === "number") {
+			this.selected.month = month;
 		}
-		if (day) {
-			this.selectedDay = day;
+		if (typeof day === "number") {
+			this.selected.day = day;
 		}
+		console.log(this.selectedWeekDays.map(x => x.dateNum));
 	}
 
 	numberOfDays(month: number, year: number): number {
@@ -123,4 +125,4 @@ export class Calendar {
 	}
 }
 
-export const calendar = new Calendar();
+export const calendar = observable(new Calendar());

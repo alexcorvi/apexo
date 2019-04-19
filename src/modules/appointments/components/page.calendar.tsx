@@ -8,6 +8,7 @@ import {
 	PrescriptionItem,
 	StaffMember
 	} from "@modules";
+import { Calendar, calendar } from "@modules";
 import { dateNames, num } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -21,18 +22,11 @@ const AppointmentEditorPanel = loadable({
 			.AppointmentEditorPanel,
 	loading: () => <Shimmer />
 });
+
 @observer
 export class CalendarPage extends React.Component<{
 	currentUser: StaffMember;
 	currentLocation: string;
-	currentYear: number;
-	currentMonth: number;
-	currentDay: number;
-	selectedYear: number;
-	selectedMonth: number;
-	selectedDay: number;
-	selectedMonthDays: DayInfo[];
-	selectedWeekDays: DayInfo[];
 	dateFormat: string;
 	currencySymbol: string;
 	prescriptionsEnabled: boolean;
@@ -40,15 +34,6 @@ export class CalendarPage extends React.Component<{
 	availableTreatments: { type: string; expenses: number; _id: string }[];
 	availablePrescriptions: PrescriptionItem[];
 	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
-	onSelectDate: ({
-		year,
-		month,
-		day
-	}: {
-		year?: number | undefined;
-		month?: number | undefined;
-		day?: number | undefined;
-	}) => void;
 	appointmentsForDay: (
 		year: number,
 		month: number,
@@ -64,6 +49,8 @@ export class CalendarPage extends React.Component<{
 
 	@observable showAll: boolean = true;
 
+	@observable c: Calendar = calendar;
+
 	componentDidMount() {
 		this.unifyHeight();
 
@@ -72,9 +59,9 @@ export class CalendarPage extends React.Component<{
 			return;
 		}
 		const dateArray = dateString.split(/\W/);
-		this.props.onSelectDate({ year: num(dateArray[0]) });
-		this.props.onSelectDate({ month: num(dateArray[1]) - 1 });
-		this.props.onSelectDate({ day: num(dateArray[2]) });
+		this.c.select({ year: num(dateArray[0]) });
+		this.c.select({ month: num(dateArray[1]) - 1 });
+		this.c.select({ day: num(dateArray[2]) });
 	}
 
 	componentDidUpdate() {
@@ -107,26 +94,27 @@ export class CalendarPage extends React.Component<{
 				<div className="selector year-selector">
 					<Row>
 						{[
-							this.props.currentYear - 2,
-							this.props.currentYear - 1,
-							this.props.currentYear,
-							this.props.currentYear + 1
+							this.c.currentYear - 2,
+							this.c.currentYear - 1,
+							this.c.currentYear,
+							this.c.currentYear + 1
 						].map(year => {
 							return (
 								<Col key={year} span={6} className="centered">
 									<a
 										onClick={() => {
-											this.props.onSelectDate({
+											this.c.select({
 												year,
 												month: 0,
 												day: 1
 											});
+											this.forceUpdate();
 										}}
 										className={
-											(this.props.selectedYear === year
+											(this.c.selected.year === year
 												? "selected"
 												: "") +
-											(this.props.currentYear === year
+											(this.c.currentYear === year
 												? " current"
 												: "")
 										}
@@ -150,19 +138,18 @@ export class CalendarPage extends React.Component<{
 								>
 									<a
 										onClick={() => {
-											this.props.onSelectDate({
+											this.c.select({
 												month: index,
 												day: 1
 											});
 										}}
 										className={
-											(this.props.selectedMonth === index
+											(this.c.selected.month === index
 												? "selected"
 												: "") +
-											(this.props.currentMonth ===
-												index &&
-											this.props.currentYear ===
-												this.props.selectedYear
+											(this.c.currentMonth === index &&
+											this.c.currentYear ===
+												this.c.selected.year
 												? " current"
 												: "")
 										}
@@ -177,12 +164,12 @@ export class CalendarPage extends React.Component<{
 				<div className="selector day-selector">
 					<div className="day-selector-wrapper">
 						<div>
-							{this.props.selectedMonthDays.map(day => {
+							{this.c.selectedMonthDays.map(day => {
 								return (
 									<div
 										key={day.dateNum}
 										onClick={() => {
-											this.props.onSelectDate({
+											this.c.select({
 												day: day.dateNum
 											});
 											setTimeout(() => {
@@ -198,8 +185,7 @@ export class CalendarPage extends React.Component<{
 										}}
 										className={
 											"day-col" +
-											(this.props.selectedDay ===
-											day.dateNum
+											(this.c.selected.day === day.dateNum
 												? " selected"
 												: "") +
 											(this.props.currentUser.onDutyDays.indexOf(
@@ -223,11 +209,11 @@ export class CalendarPage extends React.Component<{
 											className={
 												"day-number info-row" +
 												(day.dateNum ===
-													this.props.currentDay &&
-												this.props.currentMonth ===
-													this.props.selectedMonth &&
-												this.props.selectedYear ===
-													this.props.currentYear
+													this.c.currentDay &&
+												this.c.currentMonth ===
+													this.c.selected.month &&
+												this.c.selected.year ===
+													this.c.currentYear
 													? " current"
 													: "")
 											}
@@ -239,10 +225,10 @@ export class CalendarPage extends React.Component<{
 							})}
 						</div>
 						<div>
-							{this.props.selectedMonthDays.map(day => {
+							{this.c.selectedMonthDays.map(day => {
 								const number = this.props.appointmentsForDay(
-									this.props.selectedYear,
-									this.props.selectedMonth + 1,
+									this.c.selected.year,
+									this.c.selected.month + 1,
 									day.dateNum,
 									undefined,
 									this.showAll
@@ -253,14 +239,13 @@ export class CalendarPage extends React.Component<{
 									<div
 										key={day.dateNum}
 										onClick={() => {
-											this.props.onSelectDate({
+											this.c.select({
 												day: day.dateNum
 											});
 										}}
 										className={
 											"day-col" +
-											(this.props.selectedDay ===
-											day.dateNum
+											(this.c.selected.day === day.dateNum
 												? " selected"
 												: "") +
 											(this.props.currentUser.onDutyDays.indexOf(
@@ -310,8 +295,11 @@ export class CalendarPage extends React.Component<{
 							</Col>
 						</Row>
 					</div>
-					<div id="full-day-cols">
-						{this.props.selectedWeekDays.map(day => {
+					<div
+						id="full-day-cols"
+						key={JSON.stringify(this.c.selected)}
+					>
+						{this.c.selectedWeekDays.map(day => {
 							return (
 								<div
 									key={day.dateNum}
@@ -323,12 +311,12 @@ export class CalendarPage extends React.Component<{
 										) === -1
 											? " holiday"
 											: "") +
-										(this.props.selectedDay === day.dateNum
+										(this.c.selected.day === day.dateNum
 											? " selected"
 											: "")
 									}
 									onClick={() => {
-										this.props.onSelectDate({
+										this.c.select({
 											day: day.dateNum
 										});
 									}}
@@ -336,8 +324,7 @@ export class CalendarPage extends React.Component<{
 										width:
 											(
 												100 /
-												this.props.selectedWeekDays
-													.length
+												this.c.selectedWeekDays.length
 											).toString() + "%"
 									}}
 								>
@@ -350,8 +337,8 @@ export class CalendarPage extends React.Component<{
 									</h4>
 									{this.props
 										.appointmentsForDay(
-											this.props.selectedYear,
-											this.props.selectedMonth + 1,
+											this.c.selected.year,
+											this.c.selected.month + 1,
 											day.dateNum,
 											this.filter,
 											this.showAll
