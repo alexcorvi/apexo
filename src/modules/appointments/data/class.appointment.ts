@@ -77,8 +77,8 @@ export class Appointment {
 	}
 
 	@computed
-	get treatment(): undefined | Treatment {
-		return treatments.list[treatments.getIndexByID(this.treatmentID)];
+	get treatment() {
+		return treatments.list.find(x => x._id === this.treatmentID);
 	}
 
 	@computed

@@ -19,10 +19,7 @@ export class TreatmentsNumberChart extends React.Component<{
 			x: i,
 			y: treatment.profit,
 			times: treatment.times,
-			title:
-				treatments.list[
-					treatments.getIndexByID(treatment.treatment._id)
-				].type
+			title: treatment.treatment.type
 		}));
 	}
 	render() {

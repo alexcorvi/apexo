@@ -6,8 +6,7 @@ import {
 	PatientLinkComponent,
 	patientsNamespace,
 	PrescriptionItem,
-	StaffMember,
-	Treatment
+	StaffMember
 	} from "@modules";
 import { dateNames, num } from "@utils";
 import { observable } from "mobx";

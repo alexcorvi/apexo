@@ -1,25 +1,23 @@
 import { appointments, Gender, Patient, Treatment } from "@modules";
-import { day } from "@utils";
+import { day, getDayStartingPoint } from "@utils";
 import { computed, observable } from "mobx";
 
 class Statistics {
 	@observable specificMemberID: string = "";
 
-	readonly msInDay = day;
-
 	readonly todayDateObject: Date = new Date();
 
-	readonly todayStartsWith: number = this.getDayStartingPoint(
+	readonly todayStartsWith: number = getDayStartingPoint(
 		this.todayDateObject.getTime()
 	);
 
-	@observable startingDate: number = this.todayStartsWith - this.msInDay * 31;
+	@observable startingDate: number = this.todayStartsWith - day * 31;
 
 	@observable endingDate: number = this.todayStartsWith;
 
 	@computed
 	private get numberOfSelectedDays() {
-		return (this.endingDate - this.startingDate) / this.msInDay;
+		return (this.endingDate - this.startingDate) / day;
 	}
 
 	@computed
@@ -27,7 +25,7 @@ class Statistics {
 		const days: Date[] = [];
 		let i = 0;
 		while (i <= this.numberOfSelectedDays) {
-			days.push(new Date(this.startingDate + this.msInDay * i));
+			days.push(new Date(this.startingDate + day * i));
 			i++;
 		}
 		return days;
@@ -184,11 +182,6 @@ class Statistics {
 		return this.selectedAppointments
 			.map(x => x.paidAmount)
 			.reduce((total, single) => (total = total + single), 0);
-	}
-
-	getDayStartingPoint(t: number) {
-		const d = new Date(t);
-		return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
 	}
 }
 

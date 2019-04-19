@@ -1,5 +1,9 @@
 import { text } from "@core";
 
+export function getDayStartingPoint(t: number): number {
+	return new Date(t).setHours(0, 0, 0, 0);
+}
+
 export function comparableTime(date: Date) {
 	return {
 		y: date.getFullYear(),

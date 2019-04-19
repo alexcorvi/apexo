@@ -1,5 +1,5 @@
 import { Appointment, appointments, Calendar, setting, StaffMemberJSON } from "@modules";
-import { dateNames, formatDate, generateID } from "@utils";
+import { dateNames, formatDate, generateID, getDayStartingPoint } from "@utils";
 import { computed, observable } from "mobx";
 
 export class StaffMember {
@@ -136,8 +136,8 @@ export class StaffMember {
 		return this.appointments
 			.filter(
 				appointment =>
-					this.getDayStartingPoint(appointment.date) >=
-					this.getDayStartingPoint(new Date().getTime())
+					getDayStartingPoint(appointment.date) >=
+					getDayStartingPoint(new Date().getTime())
 			)
 			.sort((a, b) => a.date - b.date);
 	}
@@ -147,15 +147,10 @@ export class StaffMember {
 		return this.appointments
 			.filter(
 				appointment =>
-					this.getDayStartingPoint(appointment.date) <
-					this.getDayStartingPoint(new Date().getTime())
+					getDayStartingPoint(appointment.date) <
+					getDayStartingPoint(new Date().getTime())
 			)
 			.sort((a, b) => b.date - a.date);
-	}
-
-	getDayStartingPoint(t: number) {
-		const d = new Date(t);
-		return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
 	}
 
 	toJSON(): StaffMemberJSON {
