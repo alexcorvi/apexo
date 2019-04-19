@@ -1,12 +1,15 @@
 import { modals, status, text, user } from "@core";
 import { appointments, StaffMember } from "@modules";
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
 
 class StaffData {
 	ignoreObserver: boolean = false;
 
 	@observable list: StaffMember[] = [];
 
+	@computed get operatingStaff() {
+		return this.list.filter(x => x.operates);
+	}
 	getIndexByID(id: string) {
 		return this.list.findIndex(x => x._id === id);
 	}
@@ -26,7 +29,7 @@ class StaffData {
 	}
 
 	private deleteByID(id: string) {
-		const currentID = user.currentUser._id;
+		const currentID = (user.currentUser || { _id: "" })._id;
 		const i = this.getIndexByID(id);
 
 		const member = this.list.splice(i, 1)[0];

@@ -33,9 +33,9 @@ class Status {
 
 	@observable step: LoginStep = LoginStep.initial;
 
-	@observable online: boolean = false;
+	@observable isOnline: boolean = false;
 
-	@observable dropboxActive: boolean = false;
+	@observable isDropboxActive: boolean = false;
 
 	@observable tryOffline: boolean = false;
 
@@ -172,7 +172,7 @@ class Status {
 	}
 
 	async startNoServer() {
-		this.online = false;
+		this.isOnline = false;
 		this.keepOffline = true;
 		await this.start({
 			server: "http://apexo-no-server-mode"
@@ -235,10 +235,10 @@ class Status {
 		files
 			.status()
 			.then(x => {
-				this.dropboxActive = true;
+				this.isDropboxActive = true;
 			})
 			.catch(e => {
-				this.dropboxActive = false;
+				this.isDropboxActive = false;
 			});
 	}
 
@@ -263,11 +263,11 @@ class Status {
 			return;
 		}
 		isOnline(this.server).then(online => {
-			if (online && !this.online) {
+			if (online && !this.isOnline) {
 				console.log("getting back online");
 				resync.resync();
 			}
-			this.online = online;
+			this.isOnline = online;
 		});
 	}
 }

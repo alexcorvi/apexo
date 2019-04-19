@@ -53,7 +53,7 @@ class Settings {
 		const retain = num(this.getSetting("backup_retain")) || 3;
 
 		// carry on, only if there's access token
-		if (!status.dropboxActive) {
+		if (!status.isDropboxActive) {
 			return;
 		}
 
@@ -99,7 +99,7 @@ class Settings {
 		}
 
 		backupsToDeleteFiles.forEach(async file => {
-			await backup.deleteOld(file.path_lower);
+			await backup.deleteFromDropbox(file.path_lower);
 			await this.updateDropboxBackups();
 		});
 	}

@@ -14,6 +14,11 @@ export class PatientGalleryPanel extends React.Component<
 		currentUser: StaffMember;
 		isOnline: boolean;
 		isDropboxActive: boolean;
+		saveFile: (obj: {
+			blob: Blob;
+			ext: string;
+			dir: string;
+		}) => Promise<string>;
 		getFile: (path: string) => Promise<string>;
 		removeFile: (path: string) => Promise<any>;
 	},
@@ -79,6 +84,9 @@ export class PatientGalleryPanel extends React.Component<
 											targetDir={`${GALLERIES_DIR}/${
 												this.props.patient._id
 											}`}
+											saveFile={obj =>
+												this.props.saveFile(obj)
+											}
 										>
 											<TooltipHost
 												content={text("Add photo")}

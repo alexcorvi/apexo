@@ -1,16 +1,14 @@
 import { BarChartComponent } from "@common-components";
 import { text } from "@core";
-import { Chart, statistics, Treatment, treatments } from "@modules";
+import { Treatment, treatments } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 @observer
-class Component extends React.Component<{
+export class TreatmentsNumberChart extends React.Component<{
 	selectedTreatments: {
 		treatment: Treatment;
-		male: number;
-		female: number;
 		profit: number;
 		times: number;
 	}[];
@@ -53,11 +51,3 @@ class Component extends React.Component<{
 		);
 	}
 }
-
-export const treatmentsNumberChart: Chart = {
-	Component,
-	name: "Treatments by profits",
-	description: "Treatments by profit",
-	tags: "treatments number profit",
-	className: "col-xs-12 col-lg-6"
-};

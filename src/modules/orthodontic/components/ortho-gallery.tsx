@@ -28,6 +28,14 @@ export class OrthoGalleryPanel extends React.Component<{
 	isOnline: boolean;
 	isDropboxActive: boolean;
 	dateFormat: string;
+	saveFile: (obj: {
+		blob: Blob;
+		ext: string;
+		dir: string;
+	}) => Promise<string>;
+	getFile: (path: string) => Promise<string>;
+	removeFile: (path: string) => Promise<any>;
+	cephLoader: (obj: CephalometricItemInterface) => Promise<string>;
 }> {
 	@observable openCephalometricItem:
 		| CephalometricItemInterface
@@ -52,6 +60,12 @@ export class OrthoGalleryPanel extends React.Component<{
 				{this.props.orthoCase.patient ? (
 					<PatientGalleryPanel
 						patient={this.props.orthoCase.patient}
+						currentUser={this.props.currentUser}
+						isOnline={this.props.isOnline}
+						isDropboxActive={this.props.isDropboxActive}
+						saveFile={obj => this.props.saveFile(obj)}
+						getFile={path => this.props.getFile(path)}
+						removeFile={path => this.props.removeFile(path)}
 					/>
 				) : (
 					""
@@ -64,6 +78,11 @@ export class OrthoGalleryPanel extends React.Component<{
 							this.props.orthoCase.triggerUpdate++;
 						}}
 						item={this.openCephalometricItem}
+						dateFormat={this.props.dateFormat}
+						cephLoader={obj => this.props.cephLoader(obj)}
+						onSave={coordinates =>
+							(this.openCephalometricItem!.pointCoordinates = coordinates)
+						}
 					/>
 				) : (
 					""
@@ -158,6 +177,7 @@ export class OrthoGalleryPanel extends React.Component<{
 									targetDir={`${CEPHALOMETRIC_DIR}/${
 										this.props.orthoCase._id
 									}`}
+									saveFile={obj => this.props.saveFile(obj)}
 								>
 									<DefaultButton
 										iconProps={{ iconName: "Add" }}

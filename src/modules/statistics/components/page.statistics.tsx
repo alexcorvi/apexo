@@ -9,18 +9,7 @@ import {
 	TagType
 	} from "@common-components";
 import { text } from "@core";
-import {
-	ageBarChart,
-	Appointment,
-	appointmentsByDateChart,
-	financesByDateChart,
-	genderPieChart,
-	mostAppliedTreatmentsChart,
-	mostInvolvedTeethChart,
-	Patient,
-	treatmentsByGenderChart,
-	treatmentsNumberChart
-	} from "@modules";
+import { Appointment, Patient, PrescriptionItem, StaffMember, Treatment } from "@modules";
 import { formatDate, round } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -34,33 +23,97 @@ const AppointmentEditorPanel = loadable({
 	loading: () => <Shimmer />
 });
 
+const AgeBarChart = loadable({
+	loader: async () => (await import("./chart.age")).AgeBarChart,
+	loading: () => <Shimmer />
+});
+const AppointmentsByDateChart = loadable({
+	loader: async () =>
+		(await import("./chart.appointments-date")).AppointmentsByDateChart,
+	loading: () => <Shimmer />
+});
+const FinancesByDateChart = loadable({
+	loader: async () => (await import("./chart.finance")).FinancesByDateChart,
+	loading: () => <Shimmer />
+});
+const GenderPieChart = loadable({
+	loader: async () => (await import("./chart.gender")).GenderPieChart,
+	loading: () => <Shimmer />
+});
+const MostAppliedTreatmentsChart = loadable({
+	loader: async () =>
+		(await import("./chart.most-applied-treatments"))
+			.MostAppliedTreatmentsChart,
+	loading: () => <Shimmer />
+});
+const MostInvolvedTeethChart = loadable({
+	loader: async () =>
+		(await import("./chart.most-involved-teeth")).MostInvolvedTeethChart,
+	loading: () => <Shimmer />
+});
+const TreatmentsByGenderChart = loadable({
+	loader: async () =>
+		(await import("./chart.treatments-gender")).TreatmentsByGenderChart,
+	loading: () => <Shimmer />
+});
+const TreatmentsNumberChart = loadable({
+	loader: async () =>
+		(await import("./chart.treatments-number")).TreatmentsNumberChart,
+	loading: () => <Shimmer />
+});
+
 @observer
 export class StatisticsPage extends React.Component<{
+	onChooseStaffMember: (id: string) => void;
+	setStartingDate: (timestamp: number) => void;
+	setEndingDate: (timestamp: number) => void;
+	appointmentsForDay: (
+		year: number,
+		month: number,
+		day: number,
+		filter?: string | undefined,
+		operatorID?: string | undefined
+	) => Appointment[];
+	onDeleteAppointment: (id: string) => void;
 	selectedAppointments: Appointment[];
 	dateFormat: string;
 	currencySymbol: string;
-	onChooseStaffMember: (id: string) => void;
-	staffList: { name: string; _id: string }[];
 	startingDate: number;
-	setStartingDate: (timestamp: number) => void;
 	endingDate: number;
-	setEndingDate: (timestamp: number) => void;
 	totalPayments: number;
 	totalExpenses: number;
 	totalProfits: number;
+	availableTreatments: { _id: string; expenses: number; type: string }[];
+	availablePrescriptions: PrescriptionItem[];
+	currentUser: StaffMember;
+	prescriptionsEnabled: boolean;
+	timeTrackingEnabled: boolean;
+	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
+	selectedAppointmentsByDay: {
+		appointments: Appointment[];
+		day: Date;
+	}[];
+	selectedPatients: Patient[];
+	selectedFinancesByDay: {
+		day: Date;
+		appointments: {
+			paid: number;
+			expenses: number;
+			profit: number;
+			profitPercentage: number;
+			isPaid: boolean;
+			isDone: boolean;
+		}[];
+	}[];
+	selectedTreatments: {
+		treatment: Treatment;
+		male: number;
+		female: number;
+		profit: number;
+		times: number;
+	}[];
 }> {
 	@observable appointment: Appointment | null = null;
-
-	@observable charts = [
-		appointmentsByDateChart,
-		financesByDateChart,
-		treatmentsNumberChart,
-		mostAppliedTreatmentsChart,
-		genderPieChart,
-		treatmentsByGenderChart,
-		mostInvolvedTeethChart,
-		ageBarChart
-	];
 
 	render() {
 		return (
@@ -201,12 +254,14 @@ export class StatisticsPage extends React.Component<{
 												text: text("All members")
 											}
 										].concat(
-											this.props.staffList.map(member => {
-												return {
-													key: member._id,
-													text: member.name
-												};
-											})
+											this.props.operatingStaff.map(
+												member => {
+													return {
+														key: member._id,
+														text: member.name
+													};
+												}
+											)
 										)}
 										onChange={(ev, member) => {
 											this.props.onChooseStaffMember(
@@ -277,7 +332,23 @@ export class StatisticsPage extends React.Component<{
 					<AppointmentEditorPanel
 						appointment={this.appointment}
 						onDismiss={() => (this.appointment = null)}
-						onDelete={() => (this.appointment = null)}
+						onDeleteAppointment={id => {
+							this.props.onDeleteAppointment(id);
+							this.appointment = null;
+						}}
+						availableTreatments={this.props.availableTreatments}
+						availablePrescriptions={
+							this.props.availablePrescriptions
+						}
+						currentUser={this.props.currentUser}
+						dateFormat={this.props.dateFormat}
+						currencySymbol={this.props.currencySymbol}
+						prescriptionsEnabled={this.props.prescriptionsEnabled}
+						timeTrackingEnabled={this.props.timeTrackingEnabled}
+						operatingStaff={this.props.operatingStaff}
+						appointmentsForDay={(year, month, day) =>
+							this.props.appointmentsForDay(year, month, day)
+						}
 					/>
 				) : (
 					""
@@ -346,22 +417,97 @@ export class StatisticsPage extends React.Component<{
 
 				<div className="charts container-fluid">
 					<div className="row">
-						{this.charts.map((chart, index) => {
-							return (
-								<div
-									key={index + chart.name}
-									className={
-										"chart-wrapper " +
-										(chart.className ||
-											"col-xs-12 col-md-5 col-lg-4")
+						<div className={"chart-wrapper col-xs-12"}>
+							<SectionComponent
+								title={text("Appointments by Date")}
+							>
+								<AppointmentsByDateChart
+									selectedAppointmentsByDay={
+										this.props.selectedAppointmentsByDay
 									}
-								>
-									<SectionComponent title={text(chart.name)}>
-										<chart.Component />
-									</SectionComponent>
-								</div>
-							);
-						})}
+									dateFormat={this.props.dateFormat}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12"}>
+							<SectionComponent title={text("Finances by Date")}>
+								<FinancesByDateChart
+									dateFormat={this.props.dateFormat}
+									selectedFinancesByDay={
+										this.props.selectedFinancesByDay
+									}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
+							<SectionComponent title={text("Patients' Gender")}>
+								<GenderPieChart
+									selectedPatients={
+										this.props.selectedPatients
+									}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
+							<SectionComponent
+								title={text("Most Applied Treatments")}
+							>
+								<MostAppliedTreatmentsChart
+									selectedAppointments={
+										this.props.selectedAppointments
+									}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
+							<SectionComponent
+								title={text("Most Involved Teeth")}
+							>
+								<MostInvolvedTeethChart
+									selectedAppointments={
+										this.props.selectedAppointments
+									}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
+							<SectionComponent
+								title={text("Treatments by gender")}
+							>
+								<TreatmentsByGenderChart
+									selectedTreatments={
+										this.props.selectedTreatments
+									}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
+							<SectionComponent
+								title={text("Treatments by profits")}
+							>
+								<TreatmentsNumberChart
+									selectedTreatments={
+										this.props.selectedTreatments
+									}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
+							<SectionComponent title={text("Patients' Age")}>
+								<AgeBarChart
+									selectedPatients={
+										this.props.selectedPatients
+									}
+								/>
+							</SectionComponent>
+						</div>
 					</div>
 				</div>
 			</div>

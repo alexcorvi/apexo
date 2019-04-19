@@ -8,24 +8,17 @@ import { Icon } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
-export class AppointmentThumbComponent extends React.Component<
-	{
-		appointment: Appointment;
-		dateFormat: string;
-		canDelete?: boolean;
-
-		className?: string;
-
-		hideDate?: boolean;
-
-		showPatient?: boolean;
-
-		hideTreatment?: boolean;
-		onClick?: () => void;
-		onDelete: (id: string) => void;
-	},
-	{}
-> {
+export class AppointmentThumbComponent extends React.Component<{
+	appointment: Appointment;
+	dateFormat: string;
+	canDelete?: boolean;
+	className?: string;
+	hideDate?: boolean;
+	showPatient?: boolean;
+	hideTreatment?: boolean;
+	onClick?: () => void;
+	onDeleteAppointment: (id: string) => void;
+}> {
 	@computed
 	get className() {
 		let className = "atc-c";
@@ -66,6 +59,10 @@ export class AppointmentThumbComponent extends React.Component<
 					<PatientLinkComponent
 						className="appointment-patient-link"
 						id={this.props.appointment.patientID}
+						name={
+							(this.props.appointment.patient || { name: "" })
+								.name
+						}
 					/>
 				) : (
 					""
@@ -98,7 +95,9 @@ export class AppointmentThumbComponent extends React.Component<
 							).join("");
 						}}
 						onClick={ev => {
-							this.props.onDelete(this.props.appointment._id);
+							this.props.onDeleteAppointment(
+								this.props.appointment._id
+							);
 							ev.stopPropagation();
 						}}
 					/>

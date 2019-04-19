@@ -7,7 +7,7 @@ import {
 	SectionComponent
 	} from "@common-components";
 import { text } from "@core";
-import { AppointmentsList, StaffMember } from "@modules";
+import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -32,11 +32,24 @@ export class StaffPage extends React.Component<{
 	currentLocation: string;
 	staffMembers: StaffMember[];
 	dateFormat: string;
-	onDelete: (id: string) => void;
-	onAdd: (member: StaffMember) => void;
 	enabledPrescriptions: boolean;
 	enabledStatistics: boolean;
 	enabledOrthodontics: boolean;
+	availableTreatments: { _id: string; expenses: number; type: string }[];
+	availablePrescriptions: PrescriptionItem[];
+	currencySymbol: string;
+	timeTrackingEnabled: boolean;
+	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
+	onDeleteStaff: (id: string) => void;
+	onAddStaff: (member: StaffMember) => void;
+	onDeleteAppointment: (id: string) => void;
+	appointmentsForDay: (
+		year: number,
+		month: number,
+		day: number,
+		filter?: string | undefined,
+		operatorID?: string | undefined
+	) => Appointment[];
 }> {
 	@observable selectedId: string = this.props.currentLocation.split("/")[1];
 	@observable viewWhich: number = 1;
@@ -164,7 +177,7 @@ export class StaffPage extends React.Component<{
 															iconName: "Trash"
 														}}
 														onClick={() =>
-															this.props.onDelete(
+															this.props.onDeleteStaff(
 																member._id
 															)
 														}
@@ -320,7 +333,9 @@ export class StaffPage extends React.Component<{
 												name: text("Add new"),
 												onClick: () => {
 													const member = new StaffMember();
-													this.props.onAdd(member);
+													this.props.onAddStaff(
+														member
+													);
 													this.selectedId =
 														member._id;
 													this.viewWhich = 1;
@@ -980,6 +995,43 @@ export class StaffPage extends React.Component<{
 											list={
 												this.selectedMember
 													.nextAppointments
+											}
+											currentUser={this.props.currentUser}
+											dateFormat={this.props.dateFormat}
+											onDeleteAppointment={id =>
+												this.props.onDeleteAppointment(
+													id
+												)
+											}
+											availableTreatments={
+												this.props.availableTreatments
+											}
+											availablePrescriptions={
+												this.props
+													.availablePrescriptions
+											}
+											appointmentsForDay={(
+												year,
+												month,
+												day
+											) =>
+												this.props.appointmentsForDay(
+													year,
+													month,
+													day
+												)
+											}
+											currencySymbol={
+												this.props.currencySymbol
+											}
+											prescriptionsEnabled={
+												this.props.enabledPrescriptions
+											}
+											timeTrackingEnabled={
+												this.props.timeTrackingEnabled
+											}
+											operatingStaff={
+												this.props.operatingStaff
 											}
 										/>
 									) : (

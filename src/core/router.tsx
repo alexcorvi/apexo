@@ -1,6 +1,6 @@
 import { menu, resync, user } from "@core";
 import { HomeView } from "@main-components";
-import { appointments, setting } from "@modules";
+import { appointments, setting, statistics } from "@modules";
 import { computed, observable } from "mobx";
 import * as React from "react";
 
@@ -12,7 +12,7 @@ export interface Route {
 }
 
 class Router {
-	@observable reSyncing = false;
+	@observable isCurrentlyReSyncing = false;
 
 	@observable currentLocation = "";
 
@@ -30,7 +30,9 @@ class Router {
 			}) || {
 				component: async () => (
 					<HomeView
-						currentUsername={user.currentUser.name}
+						currentUsername={
+							(user.currentUser || { name: "" }).name
+						}
 						todayAppointments={appointments.appointmentsForDay(
 							new Date().getTime(),
 							0,
@@ -41,6 +43,10 @@ class Router {
 							0,
 							0
 						)}
+						dateFormat={setting.getSetting("date_format")}
+						selectedAppointmentsByDay={
+							statistics.selectedAppointmentsByDay
+						}
 						showChart={!!setting.getSetting("module_statistics")}
 					/>
 				),
@@ -62,7 +68,7 @@ class Router {
 
 	async currentLoader() {
 		const namespace = this.currentLocation.split("/")[0];
-		this.reSyncing = true;
+		this.isCurrentlyReSyncing = true;
 		try {
 			const resyncModule = resync.modules.find(
 				x => x.namespace === namespace
@@ -73,7 +79,7 @@ class Router {
 		} catch (e) {
 			console.log(e);
 		}
-		this.reSyncing = false;
+		this.isCurrentlyReSyncing = false;
 		return true;
 	}
 

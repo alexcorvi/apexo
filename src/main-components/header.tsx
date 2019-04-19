@@ -6,13 +6,13 @@ import * as React from "react";
 
 @observer
 export class HeaderView extends React.Component<{
-	onExpandMenu: () => void;
-	onExpandUser: () => void;
+	expandMenu: () => void;
+	expandUser: () => void;
 	currentNamespace: string;
 	isOnline: boolean;
 	resync: () => Promise<boolean>;
-	onStartReSyncing: () => void;
-	onFinishReSyncing: () => void;
+	startReSyncing: () => void;
+	finishReSyncing: () => void;
 	isCurrentlyReSyncing: boolean;
 }> {
 	render() {
@@ -22,7 +22,7 @@ export class HeaderView extends React.Component<{
 					<Col span={8}>
 						<section className="menu-button">
 							<IconButton
-								onClick={this.props.onExpandMenu}
+								onClick={this.props.expandMenu}
 								disabled={false}
 								iconProps={{ iconName: "GlobalNavButton" }}
 								title="GlobalNavButton"
@@ -41,9 +41,9 @@ export class HeaderView extends React.Component<{
 								<TooltipHost content={text("Sync with server")}>
 									<IconButton
 										onClick={async () => {
-											this.props.onStartReSyncing();
+											this.props.startReSyncing();
 											await this.props.resync();
-											this.props.onFinishReSyncing();
+											this.props.finishReSyncing();
 										}}
 										iconProps={{ iconName: "Sync" }}
 										className={
@@ -62,7 +62,7 @@ export class HeaderView extends React.Component<{
 
 							<TooltipHost content={text("User panel")}>
 								<IconButton
-									onClick={this.props.onExpandUser}
+									onClick={this.props.expandUser}
 									iconProps={{ iconName: "Contact" }}
 								/>
 							</TooltipHost>

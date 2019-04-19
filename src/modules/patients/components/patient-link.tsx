@@ -9,7 +9,7 @@ export class PatientLinkComponent extends React.Component<
 
 		name: string;
 		className?: string;
-		onClick: () => void;
+		onClick?: () => void;
 	},
 	{}
 > {

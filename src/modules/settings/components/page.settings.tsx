@@ -22,6 +22,7 @@ export class SettingsPage extends React.Component<
 		currentUser: StaffMember;
 		isOnline: boolean;
 		isDropboxActive: boolean;
+		dropboxBackups: DropboxFile[];
 		updateDropboxBackups: () => Promise<void>;
 		validateDropboxToken: () => void;
 		setSetting: (id: keyof typeof dictionary, val: string) => void;
@@ -29,9 +30,8 @@ export class SettingsPage extends React.Component<
 		compact: () => Promise<boolean>;
 		restoreFromFile: (file: Blob) => void;
 		restoreFromDropbox: (path: string) => Promise<void>;
-		deleteDropboxBackup: (path: string) => Promise<void>;
+		deleteDropboxBackup: (path: string) => Promise<any>;
 		downloadCurrent: () => Promise<any>;
-		dropboxBackups: DropboxFile[];
 	},
 	{}
 > {

@@ -1,38 +1,87 @@
-import { connectToDB, menu, router, user } from "@core";
-import { OrthoCase, orthoCases, orthoNamespace, setting } from "@modules";
+import * as core from "@core";
+import * as modules from "@modules";
 import * as React from "react";
 export const registerOrthodontic = {
 	async register() {
-		router.register({
-			namespace: orthoNamespace,
+		core.router.register({
+			namespace: modules.orthoNamespace,
 			regex: /^orthodontic/,
 			component: async () => {
-				const Component = (await import("./components/page.orthodontic"))
+				const OrthoPage = (await import("./components/page.orthodontic"))
 					.OrthoPage;
-				return <Component />;
+				return (
+					<OrthoPage
+						dateFormat={modules.setting.getSetting("date_format")}
+						currencySymbol={modules.setting.getSetting(
+							"currencySymbol"
+						)}
+						cases={modules.orthoCases.list}
+						filteredCases={modules.orthoCases.filtered}
+						currentUser={
+							core.user.currentUser || new modules.StaffMember()
+						}
+						patientsWithNoOrtho={
+							modules.orthoCases.patientsWithNoOrtho
+						}
+						allPatients={modules.patients.list}
+						availableTreatments={modules.treatments.list}
+						availablePrescriptions={modules.prescriptions.list}
+						prescriptionsEnabled={
+							!!modules.setting.getSetting("module_prescriptions")
+						}
+						timeTrackingEnabled={
+							!!modules.setting.getSetting("time_tracking")
+						}
+						operatingStaff={modules.staff.operatingStaff}
+						isOnline={core.status.isOnline}
+						isDropboxActive={core.status.isDropboxActive}
+						onDeleteOrtho={id => modules.orthoCases.deleteModal(id)}
+						onAddOrtho={orthoCase => {
+							modules.orthoCases.list.push(orthoCase.orthoCase);
+							if (orthoCase.patient) {
+								modules.patients.list.push(orthoCase.patient);
+							}
+						}}
+						onAddAppointment={appointment =>
+							modules.appointments.list.push(appointment)
+						}
+						saveFile={x => core.files.save(x)}
+						getFile={x => core.files.get(x)}
+						removeFile={x => core.files.remove(x)}
+						onDeleteAppointment={id => {
+							modules.appointments.deleteModal(id);
+						}}
+						appointmentsForDay={(...args) =>
+							modules.appointments.appointmentsForDay(...args)
+						}
+						newModal={x => core.modals.newModal(x)}
+						cephLoader={x => modules.orthoCases.cephLoader(x)}
+					/>
+				);
 			},
 			condition: () =>
-				!!setting.getSetting("module_orthodontics") &&
-				user.currentUser.canViewOrtho
+				!!modules.setting.getSetting("module_orthodontics") &&
+				(core.user.currentUser || { canViewOrtho: false }).canViewOrtho
 		});
-		menu.items.push({
+		core.menu.items.push({
 			icon: "MiniLink",
-			name: orthoNamespace,
-			key: orthoNamespace,
+			name: modules.orthoNamespace,
+			key: modules.orthoNamespace,
 			onClick: () => {
-				router.go([orthoNamespace]);
+				core.router.go([modules.orthoNamespace]);
 			},
 			order: 3,
 			url: "",
 
 			condition: () =>
-				user.currentUser.canViewOrtho &&
-				!!setting.getSetting("module_orthodontics")
+				(core.user.currentUser || { canViewOrtho: false })
+					.canViewOrtho &&
+				!!modules.setting.getSetting("module_orthodontics")
 		});
-		await ((await connectToDB(orthoNamespace, orthoNamespace)) as any)(
-			OrthoCase,
-			orthoCases
-		);
+		await ((await core.connectToDB(
+			modules.orthoNamespace,
+			modules.orthoNamespace
+		)) as any)(modules.OrthoCase, modules.orthoCases);
 		return true;
 	},
 	order: 8

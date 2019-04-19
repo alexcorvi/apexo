@@ -1,9 +1,18 @@
 import { Col, ProfileComponent, ProfileSquaredComponent, Row } from "@common-components";
 import { text } from "@core";
-import { Appointment, appointmentsByDateChart } from "@modules";
+import { Appointment } from "@modules";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
+import { Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const AppointmentsByDateChart = loadable({
+	loader: async () =>
+		(await import("modules/statistics/components/chart.appointments-date"))
+			.AppointmentsByDateChart,
+	loading: () => <Shimmer />
+});
 
 @observer
 export class HomeView extends React.Component<{
@@ -11,17 +20,12 @@ export class HomeView extends React.Component<{
 	showChart: boolean;
 	todayAppointments: Appointment[];
 	tomorrowAppointments: Appointment[];
+	dateFormat: string;
+	selectedAppointmentsByDay: {
+		appointments: Appointment[];
+		day: Date;
+	}[];
 }> {
-	@observable
-	time = {
-		year: new Date().getFullYear(),
-		month: new Date().getMonth(),
-		day: new Date().getDate(),
-		monthName: new Date().toLocaleDateString("en-EN", { month: "long" }),
-		dayName: new Date().toLocaleDateString("en-EN", { weekday: "long" }),
-		time: new Date().toLocaleTimeString("en-EN", {})
-	};
-
 	render() {
 		return (
 			<div className="home p-l-10 p-r-10">
@@ -32,7 +36,12 @@ export class HomeView extends React.Component<{
 					<hr />
 					<div>
 						{this.props.showChart ? (
-							<appointmentsByDateChart.Component />
+							<AppointmentsByDateChart
+								selectedAppointmentsByDay={
+									this.props.selectedAppointmentsByDay
+								}
+								dateFormat={this.props.dateFormat}
+							/>
 						) : (
 							""
 						)}

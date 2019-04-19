@@ -11,9 +11,9 @@ export interface MessageInterface {
 }
 
 class Messages {
-	@observable list: MessageInterface[] = [];
+	@observable activeMessages: MessageInterface[] = [];
 	public newMessage(msg: MessageInterface) {
-		this.list.push(msg);
+		this.activeMessages.push(msg);
 		setTimeout(() => {
 			if (this.removeMsgByID(msg.id)) {
 				(msg.onExpire || (() => {}))();
@@ -22,11 +22,11 @@ class Messages {
 	}
 
 	public removeMsgByID(id: string): boolean {
-		const i = this.list.findIndex(x => x.id === id);
+		const i = this.activeMessages.findIndex(x => x.id === id);
 		if (i === -1) {
 			return false;
 		} else {
-			this.list.splice(i, 1);
+			this.activeMessages.splice(i, 1);
 			return true;
 		}
 	}

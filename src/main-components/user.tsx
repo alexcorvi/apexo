@@ -1,6 +1,6 @@
 import { Col, ProfileComponent, Row, SectionComponent } from "@common-components";
 import { text } from "@core";
-import { Appointment, AppointmentThumbComponent } from "@modules";
+import { Appointment, AppointmentThumbComponent, PrescriptionItem, StaffMember } from "@modules";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import {
@@ -28,8 +28,23 @@ export class UserPanelView extends React.Component<{
 	todayAppointments: Appointment[];
 	isOpen: boolean;
 	onDismiss: () => void;
-	onLogout: () => void;
-	onResetUser: () => void;
+	logout: () => void;
+	resetUser: () => void;
+	dateFormat: string;
+	availableTreatments: { _id: string; expenses: number; type: string }[];
+	availablePrescriptions: PrescriptionItem[];
+	currentUser: StaffMember;
+	appointmentsForDay: (
+		year: number,
+		month: number,
+		day: number,
+		filter?: string | undefined,
+		operatorID?: string | undefined
+	) => Appointment[];
+	currencySymbol: string;
+	prescriptionsEnabled: boolean;
+	timeTrackingEnabled: boolean;
+	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
 }> {
 	@observable appointment: Appointment | null = null;
 
@@ -51,7 +66,7 @@ export class UserPanelView extends React.Component<{
 									<div>
 										<Link
 											onClick={() => {
-												this.props.onLogout();
+												this.props.logout();
 											}}
 										>
 											{text("Logout")}
@@ -60,7 +75,7 @@ export class UserPanelView extends React.Component<{
 										<Link
 											className="reset-user"
 											onClick={() => {
-												this.props.onResetUser();
+												this.props.resetUser();
 											}}
 										>
 											{text("Switch user")}
@@ -100,6 +115,8 @@ export class UserPanelView extends React.Component<{
 										onClick={() => {
 											this.appointment = appointment;
 										}}
+										onDeleteAppointment={() => {}}
+										dateFormat={this.props.dateFormat}
 									/>
 								);
 							})}
@@ -110,7 +127,20 @@ export class UserPanelView extends React.Component<{
 					<AppointmentEditorPanel
 						appointment={this.appointment}
 						onDismiss={() => (this.appointment = null)}
-						onDelete={() => (this.appointment = null)}
+						onDeleteAppointment={() => (this.appointment = null)}
+						availableTreatments={this.props.availableTreatments}
+						availablePrescriptions={
+							this.props.availablePrescriptions
+						}
+						currentUser={this.props.currentUser}
+						dateFormat={this.props.dateFormat}
+						currencySymbol={this.props.currencySymbol}
+						prescriptionsEnabled={this.props.prescriptionsEnabled}
+						timeTrackingEnabled={this.props.timeTrackingEnabled}
+						operatingStaff={this.props.operatingStaff}
+						appointmentsForDay={(year, month, day) =>
+							this.props.appointmentsForDay(year, month, day)
+						}
 					/>
 				) : (
 					""

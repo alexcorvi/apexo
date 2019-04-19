@@ -1,35 +1,78 @@
-import { connectToDB, menu, router, user } from "@core";
-import { Patient, patients, patientsNamespace } from "@modules";
+import * as core from "@core";
+import * as modules from "@modules";
 import * as React from "react";
 
 export const registerPatients = {
 	async register() {
-		router.register({
-			namespace: patientsNamespace,
+		core.router.register({
+			namespace: modules.patientsNamespace,
 			regex: /^patients/,
 			component: async () => {
-				const Component = (await import("./components/page.patients"))
+				const PatientsPage = (await import("./components/page.patients"))
 					.PatientsPage;
-				return <Component />;
+				return (
+					<PatientsPage
+						dateFormat={modules.setting.getSetting("date_format")}
+						currencySymbol={modules.setting.getSetting(
+							"currencySymbol"
+						)}
+						currentUser={
+							core.user.currentUser || new modules.StaffMember()
+						}
+						patients={modules.patients.list}
+						availableTreatments={modules.treatments.list}
+						availablePrescriptions={modules.prescriptions.list}
+						prescriptionsEnabled={
+							!!modules.setting.getSetting("module_prescriptions")
+						}
+						timeTrackingEnabled={
+							!!modules.setting.getSetting("time_tracking")
+						}
+						operatingStaff={modules.staff.operatingStaff}
+						isOnline={core.status.isOnline}
+						isDropboxActive={core.status.isDropboxActive}
+						onAddAppointment={appointment =>
+							modules.appointments.list.push(appointment)
+						}
+						saveFile={x => core.files.save(x)}
+						getFile={x => core.files.get(x)}
+						removeFile={x => core.files.remove(x)}
+						onDeleteAppointment={id => {
+							modules.appointments.deleteModal(id);
+						}}
+						appointmentsForDay={(...args) =>
+							modules.appointments.appointmentsForDay(...args)
+						}
+						currentLocation={core.router.currentLocation}
+						onDeletePatient={id => modules.patients.deleteModal(id)}
+						onAddPatient={patient =>
+							modules.patients.list.push(patient)
+						}
+					/>
+				);
 			},
-			condition: () => user.currentUser.canViewPatients
+			condition: () =>
+				(core.user.currentUser || { canViewPatients: false })
+					.canViewPatients
 		});
 
-		menu.items.push({
+		core.menu.items.push({
 			icon: "ContactCard",
-			name: patientsNamespace,
-			key: patientsNamespace,
+			name: modules.patientsNamespace,
+			key: modules.patientsNamespace,
 			onClick: () => {
-				router.go([patientsNamespace]);
+				core.router.go([modules.patientsNamespace]);
 			},
 			order: 1.5,
 			url: "",
-			condition: () => user.currentUser.canViewPatients
+			condition: () =>
+				(core.user.currentUser || { canViewPatients: false })
+					.canViewPatients
 		});
-		await ((await connectToDB(
-			patientsNamespace,
-			patientsNamespace
-		)) as any)(Patient, patients);
+		await ((await core.connectToDB(
+			modules.patientsNamespace,
+			modules.patientsNamespace
+		)) as any)(modules.Patient, modules.patients);
 		return true;
 	},
 	order: 4

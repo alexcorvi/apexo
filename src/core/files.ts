@@ -23,7 +23,15 @@ function arrayBufferToBase64(
 }
 
 export const files = {
-	async save(blob: Blob, ext: string, dir: string): Promise<string> {
+	async save({
+		blob,
+		ext,
+		dir
+	}: {
+		blob: Blob;
+		ext: string;
+		dir: string;
+	}): Promise<string> {
 		return new Promise(async (resolve, reject) => {
 			const accessToken = setting.getSetting("dropbox_accessToken");
 			if (!accessToken) {

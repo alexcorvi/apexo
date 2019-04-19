@@ -1,37 +1,71 @@
-import { connectToDB, menu, router, user } from "@core";
-import { setting, SettingsItem, settingsNamespace } from "@modules";
+import * as core from "@core";
+import * as modules from "@modules";
 import * as React from "react";
 export const registerSettings = {
 	async register() {
-		setting.setSetting("hourlyRate", "50");
-		setting.setSetting("currencySymbol", "$");
+		modules.setting.setSetting("hourlyRate", "50");
+		modules.setting.setSetting("currencySymbol", "$");
 
-		router.register({
-			namespace: settingsNamespace,
+		core.router.register({
+			namespace: modules.settingsNamespace,
 			regex: /^settings/,
 			component: async () => {
-				const Component = (await import("./components/page.settings"))
+				const SettingsPage = (await import("./components/page.settings"))
 					.SettingsPage;
-				return <Component />;
+				return (
+					<SettingsPage
+						currentUser={
+							core.user.currentUser || new modules.StaffMember()
+						}
+						isOnline={core.status.isOnline}
+						isDropboxActive={core.status.isDropboxActive}
+						dropboxBackups={modules.setting.dropboxBackups}
+						updateDropboxBackups={() =>
+							modules.setting.updateDropboxBackups()
+						}
+						validateDropboxToken={() =>
+							core.status.validateDropBoxToken()
+						}
+						setSetting={(...args) =>
+							modules.setting.setSetting(...args)
+						}
+						getSetting={id => modules.setting.getSetting(id)}
+						compact={() => core.compact.compact()}
+						restoreFromFile={file => core.restore.fromFile(file)}
+						restoreFromDropbox={path =>
+							core.restore.fromDropbox(path)
+						}
+						deleteDropboxBackup={path =>
+							core.backup.deleteFromDropbox(path)
+						}
+						downloadCurrent={() =>
+							core.downloadCurrentStateAsBackup()
+						}
+					/>
+				);
 			},
-			condition: () => user.currentUser.canViewSettings
+			condition: () =>
+				(core.user.currentUser || { canViewSettings: false })
+					.canViewSettings
 		});
 
-		menu.items.push({
+		core.menu.items.push({
 			icon: "Settings",
-			name: settingsNamespace,
-			key: settingsNamespace,
+			name: modules.settingsNamespace,
+			key: modules.settingsNamespace,
 			onClick: () => {
-				router.go([settingsNamespace]);
+				core.router.go([modules.settingsNamespace]);
 			},
 			order: 999,
 			url: "",
-			condition: () => user.currentUser.canViewSettings
+			condition: () =>
+				(core.user.currentUser || { canViewSettings: false })
+					.canViewSettings
 		});
-		await ((await connectToDB(
-			settingsNamespace,
-			settingsNamespace
-		)) as any)(SettingsItem, setting);
+		await ((await core.connectToDB(
+			modules.settingsNamespace,
+			modules.settingsNamespace
+		)) as any)(modules.SettingsItem, modules.setting);
 		return true;
 	},
 	order: 0

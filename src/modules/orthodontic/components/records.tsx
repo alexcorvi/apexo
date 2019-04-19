@@ -47,6 +47,11 @@ export class OrthoRecordsPanel extends React.Component<{
 	dateFormat: string;
 	getFile: (path: string) => Promise<string>;
 	removeFile: (path: string) => Promise<any>;
+	saveFile: (obj: {
+		blob: Blob;
+		ext: string;
+		dir: string;
+	}) => Promise<string>;
 	addModal: (modal: ModalInterface) => void;
 }> {
 	@observable selectedPhotoId: string = "";
@@ -1051,6 +1056,10 @@ export class OrthoRecordsPanel extends React.Component<{
 																				) : (
 																					<PickAndUploadComponent
 																						{...{
+																							saveFile: obj =>
+																								this.props.saveFile(
+																									obj
+																								),
 																							crop: true,
 																							allowMultiple: false,
 																							accept:

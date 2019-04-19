@@ -3,7 +3,7 @@ import { day } from "@utils";
 import { computed, observable } from "mobx";
 
 class Statistics {
-	@observable filterByMember: string = "";
+	@observable specificMemberID: string = "";
 
 	readonly msInDay = day;
 
@@ -93,8 +93,8 @@ class Statistics {
 				)
 				.filter(
 					appointment =>
-						!this.filterByMember ||
-						appointment.staffID.indexOf(this.filterByMember) > -1
+						!this.specificMemberID ||
+						appointment.staffID.indexOf(this.specificMemberID) > -1
 				)
 				.filter(appointment => appointment.treatment)
 		);
@@ -130,8 +130,14 @@ class Statistics {
 
 	@computed
 	get selectedPatients() {
-		return this.selectedAppointments.map(
-			appointment => appointment.patient
+		return this.selectedAppointments.reduce(
+			(patients: Patient[], appointment) => {
+				if (appointment.patient) {
+					patients.push(appointment.patient);
+				}
+				return patients;
+			},
+			[]
 		);
 	}
 

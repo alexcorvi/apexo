@@ -4,7 +4,6 @@ import {
 	DBsList,
 	destroyLocal,
 	files,
-	Message,
 	messages,
 	modals,
 	resync,
@@ -91,7 +90,7 @@ export const backup = {
 
 	toDropbox: async function(): Promise<string> {
 		const blob = await backup.toBlob();
-		const path = await files.save(blob, ext, BACKUPS_DIR);
+		const path = await files.save({ blob, ext, dir: BACKUPS_DIR });
 		return path;
 	},
 
@@ -99,7 +98,7 @@ export const backup = {
 		return await files.list(BACKUPS_DIR);
 	},
 
-	deleteOld: async function(path: string) {
+	deleteFromDropbox: async function(path: string) {
 		return await files.remove(path);
 	}
 };
@@ -170,10 +169,10 @@ export const restore = {
 							await restore.fromJSON(json);
 							resolve();
 						} else {
-							const msg = new Message(
-								text("Restoration cancelled")
-							);
-							messages.newMessage(msg);
+							messages.newMessage({
+								id: generateID(),
+								text: text("Restoration cancelled")
+							});
 							return reject();
 						}
 					},
@@ -189,8 +188,10 @@ export const restore = {
 	fromFile: async function(file: Blob) {
 		return new Promise((resolve, reject) => {
 			function terminate() {
-				const msg = new Message(text("Invalid file"));
-				messages.newMessage(msg);
+				messages.newMessage({
+					id: generateID(),
+					text: text("Invalid file")
+				});
 				return reject();
 			}
 			const reader = new FileReader();
@@ -221,7 +222,7 @@ export const restore = {
 	}
 };
 
-export async function downloadCurrent() {
+export async function downloadCurrentStateAsBackup() {
 	const blob = await backup.toBlob();
 	return new Promise(resolve => {
 		modals.newModal({

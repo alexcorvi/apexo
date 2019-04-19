@@ -1,4 +1,3 @@
-import { StaffMember } from "../../staff/data/class.member";
 import {
 	Col,
 	DataTableComponent,
@@ -7,8 +6,17 @@ import {
 	Row,
 	TagInputComponent
 	} from "@common-components";
-import { text } from "@core";
-import { genderToString, OrthoCase, Patient, PatientAppointmentsPanel } from "@modules";
+import { ModalInterface, text } from "@core";
+import {
+	Appointment,
+	CephalometricItemInterface,
+	genderToString,
+	OrthoCase,
+	Patient,
+	PatientAppointmentsPanel,
+	PrescriptionItem,
+	StaffMember
+	} from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -65,14 +73,40 @@ export class OrthoPage extends React.Component<{
 	filteredCases: OrthoCase[];
 	currentUser: StaffMember;
 	patientsWithNoOrtho: Patient[];
-	onDelete: (id: string) => void;
-	onAdd: ({
+	allPatients: Patient[];
+	availableTreatments: { _id: string; expenses: number; type: string }[];
+	availablePrescriptions: PrescriptionItem[];
+	prescriptionsEnabled: boolean;
+	timeTrackingEnabled: boolean;
+	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
+	isOnline: boolean;
+	isDropboxActive: boolean;
+	onDeleteOrtho: (id: string) => void;
+	onAddOrtho: ({
 		orthoCase,
 		patient
 	}: {
 		orthoCase: OrthoCase;
 		patient?: Patient;
 	}) => void;
+	onAddAppointment: (appointment: Appointment) => void;
+	saveFile: (obj: {
+		blob: Blob;
+		ext: string;
+		dir: string;
+	}) => Promise<string>;
+	getFile: (path: string) => Promise<string>;
+	removeFile: (path: string) => Promise<any>;
+	onDeleteAppointment: (id: string) => void;
+	appointmentsForDay: (
+		year: number,
+		month: number,
+		day: number,
+		filter?: string | undefined,
+		operatorID?: string | undefined
+	) => Appointment[];
+	newModal: (modal: ModalInterface) => void;
+	cephLoader: (obj: CephalometricItemInterface) => Promise<string>;
 }> {
 	@observable showAdditionPanel: boolean = false;
 	@observable newPatientName: string = "";
@@ -263,7 +297,7 @@ export class OrthoPage extends React.Component<{
 															iconName: "Trash"
 														}}
 														onClick={() =>
-															this.props.onDelete(
+															this.props.onDeleteOrtho(
 																orthoCase._id
 															)
 														}
@@ -545,7 +579,7 @@ export class OrthoPage extends React.Component<{
 							this.showAdditionPanel = false;
 							const orthoCase = new OrthoCase();
 							orthoCase.patientID = val.key;
-							this.props.onAdd({ orthoCase: orthoCase });
+							this.props.onAddOrtho({ orthoCase: orthoCase });
 							this.selectedId = orthoCase._id;
 							this.viewWhich = 3;
 						}}
@@ -566,7 +600,7 @@ export class OrthoPage extends React.Component<{
 							newPatient.name = this.newPatientName;
 							const orthoCase = new OrthoCase();
 							orthoCase.patientID = newPatient._id;
-							this.props.onAdd({
+							this.props.onAddOrtho({
 								orthoCase: orthoCase,
 								patient: newPatient
 							});
@@ -656,6 +690,16 @@ export class OrthoPage extends React.Component<{
 								{this.viewWhich === 1 ? (
 									<PatientDetailsPanel
 										patient={this.selectedPatient!}
+										currentUser={this.props.currentUser}
+										usedLabels={this.props.allPatients
+											.map(x => x.labels)
+											.reduce(
+												(a: string[], b) =>
+													a.concat(
+														b.map(x => x.text)
+													),
+												[]
+											)}
 									/>
 								) : (
 									""
@@ -664,6 +708,7 @@ export class OrthoPage extends React.Component<{
 								{this.viewWhich === 2 ? (
 									<DentalHistoryPanel
 										patient={this.selectedPatient!}
+										currentUser={this.props.currentUser}
 									/>
 								) : (
 									""
@@ -672,6 +717,7 @@ export class OrthoPage extends React.Component<{
 								{this.viewWhich === 3 ? (
 									<OrthoCaseSheetPanel
 										orthoCase={this.selectedCase}
+										currentUser={this.props.currentUser}
 									/>
 								) : (
 									""
@@ -680,6 +726,20 @@ export class OrthoPage extends React.Component<{
 								{this.viewWhich === 4 ? (
 									<OrthoRecordsPanel
 										orthoCase={this.selectedCase}
+										currentUser={this.props.currentUser}
+										isOnline={this.props.isOnline}
+										isDropboxActive={
+											this.props.isDropboxActive
+										}
+										dateFormat={this.props.dateFormat}
+										getFile={x => this.props.getFile(x)}
+										removeFile={x =>
+											this.props.removeFile(x)
+										}
+										saveFile={obj =>
+											this.props.saveFile(obj)
+										}
+										addModal={x => this.props.newModal(x)}
 									/>
 								) : (
 									""
@@ -688,6 +748,20 @@ export class OrthoPage extends React.Component<{
 								{this.viewWhich === 5 ? (
 									<OrthoGalleryPanel
 										orthoCase={this.selectedCase}
+										currentUser={this.props.currentUser}
+										isOnline={this.props.isOnline}
+										isDropboxActive={
+											this.props.isDropboxActive
+										}
+										dateFormat={this.props.dateFormat}
+										saveFile={x => this.props.saveFile(x)}
+										removeFile={x =>
+											this.props.removeFile(x)
+										}
+										getFile={x => this.props.getFile(x)}
+										cephLoader={x =>
+											this.props.cephLoader(x)
+										}
 									/>
 								) : (
 									""
@@ -696,6 +770,45 @@ export class OrthoPage extends React.Component<{
 								{this.viewWhich === 6 ? (
 									<PatientAppointmentsPanel
 										patient={this.selectedPatient}
+										currentUser={this.props.currentUser}
+										appointments={
+											this.selectedCase.patient!
+												.appointments
+										}
+										onAdd={appointment =>
+											this.props.onAddAppointment(
+												appointment
+											)
+										}
+										dateFormat={this.props.dateFormat}
+										onDeleteAppointment={id =>
+											this.props.onDeleteAppointment(id)
+										}
+										availablePrescriptions={
+											this.props.availablePrescriptions
+										}
+										availableTreatments={
+											this.props.availableTreatments
+										}
+										currencySymbol={
+											this.props.currencySymbol
+										}
+										prescriptionsEnabled={
+											this.props.prescriptionsEnabled
+										}
+										timeTrackingEnabled={
+											this.props.timeTrackingEnabled
+										}
+										operatingStaff={
+											this.props.operatingStaff
+										}
+										appointmentsForDay={(a, b, c) =>
+											this.props.appointmentsForDay(
+												a,
+												b,
+												c
+											)
+										}
 									/>
 								) : (
 									""

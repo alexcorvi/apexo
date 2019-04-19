@@ -7,7 +7,15 @@ import {
 	TagComponent
 	} from "@common-components";
 import { text } from "@core";
-import { genderToString, Patient, PatientAppointmentsPanel, PatientGalleryPanel, StaffMember } from "@modules";
+import {
+	Appointment,
+	genderToString,
+	Patient,
+	PatientAppointmentsPanel,
+	PatientGalleryPanel,
+	PrescriptionItem,
+	StaffMember
+	} from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -39,12 +47,35 @@ const DentalHistoryPanel = loadable({
 @observer
 export class PatientsPage extends React.Component<{
 	patients: Patient[];
+	isOnline: boolean;
+	isDropboxActive: boolean;
 	currentUser: StaffMember;
 	dateFormat: string;
 	currencySymbol: string;
 	currentLocation: string;
-	onDelete: (id: string) => void;
-	onAdd: (patient: Patient) => void;
+	onDeletePatient: (id: string) => void;
+	onAddPatient: (patient: Patient) => void;
+	onAddAppointment: (appointment: Appointment) => void;
+	saveFile: (obj: {
+		blob: Blob;
+		ext: string;
+		dir: string;
+	}) => Promise<string>;
+	getFile: (path: string) => Promise<string>;
+	removeFile: (path: string) => Promise<any>;
+	onDeleteAppointment: (id: string) => void;
+	availableTreatments: { _id: string; expenses: number; type: string }[];
+	availablePrescriptions: PrescriptionItem[];
+	appointmentsForDay: (
+		year: number,
+		month: number,
+		day: number,
+		filter?: string | undefined,
+		operatorID?: string | undefined
+	) => Appointment[];
+	prescriptionsEnabled: boolean;
+	timeTrackingEnabled: boolean;
+	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
 }> {
 	@observable selectedId: string = this.props.currentLocation.split("/")[1];
 
@@ -122,22 +153,71 @@ export class PatientsPage extends React.Component<{
 						}}
 					>
 						{this.viewWhich === 1 ? (
-							<PatientDetailsPanel patient={this.patient!} />
+							<PatientDetailsPanel
+								patient={this.patient!}
+								currentUser={this.props.currentUser}
+								usedLabels={this.props.patients
+									.map(x => x.labels)
+									.reduce(
+										(a: string[], b) =>
+											a.concat(b.map(x => x.text)),
+										[]
+									)}
+							/>
 						) : (
 							""
 						)}
 						{this.viewWhich === 2 ? (
-							<DentalHistoryPanel patient={this.patient!} />
+							<DentalHistoryPanel
+								patient={this.patient!}
+								currentUser={this.props.currentUser}
+							/>
 						) : (
 							""
 						)}
 						{this.viewWhich === 3 ? (
-							<PatientGalleryPanel patient={this.patient} />
+							<PatientGalleryPanel
+								patient={this.patient}
+								currentUser={this.props.currentUser}
+								isOnline={this.props.isOnline}
+								isDropboxActive={this.props.isDropboxActive}
+								saveFile={obj => this.props.saveFile(obj)}
+								getFile={path => this.props.getFile(path)}
+								removeFile={path => this.props.removeFile(path)}
+							/>
 						) : (
 							""
 						)}
 						{this.viewWhich === 4 ? (
-							<PatientAppointmentsPanel patient={this.patient} />
+							<PatientAppointmentsPanel
+								patient={this.patient}
+								currentUser={this.props.currentUser}
+								appointments={this.patient.appointments}
+								onAdd={appointment =>
+									this.props.onAddAppointment(appointment)
+								}
+								dateFormat={this.props.dateFormat}
+								onDeleteAppointment={id =>
+									this.props.onDeleteAppointment(id)
+								}
+								availablePrescriptions={
+									this.props.availablePrescriptions
+								}
+								availableTreatments={
+									this.props.availableTreatments
+								}
+								currencySymbol={this.props.currencySymbol}
+								prescriptionsEnabled={
+									this.props.prescriptionsEnabled
+								}
+								timeTrackingEnabled={
+									this.props.timeTrackingEnabled
+								}
+								operatingStaff={this.props.operatingStaff}
+								appointmentsForDay={(a, b, c) =>
+									this.props.appointmentsForDay(a, b, c)
+								}
+							/>
 						) : (
 							""
 						)}
@@ -261,7 +341,7 @@ export class PatientsPage extends React.Component<{
 													iconName: "Trash"
 												}}
 												onClick={() =>
-													this.props.onDelete(
+													this.props.onDeletePatient(
 														patient._id
 													)
 												}
@@ -441,7 +521,7 @@ export class PatientsPage extends React.Component<{
 										name: text("Add new"),
 										onClick: () => {
 											const patient = new Patient();
-											this.props.onAdd(patient);
+											this.props.onAddPatient(patient);
 											this.selectedId = patient._id;
 											this.viewWhich = 1;
 										},

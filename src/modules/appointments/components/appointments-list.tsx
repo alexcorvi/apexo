@@ -1,5 +1,5 @@
 import { text } from "@core";
-import { Appointment, AppointmentThumbComponent, StaffMember } from "@modules";
+import { Appointment, AppointmentThumbComponent, PrescriptionItem, StaffMember } from "@modules";
 import { textualFilter } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -19,6 +19,21 @@ export class AppointmentsList extends React.Component<
 	{
 		list: Appointment[];
 		currentUser: StaffMember;
+		dateFormat: string;
+		onDeleteAppointment: (id: string) => void;
+		availableTreatments: { _id: string; expenses: number; type: string }[];
+		availablePrescriptions: PrescriptionItem[];
+		appointmentsForDay: (
+			year: number,
+			month: number,
+			day: number,
+			filter?: string | undefined,
+			operatorID?: string | undefined
+		) => Appointment[];
+		currencySymbol: string;
+		prescriptionsEnabled: boolean;
+		timeTrackingEnabled: boolean;
+		operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
 	},
 	{}
 > {
@@ -78,6 +93,12 @@ export class AppointmentsList extends React.Component<
 											}
 											appointment={appointment}
 											canDelete={this.canEdit}
+											dateFormat={this.props.dateFormat}
+											onDeleteAppointment={() =>
+												this.props.onDeleteAppointment(
+													appointment._id
+												)
+											}
 										/>
 									);
 								})
@@ -92,9 +113,25 @@ export class AppointmentsList extends React.Component<
 				)}
 				{this.selectedAppointment ? (
 					<AppointmentEditorPanel
-						onDismiss={() => (this.selectedAppointmentID = "")}
 						appointment={this.selectedAppointment}
-						onDelete={() => (this.selectedAppointmentID = "")}
+						onDismiss={() => (this.selectedAppointmentID = "")}
+						onDeleteAppointment={id => {
+							this.props.onDeleteAppointment(id);
+							this.selectedAppointmentID = "";
+						}}
+						availableTreatments={this.props.availableTreatments}
+						availablePrescriptions={
+							this.props.availablePrescriptions
+						}
+						currentUser={this.props.currentUser}
+						dateFormat={this.props.dateFormat}
+						currencySymbol={this.props.currencySymbol}
+						prescriptionsEnabled={this.props.prescriptionsEnabled}
+						timeTrackingEnabled={this.props.timeTrackingEnabled}
+						operatingStaff={this.props.operatingStaff}
+						appointmentsForDay={(year, month, day) =>
+							this.props.appointmentsForDay(year, month, day)
+						}
 					/>
 				) : (
 					""

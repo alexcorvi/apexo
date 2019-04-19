@@ -1,13 +1,12 @@
 import { LineChartComponent } from "@common-components";
 import { text } from "@core";
-import { Chart } from "@modules";
 import { formatDate, round } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 @observer
-class Component extends React.Component<{
+export class FinancesByDateChart extends React.Component<{
 	selectedFinancesByDay: {
 		day: Date;
 		appointments: {
@@ -87,11 +86,3 @@ class Component extends React.Component<{
 		);
 	}
 }
-
-export const financesByDateChart: Chart = {
-	Component,
-	name: "Finances by Date",
-	description: "A calculation of finances",
-	tags: "net profit by per day date",
-	className: "col-xs-12"
-};

@@ -1,33 +1,70 @@
-import { connectToDB, menu, router, user } from "@core";
-import { staff, StaffMember, staffNamespace } from "@modules";
+import * as core from "@core";
+import * as modules from "@modules";
 import * as React from "react";
 export const registerStaff = {
 	async register() {
-		router.register({
-			namespace: staffNamespace,
+		core.router.register({
+			namespace: modules.staffNamespace,
 			regex: /^staff/,
 			component: async () => {
-				const Component = (await import("./components/page.staff"))
+				const StaffPage = (await import("./components/page.staff"))
 					.StaffPage;
-				return <Component />;
+				return (
+					<StaffPage
+						currentUser={
+							core.user.currentUser || new modules.StaffMember()
+						}
+						currentLocation={core.router.currentLocation}
+						staffMembers={modules.staff.list}
+						dateFormat={modules.setting.getSetting("date_format")}
+						currencySymbol={modules.setting.getSetting(
+							"currencySymbol"
+						)}
+						enabledOrthodontics={
+							!!modules.setting.getSetting("module_orthodontics")
+						}
+						enabledPrescriptions={
+							!!modules.setting.getSetting("module_prescriptions")
+						}
+						enabledStatistics={
+							!!modules.setting.getSetting("module_statistics")
+						}
+						timeTrackingEnabled={
+							!!modules.setting.getSetting("time_tracking")
+						}
+						availableTreatments={modules.treatments.list}
+						availablePrescriptions={modules.prescriptions.list}
+						operatingStaff={modules.staff.operatingStaff}
+						onDeleteStaff={id => modules.staff.deleteModal(id)}
+						onAddStaff={staff => modules.staff.list.push(staff)}
+						onDeleteAppointment={id =>
+							modules.appointments.deleteModal(id)
+						}
+						appointmentsForDay={(...args) =>
+							modules.appointments.appointmentsForDay(...args)
+						}
+					/>
+				);
 			},
-			condition: () => user.currentUser.canViewStaff
+			condition: () =>
+				(core.user.currentUser || { canViewStaff: false }).canViewStaff
 		});
-		menu.items.push({
+		core.menu.items.push({
 			icon: "Contact",
-			name: staffNamespace,
-			key: staffNamespace,
+			name: modules.staffNamespace,
+			key: modules.staffNamespace,
 			onClick: () => {
-				router.go([staffNamespace]);
+				core.router.go([modules.staffNamespace]);
 			},
 			order: 0,
 			url: "",
-			condition: () => user.currentUser.canViewStaff
+			condition: () =>
+				(core.user.currentUser || { canViewStaff: false }).canViewStaff
 		});
-		await ((await connectToDB("doctors", staffNamespace)) as any)(
-			StaffMember,
-			staff
-		);
+		await ((await core.connectToDB(
+			"doctors",
+			modules.staffNamespace
+		)) as any)(modules.StaffMember, modules.staff);
 		return true;
 	},
 	order: 7

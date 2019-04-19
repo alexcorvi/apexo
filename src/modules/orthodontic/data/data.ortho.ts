@@ -41,7 +41,7 @@ class OrthoCases {
 		);
 	}
 
-	toCephString(obj: CephalometricItemInterface): Promise<string> {
+	cephLoader(obj: CephalometricItemInterface): Promise<string> {
 		return new Promise(async (resolve, reject) => {
 			const img = await files.get(obj.imgPath);
 			const i = new Image();

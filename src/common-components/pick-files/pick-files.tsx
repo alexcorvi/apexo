@@ -1,4 +1,3 @@
-import { files } from "@core";
 import { generateID, second } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -50,6 +49,11 @@ export class PickAndUploadComponent extends React.Component<
 		onFinish: (URI: string[]) => void;
 		onStartLoading?: () => void;
 		onFinishLoading?: () => void;
+		saveFile: (obj: {
+			blob: Blob;
+			ext: string;
+			dir: string;
+		}) => Promise<string>;
 		targetDir: string;
 		crop?: boolean;
 		prevSrc?: string;
@@ -148,11 +152,11 @@ export class PickAndUploadComponent extends React.Component<
 
 	async saveBase64(base64DataURI: string) {
 		const blob = dataURItoBlob(base64DataURI);
-		const filePath = await files.save(
-			blob,
-			base64DataURI.replace(/data:[a-z]*\/([a-z]*);.*/, "$1"),
-			this.props.targetDir
-		);
+		const filePath = await this.props.saveFile({
+			blob: blob,
+			ext: base64DataURI.replace(/data:[a-z]*\/([a-z]*);.*/, "$1"),
+			dir: this.props.targetDir
+		});
 		this.resultArr.push(filePath);
 	}
 }

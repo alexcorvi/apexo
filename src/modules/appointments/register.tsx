@@ -1,35 +1,72 @@
-import { connectToDB, menu, router, user } from "@core";
-import { Appointment, appointments, appointmentsNamespace } from "@modules";
+import * as core from "@core";
+import * as modules from "@modules";
 import * as React from "react";
 
 export const registerAppointments = {
 	async register() {
-		router.register({
-			namespace: appointmentsNamespace,
+		core.router.register({
+			namespace: modules.appointmentsNamespace,
 			regex: /^appointments/,
 			component: async () => {
-				const Component = (await import("./components/page.calendar"))
+				const CalendarPage = (await import("./components/page.calendar"))
 					.CalendarPage;
-				return <Component />;
+				return (
+					<CalendarPage
+						currentUser={
+							core.user.currentUser || new modules.StaffMember()
+						}
+						currentLocation={core.router.currentLocation}
+						currentDay={modules.calendar.currentDay}
+						currentMonth={modules.calendar.currentMonth}
+						currentYear={modules.calendar.currentYear}
+						selectedDay={modules.calendar.selectedDay}
+						selectedMonth={modules.calendar.selectedMonth}
+						selectedYear={modules.calendar.selectedYear}
+						selectedMonthDays={modules.calendar.selectedMonthDays}
+						selectedWeekDays={modules.calendar.selectedWeekDays}
+						dateFormat={modules.setting.getSetting("date_format")}
+						currencySymbol={modules.setting.getSetting(
+							"currencySymbol"
+						)}
+						prescriptionsEnabled={
+							!!modules.setting.getSetting("module_prescriptions")
+						}
+						timeTrackingEnabled={
+							!!modules.setting.getSetting("time_tracking")
+						}
+						availableTreatments={modules.treatments.list}
+						availablePrescriptions={modules.prescriptions.list}
+						operatingStaff={modules.staff.operatingStaff}
+						onSelectDate={obj => modules.calendar.select(obj)}
+						appointmentsForDay={(...args) =>
+							modules.appointments.appointmentsForDay(...args)
+						}
+						onNavigation={arr => core.router.go(arr)}
+					/>
+				);
 			},
-			condition: () => user.currentUser.canViewAppointments
+			condition: () =>
+				(core.user.currentUser || { canViewAppointments: false })
+					.canViewAppointments
 		});
-		menu.items.push({
+		core.menu.items.push({
 			icon: "Calendar",
-			name: appointmentsNamespace,
-			key: appointmentsNamespace,
+			name: modules.appointmentsNamespace,
+			key: modules.appointmentsNamespace,
 			onClick: () => {
-				router.go([appointmentsNamespace]);
+				core.router.go([modules.appointmentsNamespace]);
 			},
 			order: 3,
 			url: "",
-			condition: () => user.currentUser.canViewAppointments
+			condition: () =>
+				(core.user.currentUser || { canViewAppointments: false })
+					.canViewAppointments
 		});
-		await ((await connectToDB(
-			appointmentsNamespace,
-			appointmentsNamespace,
+		await ((await core.connectToDB(
+			modules.appointmentsNamespace,
+			modules.appointmentsNamespace,
 			true
-		)) as any)(Appointment, appointments);
+		)) as any)(modules.Appointment, modules.appointments);
 		return true;
 	},
 	order: 9

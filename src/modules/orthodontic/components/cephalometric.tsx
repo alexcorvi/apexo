@@ -10,9 +10,9 @@ import * as React from "react";
 @observer
 export class CephalometricEditorPanel extends React.Component<{
 	item: CephalometricItemInterface;
-	dateFormat: string;
-	itemLoader: () => Promise<CephalometricItemInterface>;
 	onDismiss: () => void;
+	dateFormat: string;
+	cephLoader: (obj: CephalometricItemInterface) => Promise<string>;
 	onSave: (coordinates: string) => void;
 }> {
 	@observable loading: boolean = true;
@@ -20,7 +20,7 @@ export class CephalometricEditorPanel extends React.Component<{
 		setTimeout(async () => {
 			const iFrame: any = document.getElementById("cephalometric");
 			iFrame.onload = () => {
-				this.props.itemLoader().then(cephString => {
+				this.props.cephLoader(this.props.item).then(cephString => {
 					iFrame.contentWindow.postMessage(
 						"cephalometric-open:" + cephString,
 						"*"

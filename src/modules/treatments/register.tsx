@@ -1,34 +1,54 @@
-import { connectToDB, menu, router, user } from "@core";
-import { Treatment, treatments, treatmentsNamespace } from "@modules";
+import * as core from "@core";
+import * as modules from "@modules";
 import * as React from "react";
 export const registerTreatments = {
 	async register() {
-		router.register({
-			namespace: treatmentsNamespace,
+		core.router.register({
+			namespace: modules.treatmentsNamespace,
 			regex: /^treatments/,
 			component: async () => {
-				const Component = (await import("./components/page.treatments"))
+				const Treatments = (await import("./components/page.treatments"))
 					.Treatments;
-				return <Component />;
+				return (
+					<Treatments
+						currentUser={
+							core.user.currentUser || new modules.StaffMember()
+						}
+						currentLocation={core.router.currentLocation}
+						treatments={modules.treatments.list}
+						appointments={modules.appointments.list}
+						currencySymbol={modules.setting.getSetting(
+							"currencySymbol"
+						)}
+						onDelete={id => modules.treatments.deleteModal(id)}
+						onAdd={treatment =>
+							modules.treatments.list.push(treatment)
+						}
+					/>
+				);
 			},
-			condition: () => user.currentUser.canViewTreatments
+			condition: () =>
+				(core.user.currentUser || { canViewTreatments: false })
+					.canViewTreatments
 		});
 
-		menu.items.push({
+		core.menu.items.push({
 			icon: "Cricket",
-			name: treatmentsNamespace,
+			name: modules.treatmentsNamespace,
 			onClick: () => {
-				router.go([treatmentsNamespace]);
+				core.router.go([modules.treatmentsNamespace]);
 			},
 			order: 5,
 			url: "",
-			key: treatmentsNamespace,
-			condition: () => user.currentUser.canViewTreatments
+			key: modules.treatmentsNamespace,
+			condition: () =>
+				(core.user.currentUser || { canViewTreatments: false })
+					.canViewTreatments
 		});
-		await ((await connectToDB(
-			treatmentsNamespace,
-			treatmentsNamespace
-		)) as any)(Treatment, treatments);
+		await ((await core.connectToDB(
+			modules.treatmentsNamespace,
+			modules.treatmentsNamespace
+		)) as any)(modules.Treatment, modules.treatments);
 		return true;
 	},
 	order: 3

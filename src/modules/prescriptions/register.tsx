@@ -1,38 +1,50 @@
-import { connectToDB, menu, router, user } from "@core";
-import { PrescriptionItem, prescriptions, prescriptionsNamespace, setting } from "@modules";
+import * as core from "@core";
+import * as modules from "@modules";
 import * as React from "react";
 export const registerPrescriptions = {
 	async register() {
-		router.register({
-			namespace: prescriptionsNamespace,
+		core.router.register({
+			namespace: modules.prescriptionsNamespace,
 			regex: /^prescriptions/,
 			component: async () => {
-				const Component = (await import("./components/page.prescriptions"))
+				const PrescriptionsPage = (await import("./components/page.prescriptions"))
 					.PrescriptionsPage;
-				return <Component />;
+				return (
+					<PrescriptionsPage
+						currentUser={
+							core.user.currentUser || new modules.StaffMember()
+						}
+						currentLocation={core.router.currentLocation}
+						prescriptions={modules.prescriptions.list}
+						onDelete={id => modules.prescriptions.deleteModal(id)}
+						onAdd={x => modules.prescriptions.list.push(x)}
+					/>
+				);
 			},
 			condition: () =>
-				!!setting.getSetting("module_prescriptions") &&
-				user.currentUser.canViewPrescriptions
+				!!modules.setting.getSetting("module_prescriptions") &&
+				(core.user.currentUser || { canViewPrescriptions: false })
+					.canViewPrescriptions
 		});
 
-		menu.items.push({
+		core.menu.items.push({
 			icon: "Pill",
-			name: prescriptionsNamespace,
-			key: prescriptionsNamespace,
+			name: modules.prescriptionsNamespace,
+			key: modules.prescriptionsNamespace,
 			onClick: () => {
-				router.go([prescriptionsNamespace]);
+				core.router.go([modules.prescriptionsNamespace]);
 			},
 			order: 9,
 			url: "",
 			condition: () =>
-				user.currentUser.canViewPrescriptions &&
-				!!setting.getSetting("module_prescriptions")
+				(core.user.currentUser || { canViewPrescriptions: false })
+					.canViewPrescriptions &&
+				!!modules.setting.getSetting("module_prescriptions")
 		});
-		await ((await connectToDB(
-			prescriptionsNamespace,
-			prescriptionsNamespace
-		)) as any)(PrescriptionItem, prescriptions);
+		await ((await core.connectToDB(
+			modules.prescriptionsNamespace,
+			modules.prescriptionsNamespace
+		)) as any)(modules.PrescriptionItem, modules.prescriptions);
 		return true;
 	},
 	order: 5

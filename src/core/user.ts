@@ -3,7 +3,7 @@ import { staff } from "@modules";
 import { computed, observable } from "mobx";
 
 class UserData {
-	@observable visible: boolean = false;
+	@observable isVisible: boolean = false;
 	@computed
 	get currentUser() {
 		return staff.list.find(x => x._id === status.currentUserID);
@@ -23,10 +23,10 @@ class UserData {
 		}
 	}
 	show() {
-		this.visible = true;
+		this.isVisible = true;
 	}
 	hide() {
-		this.visible = false;
+		this.isVisible = false;
 	}
 }
 

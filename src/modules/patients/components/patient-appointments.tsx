@@ -1,6 +1,6 @@
 import { SectionComponent } from "@common-components";
 import { text } from "@core";
-import { Appointment, AppointmentsList, Patient, StaffMember } from "@modules";
+import { Appointment, AppointmentsList, Patient, PrescriptionItem, StaffMember } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { DefaultButton, MessageBar, MessageBarType } from "office-ui-fabric-react";
@@ -10,19 +10,27 @@ import * as React from "react";
 export class PatientAppointmentsPanel extends React.Component<
 	{
 		patient: Patient;
-		onAdd: (appointment: Appointment) => void;
-		appointments: Appointment[];
 		currentUser: StaffMember;
+		appointments: Appointment[];
+		onAdd: (appointment: Appointment) => void;
+		dateFormat: string;
+		onDeleteAppointment: (id: string) => void;
+		availableTreatments: { _id: string; expenses: number; type: string }[];
+		availablePrescriptions: PrescriptionItem[];
+		appointmentsForDay: (
+			year: number,
+			month: number,
+			day: number,
+			filter?: string | undefined,
+			operatorID?: string | undefined
+		) => Appointment[];
+		currencySymbol: string;
+		prescriptionsEnabled: boolean;
+		timeTrackingEnabled: boolean;
+		operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
 	},
 	{}
 > {
-	@computed
-	get appointments() {
-		return this.props.appointments.filter(item => {
-			return item.patientID === this.props.patient._id;
-		});
-	}
-
 	@computed get canEdit() {
 		return this.props.currentUser.canEditPatients;
 	}
@@ -35,9 +43,25 @@ export class PatientAppointmentsPanel extends React.Component<
 				<SectionComponent title={text(`Patient Appointments`)}>
 					<AppointmentsList
 						ref={l => (this.l = l)}
-						list={this.appointments}
+						list={this.props.appointments}
+						currentUser={this.props.currentUser}
+						dateFormat={this.props.dateFormat}
+						onDeleteAppointment={id =>
+							this.props.onDeleteAppointment(id)
+						}
+						availableTreatments={this.props.availableTreatments}
+						availablePrescriptions={
+							this.props.availablePrescriptions
+						}
+						appointmentsForDay={(year, month, day) =>
+							this.props.appointmentsForDay(year, month, day)
+						}
+						currencySymbol={this.props.currencySymbol}
+						prescriptionsEnabled={this.props.prescriptionsEnabled}
+						timeTrackingEnabled={this.props.timeTrackingEnabled}
+						operatingStaff={this.props.operatingStaff}
 					/>
-					{this.appointments.length ? (
+					{this.props.appointments.length ? (
 						""
 					) : (
 						<MessageBar messageBarType={MessageBarType.info}>

@@ -26,7 +26,7 @@ class MenuData {
 		}
 	];
 
-	@observable visible: boolean = false;
+	@observable isVisible: boolean = false;
 
 	@computed
 	get sortedItems() {
@@ -43,11 +43,11 @@ class MenuData {
 	}
 
 	hide() {
-		this.visible = false;
+		this.isVisible = false;
 	}
 
 	show() {
-		this.visible = true;
+		this.isVisible = true;
 	}
 }
 

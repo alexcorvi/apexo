@@ -11,7 +11,7 @@ export class ChooseUserComponent extends React.Component<
 	{
 		showMessage: (message: MessageInterface) => void;
 		showModal: (modal: ModalInterface) => void;
-		onChoosing: (id: string) => void;
+		onClickUser: (id: string) => void;
 		onCreatingNew: (name: string) => void;
 		users: { name: string; _id: string; pin: string | undefined }[];
 	},
@@ -32,7 +32,9 @@ export class ChooseUserComponent extends React.Component<
 										text: text("Please enter your PIN"),
 										onConfirm: providedPin => {
 											if (providedPin === user.pin) {
-												this.props.onChoosing(user._id);
+												this.props.onClickUser(
+													user._id
+												);
 											} else {
 												this.props.showMessage({
 													id: generateID(),
@@ -47,7 +49,7 @@ export class ChooseUserComponent extends React.Component<
 										showConfirmButton: true
 									});
 								} else {
-									this.props.onChoosing(user._id);
+									this.props.onClickUser(user._id);
 								}
 							}}
 							key={user._id}
