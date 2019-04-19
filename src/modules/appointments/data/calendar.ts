@@ -111,7 +111,6 @@ export class Calendar {
 		if (typeof day === "number") {
 			this.selected.day = day;
 		}
-		console.log(this.selectedWeekDays.map(x => x.dateNum));
 	}
 
 	numberOfDays(month: number, year: number): number {
