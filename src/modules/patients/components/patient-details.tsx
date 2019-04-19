@@ -1,18 +1,19 @@
-import {
-	Col,
-	EditableListComponent,
-	getRandomTagType,
-	Row,
-	SectionComponent,
-	TagInputComponent
-	} from "@common-components";
+import { Col, getRandomTagType, Row, SectionComponent, TagInputComponent } from "@common-components";
 import { text } from "@core";
 import { Gender, Patient, StaffMember } from "@modules";
 import { num } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
-import { Dropdown, TextField } from "office-ui-fabric-react";
+import { Dropdown, Shimmer, TextField } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const EditableListComponent = loadable({
+	loading: () => <Shimmer />,
+	loader: async () =>
+		(await import("common-components/editable-list/editable-list"))
+			.EditableListComponent
+});
 
 @observer
 export class PatientDetailsPanel extends React.Component<{

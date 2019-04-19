@@ -1,4 +1,4 @@
-import { EditableListComponent, SectionComponent, TagInputComponent } from "@common-components";
+import { SectionComponent, TagInputComponent } from "@common-components";
 import { text } from "@core";
 import {
 	FacialProfile,
@@ -18,9 +18,18 @@ import {
 	MessageBar,
 	MessageBarType,
 	SelectionMode,
+	Shimmer,
 	TextField
 	} from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const EditableListComponent = loadable({
+	loading: () => <Shimmer />,
+	loader: async () =>
+		(await import("common-components/editable-list/editable-list"))
+			.EditableListComponent
+});
 
 @observer
 export class OrthoCaseSheetPanel extends React.Component<{

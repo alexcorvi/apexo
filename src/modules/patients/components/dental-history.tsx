@@ -1,7 +1,6 @@
 import { Col, ProfileComponent, Row, SectionComponent } from "@common-components";
 import { text } from "@core";
 import { conditionToColor, Patient, StaffMember, ToothCondition } from "@modules";
-import { EditableListComponent } from "common-components/editable-list/editable-list";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
@@ -14,6 +13,13 @@ import {
 	} from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
+
+const EditableListComponent = loadable({
+	loading: () => <Shimmer />,
+	loader: async () =>
+		(await import("common-components/editable-list/editable-list"))
+			.EditableListComponent
+});
 
 const TeethDeciduousChart = loadable({
 	loader: async () =>

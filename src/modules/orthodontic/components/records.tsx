@@ -9,7 +9,6 @@ import {
 import { ModalInterface, ORTHO_RECORDS_DIR, text } from "@core";
 import { OrthoCase, Photo, StaffMember, Visit } from "@modules";
 import { day, formatDate, num } from "@utils";
-import { EditableListComponent } from "common-components/editable-list/editable-list";
 import { diff } from "fast-array-diff";
 import { computed, observable, observe } from "mobx";
 import { observer } from "mobx-react";
@@ -24,11 +23,20 @@ import {
 	MessageBar,
 	MessageBarType,
 	SelectionMode,
+	Shimmer,
 	TextField,
 	Toggle,
 	TooltipHost
 	} from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const EditableListComponent = loadable({
+	loading: () => <Shimmer />,
+	loader: async () =>
+		(await import("common-components/editable-list/editable-list"))
+			.EditableListComponent
+});
 
 const viewsTerms = [
 	"Frontal",
