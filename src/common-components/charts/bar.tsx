@@ -29,7 +29,7 @@ export class BarChartComponent extends React.Component<
 		const ctx = (document.getElementById(
 			this.id
 		) as HTMLCanvasElement).getContext("2d") as CanvasRenderingContext2D;
-		const chart = new Chart(ctx, {
+		const chart: Chart = new (Chart as any)(ctx, {
 			type: this.props.horizontal ? "horizontalBar" : "bar",
 			data: {
 				labels: this.props.data.xLabels,
