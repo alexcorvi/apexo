@@ -7,3 +7,5 @@ window.matchMedia = jest.fn().mockImplementation(query => {
 		removeListener: jest.fn()
 	};
 });
+
+window.onhashchange = jest.fn().mockImplementation(() => {});

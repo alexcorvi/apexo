@@ -30,8 +30,8 @@ class Translate {
 	constructor() {
 		setTimeout(() => {
 			this.checkLang();
+			setting.onSettingChange(() => this.checkLang());
 		}, 500);
-		setting.onSettingChange(() => this.checkLang());
 	}
 
 	private async checkLang() {

@@ -1,4 +1,4 @@
-import "./_mock.matchMedia";
+import "../mocks/browser-mocks";
 import {
 	comparableDate,
 	day,
