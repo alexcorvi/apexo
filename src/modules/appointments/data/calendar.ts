@@ -52,7 +52,7 @@ export class Calendar {
 				weekday: "short"
 			});
 			const isWeekend =
-				dateNames.days(true).indexOf(dayLiteral) === this.weekendsOn;
+				dateNames.days().indexOf(dayLiteral) === this.weekendsOn;
 			month[month.length - 1].push({
 				dateNum: date + 1,
 				weekDay: {

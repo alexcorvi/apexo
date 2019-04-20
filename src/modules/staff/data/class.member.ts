@@ -39,9 +39,9 @@ export class StaffMember {
 	@computed
 	get onDuty() {
 		return dateNames
-			.days(true)
+			.days()
 			.filter(day => this.onDutyDays.indexOf(day) !== -1)
-			.map(day => dateNames.days(true).indexOf(day));
+			.map(day => dateNames.days().indexOf(day));
 	}
 
 	@computed
@@ -50,8 +50,8 @@ export class StaffMember {
 			.slice()
 			.sort(
 				(dayA, dayB) =>
-					dateNames.days(true).indexOf(dayA) -
-					dateNames.days(true).indexOf(dayB)
+					dateNames.days().indexOf(dayA) -
+					dateNames.days().indexOf(dayB)
 			);
 	}
 

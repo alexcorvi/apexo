@@ -7,7 +7,7 @@ import {
 	treatments
 	} from "@modules";
 import {
-	comparableTime,
+	comparableDate,
 	generateID,
 	hour,
 	isToday,
@@ -152,11 +152,6 @@ export class Appointment {
 			!this.isDone &&
 			this.date > new Date().getTime()
 		);
-	}
-
-	@computed get dateFloor() {
-		const d = comparableTime(new Date(this.date));
-		return new Date(`${d.y}/${d.m + 1}/${d.d}`);
 	}
 
 	@computed get formattedTime() {

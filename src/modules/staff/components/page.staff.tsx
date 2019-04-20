@@ -352,7 +352,7 @@ export class StaffPage extends React.Component<{
 					<Col lg={8}>
 						<table className="ms-table duty-table">
 							<tbody>
-								{dateNames.days(true).map(dayName => {
+								{dateNames.days().map(dayName => {
 									return (
 										<tr key={dayName}>
 											<th className="day-name">
@@ -487,48 +487,43 @@ export class StaffPage extends React.Component<{
 											<label>
 												{text("Days on duty")}
 											</label>
-											{dateNames
-												.days(true)
-												.map((day, i) => {
-													return (
-														<Checkbox
-															key={day}
-															disabled={
-																!this.canEdit
-															}
-															label={
-																dateNames.daysShort()[
-																	i
-																]
-															}
-															checked={
-																this.selectedMember!.onDutyDays.indexOf(
+											{dateNames.days().map((day, i) => {
+												return (
+													<Checkbox
+														key={day}
+														disabled={!this.canEdit}
+														label={
+															dateNames.daysShort()[
+																i
+															]
+														}
+														checked={
+															this.selectedMember!.onDutyDays.indexOf(
+																day
+															) > -1
+														}
+														onChange={(
+															ev,
+															checked
+														) => {
+															if (checked) {
+																this.selectedMember!.onDutyDays.push(
 																	day
-																) > -1
-															}
-															onChange={(
-																ev,
-																checked
-															) => {
-																if (checked) {
-																	this.selectedMember!.onDutyDays.push(
+																);
+															} else {
+																this.selectedMember!.onDutyDays.splice(
+																	this.selectedMember!.onDutyDays.indexOf(
 																		day
-																	);
-																} else {
-																	this.selectedMember!.onDutyDays.splice(
-																		this.selectedMember!.onDutyDays.indexOf(
-																			day
-																		),
-																		1
-																	);
-																}
-																this
-																	.selectedMember!
-																	.triggerUpdate++;
-															}}
-														/>
-													);
-												})}
+																	),
+																	1
+																);
+															}
+															this.selectedMember!
+																.triggerUpdate++;
+														}}
+													/>
+												);
+											})}
 										</div>
 									</SectionComponent>
 

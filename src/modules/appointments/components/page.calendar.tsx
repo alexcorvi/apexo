@@ -154,7 +154,7 @@ export class CalendarPage extends React.Component<{
 												: "")
 										}
 									>
-										{monthShort}
+										{text(monthShort)}
 									</a>
 								</Col>
 							);

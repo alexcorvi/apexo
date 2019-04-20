@@ -11,7 +11,7 @@ import {
 	stringToGender,
 	Tooth
 	} from "@modules";
-import { comparableTime, formatDate, generateID } from "@utils";
+import { comparableDate, formatDate, generateID } from "@utils";
 import { computed, observable, observe } from "mobx";
 
 export class Patient {
@@ -68,8 +68,8 @@ export class Patient {
 				if (appointment.isDone) {
 					return false;
 				}
-				const t = comparableTime(new Date());
-				const a = comparableTime(new Date(appointment.date));
+				const t = comparableDate(new Date());
+				const a = comparableDate(new Date(appointment.date));
 				return t.y <= a.y && t.m <= a.m && t.d <= a.d;
 			})
 			.sort((a, b) => a.date - b.date)[0];

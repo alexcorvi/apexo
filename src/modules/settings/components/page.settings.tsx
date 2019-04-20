@@ -109,7 +109,7 @@ export class SettingsPage extends React.Component<
 							<Dropdown
 								label={text("Week ends on")}
 								options={dateNames
-									.days(true)
+									.days()
 									.map((dayName, index) => ({
 										key: index.toString(),
 										text: text(dayName)

@@ -1,10 +1,9 @@
-import { text } from "@core";
-
 export function getDayStartingPoint(t: number): number {
 	return new Date(t).setHours(0, 0, 0, 0);
 }
 
-export function comparableTime(date: Date) {
+export function comparableDate(date: Date) {
+	date.setHours(0, 0, 0, 0);
 	return {
 		y: date.getFullYear(),
 		m: date.getMonth(),
@@ -14,25 +13,25 @@ export function comparableTime(date: Date) {
 
 export function isToday(timestamp: number) {
 	return (
-		JSON.stringify(comparableTime(new Date(timestamp))) ===
-		JSON.stringify(comparableTime(new Date()))
+		JSON.stringify(comparableDate(new Date(timestamp))) ===
+		JSON.stringify(comparableDate(new Date()))
 	);
 }
 
 export function isYesterday(timestamp: number) {
 	return (
-		JSON.stringify(comparableTime(new Date(timestamp))) ===
+		JSON.stringify(comparableDate(new Date(timestamp))) ===
 		JSON.stringify(
-			comparableTime(new Date(new Date().getTime() - 86400000))
+			comparableDate(new Date(new Date().getTime() - 86400000))
 		)
 	);
 }
 
 export function isTomorrow(timestamp: number) {
 	return (
-		JSON.stringify(comparableTime(new Date(timestamp))) ===
+		JSON.stringify(comparableDate(new Date(timestamp))) ===
 		JSON.stringify(
-			comparableTime(new Date(new Date().getTime() + 86400000))
+			comparableDate(new Date(new Date().getTime() + 86400000))
 		)
 	);
 }
@@ -58,45 +57,44 @@ export function formatDate(d: Date | number | undefined, dateFormat: string) {
 }
 
 export const dateNames = {
-	daysShort: () =>
-		dateNames.days(true).map(x => text(x.substr(0, 2).toUpperCase())),
+	daysShort: () => dateNames.days().map(x => x.substr(0, 2).toUpperCase()),
 
-	days: (skip?: boolean) => [
-		text("Monday" + (skip ? "_" : "")).replace("_", ""),
-		text("Tuesday" + (skip ? "_" : "")).replace("_", ""),
-		text("Wednesday" + (skip ? "_" : "")).replace("_", ""),
-		text("Thursday" + (skip ? "_" : "")).replace("_", ""),
-		text("Friday" + (skip ? "_" : "")).replace("_", ""),
-		text("Saturday" + (skip ? "_" : "")).replace("_", ""),
-		text("Sunday" + (skip ? "_" : "")).replace("_", "")
+	days: () => [
+		"Monday",
+		"Tuesday",
+		"Wednesday",
+		"Thursday",
+		"Friday",
+		"Saturday",
+		"Sunday"
 	],
 	monthsShort: () => [
-		text("Jan"),
-		text("Feb"),
-		text("Mar"),
-		text("Apr"),
-		text("May"),
-		text("Jun"),
-		text("Jul"),
-		text("Aug"),
-		text("Sep"),
-		text("Oct"),
-		text("Nov"),
-		text("Dec")
+		"Jan",
+		"Feb",
+		"Mar",
+		"Apr",
+		"May",
+		"Jun",
+		"Jul",
+		"Aug",
+		"Sep",
+		"Oct",
+		"Nov",
+		"Dec"
 	],
 	months: () => [
-		text("January"),
-		text("February"),
-		text("March"),
-		text("April"),
-		text("May"),
-		text("June"),
-		text("July"),
-		text("August"),
-		text("September"),
-		text("October"),
-		text("November"),
-		text("December")
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December"
 	]
 };
 
