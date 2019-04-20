@@ -1,4 +1,4 @@
-import { checkServer } from './check-server';
+import { checkServer } from "@utils";
 export async function isOnline(server: string) {
 	if (!navigator.onLine) {
 		return false;
