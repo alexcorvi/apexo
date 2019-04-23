@@ -25,7 +25,7 @@ export enum LoginStep {
 	initial
 }
 
-class Status {
+export class Status {
 	@observable server: string = "";
 	@observable currentUserID: string = "";
 
@@ -109,7 +109,7 @@ class Status {
 				this.tryOffline = true;
 			}
 			return `
-				An error occured, please make sure that the server is online and it\'s accessible.
+				An error occurred, please make sure that the server is online and it\'s accessible.
 				Click "change" to change into another server
 			`;
 		}
@@ -118,23 +118,29 @@ class Status {
 	async loginWithCredentialsOnline({
 		username,
 		password,
-		server
+		server,
+		noStart
 	}: {
 		username: string;
 		password: string;
 		server: string;
+		noStart?: boolean;
 	}) {
-		const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
-			.default;
-		const auth: PouchDB.Plugin = ((await import("pouchdb-authentication")) as any)
-			.default;
+		const PouchDB: PouchDB.Static =
+			((await import("pouchdb-browser")) as any).default ||
+			((await import("pouchdb-browser")) as any);
+		const auth: PouchDB.Plugin =
+			((await import("pouchdb-authentication")) as any).default ||
+			((await import("pouchdb-authentication")) as any);
 		PouchDB.plugin(auth);
-
 		try {
 			await new PouchDB(server, { skip_setup: true }).logIn(
 				username,
 				password
 			);
+			if (noStart) {
+				return true;
+			}
 			store.set(
 				"LSL_hash",
 				Md5.hashStr(server + username + password).toString()
@@ -151,16 +157,22 @@ class Status {
 	async loginWithCredentialsOffline({
 		username,
 		password,
-		server
+		server,
+		noStart
 	}: {
 		username: string;
 		password: string;
 		server: string;
+		noStart?: boolean;
 	}) {
 		const LSL_hash = store.get("LSL_hash");
 		if (LSL_hash === Md5.hashStr(server + username + password).toString()) {
-			this.start({ server });
-			return true;
+			if (noStart) {
+				return true;
+			} else {
+				this.start({ server });
+				return true;
+			}
 		} else {
 			return "This was not the last username/password combination you used!";
 		}
@@ -190,15 +202,17 @@ class Status {
 		} catch (e) {
 			console.log("Registering modules failed", e);
 		}
-		if (!this.checkUserID()) {
+		if (!this.checkAndSetUserID()) {
 			this.step = LoginStep.chooseUser;
 		}
 	}
 	async logout() {
-		const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
-			.default;
-		const auth: PouchDB.Plugin = ((await import("pouchdb-authentication")) as any)
-			.default;
+		const PouchDB: PouchDB.Static =
+			((await import("pouchdb-browser")) as any).default ||
+			((await import("pouchdb-browser")) as any);
+		const auth: PouchDB.Plugin =
+			((await import("pouchdb-authentication")) as any).default ||
+			((await import("pouchdb-authentication")) as any);
 		PouchDB.plugin(auth);
 		if (navigator.onLine && !this.keepOffline) {
 			try {
@@ -211,7 +225,7 @@ class Status {
 		location.reload();
 	}
 
-	checkUserID() {
+	checkAndSetUserID() {
 		const userID = store.get("user_id");
 		if (userID && staff.getIndexByID(userID) !== -1) {
 			this.setUser(userID);
@@ -231,17 +245,6 @@ class Status {
 		store.set("user_id", id);
 	}
 
-	validateDropBoxToken() {
-		files
-			.status()
-			.then(x => {
-				this.isDropboxActive = true;
-			})
-			.catch(e => {
-				this.isDropboxActive = false;
-			});
-	}
-
 	async activeSession(server: string) {
 		const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
 			.default;
@@ -256,6 +259,17 @@ class Status {
 			}
 		} catch (e) {}
 		return false;
+	}
+
+	validateDropBoxToken() {
+		files
+			.status()
+			.then(x => {
+				this.isDropboxActive = true;
+			})
+			.catch(e => {
+				this.isDropboxActive = false;
+			});
 	}
 
 	validateOnlineStatus() {
