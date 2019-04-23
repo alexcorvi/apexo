@@ -1,4 +1,6 @@
 module.exports = {
+	automock: false,
+	setupFiles: ["./src/mocks/browser-mocks.ts"],
 	roots: ["<rootDir>/src"],
 	transform: {
 		"^.+\\.tsx?$": "ts-jest"
