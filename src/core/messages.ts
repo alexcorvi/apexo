@@ -10,7 +10,7 @@ export interface MessageInterface {
 	onExpire?: () => void;
 }
 
-class Messages {
+export class Messages {
 	@observable activeMessages: MessageInterface[] = [];
 	public newMessage(msg: MessageInterface) {
 		this.activeMessages.push(msg);
