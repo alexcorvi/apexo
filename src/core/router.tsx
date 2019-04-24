@@ -11,7 +11,7 @@ export interface Route {
 	condition?: () => boolean;
 }
 
-class Router {
+export class Router {
 	@observable isCurrentlyReSyncing = false;
 
 	@observable currentLocation = "";
@@ -100,10 +100,6 @@ class Router {
 		location.hash = "#!/" + routes.join("/");
 		scrollTo(0, 0);
 		menu.hide();
-	}
-
-	history(location: number) {
-		history.go(location);
 	}
 
 	private async checkAndLoad() {
