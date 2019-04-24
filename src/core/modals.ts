@@ -10,7 +10,7 @@ export interface ModalInterface {
 	showCancelButton: boolean;
 }
 
-class ModalData {
+export class Modals {
 	@observable activeModals: ModalInterface[] = [];
 	newModal(modal: ModalInterface) {
 		modal.id = generateID();
@@ -22,4 +22,4 @@ class ModalData {
 	}
 }
 
-export const modals = new ModalData();
+export const modals = new Modals();
