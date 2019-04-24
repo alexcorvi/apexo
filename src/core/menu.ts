@@ -11,13 +11,13 @@ export interface MenuItem {
 	condition?: () => boolean;
 }
 
-class MenuData {
+export class Menu {
 	@observable
 	items: MenuItem[] = [
 		{
 			icon: "Home",
 			name: "Home",
-			order: -99,
+			order: -999,
 			key: "Home",
 			url: "",
 			onClick: () => {
@@ -51,4 +51,4 @@ class MenuData {
 	}
 }
 
-export const menu = new MenuData();
+export const menu = new Menu();
