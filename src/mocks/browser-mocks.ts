@@ -27,3 +27,5 @@ export function mockResponse(
 		[method]("/")
 		.reply(code, JSON.stringify(res));
 }
+
+(global as any).scrollTo = jest.fn();
