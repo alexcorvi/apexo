@@ -68,9 +68,9 @@ export class Patient {
 				if (appointment.isDone) {
 					return false;
 				}
-				const t = comparableDate(new Date());
-				const a = comparableDate(new Date(appointment.date));
-				return t.y <= a.y && t.m <= a.m && t.d <= a.d;
+				const today = new Date().setHours(0, 0, 0, 0);
+				const date = new Date(appointment.date).setHours(0, 0, 0, 0);
+				return today <= date;
 			})
 			.sort((a, b) => a.date - b.date)[0];
 	}
