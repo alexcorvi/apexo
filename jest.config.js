@@ -1,6 +1,8 @@
 module.exports = {
 	automock: false,
 	setupFiles: ["./src/mocks/browser-mocks.ts"],
+	setupFilesAfterEnv: ["./src/mocks/setup-enzyme-tests.ts"],
+	testEnvironment: "enzyme",
 	roots: ["<rootDir>/src"],
 	transform: {
 		"^.+\\.tsx?$": "ts-jest"
