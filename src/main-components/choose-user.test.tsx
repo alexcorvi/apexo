@@ -27,7 +27,6 @@ const wrapper = mount(<ChooseUserComponent {...props} />);
 const wrapperNoUsers = mount(<ChooseUserComponent {...propsNoUsers} />);
 
 describe("@common-components: choose user", () => {
-	/*
 	it("component mounts", () => {
 		expect(wrapper.find("#create-user")).not.toExist();
 		expect(wrapper.find("#choose-user")).toExist();
@@ -64,7 +63,6 @@ describe("@common-components: choose user", () => {
 		expect(wrapperNoUsers.find("#create-user")).toExist();
 		expect(wrapperNoUsers.find("#choose-user")).not.toExist();
 	});
-	*/
 
 	it("Creating new user", done => {
 		wrapperNoUsers
