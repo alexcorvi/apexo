@@ -8,11 +8,11 @@ import * as React from "react";
 export class HeaderView extends React.Component<{
 	expandMenu: () => void;
 	expandUser: () => void;
-	currentNamespace: string;
-	isOnline: boolean;
 	resync: () => Promise<boolean>;
 	startReSyncing: () => void;
 	finishReSyncing: () => void;
+	currentNamespace: string;
+	isOnline: boolean;
 	isCurrentlyReSyncing: boolean;
 }> {
 	render() {
@@ -27,6 +27,7 @@ export class HeaderView extends React.Component<{
 								iconProps={{ iconName: "GlobalNavButton" }}
 								title="GlobalNavButton"
 								ariaLabel="GlobalNavButton"
+								id="expand-menu"
 							/>
 						</section>
 					</Col>
@@ -40,6 +41,7 @@ export class HeaderView extends React.Component<{
 							{this.props.isOnline ? (
 								<TooltipHost content={text("Sync with server")}>
 									<IconButton
+										id="online"
 										onClick={async () => {
 											this.props.startReSyncing();
 											await this.props.resync();
@@ -55,7 +57,7 @@ export class HeaderView extends React.Component<{
 									/>
 								</TooltipHost>
 							) : (
-								<span className="offline">
+								<span className="offline" id="offline">
 									<Icon iconName="WifiWarning4" />
 								</span>
 							)}
@@ -64,6 +66,7 @@ export class HeaderView extends React.Component<{
 								<IconButton
 									onClick={this.props.expandUser}
 									iconProps={{ iconName: "Contact" }}
+									id="expand-user"
 								/>
 							</TooltipHost>
 						</section>
