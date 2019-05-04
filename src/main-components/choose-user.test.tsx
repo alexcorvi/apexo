@@ -26,7 +26,7 @@ const propsNoUsers = {
 const wrapper = mount(<ChooseUserComponent {...props} />);
 const wrapperNoUsers = mount(<ChooseUserComponent {...propsNoUsers} />);
 
-describe("@common-components: choose user", () => {
+describe("@main-components: choose user", () => {
 	it("component mounts", () => {
 		expect(wrapper.find("#create-user")).not.toExist();
 		expect(wrapper.find("#choose-user")).toExist();
@@ -35,46 +35,32 @@ describe("@common-components: choose user", () => {
 		expect(wrapper.find(`#alex`)).toExist();
 		expect(wrapper.find(`#dina`)).toExist();
 	});
-	it("Clicking user works", done => {
+	it("Clicking user works", () => {
 		wrapper.find("#alex").simulate("click");
-		setTimeout(() => {
-			expect(props.onClickUser).toHaveBeenLastCalledWith("alex");
-			wrapper.find("#dina").simulate("click");
-			setTimeout(() => {
-				expect(props.onClickUser).toHaveBeenLastCalledWith("dina");
-				expect(props.showModal).not.toBeCalled();
-				done();
-			}, 200);
-		}, 200);
+		expect(props.onClickUser).toHaveBeenLastCalledWith("alex");
+		wrapper.find("#dina").simulate("click");
+		expect(props.onClickUser).toHaveBeenLastCalledWith("dina");
+		expect(props.showModal).not.toBeCalled();
 	});
-	it("clicking user with PIN", done => {
+	it("clicking user with PIN", () => {
 		wrapper.find("#dan").simulate("click");
-		setTimeout(() => {
-			expect(props.onClickUser).not.toBeCalledWith("dan");
-			expect(props.showModal).toBeCalled();
-			const modal = props.showModal.mock.calls[0][0];
-			expect(modal.input).toBe(true);
-			expect(modal.showCancelButton).toBe(true);
-			expect(modal.showConfirmButton).toBe(true);
-			done();
-		});
+		expect(props.onClickUser).not.toBeCalledWith("dan");
+		expect(props.showModal).toBeCalled();
+		const modal = props.showModal.mock.calls[0][0];
+		expect(modal.input).toBe(true);
+		expect(modal.showCancelButton).toBe(true);
+		expect(modal.showConfirmButton).toBe(true);
 	});
 	it("empty users list", () => {
 		expect(wrapperNoUsers.find("#create-user")).toExist();
 		expect(wrapperNoUsers.find("#choose-user")).not.toExist();
 	});
 
-	it("Creating new user", done => {
+	it("Creating new user", () => {
 		wrapperNoUsers
 			.find("#new-user-name input")
 			.simulate("change", { target: { value: "william" } });
-
-		setTimeout(() => {
-			wrapperNoUsers.find("button#create-new-user-btn").simulate("click");
-			setTimeout(() => {
-				expect(propsNoUsers.onCreatingNew).toBeCalledWith("william");
-				done();
-			}, 200);
-		}, 200);
+		wrapperNoUsers.find("button#create-new-user-btn").simulate("click");
+		expect(propsNoUsers.onCreatingNew).toBeCalledWith("william");
 	});
 });
