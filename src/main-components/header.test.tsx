@@ -13,7 +13,7 @@ const props = {
 	isCurrentlyReSyncing: true
 };
 
-const wrapper = mount(
+const wrapper = mount<typeof props>(
 	<HeaderView
 		expandMenu={props.expandMenu}
 		expandUser={props.expandUser}

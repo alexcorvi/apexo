@@ -23,7 +23,7 @@ const propsNoUsers = {
 	users: []
 };
 
-const wrapper = mount(<ChooseUserComponent {...props} />);
+const wrapper = mount<typeof props>(<ChooseUserComponent {...props} />);
 const wrapperNoUsers = mount(<ChooseUserComponent {...propsNoUsers} />);
 
 describe("@main-components: choose user", () => {
