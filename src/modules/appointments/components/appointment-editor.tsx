@@ -322,10 +322,20 @@ export class AppointmentEditorPanel extends React.Component<
 											</Col>
 										</Row>
 									</Row>
+									<Toggle
+										defaultChecked={
+											this.props.appointment!.isDone
+										}
+										onText={text("Done")}
+										offText={text("Not done")}
+										onChange={(e, newVal) => {
+											this.props.appointment!.isDone = newVal!;
+										}}
+									/>
 								</div>
 							</Col>
 						</Row>
-						<div className="appointment-input date">
+						<div className="appointment-input">
 							<label>{text("Operating staff")} </label>
 							{this.props.operatingStaff.map(member => {
 								const checked =
@@ -814,21 +824,6 @@ export class AppointmentEditorPanel extends React.Component<
 										/>
 									</p>
 								</div>
-							</Col>
-						</Row>
-						<Row gutter={12}>
-							<Col sm={24}>
-								<Toggle
-									defaultChecked={
-										this.props.appointment!.isDone
-									}
-									onText={text("Done")}
-									offText={text("Not done")}
-									disabled={!this.canEdit}
-									onChange={(e, newVal) => {
-										this.props.appointment!.isDone = newVal!;
-									}}
-								/>
 							</Col>
 						</Row>
 					</SectionComponent>
