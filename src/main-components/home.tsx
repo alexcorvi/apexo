@@ -29,24 +29,26 @@ export class HomeView extends React.Component<{
 		return (
 			<div className="home p-l-10 p-r-10">
 				<div className="container">
-					<h2 className="m-b-20">
+					<h2 className="m-b-20 welcome">
 						{text("Welcome")}, {this.props.currentUsername}
 					</h2>
 					<hr />
 					<div>
 						{this.props.showChart ? (
-							<AppointmentsByDateChart
-								selectedAppointmentsByDay={
-									this.props.selectedAppointmentsByDay
-								}
-								dateFormat={this.props.dateFormat}
-							/>
+							<div id="home-chart">
+								<AppointmentsByDateChart
+									selectedAppointmentsByDay={
+										this.props.selectedAppointmentsByDay
+									}
+									dateFormat={this.props.dateFormat}
+								/>
+							</div>
 						) : (
 							""
 						)}
 					</div>
 					<Row gutter={12}>
-						<Col md={12}>
+						<Col md={12} className="today-appointments">
 							<h3 className="appointments-table-heading">
 								{text("Today's Appointments")}
 							</h3>
@@ -63,7 +65,7 @@ export class HomeView extends React.Component<{
 										appointment => (
 											<tr
 												key={appointment._id}
-												className="home-td"
+												className="home-td today-appointment"
 											>
 												<td>
 													<ProfileSquaredComponent
@@ -156,7 +158,7 @@ export class HomeView extends React.Component<{
 								""
 							)}
 						</Col>
-						<Col md={12}>
+						<Col md={12} className="tomorrow-appointments">
 							<h3 className="appointments-table-heading">
 								{text("Tomorrow's Appointments")}
 							</h3>
@@ -173,7 +175,7 @@ export class HomeView extends React.Component<{
 										appointment => (
 											<tr
 												key={appointment._id}
-												className="home-td"
+												className="home-td tomorrow-appointment"
 											>
 												<td>
 													<ProfileSquaredComponent
