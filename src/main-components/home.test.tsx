@@ -2,7 +2,6 @@ import { HomeView } from "./home";
 import "../mocks/state-mocks";
 import * as modules from "@modules";
 import { mount } from "enzyme";
-import { toJS } from "mobx";
 import * as React from "react";
 
 const props = {
