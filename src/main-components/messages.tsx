@@ -11,7 +11,10 @@ export class MessagesView extends React.Component<{
 			<div className="messages-component">
 				{this.props.messages.map(msg => {
 					return (
-						<div key={msg.id} className="message bottom-bounce">
+						<div
+							key={msg.id}
+							className={`message bottom-bounce m-id-${msg.id}`}
+						>
 							<Icon iconName={"Important"} />
 							<span className="message-inner">{msg.text}</span>
 						</div>
