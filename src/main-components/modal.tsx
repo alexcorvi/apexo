@@ -17,7 +17,7 @@ export class ModalsView extends React.Component<{
 				{this.props.activeModals.map((modal, index) => (
 					<Panel
 						key={modal.id}
-						className={`confirmation-modal ${
+						className={`confirmation-modal ${modal.id} ${
 							modal.input ? "input-modal" : ""
 						}`}
 						isBlocking
@@ -33,6 +33,7 @@ export class ModalsView extends React.Component<{
 							<TextField
 								value={this.inputValue}
 								onChange={(e, val) => (this.inputValue = val!)}
+								className="modal-input"
 							/>
 						) : (
 							""
@@ -46,6 +47,7 @@ export class ModalsView extends React.Component<{
 								}}
 								iconProps={{ iconName: "CheckMark" }}
 								text={text("Confirm")}
+								className="confirm-modal-btn"
 							/>
 						) : (
 							""

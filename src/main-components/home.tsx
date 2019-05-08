@@ -1,7 +1,6 @@
 import { Col, ProfileComponent, ProfileSquaredComponent, Row } from "@common-components";
 import { text } from "@core";
 import { Appointment } from "@modules";
-import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Shimmer } from "office-ui-fabric-react";
 import * as React from "react";

@@ -26,7 +26,7 @@ const wrapper = mount(
 	/>
 );
 
-describe("@common-components: header", () => {
+describe("@main-components: header", () => {
 	it("expands menu", () => {
 		wrapper.find("#expand-menu i").simulate("click");
 		expect(props.expandMenu).toBeCalled();
