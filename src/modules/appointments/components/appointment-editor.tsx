@@ -328,6 +328,19 @@ export class AppointmentEditorPanel extends React.Component<
 										}
 										onText={text("Done")}
 										offText={text("Not done")}
+										disabled={
+											!this.canEdit ||
+											(!this.props.appointment.isDone &&
+												new Date(
+													this.props.appointment.date
+												).setHours(0, 0, 0, 0) >
+													new Date().setHours(
+														0,
+														0,
+														0,
+														0
+													))
+										}
 										onChange={(e, newVal) => {
 											this.props.appointment!.isDone = newVal!;
 										}}
