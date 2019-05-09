@@ -51,7 +51,7 @@ export class LoginView extends React.Component<{
 	componentWillMount() {
 		this.props
 			.initialCheck(this.serverFieldValue)
-			.then(() => (this.initiallyChecked = true));
+			.finally(() => (this.initiallyChecked = true));
 	}
 
 	render() {
@@ -72,7 +72,7 @@ export class LoginView extends React.Component<{
 						/>
 					</div>
 				) : (
-					<div>
+					<div className="login-forum">
 						{this.initiallyChecked ? (
 							<div className="login-step">
 								<div
@@ -112,6 +112,7 @@ export class LoginView extends React.Component<{
 											onChange={(ev, v) =>
 												(this.serverFieldValue = v!)
 											}
+											className="input-server"
 										/>
 									</div>
 
@@ -136,6 +137,7 @@ export class LoginView extends React.Component<{
 									onChange={(e, v) =>
 										(this.usernameFieldValue = v!)
 									}
+									className="input-identification"
 								/>
 								<TextField
 									name="password"
@@ -146,11 +148,12 @@ export class LoginView extends React.Component<{
 									onChange={(e, v) =>
 										(this.passwordFieldValue = v!)
 									}
+									className="input-password"
 								/>
 								<PrimaryButton
 									text={text("Login")}
 									disabled={this.disableInputs}
-									className="m-t-15 m-b-15"
+									className="m-t-15 m-b-15 proceed-login"
 									onClick={async () => {
 										if (
 											!(
@@ -185,7 +188,7 @@ export class LoginView extends React.Component<{
 									<PrimaryButton
 										text={text("Access offline")}
 										disabled={this.disableInputs}
-										className="m-t-15 m-b-15 m-l-5 m-r-5"
+										className="m-t-15 m-b-15 m-l-5 m-r-5 proceed-offline"
 										onClick={async () => {
 											if (
 												!(
@@ -230,7 +233,10 @@ export class LoginView extends React.Component<{
 							""
 						)}
 						{this.errorMessage ? (
-							<MessageBar messageBarType={MessageBarType.error}>
+							<MessageBar
+								className="error-msg"
+								messageBarType={MessageBarType.error}
+							>
 								{this.errorMessage}
 							</MessageBar>
 						) : (
