@@ -31,6 +31,7 @@ export class MenuView extends React.Component<{
 										: "")
 								}
 								onClick={item.onClick}
+								data-testid="menu-item-bg"
 							>
 								<Icon iconName={item.icon} />
 								<span className="text">{text(item.name)}</span>
@@ -45,6 +46,7 @@ export class MenuView extends React.Component<{
 					type={PanelType.smallFixedNear}
 					onDismiss={this.props.onDismiss}
 					hasCloseButton={false}
+					data-testid="menu-sd"
 				>
 					<Nav
 						groups={[
@@ -55,7 +57,8 @@ export class MenuView extends React.Component<{
 										name: text(x.name),
 										key: x.key,
 										url: x.url,
-										onClick: x.onClick
+										onClick: x.onClick,
+										"data-testid": "menu-item-sd"
 									};
 								})
 							}
