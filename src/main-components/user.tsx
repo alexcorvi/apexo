@@ -68,6 +68,7 @@ export class UserPanelView extends React.Component<{
 											onClick={() => {
 												this.props.logout();
 											}}
+											data-testid="logout"
 										>
 											{text("Logout")}
 										</Link>
@@ -77,6 +78,7 @@ export class UserPanelView extends React.Component<{
 											onClick={() => {
 												this.props.resetUser();
 											}}
+											data-testid="switch"
 										>
 											{text("Switch user")}
 										</Link>
@@ -90,6 +92,7 @@ export class UserPanelView extends React.Component<{
 								onClick={() => {
 									this.props.onDismiss();
 								}}
+								data-testid="dismiss"
 							/>
 						</Col>
 					</Row>
@@ -97,17 +100,24 @@ export class UserPanelView extends React.Component<{
 			>
 				<SectionComponent title={text("Today's Appointments")}>
 					{this.props.todayAppointments.length === 0 ? (
-						<MessageBar messageBarType={MessageBarType.info}>
+						<MessageBar
+							messageBarType={MessageBarType.info}
+							data-testid="no-appointments"
+						>
 							{text("No appointments today")}
 						</MessageBar>
 					) : (
-						<div className="appointments-listing">
+						<div
+							className="appointments-listing"
+							data-testid="appointments-list"
+						>
 							{this.props.todayAppointments.map(appointment => {
 								const date = new Date(appointment.date);
 								const dateLink = `${date.getFullYear()}-${date.getMonth() +
 									1}-${date.getDate()}`;
 								return (
 									<AppointmentThumbComponent
+										data-testid="appointment-thumb"
 										key={appointment._id}
 										appointment={appointment}
 										hideDate={true}
