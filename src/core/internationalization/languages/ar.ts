@@ -35,6 +35,7 @@ export default {
 	Logout: "تسجيل خروج",
 	Operators: "الاطباء",
 	Missed: "غائب",
+	"How are you?": "من أنت؟",
 	"Switch user": "تبديل مستخدم",
 	Expenses: "مصاريف",
 	Profit: "ارباح",
