@@ -2155,6 +2155,9 @@ hr {
   right: auto;
   left: 7px; }
 
+[dir="rtl"] .ms-Pivot-text {
+  margin-right: 5px; }
+
 [dir="rtl"] .atc-c .delete {
   right: auto;
   left: 12px; }
@@ -5919,6 +5922,14 @@ hr {
         border: 1px solid #ffebb6;
         background: #fff9e9;
         float: right; }
+        .calendar-component .full-day-col .appointment .time.done, .calendar-component .full-day-col .appointment .time.missed {
+          color: #fff;
+          border-color: transparent;
+          opacity: 0.6;
+          font-size: 10px;
+          background: #009688; }
+        .calendar-component .full-day-col .appointment .time.missed {
+          background: #e91e63; }
       .calendar-component .full-day-col .appointment a {
         display: inline-block;
         color: #2196f3;
@@ -6761,6 +6772,10 @@ hr {
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
   .panel-heading .close {
     text-align: right; }
+  .panel-heading .ms-Pivot {
+    margin-bottom: -15px; }
+    .panel-heading .ms-Pivot .ms-Pivot-link {
+      font-size: 12px; }
 
 @media (max-width: 1200px) {
   .duty-table {
