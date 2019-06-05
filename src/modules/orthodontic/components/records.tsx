@@ -6,7 +6,7 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import { ModalInterface, ORTHO_RECORDS_DIR, text } from "@core";
+import { imagesTable, ModalInterface, ORTHO_RECORDS_DIR, status, text } from "@core";
 import { OrthoCase, Photo, StaffMember, Visit } from "@modules";
 import { day, formatDate, num } from "@utils";
 import { diff } from "fast-array-diff";
@@ -51,7 +51,6 @@ export class OrthoRecordsPanel extends React.Component<{
 	orthoCase: OrthoCase;
 	currentUser: StaffMember;
 	isOnline: boolean;
-	isDropboxActive: boolean;
 	dateFormat: string;
 	getFile: (path: string) => Promise<string>;
 	removeFile: (path: string) => Promise<any>;
@@ -68,8 +67,6 @@ export class OrthoRecordsPanel extends React.Component<{
 	@observable expandedField: string = "";
 
 	@observable uploadingPhotoID: string = "";
-
-	@observable imagesTable: { [key: string]: string } = {};
 
 	@observable showGrid: boolean = false;
 
@@ -111,43 +108,17 @@ export class OrthoRecordsPanel extends React.Component<{
 
 	componentDidMount() {
 		this.allImages.forEach(async path => {
-			await this.addImage(path);
+			await imagesTable.fetchImage(path);
 		});
-		this.stopObservation = this.observe();
 	}
 
 	componentWillUnmount() {
 		this.stopObservation();
 	}
 
-	async addImage(path: string) {
-		this.imagesTable[path] = "";
-		const uri = await this.props.getFile(path);
-		this.imagesTable[path] = uri;
-		return;
-	}
-
 	async removeImage(path: string) {
 		await this.props.removeFile(path);
-		delete this.imagesTable[path];
 		return;
-	}
-
-	observe() {
-		return observe(this.props.orthoCase, change => {
-			if (change.name === "visits") {
-				const diffResult = diff(
-					Object.keys(this.imagesTable).sort(),
-					this.allImages.sort()
-				);
-				diffResult.added.forEach(path => {
-					this.addImage(path);
-				});
-				diffResult.removed.forEach(path => {
-					this.removeImage(path);
-				});
-			}
-		});
 	}
 
 	render() {
@@ -277,7 +248,7 @@ export class OrthoRecordsPanel extends React.Component<{
 				</SectionComponent>
 				<SectionComponent title={text(`Records`)}>
 					{this.props.isOnline ? (
-						this.props.isDropboxActive ? (
+						status.isDropboxActive ? (
 							<div className="album">
 								{this.props.orthoCase.visits.length ? (
 									<table>
@@ -645,8 +616,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																				this
 																					.zoomedColumn ===
 																					photoIndex &&
-																				this
-																					.imagesTable[
+																				imagesTable
+																					.table[
 																					photo
 																						.photoID
 																				] ? (
@@ -655,8 +626,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																					""
 																				)}
 																				{photo.photoID ? (
-																					this
-																						.imagesTable[
+																					imagesTable
+																						.table[
 																						photo
 																							.photoID
 																					] ? (
@@ -680,8 +651,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																										"100%"
 																								}}
 																								src={
-																									this
-																										.imagesTable[
+																									imagesTable
+																										.table[
 																										photo
 																											.photoID
 																									]
@@ -716,8 +687,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																													"100%"
 																											}}
 																											src={
-																												this
-																													.imagesTable[
+																												imagesTable
+																													.table[
 																													photo
 																														.photoID
 																												]
@@ -728,8 +699,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																											<img
 																												className="overlay-img"
 																												src={
-																													this
-																														.imagesTable[
+																													imagesTable
+																														.table[
 																														nextVisit
 																															.photos[
 																															photoIndex
@@ -746,8 +717,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																											<img
 																												className="overlay-img"
 																												src={
-																													this
-																														.imagesTable[
+																													imagesTable
+																														.table[
 																														prevVisit
 																															.photos[
 																															photoIndex
@@ -987,8 +958,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																													this.overlayWithPrev = !this
 																														.overlayWithPrev;
 																												},
-																												hidden: !this
-																													.imagesTable[
+																												hidden: !imagesTable
+																													.table[
 																													prevVisit
 																														.photos[
 																														photoIndex
@@ -1014,8 +985,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																													this.overlayWithNext = !this
 																														.overlayWithNext;
 																												},
-																												hidden: !this
-																													.imagesTable[
+																												hidden: !imagesTable
+																													.table[
 																													nextVisit
 																														.photos[
 																														photoIndex
@@ -1038,6 +1009,18 @@ export class OrthoRecordsPanel extends React.Component<{
 																												disabled: !this
 																													.canEdit,
 																												onClick: () => {
+																													this.removeImage(
+																														this
+																															.props
+																															.orthoCase
+																															.visits[
+																															visitIndex
+																														]
+																															.photos[
+																															photoIndex
+																														]
+																															.photoID
+																													);
 																													this.props.orthoCase.visits[
 																														visitIndex
 																													].photos[
@@ -1072,14 +1055,15 @@ export class OrthoRecordsPanel extends React.Component<{
 																							allowMultiple: false,
 																							accept:
 																								fileTypes.image,
-																							prevSrc: this
-																								.imagesTable[
-																								prevVisit
-																									.photos[
-																									photoIndex
-																								]
-																									.photoID
-																							],
+																							prevSrc:
+																								imagesTable
+																									.table[
+																									prevVisit
+																										.photos[
+																										photoIndex
+																									]
+																										.photoID
+																								],
 																							disabled: !this
 																								.canEdit,
 																							onFinish: e => {
@@ -1092,6 +1076,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																										photoIndex
 																									].photoID =
 																										e[0];
+																									imagesTable.fetchImage(
+																										e[0]
+																									);
 																									this.tu();
 																								}
 																							},
@@ -1160,9 +1147,15 @@ export class OrthoRecordsPanel extends React.Component<{
 																							"This visit data will be deleted along with all photos and notes"
 																						),
 																						onConfirm: () => {
-																							this.props.orthoCase.visits.splice(
+																							const deletedVisit = this.props.orthoCase.visits.splice(
 																								visitIndex,
 																								1
+																							);
+																							deletedVisit[0].photos.forEach(
+																								photo =>
+																									this.removeImage(
+																										photo.photoID
+																									)
 																							);
 																							this.tu();
 																						},

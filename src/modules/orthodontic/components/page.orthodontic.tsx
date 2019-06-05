@@ -635,9 +635,6 @@ export class OrthoPage extends React.Component<{
 										orthoCase={this.selectedCase}
 										currentUser={this.props.currentUser}
 										isOnline={this.props.isOnline}
-										isDropboxActive={
-											this.props.isDropboxActive
-										}
 										dateFormat={this.props.dateFormat}
 										getFile={x => this.props.getFile(x)}
 										removeFile={x =>

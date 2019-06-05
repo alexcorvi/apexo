@@ -62,7 +62,6 @@ export class OrthoGalleryPanel extends React.Component<{
 						patient={this.props.orthoCase.patient}
 						currentUser={this.props.currentUser}
 						isOnline={this.props.isOnline}
-						isDropboxActive={this.props.isDropboxActive}
 						saveFile={obj => this.props.saveFile(obj)}
 						getFile={path => this.props.getFile(path)}
 						removeFile={path => this.props.removeFile(path)}
