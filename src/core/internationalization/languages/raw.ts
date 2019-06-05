@@ -482,6 +482,9 @@ export const raw = {
 	 */
 	Backup: "",
 	Actions: "",
+	"Settings are locked": "",
+	"To prevent unintentional changes, solve the mathematical equation to unlock":
+		"",
 
 	/**========================================
 	 * other

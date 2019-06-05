@@ -498,6 +498,9 @@ export default {
 	 */
 	Backup: "نسخة إحتياطية",
 	Actions: "حذف أو إسترجاع",
+	"Settings are locked": "الإعدادات مغلقة",
+	"To prevent unintentional changes, solve the mathematical equation to unlock":
+		"وذلك لتجنب التغيرات الغير مقصودة، قم بحل المعادلة أدناه لفتح القفل",
 
 	/**========================================
 	 * other

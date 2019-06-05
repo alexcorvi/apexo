@@ -35,6 +35,17 @@ export class SettingsPage extends React.Component<
 	},
 	{}
 > {
+	unlockCombinations = [
+		[5, 4, 9],
+		[3, 2, 5],
+		[6, 1, 7],
+		[2, 6, 8],
+		[5, 1, 6],
+		[4, 1, 5]
+	];
+
+	chosenCombination = this.unlockCombinations[Math.floor(Math.random() * 6)];
+
 	@observable triggerUpdate: number = 0;
 
 	@observable inputEl: HTMLInputElement | null = null;
@@ -45,6 +56,8 @@ export class SettingsPage extends React.Component<
 
 	@observable loading: boolean = false;
 
+	@observable locked: boolean = true;
+
 	componentWillMount() {
 		setTimeout(() => this.props.updateDropboxBackups(), second);
 	}
@@ -52,467 +65,544 @@ export class SettingsPage extends React.Component<
 	render() {
 		return (
 			<div className="settings-component p-15 p-l-10 p-r-10">
-				<SectionComponent title={text(`General Setting`)}>
-					<SettingInputComponent
-						element={
-							<Dropdown
-								label={text("Language")}
-								options={[
-									{ key: "en", text: "English" },
-									{ key: "ar", text: "العربية" }
-								]}
-								defaultSelectedKey={this.props.getSetting(
-									"lang"
-								)}
-								onChange={(ev, v) => {
-									this.props.setSetting(
-										"lang",
-										v!.key.toString()
-									);
-								}}
-								disabled={!this.canEdit}
-							/>
-						}
-						info={text(
-							`Choose the main language of display menus and items`
-						)}
-					/>
-
-					<SettingInputComponent
-						element={
-							<Dropdown
-								label={text("Date format")}
-								options={[
-									{ key: "dd/mm/yyyy", text: "dd/mm/yyyy" },
-									{ key: "mm/dd/yyyy", text: "mm/dd/yyyy" },
-									{ key: "dd MM 'YY", text: "dd MM 'YY" }
-								]}
-								defaultSelectedKey={this.props.getSetting(
-									"date_format"
-								)}
-								onChange={(ev, v) => {
-									this.props.setSetting(
-										"date_format",
-										v!.key.toString()
-									);
-								}}
-								disabled={!this.canEdit}
-							/>
-						}
-						info={text(
-							`Set the date format to be used across this application`
-						)}
-					/>
-
-					<SettingInputComponent
-						element={
-							<Dropdown
-								label={text("Week ends on")}
-								options={dateNames
-									.days()
-									.map((dayName, index) => ({
-										key: index.toString(),
-										text: text(dayName)
-									}))}
-								defaultSelectedKey={this.props.getSetting(
-									"weekend_num"
-								)}
-								onChange={(ev, v) => {
-									this.props.setSetting(
-										"weekend_num",
-										v!.key.toString()
-									);
-								}}
-								disabled={!this.canEdit}
-							/>
-						}
-						info={text(`On which day the week ends`)}
-					/>
-
-					<SettingInputComponent
-						element={
-							<TextField
-								value={this.props.getSetting(
-									"dropbox_accessToken"
-								)}
-								label={text("Dropbox access token")}
-								onChange={(ev, val) => {
-									this.props.setSetting(
-										"dropbox_accessToken",
-										val!
-									);
-
-									setTimeout(
-										() => this.props.validateDropboxToken(),
-										second / 2
-									);
-								}}
-								disabled={!this.canEdit}
-							/>
-						}
-						info={text(
-							`This access token is used to store files across the application, like backups and images`
-						)}
-					/>
-				</SectionComponent>
-
-				<SectionComponent title={text(`Financial Settings`)}>
-					{this.props.getSetting("time_tracking") ? (
-						<SettingInputComponent
-							element={
-								<TextField
-									label={text("Time expenses (per hour)")}
-									type="number"
-									value={this.props.getSetting("hourlyRate")}
-									onChange={(ev, newVal) => {
-										this.props.setSetting(
-											"hourlyRate",
-											newVal!.toString()
-										);
-									}}
-									disabled={!this.canEdit}
-								/>
-							}
-							info={text(
-								// tslint:disable-next-line:max-line-length
-								`When time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses So here you can put the electricity, rent, and other time dependent expenses`
+				{this.locked ? (
+					<div>
+						<h2>{text("Settings are locked")}</h2>
+						<h3>
+							{text(
+								"To prevent unintentional changes, solve the mathematical equation to unlock"
 							)}
-						/>
-					) : (
-						""
-					)}
-
-					<SettingInputComponent
-						element={
+						</h3>
+						<hr />
+						<div className="math-question">
+							{this.chosenCombination[0]} +{" "}
+							{this.chosenCombination[1]} ={" "}
 							<TextField
-								label={text("Currency symbol")}
-								value={this.props.getSetting("currencySymbol")}
-								onChange={(ev, newVal) => {
-									this.props.setSetting(
-										"currencySymbol",
-										newVal!.toString()
-									);
-								}}
-								disabled={!this.canEdit}
-							/>
-						}
-						info={text(
-							`This symbol you enter here will be used across your application`
-						)}
-					/>
-				</SectionComponent>
-
-				<SectionComponent title={text(`Optional Modules and Features`)}>
-					<Toggle
-						onText={text("Prescriptions module enabled")}
-						offText={text("Prescriptions module disabled")}
-						defaultChecked={
-							!!this.props.getSetting("module_prescriptions")
-						}
-						onChange={(ev, val) => {
-							this.props.setSetting(
-								"module_prescriptions",
-								val ? "enable" : ""
-							);
-						}}
-						disabled={!this.canEdit}
-					/>
-					<Toggle
-						onText={text("Orthodontic module enabled")}
-						offText={text("Orthodontic module disabled")}
-						defaultChecked={
-							!!this.props.getSetting("module_orthodontics")
-						}
-						onChange={(ev, val) => {
-							this.props.setSetting(
-								"module_orthodontics",
-								val ? "enable" : ""
-							);
-						}}
-						disabled={!this.canEdit}
-					/>
-					<Toggle
-						onText={text("Statistics module enabled")}
-						offText={text("Statistics module disabled")}
-						defaultChecked={
-							!!this.props.getSetting("module_statistics")
-						}
-						onChange={(ev, val) => {
-							this.props.setSetting(
-								"module_statistics",
-								val ? "enable" : ""
-							);
-						}}
-						disabled={!this.canEdit}
-					/>
-					<Toggle
-						onText={text("Time tracking enabled")}
-						offText={text("Time tracking disabled")}
-						defaultChecked={
-							!!this.props.getSetting("time_tracking")
-						}
-						onChange={(ev, val) => {
-							this.props.setSetting(
-								"time_tracking",
-								val ? "enable" : ""
-							);
-						}}
-						disabled={!this.canEdit}
-					/>
-				</SectionComponent>
-
-				<SectionComponent title={text(`Backup and Restore`)}>
-					{this.props.isOnline ? (
-						<div>
-							<DefaultButton
-								onClick={() => {
-									this.props.compact();
-								}}
-								iconProps={{ iconName: "ZipFolder" }}
-								className="m-l-5 m-t-5"
-								text={text("Run compaction")}
-							/>
-
-							<DefaultButton
-								onClick={() => {
-									this.props.downloadCurrent();
-								}}
-								className="m-l-5 m-t-5"
-								iconProps={{ iconName: "Database" }}
-								text={text("Download a backup")}
-							/>
-
-							<DefaultButton
-								onClick={() =>
-									this.inputEl ? this.inputEl.click() : ""
+								type="number"
+								onChange={(e, v) =>
+									Number(v) === this.chosenCombination[2]
+										? (this.locked = false)
+										: ""
 								}
-								className="m-l-5 m-t-5"
-								iconProps={{ iconName: "DatabaseSync" }}
-								text={text("Restore from file")}
-							/>
-							<input
-								ref={el => (this.inputEl = el)}
-								hidden
-								type="file"
-								multiple={false}
-								onChange={async e => {
-									if (
-										e.target.files &&
-										e.target.files.length > 0
-									) {
-										this.props.restoreFromFile(
-											e.target.files[0]
-										);
-									}
-								}}
 							/>
 						</div>
-					) : (
-						<MessageBar messageBarType={MessageBarType.warning}>
-							{text(
-								"Backup and restore functionality are not available while you're offline"
-							)}
-						</MessageBar>
-					)}
-				</SectionComponent>
-
-				<SectionComponent title={text(`Automated Backup and Restore`)}>
-					{this.props.isOnline ? (
-						this.props.isDropboxActive ? (
-							<div>
-								<Dropdown
-									label={text("Backup frequency")}
-									options={[
-										{ key: "d", text: text("Daily") },
-										{ key: "w", text: text("Weekly") },
-										{ key: "m", text: text("Monthly") },
-										{ key: "n", text: text("Never") }
-									]}
-									defaultSelectedKey={this.props.getSetting(
-										"backup_freq"
-									)}
-									onChange={(ev, v) => {
-										this.props.setSetting(
-											"backup_freq",
-											v!.key.toString()
-										);
-									}}
-									disabled={!this.canEdit}
-								/>
-
-								<TextField
-									value={this.props.getSetting(
-										"backup_retain"
-									)}
-									label={text("How many backups to retain")}
-									onChange={(ev, val) => {
-										this.props.setSetting(
-											"backup_retain",
-											val!
-										);
-									}}
-									disabled={!this.canEdit}
-									type="number"
-								/>
-
-								{this.props.dropboxBackups.length ? (
-									<table className="ms-table">
-										<thead>
-											<tr>
-												<th>{text("Backup")}</th>
-												<th>{text("Actions")}</th>
-											</tr>
-										</thead>
-										<tbody>
-											{this.props.dropboxBackups.map(
-												file => {
-													const date = new Date(
-														file.client_modified
-													);
-
-													return (
-														<tr key={file.id}>
-															<td>
-																<ProfileSquaredComponent
-																	onRenderInitials={() => (
-																		<div
-																			style={{
-																				textAlign:
-																					"center",
-																				fontSize: 10
-																			}}
-																		>
-																			{`${date.getDate()}/${date.getMonth() +
-																				1}`}
-																		</div>
-																	)}
-																	text={formatDate(
-																		date,
-																		this.props.getSetting(
-																			"date_format"
-																		)
-																	)}
-																	subText={`${Math.round(
-																		file.size /
-																			1000
-																	)} KB`}
-																/>
-															</td>
-															<td>
-																<TooltipHost
-																	content={text(
-																		"Delete"
-																	)}
-																>
-																	<IconButton
-																		style={{
-																			marginRight: 6
-																		}}
-																		iconProps={{
-																			iconName: this
-																				.loading
-																				? "sync"
-																				: "delete"
-																		}}
-																		className={
-																			this
-																				.loading
-																				? "rotate"
-																				: ""
-																		}
-																		disabled={
-																			!this
-																				.canEdit
-																		}
-																		onClick={() => {
-																			this.loading = true;
-																			this.props
-																				.deleteDropboxBackup(
-																					file.path_lower
-																				)
-																				.then(
-																					() => {
-																						this.loading = false;
-																						this.props.updateDropboxBackups();
-																					}
-																				)
-																				.catch(
-																					() => {
-																						this.loading = false;
-																						this.props.updateDropboxBackups();
-																					}
-																				);
-																		}}
-																	/>
-																</TooltipHost>
-
-																<TooltipHost
-																	content={text(
-																		"Restore"
-																	)}
-																>
-																	<IconButton
-																		style={{
-																			marginRight: 6
-																		}}
-																		iconProps={{
-																			iconName: this
-																				.loading
-																				? "sync"
-																				: "DatabaseSync"
-																		}}
-																		className={
-																			this
-																				.loading
-																				? "rotate"
-																				: ""
-																		}
-																		disabled={
-																			!this
-																				.canEdit
-																		}
-																		onClick={() => {
-																			this.loading = true;
-																			this.props
-																				.restoreFromDropbox(
-																					file.path_lower
-																				)
-																				.then(
-																					() =>
-																						(this.loading = false)
-																				)
-																				.catch(
-																					() =>
-																						(this.loading = false)
-																				);
-																		}}
-																	/>
-																</TooltipHost>
-															</td>
-														</tr>
-													);
-												}
-											)}
-										</tbody>
-									</table>
-								) : (
-									""
+					</div>
+				) : (
+					<div className="unlocked">
+						{" "}
+						<SectionComponent title={text(`General Setting`)}>
+							<SettingInputComponent
+								element={
+									<Dropdown
+										label={text("Language")}
+										options={[
+											{ key: "en", text: "English" },
+											{ key: "ar", text: "العربية" }
+										]}
+										defaultSelectedKey={this.props.getSetting(
+											"lang"
+										)}
+										onChange={(ev, v) => {
+											this.props.setSetting(
+												"lang",
+												v!.key.toString()
+											);
+										}}
+										disabled={!this.canEdit}
+									/>
+								}
+								info={text(
+									`Choose the main language of display menus and items`
 								)}
-							</div>
-						) : (
-							<MessageBar messageBarType={MessageBarType.warning}>
-								A valid DropBox access token is required for
-								this section
-							</MessageBar>
-						)
-					) : (
-						<MessageBar messageBarType={MessageBarType.warning}>
-							{text(
-								"Backup and restore functionality are not available while you're offline"
+							/>
+
+							<SettingInputComponent
+								element={
+									<Dropdown
+										label={text("Date format")}
+										options={[
+											{
+												key: "dd/mm/yyyy",
+												text: "dd/mm/yyyy"
+											},
+											{
+												key: "mm/dd/yyyy",
+												text: "mm/dd/yyyy"
+											},
+											{
+												key: "dd MM 'YY",
+												text: "dd MM 'YY"
+											}
+										]}
+										defaultSelectedKey={this.props.getSetting(
+											"date_format"
+										)}
+										onChange={(ev, v) => {
+											this.props.setSetting(
+												"date_format",
+												v!.key.toString()
+											);
+										}}
+										disabled={!this.canEdit}
+									/>
+								}
+								info={text(
+									`Set the date format to be used across this application`
+								)}
+							/>
+
+							<SettingInputComponent
+								element={
+									<Dropdown
+										label={text("Week ends on")}
+										options={dateNames
+											.days()
+											.map((dayName, index) => ({
+												key: index.toString(),
+												text: text(dayName)
+											}))}
+										defaultSelectedKey={this.props.getSetting(
+											"weekend_num"
+										)}
+										onChange={(ev, v) => {
+											this.props.setSetting(
+												"weekend_num",
+												v!.key.toString()
+											);
+										}}
+										disabled={!this.canEdit}
+									/>
+								}
+								info={text(`On which day the week ends`)}
+							/>
+
+							<SettingInputComponent
+								element={
+									<TextField
+										value={this.props.getSetting(
+											"dropbox_accessToken"
+										)}
+										label={text("Dropbox access token")}
+										onChange={(ev, val) => {
+											this.props.setSetting(
+												"dropbox_accessToken",
+												val!
+											);
+
+											setTimeout(
+												() =>
+													this.props.validateDropboxToken(),
+												second / 2
+											);
+										}}
+										disabled={!this.canEdit}
+									/>
+								}
+								info={text(
+									`This access token is used to store files across the application, like backups and images`
+								)}
+							/>
+						</SectionComponent>
+						<SectionComponent title={text(`Financial Settings`)}>
+							{this.props.getSetting("time_tracking") ? (
+								<SettingInputComponent
+									element={
+										<TextField
+											label={text(
+												"Time expenses (per hour)"
+											)}
+											type="number"
+											value={this.props.getSetting(
+												"hourlyRate"
+											)}
+											onChange={(ev, newVal) => {
+												this.props.setSetting(
+													"hourlyRate",
+													newVal!.toString()
+												);
+											}}
+											disabled={!this.canEdit}
+										/>
+									}
+									info={text(
+										// tslint:disable-next-line:max-line-length
+										`When time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses So here you can put the electricity, rent, and other time dependent expenses`
+									)}
+								/>
+							) : (
+								""
 							)}
-						</MessageBar>
-					)}
-				</SectionComponent>
+
+							<SettingInputComponent
+								element={
+									<TextField
+										label={text("Currency symbol")}
+										value={this.props.getSetting(
+											"currencySymbol"
+										)}
+										onChange={(ev, newVal) => {
+											this.props.setSetting(
+												"currencySymbol",
+												newVal!.toString()
+											);
+										}}
+										disabled={!this.canEdit}
+									/>
+								}
+								info={text(
+									`This symbol you enter here will be used across your application`
+								)}
+							/>
+						</SectionComponent>
+						<SectionComponent
+							title={text(`Optional Modules and Features`)}
+						>
+							<Toggle
+								onText={text("Prescriptions module enabled")}
+								offText={text("Prescriptions module disabled")}
+								defaultChecked={
+									!!this.props.getSetting(
+										"module_prescriptions"
+									)
+								}
+								onChange={(ev, val) => {
+									this.props.setSetting(
+										"module_prescriptions",
+										val ? "enable" : ""
+									);
+								}}
+								disabled={!this.canEdit}
+							/>
+							<Toggle
+								onText={text("Orthodontic module enabled")}
+								offText={text("Orthodontic module disabled")}
+								defaultChecked={
+									!!this.props.getSetting(
+										"module_orthodontics"
+									)
+								}
+								onChange={(ev, val) => {
+									this.props.setSetting(
+										"module_orthodontics",
+										val ? "enable" : ""
+									);
+								}}
+								disabled={!this.canEdit}
+							/>
+							<Toggle
+								onText={text("Statistics module enabled")}
+								offText={text("Statistics module disabled")}
+								defaultChecked={
+									!!this.props.getSetting("module_statistics")
+								}
+								onChange={(ev, val) => {
+									this.props.setSetting(
+										"module_statistics",
+										val ? "enable" : ""
+									);
+								}}
+								disabled={!this.canEdit}
+							/>
+							<Toggle
+								onText={text("Time tracking enabled")}
+								offText={text("Time tracking disabled")}
+								defaultChecked={
+									!!this.props.getSetting("time_tracking")
+								}
+								onChange={(ev, val) => {
+									this.props.setSetting(
+										"time_tracking",
+										val ? "enable" : ""
+									);
+								}}
+								disabled={!this.canEdit}
+							/>
+						</SectionComponent>
+						<SectionComponent title={text(`Backup and Restore`)}>
+							{this.props.isOnline ? (
+								<div>
+									<DefaultButton
+										onClick={() => {
+											this.props.compact();
+										}}
+										iconProps={{ iconName: "ZipFolder" }}
+										className="m-l-5 m-t-5"
+										text={text("Run compaction")}
+									/>
+
+									<DefaultButton
+										onClick={() => {
+											this.props.downloadCurrent();
+										}}
+										className="m-l-5 m-t-5"
+										iconProps={{ iconName: "Database" }}
+										text={text("Download a backup")}
+									/>
+
+									<DefaultButton
+										onClick={() =>
+											this.inputEl
+												? this.inputEl.click()
+												: ""
+										}
+										className="m-l-5 m-t-5"
+										iconProps={{ iconName: "DatabaseSync" }}
+										text={text("Restore from file")}
+									/>
+									<input
+										ref={el => (this.inputEl = el)}
+										hidden
+										type="file"
+										multiple={false}
+										onChange={async e => {
+											if (
+												e.target.files &&
+												e.target.files.length > 0
+											) {
+												this.props.restoreFromFile(
+													e.target.files[0]
+												);
+											}
+										}}
+									/>
+								</div>
+							) : (
+								<MessageBar
+									messageBarType={MessageBarType.warning}
+								>
+									{text(
+										"Backup and restore functionality are not available while you're offline"
+									)}
+								</MessageBar>
+							)}
+						</SectionComponent>
+						<SectionComponent
+							title={text(`Automated Backup and Restore`)}
+						>
+							{this.props.isOnline ? (
+								this.props.isDropboxActive ? (
+									<div>
+										<Dropdown
+											label={text("Backup frequency")}
+											options={[
+												{
+													key: "d",
+													text: text("Daily")
+												},
+												{
+													key: "w",
+													text: text("Weekly")
+												},
+												{
+													key: "m",
+													text: text("Monthly")
+												},
+												{
+													key: "n",
+													text: text("Never")
+												}
+											]}
+											defaultSelectedKey={this.props.getSetting(
+												"backup_freq"
+											)}
+											onChange={(ev, v) => {
+												this.props.setSetting(
+													"backup_freq",
+													v!.key.toString()
+												);
+											}}
+											disabled={!this.canEdit}
+										/>
+
+										<TextField
+											value={this.props.getSetting(
+												"backup_retain"
+											)}
+											label={text(
+												"How many backups to retain"
+											)}
+											onChange={(ev, val) => {
+												this.props.setSetting(
+													"backup_retain",
+													val!
+												);
+											}}
+											disabled={!this.canEdit}
+											type="number"
+										/>
+
+										{this.props.dropboxBackups.length ? (
+											<table className="ms-table">
+												<thead>
+													<tr>
+														<th>
+															{text("Backup")}
+														</th>
+														<th>
+															{text("Actions")}
+														</th>
+													</tr>
+												</thead>
+												<tbody>
+													{this.props.dropboxBackups.map(
+														file => {
+															const date = new Date(
+																file.client_modified
+															);
+
+															return (
+																<tr
+																	key={
+																		file.id
+																	}
+																>
+																	<td>
+																		<ProfileSquaredComponent
+																			onRenderInitials={() => (
+																				<div
+																					style={{
+																						textAlign:
+																							"center",
+																						fontSize: 10
+																					}}
+																				>
+																					{`${date.getDate()}/${date.getMonth() +
+																						1}`}
+																				</div>
+																			)}
+																			text={formatDate(
+																				date,
+																				this.props.getSetting(
+																					"date_format"
+																				)
+																			)}
+																			subText={`${Math.round(
+																				file.size /
+																					1000
+																			)} KB`}
+																		/>
+																	</td>
+																	<td>
+																		<TooltipHost
+																			content={text(
+																				"Delete"
+																			)}
+																		>
+																			<IconButton
+																				style={{
+																					marginRight: 6
+																				}}
+																				iconProps={{
+																					iconName: this
+																						.loading
+																						? "sync"
+																						: "delete"
+																				}}
+																				className={
+																					this
+																						.loading
+																						? "rotate"
+																						: ""
+																				}
+																				disabled={
+																					!this
+																						.canEdit
+																				}
+																				onClick={() => {
+																					this.loading = true;
+																					this.props
+																						.deleteDropboxBackup(
+																							file.path_lower
+																						)
+																						.then(
+																							() => {
+																								this.loading = false;
+																								this.props.updateDropboxBackups();
+																							}
+																						)
+																						.catch(
+																							() => {
+																								this.loading = false;
+																								this.props.updateDropboxBackups();
+																							}
+																						);
+																				}}
+																			/>
+																		</TooltipHost>
+
+																		<TooltipHost
+																			content={text(
+																				"Restore"
+																			)}
+																		>
+																			<IconButton
+																				style={{
+																					marginRight: 6
+																				}}
+																				iconProps={{
+																					iconName: this
+																						.loading
+																						? "sync"
+																						: "DatabaseSync"
+																				}}
+																				className={
+																					this
+																						.loading
+																						? "rotate"
+																						: ""
+																				}
+																				disabled={
+																					!this
+																						.canEdit
+																				}
+																				onClick={() => {
+																					this.loading = true;
+																					this.props
+																						.restoreFromDropbox(
+																							file.path_lower
+																						)
+																						.then(
+																							() =>
+																								(this.loading = false)
+																						)
+																						.catch(
+																							() =>
+																								(this.loading = false)
+																						);
+																				}}
+																			/>
+																		</TooltipHost>
+																	</td>
+																</tr>
+															);
+														}
+													)}
+												</tbody>
+											</table>
+										) : (
+											""
+										)}
+									</div>
+								) : (
+									<MessageBar
+										messageBarType={MessageBarType.warning}
+									>
+										A valid DropBox access token is required
+										for this section
+									</MessageBar>
+								)
+							) : (
+								<MessageBar
+									messageBarType={MessageBarType.warning}
+								>
+									{text(
+										"Backup and restore functionality are not available while you're offline"
+									)}
+								</MessageBar>
+							)}
+						</SectionComponent>
+					</div>
+				)}
 			</div>
 		);
 	}

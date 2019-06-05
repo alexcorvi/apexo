@@ -1,6 +1,13 @@
 @import "./global-styles/shadows.scss";
 
 .settings-component {
+	.math-question {
+		.ms-TextField {
+			display: inline-block;
+			width: 70px;
+		}
+	}
+
 	font-size: 13px;
 
 	.ms-MessageBar {
