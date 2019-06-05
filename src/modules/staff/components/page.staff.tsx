@@ -1,10 +1,12 @@
 import {
 	Col,
 	DataTableComponent,
+	PanelTabs,
 	ProfileComponent,
 	ProfileSquaredComponent,
 	Row,
-	SectionComponent
+	SectionComponent,
+	TableActions
 	} from "@common-components";
 import { text } from "@core";
 import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
@@ -21,8 +23,7 @@ import {
 	PanelType,
 	PersonaInitialsColor,
 	TextField,
-	Toggle,
-	TooltipHost
+	Toggle
 	} from "office-ui-fabric-react";
 import * as React from "react";
 
@@ -51,8 +52,34 @@ export class StaffPage extends React.Component<{
 		operatorID?: string | undefined
 	) => Appointment[];
 }> {
+	tabs = [
+		{
+			key: "details",
+			title: "Staff Member Details",
+			icon: "DietPlanNotebook"
+		},
+		{
+			key: "permission",
+			title: "Level and Permission",
+			icon: "Permissions"
+		},
+		{
+			key: "appointments",
+			title: "Upcoming Appointments",
+			icon: "Calendar",
+			hidden: !this.props.currentUser.canViewAppointments
+		},
+		{
+			key: "delete",
+			title: "Delete",
+			icon: "Trash",
+			hidden: !this.canEdit,
+			hiddenOnPanel: true
+		}
+	];
+
 	@observable selectedId: string = this.props.currentLocation.split("/")[1];
-	@observable viewWhich: number = 1;
+	@observable viewWhich: "" | "details" | "permission" | "appointments" = "";
 
 	@computed get canEdit() {
 		return this.props.currentUser.canEditStaff;
@@ -107,83 +134,20 @@ export class StaffPage extends React.Component<{
 													size={3}
 												/>
 												<br />
-												<TooltipHost
-													content={text(
-														"Staff Member Details"
-													)}
-												>
-													<IconButton
-														className="action-button"
-														iconProps={{
-															iconName:
-																"DietPlanNotebook"
-														}}
-														onClick={() => {
-															this.selectedId =
-																member._id;
-															this.viewWhich = 1;
-														}}
-													/>
-												</TooltipHost>
-
-												<TooltipHost
-													content={text(
-														"Level and Permission"
-													)}
-												>
-													<IconButton
-														className="action-button"
-														iconProps={{
-															iconName:
-																"Permissions"
-														}}
-														onClick={() => {
-															this.selectedId =
-																member._id;
-															this.viewWhich = 2;
-														}}
-													/>
-												</TooltipHost>
-
-												{this.props.currentUser
-													.canViewAppointments ? (
-													<TooltipHost
-														content={text(
-															"Upcoming Appointments"
-														)}
-													>
-														<IconButton
-															className="action-button"
-															iconProps={{
-																iconName:
-																	"Calendar"
-															}}
-															onClick={() => {
-																this.selectedId =
-																	member._id;
-																this.viewWhich = 3;
-															}}
-														/>
-													</TooltipHost>
-												) : (
-													""
-												)}
-												<TooltipHost
-													content={text("Delete")}
-												>
-													<IconButton
-														className="action-button delete"
-														iconProps={{
-															iconName: "Trash"
-														}}
-														onClick={() =>
+												<TableActions
+													items={this.tabs}
+													onSelect={key => {
+														if (key === "delete") {
 															this.props.onDeleteStaff(
 																member._id
-															)
+															);
+														} else {
+															this.selectedId =
+																member._id;
+															this.viewWhich = key as any;
 														}
-														disabled={!this.canEdit}
-													/>
-												</TooltipHost>
+													}}
+												/>
 											</div>
 										),
 										className: "no-label"
@@ -338,7 +302,7 @@ export class StaffPage extends React.Component<{
 													);
 													this.selectedId =
 														member._id;
-													this.viewWhich = 1;
+													this.viewWhich = "details";
 												},
 												iconProps: {
 													iconName: "Add"
@@ -419,55 +383,42 @@ export class StaffPage extends React.Component<{
 						isLightDismiss={true}
 						onDismiss={() => {
 							this.selectedId = "";
-							this.viewWhich = 0;
+							this.viewWhich = "";
 						}}
 						onRenderNavigation={() => (
-							<Row className="panel-heading">
-								<Col span={20}>
-									{this.selectedMember!.name ? (
-										<ProfileComponent
-											name={this.selectedMember!.name}
-											secondaryElement={
-												<span>
-													{this.viewWhich === 1
-														? text(
-																"Staff Member Details"
-														  )
-														: ""}
-													{this.viewWhich === 2
-														? text(
-																"Level and Permission"
-														  )
-														: ""}
-													{this.viewWhich === 3
-														? text(
-																"Upcoming Appointments"
-														  )
-														: ""}
-												</span>
-											}
-											tertiaryText={
-												this.selectedMember!.phone
-											}
-											size={3}
+							<div className="panel-heading">
+								<Row>
+									<Col span={20}>
+										{this.selectedMember!.name ? (
+											<ProfileComponent
+												name={this.selectedMember!.name}
+												size={2}
+											/>
+										) : (
+											<p />
+										)}
+									</Col>
+									<Col span={4} className="close">
+										<IconButton
+											iconProps={{ iconName: "cancel" }}
+											onClick={() => {
+												this.selectedId = "";
+											}}
 										/>
-									) : (
-										<p />
-									)}
-								</Col>
-								<Col span={4} className="close">
-									<IconButton
-										iconProps={{ iconName: "cancel" }}
-										onClick={() => {
-											this.selectedId = "";
-										}}
-									/>
-								</Col>
-							</Row>
+									</Col>
+								</Row>
+								<PanelTabs
+									currentSelectedKey={this.viewWhich}
+									onSelect={key => {
+										this.viewWhich = key as any;
+									}}
+									items={this.tabs}
+								/>
+							</div>
 						)}
 					>
 						<div className="staff-editor">
-							{this.viewWhich === 1 ? (
+							{this.viewWhich === "details" ? (
 								<div>
 									<SectionComponent
 										title={text(`Basic Info`)}
@@ -570,7 +521,7 @@ export class StaffPage extends React.Component<{
 								""
 							)}
 
-							{this.viewWhich === 2 ? (
+							{this.viewWhich === "permission" ? (
 								<div>
 									{this.selectedMember._id ===
 									this.props.currentUser._id ? (
@@ -980,7 +931,7 @@ export class StaffPage extends React.Component<{
 								""
 							)}
 
-							{this.viewWhich === 3 ? (
+							{this.viewWhich === "appointments" ? (
 								<SectionComponent
 									title={text(`Upcoming Appointments`)}
 								>

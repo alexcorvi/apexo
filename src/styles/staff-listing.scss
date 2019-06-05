@@ -49,6 +49,12 @@
 	.close {
 		text-align: right;
 	}
+	.ms-Pivot {
+		margin-bottom: -15px;
+		.ms-Pivot-link {
+			font-size: 12px;
+		}
+	}
 }
 
 @media (max-width: 1200px) {
