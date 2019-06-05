@@ -1,9 +1,11 @@
 import {
 	Col,
 	DataTableComponent,
+	PanelTabs,
 	ProfileComponent,
 	ProfileSquaredComponent,
 	Row,
+	TableActions,
 	TagComponent
 	} from "@common-components";
 import { text } from "@core";
@@ -77,11 +79,41 @@ export class PatientsPage extends React.Component<{
 	timeTrackingEnabled: boolean;
 	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
 }> {
+	tabs = [
+		{
+			key: "details",
+			title: "Patient Details",
+			icon: "DietPlanNotebook"
+		},
+		{
+			key: "dental",
+			title: "Dental History",
+			icon: "teeth"
+		},
+		{
+			key: "gallery",
+			title: "Gallery and X-Rays",
+			icon: "PhotoCollection"
+		},
+		{
+			key: "appointments",
+			title: "Upcoming Appointments",
+			icon: "Calendar",
+			hidden: !this.props.currentUser.canViewAppointments
+		},
+		{
+			key: "delete",
+			title: "Delete",
+			icon: "Trash",
+			hidden: !this.canEdit,
+			hiddenOnPanel: true
+		}
+	];
 	@observable selectedId: string = this.props.currentLocation.split("/")[1];
 
-	@observable viewWhich: number = this.props.currentLocation.split("/")[1]
-		? 1
-		: 0;
+	@observable viewWhich: string = this.props.currentLocation.split("/")[1]
+		? "details"
+		: "";
 
 	@computed
 	get patient() {
@@ -99,60 +131,49 @@ export class PatientsPage extends React.Component<{
 			<div className="patients-component p-15 p-l-10 p-r-10">
 				{this.patient ? (
 					<Panel
-						key={this.selectedId + this.viewWhich}
+						key={this.selectedId}
 						isOpen={!!this.patient}
 						type={PanelType.medium}
 						closeButtonAriaLabel="Close"
 						isLightDismiss={true}
 						onDismiss={() => {
 							this.selectedId = "";
-							this.viewWhich = 0;
+							this.viewWhich = "";
 						}}
 						onRenderNavigation={() => {
 							return (
-								<Row className="panel-heading">
-									<Col span={22}>
-										<ProfileComponent
-											name={this.patient!.name}
-											secondaryElement={
-												<div>
-													{this.viewWhich === 1
-														? text(
-																"Patient Details"
-														  )
-														: ""}
-													{this.viewWhich === 2
-														? text("Dental History")
-														: ""}
-													{this.viewWhich === 3
-														? text(
-																"Gallery and X-Rays"
-														  )
-														: ""}
-													{this.viewWhich === 4
-														? text(
-																"Patient Appointments"
-														  )
-														: ""}
-												</div>
-											}
-											size={3}
-										/>
-									</Col>
-									<Col span={2} className="close">
-										<IconButton
-											iconProps={{ iconName: "cancel" }}
-											onClick={() => {
-												this.selectedId = "";
-												this.viewWhich = 0;
-											}}
-										/>
-									</Col>
-								</Row>
+								<div className="panel-heading">
+									<Row>
+										<Col span={22}>
+											<ProfileComponent
+												name={this.patient!.name}
+												size={2}
+											/>
+										</Col>
+										<Col span={2} className="close">
+											<IconButton
+												iconProps={{
+													iconName: "cancel"
+												}}
+												onClick={() => {
+													this.selectedId = "";
+													this.viewWhich = "";
+												}}
+											/>
+										</Col>
+									</Row>
+									<PanelTabs
+										currentSelectedKey={this.viewWhich}
+										onSelect={key => {
+											this.viewWhich = key as any;
+										}}
+										items={this.tabs}
+									/>
+								</div>
 							);
 						}}
 					>
-						{this.viewWhich === 1 ? (
+						{this.viewWhich === "details" ? (
 							<PatientDetailsPanel
 								patient={this.patient!}
 								currentUser={this.props.currentUser}
@@ -167,7 +188,7 @@ export class PatientsPage extends React.Component<{
 						) : (
 							""
 						)}
-						{this.viewWhich === 2 ? (
+						{this.viewWhich === "dental" ? (
 							<DentalHistoryPanel
 								patient={this.patient!}
 								currentUser={this.props.currentUser}
@@ -175,7 +196,7 @@ export class PatientsPage extends React.Component<{
 						) : (
 							""
 						)}
-						{this.viewWhich === 3 ? (
+						{this.viewWhich === "gallery" ? (
 							<PatientGalleryPanel
 								patient={this.patient}
 								currentUser={this.props.currentUser}
@@ -188,7 +209,7 @@ export class PatientsPage extends React.Component<{
 						) : (
 							""
 						)}
-						{this.viewWhich === 4 ? (
+						{this.viewWhich === "appointments" ? (
 							<PatientAppointmentsPanel
 								patient={this.patient}
 								currentUser={this.props.currentUser}
@@ -264,90 +285,20 @@ export class PatientsPage extends React.Component<{
 										/>
 										<br />
 
-										<TooltipHost
-											content={text("Patient Details")}
-										>
-											<IconButton
-												className="action-button"
-												iconProps={{
-													iconName: "DietPlanNotebook"
-												}}
-												onClick={() => {
-													this.selectedId =
-														patient._id;
-													this.viewWhich = 1;
-												}}
-											/>
-										</TooltipHost>
-
-										<TooltipHost
-											content={text("Dental History")}
-										>
-											<IconButton
-												className="action-button"
-												iconProps={{
-													iconName: "Teeth"
-												}}
-												onClick={() => {
-													this.selectedId =
-														patient._id;
-													this.viewWhich = 2;
-												}}
-											/>
-										</TooltipHost>
-
-										<TooltipHost
-											content={text("Gallery and X-Rays")}
-										>
-											<IconButton
-												className="action-button"
-												iconProps={{
-													iconName: "PhotoCollection"
-												}}
-												onClick={() => {
-													this.selectedId =
-														patient._id;
-													this.viewWhich = 3;
-												}}
-											/>
-										</TooltipHost>
-
-										{this.props.currentUser
-											.canViewAppointments ? (
-											<TooltipHost
-												content={text(
-													"Patient Appointments"
-												)}
-											>
-												<IconButton
-													className="action-button"
-													iconProps={{
-														iconName: "Calendar"
-													}}
-													onClick={() => {
-														this.selectedId =
-															patient._id;
-														this.viewWhich = 4;
-													}}
-												/>
-											</TooltipHost>
-										) : (
-											""
-										)}
-										<TooltipHost content={text("Delete")}>
-											<IconButton
-												className="action-button delete"
-												iconProps={{
-													iconName: "Trash"
-												}}
-												onClick={() =>
+										<TableActions
+											items={this.tabs}
+											onSelect={key => {
+												if (key === "delete") {
 													this.props.onDeletePatient(
 														patient._id
-													)
+													);
+												} else {
+													this.selectedId =
+														patient._id;
+													this.viewWhich = key as any;
 												}
-												disabled={!this.canEdit}
-											/>
-										</TooltipHost>
+											}}
+										/>
 									</div>
 								),
 								className: "no-label"
@@ -523,7 +474,7 @@ export class PatientsPage extends React.Component<{
 											const patient = new Patient();
 											this.props.onAddPatient(patient);
 											this.selectedId = patient._id;
-											this.viewWhich = 1;
+											this.viewWhich = "details";
 										},
 										iconProps: {
 											iconName: "Add"
