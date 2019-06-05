@@ -1,9 +1,11 @@
 import {
 	Col,
 	DataTableComponent,
+	PanelTabs,
 	ProfileComponent,
 	ProfileSquaredComponent,
 	Row,
+	TableActions,
 	TagInputComponent
 	} from "@common-components";
 import { ModalInterface, text } from "@core";
@@ -108,10 +110,51 @@ export class OrthoPage extends React.Component<{
 	newModal: (modal: ModalInterface) => void;
 	cephLoader: (obj: CephalometricItemInterface) => Promise<string>;
 }> {
+	tabs = [
+		{
+			key: "details",
+			title: "Patient Details",
+			icon: "DietPlanNotebook"
+		},
+		{
+			key: "dental",
+			title: "Dental History",
+			icon: "teeth"
+		},
+		{
+			key: "sheet",
+			title: "Orthodontic Case Sheet",
+			icon: "GroupedList"
+		},
+		{
+			key: "album",
+			title: "Orthodontic Album",
+			icon: "TripleColumn"
+		},
+		{
+			key: "gallery",
+			title: "Gallery and X-Rays",
+			icon: "PhotoCollection"
+		},
+		{
+			key: "appointments",
+			title: "Upcoming Appointments",
+			icon: "Calendar",
+			hidden: !this.props.currentUser.canViewAppointments
+		},
+		{
+			key: "delete",
+			title: "Delete",
+			icon: "Trash",
+			hidden: !this.canEdit,
+			hiddenOnPanel: true
+		}
+	];
+
 	@observable showAdditionPanel: boolean = false;
 	@observable newPatientName: string = "";
 	@observable selectedId: string = "";
-	@observable viewWhich: number = 0;
+	@observable viewWhich: string = "";
 
 	@computed get selectedCase() {
 		return this.props.cases.find(
@@ -171,139 +214,20 @@ export class OrthoPage extends React.Component<{
 													size={3}
 												/>
 												<br />
-												<TooltipHost
-													content={text(
-														"Patient Details"
-													)}
-												>
-													<IconButton
-														className="action-button"
-														iconProps={{
-															iconName:
-																"DietPlanNotebook"
-														}}
-														onClick={() => {
-															this.selectedId =
-																orthoCase._id;
-															this.viewWhich = 1;
-														}}
-													/>
-												</TooltipHost>
-
-												<TooltipHost
-													content={text(
-														"Dental History"
-													)}
-												>
-													<IconButton
-														className="action-button"
-														iconProps={{
-															iconName: "Teeth"
-														}}
-														onClick={() => {
-															this.selectedId =
-																orthoCase._id;
-															this.viewWhich = 2;
-														}}
-													/>
-												</TooltipHost>
-
-												<TooltipHost
-													content={text(
-														"Orthodontic Case Sheet"
-													)}
-												>
-													<IconButton
-														className="action-button"
-														iconProps={{
-															iconName:
-																"GroupedList"
-														}}
-														onClick={() => {
-															this.selectedId =
-																orthoCase._id;
-															this.viewWhich = 3;
-														}}
-													/>
-												</TooltipHost>
-
-												<TooltipHost
-													content={text(
-														"Orthodontic Album"
-													)}
-												>
-													<IconButton
-														className="action-button"
-														iconProps={{
-															iconName:
-																"TripleColumn"
-														}}
-														onClick={() => {
-															this.selectedId =
-																orthoCase._id;
-															this.viewWhich = 4;
-														}}
-													/>
-												</TooltipHost>
-
-												<TooltipHost
-													content={text(
-														"Gallery and X-Rays"
-													)}
-												>
-													<IconButton
-														className="action-button"
-														iconProps={{
-															iconName:
-																"PhotoCollection"
-														}}
-														onClick={() => {
-															this.selectedId =
-																orthoCase._id;
-															this.viewWhich = 5;
-														}}
-													/>
-												</TooltipHost>
-
-												{this.props.currentUser
-													.canViewAppointments ? (
-													<TooltipHost
-														content={text(
-															"Patient Appointments"
-														)}
-													>
-														<IconButton
-															className="action-button"
-															iconProps={{
-																iconName:
-																	"Calendar"
-															}}
-															onClick={() => {
-																this.selectedId =
-																	orthoCase._id;
-																this.viewWhich = 6;
-															}}
-														/>
-													</TooltipHost>
-												) : (
-													""
-												)}
-												<TooltipHost
-													content={text("Delete")}
-												>
-													<IconButton
-														className="action-button delete"
-														iconProps={{
-															iconName: "Trash"
-														}}
-														onClick={() =>
+												<TableActions
+													items={this.tabs}
+													onSelect={key => {
+														if (key === "delete") {
 															this.props.onDeleteOrtho(
 																orthoCase._id
-															)
+															);
+														} else {
+															this.selectedId =
+																orthoCase._id;
+															this.viewWhich = key as any;
 														}
-														disabled={!this.canEdit}
-													/>
-												</TooltipHost>
+													}}
+												/>
 											</div>
 										),
 										className: "no-label"
@@ -581,7 +505,7 @@ export class OrthoPage extends React.Component<{
 							orthoCase.patientID = val.key;
 							this.props.onAddOrtho({ orthoCase: orthoCase });
 							this.selectedId = orthoCase._id;
-							this.viewWhich = 3;
+							this.viewWhich = "sheet";
 						}}
 						placeholder={text(`Type to select patient`)}
 					/>
@@ -606,7 +530,7 @@ export class OrthoPage extends React.Component<{
 							});
 							this.newPatientName = "";
 							this.selectedId = orthoCase._id;
-							this.viewWhich = 3;
+							this.viewWhich = "details";
 						}}
 						iconProps={{
 							iconName: "add"
@@ -628,7 +552,7 @@ export class OrthoPage extends React.Component<{
 					isLightDismiss={true}
 					onDismiss={() => {
 						this.selectedId = "";
-						this.viewWhich = 0;
+						this.viewWhich = "";
 					}}
 					onRenderNavigation={() => {
 						if (!this.selectedCase) {
@@ -638,56 +562,39 @@ export class OrthoPage extends React.Component<{
 							return <div />;
 						}
 						return (
-							<Row className="panel-heading">
-								<Col span={22}>
-									<ProfileComponent
-										name={this.selectedPatient!.name}
-										secondaryElement={
-											<span>
-												{this.viewWhich === 1
-													? text("Patient Details")
-													: ""}
-												{this.viewWhich === 2
-													? text("Dental History")
-													: ""}
-												{this.viewWhich === 3
-													? text(
-															"Orthodontic Case Sheet"
-													  )
-													: ""}
-												{this.viewWhich === 4
-													? text("Orthodontic Album")
-													: ""}
-												{this.viewWhich === 5
-													? text("Gallery and X-Rays")
-													: ""}
-												{this.viewWhich === 6
-													? text(
-															"Patient Appointments"
-													  )
-													: ""}
-											</span>
-										}
-										size={3}
-									/>
-								</Col>
-								<Col span={2} className="close">
-									<IconButton
-										iconProps={{ iconName: "cancel" }}
-										onClick={() => {
-											this.selectedId = "";
-											this.viewWhich = 0;
-										}}
-									/>
-								</Col>
-							</Row>
+							<div className="panel-heading">
+								<Row>
+									<Col span={22}>
+										<ProfileComponent
+											name={this.selectedPatient!.name}
+											size={2}
+										/>
+									</Col>
+									<Col span={2} className="close">
+										<IconButton
+											iconProps={{ iconName: "cancel" }}
+											onClick={() => {
+												this.selectedId = "";
+												this.viewWhich = "";
+											}}
+										/>
+									</Col>
+								</Row>
+								<PanelTabs
+									currentSelectedKey={this.viewWhich}
+									onSelect={key => {
+										this.viewWhich = key as any;
+									}}
+									items={this.tabs}
+								/>
+							</div>
 						);
 					}}
 				>
 					<div>
 						{this.selectedCase && this.selectedPatient ? (
 							<div className="ortho-single-component">
-								{this.viewWhich === 1 ? (
+								{this.viewWhich === "details" ? (
 									<PatientDetailsPanel
 										patient={this.selectedPatient!}
 										currentUser={this.props.currentUser}
@@ -705,7 +612,7 @@ export class OrthoPage extends React.Component<{
 									""
 								)}
 
-								{this.viewWhich === 2 ? (
+								{this.viewWhich === "dental" ? (
 									<DentalHistoryPanel
 										patient={this.selectedPatient!}
 										currentUser={this.props.currentUser}
@@ -714,7 +621,7 @@ export class OrthoPage extends React.Component<{
 									""
 								)}
 
-								{this.viewWhich === 3 ? (
+								{this.viewWhich === "sheet" ? (
 									<OrthoCaseSheetPanel
 										orthoCase={this.selectedCase}
 										currentUser={this.props.currentUser}
@@ -723,7 +630,7 @@ export class OrthoPage extends React.Component<{
 									""
 								)}
 
-								{this.viewWhich === 4 ? (
+								{this.viewWhich === "album" ? (
 									<OrthoRecordsPanel
 										orthoCase={this.selectedCase}
 										currentUser={this.props.currentUser}
@@ -745,7 +652,7 @@ export class OrthoPage extends React.Component<{
 									""
 								)}
 
-								{this.viewWhich === 5 ? (
+								{this.viewWhich === "gallery" ? (
 									<OrthoGalleryPanel
 										orthoCase={this.selectedCase}
 										currentUser={this.props.currentUser}
@@ -767,7 +674,7 @@ export class OrthoPage extends React.Component<{
 									""
 								)}
 
-								{this.viewWhich === 6 ? (
+								{this.viewWhich === "appointments" ? (
 									<PatientAppointmentsPanel
 										patient={this.selectedPatient}
 										currentUser={this.props.currentUser}
