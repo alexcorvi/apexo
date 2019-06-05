@@ -188,6 +188,17 @@
 				border: 1px solid #ffebb6;
 				background: #fff9e9;
 				float: right;
+				&.done,
+				&.missed {
+					color: #fff;
+					border-color: transparent;
+					opacity: 0.6;
+					font-size: 10px;
+					background: #009688;
+				}
+				&.missed {
+					background: #e91e63;
+				}
 			}
 			a {
 				display: inline-block;

@@ -355,10 +355,21 @@ export class CalendarPage extends React.Component<{
 														(this.appointment = appointment)
 													}
 												>
-													<div className="time">
-														{
-															appointment.formattedTime
+													<div
+														className={
+															"time" +
+															(appointment.missed
+																? " missed"
+																: appointment.isDone
+																? " done"
+																: "")
 														}
+													>
+														{appointment.missed
+															? "Missed"
+															: appointment.isDone
+															? "Done"
+															: appointment.formattedTime}
 													</div>
 													<div className="m-b-5">
 														<ProfileSquaredComponent
