@@ -1,5 +1,5 @@
 import { Col, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
-import { DropboxFile, text } from "@core";
+import { DropboxFile, status, text } from "@core";
 import { dictionary, StaffMember } from "@modules";
 import { dateNames, formatDate, second } from "@utils";
 import { computed, observable } from "mobx";
@@ -20,8 +20,6 @@ import * as React from "react";
 export class SettingsPage extends React.Component<
 	{
 		currentUser: StaffMember;
-		isOnline: boolean;
-		isDropboxActive: boolean;
 		dropboxBackups: DropboxFile[];
 		updateDropboxBackups: () => Promise<void>;
 		validateDropboxToken: () => void;
@@ -319,7 +317,7 @@ export class SettingsPage extends React.Component<
 							/>
 						</SectionComponent>
 						<SectionComponent title={text(`Backup and Restore`)}>
-							{this.props.isOnline ? (
+							{status.isOnline ? (
 								<div>
 									<DefaultButton
 										onClick={() => {
@@ -379,8 +377,8 @@ export class SettingsPage extends React.Component<
 						<SectionComponent
 							title={text(`Automated Backup and Restore`)}
 						>
-							{this.props.isOnline ? (
-								this.props.isDropboxActive ? (
+							{status.isOnline ? (
+								status.isDropboxActive ? (
 									<div>
 										<Dropdown
 											label={text("Backup frequency")}

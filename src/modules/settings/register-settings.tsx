@@ -10,15 +10,14 @@ export const registerSettings = {
 			namespace: modules.settingsNamespace,
 			regex: /^settings/,
 			component: async () => {
-				const SettingsPage = (await import("./components/page.settings"))
-					.SettingsPage;
+				const SettingsPage = (await import(
+					"./components/page.settings"
+				)).SettingsPage;
 				return (
 					<SettingsPage
 						currentUser={
 							core.user.currentUser || new modules.StaffMember()
 						}
-						isOnline={core.status.isOnline}
-						isDropboxActive={core.status.isDropboxActive}
 						dropboxBackups={modules.setting.dropboxBackups}
 						updateDropboxBackups={() =>
 							modules.setting.updateDropboxBackups()

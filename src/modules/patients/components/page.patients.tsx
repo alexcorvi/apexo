@@ -49,8 +49,6 @@ const DentalHistoryPanel = loadable({
 @observer
 export class PatientsPage extends React.Component<{
 	patients: Patient[];
-	isOnline: boolean;
-	isDropboxActive: boolean;
 	currentUser: StaffMember;
 	dateFormat: string;
 	currencySymbol: string;
@@ -221,7 +219,6 @@ export class PatientsPage extends React.Component<{
 							<PatientGalleryPanel
 								patient={this.patient}
 								currentUser={this.props.currentUser}
-								isOnline={this.props.isOnline}
 								saveFile={obj => this.props.saveFile(obj)}
 								getFile={path => this.props.getFile(path)}
 								removeFile={path => this.props.removeFile(path)}

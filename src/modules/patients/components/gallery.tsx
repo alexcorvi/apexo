@@ -11,7 +11,6 @@ export class PatientGalleryPanel extends React.Component<
 	{
 		patient: Patient;
 		currentUser: StaffMember;
-		isOnline: boolean;
 		saveFile: (obj: {
 			blob: Blob;
 			ext: string;
@@ -39,7 +38,7 @@ export class PatientGalleryPanel extends React.Component<
 	render() {
 		return (
 			<SectionComponent title={text(`Patient Gallery`)}>
-				{this.props.isOnline ? (
+				{status.isOnline ? (
 					status.isDropboxActive ? (
 						<div className="spg-p">
 							{this.props.patient.gallery.length === 0 ? (

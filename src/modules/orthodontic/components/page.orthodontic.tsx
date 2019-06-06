@@ -81,8 +81,6 @@ export class OrthoPage extends React.Component<{
 	prescriptionsEnabled: boolean;
 	timeTrackingEnabled: boolean;
 	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
-	isOnline: boolean;
-	isDropboxActive: boolean;
 	onDeleteOrtho: (id: string) => void;
 	onAddOrtho: ({
 		orthoCase,
@@ -672,7 +670,6 @@ export class OrthoPage extends React.Component<{
 									<OrthoRecordsPanel
 										orthoCase={this.selectedCase}
 										currentUser={this.props.currentUser}
-										isOnline={this.props.isOnline}
 										dateFormat={this.props.dateFormat}
 										getFile={x => this.props.getFile(x)}
 										removeFile={x =>
@@ -691,10 +688,6 @@ export class OrthoPage extends React.Component<{
 									<OrthoGalleryPanel
 										orthoCase={this.selectedCase}
 										currentUser={this.props.currentUser}
-										isOnline={this.props.isOnline}
-										isDropboxActive={
-											this.props.isDropboxActive
-										}
 										dateFormat={this.props.dateFormat}
 										saveFile={x => this.props.saveFile(x)}
 										removeFile={x =>

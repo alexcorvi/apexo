@@ -7,8 +7,9 @@ export const registerOrthodontic = {
 			namespace: modules.orthoNamespace,
 			regex: /^orthodontic/,
 			component: async () => {
-				const OrthoPage = (await import("./components/page.orthodontic"))
-					.OrthoPage;
+				const OrthoPage = (await import(
+					"./components/page.orthodontic"
+				)).OrthoPage;
 				return (
 					<OrthoPage
 						dateFormat={modules.setting.getSetting("date_format")}
@@ -33,8 +34,6 @@ export const registerOrthodontic = {
 							!!modules.setting.getSetting("time_tracking")
 						}
 						operatingStaff={modules.staff.operatingStaff}
-						isOnline={core.status.isOnline}
-						isDropboxActive={core.status.isDropboxActive}
 						onDeleteOrtho={id => modules.orthoCases.deleteModal(id)}
 						onAddOrtho={orthoCase => {
 							modules.orthoCases.list.push(orthoCase.orthoCase);

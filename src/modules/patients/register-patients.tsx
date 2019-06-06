@@ -8,8 +8,9 @@ export const registerPatients = {
 			namespace: modules.patientsNamespace,
 			regex: /^patients/,
 			component: async () => {
-				const PatientsPage = (await import("./components/page.patients"))
-					.PatientsPage;
+				const PatientsPage = (await import(
+					"./components/page.patients"
+				)).PatientsPage;
 				return (
 					<PatientsPage
 						dateFormat={modules.setting.getSetting("date_format")}
@@ -29,8 +30,6 @@ export const registerPatients = {
 							!!modules.setting.getSetting("time_tracking")
 						}
 						operatingStaff={modules.staff.operatingStaff}
-						isOnline={core.status.isOnline}
-						isDropboxActive={core.status.isDropboxActive}
 						onAddAppointment={appointment =>
 							modules.appointments.list.push(appointment)
 						}

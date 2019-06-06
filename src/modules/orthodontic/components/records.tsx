@@ -50,7 +50,6 @@ const viewsTerms = [
 export class OrthoRecordsPanel extends React.Component<{
 	orthoCase: OrthoCase;
 	currentUser: StaffMember;
-	isOnline: boolean;
 	dateFormat: string;
 	getFile: (path: string) => Promise<string>;
 	removeFile: (path: string) => Promise<any>;
@@ -247,7 +246,7 @@ export class OrthoRecordsPanel extends React.Component<{
 					</Row>
 				</SectionComponent>
 				<SectionComponent title={text(`Records`)}>
-					{this.props.isOnline ? (
+					{status.isOnline ? (
 						status.isDropboxActive ? (
 							<div className="album">
 								{this.props.orthoCase.visits.length ? (

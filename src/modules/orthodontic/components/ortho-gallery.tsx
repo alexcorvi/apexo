@@ -6,7 +6,7 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import { CEPHALOMETRIC_DIR, text } from "@core";
+import { CEPHALOMETRIC_DIR, status, text } from "@core";
 import { CephalometricItemInterface, OrthoCase, PatientGalleryPanel, StaffMember } from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
@@ -25,8 +25,6 @@ const CephalometricEditorPanel = loadable({
 export class OrthoGalleryPanel extends React.Component<{
 	orthoCase: OrthoCase;
 	currentUser: StaffMember;
-	isOnline: boolean;
-	isDropboxActive: boolean;
 	dateFormat: string;
 	saveFile: (obj: {
 		blob: Blob;
@@ -61,7 +59,6 @@ export class OrthoGalleryPanel extends React.Component<{
 					<PatientGalleryPanel
 						patient={this.props.orthoCase.patient}
 						currentUser={this.props.currentUser}
-						isOnline={this.props.isOnline}
 						saveFile={obj => this.props.saveFile(obj)}
 						getFile={path => this.props.getFile(path)}
 						removeFile={path => this.props.removeFile(path)}
@@ -88,8 +85,8 @@ export class OrthoGalleryPanel extends React.Component<{
 				)}
 
 				<SectionComponent title={text(`Cephalometric Analysis`)}>
-					{this.props.isOnline ? (
-						this.props.isDropboxActive ? (
+					{status.isOnline ? (
+						status.isDropboxActive ? (
 							<div>
 								{this.props.orthoCase.cephalometricHistory.map(
 									(c, i) => (
