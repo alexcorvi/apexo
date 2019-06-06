@@ -21,6 +21,8 @@ export class Patient {
 
 	@observable name: string = "";
 
+	@observable avatar: string = "";
+
 	@observable birthYear: number = 0;
 
 	@observable gender: Gender = Gender.male;
@@ -180,6 +182,7 @@ export class Patient {
 	fromJSON(json: PatientJSON) {
 		this._id = json._id;
 		this.name = json.name;
+		this.avatar = json.avatar || "";
 		this.birthYear = json.birthYear;
 		this.gender = stringToGender(json.gender);
 		this.tags = json.tags;
@@ -217,6 +220,7 @@ export class Patient {
 		return {
 			_id: this._id,
 			name: this.name,
+			avatar: this.avatar,
 			birthYear: this.birthYear,
 			gender: genderToString(this.gender),
 			tags: this.tags,

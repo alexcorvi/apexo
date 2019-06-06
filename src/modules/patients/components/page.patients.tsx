@@ -8,7 +8,7 @@ import {
 	TableActions,
 	TagComponent
 	} from "@common-components";
-import { text } from "@core";
+import { imagesTable, text } from "@core";
 import {
 	Appointment,
 	genderToString,
@@ -148,6 +148,24 @@ export class PatientsPage extends React.Component<{
 											<ProfileComponent
 												name={this.patient!.name}
 												size={2}
+												avatar={
+													this.patient!.avatar
+														? imagesTable.table[
+																this.patient!
+																	.avatar
+														  ]
+															? imagesTable.table[
+																	this
+																		.patient!
+																		.avatar
+															  ]
+															: imagesTable.fetchImage(
+																	this
+																		.patient!
+																		.avatar
+															  )
+														: undefined
+												}
 											/>
 										</Col>
 										<Col span={2} className="close">
@@ -184,6 +202,9 @@ export class PatientsPage extends React.Component<{
 											a.concat(b.map(x => x.text)),
 										[]
 									)}
+								onChangeViewWhich={key =>
+									(this.viewWhich = key)
+								}
 							/>
 						) : (
 							""
@@ -269,6 +290,19 @@ export class PatientsPage extends React.Component<{
 									<div>
 										<ProfileComponent
 											name={patient.name}
+											avatar={
+												patient.avatar
+													? imagesTable.table[
+															patient.avatar
+													  ]
+														? imagesTable.table[
+																patient.avatar
+														  ]
+														: imagesTable.fetchImage(
+																patient.avatar
+														  )
+													: undefined
+											}
 											secondaryElement={
 												<span>
 													{text(

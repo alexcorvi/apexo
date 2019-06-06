@@ -8,7 +8,7 @@ import {
 	TableActions,
 	TagInputComponent
 	} from "@common-components";
-import { ModalInterface, text } from "@core";
+import { imagesTable, ModalInterface, text } from "@core";
 import {
 	Appointment,
 	CephalometricItemInterface,
@@ -200,6 +200,22 @@ export class OrthoPage extends React.Component<{
 											<div>
 												<ProfileComponent
 													name={patient.name}
+													avatar={
+														patient.avatar
+															? imagesTable.table[
+																	patient
+																		.avatar
+															  ]
+																? imagesTable
+																		.table[
+																		patient
+																			.avatar
+																  ]
+																: imagesTable.fetchImage(
+																		patient.avatar
+																  )
+															: undefined
+													}
 													secondaryElement={
 														<span>
 															{text(
@@ -568,6 +584,25 @@ export class OrthoPage extends React.Component<{
 										<ProfileComponent
 											name={this.selectedPatient!.name}
 											size={2}
+											avatar={
+												this.selectedPatient!.avatar
+													? imagesTable.table[
+															this
+																.selectedPatient!
+																.avatar
+													  ]
+														? imagesTable.table[
+																this
+																	.selectedPatient!
+																	.avatar
+														  ]
+														: imagesTable.fetchImage(
+																this
+																	.selectedPatient!
+																	.avatar
+														  )
+													: undefined
+											}
 										/>
 									</Col>
 									<Col span={2} className="close">
@@ -607,6 +642,9 @@ export class OrthoPage extends React.Component<{
 													),
 												[]
 											)}
+										onChangeViewWhich={key =>
+											(this.viewWhich = key)
+										}
 									/>
 								) : (
 									""

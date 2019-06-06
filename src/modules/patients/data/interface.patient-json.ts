@@ -3,6 +3,7 @@ import { ToothJSON } from "@modules";
 export interface PatientJSON {
 	_id: string;
 	name: string;
+	avatar: string;
 	birthYear: number;
 	gender: string;
 	tags: string;

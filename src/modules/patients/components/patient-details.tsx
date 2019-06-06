@@ -1,10 +1,10 @@
 import { Col, getRandomTagType, Row, SectionComponent, TagInputComponent } from "@common-components";
-import { text } from "@core";
+import { imagesTable, status, text } from "@core";
 import { Gender, Patient, StaffMember } from "@modules";
 import { num } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
-import { Dropdown, Shimmer, TextField } from "office-ui-fabric-react";
+import { Dropdown, Label, Link, Shimmer, TextField } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
 
@@ -20,6 +20,7 @@ export class PatientDetailsPanel extends React.Component<{
 	patient: Patient;
 	currentUser: StaffMember;
 	usedLabels: string[];
+	onChangeViewWhich: (key: string) => void;
 }> {
 	@computed get canEdit() {
 		return this.props.currentUser.canEditPatients;
@@ -83,6 +84,57 @@ export class PatientDetailsPanel extends React.Component<{
 							</div>
 						</Col>
 					</Row>
+					{status.isOnline ? (
+						<div>
+							<Label>Avatar photo</Label>
+							{this.props.patient.gallery.map(image => {
+								if (imagesTable.table[image]) {
+									return (
+										<a
+											className={`thumb ${
+												this.props.patient.avatar ===
+												image
+													? "selected"
+													: ""
+											}`}
+											key={image}
+											style={{
+												backgroundImage: `url('${
+													imagesTable.table[image]
+														? imagesTable.table[
+																image
+														  ]
+														: ""
+												}')`
+											}}
+											onClick={() => {
+												this.props.patient.avatar = image;
+											}}
+										>
+											i
+										</a>
+									);
+								} else {
+									imagesTable.fetchImage(image);
+								}
+							})}
+							<Link
+								onClick={() => (this.props.patient.avatar = "")}
+							>
+								{text("Unset")}
+							</Link>{" "}
+							/{" "}
+							<Link
+								onClick={() =>
+									this.props.onChangeViewWhich("gallery")
+								}
+							>
+								{text("Upload in the gallery")}
+							</Link>
+						</div>
+					) : (
+						""
+					)}
 				</SectionComponent>
 
 				<SectionComponent title={text(`Contact Info`)}>

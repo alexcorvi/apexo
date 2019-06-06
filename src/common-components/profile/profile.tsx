@@ -13,6 +13,7 @@ export class ProfileComponent extends React.Component<
 		style?: React.CSSProperties;
 		secondaryElement?: JSX.Element;
 		onRenderInitials?: IRenderFunction<IPersonaSharedProps>;
+		avatar?: string;
 	},
 	{}
 > {
@@ -38,6 +39,7 @@ export class ProfileComponent extends React.Component<
 				text={this.props.name}
 				tertiaryText={this.props.tertiaryText}
 				onRenderInitials={this.props.onRenderInitials}
+				imageUrl={this.props.avatar}
 			/>
 		);
 	}
