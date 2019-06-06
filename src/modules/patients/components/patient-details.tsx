@@ -84,52 +84,61 @@ export class PatientDetailsPanel extends React.Component<{
 							</div>
 						</Col>
 					</Row>
-					{status.isOnline ? (
+					{status.isOnline && status.isDropboxActive ? (
 						<div>
 							<Label>Avatar photo</Label>
-							{this.props.patient.gallery.map(image => {
-								if (imagesTable.table[image]) {
-									return (
-										<a
-											className={`thumb ${
-												this.props.patient.avatar ===
-												image
-													? "selected"
-													: ""
-											}`}
-											key={image}
-											style={{
-												backgroundImage: `url('${
-													imagesTable.table[image]
-														? imagesTable.table[
-																image
-														  ]
+							<div className="thumbs">
+								{this.props.patient.gallery.map(image => {
+									if (imagesTable.table[image]) {
+										return (
+											<a
+												className={`thumb ${
+													this.props.patient
+														.avatar === image
+														? "selected"
 														: ""
-												}')`
-											}}
-											onClick={() => {
-												this.props.patient.avatar = image;
-											}}
-										>
-											i
-										</a>
-									);
-								} else {
-									imagesTable.fetchImage(image);
-								}
-							})}
-							<Link
-								onClick={() => (this.props.patient.avatar = "")}
-							>
-								{text("Unset")}
-							</Link>{" "}
-							/{" "}
+												}`}
+												key={image}
+												style={{
+													backgroundImage: `url('${
+														imagesTable.table[image]
+															? imagesTable.table[
+																	image
+															  ]
+															: ""
+													}')`
+												}}
+												onClick={() => {
+													this.props.patient.avatar = image;
+												}}
+											/>
+										);
+									} else {
+										imagesTable.fetchImage(image);
+									}
+								})}
+							</div>
+							<br />
+							{this.props.patient.avatar ? (
+								<span>
+									<Link
+										onClick={() =>
+											(this.props.patient.avatar = "")
+										}
+									>
+										{text("Unset")}
+									</Link>{" "}
+									/{" "}
+								</span>
+							) : (
+								""
+							)}
 							<Link
 								onClick={() =>
 									this.props.onChangeViewWhich("gallery")
 								}
 							>
-								{text("Upload in the gallery")}
+								{text("Upload")}
 							</Link>
 						</div>
 					) : (

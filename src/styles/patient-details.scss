@@ -34,8 +34,10 @@
 		margin-right: 5px;
 		border: 2px solid transparent;
 		cursor: pointer;
+		border-radius: 3px;
 		&.selected {
 			border-color: darkred;
+			border-radius: 50%;
 		}
 	}
 }
