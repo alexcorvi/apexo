@@ -9,3 +9,4 @@ export * from "./messages";
 export * from "./modals";
 export * from "./router";
 export * from "./user";
+export * from "./images-table";
