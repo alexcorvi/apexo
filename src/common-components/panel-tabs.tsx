@@ -10,7 +10,7 @@ export class PanelTabs extends React.Component<{
 		key: string;
 		title: string;
 		icon: string;
-		hiddenOnPanel?: boolean;
+		hidden?: boolean;
 	}[];
 	onSelect: (key: string) => void;
 	currentSelectedKey: string;
@@ -28,7 +28,7 @@ export class PanelTabs extends React.Component<{
 					}}
 				>
 					{this.props.items.map((item, index) =>
-						item.hiddenOnPanel ? (
+						item.hidden ? (
 							""
 						) : (
 							<PivotItem

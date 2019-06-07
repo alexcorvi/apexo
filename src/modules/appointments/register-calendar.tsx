@@ -8,8 +8,9 @@ export const registerAppointments = {
 			namespace: modules.appointmentsNamespace,
 			regex: /^appointments/,
 			component: async () => {
-				const CalendarPage = (await import("./components/page.calendar"))
-					.CalendarPage;
+				const CalendarPage = (await import(
+					"./components/page.calendar"
+				)).CalendarPage;
 				return (
 					<CalendarPage
 						currentUser={
@@ -33,6 +34,9 @@ export const registerAppointments = {
 							modules.appointments.appointmentsForDay(...args)
 						}
 						onNavigation={arr => core.router.go(arr)}
+						doDeleteAppointment={id => {
+							modules.appointments.deleteByID(id);
+						}}
 					/>
 				);
 			},

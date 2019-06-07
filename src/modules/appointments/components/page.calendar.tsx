@@ -42,6 +42,7 @@ export class CalendarPage extends React.Component<{
 		operatorID?: string | undefined
 	) => Appointment[];
 	onNavigation: (arr: string[]) => void;
+	doDeleteAppointment: (id: string) => void;
 }> {
 	@observable filter: string = "";
 
@@ -441,7 +442,12 @@ export class CalendarPage extends React.Component<{
 					<AppointmentEditorPanel
 						appointment={this.appointment}
 						onDismiss={() => (this.appointment = null)}
-						onDeleteAppointment={() => (this.appointment = null)}
+						onDeleteAppointment={() => {
+							this.props.doDeleteAppointment(
+								this.appointment!._id
+							);
+							this.appointment = null;
+						}}
 						currentUser={this.props.currentUser}
 						appointmentsForDay={(year, month, day) =>
 							this.props.appointmentsForDay(year, month, day)
