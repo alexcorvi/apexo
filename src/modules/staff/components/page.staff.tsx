@@ -1003,6 +1003,7 @@ export class StaffPage extends React.Component<{
 
 							{this.viewWhich === "delete" ? (
 								<div>
+									<br />
 									<MessageBar
 										messageBarType={MessageBarType.warning}
 									>

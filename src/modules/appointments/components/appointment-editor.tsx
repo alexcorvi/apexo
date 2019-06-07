@@ -939,6 +939,7 @@ export class AppointmentEditorPanel extends React.Component<
 
 					{this.viewWhich === "delete" ? (
 						<div>
+							<br />
 							<MessageBar messageBarType={MessageBarType.warning}>
 								{text(
 									"Are you sure you want to delete this appointment?"
