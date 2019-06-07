@@ -33,6 +33,7 @@ import {
 	TextField,
 	TooltipHost
 	} from "office-ui-fabric-react";
+import { MessageBar, MessageBarType, PrimaryButton } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
 
@@ -107,6 +108,7 @@ export class OrthoPage extends React.Component<{
 	) => Appointment[];
 	newModal: (modal: ModalInterface) => void;
 	cephLoader: (obj: CephalometricItemInterface) => Promise<string>;
+	doDeleteOrtho: (id: string) => void;
 }> {
 	tabs = [
 		{
@@ -745,6 +747,39 @@ export class OrthoPage extends React.Component<{
 											)
 										}
 									/>
+								) : (
+									""
+								)}
+
+								{this.viewWhich === "delete" ? (
+									<div>
+										<br />
+										<MessageBar
+											messageBarType={
+												MessageBarType.warning
+											}
+										>
+											{text(
+												"Orthodontic case will be deleted"
+											)}
+										</MessageBar>
+										<br />
+										<PrimaryButton
+											className="delete"
+											iconProps={{
+												iconName: "delete"
+											}}
+											text={text("Delete")}
+											onClick={() => {
+												this.props.doDeleteOrtho(
+													this.selectedId
+												);
+
+												this.selectedId = "";
+												this.viewWhich = "";
+											}}
+										/>
+									</div>
 								) : (
 									""
 								)}

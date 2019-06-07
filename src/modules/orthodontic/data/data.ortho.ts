@@ -70,9 +70,10 @@ class OrthoCases {
 		}
 	}
 
-	private deleteByID(id: string) {
+	deleteByID(id: string) {
 		const i = this.getIndexByID(id);
 		const orthoCase = this.list.splice(i, 1)[0];
+		// TODO: go over all files and delete them
 	}
 
 	deleteModal(id: string) {
