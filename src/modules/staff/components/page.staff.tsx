@@ -25,6 +25,7 @@ import {
 	TextField,
 	Toggle
 	} from "office-ui-fabric-react";
+import { PrimaryButton } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
@@ -51,6 +52,7 @@ export class StaffPage extends React.Component<{
 		filter?: string | undefined,
 		operatorID?: string | undefined
 	) => Appointment[];
+	doDeleteStaff: (id: string) => void;
 }> {
 	tabs = [
 		{
@@ -79,7 +81,12 @@ export class StaffPage extends React.Component<{
 	];
 
 	@observable selectedId: string = this.props.currentLocation.split("/")[1];
-	@observable viewWhich: "" | "details" | "permission" | "appointments" = "";
+	@observable viewWhich:
+		| ""
+		| "details"
+		| "permission"
+		| "appointments"
+		| "delete" = "";
 
 	@computed get canEdit() {
 		return this.props.currentUser.canEditStaff;
@@ -990,6 +997,36 @@ export class StaffPage extends React.Component<{
 										</MessageBar>
 									)}
 								</SectionComponent>
+							) : (
+								""
+							)}
+
+							{this.viewWhich === "delete" ? (
+								<div>
+									<MessageBar
+										messageBarType={MessageBarType.warning}
+									>
+										{text(
+											"Are you sure you want to delete"
+										)}
+									</MessageBar>
+									<br />
+									<PrimaryButton
+										className="delete"
+										iconProps={{
+											iconName: "delete"
+										}}
+										text={text("Delete")}
+										onClick={() => {
+											this.props.doDeleteStaff(
+												this.selectedId
+											);
+
+											this.selectedId = "";
+											this.viewWhich = "";
+										}}
+									/>
+								</div>
 							) : (
 								""
 							)}

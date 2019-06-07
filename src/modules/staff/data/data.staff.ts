@@ -28,7 +28,7 @@ class StaffData {
 		});
 	}
 
-	private deleteByID(id: string) {
+	deleteByID(id: string) {
 		const currentID = (user.currentUser || { _id: "" })._id;
 		const i = this.getIndexByID(id);
 
