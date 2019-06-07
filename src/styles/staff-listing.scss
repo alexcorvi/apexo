@@ -49,11 +49,9 @@
 	.close {
 		text-align: right;
 	}
-	.ms-Pivot {
-		margin-bottom: -15px;
-		.ms-Pivot-link {
-			font-size: 12px;
-		}
+	> .ant-row {
+		bottom: 5px;
+		margin-bottom: 2px;
 	}
 }
 
