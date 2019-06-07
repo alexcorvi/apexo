@@ -1,11 +1,14 @@
-import { IClassCreator, IClassStatic, IMobXStore, InteractionMethods, observeItem } from "@core";
+import {
+	blackListedIDs,
+	IClassCreator,
+	IClassStatic,
+	IMobXStore,
+	InteractionMethods,
+	observeItem
+	} from "@core";
 import { diff } from "fast-array-diff";
 
-export function generateMethods(
-	db: PouchDB.Database,
-	data: IMobXStore,
-	Class: IClassCreator
-) {
+export function generateMethods(db: PouchDB.Database, data: IMobXStore) {
 	const methods: InteractionMethods<IClassStatic> = {
 		/**
 		 * Put the MobX store list into the database by diffing the new store with the cache
@@ -42,6 +45,7 @@ export function generateMethods(
 		},
 
 		async remove(_id: string) {
+			blackListedIDs.push(_id);
 			const doc = await db.get(_id);
 			(doc as any)._deleted = true;
 			const response = await db.put(doc);

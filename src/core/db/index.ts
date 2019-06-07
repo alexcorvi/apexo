@@ -1,4 +1,5 @@
 import {
+	blackListedIDs,
 	configs,
 	generateMethods,
 	IClassCreator,
@@ -118,7 +119,7 @@ export async function connectToDB(
 
 	return async function(Class: IClassCreator, data: IMobXStore) {
 		// start with the basics
-		const methods = generateMethods(localDatabase, data, Class);
+		const methods = generateMethods(localDatabase, data);
 
 		/**
 		 * First of all we have three places to store data
@@ -187,6 +188,7 @@ export async function connectToDB(
 				const newDoc: any = change.doc;
 				const id = change.id;
 				const mobxIndex = data.list.findIndex(x => x._id === id);
+				const isBlackListed = blackListedIDs.indexOf(newDoc._id) !== -1;
 
 				const mobxDocHash =
 					mobxIndex !== -1
@@ -210,9 +212,18 @@ export async function connectToDB(
 					mobxDocHash !== newDoHash;
 				// it's not found in mobx and it's not deleted
 				const remoteAddition =
-					mobxIndex === -1 && change.deleted !== true;
+					mobxIndex === -1 &&
+					change.deleted !== true &&
+					!isBlackListed;
 
-				if (remoteAddition || remoteDeletion || remoteUpdate) {
+				if (isBlackListed) {
+					const localDoc = await localDatabase.get(newDoc._id);
+					await localDatabase.remove(localDoc);
+					await localDatabase.remove(change.doc || localDoc);
+					const remoteDoc = await remoteDatabase.get(newDoc._id);
+					await remoteDatabase.remove(remoteDoc);
+					await remoteDatabase.sync(localDatabase);
+				} else if (remoteAddition || remoteDeletion || remoteUpdate) {
 					data.ignoreObserver = true;
 					// if it's a deletion
 					if (remoteDeletion) {
@@ -278,3 +289,4 @@ export * from "./interface.mobx-store";
 export * from "./log";
 export * from "./observe-item";
 export * from "./single-item-update-que";
+export * from "./black-list";
