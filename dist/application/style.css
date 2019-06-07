@@ -6561,6 +6561,19 @@ hr {
   .spd-pn .buttons .delete {
     position: static !important; }
 
+.spd-pn .thumb {
+  height: 50px;
+  width: 50px;
+  background-size: cover;
+  display: inline-block;
+  margin-right: 5px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  border-radius: 3px; }
+  .spd-pn .thumb.selected {
+    border-color: darkred;
+    border-radius: 50%; }
+
 .plk-c {
   cursor: pointer; }
   .plk-c .icon {
