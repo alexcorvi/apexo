@@ -27,9 +27,9 @@ import {
 	Panel,
 	PanelType,
 	PersonaInitialsColor,
-	Shimmer,
-	TooltipHost
+	Shimmer
 	} from "office-ui-fabric-react";
+import { MessageBar, MessageBarType, PrimaryButton } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
 
@@ -76,6 +76,7 @@ export class PatientsPage extends React.Component<{
 	prescriptionsEnabled: boolean;
 	timeTrackingEnabled: boolean;
 	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
+	doDeletePatient: (id: string) => void;
 }> {
 	tabs = [
 		{
@@ -256,6 +257,41 @@ export class PatientsPage extends React.Component<{
 									this.props.appointmentsForDay(a, b, c)
 								}
 							/>
+						) : (
+							""
+						)}
+
+						{this.viewWhich === "delete" ? (
+							<div>
+								<br />
+								<MessageBar
+									messageBarType={MessageBarType.warning}
+								>
+									{`${text("All of the patient")} ${
+										this.patient.name
+									}${text(
+										"'s data will be deleted along with"
+									)} ${
+										this.patient.appointments.length
+									} ${text("of appointments")}.`}
+								</MessageBar>
+								<br />
+								<PrimaryButton
+									className="delete"
+									iconProps={{
+										iconName: "delete"
+									}}
+									text={text("Delete")}
+									onClick={() => {
+										this.props.doDeletePatient(
+											this.selectedId
+										);
+
+										this.selectedId = "";
+										this.viewWhich = "";
+									}}
+								/>
+							</div>
 						) : (
 							""
 						)}

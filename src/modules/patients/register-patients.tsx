@@ -47,6 +47,7 @@ export const registerPatients = {
 						onAddPatient={patient =>
 							modules.patients.list.push(patient)
 						}
+						doDeletePatient={id => modules.patients.deleteByID(id)}
 					/>
 				);
 			},
