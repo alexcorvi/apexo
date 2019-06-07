@@ -10,6 +10,7 @@
 		"enquire.js": "^2.1.6",
 		"fast-array-diff": "^0.2.0",
 		"file-saver": "^2.0.1",
+		"heic2any": "^0.0.1",
 		"mobx": "^5.9.4",
 		"mobx-react": "^5.4.3",
 		"office-ui-fabric-react": "^6.16.0",

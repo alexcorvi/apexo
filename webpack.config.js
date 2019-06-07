@@ -45,7 +45,10 @@ module.exports = {
 		plugins: [new TsconfigPathsPlugin({})]
 	},
 	externals: {
-		moment: "moment"
+		moment: "moment",
+		fs: "fs",
+		path: "path",
+		crypto: "crypto"
 	},
 	mode: production ? "production" : "development",
 	module: {

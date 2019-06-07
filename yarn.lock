@@ -3670,6 +3670,11 @@ hawk@~6.0.2:
     hoek "4.x.x"
     sntp "2.x.x"
 
+heic2any@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/heic2any/-/heic2any-0.0.1.tgz#8176fd427006f37556b9ba616f887d280a41a75f"
+  integrity sha512-uev8oJNwb/5xMb2GVQeTTDOmSMLQLboVgXI0STgbJjE0aCdCquXJgVDLrrWqj/7QPcMIq96eIWR9scdI/mPDhA==
+
 hmac-drbg@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"

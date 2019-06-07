@@ -35,7 +35,16 @@ function dataURItoBlob(dataURI: string) {
 }
 
 export const fileTypes = {
-	image: ["png", "jpg", "jpeg", "gif", "image/png", "image/gif", "image/jpeg"]
+	image: [
+		"png",
+		"jpg",
+		"jpeg",
+		"gif",
+		"image/png",
+		"image/gif",
+		"image/jpeg",
+		"image/heic"
+	]
 };
 
 @observer
@@ -79,7 +88,7 @@ export class PickAndUploadComponent extends React.Component<
 					ref={el => (el ? (this.pickFileEl = el) : "")}
 					className="hidden"
 					accept={this.props.accept.join(",")}
-					onChange={() => {
+					onChange={async () => {
 						const fileList = this.pickFileEl!.files;
 						if (!fileList || !fileList[0]) {
 							return;
@@ -90,7 +99,18 @@ export class PickAndUploadComponent extends React.Component<
 						}
 						this.filesNumber = fileList.length;
 						for (let index = 0; index < fileList.length; index++) {
-							const file = fileList.item(index);
+							let file = fileList.item(index);
+							if (
+								file &&
+								file.name.toLowerCase().endsWith("heic")
+							) {
+								const heic2any = (await import("heic2any"))
+									.default;
+								file = (await heic2any({
+									blob: file,
+									toType: "image/jpeg"
+								})) as any;
+							}
 							const reader = new FileReader();
 							reader.onload = async (event: Event) => {
 								const base64DataURI = (event.target as any)
