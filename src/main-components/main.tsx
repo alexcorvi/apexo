@@ -115,6 +115,7 @@ export class MainView extends React.Component<{
 	) => Appointment[];
 	newMessage: (message: MessageInterface) => void;
 	newModal: (message: ModalInterface) => void;
+	addStaffMember: (member: StaffMember) => void;
 	deleteModal: (index: number) => void;
 	initialCheck(server: string): Promise<void>;
 	loginWithCredentials({
@@ -201,6 +202,7 @@ export class MainView extends React.Component<{
 					onCreatingNew={name => {
 						const newStaffMember = new StaffMember();
 						newStaffMember.name = name;
+						this.props.addStaffMember(newStaffMember);
 						this.props.setUser(newStaffMember._id);
 					}}
 					showMessage={obj => this.props.newMessage(obj)}

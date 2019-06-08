@@ -62,6 +62,7 @@ const App = observer(() => (
 				core.status.loginWithCredentialsOffline(x)
 			}
 			startNoServer={() => core.status.startNoServer()}
+			addStaffMember={member => modules.staff.list.push(member)}
 		/>
 	</Fabric>
 ));
