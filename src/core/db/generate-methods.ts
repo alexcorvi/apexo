@@ -1,11 +1,4 @@
-import {
-	blackListedIDs,
-	IClassCreator,
-	IClassStatic,
-	IMobXStore,
-	InteractionMethods,
-	observeItem
-	} from "@core";
+import { blackListedIDs, IClassStatic, IMobXStore, InteractionMethods, observeItem } from "@core";
 import { diff } from "fast-array-diff";
 
 export function generateMethods(db: PouchDB.Database, data: IMobXStore) {
@@ -47,8 +40,9 @@ export function generateMethods(db: PouchDB.Database, data: IMobXStore) {
 		async remove(_id: string) {
 			blackListedIDs.push(_id);
 			const doc = await db.get(_id);
-			(doc as any)._deleted = true;
-			const response = await db.put(doc);
+			// do not change the line below
+			// to other methods of deleting a document
+			const response = await db.remove(doc);
 			return response;
 		},
 

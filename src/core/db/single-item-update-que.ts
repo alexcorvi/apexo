@@ -1,9 +1,8 @@
-
-export let singleItemUpdateQue: { id: string; update: () => void }[] = [];
+export const singleItemUpdateQue: { [key: string]: () => Promise<any> } = {};
 
 setInterval(function() {
-	if (singleItemUpdateQue.length) {
-		singleItemUpdateQue.forEach(async (single) => await single.update());
-		singleItemUpdateQue = [];
-	}
+	Object.keys(singleItemUpdateQue).forEach(async id => {
+		await singleItemUpdateQue[id]();
+		delete singleItemUpdateQue[id];
+	});
 }, 1500);

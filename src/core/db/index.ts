@@ -6,6 +6,7 @@ import {
 	IMobXStore,
 	log,
 	observeItem,
+	recentlyWhiteListed,
 	singleItemUpdateQue
 	} from "@core";
 import { status } from "@core";
@@ -216,13 +217,46 @@ export async function connectToDB(
 					change.deleted !== true &&
 					!isBlackListed;
 
-				if (isBlackListed) {
-					const localDoc = await localDatabase.get(newDoc._id);
-					await localDatabase.remove(localDoc);
-					await localDatabase.remove(change.doc || localDoc);
+				if (
+					isBlackListed &&
+					recentlyWhiteListed.indexOf(newDoc._id) === -1
+				) {
+					recentlyWhiteListed.push(newDoc._id);
+					let localDoc = change.doc;
+					try {
+						localDoc = await localDatabase.get(newDoc._id);
+					} catch (e) {}
+					try {
+						const doc = await localDatabase.get(
+							(localDoc || { _id: "" })._id
+						);
+						(doc as any)._deleted = true;
+						const dRes = await localDatabase.put(doc, {
+							force: true
+						});
+					} catch (e) {}
+					try {
+						const doc = await localDatabase.get(
+							(change.doc || localDoc || { _id: "" })._id
+						);
+						(doc as any)._deleted = true;
+						const dRes = await localDatabase.put(doc, {
+							force: true
+						});
+					} catch (e) {}
 					const remoteDoc = await remoteDatabase.get(newDoc._id);
-					await remoteDatabase.remove(remoteDoc);
-					await remoteDatabase.sync(localDatabase);
+					try {
+						const doc = await remoteDatabase.get(remoteDoc._id);
+						(doc as any)._deleted = true;
+						const dRes = await remoteDatabase.put(doc, {
+							force: true
+						});
+					} catch (e) {}
+					try {
+						const syncRes = await remoteDatabase.sync(
+							localDatabase
+						);
+					} catch (e) {}
 				} else if (remoteAddition || remoteDeletion || remoteUpdate) {
 					data.ignoreObserver = true;
 					// if it's a deletion
@@ -235,7 +269,7 @@ export async function connectToDB(
 						// if it's an update
 						// if there's another update that will carry on the same document
 						// don't update the MobX store just now
-						if (singleItemUpdateQue.find(x => x.id === id)) {
+						if (singleItemUpdateQue[id]) {
 						} else {
 							data.list[mobxIndex].fromJSON(newDoc);
 							observeItem(data.list[mobxIndex], data, methods);
@@ -243,7 +277,7 @@ export async function connectToDB(
 					}
 					data.ignoreObserver = false;
 				} else {
-					localDatabase.replicate.to(remoteDatabase);
+					const res = await localDatabase.sync(remoteDatabase);
 				}
 			})
 			.on("error", err => log(dbName, "Error occurred", err));

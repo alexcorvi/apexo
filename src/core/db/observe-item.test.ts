@@ -43,10 +43,7 @@ describe("@core: DB", () => {
 				// this is the function that will be called
 				return { id: _id, rev: "", ok: true };
 			});
-			singleItemUpdateQue.push({
-				id: _id,
-				update: () => {}
-			});
+			singleItemUpdateQue[_id] = async () => {};
 			observeItem(item as any, store, {
 				update: updateFunc,
 				add: async () => {

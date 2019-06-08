@@ -5,7 +5,6 @@ import { singleItemUpdateQue } from "./single-item-update-que";
 import { diff } from "fast-array-diff";
 import { isObservableArray, observe, toJS as normalizeArray } from "mobx";
 
-
 export function observeItem(
 	item: IClassStatic,
 	data: IMobXStore,
@@ -27,18 +26,7 @@ export function observeItem(
 				return;
 			}
 		}
-		// check to see if we have already queued an update for this item
-		const existingIndex = singleItemUpdateQue.findIndex(
-			single => single.id === item._id
-		);
-		// delete if it's there
-		if (existingIndex !== -1) {
-			singleItemUpdateQue.splice(existingIndex, 1);
-		}
-		// que the new update
-		singleItemUpdateQue.push({
-			id: item._id,
-			update: async () => await methods.update(item._id, item)
-		});
+		singleItemUpdateQue[item._id] = async () =>
+			await methods.update(item._id, item);
 	});
 }
