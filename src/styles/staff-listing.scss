@@ -45,7 +45,6 @@
 	padding: 15px 25px;
 	background: #fff;
 	z-index: 9999;
-	@include box_shadow(2);
 	.close {
 		text-align: right;
 	}

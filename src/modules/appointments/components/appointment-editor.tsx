@@ -545,7 +545,6 @@ export class AppointmentEditorPanel extends React.Component<
 
 							{this.props.prescriptionsEnabled ? (
 								<div>
-									<hr className="appointment-hr" />
 									<div className="appointment-input prescription">
 										<TagInputComponent
 											disabled={!this.canEdit}

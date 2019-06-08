@@ -106,285 +106,207 @@ export class StaffPage extends React.Component<{
 
 	render() {
 		return (
-			<div className="staff-component p-15 p-l-10 p-r-10">
-				<Row gutter={16}>
-					<Col lg={16}>
-						<DataTableComponent
-							maxItemsOnLoad={10}
-							heads={[
-								text("Staff Member"),
-								text("Last/Next Appointment"),
-								text("Contact Details")
-							]}
-							rows={this.props.staffMembers.map(member => ({
-								id: member._id,
-								searchableString: member.searchableString,
-								cells: [
-									{
-										dataValue: member.name,
-										component: (
-											<div>
-												<ProfileComponent
-													name={member.name}
-													secondaryElement={
-														<span>
-															{
-																member
-																	.nextAppointments
-																	.length
-															}{" "}
-															{text(
-																"upcoming appointments"
-															)}
-														</span>
-													}
-													size={3}
-												/>
-												<br />
-												<TableActions
-													items={this.tabs}
-													onSelect={key => {
-														if (key === "delete") {
-															this.props.onDeleteStaff(
-																member._id
-															);
-														} else {
-															this.selectedId =
-																member._id;
-															this.viewWhich = key as any;
-														}
-													}}
-												/>
-											</div>
-										),
-										className: "no-label",
-										onClick: () => {
-											this.selectedId = member._id;
-											this.viewWhich = "details";
-										}
-									},
-									{
-										dataValue: (
-											member.lastAppointment ||
-											member.nextAppointment || {
-												date: 0
+			<div className="staff-component">
+				<DataTableComponent
+					maxItemsOnLoad={10}
+					heads={[
+						text("Staff Member"),
+						text("Last/Next Appointment"),
+						text("Contact Details")
+					]}
+					rows={this.props.staffMembers.map(member => ({
+						id: member._id,
+						searchableString: member.searchableString,
+						cells: [
+							{
+								dataValue: member.name,
+								component: (
+									<div>
+										<ProfileComponent
+											name={member.name}
+											secondaryElement={
+												<span>
+													{
+														member.nextAppointments
+															.length
+													}{" "}
+													{text(
+														"upcoming appointments"
+													)}
+												</span>
 											}
-										).date,
-										component: (
-											<div>
-												<ProfileSquaredComponent
-													text={
-														member.lastAppointment
-															? member
-																	.lastAppointment
-																	.treatment
-																? member
-																		.lastAppointment
-																		.treatment
-																		.type
-																: ""
-															: ""
-													}
-													subText={
-														member.lastAppointment
-															? formatDate(
-																	member
-																		.lastAppointment
-																		.date,
-																	this.props
-																		.dateFormat
-															  )
-															: text(
-																	"No last appointment"
-															  )
-													}
-													size={3}
-													onRenderInitials={() => (
-														<Icon iconName="Previous" />
-													)}
-													onClick={() => {}}
-													initialsColor={
-														member.lastAppointment
-															? undefined
-															: PersonaInitialsColor.transparent
-													}
-												/>
-												<br />
-												<ProfileSquaredComponent
-													text={
-														member.nextAppointment
-															? member
-																	.nextAppointment
-																	.treatment
-																? member
-																		.nextAppointment
-																		.treatment
-																		.type
-																: ""
-															: ""
-													}
-													subText={
-														member.nextAppointment
-															? formatDate(
-																	member
-																		.nextAppointment
-																		.date,
-																	this.props
-																		.dateFormat
-															  )
-															: text(
-																	"No next appointment"
-															  )
-													}
-													size={3}
-													onRenderInitials={() => (
-														<Icon iconName="Next" />
-													)}
-													onClick={() => {}}
-													initialsColor={
-														member.nextAppointment
-															? undefined
-															: PersonaInitialsColor.transparent
-													}
-												/>
-											</div>
-										),
-										className: "hidden-xs"
-									},
-									{
-										dataValue: member.phone || member.email,
-										component: (
-											<div>
-												<ProfileSquaredComponent
-													text={member.phone}
-													subText={
-														member.phone
-															? text(
-																	"Phone number"
-															  )
-															: text(
-																	"No phone number"
-															  )
-													}
-													size={3}
-													onRenderInitials={() => (
-														<Icon iconName="Phone" />
-													)}
-													initialsColor={
-														member.phone
-															? PersonaInitialsColor.teal
-															: PersonaInitialsColor.transparent
-													}
-												/>
-												<ProfileSquaredComponent
-													text={member.email}
-													subText={
-														member.email
-															? text("Email")
-															: text("No Email")
-													}
-													size={3}
-													onRenderInitials={() => (
-														<Icon iconName="Mail" />
-													)}
-													initialsColor={
-														member.email
-															? PersonaInitialsColor.teal
-															: PersonaInitialsColor.transparent
-													}
-												/>
-											</div>
-										),
-										className: "hidden-xs"
-									}
-								]
-							}))}
-							commands={
-								this.canEdit
-									? [
-											{
-												key: "addNew",
-												title: "Add new",
-												name: text("Add new"),
-												onClick: () => {
-													const member = new StaffMember();
-													this.props.onAddStaff(
-														member
+											size={3}
+										/>
+										<br />
+										<TableActions
+											items={this.tabs}
+											onSelect={key => {
+												if (key === "delete") {
+													this.props.onDeleteStaff(
+														member._id
 													);
+												} else {
 													this.selectedId =
 														member._id;
-													this.viewWhich = "details";
-												},
-												iconProps: {
-													iconName: "Add"
+													this.viewWhich = key as any;
 												}
+											}}
+										/>
+									</div>
+								),
+								className: "no-label",
+								onClick: () => {
+									this.selectedId = member._id;
+									this.viewWhich = "details";
+								}
+							},
+							{
+								dataValue: (
+									member.lastAppointment ||
+									member.nextAppointment || {
+										date: 0
+									}
+								).date,
+								component: (
+									<div>
+										<ProfileSquaredComponent
+											text={
+												member.lastAppointment
+													? member.lastAppointment
+															.treatment
+														? member.lastAppointment
+																.treatment.type
+														: ""
+													: ""
 											}
-									  ]
-									: []
+											subText={
+												member.lastAppointment
+													? formatDate(
+															member
+																.lastAppointment
+																.date,
+															this.props
+																.dateFormat
+													  )
+													: text(
+															"No last appointment"
+													  )
+											}
+											size={3}
+											onRenderInitials={() => (
+												<Icon iconName="Previous" />
+											)}
+											onClick={() => {}}
+											initialsColor={
+												member.lastAppointment
+													? undefined
+													: PersonaInitialsColor.transparent
+											}
+										/>
+										<br />
+										<ProfileSquaredComponent
+											text={
+												member.nextAppointment
+													? member.nextAppointment
+															.treatment
+														? member.nextAppointment
+																.treatment.type
+														: ""
+													: ""
+											}
+											subText={
+												member.nextAppointment
+													? formatDate(
+															member
+																.nextAppointment
+																.date,
+															this.props
+																.dateFormat
+													  )
+													: text(
+															"No next appointment"
+													  )
+											}
+											size={3}
+											onRenderInitials={() => (
+												<Icon iconName="Next" />
+											)}
+											onClick={() => {}}
+											initialsColor={
+												member.nextAppointment
+													? undefined
+													: PersonaInitialsColor.transparent
+											}
+										/>
+									</div>
+								),
+								className: "hidden-xs"
+							},
+							{
+								dataValue: member.phone || member.email,
+								component: (
+									<div>
+										<ProfileSquaredComponent
+											text={member.phone}
+											subText={
+												member.phone
+													? text("Phone number")
+													: text("No phone number")
+											}
+											size={3}
+											onRenderInitials={() => (
+												<Icon iconName="Phone" />
+											)}
+											initialsColor={
+												member.phone
+													? PersonaInitialsColor.teal
+													: PersonaInitialsColor.transparent
+											}
+										/>
+										<ProfileSquaredComponent
+											text={member.email}
+											subText={
+												member.email
+													? text("Email")
+													: text("No Email")
+											}
+											size={3}
+											onRenderInitials={() => (
+												<Icon iconName="Mail" />
+											)}
+											initialsColor={
+												member.email
+													? PersonaInitialsColor.teal
+													: PersonaInitialsColor.transparent
+											}
+										/>
+									</div>
+								),
+								className: "hidden-xs"
 							}
-						/>
-					</Col>
-					<Col lg={8}>
-						<table className="ms-table duty-table">
-							<tbody>
-								{dateNames.days().map(dayName => {
-									return (
-										<tr key={dayName}>
-											<th className="day-name">
-												{text(dayName)}
-											</th>
-											<td>
-												{this.props.staffMembers
-													.filter(
-														member =>
-															member.onDutyDays.indexOf(
-																dayName
-															) !== -1
-													)
-													.map(member => {
-														return (
-															<ProfileComponent
-																className="m-b-5"
-																size={3}
-																key={member._id}
-																name={
-																	member.name
-																}
-																secondaryElement={
-																	<span>
-																		{
-																			(
-																				member
-																					.weeksAppointments[
-																					dayName
-																				] ||
-																				[]
-																			)
-																				.length
-																		}{" "}
-																		{text(
-																			"appointments for"
-																		)}{" "}
-																		{text(
-																			dayName
-																		)}
-																	</span>
-																}
-																onClick={() => {
-																	this.selectedId =
-																		member._id;
-																}}
-															/>
-														);
-													})}
-											</td>
-										</tr>
-									);
-								})}
-							</tbody>
-						</table>
-					</Col>
-				</Row>
+						]
+					}))}
+					commands={
+						this.canEdit
+							? [
+									{
+										key: "addNew",
+										title: "Add new",
+										name: text("Add new"),
+										onClick: () => {
+											const member = new StaffMember();
+											this.props.onAddStaff(member);
+											this.selectedId = member._id;
+											this.viewWhich = "details";
+										},
+										iconProps: {
+											iconName: "Add"
+										}
+									}
+							  ]
+							: []
+					}
+				/>
 
 				{this.selectedMember && this.viewWhich ? (
 					<Panel

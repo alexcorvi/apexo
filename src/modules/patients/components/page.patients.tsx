@@ -127,7 +127,7 @@ export class PatientsPage extends React.Component<{
 
 	render() {
 		return (
-			<div className="patients-component p-15 p-l-10 p-r-10">
+			<div className="patients-component">
 				{this.patient ? (
 					<Panel
 						key={this.selectedId}

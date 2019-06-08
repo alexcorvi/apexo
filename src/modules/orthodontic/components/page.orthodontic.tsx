@@ -176,7 +176,7 @@ export class OrthoPage extends React.Component<{
 
 	render() {
 		return (
-			<div className="orthodontic-cases-component p-15 p-l-10 p-r-10">
+			<div className="orthodontic-cases-component">
 				<DataTableComponent
 					maxItemsOnLoad={10}
 					className={"orthodontic-cases-data-table"}

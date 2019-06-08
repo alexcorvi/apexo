@@ -60,53 +60,27 @@ export class AppointmentsList extends React.Component<
 			<div className="appointments-list">
 				{this.props.list.length > 0 ? (
 					<div className="main">
-						<TextField
-							label={text("Filter")}
-							value={this.filter}
-							onChange={(e, v) => {
-								this.filter = v!;
-							}}
-						/>
-
-						<hr />
-						<p
-							style={{
-								textAlign: "right",
-								fontSize: "13px",
-								color: "#9E9E9E"
-							}}
-						>
-							{text("Results")}: {this.filtered.length}{" "}
-							{text("out of")} {this.props.list.length}
-						</p>
-
-						{this.filtered.length ? (
-							this.filtered
-								.sort((a, b) => a.date - b.date)
-								.map(appointment => {
-									return (
-										<AppointmentThumbComponent
-											key={appointment._id}
-											onClick={() =>
-												(this.selectedAppointmentID =
-													appointment._id)
-											}
-											appointment={appointment}
-											canDelete={this.canEdit}
-											dateFormat={this.props.dateFormat}
-											onDeleteAppointment={() =>
-												this.props.onDeleteAppointment(
-													appointment._id
-												)
-											}
-										/>
-									);
-								})
-						) : (
-							<p className="no-appointments">
-								{text("Nothing found") + "..."}
-							</p>
-						)}
+						{this.filtered
+							.sort((a, b) => a.date - b.date)
+							.map(appointment => {
+								return (
+									<AppointmentThumbComponent
+										key={appointment._id}
+										onClick={() =>
+											(this.selectedAppointmentID =
+												appointment._id)
+										}
+										appointment={appointment}
+										canDelete={this.canEdit}
+										dateFormat={this.props.dateFormat}
+										onDeleteAppointment={() =>
+											this.props.onDeleteAppointment(
+												appointment._id
+											)
+										}
+									/>
+								);
+							})}
 					</div>
 				) : (
 					""

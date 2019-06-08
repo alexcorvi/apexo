@@ -123,7 +123,7 @@ export class DataTableComponent extends React.Component<Props, {}> {
 			<div className="data-table">
 				<CommandBar
 					{...{
-						className: "commandBar fixed m-b-15",
+						className: "commandBar fixed",
 						isSearchBoxVisible: !this.props.hideSearch,
 						elipisisAriaLabel: text("More options"),
 						farItems: this.farItems,
@@ -233,7 +233,7 @@ export class DataTableComponent extends React.Component<Props, {}> {
 
 				{this.limitedRows.length < this.filteredRows.length ? (
 					<DefaultButton
-						style={{ marginTop: 20 }}
+						className="load-more"
 						iconProps={{ iconName: "more" }}
 						onClick={() => (this.limit = this.limit + 10)}
 						text={text("Load more")}

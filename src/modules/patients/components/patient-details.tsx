@@ -147,24 +147,29 @@ export class PatientDetailsPanel extends React.Component<{
 				</SectionComponent>
 
 				<SectionComponent title={text(`Contact Info`)}>
-					<TextField
-						label={text("Phone")}
-						value={this.props.patient.phone}
-						onChange={(ev, phone) =>
-							(this.props.patient.phone = phone!)
-						}
-						type="number"
-						disabled={!this.canEdit}
-					/>
-
-					<TextField
-						label={text("Email")}
-						value={this.props.patient.email}
-						onChange={(ev, email) =>
-							(this.props.patient.email = email!)
-						}
-						disabled={!this.canEdit}
-					/>
+					<Row gutter={6}>
+						<Col sm={12}>
+							<TextField
+								label={text("Phone")}
+								value={this.props.patient.phone}
+								onChange={(ev, phone) =>
+									(this.props.patient.phone = phone!)
+								}
+								type="number"
+								disabled={!this.canEdit}
+							/>
+						</Col>
+						<Col sm={12}>
+							<TextField
+								label={text("Email")}
+								value={this.props.patient.email}
+								onChange={(ev, email) =>
+									(this.props.patient.email = email!)
+								}
+								disabled={!this.canEdit}
+							/>
+						</Col>
+					</Row>
 
 					<TextField
 						label={text("Address")}
@@ -173,6 +178,7 @@ export class PatientDetailsPanel extends React.Component<{
 							(this.props.patient.address = address!)
 						}
 						disabled={!this.canEdit}
+						multiline
 					/>
 				</SectionComponent>
 

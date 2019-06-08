@@ -34,7 +34,6 @@ export class MenuView extends React.Component<{
 								data-testid="menu-item-bg"
 							>
 								<Icon iconName={item.icon} />
-								<span className="text">{text(item.name)}</span>
 							</div>
 						);
 					})}

@@ -28,7 +28,7 @@ export class PrescriptionsPage extends React.Component<{
 
 	render() {
 		return (
-			<div className="pc-pg p-15 p-l-10 p-r-10">
+			<div className="pc-pg">
 				<DataTableComponent
 					onDelete={
 						this.canEdit

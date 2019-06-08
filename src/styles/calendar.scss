@@ -2,10 +2,7 @@
 .calendar-component {
 	background: #fff;
 	min-height: 500px;
-	padding: 15px;
-	padding-bottom: 0;
 	font-size: 13px;
-	@include box_shadow(2);
 	.selector {
 		a.current {
 			border: 1px solid #00bcd4;
@@ -36,14 +33,18 @@
 			margin-right: 5px;
 			padding: 5px;
 		}
-		border-bottom: 1px dotted #e0e0e0;
+		border-bottom: 1px solid #f3f3f3;
 	}
 	.day-selector {
 		overflow-x: auto;
+		margin-bottom: 0;
+		padding-bottom: 0;
+		.day-selector-border {
+			border-bottom: 1px solid #f3f3f3;
+		}
 		.day-selector-wrapper {
 			margin: 0 auto;
 			width: 974px;
-			border-bottom: 1px dotted #e0e0e0;
 			padding-bottom: 10px;
 			text-align: center;
 			.day-col {
@@ -77,7 +78,7 @@
 					@include box_shadow(2);
 				}
 				&.weekend:not(:last-child) {
-					border-right: 1px dotted #e0e0e0;
+					border-right: 1px solid #f3f3f3;
 					padding-right: 13px;
 					margin-right: 10px;
 				}
@@ -132,7 +133,7 @@
 	}
 	.week-view {
 		.filters {
-			border-bottom: 1px dotted #e3e3e3;
+			border-bottom: 1px solid #f3f3f3;
 			.ms-TextField-wrapper div {
 				border: none;
 				input {
@@ -152,14 +153,14 @@
 		float: left;
 		h4 {
 			margin-top: 10px;
-			border-bottom: 1px dotted #e3e3e3;
+			border-bottom: 1px solid #f3f3f3;
 			padding-bottom: 10px;
 			margin-bottom: 10px;
 		}
 		padding: 3px 10px;
 		min-height: 300px;
 		&:not(:last-child) {
-			border-right: 1px dotted #e3e3e3;
+			border-right: 1px solid #f3f3f3;
 		}
 		&.holiday {
 			background: #fafaf7;
@@ -176,7 +177,7 @@
 		.appointment {
 			padding-bottom: 10px;
 			margin-bottom: 10px;
-			border-bottom: 1px dotted #e3e3e3;
+			border-bottom: 1px solid #f3f3f3;
 			cursor: pointer;
 			.time {
 				text-align: center;
@@ -220,8 +221,16 @@
 		text-align: center;
 	}
 
-	.filter {
-		border-left: 1px dotted #e3e3e3;
+	.filters {
+		.filter {
+			border-left: 1px solid #f3f3f3;
+		}
+		.ms-TextField {
+			margin-top: 10px;
+		}
+		.ms-Toggle {
+			padding: 15px 0 0 15px;
+		}
 	}
 	.day-name {
 		color: #616161;
@@ -230,8 +239,7 @@
 
 @media screen and (min-width: 992px) {
 	.calendar-component {
-		margin-top: 67px;
-		margin-right: 15px;
+		margin-top: 60px;
 		border-radius: 3px;
 	}
 }

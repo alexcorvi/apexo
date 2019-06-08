@@ -57,16 +57,16 @@ export class DentalHistoryPanel extends React.Component<
 
 	render() {
 		return (
-			<div className="dental-history teeth">
-				<Toggle
-					defaultChecked={true}
-					onText={text("View graphic chart")}
-					offText={text("View sorted table")}
-					onChange={(ev, newVal) => {
-						this.viewChart = newVal!;
-					}}
-				/>
-				<div className="m-t-20">
+			<div className="dental-history teeth m-t-10">
+				<div>
+					<Toggle
+						defaultChecked={true}
+						onText={text("View graphic chart")}
+						offText={text("View sorted table")}
+						onChange={(ev, newVal) => {
+							this.viewChart = newVal!;
+						}}
+					/>
 					{this.viewChart ? (
 						<div className="chart">
 							<SectionComponent title={text(`Permanent Teeth`)}>

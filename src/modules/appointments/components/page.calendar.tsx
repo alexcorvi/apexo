@@ -91,7 +91,7 @@ export class CalendarPage extends React.Component<{
 
 	render() {
 		return (
-			<div className="calendar-component container-fluid">
+			<div className="calendar-component">
 				<div className="selector year-selector">
 					<Row>
 						{[
@@ -163,113 +163,118 @@ export class CalendarPage extends React.Component<{
 					</Row>
 				</div>
 				<div className="selector day-selector">
-					<div className="day-selector-wrapper">
-						<div>
-							{this.c.selectedMonthDays.map(day => {
-								return (
-									<div
-										key={day.dateNum}
-										onClick={() => {
-											this.c.select({
-												day: day.dateNum
-											});
-											setTimeout(() => {
-												scroll(
-													0,
-													this.findPos(
-														document.getElementById(
-															"day_" + day.dateNum
+					<div className="day-selector-border">
+						<div className="day-selector-wrapper">
+							<div>
+								{this.c.selectedMonthDays.map(day => {
+									return (
+										<div
+											key={day.dateNum}
+											onClick={() => {
+												this.c.select({
+													day: day.dateNum
+												});
+												setTimeout(() => {
+													scroll(
+														0,
+														this.findPos(
+															document.getElementById(
+																"day_" +
+																	day.dateNum
+															)
 														)
-													)
-												);
-											}, 0);
-										}}
-										className={
-											"day-col" +
-											(this.c.selected.day === day.dateNum
-												? " selected"
-												: "") +
-											(this.props.currentUser.onDutyDays.indexOf(
-												day.weekDay.dayLiteral
-											) === -1
-												? " holiday"
-												: "") +
-											(day.weekDay.isWeekend
-												? " weekend"
-												: "")
-										}
-									>
-										<div className="day-name">
-											{text(
-												day.weekDay.dayLiteralShort
-													.substr(0, 2)
-													.toUpperCase()
-											)}
-										</div>
-										<a
+													);
+												}, 0);
+											}}
 											className={
-												"day-number info-row" +
-												(day.dateNum ===
-													this.c.currentDay &&
-												this.c.currentMonth ===
-													this.c.selected.month &&
-												this.c.selected.year ===
-													this.c.currentYear
-													? " current"
+												"day-col" +
+												(this.c.selected.day ===
+												day.dateNum
+													? " selected"
+													: "") +
+												(this.props.currentUser.onDutyDays.indexOf(
+													day.weekDay.dayLiteral
+												) === -1
+													? " holiday"
+													: "") +
+												(day.weekDay.isWeekend
+													? " weekend"
 													: "")
 											}
 										>
-											{day.dateNum}
-										</a>
-									</div>
-								);
-							})}
-						</div>
-						<div>
-							{this.c.selectedMonthDays.map(day => {
-								const number = this.props.appointmentsForDay(
-									this.c.selected.year,
-									this.c.selected.month + 1,
-									day.dateNum,
-									undefined,
-									this.showAll
-										? undefined
-										: this.props.currentUser._id
-								).length;
-								return (
-									<div
-										key={day.dateNum}
-										onClick={() => {
-											this.c.select({
-												day: day.dateNum
-											});
-										}}
-										className={
-											"day-col" +
-											(this.c.selected.day === day.dateNum
-												? " selected"
-												: "") +
-											(this.props.currentUser.onDutyDays.indexOf(
-												day.weekDay.dayLiteral
-											) === -1
-												? " holiday"
-												: "") +
-											(day.weekDay.isWeekend
-												? " weekend"
-												: "")
-										}
-									>
+											<div className="day-name">
+												{text(
+													day.weekDay.dayLiteralShort
+														.substr(0, 2)
+														.toUpperCase()
+												)}
+											</div>
+											<a
+												className={
+													"day-number info-row" +
+													(day.dateNum ===
+														this.c.currentDay &&
+													this.c.currentMonth ===
+														this.c.selected.month &&
+													this.c.selected.year ===
+														this.c.currentYear
+														? " current"
+														: "")
+												}
+											>
+												{day.dateNum}
+											</a>
+										</div>
+									);
+								})}
+							</div>
+							<div>
+								{this.c.selectedMonthDays.map(day => {
+									const number = this.props.appointmentsForDay(
+										this.c.selected.year,
+										this.c.selected.month + 1,
+										day.dateNum,
+										undefined,
+										this.showAll
+											? undefined
+											: this.props.currentUser._id
+									).length;
+									return (
 										<div
+											key={day.dateNum}
+											onClick={() => {
+												this.c.select({
+													day: day.dateNum
+												});
+											}}
 											className={
-												"info-row appointments-num num-" +
-												number
+												"day-col" +
+												(this.c.selected.day ===
+												day.dateNum
+													? " selected"
+													: "") +
+												(this.props.currentUser.onDutyDays.indexOf(
+													day.weekDay.dayLiteral
+												) === -1
+													? " holiday"
+													: "") +
+												(day.weekDay.isWeekend
+													? " weekend"
+													: "")
 											}
 										>
-											{number}
+											<div
+												className={
+													"info-row appointments-num num-" +
+													number
+												}
+											>
+												{number}
+											</div>
 										</div>
-									</div>
-								);
-							})}
+									);
+								})}
+							</div>
 						</div>
 					</div>
 				</div>

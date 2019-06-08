@@ -22,7 +22,6 @@ h5 {
 }
 
 .ms-table {
-	@include box_shadow(2);
 	width: 100%;
 	border-collapse: collapse;
 	thead tr th {
@@ -45,8 +44,7 @@ h5 {
 			display: none;
 		}
 		&.current {
-			background: #212121;
-			color: #fff;
+			background: #eee;
 			.sort-indicators {
 				float: right;
 			}
@@ -166,9 +164,7 @@ body {
 }
 
 body {
-	background: #f5f5f5 !important;
 	font-family: "Segoe UI WestEuropean";
-
 	line-height: 1;
 	height: auto;
 }

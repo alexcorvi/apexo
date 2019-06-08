@@ -926,7 +926,6 @@ h5 {
     font-size: 10px !important; }
 
 .ms-table {
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
   border-collapse: collapse; }
   .ms-table thead tr th {
@@ -946,8 +945,7 @@ h5 {
     .ms-table th .sort-indicators .negative {
       display: none; }
     .ms-table th.current {
-      background: #212121;
-      color: #fff; }
+      background: #eee; }
       .ms-table th.current .sort-indicators {
         float: right; }
       .ms-table th.current.positive .sort-indicators .positive {
@@ -1019,7 +1017,7 @@ h5 {
 
 .ms-Panel-content {
   height: 100%;
-  padding-top: 35px;
+  padding-top: 5px;
   padding-bottom: 35px;
   overflow-y: auto; }
 
@@ -1031,7 +1029,6 @@ body {
     overflow: hidden; }
 
 body {
-  background: #f5f5f5 !important;
   font-family: "Segoe UI WestEuropean";
   line-height: 1;
   height: auto; }
@@ -5776,10 +5773,7 @@ hr {
 .calendar-component {
   background: #fff;
   min-height: 500px;
-  padding: 15px;
-  padding-bottom: 0;
-  font-size: 13px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+  font-size: 13px; }
   .calendar-component .selector {
     padding-bottom: 10px;
     margin-bottom: 10px; }
@@ -5800,18 +5794,21 @@ hr {
       box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
   .calendar-component .year-selector,
   .calendar-component .month-selector {
-    border-bottom: 1px dotted #e0e0e0; }
+    border-bottom: 1px solid #f3f3f3; }
     .calendar-component .year-selector a,
     .calendar-component .month-selector a {
       display: inline-block;
       margin-right: 5px;
       padding: 5px; }
   .calendar-component .day-selector {
-    overflow-x: auto; }
+    overflow-x: auto;
+    margin-bottom: 0;
+    padding-bottom: 0; }
+    .calendar-component .day-selector .day-selector-border {
+      border-bottom: 1px solid #f3f3f3; }
     .calendar-component .day-selector .day-selector-wrapper {
       margin: 0 auto;
       width: 974px;
-      border-bottom: 1px dotted #e0e0e0;
       padding-bottom: 10px;
       text-align: center; }
       .calendar-component .day-selector .day-selector-wrapper .day-col {
@@ -5841,7 +5838,7 @@ hr {
           border-radius: 4px;
           box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
         .calendar-component .day-selector .day-selector-wrapper .day-col.weekend:not(:last-child) {
-          border-right: 1px dotted #e0e0e0;
+          border-right: 1px solid #f3f3f3;
           padding-right: 13px;
           margin-right: 10px; }
         .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num {
@@ -5877,7 +5874,7 @@ hr {
           background: transparent;
           color: #e3e3e3; }
   .calendar-component .week-view .filters {
-    border-bottom: 1px dotted #e3e3e3; }
+    border-bottom: 1px solid #f3f3f3; }
     .calendar-component .week-view .filters .ms-TextField-wrapper div {
       border: none; }
       .calendar-component .week-view .filters .ms-TextField-wrapper div input {
@@ -5894,11 +5891,11 @@ hr {
     min-height: 300px; }
     .calendar-component .full-day-col h4 {
       margin-top: 10px;
-      border-bottom: 1px dotted #e3e3e3;
+      border-bottom: 1px solid #f3f3f3;
       padding-bottom: 10px;
       margin-bottom: 10px; }
     .calendar-component .full-day-col:not(:last-child) {
-      border-right: 1px dotted #e3e3e3; }
+      border-right: 1px solid #f3f3f3; }
     .calendar-component .full-day-col.holiday {
       background: #fafaf7; }
     .calendar-component .full-day-col.selected {
@@ -5910,7 +5907,7 @@ hr {
     .calendar-component .full-day-col .appointment {
       padding-bottom: 10px;
       margin-bottom: 10px;
-      border-bottom: 1px dotted #e3e3e3;
+      border-bottom: 1px solid #f3f3f3;
       cursor: pointer; }
       .calendar-component .full-day-col .appointment .time {
         text-align: center;
@@ -5942,15 +5939,18 @@ hr {
         border-bottom-color: #262626; }
   .calendar-component .centered {
     text-align: center; }
-  .calendar-component .filter {
-    border-left: 1px dotted #e3e3e3; }
+  .calendar-component .filters .filter {
+    border-left: 1px solid #f3f3f3; }
+  .calendar-component .filters .ms-TextField {
+    margin-top: 10px; }
+  .calendar-component .filters .ms-Toggle {
+    padding: 15px 0 0 15px; }
   .calendar-component .day-name {
     color: #616161; }
 
 @media screen and (min-width: 992px) {
   .calendar-component {
-    margin-top: 67px;
-    margin-right: 15px;
+    margin-top: 60px;
     border-radius: 3px; } }
 
 @media screen and (min-width: 1250px) {
@@ -6012,9 +6012,8 @@ hr {
 
 .data-table .ms-CommandBar {
   box-sizing: content-box;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   background-color: #fff !important;
-  border-bottom: 1px solid #e0e0e0; }
+  border-bottom: 1px solid #f3f3f3; }
 
 .data-table .ms-table {
   background: #fafafa; }
@@ -6065,6 +6064,13 @@ hr {
 .data-table .delete-td {
   text-align: right;
   padding-right: 12px; }
+
+.data-table .load-more {
+  background: #fff;
+  display: block;
+  width: 100%;
+  margin-top: 0;
+  padding: 35px; }
 
 .date-link a {
   font-size: 12px;
@@ -6275,7 +6281,7 @@ hr {
   width: 100%;
   top: 0;
   background: #fff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
+  border-bottom: 1px solid #f3f3f3; }
   .header-component section {
     float: left;
     padding: 10px 10px 0px;
@@ -6422,30 +6428,29 @@ hr {
 
 @media (min-width: 992px) {
   #router-outlet {
-    margin-left: 117px; }
+    margin-left: 65px; }
   .icon-list {
     position: fixed;
-    top: 52px;
+    top: 50px;
     left: 0;
-    margin-top: 15px;
-    margin-left: 15px;
-    cursor: pointer; }
+    cursor: pointer;
+    background: #fff;
+    border-right: 1px solid #f5f5f5;
+    height: 100%; }
     .icon-list .item {
       transition: 0.2s all;
-      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
       background: #fff;
       padding: 10px;
       font-size: 17px;
-      text-align: center; }
+      text-align: center;
+      min-width: 65px;
+      border-bottom: 1px solid transparent; }
       .icon-list .item:hover {
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-        background: #757575;
-        color: #fff; }
+        background: #f5f5f5; }
       .icon-list .item.selected {
-        background: #00bcd4;
-        color: #fff;
-        cursor: initial;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+        background: #eee;
+        color: #000;
+        cursor: initial; }
       .icon-list .item .text {
         margin-top: 5px;
         font-size: 11px;
@@ -6698,14 +6703,17 @@ hr {
   background: #fff;
   margin-top: 10px;
   padding: 15px;
-  border-radius: 3px;
-  border: 1px solid #e3e3e3;
+  border: 1px solid #f3f3f3;
   position: relative; }
   .cl-section h3 {
     margin-bottom: 12px;
     padding-bottom: 12px;
-    border-bottom: 1px dotted #e0e0e0;
-    margin-top: 0; }
+    border-bottom: 1px solid #f3f3f3;
+    margin-top: 0;
+    margin-left: -15px;
+    margin-right: -15px;
+    padding-left: 12px;
+    padding-right: 12px; }
   .cl-section .chevron {
     position: absolute;
     top: 7px;
@@ -6717,7 +6725,8 @@ hr {
     .cl-section .cl-section-title.only-title {
       margin-bottom: 0;
       padding: 0;
-      border: none; }
+      border: none;
+      padding-left: 12px; }
 
 .settings-component {
   font-size: 13px; }
@@ -6745,8 +6754,7 @@ hr {
 
 @media screen and (min-width: 992px) {
   .settings-component {
-    margin-top: 67px;
-    margin-right: 15px;
+    margin-top: 60px;
     border-radius: 3px; } }
 
 @media screen and (max-width: 800px) {
@@ -6781,14 +6789,12 @@ hr {
 .panel-heading {
   padding: 15px 25px;
   background: #fff;
-  z-index: 9999;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+  z-index: 9999; }
   .panel-heading .close {
     text-align: right; }
-  .panel-heading .ms-Pivot {
-    margin-bottom: -15px; }
-    .panel-heading .ms-Pivot .ms-Pivot-link {
-      font-size: 12px; }
+  .panel-heading > .ant-row {
+    bottom: 5px;
+    margin-bottom: 2px; }
 
 @media (max-width: 1200px) {
   .duty-table {
@@ -6907,3 +6913,31 @@ hr {
 
 .tc-pg table.responsive tbody tr td.no-label {
   text-align: left; }
+
+.panel-tabs {
+  background: #f1f1f1;
+  margin-left: -25px;
+  margin-right: -25px;
+  padding-left: 25px;
+  padding-right: 25px; }
+  .panel-tabs .ms-Pivot {
+    margin-bottom: -15px; }
+    .panel-tabs .ms-Pivot .ms-Pivot-link {
+      font-size: 13px; }
+
+.appointments-list {
+  margin-left: -15px;
+  margin-right: -15px; }
+  .appointments-list .atc-c {
+    background: #fff;
+    border-color: #f3f3f3 !important;
+    margin-bottom: 0 !important; }
+    .appointments-list .atc-c:hover {
+      box-shadow: none !important;
+      background: #f5f5f5; }
+    .appointments-list .atc-c .delete {
+      top: 22px;
+      background: transparent;
+      border: 1px solid #f3f3f3; }
+      .appointments-list .atc-c .delete:hover {
+        color: #000; }

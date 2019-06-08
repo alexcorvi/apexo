@@ -70,19 +70,21 @@ export class PatientAppointmentsPanel extends React.Component<
 					)}
 					<br />
 					{this.canEdit ? (
-						<DefaultButton
-							onClick={() => {
-								const apt = new Appointment();
-								apt.patientID = this.props.patient._id;
-								apt.date = new Date().getTime();
-								this.props.onAdd(apt);
-								if (this.l) {
-									this.l.selectedAppointmentID = apt._id;
-								}
-							}}
-							iconProps={{ iconName: "add" }}
-							text={text("Book new appointment")}
-						/>
+						<div style={{ textAlign: "center" }}>
+							<DefaultButton
+								onClick={() => {
+									const apt = new Appointment();
+									apt.patientID = this.props.patient._id;
+									apt.date = new Date().getTime();
+									this.props.onAdd(apt);
+									if (this.l) {
+										this.l.selectedAppointmentID = apt._id;
+									}
+								}}
+								iconProps={{ iconName: "add" }}
+								text={text("Book new appointment")}
+							/>
+						</div>
 					) : (
 						""
 					)}
