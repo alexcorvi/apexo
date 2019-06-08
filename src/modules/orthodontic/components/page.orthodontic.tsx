@@ -246,7 +246,11 @@ export class OrthoPage extends React.Component<{
 												/>
 											</div>
 										),
-										className: "no-label"
+										className: "no-label",
+										onClick: () => {
+											this.selectedId = orthoCase._id;
+											this.viewWhich = "sheet";
+										}
 									},
 									{
 										dataValue: orthoCase.isFinished

@@ -157,7 +157,11 @@ export class StaffPage extends React.Component<{
 												/>
 											</div>
 										),
-										className: "no-label"
+										className: "no-label",
+										onClick: () => {
+											this.selectedId = member._id;
+											this.viewWhich = "details";
+										}
 									},
 									{
 										dataValue: (

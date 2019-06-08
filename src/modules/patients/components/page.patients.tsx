@@ -367,7 +367,11 @@ export class PatientsPage extends React.Component<{
 										/>
 									</div>
 								),
-								className: "no-label"
+								className: "no-label",
+								onClick: () => {
+									this.selectedId = patient._id;
+									this.viewWhich = "details";
+								}
 							},
 							{
 								dataValue: (

@@ -27,7 +27,10 @@ export class TableActions extends React.Component<{
 								iconProps={{
 									iconName: item.icon
 								}}
-								onClick={() => this.props.onSelect(item.key)}
+								onClick={e => {
+									this.props.onSelect(item.key);
+									e.stopPropagation();
+								}}
 							/>
 						</TooltipHost>
 					)
