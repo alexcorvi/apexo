@@ -56,7 +56,7 @@ export function generateMethods(db: PouchDB.Database, data: IMobXStore) {
 			const document = item.toJSON();
 			const doc = await db.get(_id);
 			document._rev = doc._rev;
-			const response = await db.put(document);
+			const response = await db.put(document, { force: true });
 			return response;
 		}
 	};
