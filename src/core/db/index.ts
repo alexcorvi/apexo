@@ -6,7 +6,6 @@ import {
 	IMobXStore,
 	log,
 	observeItem,
-	recentlyWhiteListed,
 	singleItemUpdateQue
 	} from "@core";
 import { status } from "@core";
@@ -189,7 +188,7 @@ export async function connectToDB(
 				const newDoc: any = change.doc;
 				const id = change.id;
 				const mobxIndex = data.list.findIndex(x => x._id === id);
-				const isBlackListed = blackListedIDs.indexOf(newDoc._id) !== -1;
+				const isBlackListed = blackListedIDs[newDoc._id] !== undefined;
 
 				const mobxDocHash =
 					mobxIndex !== -1
@@ -217,11 +216,19 @@ export async function connectToDB(
 					change.deleted !== true &&
 					!isBlackListed;
 
-				if (
-					isBlackListed &&
-					recentlyWhiteListed.indexOf(newDoc._id) === -1
-				) {
-					recentlyWhiteListed.push(newDoc._id);
+				console.log(
+					isBlackListed,
+					remoteDeletion,
+					remoteAddition,
+					remoteUpdate
+				);
+
+				if (isBlackListed && blackListedIDs[newDoc._id] < 200) {
+					console.log(
+						"black list procedure",
+						blackListedIDs[newDoc._id]
+					);
+					blackListedIDs[newDoc._id]++;
 					let localDoc = change.doc;
 					try {
 						localDoc = await localDatabase.get(newDoc._id);
@@ -258,14 +265,18 @@ export async function connectToDB(
 						);
 					} catch (e) {}
 				} else if (remoteAddition || remoteDeletion || remoteUpdate) {
+					console.log("remote procedure");
 					data.ignoreObserver = true;
 					// if it's a deletion
 					if (remoteDeletion) {
+						console.log("remote deletion");
 						data.list.splice(mobxIndex, 1);
 					} else if (remoteAddition) {
+						console.log("remote addition");
 						// if it's an addition
 						data.list.push(new Class(newDoc));
 					} else if (remoteUpdate) {
+						console.log("remote update");
 						// if it's an update
 						// if there's another update that will carry on the same document
 						// don't update the MobX store just now
@@ -277,6 +288,7 @@ export async function connectToDB(
 					}
 					data.ignoreObserver = false;
 				} else {
+					console.log("local procedure", change);
 					const res = await localDatabase.sync(remoteDatabase);
 				}
 			})

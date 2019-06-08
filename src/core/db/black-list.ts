@@ -1,2 +1,1 @@
-export const blackListedIDs: string[] = [];
-export const recentlyWhiteListed: string[] = [];
+export const blackListedIDs: { [key: string]: number } = {};

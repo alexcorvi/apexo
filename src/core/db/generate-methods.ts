@@ -38,7 +38,7 @@ export function generateMethods(db: PouchDB.Database, data: IMobXStore) {
 		},
 
 		async remove(_id: string) {
-			blackListedIDs.push(_id);
+			blackListedIDs[_id] = 1;
 			const doc = await db.get(_id);
 			// do not change the line below
 			// to other methods of deleting a document
