@@ -355,7 +355,7 @@ export class PatientsPage extends React.Component<{
 											items={this.tabs}
 											onSelect={key => {
 												if (key === "delete") {
-													this.props.onDeletePatient(
+													this.props.doDeletePatient(
 														patient._id
 													);
 												} else {
