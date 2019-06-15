@@ -6089,25 +6089,32 @@ hr {
 .dental-history table {
   direction: ltr !important;
   margin-bottom: 20px;
-  width: 100%;
-  border-collapse: collapse; }
+  direction: ltr !important;
+  margin-bottom: 20px;
+  width: calc(100% + 32px);
+  border-collapse: collapse;
+  margin-left: -16px;
+  margin-right: -16px; }
   .dental-history table.permanent tr td:nth-child(8) {
-    border-right: 2px solid #000; }
+    border-right: 1px solid #e91e63; }
   .dental-history table.permanent tr td:nth-child(9) {
-    border-left: 2px solid #000; }
+    border-left: 1px solid #e91e63; }
   .dental-history table.deciduous tr td:nth-child(5) {
-    border-right: 2px solid #000; }
+    border-right: 1px solid #e91e63; }
   .dental-history table.deciduous tr td:nth-child(6) {
-    border-left: 2px solid #000; }
+    border-left: 1px solid #e91e63; }
+  .dental-history table tr:nth-child(2) td {
+    border-bottom: none; }
   .dental-history table tr td {
     position: relative;
     background: #fff;
     transition: 0.4s all;
     cursor: pointer;
     text-align: center;
-    padding: 10px;
-    color: #000;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
+    padding: 4px;
+    font-size: 12px;
+    border: 1px solid #e3e3e3;
+    border-top: none; }
     .dental-history table tr td .has-notes {
       transition: 0.4s all;
       background: #2196f3;
@@ -6120,7 +6127,7 @@ hr {
       border-radius: 5px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
     .dental-history table tr td:hover {
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
+      background: #f3f3f3 !important; }
     .dental-history table tr td.filled {
       background: #ffc107;
       color: #fff; }
