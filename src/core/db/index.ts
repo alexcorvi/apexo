@@ -229,6 +229,7 @@ export async function connectToDB(
 						blackListedIDs[newDoc._id]
 					);
 					blackListedIDs[newDoc._id]++;
+
 					let localDoc = change.doc;
 					try {
 						localDoc = await localDatabase.get(newDoc._id);
@@ -237,27 +238,18 @@ export async function connectToDB(
 						const doc = await localDatabase.get(
 							(localDoc || { _id: "" })._id
 						);
-						(doc as any)._deleted = true;
-						const dRes = await localDatabase.put(doc, {
-							force: true
-						});
+						const dRes = await localDatabase.remove(doc);
 					} catch (e) {}
 					try {
 						const doc = await localDatabase.get(
 							(change.doc || localDoc || { _id: "" })._id
 						);
-						(doc as any)._deleted = true;
-						const dRes = await localDatabase.put(doc, {
-							force: true
-						});
+						const dRes = await localDatabase.remove(doc);
 					} catch (e) {}
 					const remoteDoc = await remoteDatabase.get(newDoc._id);
 					try {
 						const doc = await remoteDatabase.get(remoteDoc._id);
-						(doc as any)._deleted = true;
-						const dRes = await remoteDatabase.put(doc, {
-							force: true
-						});
+						const dRes = await remoteDatabase.remove(doc);
 					} catch (e) {}
 					try {
 						const syncRes = await remoteDatabase.sync(
