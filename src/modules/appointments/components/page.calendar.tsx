@@ -319,6 +319,13 @@ export class CalendarPage extends React.Component<{
 											: "") +
 										(this.c.selected.day === day.dateNum
 											? " selected"
+											: "") +
+										(day.dateNum === this.c.currentDay &&
+										this.c.currentMonth ===
+											this.c.selected.month &&
+										this.c.selected.year ===
+											this.c.currentYear
+											? " current"
 											: "")
 									}
 									onClick={() => {
