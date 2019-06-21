@@ -3,6 +3,18 @@ import { observer } from "mobx-react";
 import { Icon, Nav, Panel, PanelType } from "office-ui-fabric-react";
 import * as React from "react";
 
+class Version extends React.Component {
+	render() {
+		return (
+			<div className="ver">
+				<img src="./apple-touch-icon.png" />
+				<br />
+				--VERSION--
+			</div>
+		);
+	}
+}
+
 @observer
 export class MenuView extends React.Component<{
 	items: {
@@ -37,6 +49,7 @@ export class MenuView extends React.Component<{
 							</div>
 						);
 					})}
+					<Version />
 				</div>
 				<Panel
 					className="menu"
@@ -64,6 +77,7 @@ export class MenuView extends React.Component<{
 						]}
 						selectedKey={this.props.currentName}
 					/>
+					<Version />
 				</Panel>
 			</div>
 		);

@@ -15,6 +15,19 @@
 	}
 }
 
+.ver {
+	text-align: center;
+	font-size: 11px;
+	line-height: 15px;
+	border-top: 1px solid #f3f3f3;
+	padding-top: 15px;
+	color: #616161;
+	cursor: default;
+	img {
+		width: 32px;
+	}
+}
+
 @media (min-width: 992px) {
 	#router-outlet {
 		margin-left: 65px;
