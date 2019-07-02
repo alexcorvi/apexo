@@ -209,7 +209,8 @@ export async function connectToDB(
 				const remoteUpdate =
 					mobxIndex !== -1 &&
 					change.deleted !== true &&
-					mobxDocHash !== newDoHash;
+					mobxDocHash !== newDoHash &&
+					!singleItemUpdateQue[id];
 				// it's not found in mobx and it's not deleted
 				const remoteAddition =
 					mobxIndex === -1 &&
