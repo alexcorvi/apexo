@@ -5,4 +5,4 @@ setInterval(function() {
 		await singleItemUpdateQue[id]();
 		delete singleItemUpdateQue[id];
 	});
-}, 1500);
+}, 5000);
