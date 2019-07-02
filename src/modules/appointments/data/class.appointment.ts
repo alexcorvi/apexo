@@ -57,7 +57,7 @@ export class Appointment {
 	}
 
 	@computed get outstandingAmount() {
-		return Math.max(this.finalPrice - this.paidAmount, 0);
+		return this.isDone ? Math.max(this.finalPrice - this.paidAmount, 0) : 0;
 	}
 
 	@computed get overpaidAmount() {
