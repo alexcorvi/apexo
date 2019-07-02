@@ -64,6 +64,7 @@ export class PatientsPage extends React.Component<{
 	getFile: (path: string) => Promise<string>;
 	removeFile: (path: string) => Promise<any>;
 	onDeleteAppointment: (id: string) => void;
+	doDeleteAppointment: (id: string) => void;
 	availableTreatments: { _id: string; expenses: number; type: string }[];
 	availablePrescriptions: PrescriptionItem[];
 	appointmentsForDay: (
@@ -238,6 +239,9 @@ export class PatientsPage extends React.Component<{
 								dateFormat={this.props.dateFormat}
 								onDeleteAppointment={id =>
 									this.props.onDeleteAppointment(id)
+								}
+								doDeleteAppointment={id =>
+									this.props.doDeleteAppointment(id)
 								}
 								availablePrescriptions={
 									this.props.availablePrescriptions

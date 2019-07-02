@@ -74,7 +74,7 @@ export class StatisticsPage extends React.Component<{
 		filter?: string | undefined,
 		operatorID?: string | undefined
 	) => Appointment[];
-	onDeleteAppointment: (id: string) => void;
+	doDeleteAppointment: (id: string) => void;
 	selectedAppointments: Appointment[];
 	dateFormat: string;
 	currencySymbol: string;
@@ -332,8 +332,8 @@ export class StatisticsPage extends React.Component<{
 					<AppointmentEditorPanel
 						appointment={this.appointment}
 						onDismiss={() => (this.appointment = null)}
-						onDeleteAppointment={id => {
-							this.props.onDeleteAppointment(id);
+						doDeleteAppointment={id => {
+							this.props.doDeleteAppointment(id);
 							this.appointment = null;
 						}}
 						availableTreatments={this.props.availableTreatments}

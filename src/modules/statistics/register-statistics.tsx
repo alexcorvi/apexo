@@ -8,8 +8,9 @@ export const registerStats = {
 			namespace: modules.statsNamespace,
 			regex: /^statistics/,
 			component: async () => {
-				const StatisticsPage = (await import("./components/page.statistics"))
-					.StatisticsPage;
+				const StatisticsPage = (await import(
+					"./components/page.statistics"
+				)).StatisticsPage;
 				return (
 					<StatisticsPage
 						selectedAppointments={
@@ -56,8 +57,8 @@ export const registerStats = {
 						appointmentsForDay={(...args) =>
 							modules.appointments.appointmentsForDay(...args)
 						}
-						onDeleteAppointment={id =>
-							modules.appointments.deleteModal(id)
+						doDeleteAppointment={id =>
+							modules.appointments.deleteByID(id)
 						}
 					/>
 				);

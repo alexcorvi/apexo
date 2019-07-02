@@ -63,6 +63,9 @@ const App = observer(() => (
 			}
 			startNoServer={() => core.status.startNoServer()}
 			addStaffMember={member => modules.staff.list.push(member)}
+			doDeleteAppointment={(id: string) =>
+				modules.appointments.deleteByID(id)
+			}
 		/>
 	</Fabric>
 ));

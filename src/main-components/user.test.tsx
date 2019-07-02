@@ -27,7 +27,8 @@ const props = {
 	currencySymbol: "$",
 	prescriptionsEnabled: false,
 	timeTrackingEnabled: false,
-	operatingStaff: []
+	operatingStaff: [],
+	doDeleteAppointment: () => undefined
 };
 
 const div = window.document.createElement("div");

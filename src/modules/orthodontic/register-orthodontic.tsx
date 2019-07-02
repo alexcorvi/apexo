@@ -50,6 +50,9 @@ export const registerOrthodontic = {
 						onDeleteAppointment={id => {
 							modules.appointments.deleteModal(id);
 						}}
+						doDeleteAppointment={id =>
+							modules.appointments.deleteByID(id)
+						}
 						appointmentsForDay={(...args) =>
 							modules.appointments.appointmentsForDay(...args)
 						}

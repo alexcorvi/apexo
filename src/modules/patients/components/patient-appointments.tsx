@@ -15,6 +15,7 @@ export class PatientAppointmentsPanel extends React.Component<
 		onAdd: (appointment: Appointment) => void;
 		dateFormat: string;
 		onDeleteAppointment: (id: string) => void;
+		doDeleteAppointment: (id: string) => void;
 		availableTreatments: { _id: string; expenses: number; type: string }[];
 		availablePrescriptions: PrescriptionItem[];
 		appointmentsForDay: (
@@ -48,6 +49,9 @@ export class PatientAppointmentsPanel extends React.Component<
 						dateFormat={this.props.dateFormat}
 						onDeleteAppointment={id =>
 							this.props.onDeleteAppointment(id)
+						}
+						doDeleteAppointment={id =>
+							this.props.doDeleteAppointment(id)
 						}
 						availableTreatments={this.props.availableTreatments}
 						availablePrescriptions={

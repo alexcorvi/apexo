@@ -99,6 +99,7 @@ export class OrthoPage extends React.Component<{
 	getFile: (path: string) => Promise<string>;
 	removeFile: (path: string) => Promise<any>;
 	onDeleteAppointment: (id: string) => void;
+	doDeleteAppointment: (id: string) => void;
 	appointmentsForDay: (
 		year: number,
 		month: number,
@@ -716,15 +717,18 @@ export class OrthoPage extends React.Component<{
 											this.selectedCase.patient!
 												.appointments
 										}
+										doDeleteAppointment={id =>
+											this.props.doDeleteAppointment(id)
+										}
+										onDeleteAppointment={id =>
+											this.props.onDeleteAppointment(id)
+										}
 										onAdd={appointment =>
 											this.props.onAddAppointment(
 												appointment
 											)
 										}
 										dateFormat={this.props.dateFormat}
-										onDeleteAppointment={id =>
-											this.props.onDeleteAppointment(id)
-										}
 										availablePrescriptions={
 											this.props.availablePrescriptions
 										}

@@ -44,8 +44,6 @@ import * as React from "react";
 export class AppointmentEditorPanel extends React.Component<
 	{
 		appointment: Appointment | undefined | null;
-		onDismiss: () => void;
-		onDeleteAppointment: (_id: string) => void;
 		availableTreatments: { _id: string; expenses: number; type: string }[];
 		availablePrescriptions: PrescriptionItem[];
 		currentUser: StaffMember;
@@ -56,6 +54,8 @@ export class AppointmentEditorPanel extends React.Component<
 			filter?: string | undefined,
 			operatorID?: string | undefined
 		) => Appointment[];
+		onDismiss: () => void;
+		doDeleteAppointment: (_id: string) => void;
 		dateFormat: string;
 		currencySymbol: string;
 		prescriptionsEnabled: boolean;
@@ -952,7 +952,7 @@ export class AppointmentEditorPanel extends React.Component<
 								}}
 								text={text("Delete")}
 								onClick={() => {
-									this.props.onDeleteAppointment(
+									this.props.doDeleteAppointment(
 										this.props.appointment!._id
 									);
 								}}

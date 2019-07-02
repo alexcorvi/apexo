@@ -45,6 +45,7 @@ export class UserPanelView extends React.Component<{
 	prescriptionsEnabled: boolean;
 	timeTrackingEnabled: boolean;
 	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
+	doDeleteAppointment: (id: string) => void;
 }> {
 	@observable appointment: Appointment | null = null;
 
@@ -137,7 +138,6 @@ export class UserPanelView extends React.Component<{
 					<AppointmentEditorPanel
 						appointment={this.appointment}
 						onDismiss={() => (this.appointment = null)}
-						onDeleteAppointment={() => (this.appointment = null)}
 						availableTreatments={this.props.availableTreatments}
 						availablePrescriptions={
 							this.props.availablePrescriptions
@@ -151,6 +151,10 @@ export class UserPanelView extends React.Component<{
 						appointmentsForDay={(year, month, day) =>
 							this.props.appointmentsForDay(year, month, day)
 						}
+						doDeleteAppointment={id => {
+							this.props.doDeleteAppointment(id);
+							this.appointment = null;
+						}}
 					/>
 				) : (
 					""

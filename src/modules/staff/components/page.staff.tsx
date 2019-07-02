@@ -53,6 +53,7 @@ export class StaffPage extends React.Component<{
 		operatorID?: string | undefined
 	) => Appointment[];
 	doDeleteStaff: (id: string) => void;
+	doDeleteAppointment: (id: string) => void;
 }> {
 	tabs = [
 		{
@@ -879,6 +880,11 @@ export class StaffPage extends React.Component<{
 											dateFormat={this.props.dateFormat}
 											onDeleteAppointment={id =>
 												this.props.onDeleteAppointment(
+													id
+												)
+											}
+											doDeleteAppointment={id =>
+												this.props.doDeleteAppointment(
 													id
 												)
 											}

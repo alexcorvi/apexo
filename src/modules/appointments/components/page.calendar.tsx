@@ -454,7 +454,7 @@ export class CalendarPage extends React.Component<{
 					<AppointmentEditorPanel
 						appointment={this.appointment}
 						onDismiss={() => (this.appointment = null)}
-						onDeleteAppointment={() => {
+						doDeleteAppointment={() => {
 							this.props.doDeleteAppointment(
 								this.appointment!._id
 							);

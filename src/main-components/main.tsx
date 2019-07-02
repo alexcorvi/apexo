@@ -137,6 +137,7 @@ export class MainView extends React.Component<{
 		server: string;
 	}): Promise<boolean | string>;
 	startNoServer(): Promise<void>;
+	doDeleteAppointment(id: string): void;
 }> {
 	@computed get conditionalView() {
 		if (this.props.step === LoginStep.allDone) {
@@ -184,6 +185,9 @@ export class MainView extends React.Component<{
 						prescriptionsEnabled={this.props.prescriptionsEnabled}
 						timeTrackingEnabled={this.props.timeTrackingEnabled}
 						operatingStaff={this.props.operatingStaff}
+						doDeleteAppointment={id => {
+							this.props.doDeleteAppointment(id);
+						}}
 					/>
 					<MenuView
 						items={this.props.sortedMenuItems}
