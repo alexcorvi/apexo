@@ -940,6 +940,7 @@ h5 {
     font-weight: 300;
     font-size: 13px;
     padding: 12px 15px;
+    padding-bottom: 13px;
     background: #fafafa; }
     .ms-table th .sort-indicators .positive,
     .ms-table th .sort-indicators .negative {
@@ -1036,7 +1037,7 @@ body {
 hr {
   border: none;
   margin-bottom: 20px;
-  border-top: 1px dotted #e0e0e0; }
+  border-top: 1px solid #e0e0e0; }
 
 .hidden {
   display: none; }
@@ -2106,12 +2107,7 @@ hr {
     background: #fff !important; }
   .calendar-component .full-day-col h4 {
     padding: 12px;
-    border-bottom: none;
-    background: #fff1ce; }
-  .calendar-component .full-day-col.selected {
-    background: #fff1ce; }
-  .calendar-component .full-day-col.selected h4 {
-    background: #f3e6c5; }
+    border-bottom: none; }
   .calendar-component .full-day-col .appointment a {
     color: #000; }
   .duty-table {
@@ -2327,7 +2323,7 @@ hr {
 .day-selector
 .day-selector-wrapper
 .day-col.weekend:not(:last-child) {
-  border-left: 1px dotted #e0e0e0;
+  border-left: 1px solid #e0e0e0;
   padding-left: 13px;
   margin-left: 10px;
   border-right: none;
@@ -5551,8 +5547,7 @@ hr {
 
 .appointment-hr {
   border: none;
-  margin-bottom: 20px;
-  border-top: 1px dotted #e0e0e0; }
+  margin-bottom: 20px; }
 
 .appointment-top {
   position: relative; }
@@ -5571,7 +5566,11 @@ hr {
     .appointment-input .time-input:not(.seconds) .ms-TextField-wrapper div {
       border-right: none; }
   .appointment-input .appendage {
-    position: absolute; }
+    position: absolute;
+    width: 25%;
+    min-width: auto;
+    border-radius: 0 3px 3px 0;
+    font-size: 12px; }
     .appointment-input .appendage.stop {
       background: #ff9800; }
   .appointment-input label:not(.ms-Checkbox-label) {
@@ -5888,22 +5887,29 @@ hr {
     width: 14.285%;
     float: left;
     padding: 3px 10px;
+    padding-top: 0;
     min-height: 300px; }
-    .calendar-component .full-day-col h4 {
-      margin-top: 10px;
-      border-bottom: 1px solid #f3f3f3;
-      padding-bottom: 10px;
-      margin-bottom: 10px; }
     .calendar-component .full-day-col:not(:last-child) {
       border-right: 1px solid #f3f3f3; }
     .calendar-component .full-day-col.holiday {
       background: #fafaf7; }
-    .calendar-component .full-day-col.selected {
-      background: #fef8e7; }
-      .calendar-component .full-day-col.selected h4 {
-        border-bottom-color: #9e9e9e; }
-      .calendar-component .full-day-col.selected .appointment {
-        border-bottom-color: #9e9e9e; }
+    .calendar-component .full-day-col.current h4 b {
+      border: 1px solid #00bcd4; }
+    .calendar-component .full-day-col.selected h4 b {
+      background: #3f51b5;
+      color: #fff; }
+    .calendar-component .full-day-col h4 {
+      margin: 10px -10px;
+      margin-top: 0;
+      padding: 10px;
+      background: #fafafa; }
+      .calendar-component .full-day-col h4 b {
+        border: 1px solid transparent;
+        border-radius: 3px;
+        padding: 3px;
+        min-width: 20px;
+        display: inline-block;
+        text-align: center; }
     .calendar-component .full-day-col .appointment {
       padding-bottom: 10px;
       margin-bottom: 10px;
@@ -5945,8 +5951,6 @@ hr {
     margin-top: 10px; }
   .calendar-component .filters .ms-Toggle {
     padding: 15px 0 0 15px; }
-  .calendar-component .day-name {
-    color: #616161; }
 
 @media screen and (min-width: 992px) {
   .calendar-component {
@@ -6013,7 +6017,8 @@ hr {
 .data-table .ms-CommandBar {
   box-sizing: content-box;
   background-color: #fff !important;
-  border-bottom: 1px solid #f3f3f3; }
+  border-bottom: 1px solid #f3f3f3;
+  margin-top: -1px; }
 
 .data-table .ms-table {
   background: #fafafa; }
@@ -6433,6 +6438,17 @@ hr {
     padding-left: 0 !important;
     text-transform: capitalize; }
 
+.ver {
+  text-align: center;
+  font-size: 11px;
+  line-height: 15px;
+  border-top: 1px solid #f3f3f3;
+  padding-top: 15px;
+  color: #616161;
+  cursor: default; }
+  .ver img {
+    width: 32px; }
+
 @media (min-width: 992px) {
   #router-outlet {
     margin-left: 65px; }
@@ -6721,7 +6737,7 @@ hr {
     margin-right: -15px;
     padding-left: 12px;
     padding-right: 12px; }
-  .cl-section .chevron {
+  .cl-section .cl-chevron {
     position: absolute;
     top: 7px;
     right: 7px; }
@@ -6876,7 +6892,7 @@ hr {
     display: block;
     width: 100%;
     padding: 5px;
-    border-bottom: 1px dotted #a6a6a6; }
+    border-bottom: 1px solid #a6a6a6; }
   .tag-input-component .show-all {
     position: absolute;
     top: 9px;
