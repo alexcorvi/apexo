@@ -29,7 +29,9 @@ export class AppointmentsByDateChart extends React.Component<{
 		};
 
 		return this.props.selectedAppointmentsByDay.reduce((acc, val) => {
-			acc.paid.push(val.appointments.filter(a => a.isPaid).length);
+			acc.paid.push(
+				val.appointments.filter(a => a.isPaid && !a.missed).length
+			);
 			acc.outstanding.push(
 				val.appointments.filter(a => a.isOutstanding).length
 			);
