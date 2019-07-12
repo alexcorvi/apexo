@@ -11,7 +11,7 @@ import {
 	stringToGender,
 	Tooth
 	} from "@modules";
-import { comparableDate, formatDate, generateID } from "@utils";
+import { formatDate, generateID } from "@utils";
 import { computed, observable, observe } from "mobx";
 
 export class Patient {
@@ -75,16 +75,6 @@ export class Patient {
 				return today <= date;
 			})
 			.sort((a, b) => a.date - b.date)[0];
-	}
-
-	@computed
-	get hasPrimaryTeeth() {
-		return this.age < 18;
-	}
-
-	@computed
-	get hasPermanentTeeth() {
-		return this.age > 5;
 	}
 
 	@computed get totalPayments() {
