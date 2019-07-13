@@ -6566,6 +6566,12 @@ hr {
   .spa-panel .no-appointments {
     color: #757575;
     margin: 15px 0px 7px; }
+  .spa-panel .new-appointment .ms-Dropdown-title {
+    border: none;
+    background: #f4f4f4;
+    font-weight: 500; }
+    .spa-panel .new-appointment .ms-Dropdown-title:hover {
+      background: #e3e3e3; }
 
 .spd-pn .gender {
   margin-bottom: 12px; }

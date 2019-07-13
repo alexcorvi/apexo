@@ -28,4 +28,14 @@
 		color: rgb(117, 117, 117);
 		margin: 15px 0px 7px;
 	}
+	.new-appointment {
+		.ms-Dropdown-title {
+			border: none;
+			background: #f4f4f4;
+			font-weight: 500;
+			&:hover {
+				background: #e3e3e3;
+			}
+		}
+	}
 }

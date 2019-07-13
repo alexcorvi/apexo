@@ -1,9 +1,10 @@
 import { SectionComponent } from "@common-components";
 import { text } from "@core";
+import * as core from "@core";
 import { Appointment, AppointmentsList, Patient, PrescriptionItem, StaffMember } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
-import { DefaultButton, MessageBar, MessageBarType } from "office-ui-fabric-react";
+import { DefaultButton, Dropdown, Link, MessageBar, MessageBarType } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
@@ -74,20 +75,61 @@ export class PatientAppointmentsPanel extends React.Component<
 					)}
 					<br />
 					{this.canEdit ? (
-						<div style={{ textAlign: "center" }}>
-							<DefaultButton
-								onClick={() => {
-									const apt = new Appointment();
-									apt.patientID = this.props.patient._id;
-									apt.date = new Date().getTime();
-									this.props.onAdd(apt);
-									if (this.l) {
-										this.l.selectedAppointmentID = apt._id;
-									}
-								}}
-								iconProps={{ iconName: "add" }}
-								text={text("Book new appointment")}
-							/>
+						<div>
+							{this.props.availableTreatments.length ? (
+								<div>
+									<Dropdown
+										className="new-appointment"
+										onChange={(ev, option) => {
+											const apt = new Appointment();
+											apt.patientID = this.props.patient._id;
+											apt.date = new Date().getTime();
+											apt.treatmentID = option!.key.toString();
+											this.props.onAdd(apt);
+											if (this.l) {
+												this.l.selectedAppointmentID =
+													apt._id;
+											}
+										}}
+										onRenderItem={(item, render) => {
+											return item!.key === "ph" ? (
+												<span />
+											) : (
+												render!(item)
+											);
+										}}
+										options={this.props.availableTreatments
+											.map(treatment => ({
+												text: treatment.type,
+												key: treatment._id
+											}))
+											.concat([
+												{
+													key: "ph",
+													text:
+														"＋ Book new appointment"
+												}
+											])}
+										selectedKey="ph"
+									/>
+								</div>
+							) : (
+								<MessageBar
+									messageBarType={MessageBarType.info}
+								>
+									{text(
+										"You need to add treatments in the treatments section before being able to book new appointments"
+									)}
+									<br />
+									<Link
+										onClick={() => {
+											core.router.go(["treatments"]);
+										}}
+									>
+										Go to treatments
+									</Link>
+								</MessageBar>
+							)}
 						</div>
 					) : (
 						""
