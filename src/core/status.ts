@@ -189,7 +189,6 @@ export class Status {
 		await this.start({
 			server: "http://apexo-no-server-mode"
 		});
-		store.set("LSL_hash", Md5.hashStr("no server mode").toString());
 		store.set("no_server_mode", "true");
 	}
 
@@ -246,10 +245,12 @@ export class Status {
 	}
 
 	async activeSession(server: string) {
-		const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
-			.default;
-		const auth: PouchDB.Plugin = ((await import("pouchdb-authentication")) as any)
-			.default;
+		const PouchDB: PouchDB.Static = ((await import(
+			"pouchdb-browser"
+		)) as any).default;
+		const auth: PouchDB.Plugin = ((await import(
+			"pouchdb-authentication"
+		)) as any).default;
 		PouchDB.plugin(auth);
 		try {
 			if (navigator.onLine && (await isOnline(server))) {
