@@ -10,6 +10,7 @@ import {
 	} from "@common-components";
 import { text } from "@core";
 import { Appointment, Patient, PrescriptionItem, StaffMember, Treatment } from "@modules";
+import * as modules from "@modules";
 import { formatDate, round } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -75,43 +76,14 @@ export class StatisticsPage extends React.Component<{
 		operatorID?: string | undefined
 	) => Appointment[];
 	doDeleteAppointment: (id: string) => void;
-	selectedAppointments: Appointment[];
 	dateFormat: string;
 	currencySymbol: string;
-	startingDate: number;
-	endingDate: number;
-	totalPayments: number;
-	totalExpenses: number;
-	totalProfits: number;
-	availableTreatments: { _id: string; expenses: number; type: string }[];
+	operatingStaff: StaffMember[];
+	availableTreatments: Treatment[];
 	availablePrescriptions: PrescriptionItem[];
 	currentUser: StaffMember;
 	prescriptionsEnabled: boolean;
 	timeTrackingEnabled: boolean;
-	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
-	selectedAppointmentsByDay: {
-		appointments: Appointment[];
-		day: Date;
-	}[];
-	selectedPatients: Patient[];
-	selectedFinancesByDay: {
-		day: Date;
-		appointments: {
-			paid: number;
-			expenses: number;
-			profit: number;
-			profitPercentage: number;
-			isPaid: boolean;
-			isDone: boolean;
-		}[];
-	}[];
-	selectedTreatments: {
-		treatment: Treatment;
-		male: number;
-		female: number;
-		profit: number;
-		times: number;
-	}[];
 }> {
 	@observable appointment: Appointment | null = null;
 
@@ -129,115 +101,117 @@ export class StatisticsPage extends React.Component<{
 						text("Expenses"),
 						text("Profits")
 					]}
-					rows={this.props.selectedAppointments.map(appointment => ({
-						id: appointment._id,
-						searchableString: appointment.searchableString,
-						cells: [
-							{
-								dataValue: (
-									appointment.patient || new Patient()
-								).name,
-								component: (
-									<ProfileComponent
-										secondaryElement={
-											<span>
-												{formatDate(
-													appointment.date,
-													this.props.dateFormat
-												)}{" "}
-												/{" "}
-												{appointment.operatingStaff.map(
-													x => (
-														<i key={x._id}>
-															{x.name}{" "}
-														</i>
-													)
-												)}
-											</span>
-										}
-										name={
-											(
-												appointment!.patient ||
-												new Patient()
-											).name
-										}
-										size={3}
-									/>
-								),
-								onClick: () => {
-									this.appointment = appointment;
+					rows={modules.statistics.selectedAppointments.map(
+						appointment => ({
+							id: appointment._id,
+							searchableString: appointment.searchableString,
+							cells: [
+								{
+									dataValue: (
+										appointment.patient || new Patient()
+									).name,
+									component: (
+										<ProfileComponent
+											secondaryElement={
+												<span>
+													{formatDate(
+														appointment.date,
+														this.props.dateFormat
+													)}{" "}
+													/{" "}
+													{appointment.operatingStaff.map(
+														x => (
+															<i key={x._id}>
+																{x.name}{" "}
+															</i>
+														)
+													)}
+												</span>
+											}
+											name={
+												(
+													appointment!.patient ||
+													new Patient()
+												).name
+											}
+											size={3}
+										/>
+									),
+									onClick: () => {
+										this.appointment = appointment;
+									},
+									className: "no-label"
 								},
-								className: "no-label"
-							},
-							{
-								dataValue: appointment.treatmentID,
-								component: (
-									<ProfileSquaredComponent
-										text={
-											appointment.treatment
-												? appointment.treatment.type
-												: ""
-										}
-										subText={formatDate(
-											appointment.date,
-											this.props.dateFormat
-										)}
-										size={3}
-										onClick={() => {}}
-									/>
-								),
-								className: "hidden-xs"
-							},
-							{
-								dataValue: appointment.paidAmount,
-								component: (
-									<span>
-										{this.props.currencySymbol +
-											round(
-												appointment.paidAmount
-											).toString()}
-									</span>
-								),
-								className: "hidden-xs"
-							},
-							{
-								dataValue: appointment.outstandingAmount,
-								component: (
-									<span>
-										{this.props.currencySymbol +
-											round(
-												appointment.outstandingAmount
-											).toString()}
-									</span>
-								),
-								className: "hidden-xs"
-							},
-							{
-								dataValue: appointment.expenses,
-								component: (
-									<span>
-										{this.props.currencySymbol +
-											round(
-												appointment.expenses
-											).toString()}
-									</span>
-								),
-								className: "hidden-xs"
-							},
-							{
-								dataValue: appointment.profit,
-								component: (
-									<span>
-										{this.props.currencySymbol +
-											round(
-												appointment.profit
-											).toString()}
-									</span>
-								),
-								className: "hidden-xs"
-							}
-						]
-					}))}
+								{
+									dataValue: appointment.treatmentID,
+									component: (
+										<ProfileSquaredComponent
+											text={
+												appointment.treatment
+													? appointment.treatment.type
+													: ""
+											}
+											subText={formatDate(
+												appointment.date,
+												this.props.dateFormat
+											)}
+											size={3}
+											onClick={() => {}}
+										/>
+									),
+									className: "hidden-xs"
+								},
+								{
+									dataValue: appointment.paidAmount,
+									component: (
+										<span>
+											{this.props.currencySymbol +
+												round(
+													appointment.paidAmount
+												).toString()}
+										</span>
+									),
+									className: "hidden-xs"
+								},
+								{
+									dataValue: appointment.outstandingAmount,
+									component: (
+										<span>
+											{this.props.currencySymbol +
+												round(
+													appointment.outstandingAmount
+												).toString()}
+										</span>
+									),
+									className: "hidden-xs"
+								},
+								{
+									dataValue: appointment.expenses,
+									component: (
+										<span>
+											{this.props.currencySymbol +
+												round(
+													appointment.expenses
+												).toString()}
+										</span>
+									),
+									className: "hidden-xs"
+								},
+								{
+									dataValue: appointment.profit,
+									component: (
+										<span>
+											{this.props.currencySymbol +
+												round(
+													appointment.profit
+												).toString()}
+										</span>
+									),
+									className: "hidden-xs"
+								}
+							]
+						})
+					)}
 					farItems={[
 						{
 							key: "1",
@@ -289,7 +263,9 @@ export class StatisticsPage extends React.Component<{
 											}
 										}}
 										value={
-											new Date(this.props.startingDate)
+											new Date(
+												modules.statistics.startingDate
+											)
 										}
 										formatDate={d =>
 											`${text("From")}: ${formatDate(
@@ -314,7 +290,11 @@ export class StatisticsPage extends React.Component<{
 												);
 											}
 										}}
-										value={new Date(this.props.endingDate)}
+										value={
+											new Date(
+												modules.statistics.endingDate
+											)
+										}
 										formatDate={d =>
 											`${text("Until")}: ${formatDate(
 												d,
@@ -362,8 +342,8 @@ export class StatisticsPage extends React.Component<{
 									{text("Appointments")}:{" "}
 									<TagComponent
 										text={round(
-											this.props.selectedAppointments
-												.length
+											modules.statistics
+												.selectedAppointments.length
 										).toString()}
 										type={TagType.primary}
 									/>
@@ -376,7 +356,7 @@ export class StatisticsPage extends React.Component<{
 										text={
 											this.props.currencySymbol +
 											round(
-												this.props.totalPayments
+												modules.statistics.totalPayments
 											).toString()
 										}
 										type={TagType.warning}
@@ -390,7 +370,7 @@ export class StatisticsPage extends React.Component<{
 										text={
 											this.props.currencySymbol +
 											round(
-												this.props.totalExpenses
+												modules.statistics.totalExpenses
 											).toString()
 										}
 										type={TagType.danger}
@@ -404,7 +384,7 @@ export class StatisticsPage extends React.Component<{
 										text={
 											this.props.currencySymbol +
 											round(
-												this.props.totalProfits
+												modules.statistics.totalProfits
 											).toString()
 										}
 										type={TagType.success}
@@ -423,7 +403,8 @@ export class StatisticsPage extends React.Component<{
 							>
 								<AppointmentsByDateChart
 									selectedAppointmentsByDay={
-										this.props.selectedAppointmentsByDay
+										modules.statistics
+											.selectedAppointmentsByDay
 									}
 									dateFormat={this.props.dateFormat}
 								/>
@@ -435,7 +416,7 @@ export class StatisticsPage extends React.Component<{
 								<FinancesByDateChart
 									dateFormat={this.props.dateFormat}
 									selectedFinancesByDay={
-										this.props.selectedFinancesByDay
+										modules.statistics.selectedFinancesByDay
 									}
 								/>
 							</SectionComponent>
@@ -445,7 +426,7 @@ export class StatisticsPage extends React.Component<{
 							<SectionComponent title={text("Patients' Gender")}>
 								<GenderPieChart
 									selectedPatients={
-										this.props.selectedPatients
+										modules.statistics.selectedPatients
 									}
 								/>
 							</SectionComponent>
@@ -457,7 +438,7 @@ export class StatisticsPage extends React.Component<{
 							>
 								<MostAppliedTreatmentsChart
 									selectedAppointments={
-										this.props.selectedAppointments
+										modules.statistics.selectedAppointments
 									}
 								/>
 							</SectionComponent>
@@ -469,7 +450,7 @@ export class StatisticsPage extends React.Component<{
 							>
 								<MostInvolvedTeethChart
 									selectedAppointments={
-										this.props.selectedAppointments
+										modules.statistics.selectedAppointments
 									}
 								/>
 							</SectionComponent>
@@ -481,7 +462,7 @@ export class StatisticsPage extends React.Component<{
 							>
 								<TreatmentsByGenderChart
 									selectedTreatments={
-										this.props.selectedTreatments
+										modules.statistics.selectedTreatments
 									}
 								/>
 							</SectionComponent>
@@ -493,7 +474,7 @@ export class StatisticsPage extends React.Component<{
 							>
 								<TreatmentsNumberChart
 									selectedTreatments={
-										this.props.selectedTreatments
+										modules.statistics.selectedTreatments
 									}
 								/>
 							</SectionComponent>
@@ -503,7 +484,7 @@ export class StatisticsPage extends React.Component<{
 							<SectionComponent title={text("Patients' Age")}>
 								<AgeBarChart
 									selectedPatients={
-										this.props.selectedPatients
+										modules.statistics.selectedPatients
 									}
 								/>
 							</SectionComponent>

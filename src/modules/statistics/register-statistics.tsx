@@ -13,19 +13,11 @@ export const registerStats = {
 				)).StatisticsPage;
 				return (
 					<StatisticsPage
-						selectedAppointments={
-							modules.statistics.selectedAppointments
-						}
 						dateFormat={modules.setting.getSetting("date_format")}
 						currencySymbol={modules.setting.getSetting(
 							"currencySymbol"
 						)}
 						operatingStaff={modules.staff.operatingStaff}
-						startingDate={modules.statistics.startingDate}
-						endingDate={modules.statistics.endingDate}
-						totalPayments={modules.statistics.totalPayments}
-						totalExpenses={modules.statistics.totalExpenses}
-						totalProfits={modules.statistics.totalProfits}
 						availableTreatments={modules.treatments.list}
 						availablePrescriptions={modules.prescriptions.list}
 						currentUser={
@@ -36,16 +28,6 @@ export const registerStats = {
 						}
 						timeTrackingEnabled={
 							!!modules.setting.getSetting("time_tracking")
-						}
-						selectedAppointmentsByDay={
-							modules.statistics.selectedAppointmentsByDay
-						}
-						selectedPatients={modules.statistics.selectedPatients}
-						selectedFinancesByDay={
-							modules.statistics.selectedFinancesByDay
-						}
-						selectedTreatments={
-							modules.statistics.selectedTreatments
 						}
 						onChooseStaffMember={id => {
 							modules.statistics.specificMemberID = id;
