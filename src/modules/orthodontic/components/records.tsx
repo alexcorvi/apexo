@@ -78,16 +78,21 @@ export class OrthoRecordsPanel extends React.Component<{
 		return this.props.currentUser.canEditOrtho;
 	}
 
-	@computed get dates() {
+	@computed get patientAppointments() {
 		if (!this.props.orthoCase.patient) {
 			return [];
 		}
 		return this.props.orthoCase.patient.appointments
 			.map(appointment => ({
 				date: appointment.date,
-				treatmentType: (appointment.treatment || { type: "" }).type
+				treatmentType: (appointment.treatment || { type: "" }).type,
+				appointment
 			}))
 			.sort((a, b) => b.date - a.date);
+	}
+
+	@computed get patientDoneAppointments() {
+		return this.patientAppointments.filter(x => x.appointment.isDone);
 	}
 
 	@computed get allImages() {
@@ -182,19 +187,23 @@ export class OrthoRecordsPanel extends React.Component<{
 							{this.props.orthoCase.isStarted ? (
 								<Dropdown
 									selectedKey={this.props.orthoCase.startedDate.toString()}
-									options={this.dates.map(date => {
-										return {
-											key: date.date.toString(),
-											text: `${formatDate(
-												date.date,
-												this.props.dateFormat
-											)} ${
-												date.treatmentType
-													? `, ${date.treatmentType}`
-													: ""
-											}`
-										};
-									})}
+									options={this.patientDoneAppointments.map(
+										date => {
+											return {
+												key: date.date.toString(),
+												text: `${formatDate(
+													date.date,
+													this.props.dateFormat
+												)} ${
+													date.treatmentType
+														? `, ${
+																date.treatmentType
+														  }`
+														: ""
+												}`
+											};
+										}
+									)}
 									disabled={!this.canEdit}
 									onChange={(ev, newValue) => {
 										this.props.orthoCase.startedDate = num(
@@ -219,19 +228,23 @@ export class OrthoRecordsPanel extends React.Component<{
 							{this.props.orthoCase.isFinished ? (
 								<Dropdown
 									selectedKey={this.props.orthoCase.finishedDate.toString()}
-									options={this.dates.map(date => {
-										return {
-											key: date.date.toString(),
-											text: `${formatDate(
-												date.date,
-												this.props.dateFormat
-											)} ${
-												date.treatmentType
-													? `, ${date.treatmentType}`
-													: ""
-											}`
-										};
-									})}
+									options={this.patientDoneAppointments.map(
+										date => {
+											return {
+												key: date.date.toString(),
+												text: `${formatDate(
+													date.date,
+													this.props.dateFormat
+												)} ${
+													date.treatmentType
+														? `, ${
+																date.treatmentType
+														  }`
+														: ""
+												}`
+											};
+										}
+									)}
 									disabled={!this.canEdit}
 									onChange={(ev, newValue) => {
 										this.props.orthoCase.finishedDate = num(
@@ -481,7 +494,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																									!this
 																										.canEdit
 																								}
-																								options={this.dates.map(
+																								options={this.patientDoneAppointments.map(
 																									date => {
 																										return {
 																											key: date.date.toString(),
@@ -789,7 +802,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																																	.canEdit
 																															}
 																															selectedKey={visit.date.toString()}
-																															options={this.dates.map(
+																															options={this.patientDoneAppointments.map(
 																																date => {
 																																	return {
 																																		key: date.date.toString(),
