@@ -13,6 +13,8 @@ A web/desktop application to manage your dental clinic practice.
 -   [Demo Application](https://demo.apexo.app)
 -   [Web Application](https://web.apexo.app)
 -   [Download](https://github.com/alexcorvi/apexo/releases/)
+-   [Roadmap](https://github.com/alexcorvi/apexo/blob/master/ROADMAP.md)
+-   [Changelog](https://github.com/alexcorvi/apexo/blob/master/CHANGELOG.md)
 
 #### Embedded Apps that can be used separately
 
