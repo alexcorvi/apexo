@@ -35,7 +35,6 @@ export class ModalsView extends React.Component<{
 								value={this.inputValue}
 								onChange={(e, val) => {
 									this.inputValue = val!;
-									console.log("ay ay ay ay");
 								}}
 								data-testid="modal-input"
 							/>

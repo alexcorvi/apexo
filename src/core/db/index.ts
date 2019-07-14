@@ -246,18 +246,7 @@ export async function connectToDB(
 					change.deleted !== true &&
 					!isBlackListed;
 
-				console.log(
-					isBlackListed,
-					remoteDeletion,
-					remoteAddition,
-					remoteUpdate
-				);
-
 				if (isBlackListed && blackListedIDs[newDoc._id] < 200) {
-					console.log(
-						"black list procedure",
-						blackListedIDs[newDoc._id]
-					);
 					blackListedIDs[newDoc._id]++;
 
 					let localDoc = change.doc;
@@ -287,18 +276,14 @@ export async function connectToDB(
 						);
 					} catch (e) {}
 				} else if (remoteAddition || remoteDeletion || remoteUpdate) {
-					console.log("remote procedure");
 					data.ignoreObserver = true;
 					// if it's a deletion
 					if (remoteDeletion) {
-						console.log("remote deletion");
 						data.list.splice(mobxIndex, 1);
 					} else if (remoteAddition) {
-						console.log("remote addition");
 						// if it's an addition
 						data.list.push(new Class(newDoc));
 					} else if (remoteUpdate) {
-						console.log("remote update");
 						// if it's an update
 						// if there's another update that will carry on the same document
 						// don't update the MobX store just now
@@ -310,7 +295,6 @@ export async function connectToDB(
 					}
 					data.ignoreObserver = false;
 				} else {
-					console.log("local procedure", change);
 					const res = await localDatabase.sync(remoteDatabase);
 				}
 			})

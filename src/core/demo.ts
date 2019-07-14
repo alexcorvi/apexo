@@ -182,8 +182,6 @@ export function loadDemoData() {
 						)
 					];
 
-					console.log(toJS(appointments.list[i].staffID));
-
 					appointments.list[i].isDone =
 						appointment.date < new Date().getTime();
 				});
