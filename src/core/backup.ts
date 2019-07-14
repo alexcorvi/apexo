@@ -288,7 +288,7 @@ const view = {
 			  border-left-color: #009688
 		  }
 		  </style>
-		<h1>Restore from file</h1>
+		<h1>Restore</h1>
 		<h2>Please do not close this window, it will automatically reload when done</h2>
 		<hr>
 	`;
