@@ -30,8 +30,9 @@ export interface DatabaseDump {
 export const backup = {
 	toJSON: function() {
 		return new Promise(async (resolve, reject) => {
-			const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
-				.default;
+			const PouchDB: PouchDB.Static = ((await import(
+				"pouchdb-browser"
+			)) as any).default;
 
 			await compact.compact();
 
@@ -105,16 +106,18 @@ export const backup = {
 
 export const restore = {
 	fromJSON: async function(json: DatabaseDump[]) {
+		view.hideEverything();
 		return new Promise(async (resolve, reject) => {
-			const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
-				.default;
+			const PouchDB: PouchDB.Static = ((await import(
+				"pouchdb-browser"
+			)) as any).default;
 
 			status.resetUser();
 			let done = 0;
 
 			json.forEach(async dump => {
+				view.msg(`starting: deleting all server/"${dump.dbName}"`);
 				const dbName = dump.dbName;
-
 				const remoteDatabase1 = new PouchDB(
 					`${status.server}/${dbName}`,
 					{
@@ -126,6 +129,11 @@ export const restore = {
 					}
 				);
 				await remoteDatabase1.destroy();
+				view.msg(
+					`finished: deleting all server/"${dump.dbName}"`,
+					true
+				);
+				view.msg(`starting: uploading data to server/"${dump.dbName}"`);
 				const remoteDatabase2 = new PouchDB(
 					`${status.server}/${dbName}`,
 					{
@@ -137,16 +145,30 @@ export const restore = {
 					}
 				);
 				const a = await remoteDatabase2.bulkDocs(dump.data);
+				view.msg(
+					`finished: uploading data to server/"${dump.dbName}"`,
+					true
+				);
 				done++;
-				return;
 			});
 
 			const checkInterval = setInterval(async () => {
 				if (done === json.length) {
 					clearInterval(checkInterval);
+					view.msg(`finished: all data are now in the server`, true);
+					view.msg(`starting: destroying local data`);
 					await destroyLocal.destroy();
+					view.msg(`finished: destroying local data`, true);
+					view.msg(`starting: downloading remote data`);
 					await resync.resync();
-					location.reload();
+					view.msg(`finished: downloading remote data`, true);
+					view.msg(
+						`Everything is done, will reload in 5 seconds`,
+						true
+					);
+					setTimeout(() => {
+						location.reload();
+					}, second * 5);
 				}
 			}, second / 100);
 		});
@@ -238,3 +260,43 @@ export async function downloadCurrentStateAsBackup() {
 		});
 	});
 }
+
+const view = {
+	el: document.getElementById("root"),
+	hideEverything: function() {
+		this.el!.innerHTML = `
+		<style>
+		#root {
+			background: #f4f4f4;
+			padding: 30px;
+			font-family: monospace;
+		  }
+		  
+		  h2 {
+			font-style: italic;
+		  }
+		  
+		  p {
+			background: #e3e3e3;
+			padding: 5px;
+			border-left: 10px solid #aaaa;
+		  }
+		  p.start {
+			  border-left-color: #3f51b5
+		  }
+		  p.finish {
+			  border-left-color: #009688
+		  }
+		  </style>
+		<h1>Restore from file</h1>
+		<h2>Please do not close this window, it will automatically reload when done</h2>
+		<hr>
+	`;
+	},
+	msg: function(str: string, finish?: boolean) {
+		this.el!.innerHTML = `${this.el!.innerHTML}<p class="${
+			finish ? "finish" : "start"
+		}">${str}</p>`;
+		window.scrollTo(0, document.body.scrollHeight);
+	}
+};
