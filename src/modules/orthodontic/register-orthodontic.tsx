@@ -59,6 +59,7 @@ export const registerOrthodontic = {
 						newModal={x => core.modals.newModal(x)}
 						cephLoader={x => modules.orthoCases.cephLoader(x)}
 						doDeleteOrtho={id => modules.orthoCases.deleteByID(id)}
+						allAppointments={modules.appointments.list}
 					/>
 				);
 			},

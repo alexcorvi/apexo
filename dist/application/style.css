@@ -6627,6 +6627,9 @@ hr {
     line-height: 1.5; }
   .profile-squared.size-3 .ms-Persona-initials {
     font-size: 16px; }
+  .profile-squared.clickable:hover {
+    background: #f5f5f5;
+    cursor: pointer; }
 
 .ortho-records .ms-DetailsList {
   overflow: hidden; }

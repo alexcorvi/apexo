@@ -22,11 +22,20 @@ import {
 	Panel,
 	PanelType,
 	PersonaInitialsColor,
+	Shimmer,
 	TextField,
 	Toggle
 	} from "office-ui-fabric-react";
 import { PrimaryButton } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const AppointmentEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/appointments/components/appointment-editor"))
+			.AppointmentEditorPanel,
+	loading: () => <Shimmer />
+});
 
 @observer
 export class StaffPage extends React.Component<{
@@ -52,6 +61,7 @@ export class StaffPage extends React.Component<{
 		filter?: string | undefined,
 		operatorID?: string | undefined
 	) => Appointment[];
+	allAppointments: Appointment[];
 	doDeleteStaff: (id: string) => void;
 	doDeleteAppointment: (id: string) => void;
 }> {
@@ -82,6 +92,9 @@ export class StaffPage extends React.Component<{
 	];
 
 	@observable selectedId: string = this.props.currentLocation.split("/")[1];
+
+	@observable selectedAppointmentId: string = "";
+
 	@observable viewWhich:
 		| ""
 		| "details"
@@ -97,6 +110,12 @@ export class StaffPage extends React.Component<{
 		return (
 			this.props.currentUser._id ===
 			(this.selectedMember || { _id: "" })._id
+		);
+	}
+
+	@computed get selectedAppointment() {
+		return this.props.allAppointments.find(
+			x => x._id === this.selectedAppointmentId
 		);
 	}
 
@@ -197,7 +216,14 @@ export class StaffPage extends React.Component<{
 											onRenderInitials={() => (
 												<Icon iconName="Previous" />
 											)}
-											onClick={() => {}}
+											onClick={
+												member.lastAppointment
+													? () => {
+															this.selectedAppointmentId =
+																member.lastAppointment._id;
+													  }
+													: undefined
+											}
 											initialsColor={
 												member.lastAppointment
 													? undefined
@@ -232,7 +258,14 @@ export class StaffPage extends React.Component<{
 											onRenderInitials={() => (
 												<Icon iconName="Next" />
 											)}
-											onClick={() => {}}
+											onClick={
+												member.nextAppointment
+													? () => {
+															this.selectedAppointmentId =
+																member.nextAppointment._id;
+													  }
+													: undefined
+											}
 											initialsColor={
 												member.nextAppointment
 													? undefined
@@ -475,7 +508,6 @@ export class StaffPage extends React.Component<{
 															this.forceUpdate();
 														}
 													}}
-													onClick={() => {}}
 													type="number"
 													max={9999}
 												/>
@@ -965,6 +997,32 @@ export class StaffPage extends React.Component<{
 							)}
 						</div>
 					</Panel>
+				) : (
+					""
+				)}
+
+				{this.selectedAppointment ? (
+					<AppointmentEditorPanel
+						appointment={this.selectedAppointment}
+						onDismiss={() => (this.selectedAppointmentId = "")}
+						doDeleteAppointment={id => {
+							this.props.doDeleteAppointment(id);
+							this.selectedAppointmentId = "";
+						}}
+						availableTreatments={this.props.availableTreatments}
+						availablePrescriptions={
+							this.props.availablePrescriptions
+						}
+						currentUser={this.props.currentUser}
+						dateFormat={this.props.dateFormat}
+						currencySymbol={this.props.currencySymbol}
+						prescriptionsEnabled={this.props.enabledPrescriptions}
+						timeTrackingEnabled={this.props.timeTrackingEnabled}
+						operatingStaff={this.props.operatingStaff}
+						appointmentsForDay={(year, month, day) =>
+							this.props.appointmentsForDay(year, month, day)
+						}
+					/>
 				) : (
 					""
 				)}

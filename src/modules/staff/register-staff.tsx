@@ -47,6 +47,7 @@ export const registerStaff = {
 							modules.appointments.appointmentsForDay(...args)
 						}
 						doDeleteStaff={id => modules.staff.deleteByID(id)}
+						allAppointments={modules.appointments.list}
 					/>
 				);
 			},

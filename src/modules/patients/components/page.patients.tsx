@@ -46,6 +46,13 @@ const DentalHistoryPanel = loadable({
 	loading: () => <Shimmer />
 });
 
+const AppointmentEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/appointments/components/appointment-editor"))
+			.AppointmentEditorPanel,
+	loading: () => <Shimmer />
+});
+
 @observer
 export class PatientsPage extends React.Component<{
 	patients: Patient[];
@@ -78,6 +85,7 @@ export class PatientsPage extends React.Component<{
 	timeTrackingEnabled: boolean;
 	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
 	doDeletePatient: (id: string) => void;
+	allAppointments: Appointment[];
 }> {
 	tabs = [
 		{
@@ -109,6 +117,8 @@ export class PatientsPage extends React.Component<{
 			hiddenOnPanel: true
 		}
 	];
+
+	@observable selectedAppointmentId = "";
 	@observable selectedId: string = this.props.currentLocation.split("/")[1];
 
 	@observable viewWhich: string = this.props.currentLocation.split("/")[1]
@@ -124,6 +134,12 @@ export class PatientsPage extends React.Component<{
 
 	@computed get canEdit() {
 		return this.props.currentUser.canEditPatients;
+	}
+
+	@computed get selectedAppointment() {
+		return this.props.allAppointments.find(
+			x => x._id === this.selectedAppointmentId
+		);
 	}
 
 	render() {
@@ -409,10 +425,17 @@ export class PatientsPage extends React.Component<{
 													  )
 											}
 											size={3}
+											onClick={
+												patient.lastAppointment
+													? () => {
+															this.selectedAppointmentId =
+																patient.lastAppointment._id;
+													  }
+													: undefined
+											}
 											onRenderInitials={() => (
 												<Icon iconName="Previous" />
 											)}
-											onClick={() => {}}
 											initialsColor={
 												patient.lastAppointment
 													? undefined
@@ -448,7 +471,14 @@ export class PatientsPage extends React.Component<{
 											onRenderInitials={() => (
 												<Icon iconName="Next" />
 											)}
-											onClick={() => {}}
+											onClick={
+												patient.nextAppointment
+													? () => {
+															this.selectedAppointmentId =
+																patient.nextAppointment._id;
+													  }
+													: undefined
+											}
 											initialsColor={
 												patient.nextAppointment
 													? undefined
@@ -473,7 +503,6 @@ export class PatientsPage extends React.Component<{
 											onRenderInitials={() => (
 												<Icon iconName="CheckMark" />
 											)}
-											onClick={() => {}}
 											initialsColor={
 												patient.totalPayments > 0
 													? PersonaInitialsColor.darkBlue
@@ -505,7 +534,6 @@ export class PatientsPage extends React.Component<{
 											onRenderInitials={() => (
 												<Icon iconName="Cancel" />
 											)}
-											onClick={() => {}}
 											initialsColor={
 												patient.differenceAmount !== 0
 													? PersonaInitialsColor.darkRed
@@ -558,6 +586,31 @@ export class PatientsPage extends React.Component<{
 							: []
 					}
 				/>
+				{this.selectedAppointment ? (
+					<AppointmentEditorPanel
+						appointment={this.selectedAppointment}
+						onDismiss={() => (this.selectedAppointmentId = "")}
+						doDeleteAppointment={id => {
+							this.props.doDeleteAppointment(id);
+							this.selectedAppointmentId = "";
+						}}
+						availableTreatments={this.props.availableTreatments}
+						availablePrescriptions={
+							this.props.availablePrescriptions
+						}
+						currentUser={this.props.currentUser}
+						dateFormat={this.props.dateFormat}
+						currencySymbol={this.props.currencySymbol}
+						prescriptionsEnabled={this.props.prescriptionsEnabled}
+						timeTrackingEnabled={this.props.timeTrackingEnabled}
+						operatingStaff={this.props.operatingStaff}
+						appointmentsForDay={(year, month, day) =>
+							this.props.appointmentsForDay(year, month, day)
+						}
+					/>
+				) : (
+					""
+				)}
 			</div>
 		);
 	}

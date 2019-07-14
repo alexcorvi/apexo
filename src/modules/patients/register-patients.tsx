@@ -51,6 +51,7 @@ export const registerPatients = {
 							modules.patients.list.push(patient)
 						}
 						doDeletePatient={id => modules.patients.deleteByID(id)}
+						allAppointments={modules.appointments.list}
 					/>
 				);
 			},

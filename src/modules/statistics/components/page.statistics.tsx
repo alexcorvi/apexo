@@ -156,7 +156,6 @@ export class StatisticsPage extends React.Component<{
 												this.props.dateFormat
 											)}
 											size={3}
-											onClick={() => {}}
 										/>
 									),
 									className: "hidden-xs"

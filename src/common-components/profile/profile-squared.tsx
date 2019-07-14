@@ -9,13 +9,16 @@ interface Props {
 	initialsColor?: PersonaInitialsColor;
 	size?: number;
 	onClick?: () => void;
+	className?: string;
 }
 @observer
 export class ProfileSquaredComponent extends React.Component<Props, {}> {
 	render() {
 		return (
 			<Persona
-				className={`profile-squared size-${this.props.size}`}
+				className={`profile-squared size-${this.props.size} ${
+					this.props.onClick ? "clickable" : ""
+				} ${this.props.className || ""}`}
 				text={this.props.text || ""}
 				size={this.props.size || 3}
 				onRenderInitials={this.props.onRenderInitials}

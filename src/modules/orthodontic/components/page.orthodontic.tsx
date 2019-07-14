@@ -26,14 +26,15 @@ import {
 	DefaultButton,
 	Icon,
 	IconButton,
+	MessageBar,
+	MessageBarType,
 	Panel,
 	PanelType,
 	PersonaInitialsColor,
+	PrimaryButton,
 	Shimmer,
-	TextField,
-	TooltipHost
+	TextField
 	} from "office-ui-fabric-react";
-import { MessageBar, MessageBarType, PrimaryButton } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
 
@@ -65,6 +66,13 @@ const OrthoGalleryPanel = loadable({
 	loader: async () =>
 		(await import("modules/orthodontic/components/ortho-gallery"))
 			.OrthoGalleryPanel,
+	loading: () => <Shimmer />
+});
+
+const AppointmentEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/appointments/components/appointment-editor"))
+			.AppointmentEditorPanel,
 	loading: () => <Shimmer />
 });
 
@@ -110,6 +118,7 @@ export class OrthoPage extends React.Component<{
 	newModal: (modal: ModalInterface) => void;
 	cephLoader: (obj: CephalometricItemInterface) => Promise<string>;
 	doDeleteOrtho: (id: string) => void;
+	allAppointments: Appointment[];
 }> {
 	tabs = [
 		{
@@ -157,6 +166,8 @@ export class OrthoPage extends React.Component<{
 	@observable selectedId: string = "";
 	@observable viewWhich: string = "";
 
+	@observable selectedAppointmentId = "";
+
 	@computed get selectedCase() {
 		return this.props.cases.find(
 			orthoCase => orthoCase._id === this.selectedId
@@ -173,6 +184,12 @@ export class OrthoPage extends React.Component<{
 
 	@computed get canEdit() {
 		return this.props.currentUser.canEditOrtho;
+	}
+
+	@computed get selectedAppointment() {
+		return this.props.allAppointments.find(
+			x => x._id === this.selectedAppointmentId
+		);
 	}
 
 	render() {
@@ -282,7 +299,6 @@ export class OrthoPage extends React.Component<{
 													onRenderInitials={() => (
 														<Icon iconName="info" />
 													)}
-													onClick={() => {}}
 													initialsColor={
 														orthoCase.isStarted
 															? PersonaInitialsColor.teal
@@ -313,7 +329,6 @@ export class OrthoPage extends React.Component<{
 													onRenderInitials={() => (
 														<Icon iconName="CheckMark" />
 													)}
-													onClick={() => {}}
 													initialsColor={
 														orthoCase.isFinished
 															? PersonaInitialsColor.blue
@@ -362,11 +377,18 @@ export class OrthoPage extends React.Component<{
 													onRenderInitials={() => (
 														<Icon iconName="Previous" />
 													)}
-													onClick={() => {}}
 													initialsColor={
 														patient.lastAppointment
 															? undefined
 															: PersonaInitialsColor.transparent
+													}
+													onClick={
+														patient.lastAppointment
+															? () => {
+																	this.selectedAppointmentId =
+																		patient.lastAppointment._id;
+															  }
+															: undefined
 													}
 												/>
 												<br />
@@ -396,11 +418,18 @@ export class OrthoPage extends React.Component<{
 																	"No next appointment"
 															  )
 													}
+													onClick={
+														patient.nextAppointment
+															? () => {
+																	this.selectedAppointmentId =
+																		patient.nextAppointment._id;
+															  }
+															: undefined
+													}
 													size={3}
 													onRenderInitials={() => (
 														<Icon iconName="Next" />
 													)}
-													onClick={() => {}}
 													initialsColor={
 														patient.nextAppointment
 															? undefined
@@ -428,7 +457,6 @@ export class OrthoPage extends React.Component<{
 													onRenderInitials={() => (
 														<Icon iconName="CheckMark" />
 													)}
-													onClick={() => {}}
 													initialsColor={
 														patient.totalPayments >
 														0
@@ -468,7 +496,6 @@ export class OrthoPage extends React.Component<{
 													onRenderInitials={() => (
 														<Icon iconName="Cancel" />
 													)}
-													onClick={() => {}}
 													initialsColor={
 														patient.differenceAmount !==
 														0
@@ -797,6 +824,31 @@ export class OrthoPage extends React.Component<{
 						)}
 					</div>
 				</Panel>
+				{this.selectedAppointment ? (
+					<AppointmentEditorPanel
+						appointment={this.selectedAppointment}
+						onDismiss={() => (this.selectedAppointmentId = "")}
+						doDeleteAppointment={id => {
+							this.props.doDeleteAppointment(id);
+							this.selectedAppointmentId = "";
+						}}
+						availableTreatments={this.props.availableTreatments}
+						availablePrescriptions={
+							this.props.availablePrescriptions
+						}
+						currentUser={this.props.currentUser}
+						dateFormat={this.props.dateFormat}
+						currencySymbol={this.props.currencySymbol}
+						prescriptionsEnabled={this.props.prescriptionsEnabled}
+						timeTrackingEnabled={this.props.timeTrackingEnabled}
+						operatingStaff={this.props.operatingStaff}
+						appointmentsForDay={(year, month, day) =>
+							this.props.appointmentsForDay(year, month, day)
+						}
+					/>
+				) : (
+					""
+				)}
 			</div>
 		);
 	}
