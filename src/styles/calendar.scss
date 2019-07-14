@@ -172,8 +172,7 @@
 			}
 		}
 		h4 {
-			margin: 10px -10px;
-			margin-top: 0;
+			margin: 0 -10px;
 			padding: 10px;
 			background: #fafafa;
 			b {
@@ -188,28 +187,27 @@
 		.appointment {
 			padding-bottom: 10px;
 			margin-bottom: 10px;
-			border-bottom: 1px solid #f3f3f3;
 			cursor: pointer;
 			.time {
-				text-align: center;
 				color: #616161;
-				font-size: 12px;
 				margin-bottom: 5px;
 				clear: both;
-				padding: 5px;
-				border: 1px solid #ffebb6;
-				background: #fff9e9;
-				float: right;
+				padding: 10px;
+				background: #fafafa;
+				margin: 0 -10px 10px;
+				border-top: 1px solid #f5f5f5;
+				color: #607d8b;
+				border-color: #607d8b;
 				&.done,
 				&.missed {
 					color: #fff;
-					border-color: transparent;
+					border-color: #009688;
 					opacity: 0.6;
-					font-size: 10px;
-					background: #009688;
+					color: #009688;
 				}
 				&.missed {
-					background: #e91e63;
+					color: #e91e63;
+					border-color: #e91e63;
 				}
 			}
 			a {
@@ -249,12 +247,6 @@
 	.calendar-component {
 		margin-top: 60px;
 		border-radius: 3px;
-	}
-}
-
-@media screen and (min-width: 1250px) {
-	.calendar-component .full-day-col .time {
-		float: none !important;
 	}
 }
 

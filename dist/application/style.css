@@ -5899,8 +5899,7 @@ hr {
       background: #3f51b5;
       color: #fff; }
     .calendar-component .full-day-col h4 {
-      margin: 10px -10px;
-      margin-top: 0;
+      margin: 0 -10px;
       padding: 10px;
       background: #fafafa; }
       .calendar-component .full-day-col h4 b {
@@ -5913,26 +5912,25 @@ hr {
     .calendar-component .full-day-col .appointment {
       padding-bottom: 10px;
       margin-bottom: 10px;
-      border-bottom: 1px solid #f3f3f3;
       cursor: pointer; }
       .calendar-component .full-day-col .appointment .time {
-        text-align: center;
         color: #616161;
-        font-size: 12px;
         margin-bottom: 5px;
         clear: both;
-        padding: 5px;
-        border: 1px solid #ffebb6;
-        background: #fff9e9;
-        float: right; }
+        padding: 10px;
+        background: #fafafa;
+        margin: 0 -10px 10px;
+        border-top: 1px solid #f5f5f5;
+        color: #607d8b;
+        border-color: #607d8b; }
         .calendar-component .full-day-col .appointment .time.done, .calendar-component .full-day-col .appointment .time.missed {
           color: #fff;
-          border-color: transparent;
+          border-color: #009688;
           opacity: 0.6;
-          font-size: 10px;
-          background: #009688; }
+          color: #009688; }
         .calendar-component .full-day-col .appointment .time.missed {
-          background: #e91e63; }
+          color: #e91e63;
+          border-color: #e91e63; }
       .calendar-component .full-day-col .appointment a {
         display: inline-block;
         color: #2196f3;
@@ -5956,10 +5954,6 @@ hr {
   .calendar-component {
     margin-top: 60px;
     border-radius: 3px; } }
-
-@media screen and (min-width: 1250px) {
-  .calendar-component .full-day-col .time {
-    float: none !important; } }
 
 @media screen and (max-width: 1250px) {
   .calendar-component .full-day-col {
