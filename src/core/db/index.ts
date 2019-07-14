@@ -121,6 +121,35 @@ export async function connectToDB(
 		// start with the basics
 		const methods = generateMethods(localDatabase, data);
 
+		// bulk functions
+		resync.modules.push({
+			namespace: moduleNamespace,
+			resync: async () => {
+				console.log(`Syncing ${moduleNamespace}`);
+				await localDatabase.sync(remoteDatabase);
+			}
+		});
+
+		compact.compactMethods.push(async () => {
+			console.log(
+				"local compaction on",
+				dbName,
+				await localDatabase.compact()
+			);
+			console.log(
+				"remote compaction on",
+				dbName,
+				await remoteDatabase.compact()
+			);
+		});
+
+		destroyLocal.destroyMethods.push(async () => {
+			console.log("destroying", dbName);
+			await localDatabase.destroy();
+			console.log("destroyed", dbName);
+			return;
+		});
+
 		/**
 		 * First of all we have three places to store data
 		 * 1. remote DB
@@ -286,32 +315,6 @@ export async function connectToDB(
 				}
 			})
 			.on("error", err => log(dbName, "Error occurred", err));
-
-		resync.modules.push({
-			namespace: moduleNamespace,
-			resync: async () => {
-				console.log(`Syncing ${moduleNamespace}`);
-				await localDatabase.sync(remoteDatabase);
-			}
-		});
-
-		compact.compactMethods.push(async () => {
-			console.log(
-				"local compaction on",
-				dbName,
-				await localDatabase.compact()
-			);
-			console.log(
-				"remote compaction on",
-				dbName,
-				await remoteDatabase.compact()
-			);
-		});
-
-		destroyLocal.destroyMethods.push(async () => {
-			await localDatabase.destroy();
-			return;
-		});
 
 		return methods;
 	};
