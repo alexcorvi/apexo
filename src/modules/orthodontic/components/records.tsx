@@ -582,6 +582,51 @@ export class OrthoRecordsPanel extends React.Component<{
 																							}`
 																						)}
 																					</div>
+																				],
+																				[
+																					<div id="gf-target">
+																						{this
+																							.expandedField ===
+																						"gf-target" ? (
+																							<TextField
+																								autoFocus
+																								label={text(
+																									`Target & expectations`
+																								)}
+																								disabled={
+																									!this
+																										.canEdit
+																								}
+																								value={
+																									visit.target
+																								}
+																								onBlur={() => {
+																									this.expandedField =
+																										"";
+																								}}
+																								multiline
+																								onChange={(
+																									ev,
+																									val
+																								) => {
+																									this.props.orthoCase.visits[
+																										visitIndex
+																									].target = val!;
+																									this.tu();
+																								}}
+																							/>
+																						) : (
+																							`${text(
+																								"Target & expectations"
+																							)}: ${
+																								visit.target
+																									? visit.target
+																									: text(
+																											"No target info"
+																									  )
+																							}`
+																						)}
+																					</div>
 																				]
 																			]}
 																			isHeaderVisible={

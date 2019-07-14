@@ -66,6 +66,8 @@ export class Visit {
 	@observable date: number = new Date().getTime();
 	@observable appliance: string = "";
 
+	@observable target: string = "";
+
 	constructor(json?: VisitJSON, visitNumber?: number) {
 		if (json) {
 			this.fromJSON(json);
@@ -80,6 +82,7 @@ export class Visit {
 		this.visitNumber = json.visitNumber;
 		this.date = json.date;
 		this.appliance = json.appliance;
+		this.target = json.target || "";
 		this.photos = json.photos.map(x => new Photo(x));
 	}
 
@@ -89,6 +92,7 @@ export class Visit {
 			visitNumber: this.visitNumber,
 			date: this.date,
 			appliance: this.appliance,
+			target: this.target,
 			photos: this.photos.map(x => x.toJSON())
 		};
 	}

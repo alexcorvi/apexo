@@ -17,6 +17,7 @@ export interface VisitJSON {
 	visitNumber: number;
 	date: number;
 	appliance: string;
+	target: string | undefined;
 	photos: PhotoJSON[];
 }
 
