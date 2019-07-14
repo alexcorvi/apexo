@@ -75,7 +75,7 @@ export class AppointmentsList extends React.Component<
 										canDelete={this.canEdit}
 										dateFormat={this.props.dateFormat}
 										onDeleteAppointment={() =>
-											this.props.onDeleteAppointment(
+											this.props.doDeleteAppointment(
 												appointment._id
 											)
 										}
