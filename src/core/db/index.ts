@@ -102,7 +102,7 @@ export async function connectToDB(
 	/**
 	 * Connection object
 	 */
-	const localDatabase = new PouchDB(localName);
+	const localDatabase = new PouchDB(localName, { auto_compaction: true });
 	localDatabase.crypto(unique);
 
 	const remoteDatabase = new PouchDB(`${status.server}/${dbName}`, {
