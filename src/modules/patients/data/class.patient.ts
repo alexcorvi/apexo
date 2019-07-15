@@ -219,7 +219,12 @@ export class Patient {
 			phone: this.phone,
 			medicalHistory: Array.from(this.medicalHistory),
 			gallery: Array.from(this.gallery),
-			teeth: Array.from(this.teeth.map(x => x.toJSON())),
+			teeth: Array.from(
+				this.teeth
+					.filter(x => x)
+					.filter(x => x.condition !== "sound" || x.notes.length)
+					.map(x => x.toJSON())
+			),
 			labels: Array.from(
 				this.labels.map(x => {
 					return {
