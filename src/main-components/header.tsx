@@ -25,8 +25,8 @@ export class HeaderView extends React.Component<{
 								onClick={this.props.expandMenu}
 								disabled={false}
 								iconProps={{ iconName: "GlobalNavButton" }}
-								title="GlobalNavButton"
-								ariaLabel="GlobalNavButton"
+								title="Menu"
+								ariaLabel="Menu"
 								id="expand-menu"
 							/>
 						</section>
