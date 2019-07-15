@@ -1,6 +1,6 @@
 import { DataTableComponent } from "@common-components";
+import { cleanup, fireEvent, render } from "@testing-library/react";
 import * as React from "react";
-import { cleanup, fireEvent, render } from "react-testing-library";
 
 function generateRow(input: string) {
 	return {

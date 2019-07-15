@@ -1062,6 +1062,9 @@ hr {
       width: 100%;
       border: 0; }
 
+.ms-Tooltip {
+  pointer-events: none; }
+
 .fs-10 {
   font-size: 10px; }
 
@@ -5696,11 +5699,12 @@ hr {
       box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
       border-color: #0078d7; }
   .atc-c.labeled {
-    border-bottom: 1px solid #e0e0e0;
     border-radius: 2px;
     padding: 6px 6px 0;
     margin-bottom: 10px;
     background: #fafafa; }
+    .atc-c.labeled:not(:last-child) {
+      border-bottom: 1px solid #e0e0e0; }
     .atc-c.labeled .date-link {
       display: inline-block; }
       .atc-c.labeled .date-link a {
@@ -6069,7 +6073,8 @@ hr {
   display: block;
   width: 100%;
   margin-top: 0;
-  padding: 35px; }
+  padding: 35px;
+  border: 0; }
 
 .date-link a {
   font-size: 12px;
@@ -6457,7 +6462,7 @@ hr {
     .icon-list .item {
       transition: 0.2s all;
       background: #fff;
-      padding: 10px;
+      padding: 0.68em 0.67em 0.65em;
       font-size: 17px;
       text-align: center;
       min-width: 65px;
@@ -6475,6 +6480,10 @@ hr {
         bottom: 3px;
         display: block;
         text-transform: capitalize; } }
+
+.menu-item-tt .ms-Callout-beak {
+  height: 14px !important;
+  left: -5px !important; }
 
 .messages-component {
   position: fixed;

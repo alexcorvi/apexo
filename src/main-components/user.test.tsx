@@ -1,7 +1,7 @@
 import { UserPanelView } from "./user";
 import { Appointment, StaffMember } from "@modules";
+import { cleanup, fireEvent, render } from "@testing-library/react";
 import * as React from "react";
-import { cleanup, fireEvent, render } from "react-testing-library";
 
 const onClick = jest.fn(() => undefined);
 const props = {

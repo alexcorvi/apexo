@@ -104,9 +104,11 @@ export class DataTableComponent extends React.Component<Props, {}> {
 				onRender: () => (
 					<SearchBox
 						placeholder={text("Search")}
-						onChange={(newVal: string) =>
-							(this.filterString = newVal)
-						}
+						onChange={(ev, newVal) => {
+							if (newVal) {
+								this.filterString = newVal;
+							}
+						}}
 					/>
 				)
 			});

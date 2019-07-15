@@ -1,6 +1,6 @@
 import { ModalsView } from "./modal";
+import { cleanup, fireEvent, render } from "@testing-library/react";
 import * as React from "react";
-import { cleanup, fireEvent, render } from "react-testing-library";
 
 const props = {
 	activeModals: [],
