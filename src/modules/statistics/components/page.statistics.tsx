@@ -217,14 +217,11 @@ export class StatisticsPage extends React.Component<{
 							onRender: () => {
 								return (
 									<Dropdown
-										placeholder={text(
-											"Filter by staff member"
-										)}
-										defaultValue=""
+										defaultSelectedKey="all"
 										options={[
 											{
-												key: "",
-												text: text("All members")
+												key: "all",
+												text: text("All staff members")
 											}
 										].concat(
 											this.props.operatingStaff.map(
