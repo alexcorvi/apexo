@@ -1,6 +1,6 @@
 import { text } from "@core";
 import { observer } from "mobx-react";
-import { Icon, Nav, Panel, PanelType } from "office-ui-fabric-react";
+import { Icon, Nav, Panel, PanelType, TooltipHost } from "office-ui-fabric-react";
 import * as React from "react";
 
 class Version extends React.Component {
@@ -34,19 +34,32 @@ export class MenuView extends React.Component<{
 				<div className="visible-lg visible-md icon-list">
 					{this.props.items.map((item, index) => {
 						return (
-							<div
-								key={index}
-								className={
-									"item " +
-									(item.name === this.props.currentName
-										? "selected"
-										: "")
+							<TooltipHost
+								key={item.key}
+								content={
+									item.name.charAt(0).toUpperCase() +
+									item.name.substr(1)
 								}
-								onClick={item.onClick}
-								data-testid="menu-item-bg"
+								directionalHint={12}
+								tooltipProps={{
+									calloutProps: {
+										className: "menu-item-tt"
+									}
+								}}
 							>
-								<Icon iconName={item.icon} />
-							</div>
+								<div
+									className={
+										"item " +
+										(item.name === this.props.currentName
+											? "selected"
+											: "")
+									}
+									onClick={item.onClick}
+									data-testid="menu-item-bg"
+								>
+									<Icon iconName={item.icon} />
+								</div>
+							</TooltipHost>
 						);
 					})}
 					<Version />
