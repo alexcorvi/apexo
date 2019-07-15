@@ -356,13 +356,13 @@ export class OrthoCase {
 			startedDate: this.startedDate,
 			isStarted: this.isStarted,
 			canineRelationship: this.canineRelationship,
-			facialProfile: this.facialProfile,
+			facialProfile: this.facialProfile.charAt(0),
 			l_spaceAvailable: this.l_spaceAvailable,
 			l_spaceNeeded: this.l_spaceNeeded,
-			lips: this.lips,
+			lips: this.lips.charAt(0),
 			molarsRelationship: this.molarsRelationship,
 			nasioLabialAngle: this.nasioLabialAngle,
-			oralHygiene: this.oralHygiene,
+			oralHygiene: this.oralHygiene.charAt(0),
 			overBite: this.overBite,
 			overJet: this.overJet,
 			problemsList: Array.from(this.problemsList),
@@ -385,13 +385,28 @@ export class OrthoCase {
 		this.startedDate = json.startedDate || 0;
 		this.patientID = json.patientID;
 		this.canineRelationship = json.canineRelationship;
-		this.facialProfile = json.facialProfile;
+		this.facialProfile =
+			json.facialProfile.charAt(0) === "b"
+				? "brachycephalic"
+				: json.facialProfile.charAt(0) === "d"
+				? "dolichocephalic"
+				: "mesocephalic";
 		this.l_spaceAvailable = json.l_spaceAvailable;
 		this.l_spaceNeeded = json.l_spaceNeeded;
-		this.lips = json.lips;
+		this.lips =
+			json.lips.charAt(0) === "i"
+				? "incompetent"
+				: json.lips.charAt(0) === "p"
+				? "potentially_competent"
+				: "competent";
 		this.molarsRelationship = json.molarsRelationship;
 		this.nasioLabialAngle = json.nasioLabialAngle;
-		this.oralHygiene = json.oralHygiene;
+		this.oralHygiene =
+			json.oralHygiene.charAt(0) === "g"
+				? "good"
+				: json.oralHygiene.charAt(0) === "b"
+				? "bad"
+				: "moderate";
 		this.overBite = json.overBite;
 		this.overJet = json.overJet;
 		this.problemsList = json.problemsList;

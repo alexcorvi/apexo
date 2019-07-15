@@ -24,10 +24,10 @@ export interface VisitJSON {
 export interface CaseJSON {
 	_id: string;
 	patientID: string;
-	lips: keyof typeof Lips;
-	facialProfile: keyof typeof FacialProfile;
+	lips: string;
+	facialProfile: string;
 	nasioLabialAngle: number;
-	oralHygiene: keyof typeof OralHygiene;
+	oralHygiene: string;
 	skeletalRelationship: number;
 	molarsRelationship: number;
 	canineRelationship: number;
