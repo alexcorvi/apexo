@@ -407,6 +407,11 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
+"@types/lz-string@^1.3.33":
+  version "1.3.33"
+  resolved "https://registry.yarnpkg.com/@types/lz-string/-/lz-string-1.3.33.tgz#de2d6105ea7bcaf67dd1d9451d580700d30473fc"
+  integrity sha512-yWj3OnlKlwNpq9+Jh/nJkVAD3ta8Abk2kIRpjWpVkDlAD43tn6Q6xk5hurp84ndcq54jBDBGCD/WcIR0pspG0A==
+
 "@types/nock@^9.3.1":
   version "9.3.1"
   resolved "https://registry.yarnpkg.com/@types/nock/-/nock-9.3.1.tgz#7d761a43a10aebc7ec6bae29d89afc6cbffa5d30"
@@ -5200,6 +5205,11 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
+lz-string@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/lz-string/-/lz-string-1.4.4.tgz#c0d8eaf36059f705796e1e344811cf4c498d3a26"
+  integrity sha1-wNjq82BZ9wV5bh40SBHPTEmNOiY=
+
 make-dir@^2.0.0, make-dir@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-2.1.0.tgz#5f0310e18b8be898cc07009295a30ae41e91e6f5"
@@ -8168,7 +8178,7 @@ tr46@^1.0.1:
   dependencies:
     punycode "^2.1.0"
 
-transform-pouch@^1.1.0:
+transform-pouch@^1.1.0, transform-pouch@^1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/transform-pouch/-/transform-pouch-1.1.4.tgz#a16930c2bc5d974d36e056f5b3a5ae536921c235"
   integrity sha512-YRiWhJxrzXyj9JfqkpYoIAJ3EtlNVfxldTo8NsPsbNHEIv5F8duWrAPeLujzXrb3Nmi+b9M2jVWj44oJBvxzqw==

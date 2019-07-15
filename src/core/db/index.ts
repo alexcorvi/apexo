@@ -94,6 +94,12 @@ export async function connectToDB(
 		.default;
 	PouchDB.plugin(cryptoPouch);
 
+	const transform: PouchDB.Plugin = ((await import("transform-pouch")) as any)
+		.default;
+	PouchDB.plugin(transform);
+
+	const lzString = await import("lz-string");
+
 	const unique = Md5.hashStr(store.get("LSL_hash")).toString();
 
 	// prefixing local DB name
@@ -103,6 +109,40 @@ export async function connectToDB(
 	 * Connection object
 	 */
 	const localDatabase = new PouchDB(localName, { auto_compaction: true });
+
+	localDatabase.transform<
+		PouchDB.Meta,
+		PouchDB.Meta & {
+			_lz: string | undefined;
+		}
+	>({
+		incoming(document) {
+			const compressed = {
+				_id: document._id,
+				_rev: document._rev,
+				_revisions: document._revisions,
+				_lz: ""
+			};
+			delete document._id;
+			delete document._rev;
+			delete document._revisions;
+			compressed._lz = lzString.compressToUTF16(JSON.stringify(document));
+			return compressed;
+		},
+		outgoing(result) {
+			if (!result._lz) {
+				return result;
+			}
+			const document = JSON.parse(
+				lzString.decompressFromUTF16(result._lz)
+			);
+			document._id = result._id;
+			document._rev = result._rev;
+			document._revisions = result._revisions;
+			return document;
+		}
+	});
+
 	localDatabase.crypto(unique);
 
 	const remoteDatabase = new PouchDB(`${status.server}/${dbName}`, {
