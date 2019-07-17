@@ -90,6 +90,7 @@ export class MainView extends React.Component<{
 	timeTrackingEnabled: boolean;
 	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
 	allStaff: { _id: string; name: string; pin: string | undefined }[];
+	allAppointments: Appointment[];
 	sortedMenuItems: MenuItem[];
 	activeModals: ModalInterface[];
 	activeMessages: MessageInterface[];
@@ -188,6 +189,7 @@ export class MainView extends React.Component<{
 						doDeleteAppointment={id => {
 							this.props.doDeleteAppointment(id);
 						}}
+						allAppointments={this.props.allAppointments}
 					/>
 					<MenuView
 						items={this.props.sortedMenuItems}

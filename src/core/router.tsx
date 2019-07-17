@@ -1,7 +1,8 @@
-import { menu, resync, user } from "@core";
+import * as core from "@core";
 import { HomeView } from "@main-components";
-import { appointments, setting, statistics } from "@modules";
+import * as modules from "@modules";
 import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
 import * as React from "react";
 
 export interface Route {
@@ -31,23 +32,43 @@ export class Router {
 				component: async () => (
 					<HomeView
 						currentUsername={
-							(user.currentUser || { name: "" }).name
+							(core.user.currentUser || { name: "" }).name
 						}
-						todayAppointments={appointments.appointmentsForDay(
-							new Date().getTime(),
-							0,
-							0
-						)}
-						tomorrowAppointments={appointments.appointmentsForDay(
-							new Date().getTime() + 86400000,
-							0,
-							0
-						)}
-						dateFormat={setting.getSetting("date_format")}
+						todayAppointments={
+							modules.appointments.todayAppointments
+						}
+						tomorrowAppointments={
+							modules.appointments.tomorrowAppointments
+						}
+						dateFormat={modules.setting.getSetting("date_format")}
 						selectedAppointmentsByDay={
-							statistics.selectedAppointmentsByDay
+							modules.statistics.selectedAppointmentsByDay
 						}
-						showChart={!!setting.getSetting("module_statistics")}
+						showChart={
+							!!modules.setting.getSetting("module_statistics")
+						}
+						allAppointments={modules.appointments.list}
+						doDeleteAppointment={(id: string) =>
+							modules.appointments.deleteByID(id)
+						}
+						availableTreatments={modules.treatments.list}
+						availablePrescriptions={modules.prescriptions.list}
+						appointmentsForDay={(...args) =>
+							modules.appointments.appointmentsForDay(...args)
+						}
+						prescriptionsEnabled={
+							!!modules.setting.getSetting("module_prescriptions")
+						}
+						timeTrackingEnabled={
+							!!modules.setting.getSetting("time_tracking")
+						}
+						operatingStaff={modules.staff.operatingStaff}
+						currentUser={
+							core.user.currentUser || new modules.StaffMember()
+						}
+						currencySymbol={modules.setting.getSetting(
+							"currencySymbol"
+						)}
 					/>
 				),
 				namespace: "Home",
@@ -70,7 +91,7 @@ export class Router {
 		const namespace = this.currentLocation.split("/")[0];
 		this.isCurrentlyReSyncing = true;
 		try {
-			const resyncModule = resync.modules.find(
+			const resyncModule = core.resync.modules.find(
 				x => x.namespace === namespace
 			);
 			if (resyncModule) {
@@ -99,7 +120,7 @@ export class Router {
 	go(routes: string[]) {
 		location.hash = "#!/" + routes.join("/");
 		scrollTo(0, 0);
-		menu.hide();
+		core.menu.hide();
 	}
 
 	private async checkAndLoad() {

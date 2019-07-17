@@ -1,5 +1,6 @@
 import { HomeView } from "./home";
 import "../mocks/state-mocks";
+import * as core from "@core";
 import * as modules from "@modules";
 import { mount } from "enzyme";
 import * as React from "react";
@@ -10,7 +11,23 @@ const props = {
 	todayAppointments: [],
 	tomorrowAppointments: [],
 	dateFormat: "dd-mm-yyyy",
-	selectedAppointmentsByDay: []
+	selectedAppointmentsByDay: [],
+	allAppointments: modules.appointments.list,
+	doDeleteAppointment: (id: string) => modules.appointments.deleteByID(id),
+	availableTreatments: modules.treatments.list,
+	availablePrescriptions: modules.prescriptions.list,
+	appointmentsForDay: (
+		a: number,
+		b: number,
+		c: number,
+		d: string,
+		e: string
+	) => modules.appointments.appointmentsForDay(a, b, c, d, e),
+	prescriptionsEnabled: !!modules.setting.getSetting("module_prescriptions"),
+	timeTrackingEnabled: !!modules.setting.getSetting("time_tracking"),
+	operatingStaff: modules.staff.operatingStaff,
+	currentUser: core.user.currentUser || new modules.StaffMember(),
+	currencySymbol: modules.setting.getSetting("currencySymbol")
 };
 
 const wrapper = mount(<HomeView {...props} />);

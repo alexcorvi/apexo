@@ -1,0 +1,28 @@
+.appointments-lnd {
+	.appointment-body {
+		.hat-time {
+			font-size: 12px;
+			opacity: 0.6;
+			margin-bottom: 5px;
+			clear: both;
+			padding: 10px;
+			background: #fafafa;
+			margin: 0 -10px 10px;
+			border-top: 1px solid #f5f5f5;
+			color: #607d8b;
+		}
+		&.done {
+			.hat-time {
+				color: #009688;
+				border-color: #009688;
+			}
+		}
+		td:not(.hat-time) {
+			background: transparent !important;
+		}
+		cursor: pointer;
+		&:hover {
+			background: #f5f5f5;
+		}
+	}
+}

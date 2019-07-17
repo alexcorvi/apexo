@@ -10,3 +10,4 @@ export * from "./label/label";
 export * from "./async-component/async";
 export * from "./table-actions";
 export * from "./panel-tabs";
+export * from "./appointments-lnd/appointments-lnd";

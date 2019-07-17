@@ -1,7 +1,7 @@
-import { Col, ProfileComponent, Row, SectionComponent } from "@common-components";
+import { AppointmentsListNoDate, Col, ProfileComponent, Row, SectionComponent } from "@common-components";
 import { text } from "@core";
 import { Appointment, AppointmentThumbComponent, PrescriptionItem, StaffMember } from "@modules";
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
 	IconButton,
@@ -46,8 +46,14 @@ export class UserPanelView extends React.Component<{
 	timeTrackingEnabled: boolean;
 	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
 	doDeleteAppointment: (id: string) => void;
+	allAppointments: Appointment[];
 }> {
-	@observable appointment: Appointment | null = null;
+	@observable selectedAppointmentId: string = "";
+	@computed get selectedAppointment() {
+		return this.props.allAppointments.find(
+			x => x._id === this.selectedAppointmentId
+		);
+	}
 
 	render() {
 		return (
@@ -112,32 +118,21 @@ export class UserPanelView extends React.Component<{
 							className="appointments-listing"
 							data-testid="appointments-list"
 						>
-							{this.props.todayAppointments.map(appointment => {
-								const date = new Date(appointment.date);
-								const dateLink = `${date.getFullYear()}-${date.getMonth() +
-									1}-${date.getDate()}`;
-								return (
-									<AppointmentThumbComponent
-										data-testid="appointment-thumb"
-										key={appointment._id}
-										appointment={appointment}
-										hideDate={true}
-										showPatient={true}
-										onClick={() => {
-											this.appointment = appointment;
-										}}
-										onDeleteAppointment={() => {}}
-										dateFormat={this.props.dateFormat}
-									/>
-								);
-							})}
+							{
+								<AppointmentsListNoDate
+									appointments={this.props.todayAppointments}
+									onClick={id =>
+										(this.selectedAppointmentId = id)
+									}
+								/>
+							}
 						</div>
 					)}
 				</SectionComponent>
-				{this.appointment ? (
+				{this.selectedAppointment ? (
 					<AppointmentEditorPanel
-						appointment={this.appointment}
-						onDismiss={() => (this.appointment = null)}
+						appointment={this.selectedAppointment}
+						onDismiss={() => (this.selectedAppointmentId = "")}
 						availableTreatments={this.props.availableTreatments}
 						availablePrescriptions={
 							this.props.availablePrescriptions
@@ -153,7 +148,7 @@ export class UserPanelView extends React.Component<{
 						}
 						doDeleteAppointment={id => {
 							this.props.doDeleteAppointment(id);
-							this.appointment = null;
+							this.selectedAppointmentId = "";
 						}}
 					/>
 				) : (

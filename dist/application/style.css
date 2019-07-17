@@ -6350,6 +6350,16 @@ hr {
   margin-top: 15px;
   padding: 12px; }
 
+.home .operator-thumb {
+  margin-bottom: 1px; }
+
+.home h2 {
+  background: #f5f5f5;
+  padding: 0.84em;
+  text-align: left;
+  font-weight: 400;
+  font-size: 16px; }
+
 #router-outlet {
   margin-top: 50px;
   padding-bottom: 20px; }
@@ -6459,10 +6469,12 @@ hr {
     background: #fff;
     border-right: 1px solid #f5f5f5;
     height: 100%; }
+    .icon-list .ms-TooltipHost:nth-child(2) .item {
+      padding: 0.6em; }
     .icon-list .item {
       transition: 0.2s all;
       background: #fff;
-      padding: 0.68em 0.67em 0.65em;
+      padding: 0.75em 0.67em 0.65em;
       font-size: 17px;
       text-align: center;
       min-width: 65px;
@@ -6976,3 +6988,23 @@ hr {
       border: 1px solid #f3f3f3; }
       .appointments-list .atc-c .delete:hover {
         color: #000; }
+
+.appointments-lnd .appointment-body {
+  cursor: pointer; }
+  .appointments-lnd .appointment-body .hat-time {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-bottom: 5px;
+    clear: both;
+    padding: 10px;
+    background: #fafafa;
+    margin: 0 -10px 10px;
+    border-top: 1px solid #f5f5f5;
+    color: #607d8b; }
+  .appointments-lnd .appointment-body.done .hat-time {
+    color: #009688;
+    border-color: #009688; }
+  .appointments-lnd .appointment-body td:not(.hat-time) {
+    background: transparent !important; }
+  .appointments-lnd .appointment-body:hover {
+    background: #f5f5f5; }

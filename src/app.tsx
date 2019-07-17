@@ -66,6 +66,7 @@ const App = observer(() => (
 			doDeleteAppointment={(id: string) =>
 				modules.appointments.deleteByID(id)
 			}
+			allAppointments={modules.appointments.list}
 		/>
 	</Fabric>
 ));
