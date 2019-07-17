@@ -40,7 +40,7 @@ class AppointmentsData {
 				appointment => appointment.staffID.indexOf(operatorID) !== -1
 			);
 		}
-		return list;
+		return list.sort((a, b) => a.date - b.date);
 	}
 	getIndexByID(id: string) {
 		return this.list.findIndex(x => x._id === id);
