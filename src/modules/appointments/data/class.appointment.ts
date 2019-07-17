@@ -136,7 +136,7 @@ export class Appointment {
 	}
 
 	@computed
-	get missed() {
+	get isMissed() {
 		return (
 			new Date().getTime() - new Date(this.date).getTime() > 0 &&
 			!this.isDone &&
@@ -175,7 +175,7 @@ export class Appointment {
                 ${this.isPaid ? "paid" : ""}
 				${this.isOutstanding ? "outstanding" : ""}
 				${this.isOverpaid ? "overpaid" : ""}
-                ${this.missed ? "missed" : ""}
+                ${this.isMissed ? "missed" : ""}
                 ${this.dueToday ? "today" : ""}
 				${this.dueTomorrow ? "tomorrow" : ""}
 				${this.future ? "future" : ""}

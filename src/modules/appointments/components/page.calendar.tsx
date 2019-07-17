@@ -371,14 +371,14 @@ export class CalendarPage extends React.Component<{
 													<div
 														className={
 															"time" +
-															(appointment.missed
+															(appointment.isMissed
 																? " missed"
 																: appointment.isDone
 																? " done"
 																: "")
 														}
 													>
-														{appointment.missed
+														{appointment.isMissed
 															? "Missed"
 															: appointment.isDone
 															? "Done"
