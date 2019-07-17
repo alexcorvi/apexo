@@ -1,11 +1,19 @@
 import { modals, text } from "@core";
 import { Appointment } from "@modules";
-import { textualFilter } from "@utils";
-import { observable } from "mobx";
+import { day as dayInMs, textualFilter } from "@utils";
+import { computed, observable } from "mobx";
 
 class AppointmentsData {
 	ignoreObserver: boolean = false;
 	@observable public list: Appointment[] = [];
+
+	@computed get tomorrowAppointments() {
+		return this.appointmentsForDay(new Date().getTime() + dayInMs, 0, 0);
+	}
+
+	@computed get todayAppointments() {
+		return this.appointmentsForDay(new Date().getTime(), 0, 0);
+	}
 
 	appointmentsForDay(
 		year: number,
