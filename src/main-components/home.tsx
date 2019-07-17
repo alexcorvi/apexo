@@ -1,21 +1,13 @@
-import { PrescriptionItem } from "../modules/prescriptions/data/class.prescription-item";
-import { StaffMember } from "../modules/staff/data/class.member";
-import { AppointmentsListNoDate, Col, ProfileComponent, ProfileSquaredComponent, Row } from "@common-components";
+import { AppointmentsListNoDate, Col, ProfileComponent, Row } from "@common-components";
 import { text } from "@core";
-import { Appointment } from "@modules";
-import { isToday, isTomorrow } from "@utils";
+import * as core from "@core";
+import { Appointment, PrescriptionItem, setting, StaffMember } from "@modules";
+import { dateNames, isToday, isTomorrow } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
-
-const AppointmentsByDateChart = loadable({
-	loader: async () =>
-		(await import("modules/statistics/components/chart.appointments-date"))
-			.AppointmentsByDateChart,
-	loading: () => <Shimmer />
-});
 
 const AppointmentEditorPanel = loadable({
 	loader: async () =>
@@ -49,6 +41,7 @@ export class HomeView extends React.Component<{
 	prescriptionsEnabled: boolean;
 	timeTrackingEnabled: boolean;
 	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
+	allStaff: StaffMember[];
 	currentUser: StaffMember;
 	currencySymbol: string;
 }> {
@@ -60,29 +53,98 @@ export class HomeView extends React.Component<{
 		);
 	}
 
+	@computed get weekdays() {
+		const weekendNum = Number(setting.getSetting("weekend_num"));
+		return dateNames.days().reduce((arr: string[], date, index) => {
+			if (index <= weekendNum) {
+				arr.push(date);
+			} else {
+				arr.splice(index - weekendNum - 1, 0, date);
+			}
+			return arr;
+		}, []);
+	}
+
 	render() {
 		return (
 			<div className="home">
 				<div>
-					<h2 className="m-b-20 welcome">
+					<h2 className="welcome">
 						{text("Welcome")}, {this.props.currentUsername}
 					</h2>
-					<div>
-						{this.props.showChart ? (
-							<div id="home-chart">
-								<AppointmentsByDateChart
-									selectedAppointmentsByDay={
-										this.props.selectedAppointmentsByDay
-									}
-									dateFormat={this.props.dateFormat}
-								/>
-							</div>
-						) : (
-							""
-						)}
-					</div>
 					<Row gutter={0}>
-						<Col md={12}>
+						<Col md={10}>
+							<table className="ms-table duty-table">
+								<tbody>
+									{this.weekdays.map(dayName => {
+										return (
+											<tr key={dayName}>
+												<th className="day-name">
+													{text(dayName)}
+												</th>
+												<td className="names">
+													{this.props.allStaff
+														.filter(
+															member =>
+																member.onDutyDays.indexOf(
+																	dayName
+																) !== -1
+														)
+														.map(member => {
+															return (
+																<ProfileComponent
+																	className="m-b-5"
+																	size={3}
+																	onClick={() => {
+																		core.router.go(
+																			[
+																				"staff",
+																				member._id,
+																				"appointments"
+																			]
+																		);
+																	}}
+																	style={{
+																		cursor:
+																			"pointer"
+																	}}
+																	key={
+																		member._id
+																	}
+																	name={
+																		member.name
+																	}
+																	secondaryElement={
+																		<span>
+																			{
+																				(
+																					member
+																						.weeksAppointments[
+																						dayName
+																					] ||
+																					[]
+																				)
+																					.length
+																			}{" "}
+																			{text(
+																				"appointments for"
+																			)}{" "}
+																			{text(
+																				dayName
+																			)}
+																		</span>
+																	}
+																/>
+															);
+														})}
+												</td>
+											</tr>
+										);
+									})}
+								</tbody>
+							</table>
+						</Col>
+						<Col md={14}>
 							<h3 className="appointments-table-heading">
 								{text("Today's Appointments")}
 							</h3>
@@ -93,6 +155,9 @@ export class HomeView extends React.Component<{
 								onClick={id => {
 									this.selectedAppointmentId = id;
 								}}
+								dateFormat={this.props.dateFormat}
+								onDeleteAppointment={() => {}}
+								canDelete={false}
 							/>
 							{this.props.todayAppointments.length === 0 ? (
 								<p className="no-appointments">
@@ -103,8 +168,6 @@ export class HomeView extends React.Component<{
 							) : (
 								""
 							)}
-						</Col>
-						<Col md={12}>
 							<h3 className="appointments-table-heading">
 								{text("Tomorrow's Appointments")}
 							</h3>
@@ -115,6 +178,9 @@ export class HomeView extends React.Component<{
 								onClick={id => {
 									this.selectedAppointmentId = id;
 								}}
+								dateFormat={this.props.dateFormat}
+								onDeleteAppointment={() => {}}
+								canDelete={false}
 							/>
 							{this.props.tomorrowAppointments.length === 0 ? (
 								<p className="no-appointments">

@@ -100,7 +100,7 @@ export class StaffPage extends React.Component<{
 		| "details"
 		| "permission"
 		| "appointments"
-		| "delete" = "";
+		| "delete" = (this.props.currentLocation.split("/")[2] as any) || "";
 
 	@computed get canEdit() {
 		return this.props.currentUser.canEditStaff;
@@ -342,7 +342,10 @@ export class StaffPage extends React.Component<{
 					}
 				/>
 
-				{this.selectedMember && this.viewWhich ? (
+				{this.selectedMember &&
+				["appointments", "details", "delete", "permission"].indexOf(
+					this.viewWhich
+				) > -1 ? (
 					<Panel
 						isOpen={!!this.selectedMember}
 						type={PanelType.medium}

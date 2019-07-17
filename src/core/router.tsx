@@ -31,6 +31,7 @@ export class Router {
 			}) || {
 				component: async () => (
 					<HomeView
+						allStaff={modules.staff.list}
 						currentUsername={
 							(core.user.currentUser || { name: "" }).name
 						}

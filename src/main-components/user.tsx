@@ -1,6 +1,6 @@
 import { AppointmentsListNoDate, Col, ProfileComponent, Row, SectionComponent } from "@common-components";
 import { text } from "@core";
-import { Appointment, AppointmentThumbComponent, PrescriptionItem, StaffMember } from "@modules";
+import { Appointment, PrescriptionItem, StaffMember } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
@@ -124,6 +124,9 @@ export class UserPanelView extends React.Component<{
 									onClick={id =>
 										(this.selectedAppointmentId = id)
 									}
+									dateFormat={this.props.dateFormat}
+									onDeleteAppointment={() => {}}
+									canDelete={false}
 								/>
 							}
 						</div>

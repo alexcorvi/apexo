@@ -1,5 +1,7 @@
+import { ALRightColumn } from "../../../common-components/appointments-lnd/appointments-lnd";
+import { ALSecondaryText, AppointmentsListNoDate } from "@common-components";
 import { text } from "@core";
-import { Appointment, AppointmentThumbComponent, PrescriptionItem, StaffMember } from "@modules";
+import { Appointment, PrescriptionItem, StaffMember } from "@modules";
 import { textualFilter } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -35,6 +37,7 @@ export class AppointmentsList extends React.Component<
 		prescriptionsEnabled: boolean;
 		timeTrackingEnabled: boolean;
 		operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
+		operatorsAsSecondaryText?: boolean;
 	},
 	{}
 > {
@@ -43,11 +46,13 @@ export class AppointmentsList extends React.Component<
 	@observable selectedAppointmentID: string = "";
 
 	@computed
-	get filtered() {
-		return this.filter
+	get filteredAndSorted() {
+		return (this.filter
 			? textualFilter(this.props.list, this.filter)
-			: this.props.list;
+			: this.props.list
+		).sort((a, b) => a.date - b.date);
 	}
+
 	@computed get canEdit() {
 		return this.props.currentUser.canEditAppointments;
 	}
@@ -61,27 +66,25 @@ export class AppointmentsList extends React.Component<
 			<div className="appointments-list">
 				{this.props.list.length > 0 ? (
 					<div className="main">
-						{this.filtered
-							.sort((a, b) => a.date - b.date)
-							.map(appointment => {
-								return (
-									<AppointmentThumbComponent
-										key={appointment._id}
-										onClick={() =>
-											(this.selectedAppointmentID =
-												appointment._id)
-										}
-										appointment={appointment}
-										canDelete={this.canEdit}
-										dateFormat={this.props.dateFormat}
-										onDeleteAppointment={() =>
-											this.props.doDeleteAppointment(
-												appointment._id
-											)
-										}
-									/>
-								);
-							})}
+						{
+							<AppointmentsListNoDate
+								appointments={this.filteredAndSorted}
+								onClick={id =>
+									(this.selectedAppointmentID = id)
+								}
+								dateFormat={this.props.dateFormat}
+								onDeleteAppointment={
+									this.props.onDeleteAppointment
+								}
+								secondaryText={
+									this.props.operatorsAsSecondaryText
+										? ALSecondaryText.operators
+										: ALSecondaryText.patient
+								}
+								rightColumn={ALRightColumn.deleteButton}
+								canDelete={this.canEdit}
+							/>
+						}
 					</div>
 				) : (
 					""

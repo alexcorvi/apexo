@@ -65,6 +65,7 @@ export class PatientAppointmentsPanel extends React.Component<
 						prescriptionsEnabled={this.props.prescriptionsEnabled}
 						timeTrackingEnabled={this.props.timeTrackingEnabled}
 						operatingStaff={this.props.operatingStaff}
+						operatorsAsSecondaryText
 					/>
 					{this.props.appointments.length ? (
 						""

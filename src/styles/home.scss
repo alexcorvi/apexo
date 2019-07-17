@@ -1,6 +1,19 @@
 @import "./global-styles/shadows.scss";
 
 .home {
+	.duty-table {
+		td.names {
+			padding: 0;
+			.ms-Persona {
+				padding: 25px 5px;
+				margin: 0;
+				cursor: pointer;
+				&:hover {
+					background: #f3f3f3;
+				}
+			}
+		}
+	}
 	.home-td {
 		border-bottom: 1px solid rgb(245, 245, 245);
 	}
@@ -15,10 +28,12 @@
 		font-style: italic;
 	}
 	.appointments-table-heading {
-		background: #fff;
 		margin: 0;
-		margin-top: 15px;
+		margin-top: 0;
 		padding: 12px;
+		background: #eeeeee;
+		font-weight: 400;
+		font-size: 14px;
 	}
 	.operator-thumb {
 		margin-bottom: 1px;
@@ -29,6 +44,7 @@
 		text-align: left;
 		font-weight: 400;
 		font-size: 16px;
+		margin-bottom: 0;
 	}
 }
 
