@@ -65,12 +65,22 @@ export class LoginView extends React.Component<{
 						</MessageBar>
 						<DefaultButton
 							text="Reload"
-							className="m-t-15 m-b-15"
+							className="m-t-15 m-b-15 m-r-5"
 							onClick={() => {
 								location.reload();
 							}}
 							iconProps={{
 								iconName: "Sync"
+							}}
+						/>
+						<DefaultButton
+							text="no-server mode"
+							className="m-t-15 m-b-15"
+							onClick={() => {
+								this.props.startNoServer();
+							}}
+							iconProps={{
+								iconName: "StatusErrorFull"
 							}}
 						/>
 					</div>
