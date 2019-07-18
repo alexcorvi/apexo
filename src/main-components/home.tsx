@@ -73,7 +73,58 @@ export class HomeView extends React.Component<{
 						{text("Welcome")}, {this.props.currentUsername}
 					</h2>
 					<Row gutter={0}>
+						<Col md={14}>
+							<h3 className="appointments-table-heading">
+								{text("Today's Appointments")}
+							</h3>
+							<AppointmentsListNoDate
+								appointments={this.props.todayAppointments.filter(
+									x => isToday(x.date)
+								)}
+								onClick={id => {
+									this.selectedAppointmentId = id;
+								}}
+								dateFormat={this.props.dateFormat}
+								onDeleteAppointment={() => {}}
+								canDelete={false}
+							/>
+							{this.props.todayAppointments.length === 0 ? (
+								<p className="no-appointments">
+									{text(
+										"There are no appointments for today"
+									)}
+								</p>
+							) : (
+								""
+							)}
+							<h3 className="appointments-table-heading">
+								{text("Tomorrow's Appointments")}
+							</h3>
+							<AppointmentsListNoDate
+								appointments={this.props.tomorrowAppointments.filter(
+									x => isTomorrow(x.date)
+								)}
+								onClick={id => {
+									this.selectedAppointmentId = id;
+								}}
+								dateFormat={this.props.dateFormat}
+								onDeleteAppointment={() => {}}
+								canDelete={false}
+							/>
+							{this.props.tomorrowAppointments.length === 0 ? (
+								<p className="no-appointments">
+									{text(
+										"There are no appointments for tomorrow"
+									)}
+								</p>
+							) : (
+								""
+							)}
+						</Col>
 						<Col md={10}>
+							<h3 className="appointments-table-heading">
+								{text("This Week Appointments")}
+							</h3>
 							<table className="ms-table duty-table">
 								<tbody>
 									{this.weekdays.map(dayName => {
@@ -143,54 +194,6 @@ export class HomeView extends React.Component<{
 									})}
 								</tbody>
 							</table>
-						</Col>
-						<Col md={14}>
-							<h3 className="appointments-table-heading">
-								{text("Today's Appointments")}
-							</h3>
-							<AppointmentsListNoDate
-								appointments={this.props.todayAppointments.filter(
-									x => isToday(x.date)
-								)}
-								onClick={id => {
-									this.selectedAppointmentId = id;
-								}}
-								dateFormat={this.props.dateFormat}
-								onDeleteAppointment={() => {}}
-								canDelete={false}
-							/>
-							{this.props.todayAppointments.length === 0 ? (
-								<p className="no-appointments">
-									{text(
-										"There are no appointments for today"
-									)}
-								</p>
-							) : (
-								""
-							)}
-							<h3 className="appointments-table-heading">
-								{text("Tomorrow's Appointments")}
-							</h3>
-							<AppointmentsListNoDate
-								appointments={this.props.tomorrowAppointments.filter(
-									x => isTomorrow(x.date)
-								)}
-								onClick={id => {
-									this.selectedAppointmentId = id;
-								}}
-								dateFormat={this.props.dateFormat}
-								onDeleteAppointment={() => {}}
-								canDelete={false}
-							/>
-							{this.props.tomorrowAppointments.length === 0 ? (
-								<p className="no-appointments">
-									{text(
-										"There are no appointments for tomorrow"
-									)}
-								</p>
-							) : (
-								""
-							)}
 						</Col>
 					</Row>
 				</div>
