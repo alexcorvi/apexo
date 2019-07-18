@@ -75,7 +75,7 @@ export class HomeView extends React.Component<{
 					<Row gutter={0}>
 						<Col md={14}>
 							<h3 className="appointments-table-heading">
-								{text("Today's Appointments")}
+								{text("Appointments for today")}
 							</h3>
 							<AppointmentsListNoDate
 								appointments={this.props.todayAppointments.filter(
@@ -98,7 +98,7 @@ export class HomeView extends React.Component<{
 								""
 							)}
 							<h3 className="appointments-table-heading">
-								{text("Tomorrow's Appointments")}
+								{text("Appointments for tomorrow")}
 							</h3>
 							<AppointmentsListNoDate
 								appointments={this.props.tomorrowAppointments.filter(
@@ -123,7 +123,7 @@ export class HomeView extends React.Component<{
 						</Col>
 						<Col md={10}>
 							<h3 className="appointments-table-heading">
-								{text("This Week Appointments")}
+								{text("Appointments for this week")}
 							</h3>
 							<table className="ms-table duty-table">
 								<tbody>

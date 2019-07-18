@@ -413,11 +413,11 @@ export class StaffPage extends React.Component<{
 													<Checkbox
 														key={day}
 														disabled={!this.canEdit}
-														label={
+														label={text(
 															dateNames.daysShort()[
 																i
 															]
-														}
+														)}
 														checked={
 															this.selectedMember!.onDutyDays.indexOf(
 																day

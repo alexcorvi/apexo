@@ -1,4 +1,5 @@
 import { Col, ProfileComponent, ProfileSquaredComponent } from "@common-components";
+import { text } from "@core";
 import { Appointment, Patient } from "@modules";
 import { formatDate, isToday } from "@utils";
 import { computed } from "mobx";
@@ -110,9 +111,9 @@ export class AppointmentsListNoDate extends React.Component<
 
 	timeString(appointment: Appointment) {
 		if (appointment.isDone) {
-			return "Done";
+			return text("Done");
 		} else if (appointment.isMissed) {
-			return "Missed";
+			return text("Missed");
 		} else {
 			return appointment.formattedTime;
 		}
@@ -131,8 +132,8 @@ export class AppointmentsListNoDate extends React.Component<
 					>
 						<tr>
 							<td colSpan={2} className="hat-time">
-								{`${this.dayString(
-									appointment
+								{`${text(
+									this.dayString(appointment)
 								)} - ${this.timeString(appointment)}`}
 							</td>
 						</tr>

@@ -2128,6 +2128,43 @@ hr {
   direction: rtl;
   text-align: right; }
 
+[dir="rtl"] .home h2 {
+  text-align: right; }
+
+[dir="rtl"] .appointments-lnd .appointment-body .delete {
+  float: left; }
+
+[dir="rtl"] .editable-list .ms-DetailsRow-cell .el-expander {
+  text-align: right; }
+
+[dir="rtl"] .editable-list .ms-DetailsRow-cell .ms-Button {
+  float: left; }
+
+[dir="rtl"] .staff-editor .ms-Checkbox-text {
+  margin-left: 0;
+  margin-right: 2px; }
+
+[dir="rtl"] .menu .ms-Panel-main {
+  right: 0;
+  left: auto; }
+
+[dir="rtl"] .user-component .ms-Panel-main {
+  left: 0;
+  right: auto; }
+
+[dir="rtl"] .elc-c .input .input-icon {
+  float: left;
+  border-right: 1px solid #e3e3e3; }
+
+[dir="rtl"] .calendar-component .filters .ms-Toggle {
+  padding: 15px 15px 0 0; }
+
+[dir="rtl"] .ms-DatePicker .ms-TextField-field {
+  padding-right: 30px !important; }
+
+[dir="rtl"] .menu-item-tt .ms-Callout-beak {
+  right: -5px !important; }
+
 [dir="rtl"] .header-component .right-buttons {
   text-align: left; }
 
@@ -2144,10 +2181,18 @@ hr {
 [dir="rtl"] .ms-Persona-details {
   text-align: right; }
 
-[dir="rtl"] .cl-section .chevron {
-  position: absolute;
-  right: auto;
-  left: 7px; }
+[dir="rtl"] .cl-section {
+  padding-right: 15px; }
+  [dir="rtl"] .cl-section h3.cl-section-title {
+    margin-right: -15px;
+    margin-left: -15px; }
+  [dir="rtl"] .cl-section .chevron {
+    float: left;
+    position: relative;
+    right: 8px; }
+  [dir="rtl"] .cl-section .cl-section-title.only-title {
+    padding-right: 12px;
+    padding-left: 0; }
 
 [dir="rtl"] .ms-Pivot-text {
   margin-right: 5px; }
@@ -2291,11 +2336,11 @@ hr {
     right: 0;
     left: auto;
     margin-left: auto;
-    margin-right: 12px; }
+    border-left: 1px solid #f5f5f5;
+    border-right: 0; }
   [dir="rtl"] #router-outlet {
-    margin-right: 85px;
-    margin-left: auto;
-    margin-top: 53px; } }
+    margin-right: 65px;
+    margin-left: auto; } }
 
 [dir="rtl"] table.responsive tbody tr td.no-label {
   text-align: right; }
@@ -6660,6 +6705,7 @@ hr {
   background: #fff;
   margin-top: 10px;
   padding: 15px;
+  padding-bottom: 0;
   border: 1px solid #f3f3f3;
   position: relative; }
   .cl-section h3 {
@@ -6672,9 +6718,11 @@ hr {
     padding-left: 12px;
     padding-right: 12px; }
   .cl-section .chevron {
-    position: absolute;
-    top: 7px;
-    right: 7px; }
+    float: right;
+    position: relative;
+    top: -7px;
+    right: -8px;
+    height: 28px; }
   .cl-section .cl-section-title {
     cursor: pointer; }
     .cl-section .cl-section-title:hover {

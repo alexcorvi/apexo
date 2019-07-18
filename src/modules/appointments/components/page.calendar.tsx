@@ -379,9 +379,9 @@ export class CalendarPage extends React.Component<{
 														}
 													>
 														{appointment.isMissed
-															? "Missed"
+															? text("Missed")
 															: appointment.isDone
-															? "Done"
+															? text("Done")
 															: appointment.formattedTime}
 													</div>
 													<div className="m-b-5">

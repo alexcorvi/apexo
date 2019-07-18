@@ -105,7 +105,7 @@ export class PatientsPage extends React.Component<{
 		},
 		{
 			key: "appointments",
-			title: "Upcoming Appointments",
+			title: "Appointments",
 			icon: "Calendar",
 			hidden: !this.props.currentUser.canViewAppointments
 		},

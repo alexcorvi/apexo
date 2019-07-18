@@ -4,8 +4,9 @@ export default {
 	 */
 
 	Welcome: "مرحبا",
-	"Today's Appointments": "مواعيد اليوم",
-	"Tomorrow's Appointments": "مواعيد الغد",
+	"Appointments for today": "مواعيد اليوم",
+	"Appointments for tomorrow": "مواعيد الغد",
+	"Appointments for this week": "مواعيد هذا الاسبوع",
 	"There are no appointments for tomorrow": "لا مواعيد للغد",
 	"There are no appointments for today": "لا مواعيد لليوم",
 
@@ -46,6 +47,9 @@ export default {
 	Label: "وسم",
 	"years old": "سنوات",
 	"Not registered": "غير مسجل",
+	Today: "اليوم",
+	Tomorrow: "غدا",
+	Yesterday: "أمس",
 
 	/**========================================
 	 * Section Title
@@ -348,7 +352,7 @@ export default {
 	"moderate oral hygiene": "معتدل الاعتناء بنظاقة الفم والأسنان",
 	"Skeletal relationship: Class ": "العلاقة الجمجمية: تصنيف ",
 	"Canine relationship: Class ": "علاقة الأنياب: تصنيف ",
-	"Molars relationship: Class ": "علاقة الاسنان الخلفية: تصنيف",
+	"Molars relationship: Class ": "علاقة الاسنان الخلفية: تصنيف ",
 	ampoule: "أبرة",
 	capsule: "كبسول",
 	tablet: "حبوب",
@@ -538,7 +542,7 @@ export default {
 	"Finances by date": "الأموال بحسب التاريخ",
 	"Applied times": "عدد المرات",
 	"Filter By Staff Member": "تصفية حسب الكادر",
-	"All members": "كل الكادر",
+	"All staff members": "حساب جميع الكادر",
 
 	/**========================================
 	 * Treatments page

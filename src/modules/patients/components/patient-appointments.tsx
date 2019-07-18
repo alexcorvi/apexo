@@ -70,9 +70,13 @@ export class PatientAppointmentsPanel extends React.Component<
 					{this.props.appointments.length ? (
 						""
 					) : (
-						<MessageBar messageBarType={MessageBarType.info}>
-							{text("This patient does not have any appointment")}
-						</MessageBar>
+						<div style={{ marginTop: 15 }}>
+							<MessageBar messageBarType={MessageBarType.info}>
+								{text(
+									"This patient does not have any appointment"
+								)}
+							</MessageBar>
+						</div>
 					)}
 					<br />
 					{this.canEdit ? (
@@ -108,7 +112,10 @@ export class PatientAppointmentsPanel extends React.Component<
 												{
 													key: "ph",
 													text:
-														"＋ Book new appointment"
+														"＋ " +
+														text(
+															"Book new appointment"
+														)
 												}
 											])}
 										selectedKey="ph"

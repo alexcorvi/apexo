@@ -105,7 +105,7 @@ export class UserPanelView extends React.Component<{
 					</Row>
 				)}
 			>
-				<SectionComponent title={text("Today's Appointments")}>
+				<SectionComponent title={text("Appointments for today")}>
 					{this.props.todayAppointments.length === 0 ? (
 						<MessageBar
 							messageBarType={MessageBarType.info}

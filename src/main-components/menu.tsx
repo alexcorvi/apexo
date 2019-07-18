@@ -33,12 +33,13 @@ export class MenuView extends React.Component<{
 			<div className="menu-component">
 				<div className="visible-lg visible-md icon-list">
 					{this.props.items.map((item, index) => {
+						const pageDisplayName = text(item.name);
 						return (
 							<TooltipHost
 								key={item.key}
 								content={
-									item.name.charAt(0).toUpperCase() +
-									item.name.substr(1)
+									pageDisplayName.charAt(0).toUpperCase() +
+									pageDisplayName.substr(1)
 								}
 								directionalHint={12}
 								tooltipProps={{
