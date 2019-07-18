@@ -2,6 +2,7 @@
 	background: #fff;
 	margin-top: 10px;
 	padding: 15px;
+	padding-bottom: 0;
 	border: 1px solid #f3f3f3;
 	position: relative;
 	h3 {
@@ -15,9 +16,11 @@
 		padding-right: 12px;
 	}
 	.chevron {
-		position: absolute;
-		top: 7px;
-		right: 7px;
+		float: right;
+		position: relative;
+		top: -7px;
+		right: -8px;
+		height: 28px;
 	}
 	.cl-section-title {
 		&:hover {

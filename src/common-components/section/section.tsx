@@ -34,8 +34,14 @@ export class SectionComponent extends React.Component<{
 				>
 					{this.props.title}
 				</h3>
-
-				{this.show ? this.props.children : ""}
+				<div style={{ clear: "both" }} />
+				{this.show ? (
+					<div style={{ marginBottom: 15 }}>
+						{this.props.children}
+					</div>
+				) : (
+					""
+				)}
 			</section>
 		);
 	}
