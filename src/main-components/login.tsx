@@ -69,6 +69,9 @@ export class LoginView extends React.Component<{
 							onClick={() => {
 								location.reload();
 							}}
+							iconProps={{
+								iconName: "Sync"
+							}}
 						/>
 					</div>
 				) : (
@@ -151,6 +154,9 @@ export class LoginView extends React.Component<{
 									className="input-password"
 								/>
 								<PrimaryButton
+									iconProps={{
+										iconName: "Permissions"
+									}}
 									text={text("Login")}
 									disabled={this.disableInputs}
 									className="m-t-15 m-b-15 proceed-login"
@@ -225,6 +231,9 @@ export class LoginView extends React.Component<{
 								<DefaultButton
 									onClick={this.props.startNoServer}
 									className="no-server-mode"
+									iconProps={{
+										iconName: "StatusErrorFull"
+									}}
 								>
 									no-server mode
 								</DefaultButton>
