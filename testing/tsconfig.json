@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"sourceMap": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"module": "esnext",
+		"moduleResolution": "node",
+		"target": "es6",
+		"jsx": "react",
+		"allowJs": false,
+		"experimentalDecorators": true,
+		"forceConsistentCasingInFileNames": true,
+		"newLine": "LF",
+		"noImplicitThis": true,
+		"pretty": true,
+		"strict": true,
+		"importHelpers": true
+	},
+	"include": ["./**/*"],
+	"exclude": ["node_modules"]
+}
