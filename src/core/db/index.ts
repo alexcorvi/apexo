@@ -37,6 +37,30 @@ export const resync: {
 	}
 };
 
+export const reset: {
+	modules: Array<{ reset: () => Promise<void>; namespace: string }>;
+	reset: () => Promise<boolean>;
+} = {
+	modules: [],
+	reset: async function() {
+		return new Promise<boolean>(resolve => {
+			let done = 0;
+			this.modules.forEach(module => {
+				module
+					.reset()
+					.then(() => done++)
+					.catch(() => done++);
+			});
+			const checkInterval = setInterval(() => {
+				if (done === this.modules.length) {
+					resolve(true);
+					clearInterval(checkInterval);
+				}
+			}, 300);
+		});
+	}
+};
+
 export const compact: {
 	compactMethods: Array<() => Promise<void>>;
 	compact: () => Promise<boolean>;
@@ -167,6 +191,16 @@ export async function connectToDB(
 			resync: async () => {
 				console.log(`Syncing ${moduleNamespace}`);
 				await localDatabase.sync(remoteDatabase);
+			}
+		});
+
+		reset.modules.push({
+			namespace: moduleNamespace,
+			reset: async () => {
+				console.log(`Resetting ${moduleNamespace} started`);
+				data.list = [];
+				await localDatabase.destroy();
+				console.log(`Resetting ${moduleNamespace} done`);
 			}
 		});
 
