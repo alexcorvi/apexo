@@ -30,6 +30,12 @@ ipcMain.on("clear", () => {
 	win.reload();
 });
 
+ipcMain.on("type", (event, arg) => {
+	arg.split("").forEach(x =>
+		win.webContents.sendInputEvent({ type: "char", keyCode: x })
+	);
+});
+
 app.on("window-all-closed", () => {
 	if (process.platform !== "darwin") {
 		app.quit();

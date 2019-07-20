@@ -4,6 +4,22 @@ export function elExists(query: string): boolean {
 	return !!document.querySelector(query);
 }
 
+export async function typeIn(query: string, string: string) {
+	return new Promise(resolve => {
+		const el = document.querySelector(query) as HTMLInputElement;
+		el.focus();
+		ipcRenderer.send("type", string);
+		const i = setInterval(() => {
+			if (el.value === string) {
+				clearInterval(i);
+				resolve();
+			} else {
+				console.log(el.value);
+			}
+		}, 10);
+	});
+}
+
 export function click(query: string) {
 	const el = document.querySelector(query) as HTMLInputElement;
 	el.click();
