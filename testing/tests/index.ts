@@ -1,14 +1,16 @@
-import login from "./basic/login";
+import { loginSuit } from "./basic/login.test";
 
 interface Index {
 	[key: string]: {
-		[key: string]: () => Promise<true | string>;
+		[key: string]: {
+			[key: string]: () => Promise<true | string>;
+		};
 	};
 }
 
 const index: Index = {
 	basic: {
-		login
+		loginSuit
 	}
 };
 

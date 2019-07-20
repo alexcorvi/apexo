@@ -106,19 +106,19 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ \"./node_modules/tslib/tslib.es6.js\");\n/* harmony import */ var _tests__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tests */ \"./tests/index.ts\");\n\n\nconst results = {};\nfunction run() {\n    return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n        const testFunctions = [];\n        Object.keys(_tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"]).forEach((groupName) => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n            results[groupName] = {};\n            Object.keys(_tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"][groupName]).forEach((testName) => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n                testFunctions.push(() => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n                    const result = yield _tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"][groupName][testName]();\n                    results[groupName][testName] =\n                        result === true ? \"✅\" : \"❌ \" + result;\n                    console.log(`🧪🧪🧪 ${groupName} ${testName}: ${result === true ? \"✅\" : \"❌ \" + result}`);\n                }));\n            }));\n        }));\n        yield Promise.all(testFunctions.map(x => x()));\n        console.log(results);\n    });\n}\nrun();\n\n\n//# sourceURL=webpack:///./test.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ \"./node_modules/tslib/tslib.es6.js\");\n/* harmony import */ var _tests__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tests */ \"./tests/index.ts\");\n\n\nconst results = {};\nfunction run() {\n    return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n        const testFunctions = [];\n        Object.keys(_tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"]).forEach((groupName) => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n            Object.keys(_tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"][groupName]).forEach((suitName) => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n                Object.keys(_tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"][groupName][suitName]).forEach((testName) => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n                    const id = `${groupName} > ${suitName} > ${testName}`;\n                    const test = _tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"][groupName][suitName][testName];\n                    testFunctions.push({\n                        id,\n                        test: () => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n                            const testReturnValue = yield test();\n                            const result = testReturnValue === true\n                                ? \"✅\"\n                                : \"❌ \" + testReturnValue;\n                            results[id] = result;\n                            console.log(`🧪🧪🧪 ${id}: ${result}`);\n                        })\n                    });\n                }));\n            }));\n        }));\n        yield Promise.all(testFunctions.map(x => x.test()));\n        console.log(results);\n    });\n}\nrun();\n\n\n//# sourceURL=webpack:///./test.ts?");
 
 /***/ }),
 
-/***/ "./tests/basic/login.ts":
-/*!******************************!*\
-  !*** ./tests/basic/login.ts ***!
-  \******************************/
-/*! exports provided: default */
+/***/ "./tests/basic/login.test.ts":
+/*!***********************************!*\
+  !*** ./tests/basic/login.test.ts ***!
+  \***********************************/
+/*! exports provided: loginSuit */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ \"./node_modules/tslib/tslib.es6.js\");\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (function () {\n    return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n        return new Promise(resolve => setTimeout(() => {\n            resolve(true);\n        }, 1000));\n    });\n});\n\n\n//# sourceURL=webpack:///./tests/basic/login.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"loginSuit\", function() { return loginSuit; });\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ \"./node_modules/tslib/tslib.es6.js\");\n\nconst loginSuit = {\n    abc() {\n        return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n            yield new Promise(resolve => setTimeout(resolve, 5000));\n            return true;\n        });\n    }\n};\n\n\n//# sourceURL=webpack:///./tests/basic/login.test.ts?");
 
 /***/ }),
 
@@ -130,7 +130,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tsli
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _basic_login__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./basic/login */ \"./tests/basic/login.ts\");\n\nconst index = {\n    basic: {\n        login: _basic_login__WEBPACK_IMPORTED_MODULE_0__[\"default\"]\n    }\n};\n/* harmony default export */ __webpack_exports__[\"default\"] = (index);\n\n\n//# sourceURL=webpack:///./tests/index.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _basic_login_test__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./basic/login.test */ \"./tests/basic/login.test.ts\");\n\nconst index = {\n    basic: {\n        loginSuit: _basic_login_test__WEBPACK_IMPORTED_MODULE_0__[\"loginSuit\"]\n    }\n};\n/* harmony default export */ __webpack_exports__[\"default\"] = (index);\n\n\n//# sourceURL=webpack:///./tests/index.ts?");
 
 /***/ })
 
