@@ -15,6 +15,6 @@ export function waitForEl(query: string): Promise<void> {
 	});
 }
 
-export function reset() {
-	ipcRenderer.send("clear");
+export async function reset() {
+	await (window as any).resetApp();
 }
