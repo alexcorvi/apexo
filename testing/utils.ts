@@ -20,6 +20,16 @@ export async function typeIn(query: string, string: string) {
 	});
 }
 
+export async function waitAndClick(query: string) {
+	await waitForEl(query);
+	click(query);
+}
+
+export async function waitAndInput(query: string, input: string) {
+	await waitForEl(query);
+	await typeIn(query, input);
+}
+
 export function click(query: string) {
 	const el = document.querySelector(query) as HTMLInputElement;
 	el.click();
