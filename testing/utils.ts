@@ -47,5 +47,6 @@ export function waitForEl(query: string): Promise<void> {
 }
 
 export async function reset() {
+	await new Promise(resolve => setTimeout(resolve, 1000));
 	await (window as any).resetApp();
 }
