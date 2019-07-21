@@ -62,3 +62,7 @@ the `testing/tests` subdirectory have the following structure:
 Each test suite must export an object of test functions. Test suites must implement the `testing/tests/suite.interface.ts` interface.
 
 Each test suite must be imported in the `testing/tests/index.ts` and located in its appropriate group.
+
+---
+
+License: The MIT License (MIT) - Copyright (c) Alex Corvi
