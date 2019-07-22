@@ -1,11 +1,8 @@
-import { app, assert, interact } from "../../utils";
 import { TestResult, TestSuite } from "../interface";
+import { app, assert, interact } from "../utils";
 /**
- * TODO: login while online
  * TODO: login while offline
- * TODO: login while online using cookies
  * TODO: login while offline using saved session
- * TODO: login for user with PIN
  */
 
 const staffName = "Alex Corvi";
@@ -110,7 +107,7 @@ export const loginSuite: TestSuite = {
 		// then do a reset
 		await app.reset();
 
-		/// we should be logged in again
+		// we should be logged in again
 		await interact.waitForEl("#choose-user");
 	}
 };

@@ -1,5 +1,5 @@
-import { app, assert, interact } from "../../utils";
 import { TestResult, TestSuite } from "../interface";
+import { app, assert, interact } from "../utils";
 /**
  * TODO: showing namespace on top
  */

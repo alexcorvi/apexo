@@ -1,5 +1,5 @@
 import tests from "./tests";
-import { app } from "./utils";
+import { app } from "./tests/utils";
 
 interface Results {
 	[key: string]: boolean | string;
