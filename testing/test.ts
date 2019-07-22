@@ -8,7 +8,7 @@ interface Results {
 const results: Results = {};
 
 async function run() {
-	const testFunctions: Array<{
+	let testFunctions: Array<{
 		id: string;
 		test: () => Promise<void>;
 	}> = [];
@@ -40,6 +40,10 @@ async function run() {
 			});
 		});
 	});
+
+	if (testFunctions.find(x => x.id.indexOf("__") !== -1)) {
+		testFunctions = testFunctions.filter(x => x.id.indexOf("__") !== -1);
+	}
 
 	for (let i = 0; i < testFunctions.length; i++) {
 		await testFunctions[i].test();
