@@ -76,5 +76,41 @@ export const loginSuite: TestSuite = {
 		interact.waitAndClick("#confirm-modal-btn");
 		// we should be in
 		await interact.waitForEl(".header-component");
+	},
+
+	async loginWhenOnline() {
+		// resetting
+		await app.reset();
+		await app.removeCookies();
+
+		// entering login data and login
+		await interact.waitForEl(".input-server");
+		await interact.typeIn(".input-identification input", "test");
+		await interact.typeIn(".input-password input", "test");
+		await interact.waitAndClick(".proceed-login");
+
+		// check if actually logged in
+		await interact.waitForEl("#choose-user");
+	},
+
+	async loginWhenOnlineUsingCookies() {
+		// resetting
+		await app.reset();
+		await app.removeCookies();
+
+		// entering login data and login
+		await interact.waitForEl(".input-server");
+		await interact.typeIn(".input-identification input", "test");
+		await interact.typeIn(".input-password input", "test");
+		await interact.waitAndClick(".proceed-login");
+
+		// check if actually logged in
+		await interact.waitForEl("#choose-user");
+
+		// then do a reset
+		await app.reset();
+
+		/// we should be logged in again
+		await interact.waitForEl("#choose-user");
 	}
 };
