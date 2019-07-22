@@ -89,11 +89,6 @@ export const app = {
 		await (window as any).resetApp();
 	},
 
-	async hardReset() {
-		await new Promise(resolve => setTimeout(resolve, 1000));
-		await (window as any).hardResetApp();
-	},
-
 	async goToPage(namespace: string) {
 		await interact.waitAndClick("#expand-menu");
 		await interact.waitAndClick(`[title="${namespace}"].ms-Nav-link`);

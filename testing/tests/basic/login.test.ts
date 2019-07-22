@@ -9,8 +9,8 @@ import { TestResult, TestSuite } from "../interface";
  */
 export const loginSuite: TestSuite = {
 	async noServer(): TestResult {
-		// start new server
-		await app.hardReset();
+		// start no server
+		await app.reset();
 		await interact.waitAndClick(".no-server-mode");
 		// create new staff member
 		await interact.waitAndInput("#new-user-name", "staff A");
@@ -30,7 +30,7 @@ export const loginSuite: TestSuite = {
 	},
 
 	async defaultServerField() {
-		await app.hardReset();
+		app.reset();
 		await interact.waitForEl(".input-server input");
 		assert.elValue(".input-server input", "http://localhost:5984");
 	}
