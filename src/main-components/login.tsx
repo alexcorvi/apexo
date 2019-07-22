@@ -75,7 +75,7 @@ export class LoginView extends React.Component<{
 						/>
 						<DefaultButton
 							text="no-server mode"
-							className="m-t-15 m-b-15"
+							className="no-server-mode"
 							onClick={() => {
 								this.props.startNoServer();
 							}}

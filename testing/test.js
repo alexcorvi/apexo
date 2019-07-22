@@ -106,7 +106,31 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ \"./node_modules/tslib/tslib.es6.js\");\n/* harmony import */ var _tests__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tests */ \"./tests/index.ts\");\n\n\nconst results = {};\nfunction run() {\n    return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n        const testFunctions = [];\n        Object.keys(_tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"]).forEach((groupName) => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n            Object.keys(_tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"][groupName]).forEach((suitName) => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n                Object.keys(_tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"][groupName][suitName]).forEach((testName) => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n                    const id = `${groupName} > ${suitName} > ${testName}`;\n                    const test = _tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"][groupName][suitName][testName];\n                    testFunctions.push({\n                        id,\n                        test: () => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n                            const testReturnValue = yield test();\n                            const result = testReturnValue === true\n                                ? \"✅\"\n                                : \"❌ \" + testReturnValue;\n                            results[id] = result;\n                            console.log(`🧪🧪🧪 ${id}: ${result}`);\n                        })\n                    });\n                }));\n            }));\n        }));\n        yield Promise.all(testFunctions.map(x => x.test()));\n        console.log(results);\n    });\n}\nrun();\n\n\n//# sourceURL=webpack:///./test.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ \"./node_modules/tslib/tslib.es6.js\");\n/* harmony import */ var _tests__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tests */ \"./tests/index.ts\");\n/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils */ \"./utils.ts\");\n\n\n\nconst results = {};\nfunction run() {\n    return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n        const testFunctions = [];\n        Object.keys(_tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"]).forEach((groupName) => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n            Object.keys(_tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"][groupName]).forEach((suitName) => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n                Object.keys(_tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"][groupName][suitName]).forEach((testName) => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n                    const id = `${groupName} > ${suitName} > ${testName}`;\n                    const test = _tests__WEBPACK_IMPORTED_MODULE_1__[\"default\"][groupName][suitName][testName];\n                    testFunctions.push({\n                        id,\n                        test: () => tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n                            yield _utils__WEBPACK_IMPORTED_MODULE_2__[\"app\"].reset();\n                            console.log(`🧪 Running: ${id}`);\n                            let testReturnValue = undefined;\n                            try {\n                                yield test();\n                            }\n                            catch (e) {\n                                testReturnValue = e.toString();\n                            }\n                            const result = testReturnValue === undefined\n                                ? \"✅\"\n                                : \"❌ \" + testReturnValue;\n                            results[id] = result;\n                            console.log(`🧪 Finished: ${id}: ${result}`);\n                            yield _utils__WEBPACK_IMPORTED_MODULE_2__[\"app\"].reset();\n                        })\n                    });\n                }));\n            }));\n        }));\n        yield Promise.all(testFunctions.map(x => x.test()));\n        console.log(results);\n    });\n}\nrun();\n\n\n//# sourceURL=webpack:///./test.ts?");
+
+/***/ }),
+
+/***/ "./tests/basic/header.test.ts":
+/*!************************************!*\
+  !*** ./tests/basic/header.test.ts ***!
+  \************************************/
+/*! exports provided: headerSuite */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"headerSuite\", function() { return headerSuite; });\n/**\n * TODO: showing namespace on top\n */\nconst headerSuite = {};\n\n\n//# sourceURL=webpack:///./tests/basic/header.test.ts?");
+
+/***/ }),
+
+/***/ "./tests/basic/index.ts":
+/*!******************************!*\
+  !*** ./tests/basic/index.ts ***!
+  \******************************/
+/*! exports provided: headerSuite, menuSuite, loginSuite, userPanelSuite */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _header_test__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./header.test */ \"./tests/basic/header.test.ts\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"headerSuite\", function() { return _header_test__WEBPACK_IMPORTED_MODULE_0__[\"headerSuite\"]; });\n\n/* harmony import */ var _menu_test__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menu.test */ \"./tests/basic/menu.test.ts\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"menuSuite\", function() { return _menu_test__WEBPACK_IMPORTED_MODULE_1__[\"menuSuite\"]; });\n\n/* harmony import */ var _login_test__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./login.test */ \"./tests/basic/login.test.ts\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"loginSuite\", function() { return _login_test__WEBPACK_IMPORTED_MODULE_2__[\"loginSuite\"]; });\n\n/* harmony import */ var _user_panel_test__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./user-panel.test */ \"./tests/basic/user-panel.test.ts\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"userPanelSuite\", function() { return _user_panel_test__WEBPACK_IMPORTED_MODULE_3__[\"userPanelSuite\"]; });\n\n\n\n\n\n\n\n//# sourceURL=webpack:///./tests/basic/index.ts?");
 
 /***/ }),
 
@@ -114,11 +138,35 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var tsli
 /*!***********************************!*\
   !*** ./tests/basic/login.test.ts ***!
   \***********************************/
-/*! exports provided: loginSuit */
+/*! exports provided: loginSuite */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"loginSuit\", function() { return loginSuit; });\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ \"./node_modules/tslib/tslib.es6.js\");\n\nconst loginSuit = {\n    abc() {\n        return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n            yield new Promise(resolve => setTimeout(resolve, 5000));\n            return true;\n        });\n    }\n};\n\n\n//# sourceURL=webpack:///./tests/basic/login.test.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"loginSuite\", function() { return loginSuite; });\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ \"./node_modules/tslib/tslib.es6.js\");\n/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils */ \"./utils.ts\");\n\n\n/**\n * TODO: login while online\n * TODO: login while offline\n * TODO: login while online using cookies\n * TODO: login while offline using saved session\n * TODO: login for user with PIN\n */\nconst loginSuite = {\n    noServer() {\n        return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n            // start new server\n            yield _utils__WEBPACK_IMPORTED_MODULE_1__[\"app\"].hardReset();\n            yield _utils__WEBPACK_IMPORTED_MODULE_1__[\"interact\"].waitAndClick(\".no-server-mode\");\n            // create new staff member\n            yield _utils__WEBPACK_IMPORTED_MODULE_1__[\"interact\"].waitAndInput(\"#new-user-name\", \"staff A\");\n            _utils__WEBPACK_IMPORTED_MODULE_1__[\"interact\"].click(\"#create-new-user-btn\");\n            // go to staff page and make sure it's there\n            yield _utils__WEBPACK_IMPORTED_MODULE_1__[\"interact\"].waitForEl(\".main-component\");\n            yield _utils__WEBPACK_IMPORTED_MODULE_1__[\"app\"].goToPage(\"staff\");\n            yield _utils__WEBPACK_IMPORTED_MODULE_1__[\"interact\"].waitForEl(`.staff-component`);\n            _utils__WEBPACK_IMPORTED_MODULE_1__[\"assert\"].elContains(\".staff-component\", \"staff A\");\n            // after resetting the application, staff member must still be there\n            yield _utils__WEBPACK_IMPORTED_MODULE_1__[\"app\"].reset();\n            yield _utils__WEBPACK_IMPORTED_MODULE_1__[\"interact\"].waitAndClick(\".no-server-mode\");\n            yield _utils__WEBPACK_IMPORTED_MODULE_1__[\"interact\"].waitForEl(\"#choose-user\");\n            _utils__WEBPACK_IMPORTED_MODULE_1__[\"assert\"].elContains(\"#choose-user\", \"staff A\");\n        });\n    }\n};\n\n\n//# sourceURL=webpack:///./tests/basic/login.test.ts?");
+
+/***/ }),
+
+/***/ "./tests/basic/menu.test.ts":
+/*!**********************************!*\
+  !*** ./tests/basic/menu.test.ts ***!
+  \**********************************/
+/*! exports provided: menuSuite */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"menuSuite\", function() { return menuSuite; });\n/**\n * TODO: toggling menu\n * TODO: clicking menu item\n */\nconst menuSuite = {};\n\n\n//# sourceURL=webpack:///./tests/basic/menu.test.ts?");
+
+/***/ }),
+
+/***/ "./tests/basic/user-panel.test.ts":
+/*!****************************************!*\
+  !*** ./tests/basic/user-panel.test.ts ***!
+  \****************************************/
+/*! exports provided: userPanelSuite */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"userPanelSuite\", function() { return userPanelSuite; });\n/**\n * TODO: toggle\n * TODO: clicking X\n * TODO: logout\n * TODO: switch user\n * TODO: appointments for today\n */\nconst userPanelSuite = {};\n\n\n//# sourceURL=webpack:///./tests/basic/user-panel.test.ts?");
 
 /***/ }),
 
@@ -130,7 +178,30 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _basic_login_test__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./basic/login.test */ \"./tests/basic/login.test.ts\");\n\nconst index = {\n    basic: {\n        loginSuit: _basic_login_test__WEBPACK_IMPORTED_MODULE_0__[\"loginSuit\"]\n    }\n};\n/* harmony default export */ __webpack_exports__[\"default\"] = (index);\n\n\n//# sourceURL=webpack:///./tests/index.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _basic__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./basic */ \"./tests/basic/index.ts\");\n\nconst index = {\n    basic: _basic__WEBPACK_IMPORTED_MODULE_0__\n};\n/* harmony default export */ __webpack_exports__[\"default\"] = (index);\n\n\n//# sourceURL=webpack:///./tests/index.ts?");
+
+/***/ }),
+
+/***/ "./utils.ts":
+/*!******************!*\
+  !*** ./utils.ts ***!
+  \******************/
+/*! exports provided: timeout, assert, interact, app */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"timeout\", function() { return timeout; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"assert\", function() { return assert; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"interact\", function() { return interact; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"app\", function() { return app; });\n/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ \"./node_modules/tslib/tslib.es6.js\");\n\nconst ipcRenderer = __webpack_require__(/*! electron */ \"electron\").ipcRenderer;\nconst timeout = 15000;\nconst assert = {\n    elExists(query) {\n        if (!document.querySelector(query)) {\n            throw Error(`Element \"${query}\" does not exist`);\n        }\n    },\n    elContains(query, string) {\n        const el = document.querySelector(query);\n        if (!el) {\n            throw Error(`Element \"${query}\" does not exist`);\n        }\n        else if (el.innerText.indexOf(string) === -1) {\n            throw Error(`Element \"${query}\" does not have text: \"${string}\", instead it has the following: ${el.innerText.replace(/\\s+/g, \" \")}`);\n        }\n    }\n};\nconst interact = {\n    typeIn(query, string) {\n        return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n            return new Promise(resolve => {\n                const el = document.querySelector(query);\n                el.focus();\n                ipcRenderer.send(\"type\", string);\n                const i = setInterval(() => {\n                    if (el.value === string) {\n                        clearInterval(i);\n                        resolve();\n                    }\n                    else {\n                        console.log(el.value);\n                    }\n                }, 10);\n            });\n        });\n    },\n    waitAndClick(query) {\n        return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n            yield this.waitForEl(query);\n            this.click(query);\n        });\n    },\n    waitAndInput(query, input) {\n        return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n            yield this.waitForEl(query);\n            yield this.typeIn(query, input);\n        });\n    },\n    click(query) {\n        const el = document.querySelector(query);\n        el.click();\n    },\n    waitForEl(query) {\n        return new Promise((resolve, reject) => {\n            const initTime = new Date().getTime();\n            const i = setInterval(() => {\n                if (document.querySelector(query)) {\n                    clearInterval(i);\n                    resolve();\n                }\n                else if (new Date().getTime() - initTime > timeout) {\n                    clearInterval(i);\n                    throw Error(`Timeout: could not find element \"${query}\"`);\n                }\n            }, 10);\n        });\n    }\n};\nconst app = {\n    reset() {\n        return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n            yield new Promise(resolve => setTimeout(resolve, 1000));\n            yield window.resetApp();\n        });\n    },\n    hardReset() {\n        return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n            yield new Promise(resolve => setTimeout(resolve, 1000));\n            yield window.hardResetApp();\n        });\n    },\n    goToPage(namespace) {\n        return tslib__WEBPACK_IMPORTED_MODULE_0__[\"__awaiter\"](this, void 0, void 0, function* () {\n            yield interact.waitAndClick(\"#expand-menu\");\n            yield interact.waitAndClick(`[title=\"${namespace}\"].ms-Nav-link`);\n        });\n    }\n};\n\n\n//# sourceURL=webpack:///./utils.ts?");
+
+/***/ }),
+
+/***/ "electron":
+/*!***************************!*\
+  !*** external "electron" ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = require(\"electron\");\n\n//# sourceURL=webpack:///external_%22electron%22?");
 
 /***/ })
 

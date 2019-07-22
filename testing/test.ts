@@ -1,4 +1,5 @@
 import tests from "./tests";
+import { app } from "./utils";
 
 interface Results {
 	[key: string]: boolean | string;
@@ -20,13 +21,21 @@ async function run() {
 				testFunctions.push({
 					id,
 					test: async () => {
-						const testReturnValue = await test();
+						await app.reset();
+						console.log(`🧪 Running: ${id}`);
+						let testReturnValue: string | undefined = undefined;
+						try {
+							await test();
+						} catch (e) {
+							testReturnValue = e.toString();
+						}
 						const result =
-							testReturnValue === true
+							testReturnValue === undefined
 								? "✅"
 								: "❌ " + testReturnValue;
 						results[id] = result;
-						console.log(`🧪🧪🧪 ${id}: ${result}`);
+						console.log(`🧪 Finished: ${id}: ${result}`);
+						await app.reset();
 					}
 				});
 			});

@@ -1,52 +1,88 @@
 const ipcRenderer = require("electron").ipcRenderer;
 
-export function elExists(query: string): boolean {
-	return !!document.querySelector(query);
-}
+export const timeout = 15000;
 
-export async function typeIn(query: string, string: string) {
-	return new Promise(resolve => {
+export const assert = {
+	elExists(query: string) {
+		if (!document.querySelector(query)) {
+			throw Error(`Element "${query}" does not exist`);
+		}
+	},
+	elContains(query: string, string: string) {
+		const el: HTMLElement | null = document.querySelector(query);
+		if (!el) {
+			throw Error(`Element "${query}" does not exist`);
+		} else if (el.innerText.indexOf(string) === -1) {
+			throw Error(
+				`Element "${query}" does not have text: "${string}", instead it has the following: ${el.innerText.replace(
+					/\s+/g,
+					" "
+				)}`
+			);
+		}
+	}
+};
+
+export const interact = {
+	async typeIn(query: string, string: string) {
+		return new Promise(resolve => {
+			const el = document.querySelector(query) as HTMLInputElement;
+			el.focus();
+			ipcRenderer.send("type", string);
+			const i = setInterval(() => {
+				if (el.value === string) {
+					clearInterval(i);
+					resolve();
+				} else {
+					console.log(el.value);
+				}
+			}, 10);
+		});
+	},
+	async waitAndClick(query: string) {
+		await this.waitForEl(query);
+		this.click(query);
+	},
+
+	async waitAndInput(query: string, input: string) {
+		await this.waitForEl(query);
+		await this.typeIn(query, input);
+	},
+
+	click(query: string) {
 		const el = document.querySelector(query) as HTMLInputElement;
-		el.focus();
-		ipcRenderer.send("type", string);
-		const i = setInterval(() => {
-			if (el.value === string) {
-				clearInterval(i);
-				resolve();
-			} else {
-				console.log(el.value);
-			}
-		}, 10);
-	});
-}
+		el.click();
+	},
 
-export async function waitAndClick(query: string) {
-	await waitForEl(query);
-	click(query);
-}
+	waitForEl(query: string): Promise<void> {
+		return new Promise((resolve, reject) => {
+			const initTime = new Date().getTime();
+			const i = setInterval(() => {
+				if (document.querySelector(query)) {
+					clearInterval(i);
+					resolve();
+				} else if (new Date().getTime() - initTime > timeout) {
+					clearInterval(i);
+					throw Error(`Timeout: could not find element "${query}"`);
+				}
+			}, 10);
+		});
+	}
+};
 
-export async function waitAndInput(query: string, input: string) {
-	await waitForEl(query);
-	await typeIn(query, input);
-}
+export const app = {
+	async reset() {
+		await new Promise(resolve => setTimeout(resolve, 1000));
+		await (window as any).resetApp();
+	},
 
-export function click(query: string) {
-	const el = document.querySelector(query) as HTMLInputElement;
-	el.click();
-}
+	async hardReset() {
+		await new Promise(resolve => setTimeout(resolve, 1000));
+		await (window as any).hardResetApp();
+	},
 
-export function waitForEl(query: string): Promise<void> {
-	return new Promise(resolve => {
-		const i = setInterval(() => {
-			if (elExists(query)) {
-				clearInterval(i);
-				resolve();
-			}
-		}, 10);
-	});
-}
-
-export async function reset() {
-	await new Promise(resolve => setTimeout(resolve, 1000));
-	await (window as any).resetApp();
-}
+	async goToPage(namespace: string) {
+		await interact.waitAndClick("#expand-menu");
+		await interact.waitAndClick(`[title="${namespace}"].ms-Nav-link`);
+	}
+};

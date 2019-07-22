@@ -1,17 +1,8 @@
-import { loginSuit } from "./basic/login.test";
-
-interface Index {
-	[key: string]: {
-		[key: string]: {
-			[key: string]: () => Promise<true | string>;
-		};
-	};
-}
+import * as basic from "./basic";
+import { Index } from "./interface";
 
 const index: Index = {
-	basic: {
-		loginSuit
-	}
+	basic
 };
 
 export default index;

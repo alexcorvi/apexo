@@ -1,19 +1,22 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const { watchFile } = require("fs");
 const path = require("path");
+const fs = require("fs");
 
 let win;
 
 function start() {
 	win = new BrowserWindow({
 		webPreferences: {
-			nodeIntegration: false,
-			preload: __dirname + "/test.js"
+			nodeIntegration: true
 		}
 	});
 	win.loadURL("http://localhost:8000");
 	win.openDevTools();
 	win.maximize();
+	win.webContents.executeJavaScript(
+		fs.readFileSync("./test.js", { encoding: "utf8" })
+	);
 	win.webContents.session.clearStorageData();
 }
 
