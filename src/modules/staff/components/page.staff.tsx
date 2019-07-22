@@ -500,6 +500,7 @@ export class StaffPage extends React.Component<{
 										>
 											<div className="staff-input">
 												<TextField
+													id="login-pin"
 													label={text("Login PIN")}
 													value={
 														this.selectedMember.pin

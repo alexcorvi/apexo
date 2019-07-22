@@ -23,7 +23,7 @@ export class TableActions extends React.Component<{
 					) : (
 						<TooltipHost content={text(item.title)} key={item.key}>
 							<IconButton
-								className="action-button"
+								className={"action-button " + item.key}
 								iconProps={{
 									iconName: item.icon
 								}}

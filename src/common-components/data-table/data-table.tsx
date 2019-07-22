@@ -182,7 +182,13 @@ export class DataTableComponent extends React.Component<Props, {}> {
 					<tbody>
 						{this.limitedRows.map((row, index) => {
 							return (
-								<tr key={row.id}>
+								<tr
+									key={row.id}
+									className={row.cells[0].dataValue
+										.toString()
+										.toLowerCase()
+										.replace(/[^a-z]/g, "")}
+								>
 									{row.cells.map((cell, index2) => {
 										return (
 											<td
