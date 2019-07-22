@@ -47,6 +47,7 @@ export class ModalsView extends React.Component<{
 								onClick={() => {
 									this.props.onDismiss(index);
 									modal.onConfirm(this.inputValue);
+									this.inputValue = "";
 								}}
 								iconProps={{ iconName: "CheckMark" }}
 								text={text("Confirm")}
@@ -57,7 +58,10 @@ export class ModalsView extends React.Component<{
 						)}
 						{modal.showCancelButton ? (
 							<DefaultButton
-								onClick={() => this.props.onDismiss(index)}
+								onClick={() => {
+									this.props.onDismiss(index);
+									this.inputValue = "";
+								}}
 								iconProps={{ iconName: "Cancel" }}
 								text={text("Cancel")}
 							/>
