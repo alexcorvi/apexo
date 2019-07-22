@@ -35,7 +35,6 @@ async function run() {
 								: "❌ " + testReturnValue;
 						results[id] = result;
 						console.log(`🧪 Finished: ${id}: ${result}`);
-						await app.reset();
 					}
 				});
 			});
