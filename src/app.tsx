@@ -95,4 +95,6 @@ ReactDOM.render(<App />, document.getElementById("root"));
 	});
 };
 
-(window as any).resyncApp = resync.resync;
+(window as any).resyncApp = async () => await resync.resync();
+
+(window as any).removeCookies = async () => await core.status.removeCookies();

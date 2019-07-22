@@ -205,6 +205,17 @@ export class Status {
 			this.step = LoginStep.chooseUser;
 		}
 	}
+
+	async removeCookies() {
+		const PouchDB: PouchDB.Static =
+			((await import("pouchdb-browser")) as any).default ||
+			((await import("pouchdb-browser")) as any);
+		const auth: PouchDB.Plugin =
+			((await import("pouchdb-authentication")) as any).default ||
+			((await import("pouchdb-authentication")) as any);
+		return await new PouchDB(this.server, { skip_setup: true }).logOut();
+	}
+
 	async logout() {
 		const PouchDB: PouchDB.Static =
 			((await import("pouchdb-browser")) as any).default ||
@@ -215,7 +226,7 @@ export class Status {
 		PouchDB.plugin(auth);
 		if (navigator.onLine && !this.keepOffline) {
 			try {
-				await new PouchDB(this.server, { skip_setup: true }).logOut();
+				this.removeCookies();
 			} catch (e) {
 				console.log("Failed to logout", e);
 			}
