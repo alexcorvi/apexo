@@ -14,7 +14,7 @@ export const loginSuite: TestSuite = {
 		await interact.waitAndClick(".no-server-mode");
 		// create new staff member
 		await interact.waitAndInput("#new-user-name", "staff A");
-		interact.click("#create-new-user-btn");
+		interact.waitAndClick("#create-new-user-btn");
 
 		// go to staff page and make sure it's there
 		await interact.waitForEl(".main-component");

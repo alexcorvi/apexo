@@ -46,15 +46,14 @@ export const interact = {
 				if (el.value === string) {
 					clearInterval(i);
 					resolve();
-				} else {
-					console.log(el.value);
 				}
 			}, 10);
 		});
 	},
 	async waitAndClick(query: string) {
 		await this.waitForEl(query);
-		this.click(query);
+		const el = document.querySelector(query) as HTMLInputElement;
+		el.click();
 	},
 
 	async waitAndInput(query: string, input: string) {
@@ -62,12 +61,7 @@ export const interact = {
 		await this.typeIn(query, input);
 	},
 
-	click(query: string) {
-		const el = document.querySelector(query) as HTMLInputElement;
-		el.click();
-	},
-
-	waitForEl(query: string): Promise<void> {
+	async waitForEl(query: string): Promise<void> {
 		return new Promise((resolve, reject) => {
 			const initTime = new Date().getTime();
 			const i = setInterval(() => {
