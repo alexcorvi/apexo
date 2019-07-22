@@ -1,5 +1,5 @@
 import { ProfileComponent } from "@common-components";
-import { MessageInterface, ModalInterface, text } from "@core";
+import { MessageInterface, messages, ModalInterface, text } from "@core";
 import { generateID } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -53,6 +53,7 @@ export class ChooseUserComponent extends React.Component<
 													this.props.onClickUser(
 														user._id
 													);
+													messages.activeMessages = [];
 												} else {
 													this.props.showMessage({
 														id: generateID(),
