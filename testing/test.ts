@@ -42,7 +42,9 @@ async function run() {
 		});
 	});
 
-	await Promise.all(testFunctions.map(x => x.test()));
+	for (let i = 0; i < testFunctions.length; i++) {
+		await testFunctions[i].test();
+	}
 
 	console.log(results);
 }
