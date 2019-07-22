@@ -49,7 +49,13 @@ async function run() {
 		await testFunctions[i].test();
 	}
 
-	console.log(results);
+	console.log("🧪🧪🧪🧪🧪🧪🧪🧪🧪🧪🧪🧪🧪");
+
+	Object.keys(results).forEach(id => {
+		console.log("🧪", id, results[id]);
+	});
+
+	console.log("🧪🧪🧪🧪🧪🧪🧪🧪🧪🧪🧪🧪🧪");
 }
 
 run();
