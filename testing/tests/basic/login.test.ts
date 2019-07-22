@@ -27,5 +27,11 @@ export const loginSuite: TestSuite = {
 		await interact.waitAndClick(".no-server-mode");
 		await interact.waitForEl("#choose-user");
 		assert.elContains("#choose-user", "staff A");
+	},
+
+	async defaultServerField() {
+		await app.hardReset();
+		await interact.waitForEl(".input-server input");
+		assert.elValue(".input-server input", "http://localhost:5984");
 	}
 };
