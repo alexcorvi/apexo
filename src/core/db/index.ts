@@ -224,9 +224,6 @@ export async function connectToDB(
 			namespace: moduleNamespace,
 			resync: async () => {
 				await doTheSingleUpdates();
-				if (data.list.length) {
-					await methods.syncListToDatabase(data.list);
-				}
 				if (remoteDatabase) {
 					await localDatabase.sync(remoteDatabase);
 				}
