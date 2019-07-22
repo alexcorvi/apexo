@@ -20,6 +20,19 @@ export const assert = {
 				)}`
 			);
 		}
+	},
+	elValue(query: string, value: string) {
+		const el: HTMLInputElement | null = document.querySelector(query);
+		if (!el) {
+			throw Error(`Element "${query}" does not exist`);
+		} else if (el.value !== value) {
+			throw Error(
+				`Input "${query}" does not have value: "${value}", instead it has the following: ${el.value.replace(
+					/\s+/g,
+					" "
+				)}`
+			);
+		}
 	}
 };
 
