@@ -78,8 +78,13 @@ export const interact = {
 };
 
 export const app = {
+	async resync() {
+		await (window as any).resyncApp();
+	},
+
 	async reset() {
 		await new Promise(resolve => setTimeout(resolve, 1000));
+		await app.resync();
 		await (window as any).resetApp();
 	},
 

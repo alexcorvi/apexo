@@ -1,4 +1,4 @@
-import { destroyLocal, hardReset, initializeIcons as initializeIconsA, reset } from "@core";
+import { hardReset, initializeIcons as initializeIconsA, reset, resync } from "@core";
 import * as core from "@core";
 import { MainView } from "@main-components";
 import * as modules from "@modules";
@@ -94,3 +94,5 @@ ReactDOM.render(<App />, document.getElementById("root"));
 		ReactDOM.render(<App />, document.getElementById("root"), resolve);
 	});
 };
+
+(window as any).resyncApp = resync.resync;
