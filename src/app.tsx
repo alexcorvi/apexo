@@ -1,4 +1,4 @@
-import { destroyLocal, initializeIcons as initializeIconsA, reset } from "@core";
+import { destroyLocal, hardReset, initializeIcons as initializeIconsA, reset } from "@core";
 import * as core from "@core";
 import { MainView } from "@main-components";
 import * as modules from "@modules";
@@ -73,11 +73,22 @@ const App = observer(() => (
 ));
 
 ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById("root"));
 
 (window as any).resetApp = () => {
 	return new Promise(async resolve => {
 		ReactDOM.unmountComponentAtNode(document.getElementById("root")!);
 		await reset.reset();
+		core.status.step = core.LoginStep.initial;
+		store.clear();
+		ReactDOM.render(<App />, document.getElementById("root"), resolve);
+	});
+};
+
+(window as any).hardResetApp = () => {
+	return new Promise(async resolve => {
+		ReactDOM.unmountComponentAtNode(document.getElementById("root")!);
+		await hardReset.hardReset();
 		core.status.step = core.LoginStep.initial;
 		store.clear();
 		ReactDOM.render(<App />, document.getElementById("root"), resolve);

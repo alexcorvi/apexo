@@ -53,8 +53,34 @@ export const reset: {
 			});
 			const checkInterval = setInterval(() => {
 				if (done === this.modules.length) {
-					resolve(true);
+					console.log("resetting done");
 					clearInterval(checkInterval);
+					resolve(true);
+				}
+			}, 300);
+		});
+	}
+};
+
+export const hardReset: {
+	modules: Array<{ hardReset: () => Promise<void>; namespace: string }>;
+	hardReset: () => Promise<boolean>;
+} = {
+	modules: [],
+	hardReset: async function() {
+		return new Promise<boolean>(resolve => {
+			let done = 0;
+			this.modules.forEach(module => {
+				module
+					.hardReset()
+					.then(() => done++)
+					.catch(() => done++);
+			});
+			const checkInterval = setInterval(() => {
+				if (done === this.modules.length) {
+					console.log("hard resetting done");
+					clearInterval(checkInterval);
+					resolve(true);
 				}
 			}, 300);
 		});
@@ -76,8 +102,8 @@ export const compact: {
 			});
 			const checkInterval = setInterval(() => {
 				if (done === this.compactMethods.length) {
-					resolve(true);
 					clearInterval(checkInterval);
+					resolve(true);
 				}
 			}, 300);
 		});
@@ -99,8 +125,8 @@ export const destroyLocal: {
 			});
 			const checkInterval = setInterval(() => {
 				if (done === this.destroyMethods.length) {
-					resolve(true);
 					clearInterval(checkInterval);
+					resolve(true);
 				}
 			}, 300);
 		});
@@ -169,13 +195,20 @@ export async function connectToDB(
 
 	localDatabase.crypto(unique);
 
-	const remoteDatabase = new PouchDB(`${status.server}/${dbName}`, {
-		fetch: (url, opts) =>
-			PouchDB.fetch(url, {
-				...opts,
-				credentials: "include"
-			})
-	});
+	let noServerMode = false;
+	if (status.server.indexOf("no-server-mode") !== -1) {
+		noServerMode = true;
+	}
+
+	const remoteDatabase = noServerMode
+		? null
+		: new PouchDB(`${status.server}/${dbName}`, {
+				fetch: (url, opts) =>
+					PouchDB.fetch(url, {
+						...opts,
+						credentials: "include"
+					})
+		  });
 
 	configs[dbName] = {
 		shouldLog: shouldLog
@@ -190,17 +223,24 @@ export async function connectToDB(
 			namespace: moduleNamespace,
 			resync: async () => {
 				console.log(`Syncing ${moduleNamespace}`);
-				await localDatabase.sync(remoteDatabase);
+				if (remoteDatabase) {
+					await localDatabase.sync(remoteDatabase);
+				}
 			}
 		});
 
 		reset.modules.push({
 			namespace: moduleNamespace,
 			reset: async () => {
-				console.log(`Resetting ${moduleNamespace} started`);
+				data.list = [];
+			}
+		});
+
+		hardReset.modules.push({
+			namespace: moduleNamespace,
+			hardReset: async () => {
 				data.list = [];
 				await localDatabase.destroy();
-				console.log(`Resetting ${moduleNamespace} done`);
 			}
 		});
 
@@ -210,11 +250,13 @@ export async function connectToDB(
 				dbName,
 				await localDatabase.compact()
 			);
-			console.log(
-				"remote compaction on",
-				dbName,
-				await remoteDatabase.compact()
-			);
+			if (remoteDatabase) {
+				console.log(
+					"remote compaction on",
+					dbName,
+					await remoteDatabase.compact()
+				);
+			}
 		});
 
 		destroyLocal.destroyMethods.push(async () => {
@@ -232,15 +274,19 @@ export async function connectToDB(
 		 * We need to pass the data like this:
 		 * [Remote DB] ====> [Local DB] =====> [MobX Store]
 		 * **/
-		try {
-			await localDatabase.sync(remoteDatabase);
-		} catch (e) {
+
+		if (remoteDatabase) {
 			try {
 				await localDatabase.sync(remoteDatabase);
 			} catch (e) {
-				console.log("Sync", dbName, "Failed", e);
+				try {
+					await localDatabase.sync(remoteDatabase);
+				} catch (e) {
+					console.log("Sync", dbName, "Failed", e);
+				}
 			}
 		}
+
 		const response =
 			(await localDatabase.allDocs({ include_docs: true })).rows.map(
 				x => x.doc
@@ -339,16 +385,18 @@ export async function connectToDB(
 						);
 						const dRes = await localDatabase.remove(doc);
 					} catch (e) {}
-					const remoteDoc = await remoteDatabase.get(newDoc._id);
-					try {
-						const doc = await remoteDatabase.get(remoteDoc._id);
-						const dRes = await remoteDatabase.remove(doc);
-					} catch (e) {}
-					try {
-						const syncRes = await remoteDatabase.sync(
-							localDatabase
-						);
-					} catch (e) {}
+					if (remoteDatabase) {
+						const remoteDoc = await remoteDatabase.get(newDoc._id);
+						try {
+							const doc = await remoteDatabase.get(remoteDoc._id);
+							const dRes = await remoteDatabase.remove(doc);
+						} catch (e) {}
+						try {
+							const syncRes = await remoteDatabase.sync(
+								localDatabase
+							);
+						} catch (e) {}
+					}
 				} else if (remoteAddition || remoteDeletion || remoteUpdate) {
 					data.ignoreObserver = true;
 					// if it's a deletion
@@ -369,7 +417,9 @@ export async function connectToDB(
 					}
 					data.ignoreObserver = false;
 				} else {
-					const res = await localDatabase.sync(remoteDatabase);
+					if (remoteDatabase) {
+						const res = await localDatabase.sync(remoteDatabase);
+					}
 				}
 			})
 			.on("error", err => log(dbName, "Error occurred", err));
