@@ -37,7 +37,7 @@ export const raw = {
 	Operators: "",
 	Missed: "",
 	"Switch user": "",
-	"How are you?": "",
+	"Who are you?": "",
 	Expenses: "",
 	Profit: "",
 	male: "",

@@ -39,7 +39,7 @@ export class ChooseUserComponent extends React.Component<
 					</div>
 				) : (
 					<div id="choose-user">
-						<h3>{text("How are you?")}</h3>
+						<h3>{text("Who are you?")}</h3>
 						{this.props.users.map(user => (
 							<div
 								className="m-t-5 p-5 user-chooser pointer"
