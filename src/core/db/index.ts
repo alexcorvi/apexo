@@ -154,7 +154,7 @@ export async function connectToDB(
 	const unique = Md5.hashStr(store.get("LSL_hash")).toString();
 
 	// prefixing local DB name
-	const localName = dbName + "_" + unique;
+	const localName = dbName + "_" + Md5.hashStr(status.server);
 
 	/**
 	 * Connection object
