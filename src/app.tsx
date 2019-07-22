@@ -73,7 +73,6 @@ const App = observer(() => (
 ));
 
 ReactDOM.render(<App />, document.getElementById("root"));
-ReactDOM.render(<App />, document.getElementById("root"));
 
 (window as any).resetApp = () => {
 	return new Promise(async resolve => {
