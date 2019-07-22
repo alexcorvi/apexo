@@ -1,6 +1,7 @@
 import {
 	blackListedIDs,
 	configs,
+	doTheSingleUpdates,
 	generateMethods,
 	IClassCreator,
 	IMobXStore,
@@ -21,14 +22,14 @@ export const resync: {
 	resync: async function() {
 		return new Promise<boolean>(resolve => {
 			let done = 0;
-			this.modules.forEach(module => {
+			resync.modules.forEach(module => {
 				module
 					.resync()
 					.then(() => done++)
 					.catch(() => done++);
 			});
 			const checkInterval = setInterval(() => {
-				if (done === this.modules.length) {
+				if (done === resync.modules.length) {
 					resolve(true);
 					clearInterval(checkInterval);
 				}
@@ -45,14 +46,14 @@ export const reset: {
 	reset: async function() {
 		return new Promise<boolean>(resolve => {
 			let done = 0;
-			this.modules.forEach(module => {
+			reset.modules.forEach(module => {
 				module
 					.reset()
 					.then(() => done++)
 					.catch(() => done++);
 			});
 			const checkInterval = setInterval(() => {
-				if (done === this.modules.length) {
+				if (done === reset.modules.length) {
 					console.log("resetting done");
 					clearInterval(checkInterval);
 					resolve(true);
@@ -70,14 +71,14 @@ export const hardReset: {
 	hardReset: async function() {
 		return new Promise<boolean>(resolve => {
 			let done = 0;
-			this.modules.forEach(module => {
+			hardReset.modules.forEach(module => {
 				module
 					.hardReset()
 					.then(() => done++)
 					.catch(() => done++);
 			});
 			const checkInterval = setInterval(() => {
-				if (done === this.modules.length) {
+				if (done === hardReset.modules.length) {
 					console.log("hard resetting done");
 					clearInterval(checkInterval);
 					resolve(true);
@@ -95,13 +96,13 @@ export const compact: {
 	compact: async function() {
 		return new Promise<boolean>(resolve => {
 			let done = 0;
-			this.compactMethods.forEach(compactMethod => {
+			compact.compactMethods.forEach(compactMethod => {
 				compactMethod()
 					.then(() => done++)
 					.catch(() => done++);
 			});
 			const checkInterval = setInterval(() => {
-				if (done === this.compactMethods.length) {
+				if (done === compact.compactMethods.length) {
 					clearInterval(checkInterval);
 					resolve(true);
 				}
@@ -118,13 +119,13 @@ export const destroyLocal: {
 	destroy: async function() {
 		return new Promise<boolean>(resolve => {
 			let done = 0;
-			this.destroyMethods.forEach(destroyMethod => {
+			destroyLocal.destroyMethods.forEach(destroyMethod => {
 				destroyMethod()
 					.then(() => done++)
 					.catch(() => done++);
 			});
 			const checkInterval = setInterval(() => {
-				if (done === this.destroyMethods.length) {
+				if (done === destroyLocal.destroyMethods.length) {
 					clearInterval(checkInterval);
 					resolve(true);
 				}
@@ -222,7 +223,10 @@ export async function connectToDB(
 		resync.modules.push({
 			namespace: moduleNamespace,
 			resync: async () => {
-				console.log(`Syncing ${moduleNamespace}`);
+				await doTheSingleUpdates();
+				if (data.list.length) {
+					await methods.syncListToDatabase(data.list);
+				}
 				if (remoteDatabase) {
 					await localDatabase.sync(remoteDatabase);
 				}
@@ -305,9 +309,16 @@ export async function connectToDB(
 		// Watch the list as a whole
 		observe(data.list, change => {
 			// only if we're not ignoring it (i.e. we're not syncing from database, thus preventing cycles)
-			if (!data.ignoreObserver) {
-				methods.syncListToDatabase(data.list);
+			if (data.ignoreObserver) {
+				return;
 			}
+			// and if it's not empty (for testing purposes)
+			if (data.list.length === 0) {
+				console.log(">>>> PREVENTED");
+				return;
+			}
+			console.log("syncing", data.list);
+			methods.syncListToDatabase(data.list);
 		});
 
 		// Watch document by document
