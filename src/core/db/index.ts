@@ -314,10 +314,8 @@ export async function connectToDB(
 			}
 			// and if it's not empty (for testing purposes)
 			if (data.list.length === 0) {
-				console.log(">>>> PREVENTED");
 				return;
 			}
-			console.log("syncing", data.list);
 			methods.syncListToDatabase(data.list);
 		});
 
