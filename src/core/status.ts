@@ -264,7 +264,11 @@ export class Status {
 		)) as any).default;
 		PouchDB.plugin(auth);
 		try {
-			if (navigator.onLine && (await isOnline(server))) {
+			if (
+				navigator.onLine &&
+				(await isOnline(server)) &&
+				!this.keepOffline
+			) {
 				return !!(await new PouchDB(server, {
 					skip_setup: true
 				}).getSession()).userCtx.name;
