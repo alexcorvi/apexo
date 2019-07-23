@@ -1,11 +1,11 @@
+import { fixtures } from "../fixtures";
 import { TestResult, TestSuite } from "../interface";
 import { app, assert, interact } from "../utils";
 /**
  * TODO: login while offline
  * TODO: login while offline using saved session
+ * TODO: impossible to login
  */
-
-const staffName = "Alex Corvi";
 
 export const loginSuite: TestSuite = {
 	async noServer(): TestResult {
@@ -13,24 +13,24 @@ export const loginSuite: TestSuite = {
 		await app.reset();
 		await interact.waitAndClick(".no-server-mode");
 		// create new staff member
-		await interact.waitAndInput("#new-user-name", staffName);
-		interact.waitAndClick("#create-new-user-btn");
+		await interact.waitAndInput("#new-user-name", fixtures.staffNames[0]);
+		await interact.waitAndClick("#create-new-user-btn");
 
 		// go to staff page and make sure it's there
 		await interact.waitForEl(".main-component");
 		await app.goToPage("staff");
 		await interact.waitForEl(`.staff-component`);
-		assert.elContains(".staff-component", staffName);
+		assert.elContains(".staff-component", fixtures.staffNames[0]);
 
 		// after resetting the application, staff member must still be there
 		await app.reset();
 		await interact.waitAndClick(".no-server-mode");
 		await interact.waitForEl("#choose-user");
-		assert.elContains("#choose-user", staffName);
+		assert.elContains("#choose-user", fixtures.staffNames[0]);
 	},
 
 	async defaultServerField() {
-		app.reset();
+		await app.reset();
 		await interact.waitForEl(".input-server input");
 		assert.elValue(".input-server input", "http://localhost:5984");
 	},
@@ -43,7 +43,7 @@ export const loginSuite: TestSuite = {
 		await interact.waitForEl(".main-component");
 		await app.goToPage("staff");
 		await interact.waitForEl(`.staff-component`);
-		await interact.waitAndClick(".alexcorvi .permission");
+		await interact.waitAndClick(".dralex .permission");
 		await interact.waitForEl("#login-pin");
 		await interact.typeIn("#login-pin", "1234");
 		// visit a couple of routes
@@ -52,8 +52,8 @@ export const loginSuite: TestSuite = {
 		await app.goToPage("staff");
 		await interact.waitForEl(`.staff-component`);
 		// and then back to PIN to make sure its there
-		await interact.waitAndClick(".alexcorvi .permission");
-		assert.elValue("#login-pin", "1234");
+		await interact.waitAndClick(".dralex .permission");
+		assert.elValue("#login-pin", fixtures.PIN.valid);
 		// reset and go to no server mode again
 		await app.reset();
 		await interact.waitAndClick(".no-server-mode");
@@ -62,15 +62,15 @@ export const loginSuite: TestSuite = {
 		// we'll enter an invalid one first
 		await interact.waitAndClick(".ms-Persona");
 		await interact.waitForEl("#modal-input");
-		await interact.typeIn("#modal-input", "12345"); // invalid
-		interact.waitAndClick("#confirm-modal-btn");
+		await interact.typeIn("#modal-input", fixtures.PIN.invalid);
+		await interact.waitAndClick("#confirm-modal-btn");
 		// expect an error message
 		await interact.waitForEl(".message-inner");
 		// we'll enter the valid one now
-		interact.waitAndClick(".ms-Persona");
+		await interact.waitAndClick(".ms-Persona");
 		await interact.waitForEl("#modal-input");
-		await interact.typeIn("#modal-input", "1234"); // valid
-		interact.waitAndClick("#confirm-modal-btn");
+		await interact.typeIn("#modal-input", fixtures.PIN.valid);
+		await interact.waitAndClick("#confirm-modal-btn");
 		// we should be in
 		await interact.waitForEl(".header-component");
 	},
@@ -82,8 +82,11 @@ export const loginSuite: TestSuite = {
 
 		// entering login data and login
 		await interact.waitForEl(".input-server");
-		await interact.typeIn(".input-identification input", "test");
-		await interact.typeIn(".input-password input", "test");
+		await interact.typeIn(
+			".input-identification input",
+			fixtures.login.username
+		);
+		await interact.typeIn(".input-password input", fixtures.login.password);
 		await interact.waitAndClick(".proceed-login");
 
 		// check if actually logged in
@@ -91,23 +94,18 @@ export const loginSuite: TestSuite = {
 	},
 
 	async loginWhenOnlineUsingCookies() {
-		// resetting
-		await app.reset();
-		await app.removeCookies();
-
-		// entering login data and login
-		await interact.waitForEl(".input-server");
-		await interact.typeIn(".input-identification input", "test");
-		await interact.typeIn(".input-password input", "test");
-		await interact.waitAndClick(".proceed-login");
-
-		// check if actually logged in
-		await interact.waitForEl("#choose-user");
+		await loginSuite.loginWhenOnline();
 
 		// then do a reset
 		await app.reset();
 
 		// we should be logged in again
 		await interact.waitForEl("#choose-user");
+	},
+
+	async loginOfflineWithSavedSession__() {
+		await loginSuite.loginWhenOnline();
+		await interact.waitAndClick(".ms-Persona");
+		await interact.waitForEl(".header-component");
 	}
 };

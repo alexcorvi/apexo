@@ -55,12 +55,10 @@ export const interact = {
 		const el = document.querySelector(query) as HTMLInputElement;
 		el.click();
 	},
-
 	async waitAndInput(query: string, input: string) {
 		await this.waitForEl(query);
 		await this.typeIn(query, input);
 	},
-
 	async waitForEl(query: string): Promise<void> {
 		return new Promise((resolve, reject) => {
 			const initTime = new Date().getTime();
