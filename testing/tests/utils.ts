@@ -33,6 +33,23 @@ export const assert = {
 				)}`
 			);
 		}
+	},
+	attribute(query: string, attribute: string, expectedValue: string) {
+		const el: HTMLElement | null = document.querySelector(query);
+		if (!el) {
+			throw Error(`Element "${query}" does not exist`);
+		} else {
+			const attrVal = el.getAttribute(attribute);
+			if (!attrVal) {
+				throw Error(
+					`Element "${query}" does not have attribute ${attribute}`
+				);
+			} else if (attrVal !== expectedValue) {
+				throw Error(
+					`Element "${query}" attribute is equal to ${attrVal}, not ${expectedValue}`
+				);
+			}
+		}
 	}
 };
 
@@ -68,7 +85,7 @@ export const interact = {
 					resolve();
 				} else if (new Date().getTime() - initTime > timeout) {
 					clearInterval(i);
-					throw Error(`Timeout: could not find element "${query}"`);
+					reject(`Timeout: could not find element "${query}"`);
 				}
 			}, 10);
 		});
@@ -80,10 +97,10 @@ export const app = {
 		await (window as any).resyncApp();
 	},
 
-	async reset() {
+	async reset({ retainLSLHash }: { retainLSLHash?: boolean } = {}) {
 		await new Promise(resolve => setTimeout(resolve, 1000));
 		await app.resync();
-		await (window as any).resetApp();
+		await (window as any).resetApp(retainLSLHash);
 	},
 
 	async goToPage(namespace: string) {
@@ -93,5 +110,31 @@ export const app = {
 
 	async removeCookies() {
 		await (window as any).removeCookies();
+	}
+};
+
+export const test = {
+	async offline() {
+		return new Promise(resolve => {
+			console.log("taking it offline");
+			(window as any).emulateOffline();
+			ipcRenderer.send("offline");
+			test.onFail(async () => await test.online());
+			resolve();
+		});
+	},
+
+	async online() {
+		return new Promise(resolve => {
+			console.log("bringing it back online");
+			(window as any).disableOfflineEmulation();
+			ipcRenderer.send("online");
+			resolve();
+		});
+	},
+	onFailCallback: async () => {},
+
+	async onFail(callback: () => Promise<any>) {
+		this.onFailCallback = callback;
 	}
 };

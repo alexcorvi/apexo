@@ -1,14 +1,9 @@
 import { fixtures } from "../fixtures";
 import { TestResult, TestSuite } from "../interface";
-import { app, assert, interact } from "../utils";
-/**
- * TODO: login while offline
- * TODO: login while offline using saved session
- * TODO: impossible to login
- */
+import { app, assert, interact, test } from "../utils";
 
 export const loginSuite: TestSuite = {
-	async noServer(): TestResult {
+	async loginNoServer(): TestResult {
 		// start no server
 		await app.reset();
 		await interact.waitAndClick(".no-server-mode");
@@ -18,6 +13,8 @@ export const loginSuite: TestSuite = {
 
 		// go to staff page and make sure it's there
 		await interact.waitForEl(".main-component");
+		await interact.waitForEl(".header-component");
+		assert.attribute(".header-component", "data-login-type", "no-server");
 		await app.goToPage("staff");
 		await interact.waitForEl(`.staff-component`);
 		assert.elContains(".staff-component", fixtures.staffNames[0]);
@@ -29,13 +26,103 @@ export const loginSuite: TestSuite = {
 		assert.elContains("#choose-user", fixtures.staffNames[0]);
 	},
 
+	async loginWithCredentialsWhenOnline() {
+		// resetting
+		await app.reset();
+		await app.removeCookies();
+
+		// entering login data and login
+		await interact.waitForEl(".input-server");
+		await interact.typeIn(
+			".input-identification input",
+			fixtures.login.username
+		);
+		await interact.typeIn(".input-password input", fixtures.login.password);
+		await interact.waitAndClick(".proceed-login");
+
+		// check if actually logged in
+		await interact.waitForEl("#choose-user");
+		await interact.waitAndClick(".ms-Persona");
+		await interact.waitForEl(".header-component");
+
+		assert.attribute(
+			".header-component",
+			"data-login-type",
+			"login-credentials-online"
+		);
+	},
+
+	async loginWhenOnlineWithActiveSession() {
+		await loginSuite.loginWithCredentialsWhenOnline();
+
+		// then do a reset
+		await app.reset();
+		//
+		// we should be logged in again
+		await interact.waitForEl("#choose-user");
+		await interact.waitAndClick(".ms-Persona");
+		await interact.waitForEl(".header-component");
+		assert.attribute(
+			".header-component",
+			"data-login-type",
+			"initial-active-session"
+		);
+	},
+
+	async loginOfflineWithSavedSession() {
+		await loginSuite.loginWithCredentialsWhenOnline();
+		await interact.waitAndClick(".ms-Persona");
+		await interact.waitForEl(".header-component");
+		await test.offline();
+		await app.reset({ retainLSLHash: true });
+		await interact.waitAndClick(".ms-Persona");
+		assert.attribute(
+			".header-component",
+			"data-login-type",
+			"initial-lsl-hash-ts"
+		);
+		await test.online();
+	},
+
+	async loginOfflineWithCredentials() {
+		await loginSuite.loginWithCredentialsWhenOnline();
+		await interact.waitAndClick(".ms-Persona");
+		await interact.waitForEl(".header-component");
+		await test.offline();
+		console.log(navigator.onLine);
+		await app.reset({ retainLSLHash: true });
+		localStorage.removeItem("LSL_TS");
+		await interact.waitForEl(".offline");
+		await interact.typeIn(
+			".input-identification input",
+			fixtures.login.username
+		);
+		await interact.typeIn(".input-password input", fixtures.login.password);
+		await interact.waitAndClick(".proceed-login");
+
+		// check if actually logged in
+		await interact.waitForEl("#choose-user");
+		await interact.waitAndClick(".ms-Persona");
+		await interact.waitForEl(".header-component");
+
+		assert.attribute(
+			".header-component",
+			"data-login-type",
+			"login-credentials-offline"
+		);
+		await test.online();
+	},
+
 	async defaultServerField() {
 		await app.reset();
+		await app.removeCookies();
 		await interact.waitForEl(".input-server input");
 		assert.elValue(".input-server input", "http://localhost:5984");
 	},
 
 	async loginWithPIN() {
+		await app.reset();
+		await app.removeCookies();
 		// start no server
 		await interact.waitAndClick(".no-server-mode");
 		await interact.waitAndClick(".ms-Persona");
@@ -75,37 +162,11 @@ export const loginSuite: TestSuite = {
 		await interact.waitForEl(".header-component");
 	},
 
-	async loginWhenOnline() {
-		// resetting
-		await app.reset();
+	async impossibleToLogin() {
 		await app.removeCookies();
-
-		// entering login data and login
-		await interact.waitForEl(".input-server");
-		await interact.typeIn(
-			".input-identification input",
-			fixtures.login.username
-		);
-		await interact.typeIn(".input-password input", fixtures.login.password);
-		await interact.waitAndClick(".proceed-login");
-
-		// check if actually logged in
-		await interact.waitForEl("#choose-user");
-	},
-
-	async loginWhenOnlineUsingCookies() {
-		await loginSuite.loginWhenOnline();
-
-		// then do a reset
+		await test.offline();
 		await app.reset();
-
-		// we should be logged in again
-		await interact.waitForEl("#choose-user");
-	},
-
-	async loginOfflineWithSavedSession__() {
-		await loginSuite.loginWhenOnline();
-		await interact.waitAndClick(".ms-Persona");
-		await interact.waitForEl(".header-component");
+		await interact.waitForEl(".impossible");
+		await test.online();
 	}
 };

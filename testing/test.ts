@@ -1,5 +1,5 @@
 import tests from "./tests";
-import { app } from "./tests/utils";
+import { app, test } from "./tests/utils";
 
 interface Results {
 	[key: string]: boolean | string;
@@ -17,7 +17,7 @@ async function run() {
 		Object.keys(tests[groupName]).forEach(async suitName => {
 			Object.keys(tests[groupName][suitName]).forEach(async testName => {
 				const id = `${groupName} > ${suitName} > ${testName}`;
-				const test = tests[groupName][suitName][testName];
+				const testFunc = tests[groupName][suitName][testName];
 				testFunctions.push({
 					id,
 					test: async () => {
@@ -25,9 +25,10 @@ async function run() {
 						console.log(`🧪 Running: ${id}`);
 						let testReturnValue: string | undefined = undefined;
 						try {
-							await test();
+							await testFunc();
 						} catch (e) {
-							testReturnValue = e.toString();
+							testReturnValue = JSON.stringify(e);
+							await test.onFailCallback();
 						}
 						const result =
 							testReturnValue === undefined

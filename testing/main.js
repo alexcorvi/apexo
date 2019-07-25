@@ -4,6 +4,7 @@ const path = require("path");
 const fs = require("fs");
 
 let win;
+let offline = false;
 
 function start() {
 	win = new BrowserWindow({
@@ -18,6 +19,13 @@ function start() {
 		fs.readFileSync("./test.js", { encoding: "utf8" })
 	);
 	win.webContents.session.clearStorageData();
+
+	win.webContents.session.webRequest.onBeforeRequest((details, callback) => {
+		if (details.url.indexOf("5984") > -1) {
+			return callback({ cancel: offline });
+		}
+		return callback({ cancel: false });
+	});
 }
 
 watchFile("./test.js", () => {
@@ -39,6 +47,8 @@ ipcMain.on("type", (event, arg) => {
 	);
 });
 
+ipcMain.on("online", () => (offline = false));
+ipcMain.on("offline", () => (offline = true));
 app.on("window-all-closed", () => {
 	if (process.platform !== "darwin") {
 		app.quit();
