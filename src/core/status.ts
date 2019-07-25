@@ -2,13 +2,14 @@ import { files, resync } from "@core";
 import { registerModules, staff } from "@modules";
 import {
 	day,
-	isOnline,
+	isClientOnline,
+	isOnline as checkOnline,
 	minute,
 	num,
 	second,
 	store
 	} from "@utils";
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
 import { Md5 } from "ts-md5";
 
 const demoHosts: string[] = [
@@ -25,6 +26,14 @@ export enum LoginStep {
 	initial
 }
 
+export enum LoginType {
+	initialActiveSession = "initial-active-session",
+	initialLSLHashTS = "initial-lsl-hash-ts",
+	loginCredentialsOnline = "login-credentials-online",
+	loginCredentialsOffline = "login-credentials-offline",
+	noServer = "no-server"
+}
+
 export class Status {
 	@observable server: string = "";
 	@observable currentUserID: string = "";
@@ -33,18 +42,30 @@ export class Status {
 
 	@observable step: LoginStep = LoginStep.initial;
 
-	@observable isOnline: boolean = false;
+	@observable isServerOnline: boolean = true;
+
+	@observable isClientOnline: boolean = true;
 
 	@observable isDropboxActive: boolean = false;
 
 	@observable tryOffline: boolean = false;
 
+	@observable loginType: LoginType | "" = "";
+
+	intervals = [
+		setInterval(() => this.validateOnlineStatus(), second * 2),
+		setInterval(() => this.validateDropBoxToken(), minute),
+		setInterval(async () => {
+			this.isClientOnline = await isClientOnline();
+		}, second * 2)
+	];
+
+	@computed get isClientOnlineGet() {
+		return this.isClientOnline;
+	}
+
 	constructor() {
-		setInterval(() => this.validateOnlineStatus(), second * 2);
-
 		setTimeout(() => this.validateDropBoxToken(), second * 5); // initial
-
-		setInterval(() => this.validateDropBoxToken(), minute); // then every minute
 	}
 
 	async initialCheck(server: string) {
@@ -62,18 +83,20 @@ export class Status {
 
 		this.server = server;
 
-		const activeSession = await this.activeSession(this.server);
-
-		if (navigator.onLine) {
-			if (activeSession) {
-				console.log("Login: using active session");
+		if (this.isClientOnline) {
+			if (await this.activeSession(this.server)) {
+				this.loginType = LoginType.initialActiveSession;
 				await this.start({ server });
 				store.set("LSL_TS", new Date().getTime().toString());
+				return;
 			}
-		} else if (store.found("LSL_hash")) {
+		}
+
+		if (store.found("LSL_hash")) {
 			const now = new Date().getTime();
 			const then = new Date(num(store.get("LSL_TS"))).getTime();
 			if (now - then < 7 * day) {
+				this.loginType = LoginType.initialLSLHashTS;
 				this.start({ server });
 			}
 		}
@@ -88,7 +111,7 @@ export class Status {
 		password: string;
 		server: string;
 	}) {
-		if (!navigator.onLine && store.found("LSL_hash")) {
+		if (!this.isClientOnline && store.found("LSL_hash")) {
 			return this.loginWithCredentialsOffline({
 				username,
 				password,
@@ -96,9 +119,9 @@ export class Status {
 			});
 		}
 
-		const onlineServer = await isOnline(server);
+		const onlineServer = await checkOnline(server);
 
-		if (navigator.onLine && onlineServer) {
+		if (this.isClientOnline && onlineServer) {
 			return this.loginWithCredentialsOnline({
 				username,
 				password,
@@ -146,6 +169,7 @@ export class Status {
 				Md5.hashStr(server + username + password).toString()
 			);
 			store.set("LSL_TS", new Date().getTime().toString());
+			this.loginType = LoginType.loginCredentialsOnline;
 			this.start({ server });
 			return true;
 		} catch (e) {
@@ -170,6 +194,7 @@ export class Status {
 			if (noStart) {
 				return true;
 			} else {
+				this.loginType = LoginType.loginCredentialsOffline;
 				this.start({ server });
 				return true;
 			}
@@ -184,8 +209,9 @@ export class Status {
 	}
 
 	async startNoServer() {
-		this.isOnline = false;
+		this.isServerOnline = false;
 		this.keepOffline = true;
+		this.loginType = LoginType.noServer;
 		await this.start({
 			server: "http://apexo-no-server-mode"
 		});
@@ -193,6 +219,7 @@ export class Status {
 	}
 
 	async start({ server }: { server: string }) {
+		console.log("Login Type:", this.loginType);
 		this.server = server;
 		store.set("server_location", server);
 		this.step = LoginStep.loadingData;
@@ -224,7 +251,7 @@ export class Status {
 			((await import("pouchdb-authentication")) as any).default ||
 			((await import("pouchdb-authentication")) as any);
 		PouchDB.plugin(auth);
-		if (navigator.onLine && !this.keepOffline) {
+		if (this.isClientOnline && !this.keepOffline) {
 			try {
 				this.removeCookies();
 			} catch (e) {
@@ -265,8 +292,8 @@ export class Status {
 		PouchDB.plugin(auth);
 		try {
 			if (
-				navigator.onLine &&
-				(await isOnline(server)) &&
+				this.isClientOnline &&
+				(await checkOnline(server)) &&
 				!this.keepOffline
 			) {
 				return !!(await new PouchDB(server, {
@@ -292,13 +319,24 @@ export class Status {
 		if (this.keepOffline) {
 			return;
 		}
-		isOnline(this.server).then(online => {
-			if (online && !this.isOnline) {
+		checkOnline(this.server).then(online => {
+			if (online && !this.isServerOnline) {
 				console.log("getting back online");
 				resync.resync();
 			}
-			this.isOnline = online;
+			this.isServerOnline = online;
 		});
+	}
+	reset() {
+		this.server = "";
+		this.currentUserID = "";
+		this.keepOffline = false;
+		this.step = LoginStep.initial;
+		this.isServerOnline = true;
+		this.isClientOnline = true;
+		this.isDropboxActive = false;
+		this.tryOffline = false;
+		this.loginType = "";
 	}
 }
 

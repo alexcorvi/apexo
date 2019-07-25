@@ -259,7 +259,7 @@ export class OrthoRecordsPanel extends React.Component<{
 					</Row>
 				</SectionComponent>
 				<SectionComponent title={text(`Records`)}>
-					{status.isOnline ? (
+					{status.isServerOnline ? (
 						status.isDropboxActive ? (
 							<div className="album">
 								{this.props.orthoCase.visits.length ? (

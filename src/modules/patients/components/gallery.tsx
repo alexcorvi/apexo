@@ -38,7 +38,7 @@ export class PatientGalleryPanel extends React.Component<
 	render() {
 		return (
 			<SectionComponent title={text(`Patient Gallery`)}>
-				{status.isOnline ? (
+				{status.isServerOnline ? (
 					status.isDropboxActive ? (
 						<div className="spg-p">
 							{this.props.patient.gallery.length === 0 ? (

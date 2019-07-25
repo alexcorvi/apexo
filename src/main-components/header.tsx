@@ -1,5 +1,5 @@
 import { Col, Row } from "@common-components";
-import { text } from "@core";
+import { status, text } from "@core";
 import { observer } from "mobx-react";
 import { Icon, IconButton, TooltipHost } from "office-ui-fabric-react";
 import * as React from "react";
@@ -17,7 +17,10 @@ export class HeaderView extends React.Component<{
 }> {
 	render() {
 		return (
-			<div className="header-component">
+			<div
+				className="header-component"
+				data-login-type={status.loginType}
+			>
 				<Row>
 					<Col span={8}>
 						<section className="menu-button">

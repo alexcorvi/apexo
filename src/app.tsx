@@ -2,7 +2,7 @@ import { hardReset, initializeIcons as initializeIconsA, reset, resync } from "@
 import * as core from "@core";
 import { MainView } from "@main-components";
 import * as modules from "@modules";
-import { store } from "@utils";
+import { connSetting, isClientOnline, store } from "@utils";
 import { observer } from "mobx-react";
 import { Fabric } from "office-ui-fabric-react";
 import * as React from "react";
@@ -27,7 +27,7 @@ const App = observer(() => (
 			isCurrentlyReSyncing={core.router.isCurrentlyReSyncing}
 			step={core.status.step}
 			currentNamespace={core.router.currentNamespace}
-			isOnline={core.status.isOnline}
+			isOnline={core.status.isServerOnline}
 			userTodayAppointments={core.user.todayAppointments}
 			userPanelVisible={core.user.isVisible}
 			menuVisible={core.menu.isVisible}
@@ -74,12 +74,17 @@ const App = observer(() => (
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
-(window as any).resetApp = () => {
+(window as any).resetApp = (retainLSL?: boolean) => {
 	return new Promise(async resolve => {
 		ReactDOM.unmountComponentAtNode(document.getElementById("root")!);
 		await reset.reset();
-		core.status.step = core.LoginStep.initial;
-		store.clear();
+		core.status.reset();
+		if (retainLSL) {
+			store.remove("no_server_mode");
+			store.remove("user_id");
+		} else {
+			store.clear();
+		}
 		ReactDOM.render(<App />, document.getElementById("root"), resolve);
 	});
 };
@@ -88,7 +93,7 @@ ReactDOM.render(<App />, document.getElementById("root"));
 	return new Promise(async resolve => {
 		ReactDOM.unmountComponentAtNode(document.getElementById("root")!);
 		await hardReset.hardReset();
-		core.status.step = core.LoginStep.initial;
+		core.status.reset();
 		store.clear();
 		ReactDOM.render(<App />, document.getElementById("root"), resolve);
 	});
@@ -97,3 +102,7 @@ ReactDOM.render(<App />, document.getElementById("root"));
 (window as any).resyncApp = async () => await resync.resync();
 
 (window as any).removeCookies = async () => await core.status.removeCookies();
+
+(window as any).emulateOffline = () => (connSetting.emulateOffline = true);
+(window as any).disableOfflineEmulation = () =>
+	(connSetting.emulateOffline = false);

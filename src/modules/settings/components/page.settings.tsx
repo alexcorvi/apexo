@@ -317,7 +317,7 @@ export class SettingsPage extends React.Component<
 							/>
 						</SectionComponent>
 						<SectionComponent title={text(`Backup and Restore`)}>
-							{status.isOnline ? (
+							{status.isServerOnline ? (
 								<div>
 									<DefaultButton
 										onClick={() => {
@@ -377,7 +377,7 @@ export class SettingsPage extends React.Component<
 						<SectionComponent
 							title={text(`Automated Backup and Restore`)}
 						>
-							{status.isOnline ? (
+							{status.isServerOnline ? (
 								status.isDropboxActive ? (
 									<div>
 										<Dropdown

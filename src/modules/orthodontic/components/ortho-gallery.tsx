@@ -85,7 +85,7 @@ export class OrthoGalleryPanel extends React.Component<{
 				)}
 
 				<SectionComponent title={text(`Cephalometric Analysis`)}>
-					{status.isOnline ? (
+					{status.isServerOnline ? (
 						status.isDropboxActive ? (
 							<div>
 								{this.props.orthoCase.cephalometricHistory.map(

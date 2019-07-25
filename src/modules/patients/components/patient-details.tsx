@@ -84,7 +84,7 @@ export class PatientDetailsPanel extends React.Component<{
 							</div>
 						</Col>
 					</Row>
-					{status.isOnline && status.isDropboxActive ? (
+					{status.isServerOnline && status.isDropboxActive ? (
 						<div>
 							<Label>Avatar photo</Label>
 							<div className="thumbs">

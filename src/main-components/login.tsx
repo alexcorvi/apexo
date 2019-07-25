@@ -1,5 +1,5 @@
-import { text } from "@core";
-import { store } from "@utils";
+import { status, text } from "@core";
+import { second, store } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { DefaultButton, MessageBar, MessageBarType, PrimaryButton, TextField } from "office-ui-fabric-react";
@@ -45,7 +45,7 @@ export class LoginView extends React.Component<{
 	@observable initiallyChecked: boolean = false;
 
 	@computed get impossibleToLogin() {
-		return !navigator.onLine && !store.found("LSL_hash");
+		return !status.isClientOnline && !store.found("LSL_hash");
 	}
 
 	componentWillMount() {
@@ -89,7 +89,11 @@ export class LoginView extends React.Component<{
 						{this.initiallyChecked ? (
 							<div className="login-step">
 								<div
-									className={navigator.onLine ? "hidden" : ""}
+									className={
+										status.isClientOnline
+											? "hidden"
+											: "offline"
+									}
 								>
 									<MessageBar
 										messageBarType={MessageBarType.warning}
@@ -106,7 +110,9 @@ export class LoginView extends React.Component<{
 								<hr />
 
 								<div
-									className={navigator.onLine ? "" : "hidden"}
+									className={
+										status.isClientOnline ? "" : "hidden"
+									}
 								>
 									<div
 										style={{
