@@ -49,6 +49,7 @@ After cloning the repository, run `yarn install`, this will install the required
 
 ##### Prequisites
 
+-   Internet connection.
 -   CouchDB installed and running on `http://localhost:5984`.
 -   Admin username `test`, with password `test`.
 -   Application being served on `http://localhost:8000` (preferably on development mode).
