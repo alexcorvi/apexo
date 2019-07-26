@@ -2,9 +2,10 @@
 
 ![Apexo.app](https://i.imgur.com/Vkdbzb3.png)
 
-![license](https://img.shields.io/github/license/alexcorvi/apexo.svg)
-![David](https://img.shields.io/david/alexcorvi/apexo.svg)
-![David](https://img.shields.io/david/dev/alexcorvi/apexo.svg)
+[![Cypress.io tests](https://img.shields.io/badge/cypress.io-tests-green.svg?style=flat-square)](https://cypress.io)
+![license](https://img.shields.io/github/license/alexcorvi/apexo.svg?style=flat-square)
+![David](https://img.shields.io/david/alexcorvi/apexo.svg?style=flat-square)
+![David](https://img.shields.io/david/dev/alexcorvi/apexo.svg?style=flat-square)
 
 A web/desktop application to manage your dental clinic practice.
 
