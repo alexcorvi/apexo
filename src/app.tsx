@@ -88,6 +88,11 @@ ReactDOM.render(<App />, document.getElementById("root"));
 
 (window as any).removeCookies = async () => await core.status.removeCookies();
 
-(window as any).emulateOffline = () => (connSetting.emulateOffline = true);
-(window as any).disableOfflineEmulation = () =>
-	(connSetting.emulateOffline = false);
+(window as any).emulateOffline = () => {
+	connSetting.emulateOffline = true;
+	localStorage.setItem("emulate_offline", "1");
+};
+(window as any).disableOfflineEmulation = () => {
+	connSetting.emulateOffline = false;
+	localStorage.removeItem("emulate_offline");
+};
