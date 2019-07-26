@@ -81,6 +81,7 @@
 		"analyze": "bash scripts/analyze.sh",
 		"analyze-prod": "bash scripts/analyze-prod.sh",
 		"list": "npm ls",
-		"jest": "./node_modules/.bin/jest"
+		"jest": "node ./node_modules/.bin/jest",
+		"cypress": "node ./node_modules/.bin/cypress open"
 	}
 }
