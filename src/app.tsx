@@ -74,21 +74,6 @@ const App = observer(() => (
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
-(window as any).resetApp = (retainLSL?: boolean) => {
-	return new Promise(async resolve => {
-		ReactDOM.unmountComponentAtNode(document.getElementById("root")!);
-		await reset.reset();
-		core.status.reset();
-		if (retainLSL) {
-			store.remove("no_server_mode");
-			store.remove("user_id");
-		} else {
-			store.clear();
-		}
-		ReactDOM.render(<App />, document.getElementById("root"), resolve);
-	});
-};
-
 (window as any).hardResetApp = () => {
 	return new Promise(async resolve => {
 		ReactDOM.unmountComponentAtNode(document.getElementById("root")!);
