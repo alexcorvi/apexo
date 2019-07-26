@@ -58,7 +58,7 @@ export class LoginView extends React.Component<{
 		return (
 			<div className="login-component">
 				{this.impossibleToLogin ? (
-					<div className="impossible">
+					<div data-testid="impossible">
 						<MessageBar messageBarType={MessageBarType.error}>
 							You're offline and unable to login
 							<br />
@@ -156,7 +156,7 @@ export class LoginView extends React.Component<{
 									onChange={(e, v) =>
 										(this.usernameFieldValue = v!)
 									}
-									className="input-identification"
+									data-testid="input-identification"
 								/>
 								<TextField
 									name="password"
@@ -167,7 +167,7 @@ export class LoginView extends React.Component<{
 									onChange={(e, v) =>
 										(this.passwordFieldValue = v!)
 									}
-									className="input-password"
+									data-testid="input-password"
 								/>
 								<PrimaryButton
 									iconProps={{
@@ -175,7 +175,6 @@ export class LoginView extends React.Component<{
 									}}
 									text={text("Login")}
 									disabled={this.disableInputs}
-									className="m-t-15 m-b-15 proceed-login"
 									onClick={async () => {
 										if (
 											!(
@@ -204,13 +203,14 @@ export class LoginView extends React.Component<{
 										if (typeof result !== "boolean") {
 											this.errorMessage = result;
 										}
+									className="m-t-15 m-b-15"
+									data-testid="proceed-primary"
 									}}
 								/>
 								{this.props.tryOffline ? (
 									<PrimaryButton
 										text={text("Access offline")}
 										disabled={this.disableInputs}
-										className="m-t-15 m-b-15 m-l-5 m-r-5 proceed-offline"
 										onClick={async () => {
 											if (
 												!(
@@ -239,6 +239,8 @@ export class LoginView extends React.Component<{
 											if (typeof result !== "boolean") {
 												this.errorMessage = result;
 											}
+										className="m-t-15 m-b-15 m-l-5 m-r-5"
+										data-testid="proceed-offline"
 										}}
 									/>
 								) : (
@@ -259,7 +261,7 @@ export class LoginView extends React.Component<{
 						)}
 						{this.errorMessage ? (
 							<MessageBar
-								className="error-msg"
+								data-testid="error-msg"
 								messageBarType={MessageBarType.error}
 							>
 								{this.errorMessage}
