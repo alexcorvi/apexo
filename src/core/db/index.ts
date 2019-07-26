@@ -83,7 +83,7 @@ export const hardReset: {
 					clearInterval(checkInterval);
 					resolve(true);
 				}
-			}, 300);
+			}, 10);
 		});
 	}
 };
