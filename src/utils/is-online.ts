@@ -1,7 +1,7 @@
 import { checkServer } from "@utils";
 import isClientOnlineLib from "is-online";
 export const connSetting = {
-	emulateOffline: false
+	emulateOffline: !!localStorage.getItem("emulate_offline")
 };
 export async function isOnline(server: string) {
 	if (!(await isClientOnline())) {

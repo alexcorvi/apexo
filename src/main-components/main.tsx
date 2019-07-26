@@ -144,7 +144,11 @@ export class MainView extends React.Component<{
 		if (this.props.step === LoginStep.allDone) {
 			return (
 				<div className="main-component">
-					<div key="router" id="router-outlet">
+					<div
+						key="router"
+						id="router-outlet"
+						data-current-namespace={this.props.currentNamespace.toLowerCase()}
+					>
 						<PageLoader
 							key={this.props.currentNamespace}
 							pageComponent={async () => {

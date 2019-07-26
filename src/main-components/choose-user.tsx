@@ -24,7 +24,7 @@ export class ChooseUserComponent extends React.Component<
 				{this.props.users.length === 0 ? (
 					<div id="create-user">
 						<TextField
-							id="new-user-name"
+							data-testid="new-user-name"
 							value={this.newDocName}
 							onChange={(ev, v) => (this.newDocName = v!)}
 							label={text("Register as new staff member")}
@@ -42,6 +42,7 @@ export class ChooseUserComponent extends React.Component<
 						<h3>{text("Who are you?")}</h3>
 						{this.props.users.map(user => (
 							<div
+								data-testid="user-chooser"
 								className="m-t-5 p-5 user-chooser pointer"
 								onClick={() => {
 									if (user.pin) {

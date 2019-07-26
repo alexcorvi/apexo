@@ -30,7 +30,7 @@ export class HeaderView extends React.Component<{
 								iconProps={{ iconName: "GlobalNavButton" }}
 								title="Menu"
 								ariaLabel="Menu"
-								id="expand-menu"
+								data-testid="expand-menu"
 							/>
 						</section>
 					</Col>
@@ -69,7 +69,7 @@ export class HeaderView extends React.Component<{
 								<IconButton
 									onClick={this.props.expandUser}
 									iconProps={{ iconName: "Contact" }}
-									id="expand-user"
+									data-testid="expand-user"
 								/>
 							</TooltipHost>
 						</section>

@@ -256,6 +256,7 @@ export class SettingsPage extends React.Component<
 							title={text(`Optional Modules and Features`)}
 						>
 							<Toggle
+								data-testid="prescriptions-toggle"
 								onText={text("Prescriptions module enabled")}
 								offText={text("Prescriptions module disabled")}
 								defaultChecked={
@@ -272,6 +273,7 @@ export class SettingsPage extends React.Component<
 								disabled={!this.canEdit}
 							/>
 							<Toggle
+								data-testid="ortho-toggle"
 								onText={text("Orthodontic module enabled")}
 								offText={text("Orthodontic module disabled")}
 								defaultChecked={
@@ -288,6 +290,7 @@ export class SettingsPage extends React.Component<
 								disabled={!this.canEdit}
 							/>
 							<Toggle
+								data-testid="stats-toggle"
 								onText={text("Statistics module enabled")}
 								offText={text("Statistics module disabled")}
 								defaultChecked={
@@ -302,6 +305,7 @@ export class SettingsPage extends React.Component<
 								disabled={!this.canEdit}
 							/>
 							<Toggle
+								data-testid="time-tracking-toggle"
 								onText={text("Time tracking enabled")}
 								offText={text("Time tracking disabled")}
 								defaultChecked={

@@ -370,6 +370,7 @@ export class StaffPage extends React.Component<{
 									</Col>
 									<Col span={4} className="close">
 										<IconButton
+											data-testid="close-panel"
 											iconProps={{ iconName: "cancel" }}
 											onClick={() => {
 												this.selectedId = "";

@@ -186,6 +186,7 @@ export class PatientsPage extends React.Component<{
 										</Col>
 										<Col span={2} className="close">
 											<IconButton
+												data-testid="close-panel"
 												iconProps={{
 													iconName: "cancel"
 												}}

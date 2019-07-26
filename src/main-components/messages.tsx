@@ -14,6 +14,7 @@ export class MessagesView extends React.Component<{
 						<div
 							key={msg.id}
 							className={`message bottom-bounce m-id-${msg.id}`}
+							data-testid="message"
 						>
 							<Icon iconName={"Important"} />
 							<span className="message-inner">{msg.text}</span>

@@ -36,7 +36,7 @@ export class ModalsView extends React.Component<{
 								onChange={(e, val) => {
 									this.inputValue = val!;
 								}}
-								id="modal-input"
+								data-testid="modal-input"
 							/>
 						) : (
 							""
@@ -51,7 +51,7 @@ export class ModalsView extends React.Component<{
 								}}
 								iconProps={{ iconName: "CheckMark" }}
 								text={text("Confirm")}
-								id="confirm-modal-btn"
+								data-testid="modal-confirm"
 							/>
 						) : (
 							""
