@@ -1,5 +1,6 @@
 import { PageLoader } from "@common-components";
 import { LoginStep, MenuItem, MessageInterface, ModalInterface, text } from "@core";
+import * as core from "@core";
 import { MessagesView, ModalsView } from "@main-components";
 import { Appointment, PrescriptionItem, StaffMember } from "@modules";
 import { computed, observable } from "mobx";
@@ -213,7 +214,7 @@ export class MainView extends React.Component<{
 						const newStaffMember = new StaffMember();
 						newStaffMember.name = name;
 						this.props.addStaffMember(newStaffMember);
-						this.props.setUser(newStaffMember._id);
+						core.status.setUser(newStaffMember._id);
 					}}
 					showMessage={obj => this.props.newMessage(obj)}
 					showModal={obj => this.props.newModal(obj)}

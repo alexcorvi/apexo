@@ -1,4 +1,4 @@
-import { text } from "@core";
+import { menu, text } from "@core";
 import { observer } from "mobx-react";
 import { Icon, Nav, Panel, PanelType, TooltipHost } from "office-ui-fabric-react";
 import * as React from "react";
@@ -32,7 +32,7 @@ export class MenuView extends React.Component<{
 		return (
 			<div className="menu-component">
 				<div className="visible-lg visible-md icon-list">
-					{this.props.items.map((item, index) => {
+					{menu.sortedItems.map((item, index) => {
 						const pageDisplayName = text(item.name);
 						return (
 							<TooltipHost
@@ -81,6 +81,7 @@ export class MenuView extends React.Component<{
 									return {
 										icon: x.icon,
 										name: text(x.name),
+										title: x.name.toLocaleLowerCase(),
 										key: x.key,
 										url: x.url,
 										onClick: x.onClick,
