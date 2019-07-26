@@ -54,6 +54,40 @@ export class LoginView extends React.Component<{
 			.finally(() => (this.initiallyChecked = true));
 	}
 
+	async login(offline?: boolean) {
+		if (
+			!(
+				this.usernameFieldValue &&
+				this.passwordFieldValue &&
+				this.serverFieldValue
+			)
+		) {
+			this.errorMessage = "All fields are necessary";
+			return;
+		}
+		this.errorMessage = "";
+		const result = offline
+			? await this.props.loginWithCredentialsOffline({
+					username: this.usernameFieldValue,
+					password: this.passwordFieldValue,
+					server: this.serverFieldValue.replace(
+						/([^\/])\/[^\/].+/,
+						"$1"
+					)
+			  })
+			: await this.props.loginWithCredentials({
+					username: this.usernameFieldValue,
+					password: this.passwordFieldValue,
+					server: this.serverFieldValue.replace(
+						/([^\/])\/[^\/].+/,
+						"$1"
+					)
+			  });
+		if (typeof result !== "boolean") {
+			this.errorMessage = result;
+		}
+	}
+
 	render() {
 		return (
 			<div className="login-component">
@@ -92,7 +126,7 @@ export class LoginView extends React.Component<{
 									className={
 										status.isClientOnline
 											? "hidden"
-											: "offline"
+											: "offline-msg"
 									}
 								>
 									<MessageBar
@@ -157,6 +191,11 @@ export class LoginView extends React.Component<{
 										(this.usernameFieldValue = v!)
 									}
 									data-testid="input-identification"
+									onKeyDown={ev => {
+										if (ev.keyCode === 13) {
+											this.login();
+										}
+									}}
 								/>
 								<TextField
 									name="password"
@@ -168,6 +207,11 @@ export class LoginView extends React.Component<{
 										(this.passwordFieldValue = v!)
 									}
 									data-testid="input-password"
+									onKeyDown={ev => {
+										if (ev.keyCode === 13) {
+											this.login();
+										}
+									}}
 								/>
 								<PrimaryButton
 									iconProps={{
@@ -175,72 +219,20 @@ export class LoginView extends React.Component<{
 									}}
 									text={text("Login")}
 									disabled={this.disableInputs}
-									onClick={async () => {
-										if (
-											!(
-												this.usernameFieldValue &&
-												this.passwordFieldValue &&
-												this.serverFieldValue
-											)
-										) {
-											this.errorMessage =
-												"All fields are necessary";
-											return;
-										}
-										this.errorMessage = "";
-										const result = await this.props.loginWithCredentials(
-											{
-												username: this
-													.usernameFieldValue,
-												password: this
-													.passwordFieldValue,
-												server: this.serverFieldValue.replace(
-													/([^\/])\/[^\/].+/,
-													"$1"
-												)
-											}
-										);
-										if (typeof result !== "boolean") {
-											this.errorMessage = result;
-										}
 									className="m-t-15 m-b-15"
 									data-testid="proceed-primary"
+									onClick={() => {
+										this.login();
 									}}
 								/>
 								{this.props.tryOffline ? (
 									<PrimaryButton
 										text={text("Access offline")}
 										disabled={this.disableInputs}
-										onClick={async () => {
-											if (
-												!(
-													this.usernameFieldValue &&
-													this.passwordFieldValue &&
-													this.serverFieldValue
-												)
-											) {
-												this.errorMessage =
-													"All fields are necessary";
-												return;
-											}
-											this.errorMessage = "";
-											const result = await this.props.loginWithCredentialsOffline(
-												{
-													username: this
-														.usernameFieldValue,
-													password: this
-														.passwordFieldValue,
-													server: this.serverFieldValue.replace(
-														/([^\/])\/[^\/].+/,
-														"$1"
-													)
-												}
-											);
-											if (typeof result !== "boolean") {
-												this.errorMessage = result;
-											}
 										className="m-t-15 m-b-15 m-l-5 m-r-5"
 										data-testid="proceed-offline"
+										onClick={() => {
+											this.login(true);
 										}}
 									/>
 								) : (

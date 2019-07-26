@@ -28,6 +28,11 @@ export class ChooseUserComponent extends React.Component<
 							value={this.newDocName}
 							onChange={(ev, v) => (this.newDocName = v!)}
 							label={text("Register as new staff member")}
+							onKeyDown={ev => {
+								if (ev.keyCode === 13) {
+									this.props.onCreatingNew(this.newDocName);
+								}
+							}}
 						/>
 						<PrimaryButton
 							id="create-new-user-btn"
