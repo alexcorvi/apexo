@@ -34,35 +34,28 @@ After cloning the repository, run `yarn install`, this will install the required
 -   `yarn run build-desktop`: will create a desktop electron application that loads the URL: `web.apexo.app`.
 -   `yarn run upload`: will upload the files in `dist/application/` to `web.apexo.app` and `demo.apexo.app`.
 -   `yarn run deploy`: will build the application in production mode and then upload it just like the aforementioned script.
+-   `yarn run jest`: will run unit tests.
+-   `yarn run cypress`: will run e2e tests.
 
 ### Testing
 
-This project uses end-to-end/integration testing solely. The testing code, though found in the subdirectory `testing`, is a separate project with an independent `package.json`.
+-   This project uses end-to-end/integration testing in addition to unit tests.
+
+#### Unit testing
+
+-   Using Jest, run `yarn run jest`.
+
+#### E2E Testing
 
 ##### Prequisites
 
 -   CouchDB installed and running on `http://localhost:5984`.
+-   Admin username `test`, with password `test`.
 -   Application being served on `http://localhost:8000` (preferably on development mode).
 
 ##### Running tests
 
-navigate to `testing/` and run `npm run start`, webpack will build a new `test.js` file and an electron application will run the application and all the tests will run consecutively.
-
-The test results will be displayed on the console of the electron application.
-
-##### Adding new tests
-
-the `testing/tests` subdirectory have the following structure:
-
-```
-- tests
-    - [dir: group of tests]
-        - [file: test suite]
-```
-
-Each test suite must export an object of test functions. Test suites must implement the `testing/tests/suite.interface.ts` interface.
-
-Each test suite must be imported in the `testing/tests/index.ts` and located in its appropriate group.
+-   Using cypress, run `yarn run cypress`.
 
 ---
 
