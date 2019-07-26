@@ -20,21 +20,11 @@ export const resync: {
 } = {
 	modules: [],
 	resync: async function() {
-		return new Promise<boolean>(resolve => {
-			let done = 0;
-			resync.modules.forEach(module => {
-				module
-					.resync()
-					.then(() => done++)
-					.catch(() => done++);
-			});
-			const checkInterval = setInterval(() => {
-				if (done === resync.modules.length) {
-					resolve(true);
-					clearInterval(checkInterval);
-				}
-			}, 300);
-		});
+		for (let index = 0; index < resync.modules.length; index++) {
+			await resync.modules[index].resync();
+		}
+		console.log("Resync is done");
+		return true;
 	}
 };
 
@@ -44,22 +34,11 @@ export const reset: {
 } = {
 	modules: [],
 	reset: async function() {
-		return new Promise<boolean>(resolve => {
-			let done = 0;
-			reset.modules.forEach(module => {
-				module
-					.reset()
-					.then(() => done++)
-					.catch(() => done++);
-			});
-			const checkInterval = setInterval(() => {
-				if (done === reset.modules.length) {
-					console.log("resetting done");
-					clearInterval(checkInterval);
-					resolve(true);
-				}
-			}, 300);
-		});
+		for (let index = 0; index < reset.modules.length; index++) {
+			await reset.modules[index].reset();
+		}
+		console.log("Resetting is done");
+		return true;
 	}
 };
 
@@ -69,68 +48,39 @@ export const hardReset: {
 } = {
 	modules: [],
 	hardReset: async function() {
-		return new Promise<boolean>(resolve => {
-			let done = 0;
-			hardReset.modules.forEach(module => {
-				module
-					.hardReset()
-					.then(() => done++)
-					.catch(() => done++);
-			});
-			const checkInterval = setInterval(() => {
-				if (done === hardReset.modules.length) {
-					console.log("hard resetting done");
-					clearInterval(checkInterval);
-					resolve(true);
-				}
-			}, 10);
-		});
+		for (let index = 0; index < hardReset.modules.length; index++) {
+			await hardReset.modules[index].hardReset();
+		}
+		console.log("Hard resetting is done");
+		return true;
 	}
 };
 
 export const compact: {
-	compactMethods: Array<() => Promise<void>>;
+	modules: Array<() => Promise<void>>;
 	compact: () => Promise<boolean>;
 } = {
-	compactMethods: [],
+	modules: [],
 	compact: async function() {
-		return new Promise<boolean>(resolve => {
-			let done = 0;
-			compact.compactMethods.forEach(compactMethod => {
-				compactMethod()
-					.then(() => done++)
-					.catch(() => done++);
-			});
-			const checkInterval = setInterval(() => {
-				if (done === compact.compactMethods.length) {
-					clearInterval(checkInterval);
-					resolve(true);
-				}
-			}, 300);
-		});
+		for (let index = 0; index < compact.modules.length; index++) {
+			await compact.modules[index]();
+		}
+		console.log("Compaction is done");
+		return true;
 	}
 };
 
 export const destroyLocal: {
-	destroyMethods: Array<() => Promise<void>>;
+	modules: Array<() => Promise<void>>;
 	destroy: () => Promise<boolean>;
 } = {
-	destroyMethods: [],
+	modules: [],
 	destroy: async function() {
-		return new Promise<boolean>(resolve => {
-			let done = 0;
-			destroyLocal.destroyMethods.forEach(destroyMethod => {
-				destroyMethod()
-					.then(() => done++)
-					.catch(() => done++);
-			});
-			const checkInterval = setInterval(() => {
-				if (done === destroyLocal.destroyMethods.length) {
-					clearInterval(checkInterval);
-					resolve(true);
-				}
-			}, 300);
-		});
+		for (let index = 0; index < destroyLocal.modules.length; index++) {
+			await destroyLocal.modules[index]();
+		}
+		console.log("Destroying is done");
+		return true;
 	}
 };
 
@@ -245,7 +195,7 @@ export async function connectToDB(
 			}
 		});
 
-		compact.compactMethods.push(async () => {
+		compact.modules.push(async () => {
 			console.log(
 				"local compaction on",
 				dbName,
@@ -260,7 +210,7 @@ export async function connectToDB(
 			}
 		});
 
-		destroyLocal.destroyMethods.push(async () => {
+		destroyLocal.modules.push(async () => {
 			console.log("destroying", dbName);
 			await localDatabase.destroy();
 			console.log("destroyed", dbName);
