@@ -56,7 +56,7 @@ describe("Logging in while online", () => {
 	});
 });
 
-describe("While offline", () => {
+describe("Logging in while online", () => {
 	describe("With server", () => {
 		beforeEach(() => {
 			cy.resetEverything();
@@ -94,12 +94,14 @@ describe("While offline", () => {
 					.clear()
 					.type("test");
 				cy.getByTestId("proceed-primary").click();
+				cy.wait(2000);
 				cy.ensureLoginType("login-credentials-offline");
 			});
 		});
 		it("Using active hash with timestamp", () => {
 			cy.offline();
 			cy.reload();
+			cy.wait(2000);
 			cy.ensureLoginType("initial-lsl-hash-ts");
 		});
 	});
