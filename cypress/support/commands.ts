@@ -58,7 +58,6 @@ Cypress.Commands.add("resetEverything", type => {
 });
 
 Cypress.Commands.add("goToPage", namespace => {
-	console.log(namespace);
 	cy.getByTestId("expand-menu").click();
 	cy.get(`[title="${namespace.toLowerCase()}"].ms-Nav-link`).click();
 	cy.ensurePage(namespace);
