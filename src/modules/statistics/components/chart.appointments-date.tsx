@@ -1,6 +1,7 @@
 import { BarChartComponent } from "@common-components";
 import { text } from "@core";
 import { Appointment } from "@modules";
+import * as modules from "@modules";
 import { formatDate } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
@@ -12,7 +13,6 @@ export class AppointmentsByDateChart extends React.Component<{
 		appointments: Appointment[];
 		day: Date;
 	}[];
-	dateFormat: string;
 }> {
 	@computed
 	get values() {
@@ -36,7 +36,12 @@ export class AppointmentsByDateChart extends React.Component<{
 				val.appointments.filter(a => a.isOutstanding).length
 			);
 			acc.missed.push(val.appointments.filter(a => a.isMissed).length);
-			acc.days.push(formatDate(val.day.getTime(), this.props.dateFormat));
+			acc.days.push(
+				formatDate(
+					val.day.getTime(),
+					modules.setting!.getSetting("date_format")
+				)
+			);
 			return acc;
 		}, initialValue);
 	}

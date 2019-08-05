@@ -1,4 +1,4 @@
-export * from "./class.member";
-export * from "./data.staff";
-export * from "./interface.member-json";
+export * from "./model.member";
+export * from "./store.staff";
+export * from "./schema.member";
 export * from "./namespace.staff";

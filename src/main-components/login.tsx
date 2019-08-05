@@ -1,4 +1,5 @@
 import { status, text } from "@core";
+import * as core from "@core";
 import { second, store } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -6,29 +7,7 @@ import { DefaultButton, MessageBar, MessageBarType, PrimaryButton, TextField } f
 import * as React from "react";
 
 @observer
-export class LoginView extends React.Component<{
-	tryOffline: boolean;
-	initialCheck(server: string): Promise<void>;
-	loginWithCredentials({
-		username,
-		password,
-		server
-	}: {
-		username: string;
-		password: string;
-		server: string;
-	}): Promise<boolean | string>;
-	loginWithCredentialsOffline({
-		username,
-		password,
-		server
-	}: {
-		username: string;
-		password: string;
-		server: string;
-	}): Promise<boolean | string>;
-	startNoServer(): Promise<void>;
-}> {
+export class LoginView extends React.Component {
 	@observable usernameFieldValue = "";
 	@observable passwordFieldValue = "";
 	@observable serverFieldValue =
@@ -45,11 +24,15 @@ export class LoginView extends React.Component<{
 	@observable initiallyChecked: boolean = false;
 
 	@computed get impossibleToLogin() {
-		return !status.isClientOnline && !store.found("LSL_hash");
+		return (
+			!status.isOnline.server &&
+			!status.isOnline.client &&
+			!store.found("LSL_hash")
+		);
 	}
 
-	componentWillMount() {
-		this.props
+	componentDidMount() {
+		core.status
 			.initialCheck(this.serverFieldValue)
 			.finally(() => (this.initiallyChecked = true));
 	}
@@ -67,7 +50,7 @@ export class LoginView extends React.Component<{
 		}
 		this.errorMessage = "";
 		const result = offline
-			? await this.props.loginWithCredentialsOffline({
+			? await core.status.loginWithCredentialsOffline({
 					username: this.usernameFieldValue,
 					password: this.passwordFieldValue,
 					server: this.serverFieldValue.replace(
@@ -75,7 +58,7 @@ export class LoginView extends React.Component<{
 						"$1"
 					)
 			  })
-			: await this.props.loginWithCredentials({
+			: await core.status.loginWithCredentials({
 					username: this.usernameFieldValue,
 					password: this.passwordFieldValue,
 					server: this.serverFieldValue.replace(
@@ -111,7 +94,7 @@ export class LoginView extends React.Component<{
 							text="no-server mode"
 							className="no-server-mode"
 							onClick={() => {
-								this.props.startNoServer();
+								core.status.startNoServer();
 							}}
 							iconProps={{
 								iconName: "StatusErrorFull"
@@ -124,7 +107,7 @@ export class LoginView extends React.Component<{
 							<div className="login-step">
 								<div
 									className={
-										status.isClientOnline
+										status.isOnline.server
 											? "hidden"
 											: "offline-msg"
 									}
@@ -145,7 +128,7 @@ export class LoginView extends React.Component<{
 
 								<div
 									className={
-										status.isClientOnline ? "" : "hidden"
+										status.isOnline.server ? "" : "hidden"
 									}
 								>
 									<div
@@ -225,7 +208,7 @@ export class LoginView extends React.Component<{
 										this.login();
 									}}
 								/>
-								{this.props.tryOffline ? (
+								{core.status.tryOffline ? (
 									<PrimaryButton
 										text={text("Access offline")}
 										disabled={this.disableInputs}
@@ -239,7 +222,7 @@ export class LoginView extends React.Component<{
 									""
 								)}
 								<DefaultButton
-									onClick={this.props.startNoServer}
+									onClick={core.status.startNoServer}
 									className="no-server-mode"
 									iconProps={{
 										iconName: "StatusErrorFull"

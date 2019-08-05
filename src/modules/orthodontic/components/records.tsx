@@ -6,10 +6,11 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
+import * as core from "@core";
 import { imagesTable, ModalInterface, ORTHO_RECORDS_DIR, status, text } from "@core";
 import { OrthoCase, Photo, StaffMember, Visit } from "@modules";
+import * as modules from "@modules";
 import { day, formatDate, num } from "@utils";
-import { diff } from "fast-array-diff";
 import { computed, observable, observe } from "mobx";
 import { observer } from "mobx-react";
 import {
@@ -49,16 +50,6 @@ const viewsTerms = [
 @observer
 export class OrthoRecordsPanel extends React.Component<{
 	orthoCase: OrthoCase;
-	currentUser: StaffMember;
-	dateFormat: string;
-	getFile: (path: string) => Promise<string>;
-	removeFile: (path: string) => Promise<any>;
-	saveFile: (obj: {
-		blob: Blob;
-		ext: string;
-		dir: string;
-	}) => Promise<string>;
-	addModal: (modal: ModalInterface) => void;
 }> {
 	@observable selectedPhotoId: string = "";
 	@observable zoomedColumn: number = -1;
@@ -75,7 +66,7 @@ export class OrthoRecordsPanel extends React.Component<{
 	@observable openCallouts: string[] = [];
 
 	@computed get canEdit() {
-		return this.props.currentUser.canEditOrtho;
+		return core.user.currentUser!.canEditOrtho;
 	}
 
 	@computed get patientAppointments() {
@@ -121,7 +112,7 @@ export class OrthoRecordsPanel extends React.Component<{
 	}
 
 	async removeImage(path: string) {
-		await this.props.removeFile(path);
+		await core.files.remove(path);
 		return;
 	}
 
@@ -167,7 +158,6 @@ export class OrthoRecordsPanel extends React.Component<{
 						value={this.props.orthoCase.treatmentPlan_appliance}
 						onChange={val => {
 							this.props.orthoCase.treatmentPlan_appliance = val;
-							this.tu();
 						}}
 						disabled={!this.canEdit}
 					/>
@@ -193,7 +183,9 @@ export class OrthoRecordsPanel extends React.Component<{
 												key: date.date.toString(),
 												text: `${formatDate(
 													date.date,
-													this.props.dateFormat
+													modules.setting!.getSetting(
+														"date_format"
+													)
 												)} ${
 													date.treatmentType
 														? `, ${
@@ -234,7 +226,9 @@ export class OrthoRecordsPanel extends React.Component<{
 												key: date.date.toString(),
 												text: `${formatDate(
 													date.date,
-													this.props.dateFormat
+													modules.setting!.getSetting(
+														"date_format"
+													)
 												)} ${
 													date.treatmentType
 														? `, ${
@@ -259,8 +253,8 @@ export class OrthoRecordsPanel extends React.Component<{
 					</Row>
 				</SectionComponent>
 				<SectionComponent title={text(`Records`)}>
-					{status.isServerOnline ? (
-						status.isDropboxActive ? (
+					{status.isOnline.server ? (
+						status.isOnline.dropbox ? (
 							<div className="album">
 								{this.props.orthoCase.visits.length ? (
 									<table>
@@ -399,9 +393,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																			visit.visitNumber
 																		}, ${formatDate(
 																			visit.date,
-																			this
-																				.props
-																				.dateFormat
+																			modules.setting!.getSetting(
+																				"date_format"
+																			)
 																		)}`}
 																	>
 																		<IconButton
@@ -468,7 +462,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																									].visitNumber = num(
 																										val!
 																									);
-																									this.tu();
 																								}}
 																							/>
 																						) : (
@@ -500,9 +493,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																											key: date.date.toString(),
 																											text: `${formatDate(
 																												date.date,
-																												this
-																													.props
-																													.dateFormat
+																												modules.setting!.getSetting(
+																													"date_format"
+																												)
 																											)} ${
 																												date.treatmentType
 																													? `, ${
@@ -523,7 +516,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																										newValue!
 																											.key
 																									);
-																									this.tu();
 																								}}
 																							/>
 																						) : (
@@ -531,9 +523,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																								"Date"
 																							)}: ${formatDate(
 																								visit.date,
-																								this
-																									.props
-																									.dateFormat
+																								modules.setting!.getSetting(
+																									"date_format"
+																								)
 																							)}`
 																						)}
 																					</div>
@@ -567,7 +559,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																									this.props.orthoCase.visits[
 																										visitIndex
 																									].appliance = val!;
-																									this.tu();
 																								}}
 																							/>
 																						) : (
@@ -612,7 +603,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																									this.props.orthoCase.visits[
 																										visitIndex
 																									].target = val!;
-																									this.tu();
 																								}}
 																							/>
 																						) : (
@@ -821,7 +811,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																																].visitNumber = num(
 																																	val!
 																																);
-																																this.tu();
 																															}}
 																														/>
 																													) : (
@@ -853,9 +842,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																																		key: date.date.toString(),
 																																		text: `${formatDate(
 																																			date.date,
-																																			this
-																																				.props
-																																				.dateFormat
+																																			modules.setting!.getSetting(
+																																				"date_format"
+																																			)
 																																		)} ${
 																																			date.treatmentType
 																																				? `, ${
@@ -876,7 +865,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																																	newValue!
 																																		.key
 																																);
-																																this.tu();
 																															}}
 																														/>
 																													) : (
@@ -884,9 +872,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																															"Date"
 																														)}: ${formatDate(
 																															visit.date,
-																															this
-																																.props
-																																.dateFormat
+																															modules.setting!.getSetting(
+																																"date_format"
+																															)
 																														)}`
 																													)}
 																												</div>
@@ -920,7 +908,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																																this.props.orthoCase.visits[
 																																	visitIndex
 																																].appliance = val!;
-																																this.tu();
 																															}}
 																														/>
 																													) : (
@@ -967,7 +954,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																																].photos[
 																																	photoIndex
 																																].comment = val!;
-																																this.tu();
 																															}}
 																														/>
 																													) : (
@@ -1085,7 +1071,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																													] = new Photo();
 																													this.selectedPhotoId =
 																														"";
-																													this.tu();
 																												}
 																											}
 																										]}
@@ -1104,10 +1089,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																				) : (
 																					<PickAndUploadComponent
 																						{...{
-																							saveFile: obj =>
-																								this.props.saveFile(
-																									obj
-																								),
 																							crop: true,
 																							allowMultiple: false,
 																							accept:
@@ -1136,7 +1117,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																									imagesTable.fetchImage(
 																										e[0]
 																									);
-																									this.tu();
 																								}
 																							},
 																							onStartLoading: () => {
@@ -1198,7 +1178,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																					"DeleteRows"
 																			}}
 																			onClick={() => {
-																				this.props.addModal(
+																				core.modals.newModal(
 																					{
 																						text: text(
 																							"This visit data will be deleted along with all photos and notes"
@@ -1214,7 +1194,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																										photo.photoID
 																									)
 																							);
-																							this.tu();
 																						},
 																						showCancelButton: true,
 																						showConfirmButton: true,
@@ -1283,9 +1262,10 @@ export class OrthoRecordsPanel extends React.Component<{
 													)[0].visitNumber + 1
 											: 1;
 										this.props.orthoCase.visits.push(
-											new Visit(undefined, visitNumber)
+											new Visit().withVisitNumber(
+												visitNumber
+											)
 										);
-										this.tu();
 									}}
 								/>
 							</div>
@@ -1310,15 +1290,11 @@ export class OrthoRecordsPanel extends React.Component<{
 						value={this.props.orthoCase.nextVisitNotes}
 						onChange={val => {
 							this.props.orthoCase.nextVisitNotes = val;
-							this.tu();
 						}}
 						disabled={!this.canEdit}
 					/>
 				</SectionComponent>
 			</div>
 		);
-	}
-	tu() {
-		this.props.orthoCase.triggerUpdate++;
 	}
 }

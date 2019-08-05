@@ -26,9 +26,9 @@ export class Calendar {
 	};
 
 	@computed get weekendsOn(): number {
-		return isNaN(Number(setting.getSetting("weekend_num")))
+		return isNaN(Number(setting!.getSetting("weekend_num")))
 			? 6
-			: Number(setting.getSetting("weekend_num"));
+			: Number(setting!.getSetting("weekend_num"));
 	}
 
 	@computed get selectedMonthCalendar() {

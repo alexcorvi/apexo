@@ -1,20 +1,18 @@
 import { ModalInterface, text } from "@core";
+import * as core from "@core";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { DefaultButton, Panel, PanelType, PrimaryButton, TextField } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
-export class ModalsView extends React.Component<{
-	activeModals: ModalInterface[];
-	onDismiss: (index: number) => void;
-}> {
+export class ModalsView extends React.Component {
 	@observable inputValue: string = "";
 
 	render() {
 		return (
 			<div className="modals-component">
-				{this.props.activeModals.map((modal, index) => (
+				{core.modals.activeModals.map((modal, index) => (
 					<Panel
 						key={modal.id}
 						className={`confirmation-modal ${modal.id} ${
@@ -24,7 +22,12 @@ export class ModalsView extends React.Component<{
 						isBlocking
 						isLightDismiss
 						isOpen
-						onDismiss={() => this.props.onDismiss(index)}
+						onDismiss={() => {
+							core.modals.deleteModal(index);
+							if (modal.onDismiss) {
+								modal.onDismiss();
+							}
+						}}
 						type={PanelType.smallFluid}
 						hasCloseButton={false}
 						onRenderHeader={() => <div />}
@@ -45,7 +48,7 @@ export class ModalsView extends React.Component<{
 						{modal.showConfirmButton ? (
 							<PrimaryButton
 								onClick={() => {
-									this.props.onDismiss(index);
+									core.modals.deleteModal(index);
 									modal.onConfirm(this.inputValue);
 									this.inputValue = "";
 								}}
@@ -59,8 +62,11 @@ export class ModalsView extends React.Component<{
 						{modal.showCancelButton ? (
 							<DefaultButton
 								onClick={() => {
-									this.props.onDismiss(index);
+									core.modals.deleteModal(index);
 									this.inputValue = "";
+									if (modal.onDismiss) {
+										modal.onDismiss();
+									}
 								}}
 								iconProps={{ iconName: "Cancel" }}
 								text={text("Cancel")}

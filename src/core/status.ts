@@ -1,10 +1,10 @@
-import { files, resync } from "@core";
+import { dbAction, files } from "@core";
 import { registerModules, staff } from "@modules";
+import * as modules from "@modules";
 import {
+	checkClient,
+	checkServer,
 	day,
-	isClientOnline,
-	isOnline as checkOnline,
-	minute,
 	num,
 	second,
 	store
@@ -35,6 +35,7 @@ export enum LoginType {
 }
 
 export class Status {
+	@observable loadingIndicatorText = "";
 	@observable server: string = "";
 	@observable currentUserID: string = "";
 
@@ -42,30 +43,20 @@ export class Status {
 
 	@observable step: LoginStep = LoginStep.initial;
 
-	@observable isServerOnline: boolean = true;
-
-	@observable isClientOnline: boolean = true;
-
-	@observable isDropboxActive: boolean = false;
+	@observable isOnline = {
+		dropbox: false,
+		server: false,
+		client: false
+	};
 
 	@observable tryOffline: boolean = false;
 
 	@observable loginType: LoginType | "" = "";
 
-	intervals = [
-		setInterval(() => this.validateOnlineStatus(), second * 2),
-		setInterval(() => this.validateDropBoxToken(), minute),
-		setInterval(async () => {
-			this.isClientOnline = await isClientOnline();
-		}, second * 2)
-	];
-
-	@computed get isClientOnlineGet() {
-		return this.isClientOnline;
-	}
-
 	constructor() {
-		setTimeout(() => this.validateDropBoxToken(), second * 5); // initial
+		this.validateOnlineStatus().then(() => {
+			setInterval(() => this.validateOnlineStatus(), second * 2);
+		});
 	}
 
 	async initialCheck(server: string) {
@@ -82,8 +73,9 @@ export class Status {
 		}
 
 		this.server = server;
+		await this.validateOnlineStatus();
 
-		if (this.isClientOnline) {
+		if (this.isOnline.server) {
 			if (await this.activeSession(this.server)) {
 				this.loginType = LoginType.initialActiveSession;
 				await this.start({ server });
@@ -111,7 +103,7 @@ export class Status {
 		password: string;
 		server: string;
 	}) {
-		if (!this.isClientOnline && store.found("LSL_hash")) {
+		if (!this.isOnline.server && store.found("LSL_hash")) {
 			return this.loginWithCredentialsOffline({
 				username,
 				password,
@@ -119,9 +111,7 @@ export class Status {
 			});
 		}
 
-		const onlineServer = await checkOnline(server);
-
-		if (this.isClientOnline && onlineServer) {
+		if (this.isOnline.server) {
 			return this.loginWithCredentialsOnline({
 				username,
 				password,
@@ -209,7 +199,9 @@ export class Status {
 	}
 
 	async startNoServer() {
-		this.isServerOnline = false;
+		this.isOnline.server = false;
+		this.isOnline.client = false;
+		this.isOnline.dropbox = false;
 		this.keepOffline = true;
 		this.loginType = LoginType.noServer;
 		await this.start({
@@ -224,12 +216,14 @@ export class Status {
 		store.set("server_location", server);
 		this.step = LoginStep.loadingData;
 		try {
+			this.loadingIndicatorText = "Registering modules";
 			await registerModules();
+			this.loadingIndicatorText = "Checking and setting user";
+			if (!this.checkAndSetUserID()) {
+				this.step = LoginStep.chooseUser;
+			}
 		} catch (e) {
 			console.log("Registering modules failed", e);
-		}
-		if (!this.checkAndSetUserID()) {
-			this.step = LoginStep.chooseUser;
 		}
 	}
 
@@ -244,16 +238,10 @@ export class Status {
 	}
 
 	async logout() {
-		const PouchDB: PouchDB.Static =
-			((await import("pouchdb-browser")) as any).default ||
-			((await import("pouchdb-browser")) as any);
-		const auth: PouchDB.Plugin =
-			((await import("pouchdb-authentication")) as any).default ||
-			((await import("pouchdb-authentication")) as any);
-		PouchDB.plugin(auth);
-		if (this.isClientOnline && !this.keepOffline) {
+		if (this.isOnline.server && !this.keepOffline) {
 			try {
 				this.removeCookies();
+				await dbAction("logout");
 			} catch (e) {
 				console.log("Failed to logout", e);
 			}
@@ -264,7 +252,7 @@ export class Status {
 
 	checkAndSetUserID() {
 		const userID = store.get("user_id");
-		if (userID && staff.getIndexByID(userID) !== -1) {
+		if (userID && staff!.docs.find(x => x._id === userID)) {
 			this.setUser(userID);
 			return true;
 		} else {
@@ -291,11 +279,7 @@ export class Status {
 		)) as any).default;
 		PouchDB.plugin(auth);
 		try {
-			if (
-				this.isClientOnline &&
-				(await checkOnline(server)) &&
-				!this.keepOffline
-			) {
+			if (this.isOnline.server && !this.keepOffline) {
 				return !!(await new PouchDB(server, {
 					skip_setup: true
 				}).getSession()).userCtx.name;
@@ -304,37 +288,29 @@ export class Status {
 		return false;
 	}
 
-	validateDropBoxToken() {
-		files
-			.status()
-			.then(x => {
-				this.isDropboxActive = true;
-			})
-			.catch(e => {
-				this.isDropboxActive = false;
-			});
-	}
-
-	validateOnlineStatus() {
+	async validateOnlineStatus() {
 		if (this.keepOffline) {
-			return;
+			this.isOnline.client = false;
+			this.isOnline.server = false;
+			this.isOnline.dropbox = false;
 		}
-		checkOnline(this.server).then(online => {
-			if (online && !this.isServerOnline) {
-				console.log("getting back online");
-				resync.resync();
-			}
-			this.isServerOnline = online;
-		});
+
+		this.isOnline.server = await checkServer(this.server);
+		this.isOnline.client = await checkClient();
+		if (modules.setting) {
+			this.isOnline.dropbox = await files.status();
+		}
 	}
 	reset() {
 		this.server = "";
 		this.currentUserID = "";
 		this.keepOffline = false;
 		this.step = LoginStep.initial;
-		this.isServerOnline = true;
-		this.isClientOnline = true;
-		this.isDropboxActive = false;
+		this.isOnline = {
+			server: false,
+			client: false,
+			dropbox: false
+		};
 		this.tryOffline = false;
 		this.loginType = "";
 	}

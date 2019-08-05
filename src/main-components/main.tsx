@@ -1,8 +1,7 @@
 import { PageLoader } from "@common-components";
-import { LoginStep, MenuItem, MessageInterface, ModalInterface, text } from "@core";
+import { LoginStep, text } from "@core";
 import * as core from "@core";
 import { MessagesView, ModalsView } from "@main-components";
-import { Appointment, PrescriptionItem, StaffMember } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { MessageBar, PrimaryButton, Shimmer, Spinner, SpinnerSize } from "office-ui-fabric-react";
@@ -74,172 +73,45 @@ export class ErrorBoundaryView extends React.Component<{}> {
 }
 
 @observer
-export class MainView extends React.Component<{
-	currentUser: StaffMember;
-	step: LoginStep;
-	currentNamespace: string;
-	isOnline: boolean;
-	isCurrentlyReSyncing: boolean;
-	userTodayAppointments: Appointment[];
-	userPanelVisible: boolean;
-	menuVisible: boolean;
-	dateFormat: string;
-	availableTreatments: { _id: string; expenses: number; type: string }[];
-	availablePrescriptions: PrescriptionItem[];
-	currencySymbol: string;
-	prescriptionsEnabled: boolean;
-	timeTrackingEnabled: boolean;
-	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
-	allStaff: { _id: string; name: string; pin: string | undefined }[];
-	allAppointments: Appointment[];
-	sortedMenuItems: MenuItem[];
-	activeModals: ModalInterface[];
-	activeMessages: MessageInterface[];
-	tryOffline: boolean;
-	currentLoader: () => Promise<boolean>;
-	currentComponent: () => Promise<React.ReactElement<any>>;
-	showMenu: () => void;
-	showUser: () => void;
-	resync: () => Promise<any>;
-	onStartReSyncing: () => void;
-	onFinishReSyncing: () => void;
-	hideUserPanel: () => void;
-	hideMenu: () => void;
-	logout: () => void;
-	resetUser: () => void;
-	setUser: (id: string) => void;
-	appointmentsForDay: (
-		year: number,
-		month: number,
-		day: number,
-		filter?: string | undefined,
-		operatorID?: string | undefined
-	) => Appointment[];
-	newMessage: (message: MessageInterface) => void;
-	newModal: (message: ModalInterface) => void;
-	addStaffMember: (member: StaffMember) => void;
-	deleteModal: (index: number) => void;
-	initialCheck(server: string): Promise<void>;
-	loginWithCredentials({
-		username,
-		password,
-		server
-	}: {
-		username: string;
-		password: string;
-		server: string;
-	}): Promise<boolean | string>;
-	loginWithCredentialsOffline({
-		username,
-		password,
-		server
-	}: {
-		username: string;
-		password: string;
-		server: string;
-	}): Promise<boolean | string>;
-	startNoServer(): Promise<void>;
-	doDeleteAppointment(id: string): void;
-}> {
+export class MainView extends React.Component {
 	@computed get conditionalView() {
-		if (this.props.step === LoginStep.allDone) {
+		if (core.status.step === LoginStep.allDone) {
 			return (
 				<div className="main-component">
 					<div
 						key="router"
 						id="router-outlet"
-						data-current-namespace={this.props.currentNamespace.toLowerCase()}
+						data-current-namespace={core.router.currentNamespace.toLowerCase()}
 					>
 						<PageLoader
-							key={this.props.currentNamespace}
+							key={core.router.currentNamespace}
 							pageComponent={async () => {
-								await this.props.currentLoader();
-								return await this.props.currentComponent();
+								await core.router.currentLoader();
+								return await core.router.currentComponent();
 							}}
 						/>
 					</div>
-					<HeaderView
-						expandMenu={() => {
-							this.props.showMenu();
-						}}
-						expandUser={() => this.props.showUser()}
-						currentNamespace={this.props.currentNamespace}
-						isOnline={this.props.isOnline}
-						resync={() => this.props.resync()}
-						startReSyncing={() => this.props.onStartReSyncing()}
-						finishReSyncing={() => this.props.onFinishReSyncing()}
-						isCurrentlyReSyncing={this.props.isCurrentlyReSyncing}
-					/>
-					<UserPanelView
-						staffName={this.props.currentUser.name}
-						todayAppointments={this.props.userTodayAppointments}
-						isOpen={this.props.userPanelVisible}
-						onDismiss={() => this.props.hideUserPanel()}
-						logout={() => this.props.logout()}
-						resetUser={() => this.props.resetUser()}
-						key="user"
-						dateFormat={this.props.dateFormat}
-						availableTreatments={this.props.availableTreatments}
-						availablePrescriptions={
-							this.props.availablePrescriptions
-						}
-						currentUser={this.props.currentUser}
-						appointmentsForDay={(year, month, day) =>
-							this.props.appointmentsForDay(year, month, day)
-						}
-						currencySymbol={this.props.currencySymbol}
-						prescriptionsEnabled={this.props.prescriptionsEnabled}
-						timeTrackingEnabled={this.props.timeTrackingEnabled}
-						operatingStaff={this.props.operatingStaff}
-						doDeleteAppointment={id => {
-							this.props.doDeleteAppointment(id);
-						}}
-						allAppointments={this.props.allAppointments}
-					/>
-					<MenuView
-						items={this.props.sortedMenuItems}
-						isVisible={this.props.menuVisible}
-						currentName={this.props.currentNamespace}
-						onDismiss={() => this.props.hideMenu()}
-						key="menu"
-					/>
+					<HeaderView />
+					<UserPanelView />
+					<MenuView />
 				</div>
 			);
-		} else if (this.props.step === LoginStep.chooseUser) {
-			return (
-				<ChooseUserComponent
-					users={this.props.allStaff}
-					onClickUser={id => this.props.setUser(id)}
-					onCreatingNew={name => {
-						const newStaffMember = new StaffMember();
-						newStaffMember.name = name;
-						this.props.addStaffMember(newStaffMember);
-						core.status.setUser(newStaffMember._id);
-					}}
-					showMessage={obj => this.props.newMessage(obj)}
-					showModal={obj => this.props.newModal(obj)}
-				/>
-			);
-		} else if (this.props.step === LoginStep.initial) {
-			return (
-				<LoginView
-					tryOffline={this.props.tryOffline}
-					initialCheck={server => this.props.initialCheck(server)}
-					loginWithCredentials={obj =>
-						this.props.loginWithCredentials(obj)
-					}
-					loginWithCredentialsOffline={obj =>
-						this.props.loginWithCredentialsOffline(obj)
-					}
-					startNoServer={() => this.props.startNoServer()}
-				/>
-			);
+		} else if (core.status.step === LoginStep.chooseUser) {
+			return <ChooseUserComponent />;
+		} else if (core.status.step === LoginStep.initial) {
+			return <LoginView />;
 		} else {
 			return (
 				<div className="spinner-container">
 					<Spinner
 						size={SpinnerSize.large}
-						label={text(`Please wait`)}
+						label={
+							core.status.loadingIndicatorText
+								? `Please wait: ${
+										core.status.loadingIndicatorText
+								  }`
+								: "Please wait"
+						}
 					/>
 				</div>
 			);
@@ -264,13 +136,10 @@ export class MainView extends React.Component<{
 
 	render() {
 		return (
-			<ErrorBoundaryView key={this.props.step}>
+			<ErrorBoundaryView key={core.status.step}>
 				<div>
-					<ModalsView
-						activeModals={this.props.activeModals}
-						onDismiss={index => this.props.deleteModal(index)}
-					/>
-					<MessagesView messages={this.props.activeMessages} />
+					<ModalsView />
+					<MessagesView />
 				</div>
 				{this.conditionalView}
 			</ErrorBoundaryView>

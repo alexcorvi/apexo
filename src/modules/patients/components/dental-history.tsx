@@ -1,5 +1,6 @@
 import { Col, ProfileComponent, Row, SectionComponent } from "@common-components";
 import { text } from "@core";
+import * as core from "@core";
 import { conditionToColor, Patient, StaffMember, ToothCondition } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -38,17 +39,15 @@ const TeethPermanentChart = loadable({
 @observer
 export class DentalHistoryPanel extends React.Component<
 	{
-		currentUser: StaffMember;
 		patient: Patient;
 	},
 	{}
 > {
 	@observable viewChart: boolean = true;
 	@observable viewToothISO: number = 0;
-	@observable triggerUpdate: number = 0;
 
 	@computed get canEdit() {
-		return this.props.currentUser.canEditPatients;
+		return core.user.currentUser!.canEditPatients;
 	}
 
 	componentWillMount() {
@@ -187,8 +186,7 @@ export class DentalHistoryPanel extends React.Component<
 									this.props.patient.teeth[
 										this.viewToothISO
 									].condition = newVal.key.toString();
-									this.props.patient.triggerUpdate++;
-									this.forceUpdate();
+									this.props.patient.saveToPouch();
 								}}
 								defaultSelectedKey={
 									this.props.patient.teeth[this.viewToothISO]
@@ -212,7 +210,7 @@ export class DentalHistoryPanel extends React.Component<
 									this.props.patient.teeth[
 										this.viewToothISO
 									].notes = e;
-									this.props.patient.triggerUpdate++;
+									this.props.patient.saveToPouch();
 								}}
 							/>
 						</div>

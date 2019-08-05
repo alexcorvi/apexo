@@ -1,6 +1,7 @@
 import { Col, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
-import { DropboxFile, status, text } from "@core";
-import { dictionary, StaffMember } from "@modules";
+import * as core from "@core";
+import { status, text } from "@core";
+import * as modules from "@modules";
 import { dateNames, formatDate, second } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -17,22 +18,7 @@ import {
 import * as React from "react";
 
 @observer
-export class SettingsPage extends React.Component<
-	{
-		currentUser: StaffMember;
-		dropboxBackups: DropboxFile[];
-		updateDropboxBackups: () => Promise<void>;
-		validateDropboxToken: () => void;
-		setSetting: (id: keyof typeof dictionary, val: string) => void;
-		getSetting: (id: keyof typeof dictionary) => string;
-		compact: () => Promise<boolean>;
-		restoreFromFile: (file: Blob) => void;
-		restoreFromDropbox: (path: string) => Promise<void>;
-		deleteDropboxBackup: (path: string) => Promise<any>;
-		downloadCurrent: () => Promise<any>;
-	},
-	{}
-> {
+export class SettingsPage extends React.Component {
 	unlockCombinations = [
 		[5, 4, 9],
 		[3, 2, 5],
@@ -44,20 +30,21 @@ export class SettingsPage extends React.Component<
 
 	chosenCombination = this.unlockCombinations[Math.floor(Math.random() * 6)];
 
-	@observable triggerUpdate: number = 0;
+	@observable compactionInProgress = false;
+	@observable downloadInProgress = false;
 
 	@observable inputEl: HTMLInputElement | null = null;
 
 	@computed get canEdit() {
-		return this.props.currentUser.canEditSettings;
+		return core.user.currentUser!.canEditSettings;
 	}
 
-	@observable loading: boolean = false;
+	@observable remoteBackupInProgress: boolean = false;
 
 	@observable locked: boolean = true;
 
 	componentWillMount() {
-		setTimeout(() => this.props.updateDropboxBackups(), second);
+		setTimeout(() => modules.setting!.updateDropboxBackups(), second);
 	}
 
 	render() {
@@ -97,11 +84,11 @@ export class SettingsPage extends React.Component<
 											{ key: "en", text: "English" },
 											{ key: "ar", text: "العربية" }
 										]}
-										defaultSelectedKey={this.props.getSetting(
+										defaultSelectedKey={modules.setting!.getSetting(
 											"lang"
 										)}
 										onChange={(ev, v) => {
-											this.props.setSetting(
+											modules.setting!.setSetting(
 												"lang",
 												v!.key.toString()
 											);
@@ -132,11 +119,11 @@ export class SettingsPage extends React.Component<
 												text: "dd MM 'YY"
 											}
 										]}
-										defaultSelectedKey={this.props.getSetting(
+										defaultSelectedKey={modules.setting!.getSetting(
 											"date_format"
 										)}
 										onChange={(ev, v) => {
-											this.props.setSetting(
+											modules.setting!.setSetting(
 												"date_format",
 												v!.key.toString()
 											);
@@ -159,11 +146,11 @@ export class SettingsPage extends React.Component<
 												key: index.toString(),
 												text: text(dayName)
 											}))}
-										defaultSelectedKey={this.props.getSetting(
+										defaultSelectedKey={modules.setting!.getSetting(
 											"weekend_num"
 										)}
 										onChange={(ev, v) => {
-											this.props.setSetting(
+											modules.setting!.setSetting(
 												"weekend_num",
 												v!.key.toString()
 											);
@@ -177,19 +164,19 @@ export class SettingsPage extends React.Component<
 							<SettingInputComponent
 								element={
 									<TextField
-										value={this.props.getSetting(
+										value={modules.setting!.getSetting(
 											"dropbox_accessToken"
 										)}
 										label={text("Dropbox access token")}
 										onChange={(ev, val) => {
-											this.props.setSetting(
+											modules.setting!.setSetting(
 												"dropbox_accessToken",
 												val!
 											);
 
 											setTimeout(
 												() =>
-													this.props.validateDropboxToken(),
+													core.status.validateOnlineStatus(),
 												second / 2
 											);
 										}}
@@ -202,7 +189,7 @@ export class SettingsPage extends React.Component<
 							/>
 						</SectionComponent>
 						<SectionComponent title={text(`Financial Settings`)}>
-							{this.props.getSetting("time_tracking") ? (
+							{modules.setting!.getSetting("time_tracking") ? (
 								<SettingInputComponent
 									element={
 										<TextField
@@ -210,11 +197,11 @@ export class SettingsPage extends React.Component<
 												"Time expenses (per hour)"
 											)}
 											type="number"
-											value={this.props.getSetting(
+											value={modules.setting!.getSetting(
 												"hourlyRate"
 											)}
 											onChange={(ev, newVal) => {
-												this.props.setSetting(
+												modules.setting!.setSetting(
 													"hourlyRate",
 													newVal!.toString()
 												);
@@ -235,11 +222,11 @@ export class SettingsPage extends React.Component<
 								element={
 									<TextField
 										label={text("Currency symbol")}
-										value={this.props.getSetting(
+										value={modules.setting!.getSetting(
 											"currencySymbol"
 										)}
 										onChange={(ev, newVal) => {
-											this.props.setSetting(
+											modules.setting!.setSetting(
 												"currencySymbol",
 												newVal!.toString()
 											);
@@ -260,12 +247,12 @@ export class SettingsPage extends React.Component<
 								onText={text("Prescriptions module enabled")}
 								offText={text("Prescriptions module disabled")}
 								defaultChecked={
-									!!this.props.getSetting(
+									!!modules.setting!.getSetting(
 										"module_prescriptions"
 									)
 								}
 								onChange={(ev, val) => {
-									this.props.setSetting(
+									modules.setting!.setSetting(
 										"module_prescriptions",
 										val ? "enable" : ""
 									);
@@ -277,12 +264,12 @@ export class SettingsPage extends React.Component<
 								onText={text("Orthodontic module enabled")}
 								offText={text("Orthodontic module disabled")}
 								defaultChecked={
-									!!this.props.getSetting(
+									!!modules.setting!.getSetting(
 										"module_orthodontics"
 									)
 								}
 								onChange={(ev, val) => {
-									this.props.setSetting(
+									modules.setting!.setSetting(
 										"module_orthodontics",
 										val ? "enable" : ""
 									);
@@ -294,10 +281,12 @@ export class SettingsPage extends React.Component<
 								onText={text("Statistics module enabled")}
 								offText={text("Statistics module disabled")}
 								defaultChecked={
-									!!this.props.getSetting("module_statistics")
+									!!modules.setting!.getSetting(
+										"module_statistics"
+									)
 								}
 								onChange={(ev, val) => {
-									this.props.setSetting(
+									modules.setting!.setSetting(
 										"module_statistics",
 										val ? "enable" : ""
 									);
@@ -309,10 +298,12 @@ export class SettingsPage extends React.Component<
 								onText={text("Time tracking enabled")}
 								offText={text("Time tracking disabled")}
 								defaultChecked={
-									!!this.props.getSetting("time_tracking")
+									!!modules.setting!.getSetting(
+										"time_tracking"
+									)
 								}
 								onChange={(ev, val) => {
-									this.props.setSetting(
+									modules.setting!.setSetting(
 										"time_tracking",
 										val ? "enable" : ""
 									);
@@ -321,24 +312,30 @@ export class SettingsPage extends React.Component<
 							/>
 						</SectionComponent>
 						<SectionComponent title={text(`Backup and Restore`)}>
-							{status.isServerOnline ? (
+							{status.isOnline.server ? (
 								<div>
 									<DefaultButton
-										onClick={() => {
-											this.props.compact();
+										onClick={async () => {
+											this.compactionInProgress = true;
+											await core.dbAction("compact");
+											this.compactionInProgress = false;
 										}}
 										iconProps={{ iconName: "ZipFolder" }}
 										className="m-l-5 m-t-5"
 										text={text("Run compaction")}
+										disabled={this.compactionInProgress}
 									/>
 
 									<DefaultButton
-										onClick={() => {
-											this.props.downloadCurrent();
+										onClick={async () => {
+											this.downloadInProgress = true;
+											await core.downloadCurrentStateAsBackup();
+											this.downloadInProgress = false;
 										}}
 										className="m-l-5 m-t-5"
 										iconProps={{ iconName: "Database" }}
 										text={text("Download a backup")}
+										disabled={this.downloadInProgress}
 									/>
 
 									<DefaultButton
@@ -351,6 +348,7 @@ export class SettingsPage extends React.Component<
 										iconProps={{ iconName: "DatabaseSync" }}
 										text={text("Restore from file")}
 									/>
+
 									<input
 										ref={el => (this.inputEl = el)}
 										hidden
@@ -361,7 +359,7 @@ export class SettingsPage extends React.Component<
 												e.target.files &&
 												e.target.files.length > 0
 											) {
-												this.props.restoreFromFile(
+												core.restore.fromFile(
 													e.target.files[0]
 												);
 											}
@@ -381,8 +379,8 @@ export class SettingsPage extends React.Component<
 						<SectionComponent
 							title={text(`Automated Backup and Restore`)}
 						>
-							{status.isServerOnline ? (
-								status.isDropboxActive ? (
+							{status.isOnline.server ? (
+								status.isOnline.dropbox ? (
 									<div>
 										<Dropdown
 											label={text("Backup frequency")}
@@ -404,11 +402,11 @@ export class SettingsPage extends React.Component<
 													text: text("Never")
 												}
 											]}
-											defaultSelectedKey={this.props.getSetting(
+											defaultSelectedKey={modules.setting!.getSetting(
 												"backup_freq"
 											)}
 											onChange={(ev, v) => {
-												this.props.setSetting(
+												modules.setting!.setSetting(
 													"backup_freq",
 													v!.key.toString()
 												);
@@ -417,14 +415,14 @@ export class SettingsPage extends React.Component<
 										/>
 
 										<TextField
-											value={this.props.getSetting(
+											value={modules.setting!.getSetting(
 												"backup_retain"
 											)}
 											label={text(
 												"How many backups to retain"
 											)}
 											onChange={(ev, val) => {
-												this.props.setSetting(
+												modules.setting!.setSetting(
 													"backup_retain",
 													val!
 												);
@@ -433,7 +431,8 @@ export class SettingsPage extends React.Component<
 											type="number"
 										/>
 
-										{this.props.dropboxBackups.length ? (
+										{modules.setting!.dropboxBackups
+											.length ? (
 											<table className="ms-table">
 												<thead>
 													<tr>
@@ -446,7 +445,7 @@ export class SettingsPage extends React.Component<
 													</tr>
 												</thead>
 												<tbody>
-													{this.props.dropboxBackups.map(
+													{modules.setting!.dropboxBackups.map(
 														file => {
 															const date = new Date(
 																file.client_modified
@@ -474,7 +473,7 @@ export class SettingsPage extends React.Component<
 																			)}
 																			text={formatDate(
 																				date,
-																				this.props.getSetting(
+																				modules.setting!.getSetting(
 																					"date_format"
 																				)
 																			)}
@@ -495,37 +494,31 @@ export class SettingsPage extends React.Component<
 																					marginRight: 6
 																				}}
 																				iconProps={{
-																					iconName: this
-																						.loading
-																						? "sync"
-																						: "delete"
+																					iconName:
+																						"delete"
 																				}}
-																				className={
-																					this
-																						.loading
-																						? "rotate"
-																						: ""
-																				}
 																				disabled={
 																					!this
-																						.canEdit
+																						.canEdit ||
+																					this
+																						.remoteBackupInProgress
 																				}
 																				onClick={() => {
-																					this.loading = true;
-																					this.props
-																						.deleteDropboxBackup(
+																					this.remoteBackupInProgress = true;
+																					core.backup
+																						.deleteFromDropbox(
 																							file.path_lower
 																						)
 																						.then(
 																							() => {
-																								this.loading = false;
-																								this.props.updateDropboxBackups();
+																								this.remoteBackupInProgress = false;
+																								modules.setting!.updateDropboxBackups();
 																							}
 																						)
 																						.catch(
 																							() => {
-																								this.loading = false;
-																								this.props.updateDropboxBackups();
+																								this.remoteBackupInProgress = false;
+																								modules.setting!.updateDropboxBackups();
 																							}
 																						);
 																				}}
@@ -542,34 +535,28 @@ export class SettingsPage extends React.Component<
 																					marginRight: 6
 																				}}
 																				iconProps={{
-																					iconName: this
-																						.loading
-																						? "sync"
-																						: "DatabaseSync"
+																					iconName:
+																						"DatabaseSync"
 																				}}
-																				className={
-																					this
-																						.loading
-																						? "rotate"
-																						: ""
-																				}
 																				disabled={
 																					!this
-																						.canEdit
+																						.canEdit ||
+																					this
+																						.remoteBackupInProgress
 																				}
 																				onClick={() => {
-																					this.loading = true;
-																					this.props
-																						.restoreFromDropbox(
+																					this.remoteBackupInProgress = true;
+																					core.restore
+																						.fromDropbox(
 																							file.path_lower
 																						)
 																						.then(
 																							() =>
-																								(this.loading = false)
+																								(this.remoteBackupInProgress = false)
 																						)
 																						.catch(
 																							() =>
-																								(this.loading = false)
+																								(this.remoteBackupInProgress = false)
 																						);
 																				}}
 																			/>

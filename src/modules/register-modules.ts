@@ -1,63 +1,40 @@
-import {
-	registerAppointments,
-	registerOrthodontic,
-	registerPatients,
-	registerPrescriptions,
-	registerSettings,
-	registerStaff,
-	registerStats,
-	registerTreatments
-	} from "@modules";
+import { dbAction } from "@core";
+import * as core from "@core";
+import * as modules from "@modules";
+import { minute, second } from "@utils";
 
 const register = [
-	registerAppointments,
-	registerPatients,
-	registerSettings,
-	registerStats,
-	registerTreatments,
-	registerPrescriptions,
-	registerStaff,
-	registerOrthodontic
+	modules.registerSettings,
+	modules.registerStaff,
+	modules.registerTreatments,
+	modules.registerPatients,
+	modules.registerAppointments,
+	modules.registerOrthodontic,
+	modules.registerPrescriptions,
+	modules.registerStats
 ];
 
-let alreadyRegistered = false;
-
 export async function registerModules() {
-	return new Promise<boolean>(resolve => {
-		if (alreadyRegistered) {
-			resolve(true);
-		}
-		alreadyRegistered = true;
-		let done = 0;
-		register
-			.sort((a, b) => a.order - b.order)
-			.forEach(async module => {
-				try {
-					await module.register();
-				} catch (e) {
-					try {
-						console.error(
-							"Failed to register module with order:",
-							module.order,
-							e,
-							"Will try again"
-						);
-						await module.register();
-					} catch (e) {
-						console.error(
-							"Failed to register module with order:",
-							module.order,
-							e
-						);
-					}
-				}
-				done++;
-			});
-		const checkRegistered = setInterval(() => {
-			if (done === register.length) {
-				resolve(true);
-				clearInterval(checkRegistered);
-			}
-		}, 300);
-	});
+	for (let index = 0; index < register.length; index++) {
+		core.status.loadingIndicatorText = "Registering module " + index;
+		const reg = register[index];
+		await reg();
+	}
+
+	core.status.loadingIndicatorText = "Resyncing remote and local databases";
+	// resync on registering modules
+	await dbAction("resync");
+
+	// resync on elapsed time by 10
+	// we're calculating it again to see
+	// the elapsed time for a sync with no changes
+	core.status.loadingIndicatorText = "Calculating elapsed time";
+	const t = new Date().getTime();
+	await dbAction("resync");
+	const elapsed = new Date().getTime() - t;
+	setInterval(async () => {
+		await dbAction("resync");
+	}, 10 * elapsed);
+	core.status.loadingIndicatorText =
+		"Finished working on modules and databases";
 }

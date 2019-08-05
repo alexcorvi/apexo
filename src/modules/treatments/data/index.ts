@@ -1,4 +1,4 @@
-export * from "./class.treatment";
+export * from "./model.treatment";
 export * from "./namespace.treatments";
-export * from "./data.treatments";
-export * from "./interface.treatment-json";
+export * from "./store.treatments";
+export * from "./schema.treatment";

@@ -1,6 +1,6 @@
 import { PieChartComponent } from "@common-components";
 import { text } from "@core";
-import { Gender, Patient } from "@modules";
+import { gender, Patient } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
@@ -11,11 +11,11 @@ export class GenderPieChart extends React.Component<{
 }> {
 	@computed
 	get malePercentile() {
-		return this.calculateGenderPercentile(Gender.male);
+		return this.calculateGenderPercentile(gender.male);
 	}
 	@computed
 	get femalePercentile() {
-		return this.calculateGenderPercentile(Gender.female);
+		return this.calculateGenderPercentile(gender.female);
 	}
 	render() {
 		return (
@@ -30,10 +30,9 @@ export class GenderPieChart extends React.Component<{
 			/>
 		);
 	}
-	calculateGenderPercentile(requiredG: Gender) {
-		return this.props.selectedPatients
-			.map(patient => patient.gender)
-			.filter(patientG => patientG === requiredG)
-			.reduce((total, patientG) => (total = total + patientG), 0);
+	calculateGenderPercentile(requiredG: keyof typeof gender) {
+		return this.props.selectedPatients.filter(
+			patient => patient.gender === requiredG
+		).length;
 	}
 }

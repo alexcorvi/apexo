@@ -1,15 +1,4 @@
-import {
-	BACKUPS_DIR,
-	compact,
-	DBsList,
-	destroyLocal,
-	files,
-	messages,
-	modals,
-	resync,
-	status,
-	text
-	} from "./";
+import * as core from "@core";
 import { decode, encode, generateID, second } from "@utils";
 import { saveAs } from "file-saver";
 const ext = "apx";
@@ -28,53 +17,43 @@ export interface DatabaseDump {
 }
 
 export const backup = {
-	toJSON: function() {
-		return new Promise(async (resolve, reject) => {
-			const PouchDB: PouchDB.Static = ((await import(
-				"pouchdb-browser"
-			)) as any).default;
+	toJSON: async function() {
+		const PouchDB: PouchDB.Static = ((await import(
+			"pouchdb-browser"
+		)) as any).default;
 
-			await compact.compact();
+		await core.dbAction("compact");
 
-			const dumps: DatabaseDump[] = [];
+		const dumps: DatabaseDump[] = [];
 
-			let done = 0;
+		for (let index = 0; index < core.DBNames.length; index++) {
+			const dbName = core.DBNames[index];
 
-			DBsList.forEach(async dbName => {
-				const remoteDatabase = new PouchDB(
-					`${status.server}/${dbName}`,
-					{
-						fetch: (url, opts) =>
-							PouchDB.fetch(url, {
-								...opts,
-								credentials: "include"
-							})
-					}
-				);
+			const remoteDatabase = new PouchDB(
+				`${core.status.server}/${dbName}`,
+				{
+					fetch: (url, opts) =>
+						PouchDB.fetch(url, {
+							...opts,
+							credentials: "include"
+						})
+				}
+			);
 
-				const data = (await remoteDatabase.allDocs({
-					include_docs: true,
-					attachments: true
-				})).rows.map(entry => {
-					if (entry.doc) {
-						delete entry.doc._rev;
-					}
-					return entry.doc;
-				});
-
-				dumps.push({ dbName, data });
-
-				done++;
-				return;
+			const data = (await remoteDatabase.allDocs({
+				include_docs: true,
+				attachments: true
+			})).rows.map(entry => {
+				if (entry.doc) {
+					delete entry.doc._rev;
+				}
+				return entry.doc;
 			});
 
-			const checkInterval = setInterval(() => {
-				if (done === DBsList.length) {
-					clearInterval(checkInterval);
-					resolve(dumps);
-				}
-			}, second / 2);
-		});
+			dumps.push({ dbName, data });
+		}
+
+		return dumps;
 	},
 
 	toBase64: async function() {
@@ -91,16 +70,20 @@ export const backup = {
 
 	toDropbox: async function(): Promise<string> {
 		const blob = await backup.toBlob();
-		const path = await files.save({ blob, ext, dir: BACKUPS_DIR });
+		const path = await core.files.save({
+			blob,
+			ext,
+			dir: core.BACKUPS_DIR
+		});
 		return path;
 	},
 
 	list: async function() {
-		return await files.list(BACKUPS_DIR);
+		return await core.files.list(core.BACKUPS_DIR);
 	},
 
 	deleteFromDropbox: async function(path: string) {
-		return await files.remove(path);
+		return await core.files.remove(path);
 	}
 };
 
@@ -112,14 +95,14 @@ export const restore = {
 				"pouchdb-browser"
 			)) as any).default;
 
-			status.resetUser();
-			let done = 0;
+			core.status.resetUser();
 
-			json.forEach(async dump => {
+			for (let index = 0; index < json.length; index++) {
+				const dump = json[index];
 				view.msg(`starting: deleting all server/"${dump.dbName}"`);
 				const dbName = dump.dbName;
 				const remoteDatabase1 = new PouchDB(
-					`${status.server}/${dbName}`,
+					`${core.status.server}/${dbName}`,
 					{
 						fetch: (url, opts) =>
 							PouchDB.fetch(url, {
@@ -135,7 +118,7 @@ export const restore = {
 				);
 				view.msg(`starting: uploading data to server/"${dump.dbName}"`);
 				const remoteDatabase2 = new PouchDB(
-					`${status.server}/${dbName}`,
+					`${core.status.server}/${dbName}`,
 					{
 						fetch: (url, opts) =>
 							PouchDB.fetch(url, {
@@ -144,33 +127,24 @@ export const restore = {
 							})
 					}
 				);
-				const a = await remoteDatabase2.bulkDocs(dump.data);
+				await remoteDatabase2.bulkDocs(dump.data);
 				view.msg(
 					`finished: uploading data to server/"${dump.dbName}"`,
 					true
 				);
-				done++;
-			});
+			}
 
-			const checkInterval = setInterval(async () => {
-				if (done === json.length) {
-					clearInterval(checkInterval);
-					view.msg(`finished: all data are now in the server`, true);
-					view.msg(`starting: destroying local data`);
-					await destroyLocal.destroy();
-					view.msg(`finished: destroying local data`, true);
-					view.msg(`starting: downloading remote data`);
-					await resync.resync();
-					view.msg(`finished: downloading remote data`, true);
-					view.msg(
-						`Everything is done, will reload in 5 seconds`,
-						true
-					);
-					setTimeout(() => {
-						location.reload();
-					}, second * 5);
-				}
-			}, second / 100);
+			view.msg(`finished: all data are now in the server`, true);
+			view.msg(`starting: destroying local data`);
+			await core.dbAction("destroy");
+			view.msg(`finished: destroying local data`, true);
+			view.msg(`starting: downloading remote data`);
+			await core.dbAction("resync");
+			view.msg(`finished: downloading remote data`, true);
+			view.msg(`Everything is done, will reload in 5 seconds`, true);
+			setTimeout(() => {
+				location.reload();
+			}, second * 5);
 		});
 	},
 
@@ -181,8 +155,8 @@ export const restore = {
 				await restore.fromJSON(json);
 				resolve();
 			} else {
-				modals.newModal({
-					text: text(
+				core.modals.newModal({
+					text: core.text(
 						`All unsaved data will be lost. All data will be removed and replaced by the backup file. Type "yes" to confirm`
 					),
 					onConfirm: async (input: string) => {
@@ -191,9 +165,9 @@ export const restore = {
 							await restore.fromJSON(json);
 							resolve();
 						} else {
-							messages.newMessage({
+							core.messages.newMessage({
 								id: generateID(),
-								text: text("Restoration cancelled")
+								text: core.text("Restoration cancelled")
 							});
 							return reject();
 						}
@@ -210,9 +184,9 @@ export const restore = {
 	fromFile: async function(file: Blob) {
 		return new Promise((resolve, reject) => {
 			function terminate() {
-				messages.newMessage({
+				core.messages.newMessage({
 					id: generateID(),
-					text: text("Invalid file")
+					text: core.text("Invalid file")
 				});
 				return reject();
 			}
@@ -238,7 +212,9 @@ export const restore = {
 	},
 
 	fromDropbox: async function(filePath: string) {
-		const base64File = (await files.get(filePath)).split(";base64,")[1];
+		const base64File = (await core.files.get(filePath)).split(
+			";base64,"
+		)[1];
 		const base64Data = decode(base64File).split("apexo-backup:")[1];
 		this.fromBase64(base64Data);
 	}
@@ -247,11 +223,14 @@ export const restore = {
 export async function downloadCurrentStateAsBackup() {
 	const blob = await backup.toBlob();
 	return new Promise(resolve => {
-		modals.newModal({
+		core.modals.newModal({
 			id: generateID(),
-			text: text("Please enter file name"),
+			text: core.text("Please enter file name"),
 			onConfirm: fileName => {
 				saveAs(blob, `${fileName || "apexo-backup"}.${ext}`);
+				resolve();
+			},
+			onDismiss: () => {
 				resolve();
 			},
 			input: true,

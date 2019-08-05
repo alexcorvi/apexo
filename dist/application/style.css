@@ -5724,7 +5724,7 @@ hr {
     padding-bottom: 10px;
     margin-bottom: 10px; }
     .calendar-component .selector a.current {
-      border: 1px solid #00bcd4; }
+      border: 1px solid #03a9f4; }
     .calendar-component .selector a {
       cursor: pointer;
       transition: 0.4s all;
@@ -5841,7 +5841,7 @@ hr {
     .calendar-component .full-day-col.holiday {
       background: #fafaf7; }
     .calendar-component .full-day-col.current h4 b {
-      border: 1px solid #00bcd4; }
+      border: 1px solid #03a9f4; }
     .calendar-component .full-day-col.selected h4 b {
       background: #3f51b5;
       color: #fff; }
@@ -6005,7 +6005,7 @@ hr {
     background: #f44336;
     border-color: #f44336; }
   .data-table .action-button:hover {
-    border-color: #00bcd4; }
+    border-color: #03a9f4; }
 
 .data-table .delete-td {
   text-align: right;
@@ -6018,6 +6018,27 @@ hr {
   margin-top: 0;
   padding: 35px;
   border: 0; }
+
+.data-table .table-actions {
+  text-align: right; }
+  .data-table .table-actions .ms-TooltipHost {
+    position: relative; }
+    .data-table .table-actions .ms-TooltipHost .bubble {
+      position: absolute;
+      background: #03a9f4;
+      width: 15px;
+      height: 15px;
+      display: inline-block;
+      margin: 0;
+      padding-top: 5px;
+      text-align: center;
+      font-size: 10px;
+      line-height: 4px;
+      border-radius: 50%;
+      left: 8px;
+      top: -8px;
+      pointer-events: none;
+      color: #fff; }
 
 .date-link a {
   font-size: 12px;

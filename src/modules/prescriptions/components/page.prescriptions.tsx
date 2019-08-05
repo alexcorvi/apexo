@@ -1,29 +1,16 @@
 import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
-import { text } from "@core";
-import { itemFormToString, PrescriptionItem, prescriptionItemForms, StaffMember, stringToItemForm } from "@modules";
+import { text, user } from "@core";
+import { prescriptionItemForm, prescriptions } from "@modules";
 import { num } from "@utils";
-import { computed, observable } from "mobx";
+import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { Dropdown, IconButton, Panel, PanelType, TextField } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
-export class PrescriptionsPage extends React.Component<{
-	currentUser: StaffMember;
-	currentLocation: string;
-	prescriptions: PrescriptionItem[];
-	onDelete: (id: string) => void;
-	onAdd: (item: PrescriptionItem) => void;
-}> {
-	@observable selectedID: string = this.props.currentLocation.split("/")[1];
-
-	@computed
-	get selectedItem() {
-		return this.props.prescriptions.find(x => x._id === this.selectedID);
-	}
-
+export class PrescriptionsPage extends React.Component {
 	@computed get canEdit() {
-		return this.props.currentUser.canEditPrescriptions;
+		return user.currentUser && user.currentUser.canEditPrescriptions;
 	}
 
 	render() {
@@ -33,7 +20,7 @@ export class PrescriptionsPage extends React.Component<{
 					onDelete={
 						this.canEdit
 							? id => {
-									this.props.onDelete(id);
+									prescriptions!.deleteModal(id);
 							  }
 							: undefined
 					}
@@ -45,9 +32,13 @@ export class PrescriptionsPage extends React.Component<{
 										title: "Add new",
 										name: text("Add new"),
 										onClick: () => {
-											const prescription = new PrescriptionItem();
-											this.props.onAdd(prescription);
-											this.selectedID = prescription._id;
+											const newDoc = prescriptions!.new();
+											prescriptions!
+												.add(newDoc)
+												.then(() => {
+													prescriptions!.selectedID =
+														newDoc._id;
+												});
 										},
 										iconProps: {
 											iconName: "Add"
@@ -62,7 +53,7 @@ export class PrescriptionsPage extends React.Component<{
 						text("Frequency"),
 						text("Form")
 					]}
-					rows={this.props.prescriptions.map(prescription => {
+					rows={prescriptions!.docs.map(prescription => {
 						return {
 							id: prescription._id,
 							searchableString: prescription.searchableString,
@@ -78,15 +69,12 @@ export class PrescriptionsPage extends React.Component<{
 												prescription.timesPerDay
 											}X${
 												prescription.unitsPerTime
-											} ${text(
-												itemFormToString(
-													prescription.form
-												)
-											)}`}
+											} ${text(prescription.form)}`}
 										/>
 									),
 									onClick: () => {
-										this.selectedID = prescription._id;
+										prescriptions!.selectedID =
+											prescription._id;
 									},
 									className: "no-label"
 								},
@@ -112,13 +100,7 @@ export class PrescriptionsPage extends React.Component<{
 								{
 									dataValue: prescription.form,
 									component: (
-										<span>
-											{text(
-												itemFormToString(
-													prescription.form
-												)
-											)}
-										</span>
+										<span>{text(prescription.form)}</span>
 									),
 									className: "hidden-xs"
 								}
@@ -128,31 +110,34 @@ export class PrescriptionsPage extends React.Component<{
 					maxItemsOnLoad={20}
 				/>
 
-				{this.selectedItem ? (
+				{prescriptions!.selectedDoc ? (
 					<Panel
-						isOpen={!!this.selectedItem}
+						isOpen={!!prescriptions!.selectedDoc}
 						type={PanelType.medium}
 						closeButtonAriaLabel="Close"
 						isLightDismiss={true}
 						onDismiss={() => {
-							this.selectedID = "";
+							prescriptions!.selectedID = "";
 						}}
 						onRenderNavigation={() => (
 							<Row className="panel-heading">
 								<Col span={20}>
-									{this.selectedItem ? (
+									{prescriptions!.selectedDoc ? (
 										<ProfileSquaredComponent
-											text={this.selectedItem.name}
+											text={
+												prescriptions!.selectedDoc.name
+											}
 											subText={`${
-												this.selectedItem.doseInMg
+												prescriptions!.selectedDoc
+													.doseInMg
 											}${text("mg")} ${
-												this.selectedItem.timesPerDay
+												prescriptions!.selectedDoc
+													.timesPerDay
 											}X${
-												this.selectedItem.unitsPerTime
+												prescriptions!.selectedDoc
+													.unitsPerTime
 											} ${text(
-												itemFormToString(
-													this.selectedItem.form
-												)
+												prescriptions!.selectedDoc.form
 											)}`}
 										/>
 									) : (
@@ -163,7 +148,7 @@ export class PrescriptionsPage extends React.Component<{
 									<IconButton
 										iconProps={{ iconName: "cancel" }}
 										onClick={() => {
-											this.selectedID = "";
+											prescriptions!.selectedID = "";
 										}}
 									/>
 								</Col>
@@ -176,9 +161,9 @@ export class PrescriptionsPage extends React.Component<{
 							>
 								<TextField
 									label={text("Item name")}
-									value={this.selectedItem.name}
+									value={prescriptions!.selectedDoc.name}
 									onChange={(ev, val) =>
-										(this.selectedItem!.name = val!)
+										(prescriptions!.selectedDoc!.name = val!)
 									}
 									disabled={!this.canEdit}
 								/>
@@ -188,9 +173,9 @@ export class PrescriptionsPage extends React.Component<{
 										<TextField
 											label={text("Dosage in mg")}
 											type="number"
-											value={this.selectedItem.doseInMg.toString()}
+											value={prescriptions!.selectedDoc.doseInMg.toString()}
 											onChange={(ev, val) =>
-												(this.selectedItem!.doseInMg = num(
+												(prescriptions!.selectedDoc!.doseInMg = num(
 													val!
 												))
 											}
@@ -201,9 +186,9 @@ export class PrescriptionsPage extends React.Component<{
 										<TextField
 											label={text("Times per day")}
 											type="number"
-											value={this.selectedItem.timesPerDay.toString()}
+											value={prescriptions!.selectedDoc.timesPerDay.toString()}
 											onChange={(ev, val) =>
-												(this.selectedItem!.timesPerDay = num(
+												(prescriptions!.selectedDoc!.timesPerDay = num(
 													val!
 												))
 											}
@@ -214,9 +199,9 @@ export class PrescriptionsPage extends React.Component<{
 										<TextField
 											label={text("Units per time")}
 											type="number"
-											value={this.selectedItem.unitsPerTime.toString()}
+											value={prescriptions!.selectedDoc.unitsPerTime.toString()}
 											onChange={(ev, val) =>
-												(this.selectedItem!.unitsPerTime = num(
+												(prescriptions!.selectedDoc!.unitsPerTime = num(
 													val!
 												))
 											}
@@ -228,19 +213,19 @@ export class PrescriptionsPage extends React.Component<{
 									disabled={!this.canEdit}
 									label={text("Item form")}
 									className="form-picker"
-									selectedKey={itemFormToString(
-										this.selectedItem.form
-									)}
-									options={prescriptionItemForms.map(form => {
+									selectedKey={
+										prescriptions!.selectedDoc.form
+									}
+									options={Object.keys(
+										prescriptionItemForm
+									).map(form => {
 										return {
 											key: form,
 											text: text(form)
 										};
 									})}
 									onChange={(ev, newValue) => {
-										this.selectedItem!.form = stringToItemForm(
-											newValue!.text
-										);
+										prescriptions!.selectedDoc!.form = (newValue as any).text;
 									}}
 								/>
 							</SectionComponent>

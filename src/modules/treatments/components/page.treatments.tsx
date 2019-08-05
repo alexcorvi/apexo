@@ -1,6 +1,9 @@
+import { router } from "../../../core/router";
 import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
 import { text } from "@core";
+import * as core from "@core";
 import { Appointment, StaffMember, Treatment } from "@modules";
+import * as modules from "@modules";
 import { num } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -8,25 +11,17 @@ import { IconButton, Panel, PanelType, TextField } from "office-ui-fabric-react"
 import * as React from "react";
 
 @observer
-export class Treatments extends React.Component<{
-	currentUser: StaffMember;
-	currentLocation: string;
-	treatments: Treatment[];
-	appointments: Appointment[];
-	currencySymbol: string;
-	onDelete: (id: string) => void;
-	onAdd: (treatment: Treatment) => void;
-}> {
-	@observable selectedID: string = this.props.currentLocation.split("/")[1];
+export class Treatments extends React.Component {
+	@observable selectedID: string = core.router.currentLocation.split("/")[1];
 
 	@computed
 	get canEdit() {
-		return this.props.currentUser.canEditTreatments;
+		return core.user.currentUser!.canEditTreatments;
 	}
 
 	@computed
 	get selectedTreatment() {
-		return this.props.treatments.find(x => x._id === this.selectedID);
+		return modules.treatments!.docs.find(x => x._id === this.selectedID);
 	}
 
 	render() {
@@ -36,7 +31,7 @@ export class Treatments extends React.Component<{
 					onDelete={
 						this.canEdit
 							? id => {
-									this.props.onDelete(id);
+									modules.treatments!.deleteModal(id);
 							  }
 							: undefined
 					}
@@ -48,8 +43,8 @@ export class Treatments extends React.Component<{
 										title: "Add new",
 										name: text("Add new"),
 										onClick: () => {
-											const treatment = new Treatment();
-											this.props.onAdd(treatment);
+											const treatment = modules.treatments!.new();
+											modules.treatments!.add(treatment);
 											this.selectedID = treatment._id;
 										},
 										iconProps: {
@@ -65,12 +60,12 @@ export class Treatments extends React.Component<{
 						text("Done appointments"),
 						text("Upcoming appointments")
 					]}
-					rows={this.props.treatments.map(treatment => {
+					rows={modules.treatments!.docs.map(treatment => {
 						const now = new Date().getTime();
 						let done = 0;
 						let upcoming = 0;
 
-						const appointmentsArr = this.props.appointments;
+						const appointmentsArr = modules.appointments!.docs;
 
 						for (
 							let index = 0;
@@ -98,9 +93,11 @@ export class Treatments extends React.Component<{
 									component: (
 										<ProfileSquaredComponent
 											text={treatment.type}
-											subText={`${text("Expenses")}: ${
-												this.props.currencySymbol
-											}${treatment.expenses} ${text(
+											subText={`${text(
+												"Expenses"
+											)}: ${modules.setting!.getSetting(
+												"currencySymbol"
+											)}${treatment.expenses} ${text(
 												"per unit"
 											)}`}
 										/>
@@ -114,7 +111,9 @@ export class Treatments extends React.Component<{
 									dataValue: treatment.expenses,
 									component: (
 										<span>
-											{this.props.currencySymbol}
+											{modules.setting!.getSetting(
+												"currencySymbol"
+											)}
 											{treatment.expenses}
 										</span>
 									),
@@ -159,9 +158,11 @@ export class Treatments extends React.Component<{
 									{this.selectedTreatment ? (
 										<ProfileSquaredComponent
 											text={this.selectedTreatment.type}
-											subText={`${text("Expenses")}: ${
-												this.props.currencySymbol
-											}${
+											subText={`${text(
+												"Expenses"
+											)}: ${modules.setting!.getSetting(
+												"currencySymbol"
+											)}${
 												this.selectedTreatment.expenses
 											} ${text("per unit")}`}
 										/>
@@ -202,7 +203,9 @@ export class Treatments extends React.Component<{
 												val!
 											))
 										}
-										prefix={this.props.currencySymbol}
+										prefix={modules.setting!.getSetting(
+											"currencySymbol"
+										)}
 										disabled={!this.canEdit}
 									/>
 								</div>

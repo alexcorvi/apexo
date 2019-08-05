@@ -1,5 +1,7 @@
 import { ProfileComponent } from "@common-components";
 import { MessageInterface, messages, ModalInterface, text } from "@core";
+import * as core from "@core";
+import * as modules from "@modules";
 import { generateID } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -7,21 +9,19 @@ import { PrimaryButton, TextField } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
-export class ChooseUserComponent extends React.Component<
-	{
-		showMessage: (message: MessageInterface) => void;
-		showModal: (modal: ModalInterface) => void;
-		onClickUser: (id: string) => void;
-		onCreatingNew: (name: string) => void;
-		users: { name: string; _id: string; pin: string | undefined }[];
-	},
-	{}
-> {
+export class ChooseUserComponent extends React.Component {
 	@observable newDocName: string = "";
+
+	newDoc() {
+		const newDoc = modules.staff!.new();
+		newDoc.name = this.newDocName;
+		modules.staff!.add(newDoc);
+	}
+
 	render() {
 		return (
 			<div className="login-component">
-				{this.props.users.length === 0 ? (
+				{modules.staff!.docs.length === 0 ? (
 					<div id="create-user">
 						<TextField
 							data-testid="new-user-name"
@@ -30,14 +30,14 @@ export class ChooseUserComponent extends React.Component<
 							label={text("Register as new staff member")}
 							onKeyDown={ev => {
 								if (ev.keyCode === 13) {
-									this.props.onCreatingNew(this.newDocName);
+									this.newDoc();
 								}
 							}}
 						/>
 						<PrimaryButton
 							id="create-new-user-btn"
 							onClick={() => {
-								this.props.onCreatingNew(this.newDocName);
+								this.newDoc();
 							}}
 							text={text("Register")}
 						/>
@@ -45,23 +45,23 @@ export class ChooseUserComponent extends React.Component<
 				) : (
 					<div id="choose-user">
 						<h3>{text("Who are you?")}</h3>
-						{this.props.users.map(user => (
+						{modules.staff!.docs.map(user => (
 							<div
 								data-testid="user-chooser"
 								className="m-t-5 p-5 user-chooser pointer"
 								onClick={() => {
 									if (user.pin) {
-										this.props.showModal({
+										core.modals.newModal({
 											id: generateID(),
 											text: text("Please enter your PIN"),
 											onConfirm: providedPin => {
 												if (providedPin === user.pin) {
-													this.props.onClickUser(
+													core.status.setUser(
 														user._id
 													);
 													messages.activeMessages = [];
 												} else {
-													this.props.showMessage({
+													core.messages.newMessage({
 														id: generateID(),
 														text: text(
 															`Invalid PIN provided`
@@ -74,7 +74,7 @@ export class ChooseUserComponent extends React.Component<
 											showConfirmButton: true
 										});
 									} else {
-										this.props.onClickUser(user._id);
+										core.status.setUser(user._id);
 									}
 								}}
 								key={user._id}

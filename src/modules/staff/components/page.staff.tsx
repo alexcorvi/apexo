@@ -9,7 +9,9 @@ import {
 	TableActions
 	} from "@common-components";
 import { text } from "@core";
+import * as core from "@core";
 import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
+import * as modules from "@modules";
 import { dateNames, formatDate, num } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -38,60 +40,8 @@ const AppointmentEditorPanel = loadable({
 });
 
 @observer
-export class StaffPage extends React.Component<{
-	currentUser: StaffMember;
-	currentLocation: string;
-	staffMembers: StaffMember[];
-	dateFormat: string;
-	enabledPrescriptions: boolean;
-	enabledStatistics: boolean;
-	enabledOrthodontics: boolean;
-	availableTreatments: { _id: string; expenses: number; type: string }[];
-	availablePrescriptions: PrescriptionItem[];
-	currencySymbol: string;
-	timeTrackingEnabled: boolean;
-	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
-	onDeleteStaff: (id: string) => void;
-	onAddStaff: (member: StaffMember) => void;
-	onDeleteAppointment: (id: string) => void;
-	appointmentsForDay: (
-		year: number,
-		month: number,
-		day: number,
-		filter?: string | undefined,
-		operatorID?: string | undefined
-	) => Appointment[];
-	allAppointments: Appointment[];
-	doDeleteStaff: (id: string) => void;
-	doDeleteAppointment: (id: string) => void;
-}> {
-	tabs = [
-		{
-			key: "details",
-			title: "Staff Member Details",
-			icon: "DietPlanNotebook"
-		},
-		{
-			key: "permission",
-			title: "Level and Permission",
-			icon: "Permissions"
-		},
-		{
-			key: "appointments",
-			title: "Upcoming Appointments",
-			icon: "Calendar",
-			hidden: !this.props.currentUser.canViewAppointments
-		},
-		{
-			key: "delete",
-			title: "Delete",
-			icon: "Trash",
-			hidden: !this.canEdit,
-			hiddenOnPanel: true
-		}
-	];
-
-	@observable selectedId: string = this.props.currentLocation.split("/")[1];
+export class StaffPage extends React.Component {
+	@observable selectedId: string = core.router.currentLocation.split("/")[1];
 
 	@observable selectedAppointmentId: string = "";
 
@@ -100,28 +50,57 @@ export class StaffPage extends React.Component<{
 		| "details"
 		| "permission"
 		| "appointments"
-		| "delete" = (this.props.currentLocation.split("/")[2] as any) || "";
+		| "delete" = (core.router.currentLocation.split("/")[2] as any) || "";
 
 	@computed get canEdit() {
-		return this.props.currentUser.canEditStaff;
+		return core.user.currentUser!.canEditStaff;
 	}
 
 	@computed get sameUser() {
 		return (
-			this.props.currentUser._id ===
+			core.user.currentUser!._id ===
 			(this.selectedMember || { _id: "" })._id
 		);
 	}
 
 	@computed get selectedAppointment() {
-		return this.props.allAppointments.find(
+		return modules.appointments!.docs.find(
 			x => x._id === this.selectedAppointmentId
 		);
 	}
 
 	@computed
 	get selectedMember() {
-		return this.props.staffMembers.find(x => x._id === this.selectedId);
+		return modules.staff!.docs.find(x => x._id === this.selectedId);
+	}
+
+	tabs(staff: modules.StaffMember) {
+		return [
+			{
+				key: "details",
+				title: "Staff Member Details",
+				icon: "DietPlanNotebook"
+			},
+			{
+				key: "permission",
+				title: "Level and Permission",
+				icon: "Permissions"
+			},
+			{
+				key: "appointments",
+				title: "Upcoming Appointments",
+				icon: "Calendar",
+				hidden: !core.user.currentUser!.canViewAppointments,
+				bubbleContent: staff.nextAppointments.length
+			},
+			{
+				key: "delete",
+				title: "Delete",
+				icon: "Trash",
+				hidden: !this.canEdit,
+				hiddenOnPanel: true
+			}
+		];
 	}
 
 	render() {
@@ -134,7 +113,7 @@ export class StaffPage extends React.Component<{
 						text("Last/Next Appointment"),
 						text("Contact Details")
 					]}
-					rows={this.props.staffMembers.map(member => ({
+					rows={modules.staff!.docs.map(member => ({
 						id: member._id,
 						searchableString: member.searchableString,
 						cells: [
@@ -159,10 +138,10 @@ export class StaffPage extends React.Component<{
 										/>
 										<br />
 										<TableActions
-											items={this.tabs}
+											items={this.tabs(member)}
 											onSelect={key => {
 												if (key === "delete") {
-													this.props.onDeleteStaff(
+													modules.staff!.deleteModal(
 														member._id
 													);
 												} else {
@@ -205,8 +184,9 @@ export class StaffPage extends React.Component<{
 															member
 																.lastAppointment
 																.date,
-															this.props
-																.dateFormat
+															modules.setting!.getSetting(
+																"date_format"
+															)
 													  )
 													: text(
 															"No last appointment"
@@ -247,8 +227,9 @@ export class StaffPage extends React.Component<{
 															member
 																.nextAppointment
 																.date,
-															this.props
-																.dateFormat
+															modules.setting!.getSetting(
+																"date_format"
+															)
 													  )
 													: text(
 															"No next appointment"
@@ -328,8 +309,8 @@ export class StaffPage extends React.Component<{
 										title: "Add new",
 										name: text("Add new"),
 										onClick: () => {
-											const member = new StaffMember();
-											this.props.onAddStaff(member);
+											const member = modules.staff!.new();
+											modules.staff!.add(member);
 											this.selectedId = member._id;
 											this.viewWhich = "details";
 										},
@@ -383,7 +364,7 @@ export class StaffPage extends React.Component<{
 									onSelect={key => {
 										this.viewWhich = key as any;
 									}}
-									items={this.tabs}
+									items={this.tabs(this.selectedMember!)}
 								/>
 							</div>
 						)}
@@ -440,8 +421,6 @@ export class StaffPage extends React.Component<{
 																	1
 																);
 															}
-															this.selectedMember!
-																.triggerUpdate++;
 														}}
 													/>
 												);
@@ -495,7 +474,7 @@ export class StaffPage extends React.Component<{
 							{this.viewWhich === "permission" ? (
 								<div>
 									{this.selectedMember._id ===
-									this.props.currentUser._id ? (
+									core.user.currentUser!._id ? (
 										<SectionComponent
 											title={text(`Login PIN`)}
 										>
@@ -600,7 +579,9 @@ export class StaffPage extends React.Component<{
 												this.selectedMember!.canViewPatients = newVal!;
 											}}
 										/>
-										{this.props.enabledOrthodontics ? (
+										{modules.setting!.getSetting(
+											"module_orthodontics"
+										) ? (
 											<Toggle
 												defaultChecked={
 													this.selectedMember
@@ -659,7 +640,9 @@ export class StaffPage extends React.Component<{
 												this.selectedMember!.canViewTreatments = newVal!;
 											}}
 										/>
-										{this.props.enabledPrescriptions ? (
+										{modules.setting!.getSetting(
+											"module_prescriptions"
+										) ? (
 											<Toggle
 												defaultChecked={
 													this.selectedMember
@@ -682,7 +665,9 @@ export class StaffPage extends React.Component<{
 										) : (
 											""
 										)}
-										{this.props.enabledStatistics ? (
+										{modules.setting!.getSetting(
+											"module_statistics"
+										) ? (
 											<Toggle
 												defaultChecked={
 													this.selectedMember
@@ -772,7 +757,9 @@ export class StaffPage extends React.Component<{
 											""
 										)}
 
-										{this.props.enabledOrthodontics &&
+										{modules.setting!.getSetting(
+											"module_orthodontics"
+										) &&
 										this.selectedMember.canViewOrtho ? (
 											<Toggle
 												defaultChecked={
@@ -847,7 +834,9 @@ export class StaffPage extends React.Component<{
 											""
 										)}
 
-										{this.props.enabledPrescriptions &&
+										{modules.setting!.getSetting(
+											"module_prescriptions"
+										) &&
 										this.selectedMember
 											.canViewPrescriptions ? (
 											<Toggle
@@ -913,48 +902,6 @@ export class StaffPage extends React.Component<{
 												this.selectedMember
 													.nextAppointments
 											}
-											currentUser={this.props.currentUser}
-											dateFormat={this.props.dateFormat}
-											onDeleteAppointment={id =>
-												this.props.onDeleteAppointment(
-													id
-												)
-											}
-											doDeleteAppointment={id =>
-												this.props.doDeleteAppointment(
-													id
-												)
-											}
-											availableTreatments={
-												this.props.availableTreatments
-											}
-											availablePrescriptions={
-												this.props
-													.availablePrescriptions
-											}
-											appointmentsForDay={(
-												year,
-												month,
-												day
-											) =>
-												this.props.appointmentsForDay(
-													year,
-													month,
-													day
-												)
-											}
-											currencySymbol={
-												this.props.currencySymbol
-											}
-											prescriptionsEnabled={
-												this.props.enabledPrescriptions
-											}
-											timeTrackingEnabled={
-												this.props.timeTrackingEnabled
-											}
-											operatingStaff={
-												this.props.operatingStaff
-											}
 										/>
 									) : (
 										<MessageBar
@@ -988,7 +935,7 @@ export class StaffPage extends React.Component<{
 										}}
 										text={text("Delete")}
 										onClick={() => {
-											this.props.doDeleteStaff(
+											modules.staff!.delete(
 												this.selectedId
 											);
 
@@ -1010,23 +957,6 @@ export class StaffPage extends React.Component<{
 					<AppointmentEditorPanel
 						appointment={this.selectedAppointment}
 						onDismiss={() => (this.selectedAppointmentId = "")}
-						doDeleteAppointment={id => {
-							this.props.doDeleteAppointment(id);
-							this.selectedAppointmentId = "";
-						}}
-						availableTreatments={this.props.availableTreatments}
-						availablePrescriptions={
-							this.props.availablePrescriptions
-						}
-						currentUser={this.props.currentUser}
-						dateFormat={this.props.dateFormat}
-						currencySymbol={this.props.currencySymbol}
-						prescriptionsEnabled={this.props.enabledPrescriptions}
-						timeTrackingEnabled={this.props.timeTrackingEnabled}
-						operatingStaff={this.props.operatingStaff}
-						appointmentsForDay={(year, month, day) =>
-							this.props.appointmentsForDay(year, month, day)
-						}
 					/>
 				) : (
 					""

@@ -60,7 +60,7 @@
 			border-color: #f44336;
 		}
 		&:hover {
-			border-color: #00bcd4;
+			border-color: #03a9f4;
 		}
 	}
 	.delete-td {
@@ -74,5 +74,28 @@
 		margin-top: 0;
 		padding: 35px;
 		border: 0;
+	}
+	.table-actions {
+		text-align: right;
+		.ms-TooltipHost {
+			position: relative;
+			.bubble {
+				position: absolute;
+				background: #03a9f4;
+				width: 15px;
+				height: 15px;
+				display: inline-block;
+				margin: 0;
+				padding-top: 5px;
+				text-align: center;
+				font-size: 10px;
+				line-height: 4px;
+				border-radius: 50%;
+				left: 8px;
+				top: -8px;
+				pointer-events: none;
+				color: #fff;
+			}
+		}
 	}
 }

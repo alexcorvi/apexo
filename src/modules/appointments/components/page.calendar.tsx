@@ -1,5 +1,7 @@
 import { Col, ProfileSquaredComponent, Row } from "@common-components";
+import * as core from "@core";
 import { text } from "@core";
+import { Calendar, calendar } from "@modules";
 import {
 	Appointment,
 	DayInfo,
@@ -8,7 +10,7 @@ import {
 	PrescriptionItem,
 	StaffMember
 	} from "@modules";
-import { Calendar, calendar } from "@modules";
+import * as modules from "@modules";
 import { dateNames, num } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -24,26 +26,7 @@ const AppointmentEditorPanel = loadable({
 });
 
 @observer
-export class CalendarPage extends React.Component<{
-	currentUser: StaffMember;
-	currentLocation: string;
-	dateFormat: string;
-	currencySymbol: string;
-	prescriptionsEnabled: boolean;
-	timeTrackingEnabled: boolean;
-	availableTreatments: { type: string; expenses: number; _id: string }[];
-	availablePrescriptions: PrescriptionItem[];
-	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
-	appointmentsForDay: (
-		year: number,
-		month: number,
-		day: number,
-		filter?: string | undefined,
-		operatorID?: string | undefined
-	) => Appointment[];
-	onNavigation: (arr: string[]) => void;
-	doDeleteAppointment: (id: string) => void;
-}> {
+export class CalendarPage extends React.Component {
 	@observable filter: string = "";
 
 	@observable appointment: Appointment | null = null;
@@ -55,7 +38,7 @@ export class CalendarPage extends React.Component<{
 	componentDidMount() {
 		this.unifyHeight();
 
-		const dateString = this.props.currentLocation.split("/")[1];
+		const dateString = core.router.currentLocation.split("/")[1];
 		if (!dateString) {
 			return;
 		}
@@ -192,7 +175,7 @@ export class CalendarPage extends React.Component<{
 												day.dateNum
 													? " selected"
 													: "") +
-												(this.props.currentUser.onDutyDays.indexOf(
+												(core.user.currentUser!.onDutyDays.indexOf(
 													day.weekDay.dayLiteral
 												) === -1
 													? " holiday"
@@ -230,14 +213,14 @@ export class CalendarPage extends React.Component<{
 							</div>
 							<div>
 								{this.c.selectedMonthDays.map(day => {
-									const number = this.props.appointmentsForDay(
+									const number = modules.appointments!.appointmentsForDay(
 										this.c.selected.year,
 										this.c.selected.month + 1,
 										day.dateNum,
 										undefined,
 										this.showAll
 											? undefined
-											: this.props.currentUser._id
+											: core.user.currentUser!._id
 									).length;
 									return (
 										<div
@@ -253,7 +236,7 @@ export class CalendarPage extends React.Component<{
 												day.dateNum
 													? " selected"
 													: "") +
-												(this.props.currentUser.onDutyDays.indexOf(
+												(core.user.currentUser!.onDutyDays.indexOf(
 													day.weekDay.dayLiteral
 												) === -1
 													? " holiday"
@@ -312,7 +295,7 @@ export class CalendarPage extends React.Component<{
 									id={"day" + "_" + day.dateNum}
 									className={
 										"full-day-col" +
-										(this.props.currentUser.onDutyDays.indexOf(
+										(core.user.currentUser!.onDutyDays.indexOf(
 											day.weekDay.dayLiteral
 										) === -1
 											? " holiday"
@@ -348,15 +331,15 @@ export class CalendarPage extends React.Component<{
 											{text(day.weekDay.dayLiteral)}
 										</span>
 									</h4>
-									{this.props
-										.appointmentsForDay(
+									{modules
+										.appointments!.appointmentsForDay(
 											this.c.selected.year,
 											this.c.selected.month + 1,
 											day.dateNum,
 											this.filter,
 											this.showAll
 												? undefined
-												: this.props.currentUser._id
+												: core.user.currentUser!._id
 										)
 										.sort((a, b) => a.date - b.date)
 										.map(appointment => {
@@ -411,19 +394,6 @@ export class CalendarPage extends React.Component<{
 																}
 															).name
 														}
-														onClick={() => {
-															this.props.onNavigation(
-																[
-																	patientsNamespace,
-																	(
-																		appointment.patient || {
-																			_id:
-																				""
-																		}
-																	)._id
-																]
-															);
-														}}
 													/>
 													{appointment.operatingStaff.map(
 														operator => {
@@ -454,25 +424,6 @@ export class CalendarPage extends React.Component<{
 					<AppointmentEditorPanel
 						appointment={this.appointment}
 						onDismiss={() => (this.appointment = null)}
-						doDeleteAppointment={() => {
-							this.props.doDeleteAppointment(
-								this.appointment!._id
-							);
-							this.appointment = null;
-						}}
-						currentUser={this.props.currentUser}
-						appointmentsForDay={(year, month, day) =>
-							this.props.appointmentsForDay(year, month, day)
-						}
-						dateFormat={this.props.dateFormat}
-						currencySymbol={this.props.currencySymbol}
-						prescriptionsEnabled={this.props.prescriptionsEnabled}
-						timeTrackingEnabled={this.props.timeTrackingEnabled}
-						availablePrescriptions={
-							this.props.availablePrescriptions
-						}
-						availableTreatments={this.props.availableTreatments}
-						operatingStaff={this.props.operatingStaff}
 					/>
 				) : (
 					""

@@ -1,7 +1,7 @@
-import { TagType } from "@common-components";
+import { tagType } from "@common-components";
 
 // patient labels interface
 export interface Label {
-	type: TagType;
+	type: keyof typeof tagType;
 	text: string;
 }
