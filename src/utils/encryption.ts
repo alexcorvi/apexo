@@ -15,10 +15,8 @@ export function encrypt(str: string) {
 }
 
 export function decrypt(str: string) {
-	return decode(
-		str
-			.split(",")
-			.map(x => String.fromCharCode(num(x) - salt))
-			.join("")
-	);
+	return decode(str)
+		.split(",")
+		.map(x => String.fromCharCode(num(x) - salt))
+		.join("");
 }
