@@ -1,5 +1,4 @@
 import { text } from "@core";
-import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Pivot, PivotItem } from "office-ui-fabric-react";
 import * as React from "react";
