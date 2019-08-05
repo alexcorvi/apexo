@@ -1,6 +1,8 @@
 import { AppointmentsListNoDate, Col, ProfileComponent, Row, SectionComponent } from "@common-components";
 import { text } from "@core";
+import * as core from "@core";
 import { Appointment, PrescriptionItem, StaffMember } from "@modules";
+import * as modules from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
@@ -23,34 +25,10 @@ const AppointmentEditorPanel = loadable({
 });
 
 @observer
-export class UserPanelView extends React.Component<{
-	staffName: string;
-	todayAppointments: Appointment[];
-	isOpen: boolean;
-	onDismiss: () => void;
-	logout: () => void;
-	resetUser: () => void;
-	dateFormat: string;
-	availableTreatments: { _id: string; expenses: number; type: string }[];
-	availablePrescriptions: PrescriptionItem[];
-	currentUser: StaffMember;
-	appointmentsForDay: (
-		year: number,
-		month: number,
-		day: number,
-		filter?: string | undefined,
-		operatorID?: string | undefined
-	) => Appointment[];
-	currencySymbol: string;
-	prescriptionsEnabled: boolean;
-	timeTrackingEnabled: boolean;
-	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
-	doDeleteAppointment: (id: string) => void;
-	allAppointments: Appointment[];
-}> {
+export class UserPanelView extends React.Component {
 	@observable selectedAppointmentId: string = "";
 	@computed get selectedAppointment() {
-		return this.props.allAppointments.find(
+		return modules.appointments!.docs.find(
 			x => x._id === this.selectedAppointmentId
 		);
 	}
@@ -61,19 +39,19 @@ export class UserPanelView extends React.Component<{
 				className="user-component"
 				type={PanelType.medium}
 				isLightDismiss
-				isOpen={this.props.isOpen}
-				onDismiss={() => this.props.onDismiss()}
+				isOpen={core.user.isVisible}
+				onDismiss={() => core.user.hide()}
 				onRenderNavigation={() => (
 					<Row className="panel-heading">
 						<Col span={20}>
 							<ProfileComponent
-								name={this.props.staffName}
+								name={core.user.currentUser!.name}
 								size={3}
 								secondaryElement={
 									<div>
 										<Link
 											onClick={() => {
-												this.props.logout();
+												core.status.logout();
 											}}
 											data-testid="logout"
 										>
@@ -83,7 +61,7 @@ export class UserPanelView extends React.Component<{
 										<Link
 											className="reset-user"
 											onClick={() => {
-												this.props.resetUser();
+												core.status.resetUser();
 											}}
 											data-testid="switch"
 										>
@@ -97,7 +75,7 @@ export class UserPanelView extends React.Component<{
 							<IconButton
 								iconProps={{ iconName: "cancel" }}
 								onClick={() => {
-									this.props.onDismiss();
+									core.user.hide();
 								}}
 								data-testid="dismiss"
 							/>
@@ -106,7 +84,7 @@ export class UserPanelView extends React.Component<{
 				)}
 			>
 				<SectionComponent title={text("Appointments for today")}>
-					{this.props.todayAppointments.length === 0 ? (
+					{core.user.todayAppointments.length === 0 ? (
 						<MessageBar
 							messageBarType={MessageBarType.info}
 							data-testid="no-appointments"
@@ -120,12 +98,10 @@ export class UserPanelView extends React.Component<{
 						>
 							{
 								<AppointmentsListNoDate
-									appointments={this.props.todayAppointments}
+									appointments={core.user.todayAppointments}
 									onClick={id =>
 										(this.selectedAppointmentId = id)
 									}
-									dateFormat={this.props.dateFormat}
-									onDeleteAppointment={() => {}}
 									canDelete={false}
 								/>
 							}
@@ -136,23 +112,6 @@ export class UserPanelView extends React.Component<{
 					<AppointmentEditorPanel
 						appointment={this.selectedAppointment}
 						onDismiss={() => (this.selectedAppointmentId = "")}
-						availableTreatments={this.props.availableTreatments}
-						availablePrescriptions={
-							this.props.availablePrescriptions
-						}
-						currentUser={this.props.currentUser}
-						dateFormat={this.props.dateFormat}
-						currencySymbol={this.props.currencySymbol}
-						prescriptionsEnabled={this.props.prescriptionsEnabled}
-						timeTrackingEnabled={this.props.timeTrackingEnabled}
-						operatingStaff={this.props.operatingStaff}
-						appointmentsForDay={(year, month, day) =>
-							this.props.appointmentsForDay(year, month, day)
-						}
-						doDeleteAppointment={id => {
-							this.props.doDeleteAppointment(id);
-							this.selectedAppointmentId = "";
-						}}
 					/>
 				) : (
 					""

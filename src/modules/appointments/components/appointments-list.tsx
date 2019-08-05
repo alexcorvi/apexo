@@ -1,6 +1,6 @@
-import { ALRightColumn } from "../../../common-components/appointments-lnd/appointments-lnd";
-import { ALSecondaryText, AppointmentsListNoDate } from "@common-components";
+import { ALRightColumn, ALSecondaryText, AppointmentsListNoDate } from "@common-components";
 import { text } from "@core";
+import * as core from "@core";
 import { Appointment, PrescriptionItem, StaffMember } from "@modules";
 import { textualFilter } from "@utils";
 import { computed, observable } from "mobx";
@@ -20,23 +20,6 @@ const AppointmentEditorPanel = loadable({
 export class AppointmentsList extends React.Component<
 	{
 		list: Appointment[];
-		currentUser: StaffMember;
-		dateFormat: string;
-		onDeleteAppointment: (id: string) => void;
-		doDeleteAppointment: (id: string) => void;
-		availableTreatments: { _id: string; expenses: number; type: string }[];
-		availablePrescriptions: PrescriptionItem[];
-		appointmentsForDay: (
-			year: number,
-			month: number,
-			day: number,
-			filter?: string | undefined,
-			operatorID?: string | undefined
-		) => Appointment[];
-		currencySymbol: string;
-		prescriptionsEnabled: boolean;
-		timeTrackingEnabled: boolean;
-		operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
 		operatorsAsSecondaryText?: boolean;
 	},
 	{}
@@ -54,7 +37,7 @@ export class AppointmentsList extends React.Component<
 	}
 
 	@computed get canEdit() {
-		return this.props.currentUser.canEditAppointments;
+		return core.user.currentUser!.canEditAppointments;
 	}
 
 	@computed get selectedAppointment() {
@@ -71,10 +54,6 @@ export class AppointmentsList extends React.Component<
 								appointments={this.filteredAndSorted}
 								onClick={id =>
 									(this.selectedAppointmentID = id)
-								}
-								dateFormat={this.props.dateFormat}
-								onDeleteAppointment={
-									this.props.onDeleteAppointment
 								}
 								secondaryText={
 									this.props.operatorsAsSecondaryText
@@ -93,23 +72,6 @@ export class AppointmentsList extends React.Component<
 					<AppointmentEditorPanel
 						appointment={this.selectedAppointment}
 						onDismiss={() => (this.selectedAppointmentID = "")}
-						doDeleteAppointment={id => {
-							this.props.doDeleteAppointment(id);
-							this.selectedAppointmentID = "";
-						}}
-						availableTreatments={this.props.availableTreatments}
-						availablePrescriptions={
-							this.props.availablePrescriptions
-						}
-						currentUser={this.props.currentUser}
-						dateFormat={this.props.dateFormat}
-						currencySymbol={this.props.currencySymbol}
-						prescriptionsEnabled={this.props.prescriptionsEnabled}
-						timeTrackingEnabled={this.props.timeTrackingEnabled}
-						operatingStaff={this.props.operatingStaff}
-						appointmentsForDay={(year, month, day) =>
-							this.props.appointmentsForDay(year, month, day)
-						}
 					/>
 				) : (
 					""

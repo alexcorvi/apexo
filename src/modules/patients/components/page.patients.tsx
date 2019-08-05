@@ -8,16 +8,10 @@ import {
 	TableActions,
 	TagComponent
 	} from "@common-components";
+import * as core from "@core";
 import { imagesTable, text } from "@core";
-import {
-	Appointment,
-	genderToString,
-	Patient,
-	PatientAppointmentsPanel,
-	PatientGalleryPanel,
-	PrescriptionItem,
-	StaffMember
-	} from "@modules";
+import { Patient, PatientAppointmentsPanel, PatientGalleryPanel } from "@modules";
+import * as modules from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -54,101 +48,76 @@ const AppointmentEditorPanel = loadable({
 });
 
 @observer
-export class PatientsPage extends React.Component<{
-	patients: Patient[];
-	currentUser: StaffMember;
-	dateFormat: string;
-	currencySymbol: string;
-	currentLocation: string;
-	onDeletePatient: (id: string) => void;
-	onAddPatient: (patient: Patient) => void;
-	onAddAppointment: (appointment: Appointment) => void;
-	saveFile: (obj: {
-		blob: Blob;
-		ext: string;
-		dir: string;
-	}) => Promise<string>;
-	getFile: (path: string) => Promise<string>;
-	removeFile: (path: string) => Promise<any>;
-	onDeleteAppointment: (id: string) => void;
-	doDeleteAppointment: (id: string) => void;
-	availableTreatments: { _id: string; expenses: number; type: string }[];
-	availablePrescriptions: PrescriptionItem[];
-	appointmentsForDay: (
-		year: number,
-		month: number,
-		day: number,
-		filter?: string | undefined,
-		operatorID?: string | undefined
-	) => Appointment[];
-	prescriptionsEnabled: boolean;
-	timeTrackingEnabled: boolean;
-	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
-	doDeletePatient: (id: string) => void;
-	allAppointments: Appointment[];
-}> {
-	tabs = [
-		{
-			key: "details",
-			title: "Patient Details",
-			icon: "DietPlanNotebook"
-		},
-		{
-			key: "dental",
-			title: "Dental History",
-			icon: "teeth"
-		},
-		{
-			key: "gallery",
-			title: "Gallery and X-Rays",
-			icon: "PhotoCollection"
-		},
-		{
-			key: "appointments",
-			title: "Appointments",
-			icon: "Calendar",
-			hidden: !this.props.currentUser.canViewAppointments
-		},
-		{
-			key: "delete",
-			title: "Delete",
-			icon: "Trash",
-			hidden: !this.canEdit,
-			hiddenOnPanel: true
-		}
-	];
-
+export class PatientsPage extends React.Component {
 	@observable selectedAppointmentId = "";
-	@observable selectedId: string = this.props.currentLocation.split("/")[1];
+	@observable selectedId: string = core.router.currentLocation.split("/")[1];
 
-	@observable viewWhich: string = this.props.currentLocation.split("/")[1]
+	@observable viewWhich: string = core.router.currentLocation.split("/")[1]
 		? "details"
 		: "";
 
 	@computed
-	get patient() {
-		return this.props.patients.find(
+	get selectedPatient() {
+		return modules.patients!.docs.find(
 			patient => patient._id === this.selectedId
 		);
 	}
 
 	@computed get canEdit() {
-		return this.props.currentUser.canEditPatients;
+		return core.user.currentUser!.canEditPatients;
 	}
 
 	@computed get selectedAppointment() {
-		return this.props.allAppointments.find(
+		return modules.appointments!.docs.find(
 			x => x._id === this.selectedAppointmentId
 		);
+	}
+
+	tabs(patient: Patient) {
+		return [
+			{
+				key: "details",
+				title: "Patient Details",
+				icon: "DietPlanNotebook"
+			},
+			{
+				key: "dental",
+				title: "Dental History",
+				icon: "teeth",
+				bubbleContent: patient.teeth.filter(
+					x => x.notes.length || x.condition !== "sound"
+				).length
+			},
+			{
+				key: "gallery",
+				title: "Gallery and X-Rays",
+				icon: "PhotoCollection",
+				bubbleContent: patient.gallery.length
+			},
+			{
+				key: "appointments",
+				title: "Appointments",
+				icon: "Calendar",
+				hidden: !core.user.currentUser!.canViewAppointments,
+				bubbleContent: patient.appointments.length
+			},
+			{
+				key: "delete",
+				title: "Delete",
+				icon: "Trash",
+				hidden: !this.canEdit,
+				hiddenOnPanel: true
+			}
+		];
 	}
 
 	render() {
 		return (
 			<div className="patients-component">
-				{this.patient ? (
+				{this.selectedPatient ? (
 					<Panel
 						key={this.selectedId}
-						isOpen={!!this.patient}
+						isOpen={!!this.selectedPatient}
 						type={PanelType.medium}
 						closeButtonAriaLabel="Close"
 						isLightDismiss={true}
@@ -162,22 +131,25 @@ export class PatientsPage extends React.Component<{
 									<Row>
 										<Col span={22}>
 											<ProfileComponent
-												name={this.patient!.name}
+												name={
+													this.selectedPatient!.name
+												}
 												size={2}
 												avatar={
-													this.patient!.avatar
+													this.selectedPatient!.avatar
 														? imagesTable.table[
-																this.patient!
+																this
+																	.selectedPatient!
 																	.avatar
 														  ]
 															? imagesTable.table[
 																	this
-																		.patient!
+																		.selectedPatient!
 																		.avatar
 															  ]
 															: imagesTable.fetchImage(
 																	this
-																		.patient!
+																		.selectedPatient!
 																		.avatar
 															  )
 														: undefined
@@ -202,7 +174,7 @@ export class PatientsPage extends React.Component<{
 										onSelect={key => {
 											this.viewWhich = key as any;
 										}}
-										items={this.tabs}
+										items={this.tabs(this.selectedPatient!)}
 									/>
 								</div>
 							);
@@ -210,15 +182,7 @@ export class PatientsPage extends React.Component<{
 					>
 						{this.viewWhich === "details" ? (
 							<PatientDetailsPanel
-								patient={this.patient!}
-								currentUser={this.props.currentUser}
-								usedLabels={this.props.patients
-									.map(x => x.labels)
-									.reduce(
-										(a: string[], b) =>
-											a.concat(b.map(x => x.text)),
-										[]
-									)}
+								patient={this.selectedPatient!}
 								onChangeViewWhich={key =>
 									(this.viewWhich = key)
 								}
@@ -228,55 +192,21 @@ export class PatientsPage extends React.Component<{
 						)}
 						{this.viewWhich === "dental" ? (
 							<DentalHistoryPanel
-								patient={this.patient!}
-								currentUser={this.props.currentUser}
+								patient={this.selectedPatient!}
 							/>
 						) : (
 							""
 						)}
 						{this.viewWhich === "gallery" ? (
 							<PatientGalleryPanel
-								patient={this.patient}
-								currentUser={this.props.currentUser}
-								saveFile={obj => this.props.saveFile(obj)}
-								getFile={path => this.props.getFile(path)}
-								removeFile={path => this.props.removeFile(path)}
+								patient={this.selectedPatient}
 							/>
 						) : (
 							""
 						)}
 						{this.viewWhich === "appointments" ? (
 							<PatientAppointmentsPanel
-								patient={this.patient}
-								currentUser={this.props.currentUser}
-								appointments={this.patient.appointments}
-								onAdd={appointment =>
-									this.props.onAddAppointment(appointment)
-								}
-								dateFormat={this.props.dateFormat}
-								onDeleteAppointment={id =>
-									this.props.onDeleteAppointment(id)
-								}
-								doDeleteAppointment={id =>
-									this.props.doDeleteAppointment(id)
-								}
-								availablePrescriptions={
-									this.props.availablePrescriptions
-								}
-								availableTreatments={
-									this.props.availableTreatments
-								}
-								currencySymbol={this.props.currencySymbol}
-								prescriptionsEnabled={
-									this.props.prescriptionsEnabled
-								}
-								timeTrackingEnabled={
-									this.props.timeTrackingEnabled
-								}
-								operatingStaff={this.props.operatingStaff}
-								appointmentsForDay={(a, b, c) =>
-									this.props.appointmentsForDay(a, b, c)
-								}
+								patient={this.selectedPatient}
 							/>
 						) : (
 							""
@@ -289,11 +219,11 @@ export class PatientsPage extends React.Component<{
 									messageBarType={MessageBarType.warning}
 								>
 									{`${text("All of the patient")} ${
-										this.patient.name
+										this.selectedPatient.name
 									}${text(
 										"'s data will be deleted along with"
 									)} ${
-										this.patient.appointments.length
+										this.selectedPatient.appointments.length
 									} ${text("of appointments")}.`}
 								</MessageBar>
 								<br />
@@ -304,7 +234,7 @@ export class PatientsPage extends React.Component<{
 									}}
 									text={text("Delete")}
 									onClick={() => {
-										this.props.doDeletePatient(
+										modules.patients!.delete(
 											this.selectedId
 										);
 
@@ -329,7 +259,7 @@ export class PatientsPage extends React.Component<{
 						text("Total/Outstanding Payments"),
 						text("Label")
 					]}
-					rows={this.props.patients.map(patient => ({
+					rows={modules.patients!.docs.map(patient => ({
 						id: patient._id,
 						searchableString: patient.searchableString,
 						cells: [
@@ -337,9 +267,9 @@ export class PatientsPage extends React.Component<{
 								dataValue:
 									patient.name +
 									" " +
-									patient.age +
+									patient.gender +
 									" " +
-									genderToString(patient.gender),
+									patient.age,
 								component: (
 									<div>
 										<ProfileComponent
@@ -359,12 +289,8 @@ export class PatientsPage extends React.Component<{
 											}
 											secondaryElement={
 												<span>
-													{text(
-														genderToString(
-															patient.gender
-														)
-													)}{" "}
-													- {patient.age}{" "}
+													{text(patient.gender)} -{" "}
+													{patient.age}{" "}
 													{text("years old")}
 												</span>
 											}
@@ -373,10 +299,10 @@ export class PatientsPage extends React.Component<{
 										<br />
 
 										<TableActions
-											items={this.tabs}
+											items={this.tabs(patient)}
 											onSelect={key => {
 												if (key === "delete") {
-													this.props.onDeletePatient(
+													modules.patients!.deleteModal(
 														patient._id
 													);
 												} else {
@@ -418,8 +344,9 @@ export class PatientsPage extends React.Component<{
 															patient
 																.lastAppointment
 																.date,
-															this.props
-																.dateFormat
+															modules.setting!.getSetting(
+																"date_format"
+															)
 													  )
 													: text(
 															"No last appointment"
@@ -461,8 +388,9 @@ export class PatientsPage extends React.Component<{
 															patient
 																.nextAppointment
 																.date,
-															this.props
-																.dateFormat
+															modules.setting!.getSetting(
+																"date_format"
+															)
 													  )
 													: text(
 															"No next appointment"
@@ -496,7 +424,9 @@ export class PatientsPage extends React.Component<{
 									<div>
 										<ProfileSquaredComponent
 											text={
-												this.props.currencySymbol +
+												modules.setting!.getSetting(
+													"currencySymbol"
+												) +
 												patient.totalPayments.toString()
 											}
 											subText={text("Payments made")}
@@ -513,7 +443,9 @@ export class PatientsPage extends React.Component<{
 										<br />
 										<ProfileSquaredComponent
 											text={
-												this.props.currencySymbol +
+												modules.setting!.getSetting(
+													"currencySymbol"
+												) +
 												(patient.differenceAmount < 0
 													? patient.outstandingAmount.toString()
 													: patient.differenceAmount >
@@ -574,8 +506,8 @@ export class PatientsPage extends React.Component<{
 										title: "Add new",
 										name: text("Add new"),
 										onClick: () => {
-											const patient = new Patient();
-											this.props.onAddPatient(patient);
+											const patient = modules.patients!.new();
+											modules.patients!.add(patient);
 											this.selectedId = patient._id;
 											this.viewWhich = "details";
 										},
@@ -591,23 +523,6 @@ export class PatientsPage extends React.Component<{
 					<AppointmentEditorPanel
 						appointment={this.selectedAppointment}
 						onDismiss={() => (this.selectedAppointmentId = "")}
-						doDeleteAppointment={id => {
-							this.props.doDeleteAppointment(id);
-							this.selectedAppointmentId = "";
-						}}
-						availableTreatments={this.props.availableTreatments}
-						availablePrescriptions={
-							this.props.availablePrescriptions
-						}
-						currentUser={this.props.currentUser}
-						dateFormat={this.props.dateFormat}
-						currencySymbol={this.props.currencySymbol}
-						prescriptionsEnabled={this.props.prescriptionsEnabled}
-						timeTrackingEnabled={this.props.timeTrackingEnabled}
-						operatingStaff={this.props.operatingStaff}
-						appointmentsForDay={(year, month, day) =>
-							this.props.appointmentsForDay(year, month, day)
-						}
 					/>
 				) : (
 					""

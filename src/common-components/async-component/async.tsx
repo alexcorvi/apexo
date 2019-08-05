@@ -1,4 +1,4 @@
-import { text } from "@core";
+import * as core from "@core";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Spinner, SpinnerSize } from "office-ui-fabric-react";
@@ -10,7 +10,10 @@ export class PageLoader extends React.Component<{
 }> {
 	@observable componentToRender: React.ReactElement = (
 		<div className="spinner-container">
-			<Spinner size={SpinnerSize.large} label={text(`Please wait`)} />
+			<Spinner
+				size={SpinnerSize.large}
+				label={core.text(`Please wait`)}
+			/>
 		</div>
 	);
 

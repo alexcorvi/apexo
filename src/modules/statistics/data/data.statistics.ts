@@ -1,4 +1,5 @@
-import { appointments, Gender, Patient, Treatment } from "@modules";
+import { appointments, gender, Patient, Treatment } from "@modules";
+import * as modules from "@modules";
 import { day, getDayStartingPoint } from "@utils";
 import { computed, observable } from "mobx";
 
@@ -48,8 +49,8 @@ class Statistics {
 				let male = 0;
 				let female = 0;
 				if (
-					(appointment.patient || new Patient()).gender ===
-					Gender.female
+					(appointment.patient || modules.patients!.new()).gender ===
+					gender.female
 				) {
 					female++;
 				} else {
@@ -83,7 +84,7 @@ class Statistics {
 	@computed
 	private get _selectedAppointmentsByDay() {
 		return this.selectedDays.map(calDay =>
-			appointments
+			appointments!
 				.appointmentsForDay(
 					calDay.getFullYear(),
 					calDay.getMonth() + 1,
@@ -140,15 +141,18 @@ class Statistics {
 	}
 
 	@computed
-	get selectedFinancesByDay() {
+	get selectedFinancesByDay(): {
+		day: Date;
+		appointments: Partial<modules.Appointment>[];
+	}[] {
 		return this.selectedAppointmentsByDay.map(date => {
 			const appointmentsList = date.appointments.map(appointment => {
-				const paid = appointment.paidAmount;
+				const paidAmount = appointment.paidAmount;
 				const expenses = appointment.expenses;
 				const profit = appointment.profit;
 				const profitPercentage = appointment.profitPercentage;
 				return {
-					paid,
+					paidAmount,
 					expenses,
 					profit,
 					profitPercentage,

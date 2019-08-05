@@ -5,6 +5,7 @@ export interface ModalInterface {
 	text: string;
 	input?: boolean;
 	onConfirm: (inputValue: string) => void;
+	onDismiss?: () => void;
 	id: string | number;
 	showConfirmButton: boolean;
 	showCancelButton: boolean;

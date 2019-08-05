@@ -6,7 +6,7 @@ class UserData {
 	@observable isVisible: boolean = false;
 	@computed
 	get currentUser() {
-		return staff.list.find(x => x._id === status.currentUserID);
+		return staff!.docs.find(x => x._id === status.currentUserID);
 	}
 	@computed
 	get todayAppointments() {

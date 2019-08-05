@@ -7,7 +7,9 @@ import {
 	SectionComponent
 	} from "@common-components";
 import { CEPHALOMETRIC_DIR, status, text } from "@core";
+import * as core from "@core";
 import { CephalometricItemInterface, OrthoCase, PatientGalleryPanel, StaffMember } from "@modules";
+import * as modules from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -24,16 +26,6 @@ const CephalometricEditorPanel = loadable({
 @observer
 export class OrthoGalleryPanel extends React.Component<{
 	orthoCase: OrthoCase;
-	currentUser: StaffMember;
-	dateFormat: string;
-	saveFile: (obj: {
-		blob: Blob;
-		ext: string;
-		dir: string;
-	}) => Promise<string>;
-	getFile: (path: string) => Promise<string>;
-	removeFile: (path: string) => Promise<any>;
-	cephLoader: (obj: CephalometricItemInterface) => Promise<string>;
 }> {
 	@observable openCephalometricItem:
 		| CephalometricItemInterface
@@ -42,7 +34,7 @@ export class OrthoGalleryPanel extends React.Component<{
 	@observable
 	cephalometricToViewIndex: number = -1;
 	@computed get canEdit() {
-		return this.props.currentUser.canEditOrtho;
+		return core.user.currentUser!.canEditOrtho;
 	}
 
 	@computed
@@ -58,10 +50,6 @@ export class OrthoGalleryPanel extends React.Component<{
 				{this.props.orthoCase.patient ? (
 					<PatientGalleryPanel
 						patient={this.props.orthoCase.patient}
-						currentUser={this.props.currentUser}
-						saveFile={obj => this.props.saveFile(obj)}
-						getFile={path => this.props.getFile(path)}
-						removeFile={path => this.props.removeFile(path)}
 					/>
 				) : (
 					""
@@ -71,11 +59,8 @@ export class OrthoGalleryPanel extends React.Component<{
 					<CephalometricEditorPanel
 						onDismiss={() => {
 							this.openCephalometricItem = undefined;
-							this.props.orthoCase.triggerUpdate++;
 						}}
 						item={this.openCephalometricItem}
-						dateFormat={this.props.dateFormat}
-						cephLoader={obj => this.props.cephLoader(obj)}
 						onSave={coordinates =>
 							(this.openCephalometricItem!.pointCoordinates = coordinates)
 						}
@@ -85,8 +70,8 @@ export class OrthoGalleryPanel extends React.Component<{
 				)}
 
 				<SectionComponent title={text(`Cephalometric Analysis`)}>
-					{status.isServerOnline ? (
-						status.isDropboxActive ? (
+					{status.isOnline.server ? (
+						status.isOnline.dropbox ? (
 							<div>
 								{this.props.orthoCase.cephalometricHistory.map(
 									(c, i) => (
@@ -117,8 +102,9 @@ export class OrthoGalleryPanel extends React.Component<{
 															<span>
 																{formatDate(
 																	c.date,
-																	this.props
-																		.dateFormat
+																	modules.setting!.getSetting(
+																		"date_format"
+																	)
 																)}
 															</span>
 														}
@@ -173,7 +159,6 @@ export class OrthoGalleryPanel extends React.Component<{
 									targetDir={`${CEPHALOMETRIC_DIR}/${
 										this.props.orthoCase._id
 									}`}
-									saveFile={obj => this.props.saveFile(obj)}
 								>
 									<DefaultButton
 										iconProps={{ iconName: "Add" }}

@@ -78,7 +78,7 @@ describe("@core: status: login & logout", () => {
 
 	describe("user setting", () => {
 		it("checking setting a valid user", () => {
-			const id = staff.list[0]._id;
+			const id = staff!.docs[0]._id;
 			store.set("user_id", id);
 			const res = status.checkAndSetUserID();
 			expect(res).toBe(true);
@@ -94,7 +94,7 @@ describe("@core: status: login & logout", () => {
 			expect(status.step === LoginStep.allDone).toBe(false);
 		});
 		it("checking resetting user", () => {
-			const id = staff.list[0]._id;
+			const id = staff!.docs[0]._id;
 			store.set("user_id", id);
 			const res = status.checkAndSetUserID();
 			status.resetUser();

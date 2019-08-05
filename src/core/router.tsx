@@ -29,49 +29,7 @@ export class Router {
 					route.regex.test(this.currentLocation)
 				);
 			}) || {
-				component: async () => (
-					<HomeView
-						allStaff={modules.staff.list}
-						currentUsername={
-							(core.user.currentUser || { name: "" }).name
-						}
-						todayAppointments={
-							modules.appointments.todayAppointments
-						}
-						tomorrowAppointments={
-							modules.appointments.tomorrowAppointments
-						}
-						dateFormat={modules.setting.getSetting("date_format")}
-						selectedAppointmentsByDay={
-							modules.statistics.selectedAppointmentsByDay
-						}
-						showChart={
-							!!modules.setting.getSetting("module_statistics")
-						}
-						allAppointments={modules.appointments.list}
-						doDeleteAppointment={(id: string) =>
-							modules.appointments.deleteByID(id)
-						}
-						availableTreatments={modules.treatments.list}
-						availablePrescriptions={modules.prescriptions.list}
-						appointmentsForDay={(...args) =>
-							modules.appointments.appointmentsForDay(...args)
-						}
-						prescriptionsEnabled={
-							!!modules.setting.getSetting("module_prescriptions")
-						}
-						timeTrackingEnabled={
-							!!modules.setting.getSetting("time_tracking")
-						}
-						operatingStaff={modules.staff.operatingStaff}
-						currentUser={
-							core.user.currentUser || new modules.StaffMember()
-						}
-						currencySymbol={modules.setting.getSetting(
-							"currencySymbol"
-						)}
-					/>
-				),
+				component: async () => <HomeView />,
 				namespace: "Home",
 				regex: /a/
 			}
@@ -92,12 +50,11 @@ export class Router {
 		const namespace = this.currentLocation.split("/")[0];
 		this.isCurrentlyReSyncing = true;
 		try {
-			const resyncModule = core.resync.modules.find(
-				x => x.namespace === namespace
+			// resync on page navigation
+			core.dbAction(
+				"resync",
+				namespace === "staff" ? "doctors" : namespace
 			);
-			if (resyncModule) {
-				await resyncModule.resync();
-			}
 		} catch (e) {
 			console.log(e);
 		}

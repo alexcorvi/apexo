@@ -16,7 +16,7 @@ describe("@core: files", () => {
 
 		it("With invalid DropBox AT", () => {
 			let caught = false;
-			setting.setSetting("dropbox_accessToken", "something invalid");
+			setting!.setSetting("dropbox_accessToken", "something invalid");
 			files
 				.status()
 				.then()
@@ -26,7 +26,7 @@ describe("@core: files", () => {
 
 		it("With valid DropBox AT", () => {
 			let valid = false;
-			setting.setSetting("dropbox_accessToken", dropboxAccessToken);
+			setting!.setSetting("dropbox_accessToken", dropboxAccessToken);
 			files
 				.status()
 				.then(() => (valid = true))
@@ -40,7 +40,7 @@ describe("@core: files", () => {
 		});
 		it("saves, gets, removes files", async done => {
 			jest.setTimeout(90000);
-			setting.setSetting("dropbox_accessToken", dropboxAccessToken);
+			setting!.setSetting("dropbox_accessToken", dropboxAccessToken);
 			const pathA = await files.save({
 				blob: fileA,
 				ext: "temp",

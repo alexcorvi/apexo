@@ -7,18 +7,19 @@ import {
 	SectionComponent,
 	TagComponent,
 	TagInputComponent,
-	TagType
+	tagType
 	} from "@common-components";
 import { imagesTable, text } from "@core";
+import * as core from "@core";
 import {
 	Appointment,
 	ISOTeethArr,
-	itemFormToString,
 	Patient,
 	PrescriptionItem,
 	StaffMember,
 	Treatment
 	} from "@modules";
+import * as modules from "@modules";
 import { convert, formatDate, num, round, second } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -44,23 +45,7 @@ import * as React from "react";
 export class AppointmentEditorPanel extends React.Component<
 	{
 		appointment: Appointment | undefined | null;
-		availableTreatments: { _id: string; expenses: number; type: string }[];
-		availablePrescriptions: PrescriptionItem[];
-		currentUser: StaffMember;
-		appointmentsForDay: (
-			year: number,
-			month: number,
-			day: number,
-			filter?: string | undefined,
-			operatorID?: string | undefined
-		) => Appointment[];
 		onDismiss: () => void;
-		doDeleteAppointment: (_id: string) => void;
-		dateFormat: string;
-		currencySymbol: string;
-		prescriptionsEnabled: boolean;
-		timeTrackingEnabled: boolean;
-		operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
 	},
 	{}
 > {
@@ -128,15 +113,15 @@ export class AppointmentEditorPanel extends React.Component<
 		if (!appointment) {
 			return [].length - 1;
 		}
-		return this.props
-			.appointmentsForDay(appointment.date, 0, 0)
+		return modules
+			.appointments!.appointmentsForDay(appointment.date, 0, 0)
 			.filter(a => a._id !== appointment._id).length;
 	}
 
 	@computed
 	get treatmentOptions() {
 		const list: Treatment[] = JSON.parse(
-			JSON.stringify(this.props.availableTreatments)
+			JSON.stringify(modules.treatments!.docs)
 		);
 		if (
 			this.props.appointment &&
@@ -146,14 +131,14 @@ export class AppointmentEditorPanel extends React.Component<
 			const _id = this.props.appointment.treatmentID;
 			const type = arr[0];
 			const expenses = num(arr[1]);
-			list.push(new Treatment({ _id, expenses, type }));
+			list.push(modules.treatments!.new({ _id, type, expenses }));
 		}
 		return list;
 	}
 
 	@computed
 	get canEdit() {
-		return this.props.currentUser.canEditAppointments;
+		return core.user.currentUser!.canEditAppointments;
 	}
 
 	setTimeFromCombination() {
@@ -272,7 +257,9 @@ export class AppointmentEditorPanel extends React.Component<
 											formatDate={d =>
 												formatDate(
 													d || 0,
-													this.props.dateFormat
+													modules.setting!.getSetting(
+														"date_format"
+													)
 												)
 											}
 										/>
@@ -407,7 +394,7 @@ export class AppointmentEditorPanel extends React.Component<
 							</Row>
 							<div className="appointment-input">
 								<label>{text("Operating staff")} </label>
-								{this.props.operatingStaff.map(member => {
+								{modules.staff!.operatingStaff.map(member => {
 									const checked =
 										this.props.appointment!.staffID.indexOf(
 											member._id
@@ -441,8 +428,6 @@ export class AppointmentEditorPanel extends React.Component<
 														member._id
 													);
 												}
-												this.props.appointment!
-													.triggerUpdate++;
 											}}
 										/>
 									);
@@ -535,15 +520,15 @@ export class AppointmentEditorPanel extends React.Component<
 												this.props.appointment!.involvedTeeth = newValue.map(
 													x => num(x.key)
 												);
-												this.props.appointment!
-													.triggerUpdate++;
 											}}
 										/>
 									</div>
 								</Col>
 							</Row>
 
-							{this.props.prescriptionsEnabled ? (
+							{modules.setting!.getSetting(
+								"module_prescriptions"
+							) ? (
 								<div>
 									<div className="appointment-input prescription">
 										<TagInputComponent
@@ -555,7 +540,7 @@ export class AppointmentEditorPanel extends React.Component<
 													text: x.prescription
 												})
 											)}
-											options={this.props.availablePrescriptions.map(
+											options={modules.prescriptions!.docs.map(
 												this.prescriptionToTagInput
 											)}
 											onChange={newValue => {
@@ -565,8 +550,6 @@ export class AppointmentEditorPanel extends React.Component<
 														prescription: x.text
 													})
 												);
-												this.props.appointment!
-													.triggerUpdate++;
 											}}
 											strict={true}
 											placeholder={text("Prescription")}
@@ -576,7 +559,7 @@ export class AppointmentEditorPanel extends React.Component<
 									<div id="prescription-items">
 										<div className="print-heading">
 											<h2>
-												{this.props.currentUser.name}
+												{core.user.currentUser!.name}
 											</h2>
 											<hr />
 											<h3>
@@ -585,7 +568,7 @@ export class AppointmentEditorPanel extends React.Component<
 													(
 														this.props.appointment!
 															.patient ||
-														new Patient()
+														modules.patients!.new()
 													).name
 												}
 											</h3>
@@ -598,7 +581,7 @@ export class AppointmentEditorPanel extends React.Component<
 																this.props
 																	.appointment!
 																	.patient ||
-																new Patient()
+																modules.patients!.new()
 															).age
 														}
 													</h4>
@@ -610,7 +593,7 @@ export class AppointmentEditorPanel extends React.Component<
 															this.props
 																.appointment!
 																.patient ||
-															new Patient()
+															modules.patients!.new()
 														).gender
 															? "Female"
 															: "Male"}
@@ -697,7 +680,9 @@ export class AppointmentEditorPanel extends React.Component<
 						<SectionComponent title={text("Expenses & Price")}>
 							<Row gutter={12}>
 								<Col sm={16}>
-									{this.props.timeTrackingEnabled ? (
+									{modules.setting!.getSetting(
+										"time_tracking"
+									) ? (
 										<div className="appointment-input time">
 											<label>
 												{text(
@@ -797,30 +782,32 @@ export class AppointmentEditorPanel extends React.Component<
 													text={
 														text("Time value") +
 														": " +
-														this.props
-															.currencySymbol +
+														modules.setting!.getSetting(
+															"currencySymbol"
+														) +
 														round(
 															this.props
 																.appointment!
 																.spentTimeValue
 														).toString()
 													}
-													type={TagType.info}
+													type={tagType.info}
 												/>
 												<br />
 												<TagComponent
 													text={
 														text("Expenses") +
 														": " +
-														this.props
-															.currencySymbol +
+														modules.setting!.getSetting(
+															"currencySymbol"
+														) +
 														round(
 															this.props
 																.appointment!
 																.expenses
 														).toString()
 													}
-													type={TagType.info}
+													type={tagType.info}
 												/>
 											</p>
 										</div>
@@ -842,10 +829,9 @@ export class AppointmentEditorPanel extends React.Component<
 															newVal!
 														);
 													}}
-													prefix={
-														this.props
-															.currencySymbol
-													}
+													prefix={modules.setting!.getSetting(
+														"currencySymbol"
+													)}
 												/>
 											</Col>
 											<Col sm={8}>
@@ -859,10 +845,9 @@ export class AppointmentEditorPanel extends React.Component<
 															newVal!
 														);
 													}}
-													prefix={
-														this.props
-															.currencySymbol
-													}
+													prefix={modules.setting!.getSetting(
+														"currencySymbol"
+													)}
 												/>
 											</Col>
 											<Col sm={8}>
@@ -893,10 +878,9 @@ export class AppointmentEditorPanel extends React.Component<
 															? this.props.appointment!.overpaidAmount.toString()
 															: this.props.appointment!.outstandingAmount.toString()
 													}
-													prefix={
-														this.props
-															.currencySymbol
-													}
+													prefix={modules.setting!.getSetting(
+														"currencySymbol"
+													)}
 												/>
 											</Col>
 										</Row>
@@ -905,13 +889,15 @@ export class AppointmentEditorPanel extends React.Component<
 												text={
 													text("Profit") +
 													": " +
-													this.props.currencySymbol +
+													modules.setting!.getSetting(
+														"currencySymbol"
+													) +
 													round(
 														this.props.appointment!
 															.profit
 													).toString()
 												}
-												type={TagType.success}
+												type={tagType.success}
 											/>
 											<br />
 											<TagComponent
@@ -925,7 +911,7 @@ export class AppointmentEditorPanel extends React.Component<
 													).toString() +
 													"%"
 												}
-												type={TagType.success}
+												type={tagType.success}
 											/>
 										</p>
 									</div>
@@ -952,7 +938,7 @@ export class AppointmentEditorPanel extends React.Component<
 								}}
 								text={text("Delete")}
 								onClick={() => {
-									this.props.doDeleteAppointment(
+									modules.appointments!.delete(
 										this.props.appointment!._id
 									);
 								}}
@@ -1005,7 +991,7 @@ export class AppointmentEditorPanel extends React.Component<
 			key: p._id,
 			text: `${p.name}: ${p.doseInMg}${text("mg")} ${p.timesPerDay}X${
 				p.unitsPerTime
-			} ${text(itemFormToString(p.form))}`
+			} ${text(p.form)}`
 		};
 	}
 }

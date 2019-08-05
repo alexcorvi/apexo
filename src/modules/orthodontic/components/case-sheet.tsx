@@ -1,5 +1,6 @@
 import { SectionComponent, TagInputComponent } from "@common-components";
 import { text } from "@core";
+import * as core from "@core";
 import {
 	FacialProfile,
 	ISOTeethArr,
@@ -8,6 +9,7 @@ import {
 	OrthoCase,
 	StaffMember
 	} from "@modules";
+import * as modules from "@modules";
 import { num } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
@@ -34,10 +36,9 @@ const EditableListComponent = loadable({
 @observer
 export class OrthoCaseSheetPanel extends React.Component<{
 	orthoCase: OrthoCase;
-	currentUser: StaffMember;
 }> {
 	@computed get canEdit() {
-		return this.props.currentUser.canEditOrtho;
+		return core.user.currentUser!.canEditOrtho;
 	}
 
 	render() {
@@ -274,7 +275,6 @@ export class OrthoCaseSheetPanel extends React.Component<{
 						value={this.props.orthoCase.problemsList}
 						onChange={v => {
 							this.props.orthoCase.problemsList = v;
-							this.props.orthoCase.triggerUpdate++;
 						}}
 					/>
 					<br />

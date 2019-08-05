@@ -33,7 +33,7 @@ export const files = {
 		dir: string;
 	}): Promise<string> {
 		return new Promise(async (resolve, reject) => {
-			const accessToken = setting.getSetting("dropbox_accessToken");
+			const accessToken = setting!.getSetting("dropbox_accessToken");
 			if (!accessToken) {
 				return reject("Did not find DropBox access token");
 			}
@@ -72,7 +72,7 @@ export const files = {
 
 	async get(path: string): Promise<string> {
 		return new Promise((resolve, reject) => {
-			const accessToken = setting.getSetting("dropbox_accessToken");
+			const accessToken = setting!.getSetting("dropbox_accessToken");
 			if (!accessToken) {
 				return reject("Did not find DropBox access token");
 			}
@@ -105,7 +105,7 @@ export const files = {
 
 	async remove(path: string) {
 		return new Promise((resolve, reject) => {
-			const accessToken = setting.getSetting("dropbox_accessToken");
+			const accessToken = setting!.getSetting("dropbox_accessToken");
 			if (!accessToken) {
 				return reject("Did not find DropBox access token");
 			}
@@ -127,19 +127,21 @@ export const files = {
 		});
 	},
 
-	async status() {
-		return new Promise((resolve, reject) => {
-			const accessToken = setting.getSetting("dropbox_accessToken");
+	async status(): Promise<boolean> {
+		return new Promise(resolve => {
+			const accessToken = setting!.getSetting("dropbox_accessToken");
 			if (!accessToken) {
-				return reject("Did not find DropBox access token");
+				return resolve(false);
 			}
 			const xhr = new XMLHttpRequest();
 
-			xhr.onload = function() {
-				if (xhr.status === 200) {
-					return resolve();
-				} else {
-					return reject(xhr.response || "Not valid");
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === 4) {
+					if (xhr.status > 199 && xhr.status < 300) {
+						resolve(true);
+					} else {
+						resolve(false);
+					}
 				}
 			};
 
@@ -148,14 +150,18 @@ export const files = {
 				"https://api.dropboxapi.com/2/users/get_current_account"
 			);
 			xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-
-			xhr.send();
+			try {
+				xhr.send(null);
+			} catch (e) {
+				console.log(e);
+				resolve(false);
+			}
 		});
 	},
 
 	async list(path: string): Promise<DropboxFile[]> {
 		return new Promise((resolve, reject) => {
-			const accessToken = setting.getSetting("dropbox_accessToken");
+			const accessToken = setting!.getSetting("dropbox_accessToken");
 			if (!accessToken) {
 				return reject("Did not find DropBox access token");
 			}

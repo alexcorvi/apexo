@@ -1,6 +1,7 @@
 import { Col, Row } from "@common-components";
 import { text } from "@core";
 import { CephalometricItemInterface } from "@modules";
+import * as modules from "@modules";
 import { formatDate } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -11,8 +12,6 @@ import * as React from "react";
 export class CephalometricEditorPanel extends React.Component<{
 	item: CephalometricItemInterface;
 	onDismiss: () => void;
-	dateFormat: string;
-	cephLoader: (obj: CephalometricItemInterface) => Promise<string>;
 	onSave: (coordinates: string) => void;
 }> {
 	@observable loading: boolean = true;
@@ -20,13 +19,15 @@ export class CephalometricEditorPanel extends React.Component<{
 		setTimeout(async () => {
 			const iFrame: any = document.getElementById("cephalometric");
 			iFrame.onload = () => {
-				this.props.cephLoader(this.props.item).then(cephString => {
-					iFrame.contentWindow.postMessage(
-						"cephalometric-open:" + cephString,
-						"*"
-					);
-					this.loading = false;
-				});
+				modules
+					.orthoCases!.cephLoader(this.props.item)
+					.then(cephString => {
+						iFrame.contentWindow.postMessage(
+							"cephalometric-open:" + cephString,
+							"*"
+						);
+						this.loading = false;
+					});
 			};
 
 			// wait for response
@@ -79,7 +80,9 @@ export class CephalometricEditorPanel extends React.Component<{
 									formatDate={d =>
 										formatDate(
 											d || 0,
-											this.props.dateFormat
+											modules.setting!.getSetting(
+												"date_format"
+											)
 										)
 									}
 								/>

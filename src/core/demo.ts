@@ -1,22 +1,6 @@
 import { getRandomTagType } from "@common-components";
-import {
-	Appointment,
-	appointments,
-	Label,
-	OrthoCase,
-	orthoCases,
-	Patient,
-	patients,
-	PrescriptionItem,
-	prescriptions,
-	setting,
-	SettingsItem,
-	staff,
-	StaffMember,
-	Treatment,
-	treatments
-	} from "@modules";
-import { day, store } from "@utils";
+import { Label } from "@modules";
+import { day } from "@utils";
 import { toJS } from "mobx";
 
 function randomInRange(minimum: number, maximum: number) {
@@ -101,6 +85,8 @@ function randomCondition() {
 
 export function loadDemoData() {
 	return new Promise((resolve, reject) => {
+		/*
+		// TODO: fix this
 		const Http = new XMLHttpRequest();
 		const url = "./demo.json";
 		Http.open("GET", url);
@@ -118,7 +104,7 @@ export function loadDemoData() {
 				staff.list = demoData.staffData.staffMembers.list.map(
 					(x: any) => new StaffMember(x)
 				);
-				prescriptions.list = demoData.prescriptionsData.prescriptions.list.map(
+				(prescriptions as any).__list = demoData.prescriptionsData.prescriptions.list.map(
 					(x: any) => new PrescriptionItem(x as any)
 				);
 				patients.list = demoData.patientsData.patients.list.map(
@@ -190,5 +176,6 @@ export function loadDemoData() {
 				resolve();
 			}
 		};
+		*/
 	});
 }

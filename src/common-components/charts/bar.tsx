@@ -1,4 +1,4 @@
-import { colors } from "@common-components";
+import * as commonComponents from "@common-components";
 import { observer } from "mobx-react";
 import * as React from "react";
 
@@ -36,8 +36,8 @@ export class BarChartComponent extends React.Component<
 				datasets: this.props.data.bars.map((x, i) => ({
 					label: x.label,
 					data: x.data,
-					borderColor: colors[i],
-					backgroundColor: colors[i],
+					borderColor: commonComponents.colors[i],
+					backgroundColor: commonComponents.colors[i],
 					fill: false,
 					stack: this.props.notStacked ? "stack " + i : "stack 0"
 				}))

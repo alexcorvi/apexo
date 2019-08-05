@@ -1,5 +1,6 @@
 import { LineChartComponent } from "@common-components";
 import { text } from "@core";
+import * as modules from "@modules";
 import { formatDate, round } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
@@ -9,14 +10,7 @@ import * as React from "react";
 export class FinancesByDateChart extends React.Component<{
 	selectedFinancesByDay: {
 		day: Date;
-		appointments: {
-			paid: number;
-			expenses: number;
-			profit: number;
-			profitPercentage: number;
-			isPaid: boolean;
-			isDone: boolean;
-		}[];
+		appointments: Partial<modules.Appointment>[];
 	}[];
 	dateFormat: string;
 }> {
@@ -35,11 +29,11 @@ export class FinancesByDateChart extends React.Component<{
 			) {
 				const appointment = dateFinances.appointments[index];
 				if (appointment.isDone) {
-					totalExpenses = totalExpenses + appointment.expenses;
+					totalExpenses = totalExpenses + appointment.expenses!;
 				}
 				if (appointment.isPaid) {
-					totalPayments = totalPayments + appointment.paid;
-					totalProfits = totalProfits + appointment.profit;
+					totalPayments = totalPayments + appointment.paidAmount!;
+					totalProfits = totalProfits + appointment.profit!;
 				}
 			}
 			totalExpenses = round(totalExpenses);

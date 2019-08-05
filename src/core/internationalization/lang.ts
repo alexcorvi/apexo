@@ -28,14 +28,17 @@ class Translate {
 	@observable loadedCode: string = "en";
 
 	constructor() {
-		setTimeout(() => {
-			this.checkLang();
-			setting.onSettingChange(() => this.checkLang());
-		}, 500);
+		const i = setInterval(() => {
+			if (setting) {
+				this.checkLang();
+				setting.onSettingChange(() => this.checkLang());
+				clearInterval(i);
+			}
+		}, 100);
 	}
 
 	private async checkLang() {
-		const languageCode = setting.getSetting("lang");
+		const languageCode = setting ? setting.getSetting("lang") : "en";
 		if (languageCode !== this.loadedCode) {
 			const newLang = this.languages.find(l => l.code === languageCode);
 			if (newLang) {

@@ -3,14 +3,13 @@ import "../mocks/state-mocks";
 import { user } from "@core";
 import * as core from "@core";
 import * as modules from "@modules";
-import { toJS } from "mobx";
 
 function setUserA() {
-	core.status.setUser(modules.staff.list.find(x => x.name === "A")!._id);
+	core.status.setUser(modules.staff!.docs.find(x => x.name === "A")!._id);
 }
 
 function setUserB() {
-	core.status.setUser(modules.staff.list.find(x => x.name === "B")!._id);
+	core.status.setUser(modules.staff!.docs.find(x => x.name === "B")!._id);
 }
 
 describe("@core: user panel", () => {

@@ -1,6 +1,8 @@
 import { Col, getRandomTagType, Row, SectionComponent, TagInputComponent } from "@common-components";
+import * as core from "@core";
 import { imagesTable, status, text } from "@core";
-import { Gender, Patient, StaffMember } from "@modules";
+import * as modules from "@modules";
+import { gender, Patient, StaffMember } from "@modules";
 import { num } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
@@ -18,12 +20,10 @@ const EditableListComponent = loadable({
 @observer
 export class PatientDetailsPanel extends React.Component<{
 	patient: Patient;
-	currentUser: StaffMember;
-	usedLabels: string[];
 	onChangeViewWhich: (key: string) => void;
 }> {
 	@computed get canEdit() {
-		return this.props.currentUser.canEditPatients;
+		return core.user.currentUser!.canEditPatients;
 	}
 
 	render() {
@@ -60,23 +60,17 @@ export class PatientDetailsPanel extends React.Component<{
 							<div className="gender">
 								<Dropdown
 									label={text("Gender")}
-									selectedKey={
-										this.props.patient.gender ===
-										Gender.male
-											? "male"
-											: "female"
-									}
+									selectedKey={this.props.patient.gender}
 									options={[
 										{ key: "male", text: text("Male") },
 										{ key: "female", text: text("Female") }
 									]}
 									onChange={(ev, val) => {
 										if (val!.key === "male") {
-											this.props.patient.gender =
-												Gender.male;
+											this.props.patient.gender = "male";
 										} else {
 											this.props.patient.gender =
-												Gender.female;
+												"female";
 										}
 									}}
 									disabled={!this.canEdit}
@@ -84,7 +78,7 @@ export class PatientDetailsPanel extends React.Component<{
 							</div>
 						</Col>
 					</Row>
-					{status.isServerOnline && status.isDropboxActive ? (
+					{status.isOnline.server && status.isOnline.dropbox ? (
 						<div>
 							<Label>Avatar photo</Label>
 							<div className="thumbs">
@@ -191,7 +185,17 @@ export class PatientDetailsPanel extends React.Component<{
 								className="patient-tags"
 								placeholder={text("Labels")}
 								options={[""]
-									.concat(this.props.usedLabels)
+									.concat(
+										modules
+											.patients!.docs.map(x => x.labels)
+											.reduce(
+												(a: string[], b) =>
+													a.concat(
+														b.map(x => x.text)
+													),
+												[]
+											)
+									)
 									.map(x => ({
 										key: x,
 										text: x

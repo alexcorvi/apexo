@@ -1,6 +1,6 @@
 import { BarChartComponent } from "@common-components";
 import { text } from "@core";
-import { Treatment, treatments } from "@modules";
+import { Treatment } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";

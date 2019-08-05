@@ -1,5 +1,4 @@
 export * from "./base64";
-export * from "./check-server";
 export * from "./date";
 export * from "./encryption";
 export * from "./escape-regex";

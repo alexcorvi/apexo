@@ -1,20 +1,12 @@
 import { Col, Row } from "@common-components";
 import { status, text } from "@core";
+import * as core from "@core";
 import { observer } from "mobx-react";
 import { Icon, IconButton, TooltipHost } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
-export class HeaderView extends React.Component<{
-	expandMenu: () => void;
-	expandUser: () => void;
-	resync: () => Promise<boolean>;
-	startReSyncing: () => void;
-	finishReSyncing: () => void;
-	currentNamespace: string;
-	isOnline: boolean;
-	isCurrentlyReSyncing: boolean;
-}> {
+export class HeaderView extends React.Component {
 	render() {
 		return (
 			<div
@@ -25,7 +17,7 @@ export class HeaderView extends React.Component<{
 					<Col span={8}>
 						<section className="menu-button">
 							<IconButton
-								onClick={this.props.expandMenu}
+								onClick={() => core.menu.show()}
 								disabled={false}
 								iconProps={{ iconName: "GlobalNavButton" }}
 								title="Menu"
@@ -36,23 +28,24 @@ export class HeaderView extends React.Component<{
 					</Col>
 					<Col span={8}>
 						<section className="title">
-							{text(this.props.currentNamespace || "Home")}
+							{text(core.router.currentNamespace || "Home")}
 						</section>
 					</Col>
 					<Col span={8}>
 						<section className="right-buttons">
-							{this.props.isOnline ? (
+							{core.status.isOnline.server ? (
 								<TooltipHost content={text("Sync with server")}>
 									<IconButton
 										id="online"
 										onClick={async () => {
-											this.props.startReSyncing();
-											await this.props.resync();
-											this.props.finishReSyncing();
+											core.router.isCurrentlyReSyncing = true;
+											// resync on clicking (manual)
+											await core.dbAction("resync");
+											core.router.isCurrentlyReSyncing = false;
 										}}
 										iconProps={{ iconName: "Sync" }}
 										className={
-											this.props.isCurrentlyReSyncing
+											core.router.isCurrentlyReSyncing
 												? "rotate"
 												: ""
 										}
@@ -67,7 +60,7 @@ export class HeaderView extends React.Component<{
 
 							<TooltipHost content={text("User panel")}>
 								<IconButton
-									onClick={this.props.expandUser}
+									onClick={() => core.user.show()}
 									iconProps={{ iconName: "Contact" }}
 									data-testid="expand-user"
 								/>

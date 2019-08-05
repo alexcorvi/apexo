@@ -1,5 +1,6 @@
 import { fileTypes, PickAndUploadComponent, SectionComponent } from "@common-components";
 import { GALLERIES_DIR, imagesTable, status, text } from "@core";
+import * as core from "@core";
 import { Patient, StaffMember } from "@modules";
 import { computed, observable, observe } from "mobx";
 import { observer } from "mobx-react";
@@ -7,22 +8,11 @@ import { Icon, IconButton, MessageBar, MessageBarType, TooltipHost } from "offic
 import * as React from "react";
 
 @observer
-export class PatientGalleryPanel extends React.Component<
-	{
-		patient: Patient;
-		currentUser: StaffMember;
-		saveFile: (obj: {
-			blob: Blob;
-			ext: string;
-			dir: string;
-		}) => Promise<string>;
-		getFile: (path: string) => Promise<string>;
-		removeFile: (path: string) => Promise<any>;
-	},
-	{}
-> {
+export class PatientGalleryPanel extends React.Component<{
+	patient: Patient;
+}> {
 	@computed get canEdit() {
-		return this.props.currentUser.canEditPatients;
+		return core.user.currentUser!.canEditPatients;
 	}
 
 	@observable uploading: boolean = false;
@@ -38,8 +28,8 @@ export class PatientGalleryPanel extends React.Component<
 	render() {
 		return (
 			<SectionComponent title={text(`Patient Gallery`)}>
-				{status.isServerOnline ? (
-					status.isDropboxActive ? (
+				{status.isOnline.server ? (
+					status.isOnline.dropbox ? (
 						<div className="spg-p">
 							{this.props.patient.gallery.length === 0 ? (
 								<MessageBar
@@ -82,9 +72,6 @@ export class PatientGalleryPanel extends React.Component<
 											targetDir={`${GALLERIES_DIR}/${
 												this.props.patient._id
 											}`}
-											saveFile={obj =>
-												this.props.saveFile(obj)
-											}
 										>
 											<TooltipHost
 												content={text("Add photo")}
@@ -187,7 +174,7 @@ export class PatientGalleryPanel extends React.Component<
 	}
 
 	async removeImage() {
-		await this.props.removeFile(this.selectedImagePath);
+		await core.files.remove(this.selectedImagePath);
 		const selectedImageIndex = this.props.patient.gallery.indexOf(
 			this.selectedImagePath
 		);

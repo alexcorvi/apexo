@@ -2,6 +2,7 @@ import { AppointmentsListNoDate, Col, ProfileComponent, Row } from "@common-comp
 import { text } from "@core";
 import * as core from "@core";
 import { Appointment, PrescriptionItem, setting, StaffMember } from "@modules";
+import * as modules from "@modules";
 import { dateNames, isToday, isTomorrow } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -17,44 +18,17 @@ const AppointmentEditorPanel = loadable({
 });
 
 @observer
-export class HomeView extends React.Component<{
-	currentUsername: string;
-	showChart: boolean;
-	todayAppointments: Appointment[];
-	tomorrowAppointments: Appointment[];
-	dateFormat: string;
-	selectedAppointmentsByDay: {
-		appointments: Appointment[];
-		day: Date;
-	}[];
-	allAppointments: Appointment[];
-	doDeleteAppointment: (id: string) => void;
-	availableTreatments: { _id: string; expenses: number; type: string }[];
-	availablePrescriptions: PrescriptionItem[];
-	appointmentsForDay: (
-		year: number,
-		month: number,
-		day: number,
-		filter?: string | undefined,
-		operatorID?: string | undefined
-	) => Appointment[];
-	prescriptionsEnabled: boolean;
-	timeTrackingEnabled: boolean;
-	operatingStaff: { _id: string; name: string; onDutyDays: string[] }[];
-	allStaff: StaffMember[];
-	currentUser: StaffMember;
-	currencySymbol: string;
-}> {
+export class HomeView extends React.Component {
 	@observable selectedAppointmentId: string = "";
 
 	@computed get selectedAppointment() {
-		return this.props.allAppointments.find(
+		return modules.appointments!.docs.find(
 			appointment => appointment._id === this.selectedAppointmentId
 		);
 	}
 
 	@computed get weekdays() {
-		const weekendNum = Number(setting.getSetting("weekend_num"));
+		const weekendNum = Number(setting!.getSetting("weekend_num"));
 		return dateNames.days().reduce((arr: string[], date, index) => {
 			if (index <= weekendNum) {
 				arr.push(date);
@@ -70,7 +44,7 @@ export class HomeView extends React.Component<{
 			<div className="home">
 				<div>
 					<h2 className="welcome">
-						{text("Welcome")}, {this.props.currentUsername}
+						{text("Welcome")}, {core.user.currentUser!.name}
 					</h2>
 					<Row gutter={0}>
 						<Col md={14}>
@@ -78,17 +52,16 @@ export class HomeView extends React.Component<{
 								{text("Appointments for today")}
 							</h3>
 							<AppointmentsListNoDate
-								appointments={this.props.todayAppointments.filter(
+								appointments={modules.appointments!.todayAppointments.filter(
 									x => isToday(x.date)
 								)}
 								onClick={id => {
 									this.selectedAppointmentId = id;
 								}}
-								dateFormat={this.props.dateFormat}
-								onDeleteAppointment={() => {}}
 								canDelete={false}
 							/>
-							{this.props.todayAppointments.length === 0 ? (
+							{modules.appointments!.todayAppointments.length ===
+							0 ? (
 								<p className="no-appointments">
 									{text(
 										"There are no appointments for today"
@@ -101,17 +74,16 @@ export class HomeView extends React.Component<{
 								{text("Appointments for tomorrow")}
 							</h3>
 							<AppointmentsListNoDate
-								appointments={this.props.tomorrowAppointments.filter(
+								appointments={modules.appointments!.tomorrowAppointments.filter(
 									x => isTomorrow(x.date)
 								)}
 								onClick={id => {
 									this.selectedAppointmentId = id;
 								}}
-								dateFormat={this.props.dateFormat}
-								onDeleteAppointment={() => {}}
 								canDelete={false}
 							/>
-							{this.props.tomorrowAppointments.length === 0 ? (
+							{modules.appointments!.tomorrowAppointments
+								.length === 0 ? (
 								<p className="no-appointments">
 									{text(
 										"There are no appointments for tomorrow"
@@ -134,8 +106,8 @@ export class HomeView extends React.Component<{
 													{text(dayName)}
 												</th>
 												<td className="names">
-													{this.props.allStaff
-														.filter(
+													{modules
+														.staff!.docs.filter(
 															member =>
 																member.onDutyDays.indexOf(
 																	dayName
@@ -149,7 +121,7 @@ export class HomeView extends React.Component<{
 																	onClick={() => {
 																		core.router.go(
 																			[
-																				"staff",
+																				modules.staffNamespace,
 																				member._id,
 																				"appointments"
 																			]
@@ -204,23 +176,6 @@ export class HomeView extends React.Component<{
 							this.selectedAppointmentId = "";
 							this.render();
 						}}
-						doDeleteAppointment={id => {
-							this.props.doDeleteAppointment(id);
-							this.selectedAppointmentId = "";
-						}}
-						availableTreatments={this.props.availableTreatments}
-						availablePrescriptions={
-							this.props.availablePrescriptions
-						}
-						currentUser={this.props.currentUser}
-						dateFormat={this.props.dateFormat}
-						currencySymbol={this.props.currencySymbol}
-						prescriptionsEnabled={this.props.prescriptionsEnabled}
-						timeTrackingEnabled={this.props.timeTrackingEnabled}
-						operatingStaff={this.props.operatingStaff}
-						appointmentsForDay={(year, month, day) =>
-							this.props.appointmentsForDay(year, month, day)
-						}
 					/>
 				) : (
 					""

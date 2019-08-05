@@ -1,6 +1,6 @@
 {
 	"name": "apexo.app",
-	"version": "4.0-α1",
+	"version": "4.0-α2",
 	"description": "Clinic Manager",
 	"author": "Ali Saleem",
 	"dependencies": {
@@ -18,7 +18,7 @@
 		"office-ui-fabric-react": "^7.10.0",
 		"pouchdb-authentication": "^1.1.3",
 		"pouchdb-browser": "^7.1.1",
-		"pouchx": "^1.0.2",
+		"pouchx": "^1.0.7",
 		"react": "^16.8.6",
 		"react-avatar-editor": "^11.0.7",
 		"react-dom": "^16.8.6",

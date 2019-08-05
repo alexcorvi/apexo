@@ -1,5 +1,4 @@
 import { text } from "@core";
-import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import { IconButton, TooltipHost } from "office-ui-fabric-react";
 import * as React from "react";
@@ -11,6 +10,7 @@ export class TableActions extends React.Component<{
 		title: string;
 		icon: string;
 		hidden?: boolean;
+		bubbleContent?: number | string;
 	}[];
 	onSelect: (key: string) => void;
 }> {
@@ -32,6 +32,13 @@ export class TableActions extends React.Component<{
 									e.stopPropagation();
 								}}
 							/>
+							{item.bubbleContent ? (
+								<span className="bubble">
+									{item.bubbleContent}
+								</span>
+							) : (
+								""
+							)}
 						</TooltipHost>
 					)
 				)}

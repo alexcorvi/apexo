@@ -1,4 +1,4 @@
-import { colors } from "@common-components";
+import * as commonComponents from "@common-components";
 import { observer } from "mobx-react";
 import * as React from "react";
 
@@ -31,7 +31,7 @@ export class PieChartComponent extends React.Component<
 					{
 						data: this.props.data.map(x => x.value),
 						backgroundColor: this.props.data.map(
-							(x, i) => colors[i]
+							(x, i) => commonComponents.colors[i]
 						)
 					}
 				],

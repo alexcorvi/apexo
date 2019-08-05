@@ -1,8 +1,7 @@
-import { Col, ProfileComponent, ProfileSquaredComponent } from "@common-components";
-import { text } from "@core";
-import { Appointment, Patient } from "@modules";
-import { formatDate, isToday } from "@utils";
-import { computed } from "mobx";
+import * as CC from "@common-components";
+import * as core from "@core";
+import * as modules from "@modules";
+import * as utils from "@utils";
 import { observer } from "mobx-react";
 import { Icon } from "office-ui-fabric-react";
 import * as React from "react";
@@ -21,17 +20,15 @@ export enum ALRightColumn {
 @observer
 export class AppointmentsListNoDate extends React.Component<
 	{
-		appointments: Appointment[];
+		appointments: modules.Appointment[];
 		onClick: (id: string) => void;
-		dateFormat: string;
 		secondaryText?: ALSecondaryText;
 		rightColumn?: ALRightColumn;
-		onDeleteAppointment: (id: string) => void;
 		canDelete: boolean;
 	},
 	{}
 > {
-	secondaryText(appointment: Appointment) {
+	secondaryText(appointment: modules.Appointment) {
 		if (this.props.secondaryText === ALSecondaryText.operators) {
 			return appointment.operatingStaff.map(x => x.name).join(", ");
 		} else {
@@ -39,18 +36,18 @@ export class AppointmentsListNoDate extends React.Component<
 		}
 	}
 
-	rightColumn(appointment: Appointment) {
+	rightColumn(appointment: modules.Appointment) {
 		if (this.props.rightColumn === ALRightColumn.patient) {
-			const patient = appointment.patient || new Patient();
+			const patient = appointment.patient || modules.patients!.new();
 			return (
 				<div key={patient._id}>
-					<Col xxl={0} xl={0} lg={0} md={0} sm={0} xs={24}>
+					<CC.Col xxl={0} xl={0} lg={0} md={0} sm={0} xs={24}>
 						<div key={patient._id} className="m-t-5 fs-11">
 							{patient.name}
 						</div>
-					</Col>
-					<Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={0}>
-						<ProfileComponent
+					</CC.Col>
+					<CC.Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={0}>
+						<CC.ProfileComponent
 							key={patient._id}
 							name={patient.name}
 							onRenderInitials={() => (
@@ -59,7 +56,7 @@ export class AppointmentsListNoDate extends React.Component<
 							size={1}
 							className="m-b-5"
 						/>
-					</Col>
+					</CC.Col>
 				</div>
 			);
 		} else if (this.props.rightColumn === ALRightColumn.deleteButton) {
@@ -68,7 +65,7 @@ export class AppointmentsListNoDate extends React.Component<
 					iconName="delete"
 					className="delete"
 					onClick={ev => {
-						this.props.onDeleteAppointment(appointment._id);
+						modules.appointments!.deleteModal(appointment._id);
 						ev.stopPropagation();
 					}}
 				/>
@@ -76,13 +73,13 @@ export class AppointmentsListNoDate extends React.Component<
 		} else {
 			return appointment.operatingStaff.map(operator => (
 				<div key={operator._id}>
-					<Col xxl={0} xl={0} lg={0} md={0} sm={0} xs={24}>
+					<CC.Col xxl={0} xl={0} lg={0} md={0} sm={0} xs={24}>
 						<div key={operator._id} className="m-t-5 fs-11">
 							{operator.name}
 						</div>
-					</Col>
-					<Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={0}>
-						<ProfileComponent
+					</CC.Col>
+					<CC.Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={0}>
+						<CC.ProfileComponent
 							key={operator._id}
 							name={operator.name}
 							onRenderInitials={() => (
@@ -91,29 +88,32 @@ export class AppointmentsListNoDate extends React.Component<
 							size={1}
 							className="m-b-5"
 						/>
-					</Col>
+					</CC.Col>
 				</div>
 			));
 		}
 	}
 
-	dayString(appointment: Appointment) {
-		if (isToday(appointment.date)) {
+	dayString(appointment: modules.Appointment) {
+		if (utils.isToday(appointment.date)) {
 			return "Today";
 		} else if (appointment.dueTomorrow) {
 			return "Tomorrow";
 		} else if (appointment.dueYesterday) {
 			return "Yesterday";
 		} else {
-			return formatDate(appointment.date, this.props.dateFormat);
+			return utils.formatDate(
+				appointment.date,
+				modules.setting!.getSetting("date_format")
+			);
 		}
 	}
 
-	timeString(appointment: Appointment) {
+	timeString(appointment: modules.Appointment) {
 		if (appointment.isDone) {
-			return text("Done");
+			return core.text("Done");
 		} else if (appointment.isMissed) {
-			return text("Missed");
+			return core.text("Missed");
 		} else {
 			return appointment.formattedTime;
 		}
@@ -132,14 +132,14 @@ export class AppointmentsListNoDate extends React.Component<
 					>
 						<tr>
 							<td colSpan={2} className="hat-time">
-								{`${text(
+								{`${core.text(
 									this.dayString(appointment)
 								)} - ${this.timeString(appointment)}`}
 							</td>
 						</tr>
 						<tr className="home-td today-appointment">
 							<td>
-								<ProfileSquaredComponent
+								<CC.ProfileSquaredComponent
 									text={
 										appointment.treatment
 											? appointment.treatment.type

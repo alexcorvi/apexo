@@ -2,6 +2,8 @@ import * as core from "@core";
 import * as modules from "@modules";
 import { day, generateID } from "@utils";
 
+/*
+// TODO: fix this
 {
 	// staff
 	if (!modules.staff.list.length) {
@@ -55,40 +57,39 @@ import { day, generateID } from "@utils";
 
 {
 	// appointments
-	if (!modules.appointments.list.length) {
-		const appointmentA = new modules.Appointment();
+	if (!modules.appointments!.docs.length) {
+		const appointmentA = modules.appointments!.new();
 		appointmentA.date = new Date().getTime();
 		appointmentA.staffID = [
 			modules.staff.list.find(x => x.name === "A")!._id
 		];
 		appointmentA.notes = "A";
 
-		const appointmentB = new modules.Appointment();
+		const appointmentB = modules.appointments!.new();
 		appointmentB.date = new Date().getTime();
 		appointmentB.staffID = [
 			modules.staff.list.find(x => x.name === "B")!._id
 		];
 		appointmentB.notes = "B";
 
-		const appointmentC = new modules.Appointment();
+		const appointmentC = modules.appointments!.new();
 		appointmentC.date = new Date().getTime() - day * 30;
 		appointmentC.staffID = [
 			modules.staff.list.find(x => x.name === "A")!._id
 		];
 		appointmentC.notes = "C";
 
-		const appointmentD = new modules.Appointment();
+		const appointmentD = modules.appointments!.new();
 		appointmentD.date = new Date().getTime() - day * 30;
 		appointmentD.staffID = [
 			modules.staff.list.find(x => x.name === "B")!._id
 		];
 		appointmentD.notes = "D";
 
-		modules.appointments.list.push(
-			appointmentA,
-			appointmentB,
-			appointmentC,
-			appointmentD
-		);
+		modules.appointments!.add(appointmentA, true);
+		modules.appointments!.add(appointmentB, true);
+		modules.appointments!.add(appointmentC, true);
+		modules.appointments!.add(appointmentD, true);
 	}
 }
+*/

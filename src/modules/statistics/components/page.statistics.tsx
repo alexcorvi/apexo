@@ -6,7 +6,7 @@ import {
 	Row,
 	SectionComponent,
 	TagComponent,
-	TagType
+	tagType
 	} from "@common-components";
 import { text } from "@core";
 import { Appointment, Patient, PrescriptionItem, StaffMember, Treatment } from "@modules";
@@ -64,27 +64,7 @@ const TreatmentsNumberChart = loadable({
 });
 
 @observer
-export class StatisticsPage extends React.Component<{
-	onChooseStaffMember: (id: string) => void;
-	setStartingDate: (timestamp: number) => void;
-	setEndingDate: (timestamp: number) => void;
-	appointmentsForDay: (
-		year: number,
-		month: number,
-		day: number,
-		filter?: string | undefined,
-		operatorID?: string | undefined
-	) => Appointment[];
-	doDeleteAppointment: (id: string) => void;
-	dateFormat: string;
-	currencySymbol: string;
-	operatingStaff: StaffMember[];
-	availableTreatments: Treatment[];
-	availablePrescriptions: PrescriptionItem[];
-	currentUser: StaffMember;
-	prescriptionsEnabled: boolean;
-	timeTrackingEnabled: boolean;
-}> {
+export class StatisticsPage extends React.Component {
 	@observable appointment: Appointment | null = null;
 
 	render() {
@@ -108,7 +88,8 @@ export class StatisticsPage extends React.Component<{
 							cells: [
 								{
 									dataValue: (
-										appointment.patient || new Patient()
+										appointment.patient ||
+										modules.patients!.new()
 									).name,
 									component: (
 										<ProfileComponent
@@ -116,7 +97,9 @@ export class StatisticsPage extends React.Component<{
 												<span>
 													{formatDate(
 														appointment.date,
-														this.props.dateFormat
+														modules.setting!.getSetting(
+															"date_format"
+														)
 													)}{" "}
 													/{" "}
 													{appointment.operatingStaff.map(
@@ -131,7 +114,7 @@ export class StatisticsPage extends React.Component<{
 											name={
 												(
 													appointment!.patient ||
-													new Patient()
+													modules.patients!.new()
 												).name
 											}
 											size={3}
@@ -153,7 +136,9 @@ export class StatisticsPage extends React.Component<{
 											}
 											subText={formatDate(
 												appointment.date,
-												this.props.dateFormat
+												modules.setting!.getSetting(
+													"date_format"
+												)
 											)}
 											size={3}
 										/>
@@ -164,7 +149,9 @@ export class StatisticsPage extends React.Component<{
 									dataValue: appointment.paidAmount,
 									component: (
 										<span>
-											{this.props.currencySymbol +
+											{modules.setting!.getSetting(
+												"currencySymbol"
+											) +
 												round(
 													appointment.paidAmount
 												).toString()}
@@ -176,7 +163,9 @@ export class StatisticsPage extends React.Component<{
 									dataValue: appointment.outstandingAmount,
 									component: (
 										<span>
-											{this.props.currencySymbol +
+											{modules.setting!.getSetting(
+												"currencySymbol"
+											) +
 												round(
 													appointment.outstandingAmount
 												).toString()}
@@ -188,7 +177,9 @@ export class StatisticsPage extends React.Component<{
 									dataValue: appointment.expenses,
 									component: (
 										<span>
-											{this.props.currencySymbol +
+											{modules.setting!.getSetting(
+												"currencySymbol"
+											) +
 												round(
 													appointment.expenses
 												).toString()}
@@ -200,7 +191,9 @@ export class StatisticsPage extends React.Component<{
 									dataValue: appointment.profit,
 									component: (
 										<span>
-											{this.props.currencySymbol +
+											{modules.setting!.getSetting(
+												"currencySymbol"
+											) +
 												round(
 													appointment.profit
 												).toString()}
@@ -224,7 +217,7 @@ export class StatisticsPage extends React.Component<{
 												text: text("All staff members")
 											}
 										].concat(
-											this.props.operatingStaff.map(
+											modules.staff!.operatingStaff.map(
 												member => {
 													return {
 														key: member._id,
@@ -234,9 +227,7 @@ export class StatisticsPage extends React.Component<{
 											)
 										)}
 										onChange={(ev, member) => {
-											this.props.onChooseStaffMember(
-												member!.key.toString()
-											);
+											modules.statistics.specificMemberID = member!.key.toString();
 										}}
 									/>
 								);
@@ -253,9 +244,7 @@ export class StatisticsPage extends React.Component<{
 										onSelectDate={date => {
 											if (date) {
 												date.setHours(0, 0, 0, 0);
-												this.props.setStartingDate(
-													date.getTime()
-												);
+												modules.statistics.startingDate = date.getTime();
 											}
 										}}
 										value={
@@ -266,7 +255,9 @@ export class StatisticsPage extends React.Component<{
 										formatDate={d =>
 											`${text("From")}: ${formatDate(
 												d,
-												this.props.dateFormat
+												modules.setting!.getSetting(
+													"date_format"
+												)
 											)}`
 										}
 									/>
@@ -281,9 +272,7 @@ export class StatisticsPage extends React.Component<{
 										onSelectDate={date => {
 											if (date) {
 												date.setHours(0, 0, 0, 0);
-												this.props.setEndingDate(
-													date.getTime()
-												);
+												modules.statistics.endingDate = date.getTime();
 											}
 										}}
 										value={
@@ -294,7 +283,9 @@ export class StatisticsPage extends React.Component<{
 										formatDate={d =>
 											`${text("Until")}: ${formatDate(
 												d,
-												this.props.dateFormat
+												modules.setting!.getSetting(
+													"date_format"
+												)
 											)}`
 										}
 									/>
@@ -308,23 +299,6 @@ export class StatisticsPage extends React.Component<{
 					<AppointmentEditorPanel
 						appointment={this.appointment}
 						onDismiss={() => (this.appointment = null)}
-						doDeleteAppointment={id => {
-							this.props.doDeleteAppointment(id);
-							this.appointment = null;
-						}}
-						availableTreatments={this.props.availableTreatments}
-						availablePrescriptions={
-							this.props.availablePrescriptions
-						}
-						currentUser={this.props.currentUser}
-						dateFormat={this.props.dateFormat}
-						currencySymbol={this.props.currencySymbol}
-						prescriptionsEnabled={this.props.prescriptionsEnabled}
-						timeTrackingEnabled={this.props.timeTrackingEnabled}
-						operatingStaff={this.props.operatingStaff}
-						appointmentsForDay={(year, month, day) =>
-							this.props.appointmentsForDay(year, month, day)
-						}
 					/>
 				) : (
 					""
@@ -341,7 +315,7 @@ export class StatisticsPage extends React.Component<{
 											modules.statistics
 												.selectedAppointments.length
 										).toString()}
-										type={TagType.primary}
+										type={tagType.primary}
 									/>
 								</label>
 							</Col>
@@ -350,12 +324,14 @@ export class StatisticsPage extends React.Component<{
 									{text("Payments")}:{" "}
 									<TagComponent
 										text={
-											this.props.currencySymbol +
+											modules.setting!.getSetting(
+												"currencySymbol"
+											) +
 											round(
 												modules.statistics.totalPayments
 											).toString()
 										}
-										type={TagType.warning}
+										type={tagType.warning}
 									/>
 								</label>
 							</Col>
@@ -364,12 +340,14 @@ export class StatisticsPage extends React.Component<{
 									{text("Expenses")}:{" "}
 									<TagComponent
 										text={
-											this.props.currencySymbol +
+											modules.setting!.getSetting(
+												"currencySymbol"
+											) +
 											round(
 												modules.statistics.totalExpenses
 											).toString()
 										}
-										type={TagType.danger}
+										type={tagType.danger}
 									/>
 								</label>
 							</Col>
@@ -378,12 +356,14 @@ export class StatisticsPage extends React.Component<{
 									{text("Profits")}:{" "}
 									<TagComponent
 										text={
-											this.props.currencySymbol +
+											modules.setting!.getSetting(
+												"currencySymbol"
+											) +
 											round(
 												modules.statistics.totalProfits
 											).toString()
 										}
-										type={TagType.success}
+										type={tagType.success}
 									/>
 								</label>
 							</Col>
@@ -402,7 +382,6 @@ export class StatisticsPage extends React.Component<{
 										modules.statistics
 											.selectedAppointmentsByDay
 									}
-									dateFormat={this.props.dateFormat}
 								/>
 							</SectionComponent>
 						</div>
@@ -410,7 +389,9 @@ export class StatisticsPage extends React.Component<{
 						<div className={"chart-wrapper col-xs-12"}>
 							<SectionComponent title={text("Finances by Date")}>
 								<FinancesByDateChart
-									dateFormat={this.props.dateFormat}
+									dateFormat={modules.setting!.getSetting(
+										"date_format"
+									)}
 									selectedFinancesByDay={
 										modules.statistics.selectedFinancesByDay
 									}
