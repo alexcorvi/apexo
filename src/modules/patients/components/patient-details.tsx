@@ -182,19 +182,14 @@ export class PatientDetailsPanel extends React.Component<{
 							{" "}
 							<TagInputComponent
 								disabled={!this.canEdit}
-								className="patient-tags"
-								placeholder={text("Labels")}
-								options={[""]
-									.concat(
-										modules
-											.patients!.docs.map(x => x.labels)
-											.reduce(
-												(a: string[], b) =>
-													a.concat(
-														b.map(x => x.text)
-													),
-												[]
-											)
+								label={text("Labels")}
+								loose
+								options={modules
+									.patients!.docs.map(x => x.labels)
+									.reduce(
+										(a: string[], b) =>
+											a.concat(b.map(x => x.text)),
+										[]
 									)
 									.map(x => ({
 										key: x,
@@ -223,10 +218,8 @@ export class PatientDetailsPanel extends React.Component<{
 									this.props.patient.labels = newVal.map(
 										item => {
 											return {
-												text: item.text,
-												type: getRandomTagType(
-													item.text
-												)
+												text: item,
+												type: getRandomTagType(item)
 											};
 										}
 									);

@@ -161,15 +161,16 @@ export class OrthoCaseSheetPanel extends React.Component<{
 						}}
 					/>
 					<TagInputComponent
-						disabled={!this.canEdit}
-						strict
-						placeholder={text("Cross/scissors bite")}
+						label={text("Cross/scissors bite")}
 						options={ISOTeethArr.map(x => {
 							return {
 								key: x.toString(),
 								text: x.toString()
 							};
 						})}
+						suggestionsHeaderText={text("Cross/scissors bite")}
+						noResultsFoundText={text("No teeth found")}
+						disabled={!this.canEdit}
 						value={Array.from(
 							this.props.orthoCase.crossScissorBite
 						).map(x => ({
@@ -178,7 +179,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 						}))}
 						onChange={newValue => {
 							this.props.orthoCase.crossScissorBite = newValue.map(
-								x => num(x.key)
+								x => num(x)
 							);
 						}}
 					/>

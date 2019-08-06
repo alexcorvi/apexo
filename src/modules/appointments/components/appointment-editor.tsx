@@ -9,8 +9,8 @@ import {
 	TagInputComponent,
 	tagType
 	} from "@common-components";
-import { imagesTable, text } from "@core";
 import * as core from "@core";
+import { imagesTable, text } from "@core";
 import {
 	Appointment,
 	ISOTeethArr,
@@ -496,29 +496,29 @@ export class AppointmentEditorPanel extends React.Component<
 									{" "}
 									<div className="appointment-input involved-teeth">
 										<TagInputComponent
-											disabled={!this.canEdit}
-											placeholder={text("Involved teeth")}
-											value={this.props.appointment!.involvedTeeth.map(
-												x => ({
-													key: x.toString(),
-													text: x.toString()
-												})
-											)}
-											strict={true}
+											label={text("Involved teeth")}
 											options={ISOTeethArr.map(x => {
 												return {
 													key: x.toString(),
 													text: x.toString()
 												};
 											})}
-											formatText={x =>
-												`${x.toString()} - ${
-													convert(num(x)).Palmer
-												}`
-											}
-											onChange={newValue => {
-												this.props.appointment!.involvedTeeth = newValue.map(
-													x => num(x.key)
+											suggestionsHeaderText={text(
+												"Select involved teeth"
+											)}
+											noResultsFoundText={text(
+												"No teeth found"
+											)}
+											disabled={!this.canEdit}
+											value={this.props.appointment!.involvedTeeth.map(
+												x => ({
+													key: x.toString(),
+													text: x.toString()
+												})
+											)}
+											onChange={selectedKeys => {
+												this.props.appointment!.involvedTeeth = selectedKeys.map(
+													x => num(x)
 												);
 											}}
 										/>
@@ -532,27 +532,37 @@ export class AppointmentEditorPanel extends React.Component<
 								<div>
 									<div className="appointment-input prescription">
 										<TagInputComponent
+											label={text("Prescription")}
+											options={modules.prescriptions!.docs.map(
+												this.prescriptionToTagInput
+											)}
+											suggestionsHeaderText={text(
+												"Select prescription"
+											)}
+											noResultsFoundText={text(
+												"No prescriptions found"
+											)}
 											disabled={!this.canEdit}
-											className="prescription"
 											value={this.props.appointment!.prescriptions.map(
 												x => ({
 													key: x.id,
 													text: x.prescription
 												})
 											)}
-											options={modules.prescriptions!.docs.map(
-												this.prescriptionToTagInput
-											)}
-											onChange={newValue => {
-												this.props.appointment!.prescriptions = newValue.map(
-													x => ({
-														id: x.key,
-														prescription: x.text
+											onChange={selectedKeys => {
+												this.props.appointment!.prescriptions = selectedKeys.map(
+													selectedID => ({
+														id: selectedID,
+														prescription: this.prescriptionToTagInput(
+															modules.prescriptions!.docs.find(
+																p =>
+																	p._id ===
+																	selectedID
+															)!
+														).text
 													})
 												);
 											}}
-											strict={true}
-											placeholder={text("Prescription")}
 										/>
 									</div>
 
