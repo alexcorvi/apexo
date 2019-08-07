@@ -8,9 +8,8 @@ class Version extends React.Component {
 	render() {
 		return (
 			<div className="ver">
-				<img src="./apple-touch-icon.png" />
-				<br />
-				--VERSION--
+				apexo
+				<br /> <span>--VERSION--</span>
 			</div>
 		);
 	}
