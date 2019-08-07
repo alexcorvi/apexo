@@ -277,6 +277,23 @@ export class SettingsPage extends React.Component {
 								disabled={!this.canEdit}
 							/>
 							<Toggle
+								data-testid="labwork-toggle"
+								onText={text("Labwork module enabled")}
+								offText={text("Labwork module disabled")}
+								checked={
+									!!modules.setting!.getSetting(
+										"module_labwork"
+									)
+								}
+								onChange={(ev, val) => {
+									modules.setting!.setSetting(
+										"module_labwork",
+										val ? "enable" : ""
+									);
+								}}
+								disabled={!this.canEdit}
+							/>
+							<Toggle
 								data-testid="stats-toggle"
 								onText={text("Statistics module enabled")}
 								offText={text("Statistics module disabled")}

@@ -25,6 +25,7 @@ export const registerLabwork = async () => {
 			return <LabworkPage />;
 		},
 		condition: () =>
+			!!modules.setting!.getSetting("module_labwork") &&
 			(core.user.currentUser || { canViewLabwork: false }).canViewLabwork
 	});
 
@@ -38,6 +39,7 @@ export const registerLabwork = async () => {
 		url: "",
 		key: modules.labworkNamespace,
 		condition: () =>
+			!!modules.setting!.getSetting("module_labwork") &&
 			(core.user.currentUser || { canViewLabwork: false }).canViewLabwork
 	});
 };
