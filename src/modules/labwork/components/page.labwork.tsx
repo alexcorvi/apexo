@@ -90,7 +90,8 @@ export class LabworkPage extends React.Component {
 											text={labwork.caseTitle}
 											subText={
 												labwork.patient
-													? labwork.patient.name
+													? "for " +
+													  labwork.patient.name
 													: ""
 											}
 										/>
