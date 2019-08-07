@@ -40,7 +40,7 @@ export class PatientDetailsPanel extends React.Component<{
 							disabled={!this.canEdit}
 						/>
 					</div>
-					<Row gutter={6}>
+					<Row gutter={8}>
 						<Col sm={12}>
 							<div className="birth">
 								<TextField
@@ -141,7 +141,7 @@ export class PatientDetailsPanel extends React.Component<{
 				</SectionComponent>
 
 				<SectionComponent title={text(`Contact Info`)}>
-					<Row gutter={6}>
+					<Row gutter={8}>
 						<Col sm={12}>
 							<TextField
 								label={text("Phone")}

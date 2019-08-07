@@ -234,7 +234,7 @@ export class AppointmentEditorPanel extends React.Component<
 				<div className="appointment-editor">
 					{this.viewWhich === "details" ? (
 						<SectionComponent title={text("Appointment")}>
-							<Row gutter={12}>
+							<Row gutter={8}>
 								<Col sm={12}>
 									<div className="appointment-input date">
 										<DatePicker
@@ -279,7 +279,7 @@ export class AppointmentEditorPanel extends React.Component<
 								</Col>
 								<Col sm={12}>
 									<div className="appointment-input time">
-										<Row gutter={12}>
+										<Row gutter={8}>
 											<Label>{text("Time")}</Label>
 											<Row gutter={0}>
 												<Col span={8}>
@@ -435,7 +435,7 @@ export class AppointmentEditorPanel extends React.Component<
 								}}
 							/>
 							<br />
-							<Row gutter={12}>
+							<Row gutter={8}>
 								<Col sm={12}>
 									<div className="appointment-input treatment">
 										<Dropdown
@@ -672,7 +672,7 @@ export class AppointmentEditorPanel extends React.Component<
 
 					{this.viewWhich === "finance" ? (
 						<SectionComponent title={text("Expenses & Price")}>
-							<Row gutter={12}>
+							<Row gutter={8}>
 								<Col sm={16}>
 									{modules.setting!.getSetting(
 										"time_tracking"
@@ -811,7 +811,7 @@ export class AppointmentEditorPanel extends React.Component<
 								</Col>
 								<Col sm={24}>
 									<div className="appointment-input paid">
-										<Row gutter={12}>
+										<Row gutter={8}>
 											<Col sm={8}>
 												<TextField
 													type="number"

@@ -8,8 +8,8 @@ import {
 	SectionComponent,
 	TableActions
 	} from "@common-components";
-import { text } from "@core";
 import * as core from "@core";
+import { text } from "@core";
 import * as modules from "@modules";
 import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
@@ -432,7 +432,7 @@ export class StaffPage extends React.Component {
 									<SectionComponent
 										title={text(`Contact Details`)}
 									>
-										<Row gutter={12}>
+										<Row gutter={8}>
 											<Col sm={12}>
 												<div className="staff-input">
 													<TextField

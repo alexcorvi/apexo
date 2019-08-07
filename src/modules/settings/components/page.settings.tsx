@@ -620,7 +620,7 @@ export class SettingInputComponent extends React.Component<{
 }> {
 	render() {
 		return (
-			<Row gutter={12} style={{ marginBottom: 20 }}>
+			<Row gutter={8} style={{ marginBottom: 20 }}>
 				<Col style={{ marginBottom: -15 }} md={12}>
 					{this.props.element}
 				</Col>
