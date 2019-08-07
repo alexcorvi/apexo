@@ -8,8 +8,8 @@ import {
 	TableActions,
 	TagComponent
 	} from "@common-components";
-import * as core from "@core";
 import { imagesTable, text } from "@core";
+import * as core from "@core";
 import { Patient, PatientAppointmentsPanel, PatientGalleryPanel } from "@modules";
 import * as modules from "@modules";
 import { formatDate } from "@utils";

@@ -296,6 +296,7 @@ export class Status {
 			this.isOnline.client = false;
 			this.isOnline.server = false;
 			this.isOnline.dropbox = false;
+			return;
 		}
 
 		this.isOnline.server = await checkServer(this.server);
