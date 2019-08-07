@@ -26,7 +26,7 @@ export class HeaderView extends React.Component {
 						</section>
 					</Col>
 					<Col span={8}>
-						<section className="title">
+						<section className="title" data-testid="page-title">
 							{text(core.router.currentNamespace || "Home")}
 						</section>
 					</Col>
@@ -63,7 +63,7 @@ export class HeaderView extends React.Component {
 									/>
 								</TooltipHost>
 							) : (
-								<span className="offline" id="offline">
+								<span className="offline" data-testid="offline">
 									<Icon iconName="WifiWarning4" />
 								</span>
 							)}

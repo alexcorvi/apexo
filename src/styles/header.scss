@@ -48,6 +48,7 @@
 	}
 	.right-buttons {
 		text-align: right;
+		padding-top: 8px;
 	}
 	.offline {
 		display: inline-block;
@@ -55,5 +56,8 @@
 		color: #fff;
 		margin-right: 12px;
 		padding: 8px;
+	}
+	.resync.rotate {
+		border-radius: 50%;
 	}
 }
