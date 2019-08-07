@@ -222,7 +222,7 @@ export class LoginView extends React.Component {
 									""
 								)}
 								<DefaultButton
-									onClick={core.status.startNoServer}
+									onClick={() => core.status.startNoServer()}
 									className="no-server-mode"
 									iconProps={{
 										iconName: "StatusErrorFull"
