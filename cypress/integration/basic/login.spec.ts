@@ -13,7 +13,7 @@ describe("Logging in while online", () => {
 		cy.getByTestId("input-identification").type("test");
 		cy.getByTestId("input-password").type("test");
 		cy.getByTestId("proceed-primary").click();
-		cy.getByTestId("user-chooser", timeout)
+		cy.getByTestId("user-chooser", tout)
 			.first()
 			.click();
 		cy.ensureLoginType("login-credentials-online");
@@ -47,7 +47,7 @@ describe("Logging in while online", () => {
 			cy.getByTestId("input-identification").type("test");
 			cy.getByTestId("input-password").type("test");
 			cy.getByTestId("proceed-primary").click();
-			cy.getByTestId("user-chooser", timeout)
+			cy.getByTestId("user-chooser", tout)
 				.first()
 				.click();
 			cy.ensureLoginType("login-credentials-online");
@@ -63,7 +63,7 @@ describe("Logging in while offline", () => {
 			cy.getByTestId("input-identification").type("test");
 			cy.getByTestId("input-password").type("test");
 			cy.getByTestId("proceed-primary").click();
-			cy.getByTestId("user-chooser", timeout)
+			cy.getByTestId("user-chooser", tout)
 				.first()
 				.click();
 			cy.ensureLoginType("login-credentials-online");

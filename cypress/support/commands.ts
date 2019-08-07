@@ -66,11 +66,29 @@ Cypress.Commands.add("goToPage", namespace => {
 	cy.ensurePage(namespace);
 });
 
+Cypress.Commands.add("closePanel", () => {
+	cy.get(`[data-icon-name="cancel"]`)
+		.last()
+		.click();
+});
+
 Cypress.Commands.add("ensurePage", namespace => {
 	cy.get(
 		`[data-current-namespace="${namespace.toLowerCase()}"]#router-outlet`
 	);
 });
+
+Cypress.Commands.add("clickTabByIcon", (icon: string) => {
+	cy.get(`.ms-Pivot-icon [data-icon-name="${icon}"]`).click();
+});
+
+Cypress.Commands.add(
+	"chooseFromDropdown",
+	(dropdownClassName: string, choice: string) => {
+		cy.get(`.${dropdownClassName}`).click();
+		cy.get(`[role="option"][title="${choice}"]`).click();
+	}
+);
 
 Cypress.Commands.add(
 	"slowType",
