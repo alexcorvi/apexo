@@ -678,11 +678,11 @@ export class AppointmentEditorPanel extends React.Component<
 										"time_tracking"
 									) ? (
 										<div className="appointment-input time">
-											<label>
+											<Label>
 												{text(
 													"Time (hours, minutes, seconds)"
 												)}
-											</label>
+											</Label>
 											<TextField
 												className="time-input hours"
 												type="number"
