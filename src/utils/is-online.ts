@@ -5,6 +5,9 @@ export const connSetting = {
 
 export async function checkServer(server: string): Promise<boolean> {
 	return new Promise(resolve => {
+		if (connSetting.emulateOffline) {
+			resolve(false);
+		}
 		const http = new XMLHttpRequest();
 		http.open("GET", server + "/_session", true);
 		http.onreadystatechange = function() {
