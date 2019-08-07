@@ -1,7 +1,6 @@
 import { dbAction } from "@core";
 import * as core from "@core";
 import * as modules from "@modules";
-import { minute, second } from "@utils";
 
 const register = [
 	modules.registerSettings,
@@ -10,6 +9,7 @@ const register = [
 	modules.registerPatients,
 	modules.registerAppointments,
 	modules.registerOrthodontic,
+	modules.registerLabwork,
 	modules.registerPrescriptions,
 	modules.registerStats
 ];
