@@ -65,6 +65,7 @@ export class DentalHistoryPanel extends React.Component<
 						onChange={(ev, newVal) => {
 							this.viewChart = newVal!;
 						}}
+						className={"hidden-xs"}
 					/>
 					{this.viewChart ? (
 						<div className="chart">
