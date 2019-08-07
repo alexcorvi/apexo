@@ -56,7 +56,7 @@ describe("Logging in while online", () => {
 	});
 });
 
-describe("Logging in while online", () => {
+describe("Logging in while offline", () => {
 	describe("With server", () => {
 		beforeEach(() => {
 			cy.resetEverything();
