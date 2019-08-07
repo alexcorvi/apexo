@@ -35,6 +35,7 @@ export enum LoginType {
 }
 
 export class Status {
+	@observable dbActionProgress = false;
 	@observable loadingIndicatorText = "";
 	@observable server: string = "";
 	@observable currentUserID: string = "";

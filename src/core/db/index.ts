@@ -20,20 +20,23 @@ const methods: {
 };
 
 export async function dbAction(action: keyof typeof methods, dbName?: string) {
-	if (dbName) {
-		// apply on specific DB
-		const dbIndex = DBNames.indexOf(dbName);
-		const singleAction = methods[action][dbIndex];
-		if (singleAction) {
-			return await singleAction();
+	status.dbActionProgress = true;
+	try {
+		if (dbName) {
+			// apply on specific DB
+			const dbIndex = DBNames.indexOf(dbName);
+			const singleAction = methods[action][dbIndex];
+			if (singleAction) {
+				await singleAction();
+			}
+		} else {
+			await Promise.all(methods[action].map(x => x()));
 		}
+	} catch (e) {
+		console.log(e);
+		console.log(JSON.stringify(e));
 	}
-
-	// apply on all DBs
-	for (let index = 0; index < methods[action].length; index++) {
-		const singleMethod = methods[action][index];
-		await singleMethod();
-	}
+	status.dbActionProgress = false;
 }
 
 export async function importPouchDB() {

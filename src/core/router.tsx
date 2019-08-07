@@ -13,8 +13,6 @@ export interface Route {
 }
 
 export class Router {
-	@observable isCurrentlyReSyncing = false;
-
 	@observable currentLocation = "";
 
 	@observable innerWidth = 0;
@@ -48,7 +46,6 @@ export class Router {
 
 	async currentLoader() {
 		const namespace = this.currentLocation.split("/")[0];
-		this.isCurrentlyReSyncing = true;
 		try {
 			// resync on page navigation
 			core.dbAction(
@@ -58,7 +55,6 @@ export class Router {
 		} catch (e) {
 			console.log(e);
 		}
-		this.isCurrentlyReSyncing = false;
 		return true;
 	}
 
