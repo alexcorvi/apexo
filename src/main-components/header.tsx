@@ -20,7 +20,6 @@ export class HeaderView extends React.Component {
 								onClick={() => core.menu.show()}
 								disabled={false}
 								iconProps={{ iconName: "GlobalNavButton" }}
-								title="Menu"
 								ariaLabel="Menu"
 								data-testid="expand-menu"
 							/>
@@ -33,23 +32,34 @@ export class HeaderView extends React.Component {
 					</Col>
 					<Col span={8}>
 						<section className="right-buttons">
+							{core.status.dbActionProgress ? (
+								""
+							) : (
+								<TooltipHost content={text("User panel")}>
+									<IconButton
+										onClick={() => core.user.show()}
+										iconProps={{ iconName: "Contact" }}
+										data-testid="expand-user"
+									/>
+								</TooltipHost>
+							)}
 							{core.status.isOnline.server ? (
 								<TooltipHost content={text("Sync with server")}>
 									<IconButton
 										id="online"
+										disabled={core.status.dbActionProgress}
 										onClick={async () => {
-											core.router.isCurrentlyReSyncing = true;
 											// resync on clicking (manual)
 											await core.dbAction("resync");
-											core.router.isCurrentlyReSyncing = false;
 										}}
 										iconProps={{ iconName: "Sync" }}
 										className={
-											core.router.isCurrentlyReSyncing
+											"resync " +
+											(core.status.dbActionProgress
 												? "rotate"
-												: ""
+												: "")
 										}
-										title="Re-Sync"
+										data-testid="resync"
 									/>
 								</TooltipHost>
 							) : (
@@ -57,14 +67,6 @@ export class HeaderView extends React.Component {
 									<Icon iconName="WifiWarning4" />
 								</span>
 							)}
-
-							<TooltipHost content={text("User panel")}>
-								<IconButton
-									onClick={() => core.user.show()}
-									iconProps={{ iconName: "Contact" }}
-									data-testid="expand-user"
-								/>
-							</TooltipHost>
 						</section>
 					</Col>
 				</Row>
