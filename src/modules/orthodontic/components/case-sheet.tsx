@@ -1,6 +1,6 @@
 import { SectionComponent, TagInputComponent } from "@common-components";
-import { text } from "@core";
 import * as core from "@core";
+import { text } from "@core";
 import {
 	FacialProfile,
 	ISOTeethArr,

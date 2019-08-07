@@ -985,12 +985,6 @@ h5 {
         text-align: right;
         font-size: 14px; } }
 
-.ms-BasePicker .ms-BasePicker-text {
-  border-color: #a6a6a6; }
-
-.ms-BasePicker .ms-BasePicker-input {
-  height: auto; }
-
 .ms-Persona.treatment-link.ms-Persona--xxs {
   height: 25px; }
   .ms-Persona.treatment-link.ms-Persona--xxs .ms-Persona-primaryText {
@@ -5620,8 +5614,7 @@ hr {
     .appointment-input .appendage.stop {
       background: #ff9800; }
   .appointment-input label:not(.ms-Checkbox-label) {
-    display: block;
-    margin-bottom: 10px; }
+    display: block; }
   .appointment-input .ms-Checkbox {
     margin-bottom: 3px; }
   .appointment-input .involved-teeth .ms-BasePicker-text,

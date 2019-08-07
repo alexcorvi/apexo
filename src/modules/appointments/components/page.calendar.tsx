@@ -1,6 +1,6 @@
 import { Col, ProfileSquaredComponent, Row } from "@common-components";
-import * as core from "@core";
 import { text } from "@core";
+import * as core from "@core";
 import { Calendar, calendar } from "@modules";
 import {
 	Appointment,
