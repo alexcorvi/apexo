@@ -59,7 +59,7 @@ export class DentalHistoryPanel extends React.Component<
 			<div className="dental-history teeth m-t-10">
 				<div>
 					<Toggle
-						checked={true}
+						defaultChecked={true}
 						onText={text("View graphic chart")}
 						offText={text("View sorted table")}
 						onChange={(ev, newVal) => {
