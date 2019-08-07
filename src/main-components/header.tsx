@@ -32,17 +32,13 @@ export class HeaderView extends React.Component {
 					</Col>
 					<Col span={8}>
 						<section className="right-buttons">
-							{core.status.dbActionProgress ? (
-								""
-							) : (
-								<TooltipHost content={text("User panel")}>
-									<IconButton
-										onClick={() => core.user.show()}
-										iconProps={{ iconName: "Contact" }}
-										data-testid="expand-user"
-									/>
-								</TooltipHost>
-							)}
+							<TooltipHost content={text("User panel")}>
+								<IconButton
+									onClick={() => core.user.show()}
+									iconProps={{ iconName: "Contact" }}
+									data-testid="expand-user"
+								/>
+							</TooltipHost>
 							{core.status.isOnline.server ? (
 								<TooltipHost content={text("Sync with server")}>
 									<IconButton
