@@ -6,7 +6,7 @@ beforeEach(() => {
 	cy.online();
 });
 
-const timeout = 100 * 1000;
+const tout = 100 * 1000;
 
 describe("Logging in while online", () => {
 	it("Using active cookie", () => {
