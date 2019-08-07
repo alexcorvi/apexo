@@ -107,6 +107,8 @@ export class DataTableComponent extends React.Component<Props, {}> {
 						onChange={(ev, newVal) => {
 							if (newVal) {
 								this.filterString = newVal;
+							} else {
+								this.filterString = "";
 							}
 						}}
 					/>
