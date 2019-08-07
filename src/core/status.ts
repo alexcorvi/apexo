@@ -199,9 +199,11 @@ export class Status {
 	}
 
 	async startNoServer() {
-		this.isOnline.server = false;
-		this.isOnline.client = false;
-		this.isOnline.dropbox = false;
+		this.isOnline = {
+			server: false,
+			client: false,
+			dropbox: false
+		};
 		this.keepOffline = true;
 		this.loginType = LoginType.noServer;
 		await this.start({
