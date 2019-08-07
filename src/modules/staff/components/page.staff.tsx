@@ -529,7 +529,7 @@ export class StaffPage extends React.Component {
 											""
 										)}
 										<Toggle
-											defaultChecked={
+											checked={
 												this.selectedMember.operates
 											}
 											disabled={
@@ -547,7 +547,7 @@ export class StaffPage extends React.Component {
 										/>
 
 										<Toggle
-											defaultChecked={
+											checked={
 												this.selectedMember.canViewStaff
 											}
 											disabled={
@@ -562,7 +562,7 @@ export class StaffPage extends React.Component {
 											}}
 										/>
 										<Toggle
-											defaultChecked={
+											checked={
 												this.selectedMember
 													.canViewPatients
 											}
@@ -583,7 +583,7 @@ export class StaffPage extends React.Component {
 											"module_orthodontics"
 										) ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canViewOrtho
 												}
@@ -605,7 +605,7 @@ export class StaffPage extends React.Component {
 											""
 										)}
 										<Toggle
-											defaultChecked={
+											checked={
 												this.selectedMember
 													.canViewAppointments
 											}
@@ -623,7 +623,7 @@ export class StaffPage extends React.Component {
 											}}
 										/>
 										<Toggle
-											defaultChecked={
+											checked={
 												this.selectedMember
 													.canViewTreatments
 											}
@@ -644,7 +644,7 @@ export class StaffPage extends React.Component {
 											"module_prescriptions"
 										) ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canViewPrescriptions
 												}
@@ -669,7 +669,7 @@ export class StaffPage extends React.Component {
 											"module_statistics"
 										) ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canViewStats
 												}
@@ -692,7 +692,7 @@ export class StaffPage extends React.Component {
 										)}
 
 										<Toggle
-											defaultChecked={
+											checked={
 												this.selectedMember
 													.canViewSettings
 											}
@@ -712,7 +712,7 @@ export class StaffPage extends React.Component {
 
 										{this.selectedMember.canViewStaff ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditStaff
 												}
@@ -735,7 +735,7 @@ export class StaffPage extends React.Component {
 										)}
 										{this.selectedMember.canViewPatients ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditPatients
 												}
@@ -762,7 +762,7 @@ export class StaffPage extends React.Component {
 										) &&
 										this.selectedMember.canViewOrtho ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditOrtho
 												}
@@ -787,7 +787,7 @@ export class StaffPage extends React.Component {
 										{this.selectedMember
 											.canViewAppointments ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditAppointments
 												}
@@ -812,7 +812,7 @@ export class StaffPage extends React.Component {
 										{this.selectedMember
 											.canViewTreatments ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditTreatments
 												}
@@ -840,7 +840,7 @@ export class StaffPage extends React.Component {
 										this.selectedMember
 											.canViewPrescriptions ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditPrescriptions
 												}
@@ -864,7 +864,7 @@ export class StaffPage extends React.Component {
 
 										{this.selectedMember.canViewSettings ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditSettings
 												}

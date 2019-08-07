@@ -266,7 +266,7 @@ export class CalendarPage extends React.Component {
 						<Row>
 							<Col sm={12} md={6} xs={24}>
 								<Toggle
-									defaultChecked={this.showAll}
+									checked={this.showAll}
 									onText={text("All appointments")}
 									offText={text("My appointments only")}
 									onChange={(ev, newValue) => {

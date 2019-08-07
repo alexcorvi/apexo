@@ -57,7 +57,7 @@ export class ErrorBoundaryView extends React.Component<{}> {
 				<MessageBar className="eb" messageBarType={1}>
 					Error occurred
 					<br /> send a screenshot of the following details
-					<textarea defaultValue={this.stackTrace} />
+					<textarea value={this.stackTrace} />
 					<PrimaryButton
 						onClick={() => {
 							location.href = location.href.split("#")[0];

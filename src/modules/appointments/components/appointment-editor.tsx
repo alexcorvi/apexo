@@ -366,7 +366,7 @@ export class AppointmentEditorPanel extends React.Component<
 											</Row>
 										</Row>
 										<Toggle
-											defaultChecked={
+											checked={
 												this.props.appointment!.isDone
 											}
 											onText={text("Done")}
