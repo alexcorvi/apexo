@@ -9,8 +9,8 @@ import {
 	TagInputComponent,
 	tagType
 	} from "@common-components";
-import { imagesTable, text } from "@core";
 import * as core from "@core";
+import { imagesTable, text } from "@core";
 import {
 	Appointment,
 	ISOTeethArr,
@@ -416,6 +416,7 @@ export class AppointmentEditorPanel extends React.Component<
 										"Operating staff"
 									)}
 									noResultsFoundText={text("No staff found")}
+									className={"operating-staff"}
 								/>
 							</div>
 						</SectionComponent>

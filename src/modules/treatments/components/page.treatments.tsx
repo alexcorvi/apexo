@@ -191,6 +191,7 @@ export class Treatments extends React.Component {
 											(this.selectedTreatment!.type = val!)
 										}
 										disabled={!this.canEdit}
+										data-testid="treatment-title"
 									/>
 									<TextField
 										label={text(

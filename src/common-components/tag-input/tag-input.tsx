@@ -11,6 +11,7 @@ export class TagInputComponent extends React.Component<
 		suggestionsHeaderText?: string;
 		noResultsFoundText?: string;
 		maxItems?: number;
+		className?: string;
 		disabled?: boolean;
 		value: { key: string; text: string }[];
 		onChange?: (keys: string[]) => void;
@@ -47,6 +48,7 @@ export class TagInputComponent extends React.Component<
 			<div>
 				<Label>{this.props.label}</Label>
 				<TagPicker
+					className={this.props.className}
 					onResolveSuggestions={filter => this.filterOptions(filter)}
 					pickerSuggestionsProps={{
 						suggestionsHeaderText: this.props.suggestionsHeaderText,
