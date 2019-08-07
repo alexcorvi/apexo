@@ -9,8 +9,8 @@ import {
 	TagInputComponent,
 	tagType
 	} from "@common-components";
-import * as core from "@core";
 import { imagesTable, text } from "@core";
+import * as core from "@core";
 import {
 	Appointment,
 	ISOTeethArr,
@@ -393,45 +393,30 @@ export class AppointmentEditorPanel extends React.Component<
 								</Col>
 							</Row>
 							<div className="appointment-input">
-								<label>{text("Operating staff")} </label>
-								{modules.staff!.operatingStaff.map(member => {
-									const checked =
-										this.props.appointment!.staffID.indexOf(
-											member._id
-										) > -1;
-									return (
-										<Checkbox
-											key={member._id}
-											label={member.name}
-											disabled={
-												!this.canEdit ||
-												(!checked &&
-													member.onDutyDays.indexOf(
-														new Date(
-															this.props.appointment!.date
-														).toLocaleDateString(
-															"en-us",
-															{
-																weekday: "long"
-															}
-														)
-													) === -1)
-											}
-											checked={checked}
-											onChange={(ev, isChecked) => {
-												if (isChecked) {
-													this.props.appointment!.addStaff(
-														member._id
-													);
-												} else {
-													this.props.appointment!.removeStaff(
-														member._id
-													);
-												}
-											}}
-										/>
-									);
-								})}
+								<TagInputComponent
+									label={text("Operating staff")}
+									options={modules
+										.staff!.operatingStaff.sort((a, b) =>
+											a.name.localeCompare(b.name)
+										)
+										.map(s => {
+											return {
+												key: s._id,
+												text: s.name
+											};
+										})}
+									value={this.props.appointment!.operatingStaff.map(
+										x => ({ key: x._id, text: x.name })
+									)}
+									onChange={newKeys => {
+										this.props.appointment!.staffID = newKeys;
+									}}
+									disabled={!this.canEdit}
+									suggestionsHeaderText={text(
+										"Operating staff"
+									)}
+									noResultsFoundText={text("No staff found")}
+								/>
 							</div>
 						</SectionComponent>
 					) : (
@@ -493,7 +478,6 @@ export class AppointmentEditorPanel extends React.Component<
 									</div>
 								</Col>
 								<Col span={24}>
-									{" "}
 									<div className="appointment-input involved-teeth">
 										<TagInputComponent
 											label={text("Involved teeth")}

@@ -8,8 +8,8 @@ import {
 	TableActions,
 	TagInputComponent
 	} from "@common-components";
-import { imagesTable, ModalInterface, text } from "@core";
 import * as core from "@core";
+import { imagesTable, ModalInterface, text } from "@core";
 import { Patient, PatientAppointmentsPanel } from "@modules";
 import * as modules from "@modules";
 import { formatDate } from "@utils";
@@ -505,26 +505,28 @@ export class OrthoPage extends React.Component {
 						this.showAdditionPanel = false;
 					}}
 				>
-					<h4>{text("Choose patient")}</h4>
 					<br />
 					<TagInputComponent
-						strict
+						label={text("Choose patient")}
+						options={modules.patients!.docs.map(patient => ({
+							text: patient.name,
+							key: patient._id
+						}))}
+						suggestionsHeaderText={text("Select patient")}
+						noResultsFoundText={text("No patients found")}
+						maxItems={1}
+						disabled={!this.canEdit}
 						value={[]}
-						options={modules.orthoCases!.patientsWithNoOrtho.map(
-							patient => ({
-								key: patient._id,
-								text: patient.name
-							})
-						)}
-						onAdd={val => {
-							this.showAdditionPanel = false;
-							const orthoCase = modules.orthoCases!.new();
-							orthoCase.patientID = val.key;
-							modules.orthoCases!.add(orthoCase);
-							this.selectedId = orthoCase._id;
-							this.viewWhich = "sheet";
+						onChange={selectedKeys => {
+							if (selectedKeys[0]) {
+								this.showAdditionPanel = false;
+								const orthoCase = modules.orthoCases!.new();
+								orthoCase.patientID = selectedKeys[0];
+								modules.orthoCases!.add(orthoCase);
+								this.selectedId = orthoCase._id;
+								this.viewWhich = "sheet";
+							}
 						}}
-						placeholder={text(`Type to select patient`)}
 					/>
 					<br />
 					<hr />

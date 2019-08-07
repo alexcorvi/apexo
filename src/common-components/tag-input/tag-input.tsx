@@ -18,19 +18,28 @@ export class TagInputComponent extends React.Component<
 	{}
 > {
 	filterOptions(filter: string) {
-		return (this.props.loose
-			? [{ key: filter, text: filter }].concat(this.props.options)
-			: this.props.options
-		)
-			.filter(option => option.text.indexOf(filter) !== -1)
-			.filter(
-				option =>
-					!this.props.value.find(item => item.key === option.key)
+		return (
+			(this.props.loose && filter.length
+				? [{ key: filter, text: filter }].concat(this.props.options)
+				: this.props.options
 			)
-			.map(option => ({
-				name: option.text,
-				key: option.key
-			}));
+				// apply filter
+				.filter(
+					option =>
+						option.text
+							.toLowerCase()
+							.indexOf(filter.toLowerCase()) !== -1
+				)
+				// no repitition
+				.filter(
+					option =>
+						!this.props.value.find(item => item.key === option.key)
+				)
+				.map(option => ({
+					name: option.text,
+					key: option.key
+				}))
+		);
 	}
 
 	render() {
