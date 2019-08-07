@@ -9,12 +9,12 @@ import {
 	tagType
 	} from "@common-components";
 import { text } from "@core";
-import { Appointment, Patient, PrescriptionItem, StaffMember, Treatment } from "@modules";
+import { Appointment } from "@modules";
 import * as modules from "@modules";
 import { formatDate, round } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { DatePicker, Dropdown, Shimmer } from "office-ui-fabric-react";
+import { DatePicker, Dropdown, Label, Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
 const AppointmentEditorPanel = loadable({
@@ -308,7 +308,7 @@ export class StatisticsPage extends React.Component {
 					<SectionComponent title={text("Quick stats")}>
 						<Row>
 							<Col sm={6} xs={12}>
-								<label>
+								<Label>
 									{text("Appointments")}:{" "}
 									<TagComponent
 										text={round(
@@ -317,10 +317,10 @@ export class StatisticsPage extends React.Component {
 										).toString()}
 										type={tagType.primary}
 									/>
-								</label>
+								</Label>
 							</Col>
 							<Col sm={6} xs={12}>
-								<label>
+								<Label>
 									{text("Payments")}:{" "}
 									<TagComponent
 										text={
@@ -333,10 +333,10 @@ export class StatisticsPage extends React.Component {
 										}
 										type={tagType.warning}
 									/>
-								</label>
+								</Label>
 							</Col>
 							<Col sm={6} xs={12}>
-								<label>
+								<Label>
 									{text("Expenses")}:{" "}
 									<TagComponent
 										text={
@@ -349,10 +349,10 @@ export class StatisticsPage extends React.Component {
 										}
 										type={tagType.danger}
 									/>
-								</label>
+								</Label>
 							</Col>
 							<Col sm={6} xs={12}>
-								<label>
+								<Label>
 									{text("Profits")}:{" "}
 									<TagComponent
 										text={
@@ -365,7 +365,7 @@ export class StatisticsPage extends React.Component {
 										}
 										type={tagType.success}
 									/>
-								</label>
+								</Label>
 							</Col>
 						</Row>
 					</SectionComponent>

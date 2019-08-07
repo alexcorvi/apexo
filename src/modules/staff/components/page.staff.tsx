@@ -10,8 +10,8 @@ import {
 	} from "@common-components";
 import { text } from "@core";
 import * as core from "@core";
-import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
 import * as modules from "@modules";
+import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -19,6 +19,7 @@ import {
 	Checkbox,
 	Icon,
 	IconButton,
+	Label,
 	MessageBar,
 	MessageBarType,
 	Panel,
@@ -387,9 +388,9 @@ export class StaffPage extends React.Component {
 										</div>
 
 										<div className="staff-input">
-											<label>
+											<Label>
 												{text("Days on duty")}
-											</label>
+											</Label>
 											{dateNames.days().map((day, i) => {
 												return (
 													<Checkbox
