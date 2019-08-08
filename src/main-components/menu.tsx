@@ -40,10 +40,11 @@ export class MenuView extends React.Component {
 							>
 								<div
 									className={
-										"item " +
+										"item" +
+										` bg-menu-item-${item.key.toLowerCase()}` +
 										(item.name ===
 										core.router.currentNamespace
-											? "selected"
+											? " selected"
 											: "")
 									}
 									onClick={item.onClick}
