@@ -103,13 +103,10 @@ export class DataTableComponent extends React.Component<Props, {}> {
 				key: "a",
 				onRender: () => (
 					<SearchBox
+						value={this.filterString}
 						placeholder={core.text("Search")}
 						onChange={(ev, newVal) => {
-							if (newVal) {
-								this.filterString = newVal;
-							} else {
-								this.filterString = "";
-							}
+							this.filterString = newVal || "";
 						}}
 					/>
 				)
