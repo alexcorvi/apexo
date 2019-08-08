@@ -18,8 +18,7 @@ import * as loadable from "react-loadable";
 const EditableListComponent = loadable({
 	loading: () => <Shimmer />,
 	loader: async () =>
-		(await import("common-components/editable-list/editable-list"))
-			.EditableListComponent
+		(await import("common-components/editable-list")).EditableListComponent
 });
 
 const TeethDeciduousChart = loadable({

@@ -8,8 +8,8 @@ import {
 	TableActions,
 	TagComponent
 	} from "@common-components";
-import { imagesTable, text } from "@core";
 import * as core from "@core";
+import { imagesTable, text } from "@core";
 import { Patient, PatientAppointmentsPanel, PatientGalleryPanel } from "@modules";
 import * as modules from "@modules";
 import { formatDate } from "@utils";
@@ -49,6 +49,7 @@ const AppointmentEditorPanel = loadable({
 
 @observer
 export class PatientsPage extends React.Component {
+	dt: DataTableComponent | null = null;
 	@observable selectedAppointmentId = "";
 	@observable selectedId: string = core.router.currentLocation.split("/")[1];
 
@@ -251,6 +252,7 @@ export class PatientsPage extends React.Component {
 					""
 				)}
 				<DataTableComponent
+					ref={dt => (this.dt = dt)}
 					maxItemsOnLoad={10}
 					className={"patients-data-table"}
 					heads={[
@@ -489,6 +491,12 @@ export class PatientsPage extends React.Component {
 													key={index}
 													text={label.text}
 													type={label.type}
+													onClick={() => {
+														if (this.dt) {
+															this.dt.filterString =
+																label.text;
+														}
+													}}
 												/>
 											);
 										})}

@@ -6,8 +6,8 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import { imagesTable, ModalInterface, ORTHO_RECORDS_DIR, status, text } from "@core";
 import * as core from "@core";
+import { imagesTable, ModalInterface, ORTHO_RECORDS_DIR, status, text } from "@core";
 import { OrthoCase, Photo, StaffMember, Visit } from "@modules";
 import * as modules from "@modules";
 import { day, formatDate, num } from "@utils";
@@ -35,8 +35,7 @@ import * as loadable from "react-loadable";
 const EditableListComponent = loadable({
 	loading: () => <Shimmer />,
 	loader: async () =>
-		(await import("common-components/editable-list/editable-list"))
-			.EditableListComponent
+		(await import("common-components/editable-list")).EditableListComponent
 });
 
 const viewsTerms = [

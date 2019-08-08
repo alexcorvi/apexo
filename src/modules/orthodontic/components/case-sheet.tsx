@@ -1,6 +1,6 @@
 import { SectionComponent, TagInputComponent } from "@common-components";
-import * as core from "@core";
 import { text } from "@core";
+import * as core from "@core";
 import {
 	FacialProfile,
 	ISOTeethArr,
@@ -29,8 +29,7 @@ import * as loadable from "react-loadable";
 const EditableListComponent = loadable({
 	loading: () => <Shimmer />,
 	loader: async () =>
-		(await import("common-components/editable-list/editable-list"))
-			.EditableListComponent
+		(await import("common-components/editable-list")).EditableListComponent
 });
 
 @observer

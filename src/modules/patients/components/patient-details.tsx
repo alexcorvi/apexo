@@ -1,6 +1,6 @@
 import { Col, getRandomTagType, Row, SectionComponent, TagInputComponent } from "@common-components";
-import { imagesTable, status, text } from "@core";
 import * as core from "@core";
+import { imagesTable, status, text } from "@core";
 import * as modules from "@modules";
 import { gender, Patient, StaffMember } from "@modules";
 import { num } from "@utils";
@@ -13,8 +13,7 @@ import * as loadable from "react-loadable";
 const EditableListComponent = loadable({
 	loading: () => <Shimmer />,
 	loader: async () =>
-		(await import("common-components/editable-list/editable-list"))
-			.EditableListComponent
+		(await import("common-components/editable-list")).EditableListComponent
 });
 
 @observer
