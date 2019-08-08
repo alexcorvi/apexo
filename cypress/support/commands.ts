@@ -72,6 +72,30 @@ Cypress.Commands.add("closePanel", () => {
 		.click();
 });
 
+Cypress.Commands.add(
+	"pickDate",
+	(datePickerClassName: string, pick: "today" | "tomorrow" | "yesterday") => {
+		cy.get(`.${datePickerClassName}`).click();
+		if (pick === "today") {
+			cy.get(".ms-DatePicker-day--today")
+				.parent()
+				.click();
+		}
+		if (pick === "tomorrow") {
+			cy.get(".ms-DatePicker-day--today")
+				.parent()
+				.next()
+				.click();
+		}
+		if (pick === "yesterday") {
+			cy.get(".ms-DatePicker-day--today")
+				.parent()
+				.prev()
+				.click();
+		}
+	}
+);
+
 Cypress.Commands.add("ensurePage", namespace => {
 	cy.get(
 		`[data-current-namespace="${namespace.toLowerCase()}"]#router-outlet`

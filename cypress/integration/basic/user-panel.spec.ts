@@ -45,12 +45,6 @@ describe("Appointments", () => {
 		cy.getByTestId("patient-name").type(patientName);
 		cy.clickTabByIcon("Calendar");
 		cy.chooseFromDropdown("new-appointment", treatmentName);
-		/*
-        cy.get(".appointment-date").click();
-		cy.get(".ms-DatePicker-day-button")
-			.last()
-			.click();
-        */
 		cy.get(".operating-staff input").type("Al");
 		cy.get(".ms-Suggestions-item")
 			.first()

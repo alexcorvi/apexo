@@ -14,5 +14,9 @@ declare namespace Cypress {
 		closePanel(): void;
 		clickTabByIcon(icon: string): void;
 		chooseFromDropdown(className: string, choice: string): void;
+		pickDate(
+			className: string,
+			pick: "today" | "tomorrow" | "yesterday"
+		): void;
 	}
 }

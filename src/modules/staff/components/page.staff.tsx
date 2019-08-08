@@ -394,6 +394,7 @@ export class StaffPage extends React.Component {
 											{dateNames.days().map((day, i) => {
 												return (
 													<Checkbox
+														className="day-selector"
 														key={day}
 														disabled={!this.canEdit}
 														label={text(
