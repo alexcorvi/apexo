@@ -43,6 +43,7 @@ interface Props {
 	type: keyof typeof tagType;
 	onClick?: () => void;
 	className?: string;
+	highlighted?: boolean;
 }
 
 @observer
@@ -50,10 +51,10 @@ export class TagComponent extends React.Component<Props, {}> {
 	render() {
 		return (
 			<span
-				className={
-					`label ${this.props.type} ` +
-					(this.props.onClick ? "clickable" : "")
-				}
+				className={`label ${this.props.type} ${
+					this.props.onClick ? " clickable" : ""
+				} ${this.props.highlighted ? " highlighted" : ""}
+				`}
 				onClick={this.props.onClick}
 			>
 				{this.props.text}

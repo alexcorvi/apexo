@@ -491,11 +491,28 @@ export class PatientsPage extends React.Component {
 													key={index}
 													text={label.text}
 													type={label.type}
+													highlighted={
+														this.dt
+															? this.dt
+																	.filterString ===
+															  label.text
+															: false
+													}
 													onClick={() => {
 														if (this.dt) {
-															this.dt.filterString =
-																label.text;
+															if (
+																this.dt
+																	.filterString ===
+																label.text
+															) {
+																this.dt.filterString =
+																	"";
+															} else {
+																this.dt.filterString =
+																	label.text;
+															}
 														}
+														this.forceUpdate();
 													}}
 												/>
 											);

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 /* Document
    ========================================================================== */
@@ -6345,24 +6346,98 @@ hr {
   margin-right: 3px;
   margin-bottom: 3px;
   display: inline-block;
-  border: 1px solid #e3e3e3; }
+  border: 1px solid #e3e3e3;
+  transition: all 0.4s; }
   .label.clickable {
     cursor: pointer; }
   .label.warning {
     border-color: #fb8c00;
     color: #fb8c00; }
+    .label.warning.clickable:hover {
+      border-color: transparent;
+      background: #fb8c00;
+      color: #fff; }
   .label.primary {
     border-color: #3f51b5;
     color: #3f51b5; }
+    .label.primary.clickable:hover {
+      border-color: transparent;
+      background: #3f51b5;
+      color: #fff; }
   .label.danger {
     border-color: #e91e63;
     color: #e91e63; }
+    .label.danger.clickable:hover {
+      border-color: transparent;
+      background: #e91e63;
+      color: #fff; }
   .label.success {
     border-color: #4caf50;
     color: #4caf50; }
+    .label.success.clickable:hover {
+      border-color: transparent;
+      background: #4caf50;
+      color: #fff; }
   .label.info {
     border-color: #212121;
     color: #212121; }
+    .label.info.clickable:hover {
+      border-color: transparent;
+      background: #212121;
+      color: #fff; }
+  .label.highlighted.warning {
+    border-color: transparent;
+    background: #fb8c00;
+    color: #fff; }
+    .label.highlighted.warning.clickable:hover {
+      border-color: #fb8c00;
+      color: #fb8c00;
+      background: #fff; }
+  .label.highlighted.primary {
+    border-color: transparent;
+    background: #3f51b5;
+    color: #fff; }
+    .label.highlighted.primary.clickable:hover {
+      border-color: #3f51b5;
+      color: #3f51b5;
+      background: #fff; }
+  .label.highlighted.danger {
+    border-color: transparent;
+    background: #e91e63;
+    color: #fff; }
+    .label.highlighted.danger.clickable:hover {
+      border-color: #e91e63;
+      color: #e91e63;
+      background: #fff; }
+  .label.highlighted.success {
+    border-color: transparent;
+    background: #4caf50;
+    color: #fff; }
+    .label.highlighted.success.clickable:hover {
+      border-color: #4caf50;
+      color: #4caf50;
+      background: #fff; }
+  .label.highlighted.info {
+    border-color: transparent;
+    background: #212121;
+    color: #fff; }
+    .label.highlighted.info.clickable:hover {
+      border-color: #212121;
+      color: #212121;
+      background: #fff; }
+  .label.highlighted:after {
+    content: "";
+    margin-left: 15px;
+    height: 15px;
+    width: 15px;
+    display: inline-block;
+    text-align: center;
+    border-radius: 50%;
+    font-family: "FabricMDL2Icons";
+    margin-right: -5px;
+    font-size: 8px;
+    line-height: 16px;
+    font-weight: 900; }
 
 .login-component {
   margin: 50px auto;
