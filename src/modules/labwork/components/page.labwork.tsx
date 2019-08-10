@@ -30,6 +30,8 @@ import * as React from "react";
 
 @observer
 export class LabworkPage extends React.Component {
+	dt: null | DataTableComponent = null;
+
 	@observable selectedID: string = core.router.currentLocation.split("/")[1];
 
 	@computed
@@ -46,6 +48,7 @@ export class LabworkPage extends React.Component {
 		return (
 			<div className="lw-pg">
 				<DataTableComponent
+					ref={dt => (this.dt = dt)}
 					onDelete={
 						this.canEdit
 							? id => {
@@ -127,13 +130,36 @@ export class LabworkPage extends React.Component {
 								},
 								{
 									dataValue: labwork.labName,
-									component: (
+									component: labwork.labName.length ? (
 										<TagComponent
 											text={labwork.labName}
 											type={getRandomTagType(
 												labwork.labName
 											)}
+											highlighted={
+												this.dt
+													? this.dt.filterString ===
+													  labwork.labName
+													: false
+											}
+											onClick={() => {
+												if (this.dt) {
+													if (
+														this.dt.filterString ===
+														labwork.labName
+													) {
+														this.dt.filterString =
+															"";
+													} else {
+														this.dt.filterString =
+															labwork.labName;
+													}
+												}
+												this.forceUpdate();
+											}}
 										/>
+									) : (
+										""
 									),
 									className: "hidden-xs"
 								},
@@ -346,7 +372,8 @@ export class LabworkPage extends React.Component {
 													x => x.labName
 												)
 												.filter(
-													(x, i) => x.indexOf(x) === i
+													(x, i, a) =>
+														a.indexOf(x) === i
 												)
 												.sort((a, b) =>
 													a.localeCompare(b)
