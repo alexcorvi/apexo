@@ -26,6 +26,7 @@ interface Row {
 	id: string;
 	cells: Cell[];
 	searchableString: string;
+	className?: string;
 }
 
 interface Props {
@@ -183,10 +184,12 @@ export class DataTableComponent extends React.Component<Props, {}> {
 							return (
 								<tr
 									key={row.id}
-									className={row.cells[0].dataValue
+									className={`${row.cells[0].dataValue
 										.toString()
 										.toLowerCase()
-										.replace(/[^a-z]/g, "")}
+										.replace(/[^a-z]/g, "")} ${
+										row.className ? row.className : ""
+									}`}
 								>
 									{row.cells.map((cell, index2) => {
 										return (

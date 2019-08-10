@@ -1,6 +1,6 @@
 import { Col, getRandomTagType, Row, SectionComponent, TagInputComponent } from "@common-components";
-import * as core from "@core";
 import { imagesTable, status, text } from "@core";
+import * as core from "@core";
 import * as modules from "@modules";
 import { gender, Patient, StaffMember } from "@modules";
 import { num } from "@utils";
@@ -178,6 +178,7 @@ export class PatientDetailsPanel extends React.Component<{
 
 				<SectionComponent title={text(`Other Notes`)}>
 					<TagInputComponent
+						className="patient-labels"
 						disabled={!this.canEdit}
 						label={text("Labels")}
 						loose
