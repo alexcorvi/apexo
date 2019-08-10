@@ -126,9 +126,9 @@ export class OrthoPage extends React.Component {
 					orthoCase.problemsList.length
 			},
 			{
-				key: "album",
-				title: "Orthodontic Album",
-				icon: "TripleColumn",
+				key: "archive",
+				title: "Visits Archive",
+				icon: "Archive",
 				bubbleContent: orthoCase.visits.length
 			},
 			{
@@ -659,7 +659,7 @@ export class OrthoPage extends React.Component {
 									""
 								)}
 
-								{this.viewWhich === "album" ? (
+								{this.viewWhich === "archive" ? (
 									<OrthoRecordsPanel
 										orthoCase={this.selectedCase}
 									/>

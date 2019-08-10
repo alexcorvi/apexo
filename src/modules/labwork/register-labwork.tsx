@@ -30,7 +30,7 @@ export const registerLabwork = async () => {
 	});
 
 	core.menu.items.push({
-		icon: "teeth",
+		icon: "TestBeaker",
 		name: modules.labworkNamespace,
 		onClick: () => {
 			core.router.go([modules.labworkNamespace]);

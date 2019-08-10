@@ -30,7 +30,7 @@ export const registerPatients = async () => {
 	});
 
 	core.menu.items.push({
-		icon: "ContactCard",
+		icon: "Contact",
 		name: modules.patientsNamespace,
 		key: modules.patientsNamespace,
 		onClick: () => {
