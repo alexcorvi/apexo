@@ -36,6 +36,7 @@ export class TagInputComponent extends React.Component<
 					option =>
 						!this.props.value.find(item => item.key === option.key)
 				)
+				.filter(option => option.text.length)
 				.map(option => ({
 					name: option.text,
 					key: option.key
