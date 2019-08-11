@@ -19,8 +19,10 @@ describe("data table", () => {
 		cy.goToPage("patients");
 		patients.forEach(patientName => {
 			cy.get(`[title="Add new"]`).click();
+			cy.wait(100);
 			cy.getByTestId("patient-name").type(patientName);
 			cy.closePanel();
+			cy.wait(300);
 		});
 	});
 
@@ -34,10 +36,26 @@ describe("data table", () => {
 
 	it("Sorting", () => {
 		cy.get("th.patient").click();
+		cy.get("th.patient").should("have.class", "current");
+		cy.get("th.patient").should("have.class", "negative");
+		cy.get(
+			`th.patient .sort-indicators [data-icon-name="ChevronUpSmall"]`
+		).should("not.be.visible");
+		cy.get(
+			`th.patient .sort-indicators [data-icon-name="ChevronDownSmall"]`
+		).should("be.visible");
 		cy.get(".patients-data-table tbody tr")
 			.first()
 			.should("contain.text", "tttt");
 		cy.get("th.patient").click();
+		cy.get("th.patient").should("have.class", "current");
+		cy.get("th.patient").should("have.class", "positive");
+		cy.get(
+			`th.patient .sort-indicators [data-icon-name="ChevronUpSmall"]`
+		).should("be.visible");
+		cy.get(
+			`th.patient .sort-indicators [data-icon-name="ChevronUpSmall"]`
+		).should("be.visible");
 		cy.get(".patients-data-table tbody tr")
 			.first()
 			.should("contain.text", "aaaa");
@@ -55,5 +73,23 @@ describe("data table", () => {
 			.first()
 			.click();
 		cy.getByTestId("patient-name").should("be.visible");
+		cy.closePanel();
+	});
+
+	it("no documents exists", () => {
+		cy.goToPage("treatments");
+		cy.get(".ms-MessageBar").should(
+			"contain.text",
+			"No data in this section yet"
+		);
+	});
+
+	it("nothing matches search criteria", () => {
+		cy.goToPage("staff");
+		cy.get(".ms-SearchBox input").type("ffff");
+		cy.get(".ms-MessageBar").should(
+			"contain.text",
+			"Did not find anything"
+		);
 	});
 });
