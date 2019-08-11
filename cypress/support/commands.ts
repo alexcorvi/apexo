@@ -74,7 +74,10 @@ Cypress.Commands.add("closePanel", () => {
 
 Cypress.Commands.add(
 	"pickDate",
-	(datePickerClassName: string, pick: "today" | "tomorrow" | "yesterday") => {
+	(
+		datePickerClassName: string,
+		pick: "today" | "tomorrow" | "yesterday" | number
+	) => {
 		cy.get(`.${datePickerClassName}`).click();
 		if (pick === "today") {
 			cy.get(".ms-DatePicker-day--today")
@@ -82,15 +85,15 @@ Cypress.Commands.add(
 				.click();
 		}
 		if (pick === "tomorrow") {
-			cy.get(".ms-DatePicker-day--today")
-				.parent()
-				.next()
+			const tomorrow = (new Date().getDate() + 1).toString();
+			cy.get(".ms-DatePicker-day--infocus")
+				.contains(tomorrow)
 				.click();
 		}
 		if (pick === "yesterday") {
-			cy.get(".ms-DatePicker-day--today")
-				.parent()
-				.prev()
+			const yesterday = (new Date().getDate() - 1).toString();
+			cy.get(".ms-DatePicker-day--infocus")
+				.contains(yesterday)
 				.click();
 		}
 	}
