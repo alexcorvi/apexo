@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 /// <reference types="../../cypress" />
 
-describe("section", () => {
+describe("label", () => {
 	beforeEach(() => {
 		cy.visit("http://localhost:8000");
 		cy.clearCookies();

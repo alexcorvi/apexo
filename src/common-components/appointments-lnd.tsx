@@ -140,7 +140,7 @@ export class AppointmentsListNoDate extends React.Component<
 								)} - ${this.timeString(appointment)}`}
 							</td>
 						</tr>
-						<tr className="home-td today-appointment">
+						<tr>
 							<td>
 								<CC.ProfileSquaredComponent
 									text={
