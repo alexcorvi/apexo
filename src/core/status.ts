@@ -35,6 +35,7 @@ export enum LoginType {
 }
 
 export class Status {
+	private currentlyValidating: string | null = null;
 	@observable dbActionProgress = false;
 	@observable loadingIndicatorText = "";
 	@observable server: string = "";
@@ -292,10 +293,17 @@ export class Status {
 	}
 
 	async validateOnlineStatus() {
+		if (this.currentlyValidating === this.server) {
+			return;
+		} else {
+			this.currentlyValidating = this.server;
+		}
+
 		if (this.keepOffline) {
 			this.isOnline.client = false;
 			this.isOnline.server = false;
 			this.isOnline.dropbox = false;
+			this.currentlyValidating = null;
 			return;
 		}
 
@@ -304,6 +312,7 @@ export class Status {
 		if (modules.setting) {
 			this.isOnline.dropbox = await files.status();
 		}
+		this.currentlyValidating = null;
 	}
 	reset() {
 		this.server = "";
