@@ -35,26 +35,26 @@ describe("data table", () => {
 	});
 
 	it("Sorting", () => {
-		cy.get("th.patient").click();
-		cy.get("th.patient").should("have.class", "current");
-		cy.get("th.patient").should("have.class", "negative");
+		cy.get("th.patient-th").click();
+		cy.get("th.patient-th").should("have.class", "current");
+		cy.get("th.patient-th").should("have.class", "negative");
 		cy.get(
-			`th.patient .sort-indicators [data-icon-name="ChevronUpSmall"]`
+			`th.patient-th .sort-indicators [data-icon-name="ChevronUpSmall"]`
 		).should("not.be.visible");
 		cy.get(
-			`th.patient .sort-indicators [data-icon-name="ChevronDownSmall"]`
+			`th.patient-th .sort-indicators [data-icon-name="ChevronDownSmall"]`
 		).should("be.visible");
 		cy.get(".patients-data-table tbody tr")
 			.first()
 			.should("contain.text", "tttt");
-		cy.get("th.patient").click();
-		cy.get("th.patient").should("have.class", "current");
-		cy.get("th.patient").should("have.class", "positive");
+		cy.get("th.patient-th").click();
+		cy.get("th.patient-th").should("have.class", "current");
+		cy.get("th.patient-th").should("have.class", "positive");
 		cy.get(
-			`th.patient .sort-indicators [data-icon-name="ChevronUpSmall"]`
+			`th.patient-th .sort-indicators [data-icon-name="ChevronUpSmall"]`
 		).should("be.visible");
 		cy.get(
-			`th.patient .sort-indicators [data-icon-name="ChevronUpSmall"]`
+			`th.patient-th .sort-indicators [data-icon-name="ChevronUpSmall"]`
 		).should("be.visible");
 		cy.get(".patients-data-table tbody tr")
 			.first()
