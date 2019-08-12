@@ -3,7 +3,15 @@ import * as core from "@core";
 import { second, store } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { DefaultButton, MessageBar, MessageBarType, PrimaryButton, TextField } from "office-ui-fabric-react";
+import {
+	DefaultButton,
+	MessageBar,
+	MessageBarType,
+	PrimaryButton,
+	Spinner,
+	SpinnerSize,
+	TextField
+	} from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
@@ -17,9 +25,6 @@ export class LoginView extends React.Component {
 
 	@observable errorMessage: string = "";
 	@observable disableInputs: boolean = false;
-	@observable step: number = 1;
-
-	@observable editServerLocation: boolean = false;
 
 	@observable initiallyChecked: boolean = false;
 
@@ -92,7 +97,7 @@ export class LoginView extends React.Component {
 						/>
 						<DefaultButton
 							text="no-server mode"
-							className="no-server-mode"
+							className="no-server-mode m-t-15 m-b-15 m-r-5"
 							onClick={() => {
 								core.status.startNoServer();
 							}}
@@ -107,7 +112,8 @@ export class LoginView extends React.Component {
 							<div className="login-step">
 								<div
 									className={
-										status.isOnline.server
+										status.isOnline.server ||
+										!store.found("LSL_hash")
 											? "hidden"
 											: "offline-msg"
 									}
@@ -123,48 +129,26 @@ export class LoginView extends React.Component {
 									</MessageBar>
 								</div>
 
-								<br />
-								<hr />
-
 								<div
 									className={
-										status.isOnline.server ? "" : "hidden"
+										status.isOnline.server ||
+										!store.found("LSL_hash")
+											? ""
+											: "hidden"
 									}
 								>
-									<div
-										style={{
-											display: "inline-block",
-											width: "75%"
-										}}
-									>
-										<TextField
-											name="server"
-											label={text(`Server location`)}
-											value={this.serverFieldValue}
-											disabled={
-												this.disableInputs ||
-												!this.editServerLocation
-											}
-											onChange={(ev, v) =>
-												(this.serverFieldValue = v!)
-											}
-											className="input-server"
-										/>
-									</div>
-
-									<DefaultButton
-										className="edit-server-location"
-										onClick={() => {
-											this.editServerLocation = true;
-										}}
-									>
-										Change
-									</DefaultButton>
+									<TextField
+										name="server"
+										label={text(`Server location`)}
+										value={this.serverFieldValue}
+										disabled={this.disableInputs}
+										onChange={(ev, v) =>
+											(this.serverFieldValue = v!)
+										}
+										className="input-server"
+									/>
 								</div>
 
-								<br />
-								<br />
-								<hr />
 								<TextField
 									name="identification"
 									label={text(`Username`)}
@@ -232,7 +216,19 @@ export class LoginView extends React.Component {
 								</DefaultButton>
 							</div>
 						) : (
-							""
+							<div className="spinner-container">
+								<Spinner
+									size={SpinnerSize.large}
+									label={
+										core.status.initialLoadingIndicatorText
+											? `Please wait: ${
+													core.status
+														.initialLoadingIndicatorText
+											  }`
+											: "Please wait"
+									}
+								/>
+							</div>
 						)}
 						{this.errorMessage ? (
 							<MessageBar
