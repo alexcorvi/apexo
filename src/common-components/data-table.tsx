@@ -141,7 +141,7 @@ export class DataTableComponent extends React.Component<Props, {}> {
 								<th
 									className={
 										head.toLowerCase().replace(/\s/g, "") +
-										" table-head-sort" +
+										"-th table-head-sort" +
 										(this.currentColIndex === index
 											? " current"
 											: "") +
