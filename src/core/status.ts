@@ -38,6 +38,7 @@ export class Status {
 	private currentlyValidating: string | null = null;
 	@observable dbActionProgress = false;
 	@observable loadingIndicatorText = "";
+	@observable initialLoadingIndicatorText = "";
 	@observable server: string = "";
 	@observable currentUserID: string = "";
 
@@ -62,6 +63,7 @@ export class Status {
 	}
 
 	async initialCheck(server: string) {
+		this.initialLoadingIndicatorText = "running initial check";
 		// If we're on a demo host
 		if (demoHosts.indexOf(location.host) !== -1) {
 			console.log("Login: Demo mode");
@@ -74,9 +76,11 @@ export class Status {
 			return await this.startNoServer();
 		}
 
+		this.initialLoadingIndicatorText = "checking online status";
 		this.server = server;
 		await this.validateOnlineStatus();
 
+		this.initialLoadingIndicatorText = "checking active session";
 		if (this.isOnline.server) {
 			if (await this.activeSession(this.server)) {
 				this.loginType = LoginType.initialActiveSession;
@@ -309,11 +313,17 @@ export class Status {
 			return;
 		}
 
-		this.isOnline.server = await checkServer(this.server);
-		this.isOnline.client = await checkClient();
-		if (modules.setting) {
-			this.isOnline.dropbox = await files.status();
-		}
+		try {
+			this.initialLoadingIndicatorText = "checking server connectivity";
+			this.isOnline.server = await checkServer(this.server);
+			this.initialLoadingIndicatorText = "checking client connectivity";
+			this.isOnline.client = await checkClient();
+			this.initialLoadingIndicatorText =
+				"checking files server connectivity";
+			if (modules.setting) {
+				this.isOnline.dropbox = await files.status();
+			}
+		} catch (e) {}
 		this.currentlyValidating = null;
 	}
 	reset() {
