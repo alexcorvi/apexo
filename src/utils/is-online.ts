@@ -9,6 +9,7 @@ export async function checkServer(server: string): Promise<boolean> {
 			resolve(false);
 		}
 		const http = new XMLHttpRequest();
+		http.timeout = 2500;
 		http.open("GET", server + "/_session", true);
 		http.onreadystatechange = function() {
 			if (http.readyState === 4) {
