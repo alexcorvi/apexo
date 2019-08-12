@@ -105,6 +105,8 @@ export class Status {
 		password: string;
 		server: string;
 	}) {
+		this.server = server;
+		await this.validateOnlineStatus();
 		if (!this.isOnline.server && store.found("LSL_hash")) {
 			return this.loginWithCredentialsOffline({
 				username,
