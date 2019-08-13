@@ -1,6 +1,7 @@
 import { dbAction } from "@core";
 import * as core from "@core";
 import * as modules from "@modules";
+import * as utils from "@utils";
 
 const register = [
 	modules.registerSettings,
@@ -14,6 +15,13 @@ const register = [
 	modules.registerStats
 ];
 
+async function initResync() {
+	// resync on function call
+	await dbAction("resync");
+	// resync on interval of 2 minutes
+	setTimeout(initResync, 2 * utils.minute);
+}
+
 export async function registerModules() {
 	for (let index = 0; index < register.length; index++) {
 		core.status.loadingIndicatorText = "Registering module " + index;
@@ -21,21 +29,10 @@ export async function registerModules() {
 		await reg();
 	}
 
+	// resync on load: only staff database initially
+	// because we need it in login
+	core.status.loadingIndicatorText = "Resyncing basic info";
+	await dbAction("resync", "doctors");
 
-	core.status.loadingIndicatorText = "Resyncing remote and local databases";
-	// resync on registering modules
-	await dbAction("resync");
-
-	// resync on elapsed time by 10
-	// we're calculating it again to see
-	// the elapsed time for a sync with no changes
-	core.status.loadingIndicatorText = "Calculating elapsed time";
-	const t = new Date().getTime();
-	await dbAction("resync");
-	const elapsed = new Date().getTime() - t;
-	setInterval(async () => {
-		await dbAction("resync");
-	}, 10 * elapsed);
-	core.status.loadingIndicatorText =
-		"Finished working on modules and databases";
+	initResync();
 }
