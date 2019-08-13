@@ -50,14 +50,14 @@
 		text-align: right;
 		padding-top: 8px;
 	}
-	.offline {
-		display: inline-block;
-		background: #ff5722;
-		color: #fff;
-		margin-right: 12px;
-		padding: 8px;
-	}
 	.resync.rotate {
 		border-radius: 50%;
+	}
+	.resync.error {
+		background: #fff;
+		border: 1px solid #ff5722;
+		i {
+			color: #ff5722;
+		}
 	}
 }

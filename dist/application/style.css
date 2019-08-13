@@ -6262,14 +6262,13 @@ hr {
   .header-component .right-buttons {
     text-align: right;
     padding-top: 8px; }
-  .header-component .offline {
-    display: inline-block;
-    background: #ff5722;
-    color: #fff;
-    margin-right: 12px;
-    padding: 8px; }
   .header-component .resync.rotate {
     border-radius: 50%; }
+  .header-component .resync.error {
+    background: #fff;
+    border: 1px solid #ff5722; }
+    .header-component .resync.error i {
+      color: #ff5722; }
 
 .home .duty-table td.names {
   padding: 0; }

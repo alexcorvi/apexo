@@ -39,29 +39,54 @@ export class HeaderView extends React.Component {
 									data-testid="expand-user"
 								/>
 							</TooltipHost>
-							{core.status.isOnline.server ? (
-								<TooltipHost content={text("Sync with server")}>
+							{core.status.keepServerOffline ? (
+								""
+							) : (
+								<TooltipHost
+									content={
+										!core.status.isOnline.server
+											? text(
+													"Server is unavailable/unavailable"
+											  )
+											: core.status.invalidLogin
+											? text(
+													"Can't login to remote server"
+											  )
+											: text("Sync with server")
+									}
+								>
 									<IconButton
-										id="online"
-										disabled={core.status.dbActionProgress}
+										data-test-id="resync-btn"
+										disabled={
+											core.status.dbActionProgress ||
+											core.status.invalidLogin ||
+											!core.status.isOnline.server
+										}
 										onClick={async () => {
 											// resync on clicking (manual)
 											await core.dbAction("resync");
 										}}
-										iconProps={{ iconName: "Sync" }}
+										iconProps={{
+											iconName: !core.status.isOnline
+												.server
+												? "WifiWarning4"
+												: core.status.invalidLogin
+												? "Important"
+												: "Sync"
+										}}
 										className={
 											"resync " +
 											(core.status.dbActionProgress
-												? "rotate"
+												? "rotate "
+												: "") +
+											(core.status.invalidLogin ||
+											!core.status.isOnline.server
+												? "error"
 												: "")
 										}
 										data-testid="resync"
 									/>
 								</TooltipHost>
-							) : (
-								<span className="offline" data-testid="offline">
-									<Icon iconName="WifiWarning4" />
-								</span>
 							)}
 						</section>
 					</Col>
