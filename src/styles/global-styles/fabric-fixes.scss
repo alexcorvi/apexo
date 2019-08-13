@@ -203,3 +203,10 @@ hr {
 .ms-Tooltip {
 	pointer-events: none;
 }
+
+.ms-TooltipHost,
+.ms-Persona-details,
+.ms-Layer,
+.ms-TextField-field {
+	line-height: initial;
+}

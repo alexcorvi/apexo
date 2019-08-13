@@ -1060,6 +1060,12 @@ hr {
 .ms-Tooltip {
   pointer-events: none; }
 
+.ms-TooltipHost,
+.ms-Persona-details,
+.ms-Layer,
+.ms-TextField-field {
+  line-height: initial; }
+
 .fs-10 {
   font-size: 10px; }
 
@@ -6139,55 +6145,28 @@ hr {
 .single-tooth-condition {
   margin-top: 10px; }
 
-.elc-c {
-  margin-top: 10px;
-  font-size: 13px;
-  line-height: 1;
-  border: 1px solid #a6a6a6; }
-  .elc-c:hover {
-    border: 1px solid #121212; }
-  .elc-c .editable-list .new-item-input {
-    border: none;
-    background: #fff;
-    display: block;
-    width: 100%;
-    padding: 8px; }
-  .elc-c .input {
-    transition: 0.3s all;
-    background: #fff; }
-    .elc-c .input .input-icon {
-      padding: 9px;
-      color: #2196f3;
-      cursor: pointer; }
-    .elc-c .input .input-image {
-      color: #2196f3;
-      font-size: 20px;
-      padding: 6px 8px;
-      cursor: pointer; }
-    .elc-c .input .input-field {
-      border: none;
-      display: block;
-      width: 100%; }
-  .elc-c .ms-TextField-fieldGroup {
-    border: none;
-    min-height: auto !important;
-    background: transparent; }
-  .elc-c .ms-DetailsRow-cell {
-    border-top: 1px solid #f1f1f1; }
-    .elc-c .ms-DetailsRow-cell textarea {
-      font-size: 13px;
-      padding: 10px;
-      background: transparent;
-      margin-right: 35px; }
-    .elc-c .ms-DetailsRow-cell .delete {
-      position: absolute;
-      top: 0;
-      right: 0;
-      border-left: 1px solid #e3e3e3; }
-  .elc-c .el-expander {
-    padding: 10px 0;
-    margin-top: -10px;
-    margin-bottom: -10px; }
+.elc-c .new-item {
+  margin-bottom: -1px !important;
+  border-bottom: 0; }
+  .elc-c .new-item .ms-TextField-suffix {
+    margin: 1px; }
+    .elc-c .new-item .ms-TextField-suffix button {
+      background: transparent; }
+
+.elc-c .items {
+  border: 1.5px solid #8a8886;
+  border-radius: 0 0 2px 2px; }
+
+.elc-c .ms-DetailsRow-cell {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #f1f1f1; }
+  .elc-c .ms-DetailsRow-cell .ms-TextField {
+    margin-bottom: 0 !important; }
+    .elc-c .ms-DetailsRow-cell .ms-TextField .ms-TextField-fieldGroup {
+      border: 0; }
+  .elc-c .ms-DetailsRow-cell textarea {
+    resize: none; }
 
 .spg-p .thumbs {
   text-align: center;
@@ -6808,11 +6787,11 @@ hr {
     margin-bottom: 12px;
     padding-bottom: 12px;
     border-bottom: 1px solid #f3f3f3;
-    margin-top: 0;
     margin-left: -15px;
     margin-right: -15px;
     padding-left: 12px;
-    padding-right: 12px; }
+    padding-right: 12px;
+    margin-top: -5px; }
   .cl-section .chevron {
     float: right;
     position: relative;
