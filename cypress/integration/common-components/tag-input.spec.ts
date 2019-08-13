@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 /// <reference types="../../cypress" />
 
-describe("Editable list", () => {
+describe("Tag input", () => {
 	before(() => {
 		cy.visit("http://localhost:8000");
 		cy.clearCookies();
