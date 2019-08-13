@@ -56,7 +56,11 @@ export class EditableListComponent extends React.Component<
 					onChange={(e, value) => (this.valueToAdd = value || "")}
 					disabled={this.props.disabled}
 					onRenderSuffix={() => (
-						<IconButton iconProps={{ iconName: "Add" }} />
+						<IconButton
+							iconProps={{ iconName: "Add" }}
+							disabled={!this.valueToAdd.replace(/\W/, "").length}
+							onClick={() => this.addItem()}
+						/>
 					)}
 				/>
 
