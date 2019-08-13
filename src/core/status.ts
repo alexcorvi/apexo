@@ -88,9 +88,7 @@ export class Status {
 				store.set("LSL_TS", new Date().getTime().toString());
 				return;
 			}
-		}
-
-		if (store.found("LSL_hash")) {
+		} else if (store.found("LSL_hash")) {
 			const now = new Date().getTime();
 			const then = new Date(num(store.get("LSL_TS"))).getTime();
 			if (now - then < 7 * day) {
