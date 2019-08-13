@@ -46,7 +46,7 @@ export class HeaderView extends React.Component {
 									content={
 										!core.status.isOnline.server
 											? text(
-													"Server is unavailable/unavailable"
+													"Server is unavailable/offline"
 											  )
 											: core.status.invalidLogin
 											? text(
