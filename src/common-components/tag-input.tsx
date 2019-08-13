@@ -31,11 +31,12 @@ export class TagInputComponent extends React.Component<
 							.toLowerCase()
 							.indexOf(filter.toLowerCase()) !== -1
 				)
-				// no repitition
+				// no repetition
 				.filter(
 					option =>
 						!this.props.value.find(item => item.key === option.key)
 				)
+				// no empty option
 				.filter(option => option.text.length)
 				.map(option => ({
 					name: option.text,

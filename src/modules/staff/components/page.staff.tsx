@@ -8,8 +8,8 @@ import {
 	SectionComponent,
 	TableActions
 	} from "@common-components";
-import * as core from "@core";
 import { text } from "@core";
+import * as core from "@core";
 import * as modules from "@modules";
 import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
@@ -384,6 +384,7 @@ export class StaffPage extends React.Component {
 													(this.selectedMember!.name = val!)
 												}
 												disabled={!this.canEdit}
+												data-testid="staff-name"
 											/>
 										</div>
 
