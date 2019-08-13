@@ -307,4 +307,11 @@
 	.calendar-component .full-day-col {
 		float: right;
 	}
+
+	.ms-TooltipHost,
+	.ms-Persona-details,
+	.ms-Layer,
+	.ms-TextField-field {
+		line-height: initial;
+	}
 }
