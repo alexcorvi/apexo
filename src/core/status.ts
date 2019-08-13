@@ -40,6 +40,7 @@ export class Status {
 	@observable loadingIndicatorText = "";
 	@observable initialLoadingIndicatorText = "";
 	@observable server: string = "";
+	@observable invalidLogin: boolean = false;
 	@observable currentUserID: string = "";
 
 	@observable keepServerOffline = false;
@@ -309,7 +310,20 @@ export class Status {
 			} else {
 				this.initialLoadingIndicatorText =
 					"checking server connectivity";
-				this.isOnline.server = await checkServer(this.server);
+				const serverConnectivityResult = await checkServer(this.server);
+				if (!this.isOnline.server && !!serverConnectivityResult) {
+					// we were offline, and we're now online
+					// resync on online status change
+					dbAction("resync");
+				}
+				this.isOnline.server = !!serverConnectivityResult;
+				if (
+					serverConnectivityResult &&
+					!serverConnectivityResult.name
+				) {
+					// when server is online but user is invalid
+					this.invalidLogin = true;
+				}
 			}
 			this.initialLoadingIndicatorText = "checking client connectivity";
 			this.isOnline.client = await checkClient();
