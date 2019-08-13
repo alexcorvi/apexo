@@ -396,7 +396,7 @@ export class SettingsPage extends React.Component {
 						<SectionComponent
 							title={text(`Automated Backup and Restore`)}
 						>
-							{status.isOnline.server ? (
+							{status.isOnline.client ? (
 								status.isOnline.dropbox ? (
 									<div>
 										<Dropdown

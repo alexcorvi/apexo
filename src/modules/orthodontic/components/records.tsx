@@ -6,8 +6,8 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import * as core from "@core";
 import { imagesTable, ModalInterface, ORTHO_RECORDS_DIR, status, text } from "@core";
+import * as core from "@core";
 import { OrthoCase, Photo, StaffMember, Visit } from "@modules";
 import * as modules from "@modules";
 import { day, formatDate, num } from "@utils";
@@ -252,7 +252,7 @@ export class OrthoRecordsPanel extends React.Component<{
 					</Row>
 				</SectionComponent>
 				<SectionComponent title={text(`Records`)}>
-					{status.isOnline.server ? (
+					{status.isOnline.client ? (
 						status.isOnline.dropbox ? (
 							<div className="album">
 								{this.props.orthoCase.visits.length ? (

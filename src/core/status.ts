@@ -42,7 +42,7 @@ export class Status {
 	@observable server: string = "";
 	@observable currentUserID: string = "";
 
-	@observable keepOffline = false;
+	@observable keepServerOffline = false;
 
 	@observable step: LoginStep = LoginStep.initial;
 
@@ -212,7 +212,7 @@ export class Status {
 			client: false,
 			dropbox: false
 		};
-		this.keepOffline = true;
+		this.keepServerOffline = true;
 		this.loginType = LoginType.noServer;
 		await this.start({
 			server: "http://apexo-no-server-mode"
@@ -248,7 +248,7 @@ export class Status {
 	}
 
 	async logout() {
-		if (this.isOnline.server && !this.keepOffline) {
+		if (this.isOnline.server && !this.keepServerOffline) {
 			try {
 				this.removeCookies();
 				await dbAction("logout");
@@ -289,7 +289,7 @@ export class Status {
 		)) as any).default;
 		PouchDB.plugin(auth);
 		try {
-			if (this.isOnline.server && !this.keepOffline) {
+			if (this.isOnline.server && !this.keepServerOffline) {
 				return !!(await new PouchDB(server, {
 					skip_setup: true
 				}).getSession()).userCtx.name;
@@ -305,17 +305,14 @@ export class Status {
 			this.currentlyValidating = this.server;
 		}
 
-		if (this.keepOffline) {
-			this.isOnline.client = false;
-			this.isOnline.server = false;
-			this.isOnline.dropbox = false;
-			this.currentlyValidating = null;
-			return;
-		}
-
 		try {
-			this.initialLoadingIndicatorText = "checking server connectivity";
-			this.isOnline.server = await checkServer(this.server);
+			if (this.keepServerOffline) {
+				this.isOnline.server = false;
+			} else {
+				this.initialLoadingIndicatorText =
+					"checking server connectivity";
+				this.isOnline.server = await checkServer(this.server);
+			}
 			this.initialLoadingIndicatorText = "checking client connectivity";
 			this.isOnline.client = await checkClient();
 			this.initialLoadingIndicatorText =
@@ -329,7 +326,7 @@ export class Status {
 	reset() {
 		this.server = "";
 		this.currentUserID = "";
-		this.keepOffline = false;
+		this.keepServerOffline = false;
 		this.step = LoginStep.initial;
 		this.isOnline = {
 			server: false,
