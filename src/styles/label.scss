@@ -8,6 +8,7 @@
 	margin-bottom: 3px;
 	display: inline-block;
 	border: 1px solid #e3e3e3;
+	transition: all 0.4s;
 
 	&.clickable {
 		cursor: pointer;
@@ -15,21 +16,111 @@
 	&.warning {
 		border-color: #fb8c00;
 		color: #fb8c00;
+		&.clickable:hover {
+			border-color: transparent;
+			background: #fb8c00;
+			color: #fff;
+		}
 	}
 	&.primary {
 		border-color: #3f51b5;
 		color: #3f51b5;
+		&.clickable:hover {
+			border-color: transparent;
+			background: #3f51b5;
+			color: #fff;
+		}
 	}
 	&.danger {
 		border-color: #e91e63;
 		color: #e91e63;
+		&.clickable:hover {
+			border-color: transparent;
+			background: #e91e63;
+			color: #fff;
+		}
 	}
 	&.success {
 		border-color: #4caf50;
 		color: #4caf50;
+		&.clickable:hover {
+			border-color: transparent;
+			background: #4caf50;
+			color: #fff;
+		}
 	}
 	&.info {
 		border-color: #212121;
 		color: #212121;
+		&.clickable:hover {
+			border-color: transparent;
+			background: #212121;
+			color: #fff;
+		}
+	}
+
+	&.highlighted.warning {
+		border-color: transparent;
+		background: #fb8c00;
+		color: #fff;
+		&.clickable:hover {
+			border-color: #fb8c00;
+			color: #fb8c00;
+			background: #fff;
+		}
+	}
+	&.highlighted.primary {
+		border-color: transparent;
+		background: #3f51b5;
+		color: #fff;
+		&.clickable:hover {
+			border-color: #3f51b5;
+			color: #3f51b5;
+			background: #fff;
+		}
+	}
+	&.highlighted.danger {
+		border-color: transparent;
+		background: #e91e63;
+		color: #fff;
+		&.clickable:hover {
+			border-color: #e91e63;
+			color: #e91e63;
+			background: #fff;
+		}
+	}
+	&.highlighted.success {
+		border-color: transparent;
+		background: #4caf50;
+		color: #fff;
+		&.clickable:hover {
+			border-color: #4caf50;
+			color: #4caf50;
+			background: #fff;
+		}
+	}
+	&.highlighted.info {
+		border-color: transparent;
+		background: #212121;
+		color: #fff;
+		&.clickable:hover {
+			border-color: #212121;
+			color: #212121;
+			background: #fff;
+		}
+	}
+	&.highlighted:after {
+		content: "";
+		margin-left: 15px;
+		height: 15px;
+		width: 15px;
+		display: inline-block;
+		text-align: center;
+		border-radius: 50%;
+		font-family: "FabricMDL2Icons";
+		margin-right: -5px;
+		font-size: 8px;
+		line-height: 17px;
+		font-weight: 900;
 	}
 }

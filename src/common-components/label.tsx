@@ -17,22 +17,26 @@ export const tagType: {
 };
 
 export function getRandomTagType(str: string) {
-	const r = num(
-		(str.length * str.charCodeAt(0) + str.charCodeAt(str.length - 1))
-			.toString()
-			.charAt(0)
-	);
-	if (r === 1 || r === 4) {
+	const rs = (
+		Math.cos(str.length) *
+		Math.sin(
+			str.charCodeAt(0) +
+				str.charCodeAt(str.length - 1) * str.charCodeAt(0)
+		)
+	).toString();
+	const r = Math.round(Number(rs.charAt(rs.length - 1)) / 2);
+
+	if (r === 1) {
+		return tagType.warning;
+	}
+	if (r === 2) {
 		return tagType.primary;
 	}
 	if (r === 3) {
-		return tagType.warning;
-	}
-	if (r === 5 || r === 6) {
-		return tagType.success;
-	}
-	if (r === 7 || r === 8 || r === 2) {
 		return tagType.info;
+	}
+	if (r === 4) {
+		return tagType.success;
 	} else {
 		return tagType.danger;
 	}
@@ -43,6 +47,7 @@ interface Props {
 	type: keyof typeof tagType;
 	onClick?: () => void;
 	className?: string;
+	highlighted?: boolean;
 }
 
 @observer
@@ -50,10 +55,10 @@ export class TagComponent extends React.Component<Props, {}> {
 	render() {
 		return (
 			<span
-				className={
-					`label ${this.props.type} ` +
-					(this.props.onClick ? "clickable" : "")
-				}
+				className={`label ${this.props.type} ${
+					this.props.onClick ? " clickable" : ""
+				} ${this.props.highlighted ? " highlighted" : ""}
+				`}
 				onClick={this.props.onClick}
 			>
 				{this.props.text}

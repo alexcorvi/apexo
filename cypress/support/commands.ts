@@ -66,11 +66,56 @@ Cypress.Commands.add("goToPage", namespace => {
 	cy.ensurePage(namespace);
 });
 
+Cypress.Commands.add("closePanel", () => {
+	cy.get(`[data-icon-name="cancel"]`)
+		.last()
+		.click();
+});
+
+Cypress.Commands.add(
+	"pickDate",
+	(
+		datePickerClassName: string,
+		pick: "today" | "tomorrow" | "yesterday" | number
+	) => {
+		cy.get(`.${datePickerClassName}`).click();
+		if (pick === "today") {
+			cy.get(".ms-DatePicker-day--today")
+				.parent()
+				.click();
+		}
+		if (pick === "tomorrow") {
+			const tomorrow = (new Date().getDate() + 1).toString();
+			cy.get(".ms-DatePicker-day--infocus")
+				.contains(tomorrow)
+				.click();
+		}
+		if (pick === "yesterday") {
+			const yesterday = (new Date().getDate() - 1).toString();
+			cy.get(".ms-DatePicker-day--infocus")
+				.contains(yesterday)
+				.click();
+		}
+	}
+);
+
 Cypress.Commands.add("ensurePage", namespace => {
 	cy.get(
 		`[data-current-namespace="${namespace.toLowerCase()}"]#router-outlet`
 	);
 });
+
+Cypress.Commands.add("clickTabByIcon", (icon: string) => {
+	cy.get(`.ms-Pivot-icon [data-icon-name="${icon}"]`).click();
+});
+
+Cypress.Commands.add(
+	"chooseFromDropdown",
+	(dropdownClassName: string, choice: string) => {
+		cy.get(`.${dropdownClassName}`).click();
+		cy.get(`[role="option"][title="${choice}"]`).click();
+	}
+);
 
 Cypress.Commands.add(
 	"slowType",

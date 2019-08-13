@@ -13,8 +13,7 @@ import * as loadable from "react-loadable";
 const EditableListComponent = loadable({
 	loading: () => <Shimmer />,
 	loader: async () =>
-		(await import("common-components/editable-list/editable-list"))
-			.EditableListComponent
+		(await import("common-components/editable-list")).EditableListComponent
 });
 
 @observer
@@ -38,9 +37,10 @@ export class PatientDetailsPanel extends React.Component<{
 								(this.props.patient.name = name!)
 							}
 							disabled={!this.canEdit}
+							data-testid="patient-name"
 						/>
 					</div>
-					<Row gutter={6}>
+					<Row gutter={8}>
 						<Col sm={12}>
 							<div className="birth">
 								<TextField
@@ -78,7 +78,7 @@ export class PatientDetailsPanel extends React.Component<{
 							</div>
 						</Col>
 					</Row>
-					{status.isOnline.server && status.isOnline.dropbox ? (
+					{status.isOnline.client && status.isOnline.dropbox ? (
 						<div>
 							<Label>Avatar photo</Label>
 							<div className="thumbs">
@@ -141,7 +141,7 @@ export class PatientDetailsPanel extends React.Component<{
 				</SectionComponent>
 
 				<SectionComponent title={text(`Contact Info`)}>
-					<Row gutter={6}>
+					<Row gutter={8}>
 						<Col sm={12}>
 							<TextField
 								label={text("Phone")}
@@ -177,80 +177,66 @@ export class PatientDetailsPanel extends React.Component<{
 				</SectionComponent>
 
 				<SectionComponent title={text(`Other Notes`)}>
-					<Row gutter={6}>
-						<Col md={12}>
-							{" "}
-							<TagInputComponent
-								disabled={!this.canEdit}
-								className="patient-tags"
-								placeholder={text("Labels")}
-								options={[""]
-									.concat(
-										modules
-											.patients!.docs.map(x => x.labels)
-											.reduce(
-												(a: string[], b) =>
-													a.concat(
-														b.map(x => x.text)
-													),
-												[]
-											)
-									)
-									.map(x => ({
-										key: x,
-										text: x
-									}))
-									.reduce(
-										(
-											arr: {
-												key: string;
-												text: string;
-											}[],
-											item
-										) => {
-											if (
-												arr.findIndex(
-													x => x.key === item.key
-												) === -1
-											) {
-												arr.push(item);
-											}
-											return arr;
-										},
-										[]
-									)}
-								onChange={newVal => {
-									this.props.patient.labels = newVal.map(
-										item => {
-											return {
-												text: item.text,
-												type: getRandomTagType(
-													item.text
-												)
-											};
-										}
-									);
-								}}
-								value={this.props.patient.labels.map(label => ({
-									key: label.text,
-									text: label.text
-								}))}
-							/>
-						</Col>
-						<Col md={12}>
-							<div className="medical-history">
-								<EditableListComponent
-									label={text("Notes")}
-									value={this.props.patient.medicalHistory}
-									onChange={newVal => {
-										this.props.patient.medicalHistory = newVal;
-									}}
-									style={{ marginTop: "0" }}
-									disabled={!this.canEdit}
-								/>
-							</div>
-						</Col>
-					</Row>
+					<TagInputComponent
+						className="patient-labels"
+						disabled={!this.canEdit}
+						label={text("Labels")}
+						loose
+						options={modules
+							.patients!.docs.map(x => x.labels)
+							.reduce(
+								(a: string[], b) =>
+									a.concat(b.map(x => x.text)),
+								[]
+							)
+							.map(x => ({
+								key: x,
+								text: x
+							}))
+							.reduce(
+								(
+									arr: {
+										key: string;
+										text: string;
+									}[],
+									item
+								) => {
+									if (
+										arr.findIndex(
+											x => x.key === item.key
+										) === -1
+									) {
+										arr.push(item);
+									}
+									return arr;
+								},
+								[]
+							)}
+						onChange={newVal => {
+							this.props.patient.labels = newVal.map(item => {
+								return {
+									text: item,
+									type: getRandomTagType(item)
+								};
+							});
+						}}
+						value={this.props.patient.labels.map(label => ({
+							key: label.text,
+							text: label.text
+						}))}
+					/>
+					<br />
+					<div className="medical-history">
+						<EditableListComponent
+							label={text("Notes")}
+							value={this.props.patient.medicalHistory}
+							onChange={newVal => {
+								this.props.patient.medicalHistory = newVal;
+							}}
+							style={{ marginTop: "0" }}
+							disabled={!this.canEdit}
+						/>
+					</div>
 				</SectionComponent>
 			</div>
 		);

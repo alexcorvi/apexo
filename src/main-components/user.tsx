@@ -41,6 +41,7 @@ export class UserPanelView extends React.Component {
 				isLightDismiss
 				isOpen={core.user.isVisible}
 				onDismiss={() => core.user.hide()}
+				data-testid="user-panel"
 				onRenderNavigation={() => (
 					<Row className="panel-heading">
 						<Col span={20}>

@@ -21,6 +21,7 @@ export class StaffMember extends Model<StaffMemberSchema>
 	@observable canEditTreatments: boolean = true;
 	@observable canEditPrescriptions: boolean = true;
 	@observable canEditSettings: boolean = true;
+	@observable canEditLabwork: boolean = true;
 
 	@observable canViewStaff: boolean = true;
 	@observable canViewPatients: boolean = true;
@@ -30,6 +31,8 @@ export class StaffMember extends Model<StaffMemberSchema>
 	@observable canViewPrescriptions: boolean = true;
 	@observable canViewSettings: boolean = true;
 	@observable canViewStats: boolean = true;
+
+	@observable canViewLabwork: boolean = true;
 
 	@observable pin: string | undefined = "";
 

@@ -26,7 +26,7 @@ export const registerStaff = async () => {
 			(core.user.currentUser || { canViewStaff: false }).canViewStaff
 	});
 	core.menu.items.push({
-		icon: "Contact",
+		icon: "Medical",
 		name: modules.staffNamespace,
 		key: modules.staffNamespace,
 		onClick: () => {

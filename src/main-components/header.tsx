@@ -20,44 +20,18 @@ export class HeaderView extends React.Component {
 								onClick={() => core.menu.show()}
 								disabled={false}
 								iconProps={{ iconName: "GlobalNavButton" }}
-								title="Menu"
 								ariaLabel="Menu"
 								data-testid="expand-menu"
 							/>
 						</section>
 					</Col>
 					<Col span={8}>
-						<section className="title">
+						<section className="title" data-testid="page-title">
 							{text(core.router.currentNamespace || "Home")}
 						</section>
 					</Col>
 					<Col span={8}>
 						<section className="right-buttons">
-							{core.status.isOnline.server ? (
-								<TooltipHost content={text("Sync with server")}>
-									<IconButton
-										id="online"
-										onClick={async () => {
-											core.router.isCurrentlyReSyncing = true;
-											// resync on clicking (manual)
-											await core.dbAction("resync");
-											core.router.isCurrentlyReSyncing = false;
-										}}
-										iconProps={{ iconName: "Sync" }}
-										className={
-											core.router.isCurrentlyReSyncing
-												? "rotate"
-												: ""
-										}
-										title="Re-Sync"
-									/>
-								</TooltipHost>
-							) : (
-								<span className="offline" id="offline">
-									<Icon iconName="WifiWarning4" />
-								</span>
-							)}
-
 							<TooltipHost content={text("User panel")}>
 								<IconButton
 									onClick={() => core.user.show()}
@@ -65,6 +39,55 @@ export class HeaderView extends React.Component {
 									data-testid="expand-user"
 								/>
 							</TooltipHost>
+							{core.status.keepServerOffline ? (
+								""
+							) : (
+								<TooltipHost
+									content={
+										!core.status.isOnline.server
+											? text(
+													"Server is unavailable/offline"
+											  )
+											: core.status.invalidLogin
+											? text(
+													"Can't login to remote server"
+											  )
+											: text("Sync with server")
+									}
+								>
+									<IconButton
+										data-test-id="resync-btn"
+										disabled={
+											core.status.dbActionProgress ||
+											core.status.invalidLogin ||
+											!core.status.isOnline.server
+										}
+										onClick={async () => {
+											// resync on clicking (manual)
+											await core.dbAction("resync");
+										}}
+										iconProps={{
+											iconName: !core.status.isOnline
+												.server
+												? "WifiWarning4"
+												: core.status.invalidLogin
+												? "Important"
+												: "Sync"
+										}}
+										className={
+											"resync " +
+											(core.status.dbActionProgress
+												? "rotate "
+												: "") +
+											(core.status.invalidLogin ||
+											!core.status.isOnline.server
+												? "error"
+												: "")
+										}
+										data-testid="resync"
+									/>
+								</TooltipHost>
+							)}
 						</section>
 					</Col>
 				</Row>

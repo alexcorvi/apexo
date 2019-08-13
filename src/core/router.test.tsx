@@ -50,7 +50,6 @@ describe("@core: router", () => {
 		router.go(["aa"]);
 		setTimeout(async () => {
 			await router.currentLoader();
-			// TODO: find a way to test current loader
 			done();
 		}, 300);
 	});

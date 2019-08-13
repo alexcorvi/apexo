@@ -3,14 +3,21 @@ export const connSetting = {
 	emulateOffline: !!localStorage.getItem("emulate_offline")
 };
 
-export async function checkServer(server: string): Promise<boolean> {
+export async function checkServer(
+	server: string
+): Promise<false | { name: string | null }> {
 	return new Promise(resolve => {
+		if (connSetting.emulateOffline) {
+			resolve(false);
+		}
 		const http = new XMLHttpRequest();
+		http.timeout = 2500;
+		http.withCredentials = true;
 		http.open("GET", server + "/_session", true);
 		http.onreadystatechange = function() {
 			if (http.readyState === 4) {
 				if (http.status > 199 && http.status < 300) {
-					resolve(true);
+					resolve(JSON.parse(http.response).userCtx);
 				} else {
 					resolve(false);
 				}

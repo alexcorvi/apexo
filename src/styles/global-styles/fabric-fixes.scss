@@ -106,14 +106,6 @@ h5 {
 		}
 	}
 }
-.ms-BasePicker {
-	.ms-BasePicker-text {
-		border-color: #a6a6a6;
-	}
-	.ms-BasePicker-input {
-		height: auto;
-	}
-}
 
 .ms-Persona.treatment-link.ms-Persona--xxs {
 	height: 25px;
@@ -210,4 +202,11 @@ hr {
 
 .ms-Tooltip {
 	pointer-events: none;
+}
+
+.ms-TooltipHost,
+.ms-Persona-details,
+.ms-Layer,
+.ms-TextField-field {
+	line-height: initial;
 }

@@ -8,9 +8,8 @@ class Version extends React.Component {
 	render() {
 		return (
 			<div className="ver">
-				<img src="./apple-touch-icon.png" />
-				<br />
-				--VERSION--
+				apexo
+				<br /> <span>--VERSION--</span>
 			</div>
 		);
 	}
@@ -21,6 +20,7 @@ export class MenuView extends React.Component {
 	public render() {
 		return (
 			<div className="menu-component">
+				<Version />
 				<div className="visible-lg visible-md icon-list">
 					{menu.sortedItems.map((item, index) => {
 						const pageDisplayName = text(item.name);
@@ -40,10 +40,11 @@ export class MenuView extends React.Component {
 							>
 								<div
 									className={
-										"item " +
+										"item" +
+										` bg-menu-item-${item.key.toLowerCase()}` +
 										(item.name ===
 										core.router.currentNamespace
-											? "selected"
+											? " selected"
 											: "")
 									}
 									onClick={item.onClick}
@@ -54,7 +55,6 @@ export class MenuView extends React.Component {
 							</TooltipHost>
 						);
 					})}
-					<Version />
 				</div>
 				<Panel
 					className="menu"
@@ -83,7 +83,6 @@ export class MenuView extends React.Component {
 						]}
 						selectedKey={core.router.currentNamespace}
 					/>
-					<Version />
 				</Panel>
 			</div>
 		);

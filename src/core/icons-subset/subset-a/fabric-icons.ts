@@ -18,7 +18,7 @@ export function initializeIcons(
 		},
 		fontFace: {
 			fontFamily: `"FabricMDL2Icons"`,
-			src: `url('${baseUrl}fabric-icons-d40e9e78.woff') format('woff')`
+			src: `url('${baseUrl}fabric-icons-72e4a0ad.woff') format('woff')`
 		},
 		icons: {
 			GlobalNavButton: "\uE700",
@@ -60,6 +60,7 @@ export function initializeIcons(
 			ChromeClose: "\uE8BB",
 			CalendarWeek: "\uE8C0",
 			Important: "\uE8C9",
+			GotoToday: "\uE8D1",
 			Permissions: "\uE8D7",
 			Timer: "\uE91E",
 			Info: "\uE946",
@@ -71,6 +72,7 @@ export function initializeIcons(
 			MiniExpandMirrored: "\uEA5A",
 			DietPlanNotebook: "\uEAC8",
 			Pill: "\uEACB",
+			Medical: "\uEAD4",
 			AllCurrency: "\uEAE4",
 			Cricket: "\uEB1E",
 			WifiWarning4: "\uEB63",
@@ -85,6 +87,7 @@ export function initializeIcons(
 			EditPhoto: "\uEF77",
 			Database: "\uEFC7",
 			ZipFolder: "\uF012",
+			Archive: "\uF03F",
 			FabricOpenFolderHorizontal: "\uF0A8",
 			BufferTimeBefore: "\uF0CF",
 			BufferTimeAfter: "\uF0D0",
@@ -96,9 +99,9 @@ export function initializeIcons(
 			LocaleLanguage: "\uF2B7",
 			MoreVertical: "\uF2BC",
 			AlertSolid: "\uF331",
+			TestBeaker: "\uF3A5",
 			Teeth: "\uF4A0",
 			DeleteRows: "\uF64F",
-			ReleaseGateError: "\uF7C0",
 			Rotate90Clockwise: "\uF80D",
 			Rotate90CounterClockwise: "\uF80E",
 			DatabaseSync: "\uF842"

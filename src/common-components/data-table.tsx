@@ -26,6 +26,7 @@ interface Row {
 	id: string;
 	cells: Cell[];
 	searchableString: string;
+	className?: string;
 }
 
 interface Props {
@@ -103,11 +104,10 @@ export class DataTableComponent extends React.Component<Props, {}> {
 				key: "a",
 				onRender: () => (
 					<SearchBox
+						value={this.filterString}
 						placeholder={core.text("Search")}
 						onChange={(ev, newVal) => {
-							if (newVal) {
-								this.filterString = newVal;
-							}
+							this.filterString = newVal || "";
 						}}
 					/>
 				)
@@ -140,7 +140,8 @@ export class DataTableComponent extends React.Component<Props, {}> {
 							{this.props.heads.map((head, index) => (
 								<th
 									className={
-										"table-head-sort" +
+										head.toLowerCase().replace(/\s/g, "") +
+										"-th table-head-sort" +
 										(this.currentColIndex === index
 											? " current"
 											: "") +
@@ -184,10 +185,12 @@ export class DataTableComponent extends React.Component<Props, {}> {
 							return (
 								<tr
 									key={row.id}
-									className={row.cells[0].dataValue
+									className={`${row.cells[0].dataValue
 										.toString()
 										.toLowerCase()
-										.replace(/[^a-z]/g, "")}
+										.replace(/[^a-z]/g, "")} ${
+										row.className ? row.className : ""
+									}`}
 								>
 									{row.cells.map((cell, index2) => {
 										return (

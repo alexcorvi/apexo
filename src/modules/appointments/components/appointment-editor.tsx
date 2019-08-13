@@ -9,8 +9,8 @@ import {
 	TagInputComponent,
 	tagType
 	} from "@common-components";
-import { imagesTable, text } from "@core";
 import * as core from "@core";
+import { imagesTable, text } from "@core";
 import {
 	Appointment,
 	ISOTeethArr,
@@ -234,7 +234,7 @@ export class AppointmentEditorPanel extends React.Component<
 				<div className="appointment-editor">
 					{this.viewWhich === "details" ? (
 						<SectionComponent title={text("Appointment")}>
-							<Row gutter={12}>
+							<Row gutter={8}>
 								<Col sm={12}>
 									<div className="appointment-input date">
 										<DatePicker
@@ -279,7 +279,7 @@ export class AppointmentEditorPanel extends React.Component<
 								</Col>
 								<Col sm={12}>
 									<div className="appointment-input time">
-										<Row gutter={12}>
+										<Row gutter={8}>
 											<Label>{text("Time")}</Label>
 											<Row gutter={0}>
 												<Col span={8}>
@@ -366,7 +366,7 @@ export class AppointmentEditorPanel extends React.Component<
 											</Row>
 										</Row>
 										<Toggle
-											defaultChecked={
+											checked={
 												this.props.appointment!.isDone
 											}
 											onText={text("Done")}
@@ -393,45 +393,31 @@ export class AppointmentEditorPanel extends React.Component<
 								</Col>
 							</Row>
 							<div className="appointment-input">
-								<label>{text("Operating staff")} </label>
-								{modules.staff!.operatingStaff.map(member => {
-									const checked =
-										this.props.appointment!.staffID.indexOf(
-											member._id
-										) > -1;
-									return (
-										<Checkbox
-											key={member._id}
-											label={member.name}
-											disabled={
-												!this.canEdit ||
-												(!checked &&
-													member.onDutyDays.indexOf(
-														new Date(
-															this.props.appointment!.date
-														).toLocaleDateString(
-															"en-us",
-															{
-																weekday: "long"
-															}
-														)
-													) === -1)
-											}
-											checked={checked}
-											onChange={(ev, isChecked) => {
-												if (isChecked) {
-													this.props.appointment!.addStaff(
-														member._id
-													);
-												} else {
-													this.props.appointment!.removeStaff(
-														member._id
-													);
-												}
-											}}
-										/>
-									);
-								})}
+								<TagInputComponent
+									label={text("Operating staff")}
+									options={modules
+										.staff!.operatingStaff.sort((a, b) =>
+											a.name.localeCompare(b.name)
+										)
+										.map(s => {
+											return {
+												key: s._id,
+												text: s.name
+											};
+										})}
+									value={this.props.appointment!.operatingStaff.map(
+										x => ({ key: x._id, text: x.name })
+									)}
+									onChange={newKeys => {
+										this.props.appointment!.staffID = newKeys;
+									}}
+									disabled={!this.canEdit}
+									suggestionsHeaderText={text(
+										"Operating staff"
+									)}
+									noResultsFoundText={text("No staff found")}
+									className={"operating-staff"}
+								/>
 							</div>
 						</SectionComponent>
 					) : (
@@ -450,7 +436,7 @@ export class AppointmentEditorPanel extends React.Component<
 								}}
 							/>
 							<br />
-							<Row gutter={12}>
+							<Row gutter={8}>
 								<Col sm={12}>
 									<div className="appointment-input treatment">
 										<Dropdown
@@ -493,32 +479,31 @@ export class AppointmentEditorPanel extends React.Component<
 									</div>
 								</Col>
 								<Col span={24}>
-									{" "}
 									<div className="appointment-input involved-teeth">
 										<TagInputComponent
-											disabled={!this.canEdit}
-											placeholder={text("Involved teeth")}
-											value={this.props.appointment!.involvedTeeth.map(
-												x => ({
-													key: x.toString(),
-													text: x.toString()
-												})
-											)}
-											strict={true}
+											label={text("Involved teeth")}
 											options={ISOTeethArr.map(x => {
 												return {
 													key: x.toString(),
 													text: x.toString()
 												};
 											})}
-											formatText={x =>
-												`${x.toString()} - ${
-													convert(num(x)).Palmer
-												}`
-											}
-											onChange={newValue => {
-												this.props.appointment!.involvedTeeth = newValue.map(
-													x => num(x.key)
+											suggestionsHeaderText={text(
+												"Select involved teeth"
+											)}
+											noResultsFoundText={text(
+												"No teeth found"
+											)}
+											disabled={!this.canEdit}
+											value={this.props.appointment!.involvedTeeth.map(
+												x => ({
+													key: x.toString(),
+													text: x.toString()
+												})
+											)}
+											onChange={selectedKeys => {
+												this.props.appointment!.involvedTeeth = selectedKeys.map(
+													x => num(x)
 												);
 											}}
 										/>
@@ -532,34 +517,46 @@ export class AppointmentEditorPanel extends React.Component<
 								<div>
 									<div className="appointment-input prescription">
 										<TagInputComponent
+											label={text("Prescription")}
+											options={modules.prescriptions!.docs.map(
+												this.prescriptionToTagInput
+											)}
+											suggestionsHeaderText={text(
+												"Select prescription"
+											)}
+											noResultsFoundText={text(
+												"No prescriptions found"
+											)}
 											disabled={!this.canEdit}
-											className="prescription"
 											value={this.props.appointment!.prescriptions.map(
 												x => ({
 													key: x.id,
 													text: x.prescription
 												})
 											)}
-											options={modules.prescriptions!.docs.map(
-												this.prescriptionToTagInput
-											)}
-											onChange={newValue => {
-												this.props.appointment!.prescriptions = newValue.map(
-													x => ({
-														id: x.key,
-														prescription: x.text
+											onChange={selectedKeys => {
+												this.props.appointment!.prescriptions = selectedKeys.map(
+													selectedID => ({
+														id: selectedID,
+														prescription: this.prescriptionToTagInput(
+															modules.prescriptions!.docs.find(
+																p =>
+																	p._id ===
+																	selectedID
+															)!
+														).text
 													})
 												);
 											}}
-											strict={true}
-											placeholder={text("Prescription")}
 										/>
 									</div>
 
 									<div id="prescription-items">
 										<div className="print-heading">
 											<h2>
-												{core.user.currentUser!.name}
+												{this.props.appointment.operatingStaff
+													.map(x => x.name)
+													.join(",")}
 											</h2>
 											<hr />
 											<h3>
@@ -660,7 +657,9 @@ export class AppointmentEditorPanel extends React.Component<
 									{this.props.appointment!.prescriptions
 										.length ? (
 										<DefaultButton
-											onClick={print}
+											onClick={() => {
+												print();
+											}}
 											iconProps={{ iconName: "print" }}
 											text={text("Print prescription")}
 										/>
@@ -678,17 +677,17 @@ export class AppointmentEditorPanel extends React.Component<
 
 					{this.viewWhich === "finance" ? (
 						<SectionComponent title={text("Expenses & Price")}>
-							<Row gutter={12}>
+							<Row gutter={8}>
 								<Col sm={16}>
 									{modules.setting!.getSetting(
 										"time_tracking"
 									) ? (
 										<div className="appointment-input time">
-											<label>
+											<Label>
 												{text(
 													"Time (hours, minutes, seconds)"
 												)}
-											</label>
+											</Label>
 											<TextField
 												className="time-input hours"
 												type="number"
@@ -817,7 +816,7 @@ export class AppointmentEditorPanel extends React.Component<
 								</Col>
 								<Col sm={24}>
 									<div className="appointment-input paid">
-										<Row gutter={12}>
+										<Row gutter={8}>
 											<Col sm={8}>
 												<TextField
 													type="number"

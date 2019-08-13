@@ -18,8 +18,7 @@ import * as loadable from "react-loadable";
 const EditableListComponent = loadable({
 	loading: () => <Shimmer />,
 	loader: async () =>
-		(await import("common-components/editable-list/editable-list"))
-			.EditableListComponent
+		(await import("common-components/editable-list")).EditableListComponent
 });
 
 const TeethDeciduousChart = loadable({
@@ -65,6 +64,7 @@ export class DentalHistoryPanel extends React.Component<
 						onChange={(ev, newVal) => {
 							this.viewChart = newVal!;
 						}}
+						className={"hidden-xs"}
 					/>
 					{this.viewChart ? (
 						<div className="chart">
@@ -188,7 +188,7 @@ export class DentalHistoryPanel extends React.Component<
 									].condition = newVal.key.toString();
 									this.props.patient.saveToPouch();
 								}}
-								defaultSelectedKey={
+								selectedKey={
 									this.props.patient.teeth[this.viewToothISO]
 										.condition
 								}

@@ -168,7 +168,7 @@ export class PrescriptionsPage extends React.Component {
 									disabled={!this.canEdit}
 								/>
 
-								<Row gutter={6}>
+								<Row gutter={8}>
 									<Col md={8}>
 										<TextField
 											label={text("Dosage in mg")}

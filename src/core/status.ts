@@ -35,11 +35,15 @@ export enum LoginType {
 }
 
 export class Status {
+	private currentlyValidating: string | null = null;
+	@observable dbActionProgress = false;
 	@observable loadingIndicatorText = "";
+	@observable initialLoadingIndicatorText = "";
 	@observable server: string = "";
+	@observable invalidLogin: boolean = false;
 	@observable currentUserID: string = "";
 
-	@observable keepOffline = false;
+	@observable keepServerOffline = false;
 
 	@observable step: LoginStep = LoginStep.initial;
 
@@ -60,6 +64,7 @@ export class Status {
 	}
 
 	async initialCheck(server: string) {
+		this.initialLoadingIndicatorText = "running initial check";
 		// If we're on a demo host
 		if (demoHosts.indexOf(location.host) !== -1) {
 			console.log("Login: Demo mode");
@@ -72,9 +77,11 @@ export class Status {
 			return await this.startNoServer();
 		}
 
+		this.initialLoadingIndicatorText = "checking online status";
 		this.server = server;
 		await this.validateOnlineStatus();
 
+		this.initialLoadingIndicatorText = "checking active session";
 		if (this.isOnline.server) {
 			if (await this.activeSession(this.server)) {
 				this.loginType = LoginType.initialActiveSession;
@@ -82,9 +89,7 @@ export class Status {
 				store.set("LSL_TS", new Date().getTime().toString());
 				return;
 			}
-		}
-
-		if (store.found("LSL_hash")) {
+		} else if (store.found("LSL_hash")) {
 			const now = new Date().getTime();
 			const then = new Date(num(store.get("LSL_TS"))).getTime();
 			if (now - then < 7 * day) {
@@ -103,6 +108,8 @@ export class Status {
 		password: string;
 		server: string;
 	}) {
+		this.server = server;
+		await this.validateOnlineStatus();
 		if (!this.isOnline.server && store.found("LSL_hash")) {
 			return this.loginWithCredentialsOffline({
 				username,
@@ -199,10 +206,12 @@ export class Status {
 	}
 
 	async startNoServer() {
-		this.isOnline.server = false;
-		this.isOnline.client = false;
-		this.isOnline.dropbox = false;
-		this.keepOffline = true;
+		this.isOnline = {
+			server: false,
+			client: false,
+			dropbox: false
+		};
+		this.keepServerOffline = true;
 		this.loginType = LoginType.noServer;
 		await this.start({
 			server: "http://apexo-no-server-mode"
@@ -238,7 +247,7 @@ export class Status {
 	}
 
 	async logout() {
-		if (this.isOnline.server && !this.keepOffline) {
+		if (this.isOnline.server && !this.keepServerOffline) {
 			try {
 				this.removeCookies();
 				await dbAction("logout");
@@ -279,7 +288,7 @@ export class Status {
 		)) as any).default;
 		PouchDB.plugin(auth);
 		try {
-			if (this.isOnline.server && !this.keepOffline) {
+			if (this.isOnline.server && !this.keepServerOffline) {
 				return !!(await new PouchDB(server, {
 					skip_setup: true
 				}).getSession()).userCtx.name;
@@ -289,22 +298,47 @@ export class Status {
 	}
 
 	async validateOnlineStatus() {
-		if (this.keepOffline) {
-			this.isOnline.client = false;
-			this.isOnline.server = false;
-			this.isOnline.dropbox = false;
+		if (this.currentlyValidating === this.server) {
+			return;
+		} else {
+			this.currentlyValidating = this.server;
 		}
 
-		this.isOnline.server = await checkServer(this.server);
-		this.isOnline.client = await checkClient();
-		if (modules.setting) {
-			this.isOnline.dropbox = await files.status();
-		}
+		try {
+			if (this.keepServerOffline) {
+				this.isOnline.server = false;
+			} else {
+				this.initialLoadingIndicatorText =
+					"checking server connectivity";
+				const serverConnectivityResult = await checkServer(this.server);
+				if (!this.isOnline.server && !!serverConnectivityResult) {
+					// we were offline, and we're now online
+					// resync on online status change
+					dbAction("resync");
+				}
+				this.isOnline.server = !!serverConnectivityResult;
+				if (
+					serverConnectivityResult &&
+					!serverConnectivityResult.name
+				) {
+					// when server is online but user is invalid
+					this.invalidLogin = true;
+				}
+			}
+			this.initialLoadingIndicatorText = "checking client connectivity";
+			this.isOnline.client = await checkClient();
+			this.initialLoadingIndicatorText =
+				"checking files server connectivity";
+			if (modules.setting) {
+				this.isOnline.dropbox = await files.status();
+			}
+		} catch (e) {}
+		this.currentlyValidating = null;
 	}
 	reset() {
 		this.server = "";
 		this.currentUserID = "";
-		this.keepOffline = false;
+		this.keepServerOffline = false;
 		this.step = LoginStep.initial;
 		this.isOnline = {
 			server: false,

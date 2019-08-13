@@ -10,8 +10,8 @@ import {
 	} from "@common-components";
 import { text } from "@core";
 import * as core from "@core";
-import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
 import * as modules from "@modules";
+import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -19,6 +19,7 @@ import {
 	Checkbox,
 	Icon,
 	IconButton,
+	Label,
 	MessageBar,
 	MessageBarType,
 	Panel,
@@ -383,16 +384,18 @@ export class StaffPage extends React.Component {
 													(this.selectedMember!.name = val!)
 												}
 												disabled={!this.canEdit}
+												data-testid="staff-name"
 											/>
 										</div>
 
 										<div className="staff-input">
-											<label>
+											<Label>
 												{text("Days on duty")}
-											</label>
+											</Label>
 											{dateNames.days().map((day, i) => {
 												return (
 													<Checkbox
+														className="day-selector"
 														key={day}
 														disabled={!this.canEdit}
 														label={text(
@@ -431,7 +434,7 @@ export class StaffPage extends React.Component {
 									<SectionComponent
 										title={text(`Contact Details`)}
 									>
-										<Row gutter={12}>
+										<Row gutter={8}>
 											<Col sm={12}>
 												<div className="staff-input">
 													<TextField
@@ -529,7 +532,7 @@ export class StaffPage extends React.Component {
 											""
 										)}
 										<Toggle
-											defaultChecked={
+											checked={
 												this.selectedMember.operates
 											}
 											disabled={
@@ -547,7 +550,7 @@ export class StaffPage extends React.Component {
 										/>
 
 										<Toggle
-											defaultChecked={
+											checked={
 												this.selectedMember.canViewStaff
 											}
 											disabled={
@@ -562,7 +565,7 @@ export class StaffPage extends React.Component {
 											}}
 										/>
 										<Toggle
-											defaultChecked={
+											checked={
 												this.selectedMember
 													.canViewPatients
 											}
@@ -583,7 +586,7 @@ export class StaffPage extends React.Component {
 											"module_orthodontics"
 										) ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canViewOrtho
 												}
@@ -605,7 +608,7 @@ export class StaffPage extends React.Component {
 											""
 										)}
 										<Toggle
-											defaultChecked={
+											checked={
 												this.selectedMember
 													.canViewAppointments
 											}
@@ -623,7 +626,7 @@ export class StaffPage extends React.Component {
 											}}
 										/>
 										<Toggle
-											defaultChecked={
+											checked={
 												this.selectedMember
 													.canViewTreatments
 											}
@@ -644,7 +647,7 @@ export class StaffPage extends React.Component {
 											"module_prescriptions"
 										) ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canViewPrescriptions
 												}
@@ -669,7 +672,7 @@ export class StaffPage extends React.Component {
 											"module_statistics"
 										) ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canViewStats
 												}
@@ -692,7 +695,7 @@ export class StaffPage extends React.Component {
 										)}
 
 										<Toggle
-											defaultChecked={
+											checked={
 												this.selectedMember
 													.canViewSettings
 											}
@@ -712,7 +715,7 @@ export class StaffPage extends React.Component {
 
 										{this.selectedMember.canViewStaff ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditStaff
 												}
@@ -735,7 +738,7 @@ export class StaffPage extends React.Component {
 										)}
 										{this.selectedMember.canViewPatients ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditPatients
 												}
@@ -762,7 +765,7 @@ export class StaffPage extends React.Component {
 										) &&
 										this.selectedMember.canViewOrtho ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditOrtho
 												}
@@ -787,7 +790,7 @@ export class StaffPage extends React.Component {
 										{this.selectedMember
 											.canViewAppointments ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditAppointments
 												}
@@ -812,7 +815,7 @@ export class StaffPage extends React.Component {
 										{this.selectedMember
 											.canViewTreatments ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditTreatments
 												}
@@ -840,7 +843,7 @@ export class StaffPage extends React.Component {
 										this.selectedMember
 											.canViewPrescriptions ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditPrescriptions
 												}
@@ -864,7 +867,7 @@ export class StaffPage extends React.Component {
 
 										{this.selectedMember.canViewSettings ? (
 											<Toggle
-												defaultChecked={
+												checked={
 													this.selectedMember
 														.canEditSettings
 												}

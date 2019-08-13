@@ -6,8 +6,8 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import { CEPHALOMETRIC_DIR, status, text } from "@core";
 import * as core from "@core";
+import { CEPHALOMETRIC_DIR, status, text } from "@core";
 import { CephalometricItemInterface, OrthoCase, PatientGalleryPanel, StaffMember } from "@modules";
 import * as modules from "@modules";
 import { formatDate } from "@utils";
@@ -70,7 +70,7 @@ export class OrthoGalleryPanel extends React.Component<{
 				)}
 
 				<SectionComponent title={text(`Cephalometric Analysis`)}>
-					{status.isOnline.server ? (
+					{status.isOnline.client ? (
 						status.isOnline.dropbox ? (
 							<div>
 								{this.props.orthoCase.cephalometricHistory.map(

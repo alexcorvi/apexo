@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 /* Document
    ========================================================================== */
@@ -985,12 +986,6 @@ h5 {
         text-align: right;
         font-size: 14px; } }
 
-.ms-BasePicker .ms-BasePicker-text {
-  border-color: #a6a6a6; }
-
-.ms-BasePicker .ms-BasePicker-input {
-  height: auto; }
-
 .ms-Persona.treatment-link.ms-Persona--xxs {
   height: 25px; }
   .ms-Persona.treatment-link.ms-Persona--xxs .ms-Persona-primaryText {
@@ -1064,6 +1059,12 @@ hr {
 
 .ms-Tooltip {
   pointer-events: none; }
+
+.ms-TooltipHost,
+.ms-Persona-details,
+.ms-Layer,
+.ms-TextField-field {
+  line-height: initial; }
 
 .fs-10 {
   font-size: 10px; }
@@ -5620,8 +5621,7 @@ hr {
     .appointment-input .appendage.stop {
       background: #ff9800; }
   .appointment-input label:not(.ms-Checkbox-label) {
-    display: block;
-    margin-bottom: 10px; }
+    display: block; }
   .appointment-input .ms-Checkbox {
     margin-bottom: 3px; }
   .appointment-input .involved-teeth .ms-BasePicker-text,
@@ -6079,7 +6079,7 @@ hr {
     transition: 0.4s all;
     cursor: pointer;
     text-align: center;
-    padding: 4px;
+    padding: 0.7%;
     font-size: 12px;
     border: 1px solid #e3e3e3;
     border-top: none; }
@@ -6145,55 +6145,28 @@ hr {
 .single-tooth-condition {
   margin-top: 10px; }
 
-.elc-c {
-  margin-top: 10px;
-  font-size: 13px;
-  line-height: 1;
-  border: 1px solid #a6a6a6; }
-  .elc-c:hover {
-    border: 1px solid #121212; }
-  .elc-c .editable-list .new-item-input {
-    border: none;
-    background: #fff;
-    display: block;
-    width: 100%;
-    padding: 8px; }
-  .elc-c .input {
-    transition: 0.3s all;
-    background: #fff; }
-    .elc-c .input .input-icon {
-      padding: 9px;
-      color: #2196f3;
-      cursor: pointer; }
-    .elc-c .input .input-image {
-      color: #2196f3;
-      font-size: 20px;
-      padding: 6px 8px;
-      cursor: pointer; }
-    .elc-c .input .input-field {
-      border: none;
-      display: block;
-      width: 100%; }
-  .elc-c .ms-TextField-fieldGroup {
-    border: none;
-    min-height: auto !important;
-    background: transparent; }
-  .elc-c .ms-DetailsRow-cell {
-    border-top: 1px solid #f1f1f1; }
-    .elc-c .ms-DetailsRow-cell textarea {
-      font-size: 13px;
-      padding: 10px;
-      background: transparent;
-      margin-right: 35px; }
-    .elc-c .ms-DetailsRow-cell .delete {
-      position: absolute;
-      top: 0;
-      right: 0;
-      border-left: 1px solid #e3e3e3; }
-  .elc-c .el-expander {
-    padding: 10px 0;
-    margin-top: -10px;
-    margin-bottom: -10px; }
+.elc-c .new-item {
+  margin-bottom: -1.5px !important;
+  border-bottom: 0; }
+  .elc-c .new-item .ms-TextField-suffix {
+    margin: 1px; }
+    .elc-c .new-item .ms-TextField-suffix button {
+      background: transparent; }
+
+.elc-c .items {
+  border: 1.5px solid #8a8886;
+  border-radius: 0 0 2px 2px; }
+
+.elc-c .ms-DetailsRow-cell {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #f1f1f1; }
+  .elc-c .ms-DetailsRow-cell .ms-TextField {
+    margin-bottom: 0 !important; }
+    .elc-c .ms-DetailsRow-cell .ms-TextField .ms-TextField-fieldGroup {
+      border: 0; }
+  .elc-c .ms-DetailsRow-cell textarea {
+    resize: none; }
 
 .spg-p .thumbs {
   text-align: center;
@@ -6287,13 +6260,15 @@ hr {
     .header-component .ms-OverflowSet .ms-Button-menuIcon {
       font-size: 15px; }
   .header-component .right-buttons {
-    text-align: right; }
-  .header-component .offline {
-    display: inline-block;
-    background: #ff5722;
-    color: #fff;
-    margin-right: 12px;
-    padding: 8px; }
+    text-align: right;
+    padding-top: 8px; }
+  .header-component .resync.rotate {
+    border-radius: 50%; }
+  .header-component .resync.error {
+    background: #fff;
+    border: 1px solid #ff5722; }
+    .header-component .resync.error i {
+      color: #ff5722; }
 
 .home .duty-table td.names {
   padding: 0; }
@@ -6349,24 +6324,98 @@ hr {
   margin-right: 3px;
   margin-bottom: 3px;
   display: inline-block;
-  border: 1px solid #e3e3e3; }
+  border: 1px solid #e3e3e3;
+  transition: all 0.4s; }
   .label.clickable {
     cursor: pointer; }
   .label.warning {
     border-color: #fb8c00;
     color: #fb8c00; }
+    .label.warning.clickable:hover {
+      border-color: transparent;
+      background: #fb8c00;
+      color: #fff; }
   .label.primary {
     border-color: #3f51b5;
     color: #3f51b5; }
+    .label.primary.clickable:hover {
+      border-color: transparent;
+      background: #3f51b5;
+      color: #fff; }
   .label.danger {
     border-color: #e91e63;
     color: #e91e63; }
+    .label.danger.clickable:hover {
+      border-color: transparent;
+      background: #e91e63;
+      color: #fff; }
   .label.success {
     border-color: #4caf50;
     color: #4caf50; }
+    .label.success.clickable:hover {
+      border-color: transparent;
+      background: #4caf50;
+      color: #fff; }
   .label.info {
     border-color: #212121;
     color: #212121; }
+    .label.info.clickable:hover {
+      border-color: transparent;
+      background: #212121;
+      color: #fff; }
+  .label.highlighted.warning {
+    border-color: transparent;
+    background: #fb8c00;
+    color: #fff; }
+    .label.highlighted.warning.clickable:hover {
+      border-color: #fb8c00;
+      color: #fb8c00;
+      background: #fff; }
+  .label.highlighted.primary {
+    border-color: transparent;
+    background: #3f51b5;
+    color: #fff; }
+    .label.highlighted.primary.clickable:hover {
+      border-color: #3f51b5;
+      color: #3f51b5;
+      background: #fff; }
+  .label.highlighted.danger {
+    border-color: transparent;
+    background: #e91e63;
+    color: #fff; }
+    .label.highlighted.danger.clickable:hover {
+      border-color: #e91e63;
+      color: #e91e63;
+      background: #fff; }
+  .label.highlighted.success {
+    border-color: transparent;
+    background: #4caf50;
+    color: #fff; }
+    .label.highlighted.success.clickable:hover {
+      border-color: #4caf50;
+      color: #4caf50;
+      background: #fff; }
+  .label.highlighted.info {
+    border-color: transparent;
+    background: #212121;
+    color: #fff; }
+    .label.highlighted.info.clickable:hover {
+      border-color: #212121;
+      color: #212121;
+      background: #fff; }
+  .label.highlighted:after {
+    content: "";
+    margin-left: 15px;
+    height: 15px;
+    width: 15px;
+    display: inline-block;
+    text-align: center;
+    border-radius: 50%;
+    font-family: "FabricMDL2Icons";
+    margin-right: -5px;
+    font-size: 8px;
+    line-height: 17px;
+    font-weight: 900; }
 
 .login-component {
   margin: 50px auto;
@@ -6377,11 +6426,6 @@ hr {
     .login-component .user-chooser:hover {
       border-color: #c5cae9;
       border-radius: 5px; }
-
-.no-server-mode {
-  position: absolute;
-  bottom: 10px;
-  left: 10px; }
 
 .edit-server-location {
   display: inline-block;
@@ -6425,14 +6469,23 @@ hr {
 
 .ver {
   text-align: center;
-  font-size: 11px;
-  line-height: 15px;
-  border-top: 1px solid #f3f3f3;
-  padding-top: 15px;
-  color: #616161;
-  cursor: default; }
-  .ver img {
-    width: 32px; }
+  font-size: 9px;
+  cursor: default;
+  padding: 5px;
+  border-radius: 50%;
+  line-height: 1.2em;
+  color: #9e9e9e;
+  position: fixed;
+  right: 2px;
+  bottom: 2px;
+  opacity: 0.4; }
+  .ver span {
+    font-size: 11px;
+    font-weight: 500;
+    padding-top: 2px;
+    display: inline-block;
+    margin-top: 2px;
+    border-top: 1px solid #e3e3e3; }
 
 @media (min-width: 992px) {
   #router-outlet {
@@ -6446,11 +6499,11 @@ hr {
     border-right: 1px solid #f5f5f5;
     height: 100%; }
     .icon-list .ms-TooltipHost:nth-child(2) .item {
-      padding: 0.6em; }
+      padding: 0.47em; }
     .icon-list .item {
       transition: 0.2s all;
       background: #fff;
-      padding: 0.75em 0.67em 0.65em;
+      padding: 0.55em 0.67em;
       font-size: 17px;
       text-align: center;
       min-width: 65px;
@@ -6733,11 +6786,11 @@ hr {
     margin-bottom: 12px;
     padding-bottom: 12px;
     border-bottom: 1px solid #f3f3f3;
-    margin-top: 0;
     margin-left: -15px;
     margin-right: -15px;
     padding-left: 12px;
-    padding-right: 12px; }
+    padding-right: 12px;
+    margin-top: -5px; }
   .cl-section .chevron {
     float: right;
     position: relative;

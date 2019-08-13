@@ -246,7 +246,7 @@ export class SettingsPage extends React.Component {
 								data-testid="prescriptions-toggle"
 								onText={text("Prescriptions module enabled")}
 								offText={text("Prescriptions module disabled")}
-								defaultChecked={
+								checked={
 									!!modules.setting!.getSetting(
 										"module_prescriptions"
 									)
@@ -263,7 +263,7 @@ export class SettingsPage extends React.Component {
 								data-testid="ortho-toggle"
 								onText={text("Orthodontic module enabled")}
 								offText={text("Orthodontic module disabled")}
-								defaultChecked={
+								checked={
 									!!modules.setting!.getSetting(
 										"module_orthodontics"
 									)
@@ -277,10 +277,27 @@ export class SettingsPage extends React.Component {
 								disabled={!this.canEdit}
 							/>
 							<Toggle
+								data-testid="labwork-toggle"
+								onText={text("Labwork module enabled")}
+								offText={text("Labwork module disabled")}
+								checked={
+									!!modules.setting!.getSetting(
+										"module_labwork"
+									)
+								}
+								onChange={(ev, val) => {
+									modules.setting!.setSetting(
+										"module_labwork",
+										val ? "enable" : ""
+									);
+								}}
+								disabled={!this.canEdit}
+							/>
+							<Toggle
 								data-testid="stats-toggle"
 								onText={text("Statistics module enabled")}
 								offText={text("Statistics module disabled")}
-								defaultChecked={
+								checked={
 									!!modules.setting!.getSetting(
 										"module_statistics"
 									)
@@ -297,7 +314,7 @@ export class SettingsPage extends React.Component {
 								data-testid="time-tracking-toggle"
 								onText={text("Time tracking enabled")}
 								offText={text("Time tracking disabled")}
-								defaultChecked={
+								checked={
 									!!modules.setting!.getSetting(
 										"time_tracking"
 									)
@@ -379,7 +396,7 @@ export class SettingsPage extends React.Component {
 						<SectionComponent
 							title={text(`Automated Backup and Restore`)}
 						>
-							{status.isOnline.server ? (
+							{status.isOnline.client ? (
 								status.isOnline.dropbox ? (
 									<div>
 										<Dropdown
@@ -402,7 +419,7 @@ export class SettingsPage extends React.Component {
 													text: text("Never")
 												}
 											]}
-											defaultSelectedKey={modules.setting!.getSetting(
+											selectedKey={modules.setting!.getSetting(
 												"backup_freq"
 											)}
 											onChange={(ev, v) => {
@@ -603,7 +620,7 @@ export class SettingInputComponent extends React.Component<{
 }> {
 	render() {
 		return (
-			<Row gutter={12} style={{ marginBottom: 20 }}>
+			<Row gutter={8} style={{ marginBottom: 20 }}>
 				<Col style={{ marginBottom: -15 }} md={12}>
 					{this.props.element}
 				</Col>

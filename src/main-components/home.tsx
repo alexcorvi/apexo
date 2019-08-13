@@ -52,6 +52,7 @@ export class HomeView extends React.Component {
 								{text("Appointments for today")}
 							</h3>
 							<AppointmentsListNoDate
+								className="today-appointments"
 								appointments={modules.appointments!.todayAppointments.filter(
 									x => isToday(x.date)
 								)}
@@ -74,6 +75,7 @@ export class HomeView extends React.Component {
 								{text("Appointments for tomorrow")}
 							</h3>
 							<AppointmentsListNoDate
+								className="tomorrow-appointments"
 								appointments={modules.appointments!.tomorrowAppointments.filter(
 									x => isTomorrow(x.date)
 								)}

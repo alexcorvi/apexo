@@ -6,8 +6,8 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import * as core from "@core";
 import { imagesTable, ModalInterface, ORTHO_RECORDS_DIR, status, text } from "@core";
+import * as core from "@core";
 import { OrthoCase, Photo, StaffMember, Visit } from "@modules";
 import * as modules from "@modules";
 import { day, formatDate, num } from "@utils";
@@ -35,8 +35,7 @@ import * as loadable from "react-loadable";
 const EditableListComponent = loadable({
 	loading: () => <Shimmer />,
 	loader: async () =>
-		(await import("common-components/editable-list/editable-list"))
-			.EditableListComponent
+		(await import("common-components/editable-list")).EditableListComponent
 });
 
 const viewsTerms = [
@@ -163,7 +162,7 @@ export class OrthoRecordsPanel extends React.Component<{
 					/>
 				</SectionComponent>
 				<SectionComponent title={text(`Started/Finished`)}>
-					<Row gutter={12}>
+					<Row gutter={8}>
 						<Col span={12}>
 							<Toggle
 								onText={text("Started")}
@@ -253,7 +252,7 @@ export class OrthoRecordsPanel extends React.Component<{
 					</Row>
 				</SectionComponent>
 				<SectionComponent title={text(`Records`)}>
-					{status.isOnline.server ? (
+					{status.isOnline.client ? (
 						status.isOnline.dropbox ? (
 							<div className="album">
 								{this.props.orthoCase.visits.length ? (

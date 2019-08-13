@@ -25,6 +25,7 @@ export class AppointmentsListNoDate extends React.Component<
 		secondaryText?: ALSecondaryText;
 		rightColumn?: ALRightColumn;
 		canDelete: boolean;
+		className?: string;
 	},
 	{}
 > {
@@ -121,7 +122,9 @@ export class AppointmentsListNoDate extends React.Component<
 
 	render() {
 		return (
-			<table className="ms-table appointments-lnd">
+			<table
+				className={`ms-table appointments-lnd ${this.props.className}`}
+			>
 				{this.props.appointments.map(appointment => (
 					<tbody
 						key={appointment._id}
@@ -137,7 +140,7 @@ export class AppointmentsListNoDate extends React.Component<
 								)} - ${this.timeString(appointment)}`}
 							</td>
 						</tr>
-						<tr className="home-td today-appointment">
+						<tr>
 							<td>
 								<CC.ProfileSquaredComponent
 									text={
