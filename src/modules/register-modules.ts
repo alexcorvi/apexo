@@ -21,9 +21,6 @@ export async function registerModules() {
 		await reg();
 	}
 
-	core.status.loadingIndicatorText = "Compacting databases";
-	// resync on registering modules
-	await dbAction("compact");
 
 	core.status.loadingIndicatorText = "Resyncing remote and local databases";
 	// resync on registering modules
