@@ -554,7 +554,9 @@ export class AppointmentEditorPanel extends React.Component<
 									<div id="prescription-items">
 										<div className="print-heading">
 											<h2>
-												{core.user.currentUser!.name}
+												{this.props.appointment.operatingStaff
+													.map(x => x.name)
+													.join(",")}
 											</h2>
 											<hr />
 											<h3>
@@ -655,7 +657,9 @@ export class AppointmentEditorPanel extends React.Component<
 									{this.props.appointment!.prescriptions
 										.length ? (
 										<DefaultButton
-											onClick={print}
+											onClick={() => {
+												print();
+											}}
 											iconProps={{ iconName: "print" }}
 											text={text("Print prescription")}
 										/>
