@@ -60,6 +60,7 @@ export class EditableListComponent extends React.Component<
 							iconProps={{ iconName: "Add" }}
 							disabled={!this.valueToAdd.replace(/\W/, "").length}
 							onClick={() => this.addItem()}
+							data-testid="add-elc-item"
 						/>
 					)}
 				/>
@@ -87,7 +88,7 @@ export class EditableListComponent extends React.Component<
 												onRenderSuffix={() => {
 													return (
 														<IconButton
-															className="delete"
+															data-testid="delete-elc-item"
 															iconProps={{
 																iconName:
 																	"trash"
