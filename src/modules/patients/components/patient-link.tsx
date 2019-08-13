@@ -21,7 +21,7 @@ export class PatientLinkComponent extends React.Component<
 					core.router.go([modules.patientsNamespace, this.props.id]);
 				}}
 			>
-				<Icon iconName="ContactCard" className="icon" />
+				<Icon iconName="Contact" className="icon" />
 				&nbsp;
 				{this.props.name}
 			</a>

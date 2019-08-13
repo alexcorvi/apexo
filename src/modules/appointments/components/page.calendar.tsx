@@ -1,6 +1,6 @@
 import { Col, ProfileSquaredComponent, Row } from "@common-components";
-import { text } from "@core";
 import * as core from "@core";
+import { text } from "@core";
 import { Calendar, calendar } from "@modules";
 import {
 	Appointment,
@@ -404,7 +404,7 @@ export class CalendarPage extends React.Component {
 																	}
 																	className="m-t-5 fs-11"
 																>
-																	<Icon iconName="Contact" />{" "}
+																	<Icon iconName="Medical" />{" "}
 																	{
 																		operator.name
 																	}
