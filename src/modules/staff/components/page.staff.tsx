@@ -449,6 +449,7 @@ export class StaffPage extends React.Component {
 															(this.selectedMember!.phone = val!)
 														}
 														disabled={!this.canEdit}
+														data-testid="phone-number"
 													/>
 												</div>
 											</Col>
@@ -464,6 +465,7 @@ export class StaffPage extends React.Component {
 															(this.selectedMember!.email = val!)
 														}
 														disabled={!this.canEdit}
+														data-testid="email"
 													/>
 												</div>
 											</Col>

@@ -9,8 +9,8 @@ import {
 	TagInputComponent,
 	tagType
 	} from "@common-components";
-import * as core from "@core";
 import { imagesTable, text } from "@core";
+import * as core from "@core";
 import {
 	Appointment,
 	ISOTeethArr,
@@ -388,6 +388,7 @@ export class AppointmentEditorPanel extends React.Component<
 											onChange={(e, newVal) => {
 												this.props.appointment!.isDone = newVal!;
 											}}
+											data-testid="is-done"
 										/>
 									</div>
 								</Col>
