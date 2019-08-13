@@ -141,6 +141,7 @@ describe("login", () => {
 		it("Using PIN", () => {
 			cy.resetEverything();
 			cy.reload();
+			cy.wait(1000);
 			cy.get(".no-server-mode").click();
 			cy.getByTestId("new-user-name")
 				.type("Alex")
