@@ -13,6 +13,26 @@ export interface Route {
 }
 
 export class Router {
+	@observable private _selectedID = "";
+	@observable private _selectedTab = "";
+
+	@observable private _selectedSub = "";
+
+	@observable private _selectedMain = "";
+
+	@computed get selectedID() {
+		return this._selectedID;
+	}
+	@computed get selectedTab() {
+		return this._selectedTab;
+	}
+	@computed get selectedSub() {
+		return this._selectedSub;
+	}
+	@computed get selectedMain() {
+		return this._selectedMain;
+	}
+
 	@observable currentLocation = "";
 
 	@observable innerWidth = 0;
@@ -72,15 +92,73 @@ export class Router {
 	}
 
 	go(routes: string[]) {
-		location.hash = "#!/" + routes.join("/");
+		location.hash = "#!/" + routes.join("/").replace(/\/\//g, "/");
 		scrollTo(0, 0);
-		core.menu.hide();
+	}
+
+	selectID(id: string, tab?: string) {
+		this.go([this.currentNamespace, id, tab || ""]);
+	}
+
+	selectTab(tab: string) {
+		this.go([this.currentNamespace, this.selectedID, tab]);
+	}
+
+	selectSub(sub?: string) {
+		const newLocation = this.currentLocation
+			.split("/")
+			.map(x => {
+				return x;
+			})
+			.filter(x => !x.startsWith("sub:"));
+		if (sub) {
+			newLocation.push(`sub:${sub}`);
+		}
+		this.go(newLocation);
+	}
+
+	selectMain(main?: "user" | "menu") {
+		const newLocation = this.currentLocation
+			.split("/")
+			.filter(x => !x.startsWith("main:"));
+		if (main) {
+			newLocation.push(`main:${main}`);
+		}
+		this.go(newLocation);
+	}
+
+	unSelect() {
+		this.go([this.currentNamespace]);
+	}
+
+	unSelectSub() {
+		this.selectSub();
+	}
+
+	unSelectMain() {
+		this.selectMain();
 	}
 
 	private async checkAndLoad() {
-		const newLocation = location.hash.substr(3);
-		if (newLocation !== this.currentLocation) {
-			this.currentLocation = location.hash.substr(3);
+		this.currentLocation = location.hash.substr(3);
+		this._selectedID = this.currentLocation.split("/")[1] || "";
+		this._selectedTab = this.currentLocation.split("/")[2] || "";
+		const sub = this.currentLocation
+			.split("/")
+			.find(x => x.startsWith("sub:"));
+
+		const main = this.currentLocation
+			.split("/")
+			.find(x => x.startsWith("main:"));
+		if (sub) {
+			this._selectedSub = sub.replace(/sub:/, "");
+		} else {
+			this._selectedSub = "";
+		}
+		if (main) {
+			this._selectedMain = main.replace(/main:/, "");
+		} else {
+			this._selectedMain = "";
 		}
 	}
 

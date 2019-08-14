@@ -32,8 +32,6 @@ import * as React from "react";
 export class LabworkPage extends React.Component {
 	dt: null | DataTableComponent = null;
 
-	@observable selectedID: string = core.router.currentLocation.split("/")[1];
-
 	@computed
 	get canEdit() {
 		return core.user.currentUser!.canEditLabwork;
@@ -41,7 +39,9 @@ export class LabworkPage extends React.Component {
 
 	@computed
 	get selectedLabwork() {
-		return modules.labworks!.docs.find(x => x._id === this.selectedID);
+		return modules.labworks!.docs.find(
+			x => x._id === core.router.selectedID
+		);
 	}
 
 	render() {
@@ -66,7 +66,7 @@ export class LabworkPage extends React.Component {
 										onClick: () => {
 											const labwork = modules.labworks!.new();
 											modules.labworks!.add(labwork);
-											this.selectedID = labwork._id;
+											core.router.selectID(labwork._id);
 										},
 										iconProps: {
 											iconName: "Add"
@@ -100,7 +100,7 @@ export class LabworkPage extends React.Component {
 										/>
 									),
 									onClick: () => {
-										this.selectedID = labwork._id;
+										core.router.selectID(labwork._id);
 									},
 									className: "no-label"
 								},
@@ -215,7 +215,7 @@ export class LabworkPage extends React.Component {
 						closeButtonAriaLabel="Close"
 						isLightDismiss={true}
 						onDismiss={() => {
-							this.selectedID = "";
+							core.router.unSelect();
 						}}
 						onRenderNavigation={() => (
 							<Row className="panel-heading">
@@ -240,7 +240,7 @@ export class LabworkPage extends React.Component {
 									<IconButton
 										iconProps={{ iconName: "cancel" }}
 										onClick={() => {
-											this.selectedID = "";
+											core.router.unSelect();
 										}}
 									/>
 								</Col>

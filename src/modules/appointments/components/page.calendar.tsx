@@ -12,7 +12,7 @@ import {
 	} from "@modules";
 import * as modules from "@modules";
 import { dateNames, num } from "@utils";
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Icon, Shimmer, TextField, Toggle } from "office-ui-fabric-react";
 import * as React from "react";
@@ -29,7 +29,11 @@ const AppointmentEditorPanel = loadable({
 export class CalendarPage extends React.Component {
 	@observable filter: string = "";
 
-	@observable appointment: Appointment | null = null;
+	@computed get appointment() {
+		return modules.appointments!.docs.find(
+			a => a._id === core.router.selectedID
+		);
+	}
 
 	@observable showAll: boolean = true;
 
@@ -37,15 +41,6 @@ export class CalendarPage extends React.Component {
 
 	componentDidMount() {
 		this.unifyHeight();
-
-		const dateString = core.router.currentLocation.split("/")[1];
-		if (!dateString) {
-			return;
-		}
-		const dateArray = dateString.split(/\W/);
-		this.c.select({ year: num(dateArray[0]) });
-		this.c.select({ month: num(dateArray[1]) - 1 });
-		this.c.select({ day: num(dateArray[2]) });
 	}
 
 	componentDidUpdate() {
@@ -347,9 +342,19 @@ export class CalendarPage extends React.Component {
 												<div
 													key={appointment._id}
 													className="appointment"
-													onClick={() =>
-														(this.appointment = appointment)
-													}
+													onClick={() => {
+														core.router.selectID(
+															appointment._id
+														);
+
+														setTimeout(
+															() =>
+																core.router.selectSub(
+																	"details"
+																),
+															100
+														);
+													}}
 												>
 													<div
 														className={
@@ -420,10 +425,10 @@ export class CalendarPage extends React.Component {
 						})}
 					</div>
 				</div>
-				{this.appointment ? (
+				{this.appointment && core.router.selectedSub ? (
 					<AppointmentEditorPanel
 						appointment={this.appointment}
-						onDismiss={() => (this.appointment = null)}
+						onDismiss={() => core.router.unSelect()}
 					/>
 				) : (
 					""

@@ -19,7 +19,7 @@ export class PanelTabs extends React.Component<{
 			<div className="panel-tabs">
 				<Pivot
 					headersOnly
-					defaultSelectedKey={this.props.currentSelectedKey}
+					selectedKey={this.props.currentSelectedKey}
 					onLinkClick={item => {
 						if (item && item.props.itemKey) {
 							this.props.onSelect(item.props.itemKey);

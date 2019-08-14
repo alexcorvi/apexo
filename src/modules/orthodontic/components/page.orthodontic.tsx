@@ -8,9 +8,9 @@ import {
 	TableActions,
 	TagInputComponent
 	} from "@common-components";
+import { imagesTable, text } from "@core";
 import * as core from "@core";
-import { imagesTable, ModalInterface, text } from "@core";
-import { Patient, PatientAppointmentsPanel } from "@modules";
+import { PatientAppointmentsPanel } from "@modules";
 import * as modules from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
@@ -73,14 +73,12 @@ const AppointmentEditorPanel = loadable({
 export class OrthoPage extends React.Component {
 	@observable showAdditionPanel: boolean = false;
 	@observable newPatientName: string = "";
-	@observable selectedId: string = "";
-	@observable viewWhich: string = "";
 
 	@observable selectedAppointmentId = "";
 
 	@computed get selectedCase() {
 		return modules.orthoCases!.docs.find(
-			orthoCase => orthoCase._id === this.selectedId
+			orthoCase => orthoCase._id === core.router.selectedID
 		);
 	}
 
@@ -219,9 +217,10 @@ export class OrthoPage extends React.Component {
 																orthoCase._id
 															);
 														} else {
-															this.selectedId =
-																orthoCase._id;
-															this.viewWhich = key as any;
+															core.router.selectID(
+																orthoCase._id,
+																key
+															);
 														}
 													}}
 												/>
@@ -229,8 +228,10 @@ export class OrthoPage extends React.Component {
 										),
 										className: "no-label",
 										onClick: () => {
-											this.selectedId = orthoCase._id;
-											this.viewWhich = "sheet";
+											core.router.selectID(
+												orthoCase._id,
+												"sheet"
+											);
 										}
 									},
 									{
@@ -353,6 +354,9 @@ export class OrthoPage extends React.Component {
 															? () => {
 																	this.selectedAppointmentId =
 																		patient.lastAppointment._id;
+																	core.router.selectSub(
+																		"details"
+																	);
 															  }
 															: undefined
 													}
@@ -390,6 +394,9 @@ export class OrthoPage extends React.Component {
 															? () => {
 																	this.selectedAppointmentId =
 																		patient.nextAppointment._id;
+																	core.router.selectSub(
+																		"details"
+																	);
 															  }
 															: undefined
 													}
@@ -523,16 +530,24 @@ export class OrthoPage extends React.Component {
 								const orthoCase = modules.orthoCases!.new();
 								orthoCase.patientID = selectedKeys[0];
 								modules.orthoCases!.add(orthoCase);
-								this.selectedId = orthoCase._id;
-								this.viewWhich = "sheet";
+								core.router.selectID(orthoCase._id, "sheet");
 							}
 						}}
 					/>
-					<br />
-					<hr />
-					<h4>Or add new patient</h4>
-					<br />
+					<Row className="m-t-15">
+						<Col xs={10}>
+							<hr />
+						</Col>
+
+						<Col xs={4}>
+							<i className="new-or">or</i>
+						</Col>
+						<Col xs={10}>
+							<hr />
+						</Col>
+					</Row>
 					<TextField
+						label="Add new patient"
 						placeholder={text(`Patient name`)}
 						value={this.newPatientName}
 						onChange={(e, v) => (this.newPatientName = v!)}
@@ -548,8 +563,7 @@ export class OrthoPage extends React.Component {
 							modules.orthoCases!.add(orthoCase);
 
 							this.newPatientName = "";
-							this.selectedId = orthoCase._id;
-							this.viewWhich = "details";
+							core.router.selectID(orthoCase._id, "details");
 						}}
 						iconProps={{
 							iconName: "add"
@@ -563,15 +577,14 @@ export class OrthoPage extends React.Component {
 						!!(
 							this.selectedCase &&
 							this.selectedPatient &&
-							this.viewWhich
+							core.router.selectedTab
 						)
 					}
 					type={PanelType.medium}
 					closeButtonAriaLabel="Close"
 					isLightDismiss={true}
 					onDismiss={() => {
-						this.selectedId = "";
-						this.viewWhich = "";
+						core.router.unSelect();
 					}}
 					onRenderNavigation={() => {
 						if (!this.selectedCase) {
@@ -612,16 +625,15 @@ export class OrthoPage extends React.Component {
 										<IconButton
 											iconProps={{ iconName: "cancel" }}
 											onClick={() => {
-												this.selectedId = "";
-												this.viewWhich = "";
+												core.router.unSelect();
 											}}
 										/>
 									</Col>
 								</Row>
 								<PanelTabs
-									currentSelectedKey={this.viewWhich}
+									currentSelectedKey={core.router.selectedTab}
 									onSelect={key => {
-										this.viewWhich = key as any;
+										core.router.selectTab(key);
 									}}
 									items={this.tabs(this.selectedCase)}
 								/>
@@ -632,18 +644,18 @@ export class OrthoPage extends React.Component {
 					<div>
 						{this.selectedCase && this.selectedPatient ? (
 							<div className="ortho-single-component">
-								{this.viewWhich === "details" ? (
+								{core.router.selectedTab === "details" ? (
 									<PatientDetailsPanel
 										patient={this.selectedPatient!}
 										onChangeViewWhich={key =>
-											(this.viewWhich = key)
+											core.router.selectTab(key)
 										}
 									/>
 								) : (
 									""
 								)}
 
-								{this.viewWhich === "dental" ? (
+								{core.router.selectedTab === "dental" ? (
 									<DentalHistoryPanel
 										patient={this.selectedPatient!}
 									/>
@@ -651,7 +663,7 @@ export class OrthoPage extends React.Component {
 									""
 								)}
 
-								{this.viewWhich === "sheet" ? (
+								{core.router.selectedTab === "sheet" ? (
 									<OrthoCaseSheetPanel
 										orthoCase={this.selectedCase}
 									/>
@@ -659,7 +671,7 @@ export class OrthoPage extends React.Component {
 									""
 								)}
 
-								{this.viewWhich === "archive" ? (
+								{core.router.selectedTab === "archive" ? (
 									<OrthoRecordsPanel
 										orthoCase={this.selectedCase}
 									/>
@@ -667,7 +679,7 @@ export class OrthoPage extends React.Component {
 									""
 								)}
 
-								{this.viewWhich === "gallery" ? (
+								{core.router.selectedTab === "gallery" ? (
 									<OrthoGalleryPanel
 										orthoCase={this.selectedCase}
 									/>
@@ -675,7 +687,7 @@ export class OrthoPage extends React.Component {
 									""
 								)}
 
-								{this.viewWhich === "appointments" ? (
+								{core.router.selectedTab === "appointments" ? (
 									<PatientAppointmentsPanel
 										patient={this.selectedPatient}
 									/>
@@ -683,7 +695,7 @@ export class OrthoPage extends React.Component {
 									""
 								)}
 
-								{this.viewWhich === "delete" ? (
+								{core.router.selectedTab === "delete" ? (
 									<div>
 										<br />
 										<MessageBar
@@ -704,11 +716,9 @@ export class OrthoPage extends React.Component {
 											text={text("Delete")}
 											onClick={() => {
 												modules.orthoCases!.delete(
-													this.selectedId
+													core.router.selectedID
 												);
-
-												this.selectedId = "";
-												this.viewWhich = "";
+												core.router.unSelect();
 											}}
 										/>
 									</div>

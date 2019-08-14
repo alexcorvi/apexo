@@ -1,8 +1,6 @@
-import { router } from "../../../core/router";
 import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
 import { text } from "@core";
 import * as core from "@core";
-import { Appointment, StaffMember, Treatment } from "@modules";
 import * as modules from "@modules";
 import { num } from "@utils";
 import { computed, observable } from "mobx";
@@ -12,8 +10,6 @@ import * as React from "react";
 
 @observer
 export class Treatments extends React.Component {
-	@observable selectedID: string = core.router.currentLocation.split("/")[1];
-
 	@computed
 	get canEdit() {
 		return core.user.currentUser!.canEditTreatments;
@@ -21,7 +17,9 @@ export class Treatments extends React.Component {
 
 	@computed
 	get selectedTreatment() {
-		return modules.treatments!.docs.find(x => x._id === this.selectedID);
+		return modules.treatments!.docs.find(
+			x => x._id === core.router.selectedID
+		);
 	}
 
 	render() {
@@ -45,7 +43,7 @@ export class Treatments extends React.Component {
 										onClick: () => {
 											const treatment = modules.treatments!.new();
 											modules.treatments!.add(treatment);
-											this.selectedID = treatment._id;
+											core.router.selectID(treatment._id);
 										},
 										iconProps: {
 											iconName: "Add"
@@ -103,7 +101,7 @@ export class Treatments extends React.Component {
 										/>
 									),
 									onClick: () => {
-										this.selectedID = treatment._id;
+										core.router.selectID(treatment._id);
 									},
 									className: "no-label"
 								},
@@ -150,7 +148,7 @@ export class Treatments extends React.Component {
 						closeButtonAriaLabel="Close"
 						isLightDismiss={true}
 						onDismiss={() => {
-							this.selectedID = "";
+							core.router.unSelect();
 						}}
 						onRenderNavigation={() => (
 							<Row className="panel-heading">
@@ -174,7 +172,7 @@ export class Treatments extends React.Component {
 									<IconButton
 										iconProps={{ iconName: "cancel" }}
 										onClick={() => {
-											this.selectedID = "";
+											core.router.unSelect();
 										}}
 									/>
 								</Col>

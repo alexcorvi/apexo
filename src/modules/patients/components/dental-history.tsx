@@ -43,14 +43,9 @@ export class DentalHistoryPanel extends React.Component<
 	{}
 > {
 	@observable viewChart: boolean = true;
-	@observable viewToothISO: number = 0;
 
 	@computed get canEdit() {
 		return core.user.currentUser!.canEditPatients;
-	}
-
-	componentWillMount() {
-		this.viewToothISO = 0;
 	}
 
 	render() {
@@ -72,7 +67,7 @@ export class DentalHistoryPanel extends React.Component<
 								<TeethPermanentChart
 									teeth={this.props.patient.teeth}
 									onClick={number =>
-										(this.viewToothISO = number)
+										core.router.selectSub(number.toString())
 									}
 								/>
 							</SectionComponent>
@@ -80,7 +75,7 @@ export class DentalHistoryPanel extends React.Component<
 								<TeethDeciduousChart
 									teeth={this.props.patient.teeth}
 									onClick={number =>
-										(this.viewToothISO = number)
+										core.router.selectSub(number.toString())
 									}
 								/>
 							</SectionComponent>
@@ -128,14 +123,18 @@ export class DentalHistoryPanel extends React.Component<
 				</div>
 
 				<Panel
-					isOpen={!!this.props.patient.teeth[this.viewToothISO]}
+					isOpen={
+						!!this.props.patient.teeth[
+							Number(core.router.selectedSub)
+						]
+					}
 					type={PanelType.smallFixedFar}
 					closeButtonAriaLabel="Close"
 					isLightDismiss={true}
-					onDismiss={() => (this.viewToothISO = 0)}
+					onDismiss={() => core.router.unSelectSub()}
 					onRenderNavigation={() => {
 						const tooth = this.props.patient.teeth[
-							this.viewToothISO
+							Number(core.router.selectedSub)
 						];
 
 						return (
@@ -168,7 +167,7 @@ export class DentalHistoryPanel extends React.Component<
 									<IconButton
 										iconProps={{ iconName: "cancel" }}
 										onClick={() => {
-											this.viewToothISO = 0;
+											core.router.unSelectSub();
 										}}
 									/>
 								</Col>
@@ -178,19 +177,22 @@ export class DentalHistoryPanel extends React.Component<
 				>
 					<br />
 					<br />
-					{this.props.patient.teeth[this.viewToothISO] ? (
+					{this.props.patient.teeth[
+						Number(core.router.selectedSub)
+					] ? (
 						<div className="tooth-details">
 							<Dropdown
 								placeholder={text(`Condition`)}
 								onChange={(ev, newVal: any) => {
 									this.props.patient.teeth[
-										this.viewToothISO
+										Number(core.router.selectedSub)
 									].condition = newVal.key.toString();
 									this.props.patient.saveToPouch();
 								}}
 								selectedKey={
-									this.props.patient.teeth[this.viewToothISO]
-										.condition
+									this.props.patient.teeth[
+										Number(core.router.selectedSub)
+									].condition
 								}
 								className="single-tooth-condition"
 								options={Object.keys(ToothCondition).map(c => ({
@@ -202,13 +204,14 @@ export class DentalHistoryPanel extends React.Component<
 							<EditableListComponent
 								label={text("History notes")}
 								value={
-									this.props.patient.teeth[this.viewToothISO]
-										.notes
+									this.props.patient.teeth[
+										Number(core.router.selectedSub)
+									].notes
 								}
 								disabled={!this.canEdit}
 								onChange={e => {
 									this.props.patient.teeth[
-										this.viewToothISO
+										Number(core.router.selectedSub)
 									].notes = e;
 									this.props.patient.saveToPouch();
 								}}
@@ -230,7 +233,7 @@ export class DentalHistoryPanel extends React.Component<
 			<td
 				key={"tooth" + tooth.ISO}
 				style={{ background: conditionToColor(tooth.condition) }}
-				onClick={() => (this.viewToothISO = tooth.ISO)}
+				onClick={() => core.router.selectSub(tooth.ISO.toString())}
 			>
 				<span
 					className="has-notes"

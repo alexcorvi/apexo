@@ -1,7 +1,17 @@
+import Col from "../common-components/grid/col";
+import { ProfileSquaredComponent } from "../common-components/profile/profile-squared";
+import { Row } from "@common-components";
 import { menu, text } from "@core";
 import * as core from "@core";
 import { observer } from "mobx-react";
-import { Icon, Nav, Panel, PanelType, TooltipHost } from "office-ui-fabric-react";
+import {
+	Icon,
+	IconButton,
+	Nav,
+	Panel,
+	PanelType,
+	TooltipHost
+	} from "office-ui-fabric-react";
 import * as React from "react";
 
 class Version extends React.Component {
@@ -59,7 +69,7 @@ export class MenuView extends React.Component {
 				<Panel
 					className="menu"
 					isLightDismiss={true}
-					isOpen={core.menu.isVisible}
+					isOpen={core.router.selectedMain === "menu"}
 					type={PanelType.smallFixedNear}
 					onDismiss={() => core.menu.hide()}
 					hasCloseButton={false}
@@ -82,6 +92,7 @@ export class MenuView extends React.Component {
 							}
 						]}
 						selectedKey={core.router.currentNamespace}
+						className="main-nav"
 					/>
 				</Panel>
 			</div>

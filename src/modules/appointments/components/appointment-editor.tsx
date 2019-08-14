@@ -9,8 +9,8 @@ import {
 	TagInputComponent,
 	tagType
 	} from "@common-components";
-import { imagesTable, text } from "@core";
 import * as core from "@core";
+import { imagesTable, text } from "@core";
 import {
 	Appointment,
 	ISOTeethArr,
@@ -41,6 +41,13 @@ import {
 import { MessageBarType } from "office-ui-fabric-react";
 import * as React from "react";
 
+// TODO: implement tabs for all panels
+// treatments
+// labwork
+
+// TODO: all persona details
+// on top of all panels must use a common component
+
 @observer
 export class AppointmentEditorPanel extends React.Component<
 	{
@@ -60,8 +67,6 @@ export class AppointmentEditorPanel extends React.Component<
 		minutes: this.calcTime.minutes,
 		am: this.calcTime.am
 	};
-
-	@observable viewWhich: string = "details";
 
 	tabs = [
 		{
@@ -160,13 +165,18 @@ export class AppointmentEditorPanel extends React.Component<
 	}
 
 	render() {
-		return this.props.appointment ? (
+		return this.props.appointment && core.router.selectedSub ? (
 			<Panel
 				isOpen={!!this.props.appointment}
 				type={PanelType.medium}
 				closeButtonAriaLabel="Close"
 				isLightDismiss={true}
-				onDismiss={this.props.onDismiss}
+				onDismiss={() => {
+					if (this.props.onDismiss) {
+						this.props.onDismiss();
+					}
+					core.router.unSelectSub();
+				}}
 				onRenderNavigation={() => (
 					<div className="panel-heading">
 						<Row>
@@ -225,14 +235,14 @@ export class AppointmentEditorPanel extends React.Component<
 						</Row>
 						<PanelTabs
 							items={this.tabs}
-							onSelect={key => (this.viewWhich = key)}
-							currentSelectedKey={this.viewWhich}
+							onSelect={key => core.router.selectSub(key)}
+							currentSelectedKey={core.router.selectedSub}
 						/>
 					</div>
 				)}
 			>
 				<div className="appointment-editor">
-					{this.viewWhich === "details" ? (
+					{core.router.selectedSub === "details" ? (
 						<SectionComponent title={text("Appointment")}>
 							<Row gutter={8}>
 								<Col sm={12}>
@@ -425,7 +435,7 @@ export class AppointmentEditorPanel extends React.Component<
 						""
 					)}
 
-					{this.viewWhich === "treatment" ? (
+					{core.router.selectedSub === "treatment" ? (
 						<SectionComponent title={text("Case Details")}>
 							<TextField
 								multiline
@@ -676,7 +686,7 @@ export class AppointmentEditorPanel extends React.Component<
 						""
 					)}
 
-					{this.viewWhich === "finance" ? (
+					{core.router.selectedSub === "finance" ? (
 						<SectionComponent title={text("Expenses & Price")}>
 							<Row gutter={8}>
 								<Col sm={16}>
@@ -922,7 +932,7 @@ export class AppointmentEditorPanel extends React.Component<
 						""
 					)}
 
-					{this.viewWhich === "delete" ? (
+					{core.router.selectedSub === "delete" ? (
 						<div>
 							<br />
 							<MessageBar messageBarType={MessageBarType.warning}>

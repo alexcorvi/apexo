@@ -3,6 +3,7 @@
 	background: #fff;
 	min-height: 500px;
 	font-size: 13px;
+	margin-top: 60px;
 	.selector {
 		a.current {
 			border: 1px solid #03a9f4;
@@ -240,13 +241,6 @@
 		.ms-Toggle {
 			padding: 15px 0 0 15px;
 		}
-	}
-}
-
-@media screen and (min-width: 992px) {
-	.calendar-component {
-		margin-top: 60px;
-		border-radius: 3px;
 	}
 }
 

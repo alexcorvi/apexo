@@ -1,9 +1,9 @@
 import { status } from "@core";
+import * as core from "@core";
 import { staff } from "@modules";
 import { computed, observable } from "mobx";
 
 class UserData {
-	@observable isVisible: boolean = false;
 	@computed
 	get currentUser() {
 		return staff!.docs.find(x => x._id === status.currentUserID);
@@ -23,10 +23,10 @@ class UserData {
 		}
 	}
 	show() {
-		this.isVisible = true;
+		core.router.selectMain("user");
 	}
 	hide() {
-		this.isVisible = false;
+		core.router.unSelectMain();
 	}
 }
 

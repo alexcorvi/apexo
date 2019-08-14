@@ -1,6 +1,6 @@
 import { AppointmentsListNoDate, Col, ProfileComponent, Row } from "@common-components";
-import { text } from "@core";
 import * as core from "@core";
+import { text } from "@core";
 import { Appointment, PrescriptionItem, setting, StaffMember } from "@modules";
 import * as modules from "@modules";
 import { dateNames, isToday, isTomorrow } from "@utils";
@@ -58,6 +58,7 @@ export class HomeView extends React.Component {
 								)}
 								onClick={id => {
 									this.selectedAppointmentId = id;
+									core.router.selectSub("details");
 								}}
 								canDelete={false}
 							/>
@@ -81,6 +82,7 @@ export class HomeView extends React.Component {
 								)}
 								onClick={id => {
 									this.selectedAppointmentId = id;
+									core.router.selectSub("details");
 								}}
 								canDelete={false}
 							/>
@@ -171,12 +173,12 @@ export class HomeView extends React.Component {
 						</Col>
 					</Row>
 				</div>
-				{this.selectedAppointment ? (
+				{this.selectedAppointment && core.router.selectedSub ? (
 					<AppointmentEditorPanel
 						appointment={this.selectedAppointment}
 						onDismiss={() => {
 							this.selectedAppointmentId = "";
-							this.render();
+							core.router.unSelectSub();
 						}}
 					/>
 				) : (

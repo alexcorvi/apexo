@@ -9,10 +9,11 @@ import {
 	tagType
 	} from "@common-components";
 import { text } from "@core";
-import { Appointment } from "@modules";
+import * as core from "@core";
 import * as modules from "@modules";
+import { Appointment } from "@modules";
 import { formatDate, round } from "@utils";
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { DatePicker, Dropdown, Label, Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
@@ -65,7 +66,11 @@ const TreatmentsNumberChart = loadable({
 
 @observer
 export class StatisticsPage extends React.Component {
-	@observable appointment: Appointment | null = null;
+	@computed get appointment() {
+		return modules.appointments!.docs.find(
+			x => x._id === core.router.selectedID
+		);
+	}
 
 	render() {
 		return (
@@ -121,7 +126,14 @@ export class StatisticsPage extends React.Component {
 										/>
 									),
 									onClick: () => {
-										this.appointment = appointment;
+										core.router.selectID(appointment._id);
+										setTimeout(
+											() =>
+												core.router.selectSub(
+													"details"
+												),
+											100
+										);
 									},
 									className: "no-label"
 								},
@@ -298,7 +310,7 @@ export class StatisticsPage extends React.Component {
 				{this.appointment ? (
 					<AppointmentEditorPanel
 						appointment={this.appointment}
-						onDismiss={() => (this.appointment = null)}
+						onDismiss={() => core.router.unSelect()}
 					/>
 				) : (
 					""

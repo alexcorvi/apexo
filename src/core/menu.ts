@@ -26,8 +26,6 @@ export class Menu {
 		}
 	];
 
-	@observable isVisible: boolean = false;
-
 	@computed
 	get sortedItems() {
 		return this.items
@@ -43,11 +41,11 @@ export class Menu {
 	}
 
 	hide() {
-		this.isVisible = false;
+		router.unSelectMain();
 	}
 
 	show() {
-		this.isVisible = true;
+		router.selectMain("menu");
 	}
 }
 

@@ -51,16 +51,11 @@ const AppointmentEditorPanel = loadable({
 export class PatientsPage extends React.Component {
 	dt: DataTableComponent | null = null;
 	@observable selectedAppointmentId = "";
-	@observable selectedId: string = core.router.currentLocation.split("/")[1];
-
-	@observable viewWhich: string = core.router.currentLocation.split("/")[1]
-		? "details"
-		: "";
 
 	@computed
 	get selectedPatient() {
 		return modules.patients!.docs.find(
-			patient => patient._id === this.selectedId
+			patient => patient._id === core.router.selectedID
 		);
 	}
 
@@ -117,14 +112,13 @@ export class PatientsPage extends React.Component {
 			<div className="patients-component">
 				{this.selectedPatient ? (
 					<Panel
-						key={this.selectedId}
+						key={core.router.selectedID}
 						isOpen={!!this.selectedPatient}
 						type={PanelType.medium}
 						closeButtonAriaLabel="Close"
 						isLightDismiss={true}
 						onDismiss={() => {
-							this.selectedId = "";
-							this.viewWhich = "";
+							core.router.unSelect();
 						}}
 						onRenderNavigation={() => {
 							return (
@@ -164,16 +158,17 @@ export class PatientsPage extends React.Component {
 													iconName: "cancel"
 												}}
 												onClick={() => {
-													this.selectedId = "";
-													this.viewWhich = "";
+													core.router.unSelect();
 												}}
 											/>
 										</Col>
 									</Row>
 									<PanelTabs
-										currentSelectedKey={this.viewWhich}
+										currentSelectedKey={
+											core.router.selectedTab
+										}
 										onSelect={key => {
-											this.viewWhich = key as any;
+											core.router.selectTab(key);
 										}}
 										items={this.tabs(this.selectedPatient!)}
 									/>
@@ -181,31 +176,31 @@ export class PatientsPage extends React.Component {
 							);
 						}}
 					>
-						{this.viewWhich === "details" ? (
+						{core.router.selectedTab === "details" ? (
 							<PatientDetailsPanel
 								patient={this.selectedPatient!}
 								onChangeViewWhich={key =>
-									(this.viewWhich = key)
+									core.router.selectTab(key)
 								}
 							/>
 						) : (
 							""
 						)}
-						{this.viewWhich === "dental" ? (
+						{core.router.selectedTab === "dental" ? (
 							<DentalHistoryPanel
 								patient={this.selectedPatient!}
 							/>
 						) : (
 							""
 						)}
-						{this.viewWhich === "gallery" ? (
+						{core.router.selectedTab === "gallery" ? (
 							<PatientGalleryPanel
 								patient={this.selectedPatient}
 							/>
 						) : (
 							""
 						)}
-						{this.viewWhich === "appointments" ? (
+						{core.router.selectedTab === "appointments" ? (
 							<PatientAppointmentsPanel
 								patient={this.selectedPatient}
 							/>
@@ -213,7 +208,7 @@ export class PatientsPage extends React.Component {
 							""
 						)}
 
-						{this.viewWhich === "delete" ? (
+						{core.router.selectedTab === "delete" ? (
 							<div>
 								<br />
 								<MessageBar
@@ -236,11 +231,9 @@ export class PatientsPage extends React.Component {
 									text={text("Delete")}
 									onClick={() => {
 										modules.patients!.delete(
-											this.selectedId
+											core.router.selectedID
 										);
-
-										this.selectedId = "";
-										this.viewWhich = "";
+										core.router.unSelect();
 									}}
 								/>
 							</div>
@@ -311,9 +304,10 @@ export class PatientsPage extends React.Component {
 														patient._id
 													);
 												} else {
-													this.selectedId =
-														patient._id;
-													this.viewWhich = key as any;
+													core.router.selectID(
+														patient._id,
+														key
+													);
 												}
 											}}
 										/>
@@ -321,8 +315,10 @@ export class PatientsPage extends React.Component {
 								),
 								className: "no-label",
 								onClick: () => {
-									this.selectedId = patient._id;
-									this.viewWhich = "details";
+									core.router.selectID(
+										patient._id,
+										"details"
+									);
 								}
 							},
 							{
@@ -363,6 +359,9 @@ export class PatientsPage extends React.Component {
 													? () => {
 															this.selectedAppointmentId =
 																patient.lastAppointment._id;
+															core.router.selectSub(
+																"details"
+															);
 													  }
 													: undefined
 											}
@@ -410,6 +409,9 @@ export class PatientsPage extends React.Component {
 													? () => {
 															this.selectedAppointmentId =
 																patient.nextAppointment._id;
+															core.router.selectSub(
+																"details"
+															);
 													  }
 													: undefined
 											}
@@ -536,8 +538,10 @@ export class PatientsPage extends React.Component {
 										onClick: () => {
 											const patient = modules.patients!.new();
 											modules.patients!.add(patient);
-											this.selectedId = patient._id;
-											this.viewWhich = "details";
+											core.router.selectID(
+												patient._id,
+												"details"
+											);
 										},
 										iconProps: {
 											iconName: "Add"

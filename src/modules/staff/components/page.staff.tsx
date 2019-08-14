@@ -8,8 +8,8 @@ import {
 	SectionComponent,
 	TableActions
 	} from "@common-components";
-import { text } from "@core";
 import * as core from "@core";
+import { text } from "@core";
 import * as modules from "@modules";
 import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
@@ -42,16 +42,7 @@ const AppointmentEditorPanel = loadable({
 
 @observer
 export class StaffPage extends React.Component {
-	@observable selectedId: string = core.router.currentLocation.split("/")[1];
-
 	@observable selectedAppointmentId: string = "";
-
-	@observable viewWhich:
-		| ""
-		| "details"
-		| "permission"
-		| "appointments"
-		| "delete" = (core.router.currentLocation.split("/")[2] as any) || "";
 
 	@computed get canEdit() {
 		return core.user.currentUser!.canEditStaff;
@@ -72,7 +63,7 @@ export class StaffPage extends React.Component {
 
 	@computed
 	get selectedMember() {
-		return modules.staff!.docs.find(x => x._id === this.selectedId);
+		return modules.staff!.docs.find(x => x._id === core.router.selectedID);
 	}
 
 	tabs(staff: modules.StaffMember) {
@@ -146,9 +137,10 @@ export class StaffPage extends React.Component {
 														member._id
 													);
 												} else {
-													this.selectedId =
-														member._id;
-													this.viewWhich = key as any;
+													core.router.selectID(
+														member._id,
+														key
+													);
 												}
 											}}
 										/>
@@ -156,8 +148,7 @@ export class StaffPage extends React.Component {
 								),
 								className: "no-label",
 								onClick: () => {
-									this.selectedId = member._id;
-									this.viewWhich = "details";
+									core.router.selectID(member._id, "details");
 								}
 							},
 							{
@@ -202,6 +193,9 @@ export class StaffPage extends React.Component {
 													? () => {
 															this.selectedAppointmentId =
 																member.lastAppointment._id;
+															core.router.selectSub(
+																"details"
+															);
 													  }
 													: undefined
 											}
@@ -245,6 +239,9 @@ export class StaffPage extends React.Component {
 													? () => {
 															this.selectedAppointmentId =
 																member.nextAppointment._id;
+															core.router.selectSub(
+																"details"
+															);
 													  }
 													: undefined
 											}
@@ -312,8 +309,10 @@ export class StaffPage extends React.Component {
 										onClick: () => {
 											const member = modules.staff!.new();
 											modules.staff!.add(member);
-											this.selectedId = member._id;
-											this.viewWhich = "details";
+											core.router.selectID(
+												member._id,
+												"details"
+											);
 										},
 										iconProps: {
 											iconName: "Add"
@@ -326,7 +325,7 @@ export class StaffPage extends React.Component {
 
 				{this.selectedMember &&
 				["appointments", "details", "delete", "permission"].indexOf(
-					this.viewWhich
+					core.router.selectedTab
 				) > -1 ? (
 					<Panel
 						isOpen={!!this.selectedMember}
@@ -334,8 +333,7 @@ export class StaffPage extends React.Component {
 						closeButtonAriaLabel="Close"
 						isLightDismiss={true}
 						onDismiss={() => {
-							this.selectedId = "";
-							this.viewWhich = "";
+							core.router.unSelect();
 						}}
 						onRenderNavigation={() => (
 							<div className="panel-heading">
@@ -355,15 +353,15 @@ export class StaffPage extends React.Component {
 											data-testid="close-panel"
 											iconProps={{ iconName: "cancel" }}
 											onClick={() => {
-												this.selectedId = "";
+												core.router.unSelect();
 											}}
 										/>
 									</Col>
 								</Row>
 								<PanelTabs
-									currentSelectedKey={this.viewWhich}
+									currentSelectedKey={core.router.selectedTab}
 									onSelect={key => {
-										this.viewWhich = key as any;
+										core.router.selectTab(key);
 									}}
 									items={this.tabs(this.selectedMember!)}
 								/>
@@ -371,7 +369,7 @@ export class StaffPage extends React.Component {
 						)}
 					>
 						<div className="staff-editor">
-							{this.viewWhich === "details" ? (
+							{core.router.selectedTab === "details" ? (
 								<div>
 									<SectionComponent
 										title={text(`Basic Info`)}
@@ -476,7 +474,7 @@ export class StaffPage extends React.Component {
 								""
 							)}
 
-							{this.viewWhich === "permission" ? (
+							{core.router.selectedTab === "permission" ? (
 								<div>
 									{this.selectedMember._id ===
 									core.user.currentUser!._id ? (
@@ -896,7 +894,7 @@ export class StaffPage extends React.Component {
 								""
 							)}
 
-							{this.viewWhich === "appointments" ? (
+							{core.router.selectedTab === "appointments" ? (
 								<SectionComponent
 									title={text(`Upcoming Appointments`)}
 								>
@@ -922,7 +920,7 @@ export class StaffPage extends React.Component {
 								""
 							)}
 
-							{this.viewWhich === "delete" ? (
+							{core.router.selectedTab === "delete" ? (
 								<div>
 									<br />
 									<MessageBar
@@ -941,11 +939,10 @@ export class StaffPage extends React.Component {
 										text={text("Delete")}
 										onClick={() => {
 											modules.staff!.delete(
-												this.selectedId
+												core.router.selectedID
 											);
 
-											this.selectedId = "";
-											this.viewWhich = "";
+											core.router.unSelect();
 										}}
 									/>
 								</div>

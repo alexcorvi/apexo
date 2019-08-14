@@ -39,7 +39,7 @@ export class UserPanelView extends React.Component {
 				className="user-component"
 				type={PanelType.medium}
 				isLightDismiss
-				isOpen={core.user.isVisible}
+				isOpen={core.router.selectedMain === "user"}
 				onDismiss={() => core.user.hide()}
 				data-testid="user-panel"
 				onRenderNavigation={() => (
@@ -100,19 +100,23 @@ export class UserPanelView extends React.Component {
 							{
 								<AppointmentsListNoDate
 									appointments={core.user.todayAppointments}
-									onClick={id =>
-										(this.selectedAppointmentId = id)
-									}
+									onClick={id => {
+										this.selectedAppointmentId = id;
+										core.router.selectSub("details");
+									}}
 									canDelete={false}
 								/>
 							}
 						</div>
 					)}
 				</SectionComponent>
-				{this.selectedAppointment ? (
+				{this.selectedAppointment && core.router.selectedSub ? (
 					<AppointmentEditorPanel
 						appointment={this.selectedAppointment}
-						onDismiss={() => (this.selectedAppointmentId = "")}
+						onDismiss={() => {
+							this.selectedAppointmentId = "";
+							core.router.unSelectSub();
+						}}
 					/>
 				) : (
 					""

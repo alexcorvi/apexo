@@ -1,6 +1,15 @@
-import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
+import {
+	Col,
+	DataTableComponent,
+	PanelTabs,
+	ProfileSquaredComponent,
+	Row,
+	SectionComponent
+	} from "@common-components";
 import { text, user } from "@core";
+import * as core from "@core";
 import { prescriptionItemForm, prescriptions } from "@modules";
+import * as modules from "@modules";
 import { num } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
@@ -9,6 +18,12 @@ import * as React from "react";
 
 @observer
 export class PrescriptionsPage extends React.Component {
+	@computed get selectedPrescription() {
+		return modules.prescriptions!.docs.find(
+			p => p._id === core.router.selectedID
+		);
+	}
+
 	@computed get canEdit() {
 		return user.currentUser && user.currentUser.canEditPrescriptions;
 	}
@@ -36,8 +51,9 @@ export class PrescriptionsPage extends React.Component {
 											prescriptions!
 												.add(newDoc)
 												.then(() => {
-													prescriptions!.selectedID =
-														newDoc._id;
+													core.router.selectID(
+														newDoc._id
+													);
 												});
 										},
 										iconProps: {
@@ -73,8 +89,7 @@ export class PrescriptionsPage extends React.Component {
 										/>
 									),
 									onClick: () => {
-										prescriptions!.selectedID =
-											prescription._id;
+										core.router.selectID(prescription._id);
 									},
 									className: "no-label"
 								},
@@ -110,49 +125,64 @@ export class PrescriptionsPage extends React.Component {
 					maxItemsOnLoad={20}
 				/>
 
-				{prescriptions!.selectedDoc ? (
+				{this.selectedPrescription ? (
 					<Panel
-						isOpen={!!prescriptions!.selectedDoc}
+						isOpen={!!this.selectedPrescription}
 						type={PanelType.medium}
 						closeButtonAriaLabel="Close"
 						isLightDismiss={true}
 						onDismiss={() => {
-							prescriptions!.selectedID = "";
+							core.router.unSelect();
 						}}
 						onRenderNavigation={() => (
-							<Row className="panel-heading">
-								<Col span={20}>
-									{prescriptions!.selectedDoc ? (
-										<ProfileSquaredComponent
-											text={
-												prescriptions!.selectedDoc.name
-											}
-											subText={`${
-												prescriptions!.selectedDoc
-													.doseInMg
-											}${text("mg")} ${
-												prescriptions!.selectedDoc
-													.timesPerDay
-											}X${
-												prescriptions!.selectedDoc
-													.unitsPerTime
-											} ${text(
-												prescriptions!.selectedDoc.form
-											)}`}
+							<div className="panel-heading">
+								<Row>
+									<Col span={20}>
+										{this.selectedPrescription ? (
+											<ProfileSquaredComponent
+												text={
+													this.selectedPrescription
+														.name
+												}
+												subText={`${
+													this.selectedPrescription
+														.doseInMg
+												}${text("mg")} ${
+													this.selectedPrescription
+														.timesPerDay
+												}X${
+													this.selectedPrescription
+														.unitsPerTime
+												} ${text(
+													this.selectedPrescription
+														.form
+												)}`}
+											/>
+										) : (
+											<p />
+										)}
+									</Col>
+									<Col span={4} className="close">
+										<IconButton
+											iconProps={{ iconName: "cancel" }}
+											onClick={() => {
+												core.router.unSelect();
+											}}
 										/>
-									) : (
-										<p />
-									)}
-								</Col>
-								<Col span={4} className="close">
-									<IconButton
-										iconProps={{ iconName: "cancel" }}
-										onClick={() => {
-											prescriptions!.selectedID = "";
-										}}
-									/>
-								</Col>
-							</Row>
+									</Col>
+								</Row>
+								<PanelTabs
+									currentSelectedKey={"pill"}
+									onSelect={key => {}}
+									items={[
+										{
+											key: "pill",
+											icon: "pill",
+											title: "Prescription Details"
+										}
+									]}
+								/>
+							</div>
 						)}
 					>
 						<div className="prescription-editor">
@@ -161,9 +191,9 @@ export class PrescriptionsPage extends React.Component {
 							>
 								<TextField
 									label={text("Item name")}
-									value={prescriptions!.selectedDoc.name}
+									value={this.selectedPrescription.name}
 									onChange={(ev, val) =>
-										(prescriptions!.selectedDoc!.name = val!)
+										(this.selectedPrescription!.name = val!)
 									}
 									disabled={!this.canEdit}
 								/>
@@ -173,9 +203,9 @@ export class PrescriptionsPage extends React.Component {
 										<TextField
 											label={text("Dosage in mg")}
 											type="number"
-											value={prescriptions!.selectedDoc.doseInMg.toString()}
+											value={this.selectedPrescription.doseInMg.toString()}
 											onChange={(ev, val) =>
-												(prescriptions!.selectedDoc!.doseInMg = num(
+												(this.selectedPrescription!.doseInMg = num(
 													val!
 												))
 											}
@@ -186,9 +216,9 @@ export class PrescriptionsPage extends React.Component {
 										<TextField
 											label={text("Times per day")}
 											type="number"
-											value={prescriptions!.selectedDoc.timesPerDay.toString()}
+											value={this.selectedPrescription.timesPerDay.toString()}
 											onChange={(ev, val) =>
-												(prescriptions!.selectedDoc!.timesPerDay = num(
+												(this.selectedPrescription!.timesPerDay = num(
 													val!
 												))
 											}
@@ -199,9 +229,9 @@ export class PrescriptionsPage extends React.Component {
 										<TextField
 											label={text("Units per time")}
 											type="number"
-											value={prescriptions!.selectedDoc.unitsPerTime.toString()}
+											value={this.selectedPrescription.unitsPerTime.toString()}
 											onChange={(ev, val) =>
-												(prescriptions!.selectedDoc!.unitsPerTime = num(
+												(this.selectedPrescription!.unitsPerTime = num(
 													val!
 												))
 											}
@@ -213,9 +243,7 @@ export class PrescriptionsPage extends React.Component {
 									disabled={!this.canEdit}
 									label={text("Item form")}
 									className="form-picker"
-									selectedKey={
-										prescriptions!.selectedDoc.form
-									}
+									selectedKey={this.selectedPrescription.form}
 									options={Object.keys(
 										prescriptionItemForm
 									).map(form => {
@@ -225,7 +253,7 @@ export class PrescriptionsPage extends React.Component {
 										};
 									})}
 									onChange={(ev, newValue) => {
-										prescriptions!.selectedDoc!.form = (newValue as any).text;
+										this.selectedPrescription!.form = (newValue as any).text;
 									}}
 								/>
 							</SectionComponent>

@@ -1066,6 +1066,9 @@ hr {
 .ms-TextField-field {
   line-height: initial; }
 
+.ms-Persona-initials i {
+  font-weight: 100; }
+
 .fs-10 {
   font-size: 10px; }
 
@@ -2104,8 +2107,7 @@ hr {
     background: transparent; }
   .no-data {
     margin: 0; }
-  .settings-component,
-  .calendar-component {
+  .settings-component {
     padding: 15px !important; }
   html body {
     background: #fff !important; }
@@ -5719,7 +5721,8 @@ hr {
 .calendar-component {
   background: #fff;
   min-height: 500px;
-  font-size: 13px; }
+  font-size: 13px;
+  margin-top: 60px; }
   .calendar-component .selector {
     padding-bottom: 10px;
     margin-bottom: 10px; }
@@ -5897,11 +5900,6 @@ hr {
   .calendar-component .filters .ms-Toggle {
     padding: 15px 0 0 15px; }
 
-@media screen and (min-width: 992px) {
-  .calendar-component {
-    margin-top: 60px;
-    border-radius: 3px; } }
-
 @media screen and (max-width: 1250px) {
   .calendar-component .full-day-col {
     width: 33.33% !important;
@@ -5968,6 +5966,8 @@ hr {
     cursor: pointer; }
     .data-table .ms-table td.clickable:hover {
       background: #f5f5f5; }
+  .data-table .ms-table td.no-label {
+    text-align: left; }
 
 .data-table tr {
   border-bottom: 1px solid #f3f3f3; }
@@ -6459,13 +6459,20 @@ hr {
     bottom: 15px;
     background: #b71c1c; }
 
-.menu .ms-Nav ul {
-  padding-top: 5px; }
-  .menu .ms-Nav ul .is-selected {
-    background: #e1f5fe; }
-  .menu .ms-Nav ul .ms-Nav-link {
-    padding-left: 0 !important;
-    text-transform: capitalize; }
+.menu .ms-Panel-content {
+  padding: 0; }
+
+.menu .ms-Nav ul .is-selected .ms-Nav-link {
+  background: #f5f5f5;
+  border-bottom: 1px solid #f3f3f3;
+  border-radius: 0;
+  border-top: 1px solid #f3f3f3;
+  font-weight: 600; }
+  .menu .ms-Nav ul .is-selected .ms-Nav-link:after {
+    border: 0; }
+
+.menu .ms-Nav ul .ms-Nav-link {
+  text-transform: capitalize; }
 
 .ver {
   text-align: center;
@@ -6586,6 +6593,12 @@ hr {
   bottom: initial;
   top: 0; }
 
+.new-or {
+  text-align: center;
+  display: block;
+  line-height: 13px;
+  font-weight: 600; }
+
 .spa-panel {
   position: relative; }
   .spa-panel .add-new {
@@ -6657,10 +6670,6 @@ hr {
   .plk-c .icon {
     position: relative;
     top: 2px; }
-
-@media screen and (max-width: 800px) {
-  .patients-component {
-    padding: 10px; } }
 
 .pc-pg table.responsive tbody tr td:not(.no-label):before {
   display: none; }

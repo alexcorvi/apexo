@@ -76,12 +76,11 @@ export class HeaderView extends React.Component {
 										}}
 										className={
 											"resync " +
-											(core.status.dbActionProgress
-												? "rotate "
-												: "") +
 											(core.status.invalidLogin ||
 											!core.status.isOnline.server
 												? "error"
+												: core.status.dbActionProgress
+												? "rotate"
 												: "")
 										}
 										data-testid="resync"

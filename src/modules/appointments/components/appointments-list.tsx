@@ -1,11 +1,10 @@
 import { ALRightColumn, ALSecondaryText, AppointmentsListNoDate } from "@common-components";
-import { text } from "@core";
 import * as core from "@core";
-import { Appointment, PrescriptionItem, StaffMember } from "@modules";
+import { Appointment } from "@modules";
 import { textualFilter } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { Shimmer, TextField } from "office-ui-fabric-react";
+import { Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
 
@@ -52,9 +51,10 @@ export class AppointmentsList extends React.Component<
 						{
 							<AppointmentsListNoDate
 								appointments={this.filteredAndSorted}
-								onClick={id =>
-									(this.selectedAppointmentID = id)
-								}
+								onClick={id => {
+									this.selectedAppointmentID = id;
+									core.router.selectSub("details");
+								}}
 								secondaryText={
 									this.props.operatorsAsSecondaryText
 										? ALSecondaryText.operators
@@ -68,11 +68,17 @@ export class AppointmentsList extends React.Component<
 				) : (
 					""
 				)}
-				{this.selectedAppointment ? (
-					<AppointmentEditorPanel
-						appointment={this.selectedAppointment}
-						onDismiss={() => (this.selectedAppointmentID = "")}
-					/>
+				{this.selectedAppointment && core.router.selectedSub ? (
+					<div>
+						{core.router.selectedSub}{" "}
+						<AppointmentEditorPanel
+							appointment={this.selectedAppointment}
+							onDismiss={() => {
+								this.selectedAppointmentID = "";
+								core.router.unSelectSub();
+							}}
+						/>
+					</div>
 				) : (
 					""
 				)}
