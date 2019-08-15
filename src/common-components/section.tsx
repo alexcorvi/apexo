@@ -34,7 +34,6 @@ export class SectionComponent extends React.Component<{
 				>
 					{this.props.title}
 				</h3>
-				<div style={{ clear: "both" }} />
 				{this.show ? (
 					<div style={{ marginBottom: 15 }}>
 						{this.props.children}

@@ -1,4 +1,4 @@
-import { Col, ProfileComponent, Row, SectionComponent } from "@common-components";
+import { Col, PanelTabs, ProfileComponent, Row, SectionComponent } from "@common-components";
 import { text } from "@core";
 import * as core from "@core";
 import { conditionToColor, Patient, StaffMember, ToothCondition } from "@modules";
@@ -138,51 +138,64 @@ export class DentalHistoryPanel extends React.Component<
 						];
 
 						return (
-							<Row className="panel-heading">
-								<Col span={22}>
-									<ProfileComponent
-										name={`ISO: ${
-											tooth ? tooth.ISO : ""
-										} - Universal: ${
-											tooth ? tooth.Universal : ""
-										}`}
-										secondaryElement={
-											<span>
-												{tooth
-													? tooth.Name.split(" ")
-															.filter((x, i) => i)
-															.join(" ")
-													: ""}
-											</span>
+							<div className="panel-heading">
+								<Row>
+									<Col span={22}>
+										<ProfileComponent
+											name={`ISO: ${
+												tooth ? tooth.ISO : ""
+											} - Universal: ${
+												tooth ? tooth.Universal : ""
+											}`}
+											secondaryElement={
+												<span>
+													{tooth
+														? tooth.Name.split(" ")
+																.filter(
+																	(x, i) => i
+																)
+																.join(" ")
+														: ""}
+												</span>
+											}
+											onRenderInitials={() => (
+												<span className="palmer">
+													{tooth ? tooth.Palmer : ""}
+												</span>
+											)}
+											size={2}
+										/>
+									</Col>
+									<Col span={2} className="close">
+										<IconButton
+											iconProps={{ iconName: "cancel" }}
+											onClick={() => {
+												core.router.unSelectSub();
+											}}
+										/>
+									</Col>
+								</Row>
+								<PanelTabs
+									currentSelectedKey={"details"}
+									onSelect={() => {}}
+									items={[
+										{
+											key: "details",
+											icon: "teeth",
+											title: "Tooth Details"
 										}
-										onRenderInitials={() => (
-											<span className="palmer">
-												{tooth ? tooth.Palmer : ""}
-											</span>
-										)}
-										size={3}
-									/>
-								</Col>
-								<Col span={2} className="close">
-									<IconButton
-										iconProps={{ iconName: "cancel" }}
-										onClick={() => {
-											core.router.unSelectSub();
-										}}
-									/>
-								</Col>
-							</Row>
+									]}
+								/>
+							</div>
 						);
 					}}
 				>
-					<br />
-					<br />
 					{this.props.patient.teeth[
 						Number(core.router.selectedSub)
 					] ? (
 						<div className="tooth-details">
 							<Dropdown
-								placeholder={text(`Condition`)}
+								label={text(`Tooth condition`)}
 								onChange={(ev, newVal: any) => {
 									this.props.patient.teeth[
 										Number(core.router.selectedSub)
@@ -202,7 +215,7 @@ export class DentalHistoryPanel extends React.Component<
 								disabled={!this.canEdit}
 							/>
 							<EditableListComponent
-								label={text("History notes")}
+								label={text("Tooth history")}
 								value={
 									this.props.patient.teeth[
 										Number(core.router.selectedSub)

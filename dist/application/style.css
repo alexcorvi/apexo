@@ -1069,6 +1069,13 @@ hr {
 .ms-Persona-initials i {
   font-weight: 100; }
 
+.ms-TextField-prefix,
+.ms-TextField-suffix {
+  margin: 1px; }
+
+.ms-Toggle-stateText {
+  line-height: 1; }
+
 .fs-10 {
   font-size: 10px; }
 
@@ -2081,16 +2088,6 @@ hr {
     margin-bottom: -1px; }
   .data-table tr {
     margin-top: 0 !important; }
-  .ms-CommandBar.fixed,
-  .header-component,
-  table.responsive tbody tr,
-  .calendar-component,
-  .sc-pg .charts .chart-wrapper .chart .graph,
-  .sc-pg .charts .chart-wrapper .chart,
-  .quick .label,
-  .panel-heading,
-  .sc-pg .controls {
-    box-shadow: none !important; }
   .header-component,
   .ms-CommandBar.fixed,
   table.responsive tbody tr,
@@ -6148,10 +6145,8 @@ hr {
 .elc-c .new-item {
   margin-bottom: -1.5px !important;
   border-bottom: 0; }
-  .elc-c .new-item .ms-TextField-suffix {
-    margin: 1px; }
-    .elc-c .new-item .ms-TextField-suffix button {
-      background: transparent; }
+  .elc-c .new-item .ms-TextField-suffix button {
+    background: transparent; }
 
 .elc-c .items {
   border: 1.5px solid #8a8886;

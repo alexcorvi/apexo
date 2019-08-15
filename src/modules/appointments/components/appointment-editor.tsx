@@ -9,8 +9,8 @@ import {
 	TagInputComponent,
 	tagType
 	} from "@common-components";
-import * as core from "@core";
 import { imagesTable, text } from "@core";
+import * as core from "@core";
 import {
 	Appointment,
 	ISOTeethArr,
@@ -40,13 +40,6 @@ import {
 	} from "office-ui-fabric-react";
 import { MessageBarType } from "office-ui-fabric-react";
 import * as React from "react";
-
-// TODO: implement tabs for all panels
-// treatments
-// labwork
-
-// TODO: all persona details
-// on top of all panels must use a common component
 
 @observer
 export class AppointmentEditorPanel extends React.Component<

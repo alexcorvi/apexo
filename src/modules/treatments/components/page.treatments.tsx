@@ -1,11 +1,26 @@
-import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
+import {
+	Col,
+	DataTableComponent,
+	PanelTabs,
+	ProfileSquaredComponent,
+	Row,
+	SectionComponent
+	} from "@common-components";
 import { text } from "@core";
 import * as core from "@core";
 import * as modules from "@modules";
 import { num } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { IconButton, Panel, PanelType, TextField } from "office-ui-fabric-react";
+import {
+	IconButton,
+	MessageBar,
+	MessageBarType,
+	Panel,
+	PanelType,
+	PrimaryButton,
+	TextField
+	} from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
@@ -43,7 +58,10 @@ export class Treatments extends React.Component {
 										onClick: () => {
 											const treatment = modules.treatments!.new();
 											modules.treatments!.add(treatment);
-											core.router.selectID(treatment._id);
+											core.router.selectID(
+												treatment._id,
+												"details"
+											);
 										},
 										iconProps: {
 											iconName: "Add"
@@ -101,7 +119,10 @@ export class Treatments extends React.Component {
 										/>
 									),
 									onClick: () => {
-										core.router.selectID(treatment._id);
+										core.router.selectID(
+											treatment._id,
+											"details"
+										);
 									},
 									className: "no-label"
 								},
@@ -151,64 +172,119 @@ export class Treatments extends React.Component {
 							core.router.unSelect();
 						}}
 						onRenderNavigation={() => (
-							<Row className="panel-heading">
-								<Col span={20}>
-									{this.selectedTreatment ? (
-										<ProfileSquaredComponent
-											text={this.selectedTreatment.type}
-											subText={`${text(
-												"Expenses"
-											)}: ${modules.setting!.getSetting(
-												"currencySymbol"
-											)}${
-												this.selectedTreatment.expenses
-											} ${text("per unit")}`}
+							<div className="panel-heading">
+								<Row>
+									<Col span={20}>
+										{this.selectedTreatment ? (
+											<ProfileSquaredComponent
+												text={
+													this.selectedTreatment.type
+												}
+												subText={`${text(
+													"Expenses"
+												)}: ${modules.setting!.getSetting(
+													"currencySymbol"
+												)}${
+													this.selectedTreatment
+														.expenses
+												} ${text("per unit")}`}
+											/>
+										) : (
+											<p />
+										)}
+									</Col>
+									<Col span={4} className="close">
+										<IconButton
+											iconProps={{ iconName: "cancel" }}
+											onClick={() => {
+												core.router.unSelect();
+											}}
 										/>
-									) : (
-										<p />
-									)}
-								</Col>
-								<Col span={4} className="close">
-									<IconButton
-										iconProps={{ iconName: "cancel" }}
-										onClick={() => {
-											core.router.unSelect();
-										}}
-									/>
-								</Col>
-							</Row>
+									</Col>
+								</Row>
+								<PanelTabs
+									currentSelectedKey={core.router.selectedTab}
+									onSelect={key => core.router.selectTab(key)}
+									items={[
+										{
+											key: "details",
+											icon: "cricket",
+											title: "Treatment Details"
+										},
+										{
+											key: "delete",
+											icon: "trash",
+											title: "Delete"
+										}
+									]}
+								/>
+							</div>
 						)}
 					>
 						<div className="treatment-editor">
-							<SectionComponent title={text("Treatment Details")}>
-								<div className="treatment-input">
-									<TextField
-										label={text("Treatment title")}
-										value={this.selectedTreatment.type}
-										onChange={(ev, val) =>
-											(this.selectedTreatment!.type = val!)
-										}
-										disabled={!this.canEdit}
-										data-testid="treatment-title"
-									/>
-									<TextField
-										label={text(
-											"Treatment expenses (per unit)"
+							{core.router.selectedTab === "details" ? (
+								<SectionComponent
+									title={text("Treatment Details")}
+								>
+									<div className="treatment-input">
+										<TextField
+											label={text("Treatment title")}
+											value={this.selectedTreatment.type}
+											onChange={(ev, val) =>
+												(this.selectedTreatment!.type = val!)
+											}
+											disabled={!this.canEdit}
+											data-testid="treatment-title"
+										/>
+										<TextField
+											label={text(
+												"Treatment expenses (per unit)"
+											)}
+											type="number"
+											value={this.selectedTreatment.expenses.toString()}
+											onChange={(ev, val) =>
+												(this.selectedTreatment!.expenses = num(
+													val!
+												))
+											}
+											prefix={modules.setting!.getSetting(
+												"currencySymbol"
+											)}
+											disabled={!this.canEdit}
+										/>
+									</div>
+								</SectionComponent>
+							) : (
+								""
+							)}
+							{core.router.selectedTab === "delete" ? (
+								<div>
+									<br />
+									<MessageBar
+										messageBarType={MessageBarType.warning}
+									>
+										{text(
+											"Are you sure you want to delete"
 										)}
-										type="number"
-										value={this.selectedTreatment.expenses.toString()}
-										onChange={(ev, val) =>
-											(this.selectedTreatment!.expenses = num(
-												val!
-											))
-										}
-										prefix={modules.setting!.getSetting(
-											"currencySymbol"
-										)}
-										disabled={!this.canEdit}
+									</MessageBar>
+									<br />
+									<PrimaryButton
+										className="delete"
+										iconProps={{
+											iconName: "delete"
+										}}
+										text={text("Delete")}
+										onClick={() => {
+											modules.treatments!.delete(
+												core.router.selectedID
+											);
+											core.router.unSelect();
+										}}
 									/>
 								</div>
-							</SectionComponent>
+							) : (
+								""
+							)}
 						</div>
 					</Panel>
 				) : (

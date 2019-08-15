@@ -97,11 +97,30 @@ export class Router {
 	}
 
 	selectID(id: string, tab?: string) {
-		this.go([this.currentNamespace, id, tab || ""]);
-	}
+		const newLocation = this.currentLocation
+			.split("/")
+			.map(x => {
+				return x;
+			})
+			.filter(x => !x.startsWith("id:"));
+		newLocation.push(`id:${id}`);
+		this.go(newLocation);
 
-	selectTab(tab: string) {
-		this.go([this.currentNamespace, this.selectedID, tab]);
+		if (tab) {
+			setTimeout(() => this.selectTab(tab), 100);
+		}
+	}
+	selectTab(tab?: string) {
+		const newLocation = this.currentLocation
+			.split("/")
+			.map(x => {
+				return x;
+			})
+			.filter(x => !x.startsWith("tab:"));
+		if (tab) {
+			newLocation.push(`tab:${tab}`);
+		}
+		this.go(newLocation);
 	}
 
 	selectSub(sub?: string) {
@@ -141,8 +160,15 @@ export class Router {
 
 	private async checkAndLoad() {
 		this.currentLocation = location.hash.substr(3);
-		this._selectedID = this.currentLocation.split("/")[1] || "";
-		this._selectedTab = this.currentLocation.split("/")[2] || "";
+
+		const id = this.currentLocation
+			.split("/")
+			.find(x => x.startsWith("id:"));
+
+		const tab = this.currentLocation
+			.split("/")
+			.find(x => x.startsWith("tab:"));
+
 		const sub = this.currentLocation
 			.split("/")
 			.find(x => x.startsWith("sub:"));
@@ -150,6 +176,11 @@ export class Router {
 		const main = this.currentLocation
 			.split("/")
 			.find(x => x.startsWith("main:"));
+		if (id) {
+			this._selectedID = id.replace(/id:/, "");
+		} else {
+			this._selectedID = "";
+		}
 		if (sub) {
 			this._selectedSub = sub.replace(/sub:/, "");
 		} else {
@@ -159,6 +190,11 @@ export class Router {
 			this._selectedMain = main.replace(/main:/, "");
 		} else {
 			this._selectedMain = "";
+		}
+		if (tab) {
+			this._selectedTab = tab.replace(/tab:/, "");
+		} else {
+			this._selectedTab = "";
 		}
 	}
 

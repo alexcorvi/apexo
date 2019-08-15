@@ -158,7 +158,6 @@ export class PatientGalleryPanel extends React.Component<{
 						)}
 					</MessageBar>
 				)}
-				<div style={{ clear: "both" }} />
 			</SectionComponent>
 		);
 	}

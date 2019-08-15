@@ -2,6 +2,7 @@ import {
 	Col,
 	DataTableComponent,
 	getRandomTagType,
+	PanelTabs,
 	ProfileComponent,
 	ProfileSquaredComponent,
 	Row,
@@ -19,13 +20,14 @@ import {
 	Dropdown,
 	IconButton,
 	Label,
+	MessageBarType,
 	Panel,
 	PanelType,
 	TagPicker,
 	TextField,
 	Toggle
 	} from "office-ui-fabric-react";
-import { DatePicker } from "office-ui-fabric-react";
+import { DatePicker, MessageBar, PrimaryButton } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
@@ -66,7 +68,10 @@ export class LabworkPage extends React.Component {
 										onClick: () => {
 											const labwork = modules.labworks!.new();
 											modules.labworks!.add(labwork);
-											core.router.selectID(labwork._id);
+											core.router.selectID(
+												labwork._id,
+												"details"
+											);
 										},
 										iconProps: {
 											iconName: "Add"
@@ -100,7 +105,10 @@ export class LabworkPage extends React.Component {
 										/>
 									),
 									onClick: () => {
-										core.router.selectID(labwork._id);
+										core.router.selectID(
+											labwork._id,
+											"details"
+										);
 									},
 									className: "no-label"
 								},
@@ -218,371 +226,449 @@ export class LabworkPage extends React.Component {
 							core.router.unSelect();
 						}}
 						onRenderNavigation={() => (
-							<Row className="panel-heading">
-								<Col span={20}>
-									{this.selectedLabwork ? (
-										<ProfileSquaredComponent
-											text={
-												this.selectedLabwork.caseTitle
-											}
-											subText={
-												this.selectedLabwork.patient
-													? this.selectedLabwork
-															.patient.name
-													: ""
-											}
+							<div className="panel-heading">
+								<Row>
+									<Col span={20}>
+										{this.selectedLabwork ? (
+											<ProfileSquaredComponent
+												text={
+													this.selectedLabwork
+														.caseTitle
+												}
+												subText={
+													this.selectedLabwork.patient
+														? this.selectedLabwork
+																.patient.name
+														: ""
+												}
+											/>
+										) : (
+											<p />
+										)}
+									</Col>
+									<Col span={4} className="close">
+										<IconButton
+											iconProps={{ iconName: "cancel" }}
+											onClick={() => {
+												core.router.unSelect();
+											}}
 										/>
-									) : (
-										<p />
-									)}
-								</Col>
-								<Col span={4} className="close">
-									<IconButton
-										iconProps={{ iconName: "cancel" }}
-										onClick={() => {
-											core.router.unSelect();
-										}}
-									/>
-								</Col>
-							</Row>
+									</Col>
+								</Row>
+								<PanelTabs
+									currentSelectedKey={core.router.selectedTab}
+									onSelect={key => core.router.selectTab(key)}
+									items={[
+										{
+											key: "details",
+											icon: "Contact",
+											title: "Case Details"
+										},
+										{
+											key: "lab",
+											icon: "TestBeaker",
+											title: "Lab Details"
+										},
+										{
+											key: "delete",
+											icon: "trash",
+											title: "Delete"
+										}
+									]}
+								/>
+							</div>
 						)}
 					>
 						<div className="labwork-editor">
-							<SectionComponent title={text("Case Details")}>
-								<Row gutter={8}>
-									<Col sm={12}>
-										<TextField
-											label={text("Case title")}
-											value={
-												this.selectedLabwork.caseTitle
-											}
-											onChange={(ev, val) =>
-												(this.selectedLabwork!.caseTitle = val!)
-											}
-											disabled={!this.canEdit}
-										/>
-									</Col>
-									<Col sm={12}>
-										<TagInputComponent
-											label={text("Patient")}
-											options={modules.patients!.docs.map(
-												patient => ({
-													text: patient.name,
-													key: patient._id
-												})
-											)}
-											suggestionsHeaderText={text(
-												"Select patient"
-											)}
-											noResultsFoundText={text(
-												"No patients found"
-											)}
-											maxItems={1}
-											disabled={!this.canEdit}
-											value={
-												this.selectedLabwork.patient
-													? [
-															{
-																text: this
-																	.selectedLabwork
-																	.patient
-																	.name,
-																key: this
-																	.selectedLabwork
-																	.patient._id
-															}
-													  ]
-													: []
-											}
-											onChange={selectedKeys => {
-												this.selectedLabwork!.patientID =
-													selectedKeys[0] || "";
-											}}
-										/>
-									</Col>
-								</Row>
-								<TagInputComponent
-									label={text("Involved teeth")}
-									options={modules.ISOTeethArr.map(x => {
-										return {
-											key: x.toString(),
-											text: x.toString()
-										};
-									})}
-									suggestionsHeaderText={text(
-										"Select involved teeth"
-									)}
-									noResultsFoundText={text("No teeth found")}
-									disabled={!this.canEdit}
-									value={this.selectedLabwork.involvedTeeth.map(
-										x => ({
-											key: x.toString(),
-											text: x.toString()
-										})
-									)}
-									onChange={selectedKeys => {
-										this.selectedLabwork!.involvedTeeth = selectedKeys.map(
-											x => num(x)
-										);
-									}}
-								/>
-								<br />
-								<TextField
-									label={text("Case Details")}
-									value={this.selectedLabwork.caseDetails}
-									onChange={(ev, val) =>
-										(this.selectedLabwork!.caseDetails = val!)
-									}
-									disabled={!this.canEdit}
-									multiline
-								/>
-								<TagInputComponent
-									label={text("Operating staff")}
-									options={modules
-										.staff!.operatingStaff.sort((a, b) =>
-											a.name.localeCompare(b.name)
-										)
-										.map(s => {
+							{core.router.selectedTab === "details" ? (
+								<SectionComponent title={text("Case Details")}>
+									<Row gutter={8}>
+										<Col sm={12}>
+											<TextField
+												label={text("Case title")}
+												value={
+													this.selectedLabwork
+														.caseTitle
+												}
+												onChange={(ev, val) =>
+													(this.selectedLabwork!.caseTitle = val!)
+												}
+												disabled={!this.canEdit}
+											/>
+										</Col>
+										<Col sm={12}>
+											<TagInputComponent
+												label={text("Patient")}
+												options={modules.patients!.docs.map(
+													patient => ({
+														text: patient.name,
+														key: patient._id
+													})
+												)}
+												suggestionsHeaderText={text(
+													"Select patient"
+												)}
+												noResultsFoundText={text(
+													"No patients found"
+												)}
+												maxItems={1}
+												disabled={!this.canEdit}
+												value={
+													this.selectedLabwork.patient
+														? [
+																{
+																	text: this
+																		.selectedLabwork
+																		.patient
+																		.name,
+																	key: this
+																		.selectedLabwork
+																		.patient
+																		._id
+																}
+														  ]
+														: []
+												}
+												onChange={selectedKeys => {
+													this.selectedLabwork!.patientID =
+														selectedKeys[0] || "";
+												}}
+											/>
+										</Col>
+									</Row>
+									<TagInputComponent
+										label={text("Involved teeth")}
+										options={modules.ISOTeethArr.map(x => {
 											return {
-												key: s._id,
-												text: s.name
+												key: x.toString(),
+												text: x.toString()
 											};
 										})}
-									value={this.selectedLabwork!.operatingStaff.map(
-										x => ({ key: x._id, text: x.name })
-									)}
-									onChange={newKeys => {
-										this.selectedLabwork!.operatingStaffIDs = newKeys;
-									}}
-									disabled={!this.canEdit}
-									suggestionsHeaderText={text(
-										"Operating staff"
-									)}
-									noResultsFoundText={text("No staff found")}
-								/>
-							</SectionComponent>
-							<SectionComponent title={text("Lab Details")}>
-								<Row gutter={8}>
-									<Col sm={12}>
-										<TagInputComponent
-											label={text("Laboratory")}
-											loose
-											options={modules
-												.labworks!.docs.map(
-													x => x.labName
-												)
-												.filter(
-													(x, i, a) =>
-														a.indexOf(x) === i
-												)
-												.sort((a, b) =>
-													a.localeCompare(b)
-												)
-												.map(labName => {
-													return {
-														key: labName,
-														text: labName
-													};
-												})}
-											value={
-												this.selectedLabwork.labName
-													? [
-															{
-																key: this
-																	.selectedLabwork
-																	.labName,
-																text: this
-																	.selectedLabwork
-																	.labName
-															}
-													  ]
-													: []
-											}
-											onChange={newKeys => {
-												this.selectedLabwork!.labName =
-													newKeys[0] || "";
+										suggestionsHeaderText={text(
+											"Select involved teeth"
+										)}
+										noResultsFoundText={text(
+											"No teeth found"
+										)}
+										disabled={!this.canEdit}
+										value={this.selectedLabwork.involvedTeeth.map(
+											x => ({
+												key: x.toString(),
+												text: x.toString()
+											})
+										)}
+										onChange={selectedKeys => {
+											this.selectedLabwork!.involvedTeeth = selectedKeys.map(
+												x => num(x)
+											);
+										}}
+									/>
+									<br />
+									<TextField
+										label={text("Case Details")}
+										value={this.selectedLabwork.caseDetails}
+										onChange={(ev, val) =>
+											(this.selectedLabwork!.caseDetails = val!)
+										}
+										disabled={!this.canEdit}
+										multiline
+									/>
+									<TagInputComponent
+										label={text("Operating staff")}
+										options={modules
+											.staff!.operatingStaff.sort(
+												(a, b) =>
+													a.name.localeCompare(b.name)
+											)
+											.map(s => {
+												return {
+													key: s._id,
+													text: s.name
+												};
+											})}
+										value={this.selectedLabwork!.operatingStaff.map(
+											x => ({ key: x._id, text: x.name })
+										)}
+										onChange={newKeys => {
+											this.selectedLabwork!.operatingStaffIDs = newKeys;
+										}}
+										disabled={!this.canEdit}
+										suggestionsHeaderText={text(
+											"Operating staff"
+										)}
+										noResultsFoundText={text(
+											"No staff found"
+										)}
+									/>
+								</SectionComponent>
+							) : (
+								""
+							)}
+							{core.router.selectedTab === "lab" ? (
+								<SectionComponent title={text("Lab Details")}>
+									<Row gutter={8}>
+										<Col sm={12}>
+											<TagInputComponent
+												label={text("Laboratory")}
+												loose
+												options={modules
+													.labworks!.docs.map(
+														x => x.labName
+													)
+													.filter(
+														(x, i, a) =>
+															a.indexOf(x) === i
+													)
+													.sort((a, b) =>
+														a.localeCompare(b)
+													)
+													.map(labName => {
+														return {
+															key: labName,
+															text: labName
+														};
+													})}
+												value={
+													this.selectedLabwork.labName
+														? [
+																{
+																	key: this
+																		.selectedLabwork
+																		.labName,
+																	text: this
+																		.selectedLabwork
+																		.labName
+																}
+														  ]
+														: []
+												}
+												onChange={newKeys => {
+													this.selectedLabwork!.labName =
+														newKeys[0] || "";
 
-												if (newKeys[0]) {
-													const sentBefore = modules
-														.labworks!.docs.sort(
-															(a, b) => {
-																return (
-																	b.sentDate -
-																	a.sentDate
-																);
-															}
-														)
-														.find(
-															x =>
-																x.labName ===
-																	this
-																		.selectedLabwork!
-																		.labName &&
-																x._id !==
-																	this
-																		.selectedLabwork!
-																		._id
-														);
+													if (newKeys[0]) {
+														const sentBefore = modules
+															.labworks!.docs.sort(
+																(a, b) => {
+																	return (
+																		b.sentDate -
+																		a.sentDate
+																	);
+																}
+															)
+															.find(
+																x =>
+																	x.labName ===
+																		this
+																			.selectedLabwork!
+																			.labName &&
+																	x._id !==
+																		this
+																			.selectedLabwork!
+																			._id
+															);
 
-													if (sentBefore) {
+														if (sentBefore) {
+															this.selectedLabwork!.labContact =
+																sentBefore.labContact;
+														}
+													} else {
 														this.selectedLabwork!.labContact =
-															sentBefore.labContact;
+															"";
 													}
-												} else {
-													this.selectedLabwork!.labContact =
-														"";
-												}
-											}}
-											maxItems={1}
-											disabled={!this.canEdit}
-											suggestionsHeaderText={text(
-												"Laboratory name"
-											)}
-											noResultsFoundText={text(
-												"No laboratory found"
-											)}
-										/>
-									</Col>
-									<Col sm={12}>
-										<TextField
-											disabled={!this.canEdit}
-											label={text("Lab contact")}
-											value={
-												this.selectedLabwork.labContact
-											}
-											onChange={(e, newVal) => {
-												this.selectedLabwork!.labContact = newVal!;
-											}}
-										/>
-									</Col>
-								</Row>
-								<Row gutter={8}>
-									<Col sm={8}>
-										<div className="m-t-20">
-											<Toggle
-												checked={
-													this.selectedLabwork.isPaid
-												}
-												onText={text("Paid")}
-												offText={text("Not paid")}
-												disabled={!this.canEdit}
-												onChange={(e, newVal) => {
-													this.selectedLabwork!.isPaid = newVal!;
 												}}
-											/>
-											{this.selectedLabwork.isPaid ? (
-												<TextField
-													type="number"
-													disabled={!this.canEdit}
-													label={text("Price")}
-													value={this.selectedLabwork.price.toString()}
-													onChange={(e, newVal) => {
-														this.selectedLabwork!.price = num(
-															newVal!
-														);
-													}}
-													prefix={modules.setting!.getSetting(
-														"currencySymbol"
-													)}
-												/>
-											) : (
-												""
-											)}
-										</div>
-									</Col>
-									<Col sm={8}>
-										<div className="m-t-20">
-											<Toggle
-												checked={
-													this.selectedLabwork.isSent
-												}
-												onText={text("Sent")}
-												offText={text("Not sent")}
+												maxItems={1}
 												disabled={!this.canEdit}
-												onChange={(e, newVal) => {
-													this.selectedLabwork!.isSent = newVal!;
-												}}
+												suggestionsHeaderText={text(
+													"Laboratory name"
+												)}
+												noResultsFoundText={text(
+													"No laboratory found"
+												)}
 											/>
-											{this.selectedLabwork.isSent ? (
-												<DatePicker
-													label={text("Sent date")}
-													disabled={!this.canEdit}
-													placeholder={text(
-														"Select a date"
-													)}
-													value={
-														new Date(
-															this.selectedLabwork.sentDate
-														)
-													}
-													onSelectDate={date => {
-														if (date) {
-															this.selectedLabwork!.sentDate = date.getTime();
-														}
-													}}
-													formatDate={d =>
-														formatDate(
-															d || 0,
-															modules.setting!.getSetting(
-																"date_format"
-															)
-														)
-													}
-												/>
-											) : (
-												""
-											)}
-										</div>
-									</Col>
-									<Col sm={8}>
-										<div className="m-t-20">
-											<Toggle
-												checked={
+										</Col>
+										<Col sm={12}>
+											<TextField
+												disabled={!this.canEdit}
+												label={text("Lab contact")}
+												value={
 													this.selectedLabwork
-														.isReceived
+														.labContact
 												}
-												onText={text("Received")}
-												offText={text("Not received")}
-												disabled={!this.canEdit}
 												onChange={(e, newVal) => {
-													this.selectedLabwork!.isReceived = newVal!;
+													this.selectedLabwork!.labContact = newVal!;
 												}}
 											/>
-											{this.selectedLabwork.isReceived ? (
-												<DatePicker
-													label={text(
-														"Received date"
+										</Col>
+									</Row>
+									<Row gutter={8}>
+										<Col sm={8}>
+											<div className="m-t-20">
+												<Toggle
+													checked={
+														this.selectedLabwork
+															.isPaid
+													}
+													onText={text("Paid")}
+													offText={text("Not paid")}
+													disabled={!this.canEdit}
+													onChange={(e, newVal) => {
+														this.selectedLabwork!.isPaid = newVal!;
+													}}
+												/>
+												{this.selectedLabwork.isPaid ? (
+													<TextField
+														type="number"
+														disabled={!this.canEdit}
+														label={text("Price")}
+														value={this.selectedLabwork.price.toString()}
+														onChange={(
+															e,
+															newVal
+														) => {
+															this.selectedLabwork!.price = num(
+																newVal!
+															);
+														}}
+														prefix={modules.setting!.getSetting(
+															"currencySymbol"
+														)}
+													/>
+												) : (
+													""
+												)}
+											</div>
+										</Col>
+										<Col sm={8}>
+											<div className="m-t-20">
+												<Toggle
+													checked={
+														this.selectedLabwork
+															.isSent
+													}
+													onText={text("Sent")}
+													offText={text("Not sent")}
+													disabled={!this.canEdit}
+													onChange={(e, newVal) => {
+														this.selectedLabwork!.isSent = newVal!;
+													}}
+												/>
+												{this.selectedLabwork.isSent ? (
+													<DatePicker
+														label={text(
+															"Sent date"
+														)}
+														disabled={!this.canEdit}
+														placeholder={text(
+															"Select a date"
+														)}
+														value={
+															new Date(
+																this.selectedLabwork.sentDate
+															)
+														}
+														onSelectDate={date => {
+															if (date) {
+																this.selectedLabwork!.sentDate = date.getTime();
+															}
+														}}
+														formatDate={d =>
+															formatDate(
+																d || 0,
+																modules.setting!.getSetting(
+																	"date_format"
+																)
+															)
+														}
+													/>
+												) : (
+													""
+												)}
+											</div>
+										</Col>
+										<Col sm={8}>
+											<div className="m-t-20">
+												<Toggle
+													checked={
+														this.selectedLabwork
+															.isReceived
+													}
+													onText={text("Received")}
+													offText={text(
+														"Not received"
 													)}
 													disabled={!this.canEdit}
-													placeholder={text(
-														"Select a date"
-													)}
-													value={
-														new Date(
-															this.selectedLabwork.receivedDate
-														)
-													}
-													onSelectDate={date => {
-														if (date) {
-															this.selectedLabwork!.receivedDate = date.getTime();
-														}
+													onChange={(e, newVal) => {
+														this.selectedLabwork!.isReceived = newVal!;
 													}}
-													formatDate={d =>
-														formatDate(
-															d || 0,
-															modules.setting!.getSetting(
-																"date_format"
-															)
-														)
-													}
 												/>
-											) : (
-												""
-											)}
-										</div>
-									</Col>
-								</Row>
-							</SectionComponent>
+												{this.selectedLabwork
+													.isReceived ? (
+													<DatePicker
+														label={text(
+															"Received date"
+														)}
+														disabled={!this.canEdit}
+														placeholder={text(
+															"Select a date"
+														)}
+														value={
+															new Date(
+																this.selectedLabwork.receivedDate
+															)
+														}
+														onSelectDate={date => {
+															if (date) {
+																this.selectedLabwork!.receivedDate = date.getTime();
+															}
+														}}
+														formatDate={d =>
+															formatDate(
+																d || 0,
+																modules.setting!.getSetting(
+																	"date_format"
+																)
+															)
+														}
+													/>
+												) : (
+													""
+												)}
+											</div>
+										</Col>
+									</Row>
+								</SectionComponent>
+							) : (
+								""
+							)}
+							{core.router.selectedTab === "delete" ? (
+								<div>
+									<br />
+									<MessageBar
+										messageBarType={MessageBarType.warning}
+									>
+										{text(
+											"Are you sure you want to delete"
+										)}
+									</MessageBar>
+									<br />
+									<PrimaryButton
+										className="delete"
+										iconProps={{
+											iconName: "delete"
+										}}
+										text={text("Delete")}
+										onClick={() => {
+											modules.labworks!.delete(
+												core.router.selectedID
+											);
+											core.router.unSelect();
+										}}
+									/>
+								</div>
+							) : (
+								""
+							)}
 						</div>
 					</Panel>
 				) : (
