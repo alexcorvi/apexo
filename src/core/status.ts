@@ -323,6 +323,11 @@ export class Status {
 				) {
 					// when server is online but user is invalid
 					this.invalidLogin = true;
+				} else if (
+					serverConnectivityResult &&
+					serverConnectivityResult.name
+				) {
+					this.invalidLogin = false;
 				}
 			}
 			this.initialLoadingIndicatorText = "checking client connectivity";
