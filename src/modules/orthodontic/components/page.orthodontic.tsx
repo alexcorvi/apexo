@@ -2,6 +2,7 @@ import {
 	Col,
 	DataTableComponent,
 	PanelTabs,
+	PanelTop,
 	ProfileComponent,
 	ProfileSquaredComponent,
 	Row,
@@ -595,41 +596,26 @@ export class OrthoPage extends React.Component {
 						}
 						return (
 							<div className="panel-heading">
-								<Row>
-									<Col span={22}>
-										<ProfileComponent
-											name={this.selectedPatient!.name}
-											size={2}
-											avatar={
-												this.selectedPatient!.avatar
-													? imagesTable.table[
-															this
-																.selectedPatient!
-																.avatar
-													  ]
-														? imagesTable.table[
-																this
-																	.selectedPatient!
-																	.avatar
-														  ]
-														: imagesTable.fetchImage(
-																this
-																	.selectedPatient!
-																	.avatar
-														  )
-													: undefined
-											}
-										/>
-									</Col>
-									<Col span={2} className="close">
-										<IconButton
-											iconProps={{ iconName: "cancel" }}
-											onClick={() => {
-												core.router.unSelect();
-											}}
-										/>
-									</Col>
-								</Row>
+								<PanelTop
+									title={this.selectedPatient!.name}
+									type={"Orthodontic case"}
+									onDismiss={() => core.user.hide()}
+									avatar={
+										this.selectedPatient!.avatar
+											? imagesTable.table[
+													this.selectedPatient!.avatar
+											  ]
+												? imagesTable.table[
+														this.selectedPatient!
+															.avatar
+												  ]
+												: imagesTable.fetchImage(
+														this.selectedPatient!
+															.avatar
+												  )
+											: undefined
+									}
+								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
 									onSelect={key => {

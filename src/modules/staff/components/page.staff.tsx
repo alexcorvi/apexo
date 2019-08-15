@@ -2,14 +2,15 @@ import {
 	Col,
 	DataTableComponent,
 	PanelTabs,
+	PanelTop,
 	ProfileComponent,
 	ProfileSquaredComponent,
 	Row,
 	SectionComponent,
 	TableActions
 	} from "@common-components";
-import * as core from "@core";
 import { text } from "@core";
+import * as core from "@core";
 import * as modules from "@modules";
 import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
@@ -337,27 +338,11 @@ export class StaffPage extends React.Component {
 						}}
 						onRenderNavigation={() => (
 							<div className="panel-heading">
-								<Row>
-									<Col span={20}>
-										{this.selectedMember!.name ? (
-											<ProfileComponent
-												name={this.selectedMember!.name}
-												size={2}
-											/>
-										) : (
-											<p />
-										)}
-									</Col>
-									<Col span={4} className="close">
-										<IconButton
-											data-testid="close-panel"
-											iconProps={{ iconName: "cancel" }}
-											onClick={() => {
-												core.router.unSelect();
-											}}
-										/>
-									</Col>
-								</Row>
+								<PanelTop
+									title={this.selectedMember!.name}
+									type={"Staff Member"}
+									onDismiss={() => core.user.hide()}
+								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
 									onSelect={key => {

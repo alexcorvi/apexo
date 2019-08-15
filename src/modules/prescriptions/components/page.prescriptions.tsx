@@ -2,6 +2,7 @@ import {
 	Col,
 	DataTableComponent,
 	PanelTabs,
+	PanelTop,
 	ProfileSquaredComponent,
 	Row,
 	SectionComponent
@@ -15,7 +16,6 @@ import { computed } from "mobx";
 import { observer } from "mobx-react";
 import {
 	Dropdown,
-	IconButton,
 	MessageBar,
 	MessageBarType,
 	Panel,
@@ -149,41 +149,19 @@ export class PrescriptionsPage extends React.Component {
 						}}
 						onRenderNavigation={() => (
 							<div className="panel-heading">
-								<Row>
-									<Col span={20}>
-										{this.selectedPrescription ? (
-											<ProfileSquaredComponent
-												text={
-													this.selectedPrescription
-														.name
-												}
-												subText={`${
-													this.selectedPrescription
-														.doseInMg
-												}${text("mg")} ${
-													this.selectedPrescription
-														.timesPerDay
-												}X${
-													this.selectedPrescription
-														.unitsPerTime
-												} ${text(
-													this.selectedPrescription
-														.form
-												)}`}
-											/>
-										) : (
-											<p />
-										)}
-									</Col>
-									<Col span={4} className="close">
-										<IconButton
-											iconProps={{ iconName: "cancel" }}
-											onClick={() => {
-												core.router.unSelect();
-											}}
-										/>
-									</Col>
-								</Row>
+								<PanelTop
+									title={this.selectedPrescription!.name}
+									type={"Prescription"}
+									subTitle={`${
+										this.selectedPrescription!.doseInMg
+									}${text("mg")} ${
+										this.selectedPrescription!.timesPerDay
+									}X${
+										this.selectedPrescription!.unitsPerTime
+									} ${text(this.selectedPrescription!.form)}`}
+									onDismiss={() => core.user.hide()}
+									square
+								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
 									onSelect={key => core.router.selectTab(key)}

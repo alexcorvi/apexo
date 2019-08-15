@@ -1,4 +1,11 @@
-import { Col, PanelTabs, ProfileComponent, Row, SectionComponent } from "@common-components";
+import {
+	Col,
+	PanelTabs,
+	PanelTop,
+	ProfileComponent,
+	Row,
+	SectionComponent
+	} from "@common-components";
 import { text } from "@core";
 import * as core from "@core";
 import { conditionToColor, Patient, StaffMember, ToothCondition } from "@modules";
@@ -6,6 +13,7 @@ import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
 	Dropdown,
+	Icon,
 	IconButton,
 	Panel,
 	PanelType,
@@ -121,119 +129,103 @@ export class DentalHistoryPanel extends React.Component<
 						</div>
 					)}
 				</div>
+				{this.props.patient.teeth[Number(core.router.selectedSub)] ? (
+					<Panel
+						isOpen={
+							!!this.props.patient.teeth[
+								Number(core.router.selectedSub)
+							]
+						}
+						type={PanelType.smallFixedFar}
+						closeButtonAriaLabel="Close"
+						isLightDismiss={true}
+						onDismiss={() => core.router.unSelectSub()}
+						onRenderNavigation={() => {
+							const tooth = this.props.patient.teeth[
+								Number(core.router.selectedSub)
+							];
 
-				<Panel
-					isOpen={
-						!!this.props.patient.teeth[
-							Number(core.router.selectedSub)
-						]
-					}
-					type={PanelType.smallFixedFar}
-					closeButtonAriaLabel="Close"
-					isLightDismiss={true}
-					onDismiss={() => core.router.unSelectSub()}
-					onRenderNavigation={() => {
-						const tooth = this.props.patient.teeth[
-							Number(core.router.selectedSub)
-						];
+							return (
+								<div className="panel-heading panel-heading-tooth">
+									<PanelTop
+										title={`ISO: ${
+											tooth ? tooth.ISO : ""
+										} - Universal: ${
+											tooth ? tooth.Universal : ""
+										}`}
+										type={tooth.Name}
+										onDismiss={() => core.user.hide()}
+										initials={<Icon iconName="teeth" />}
+										initialsColor={conditionToColor(
+											tooth.condition
+										)}
+										square
+									/>
 
-						return (
-							<div className="panel-heading">
-								<Row>
-									<Col span={22}>
-										<ProfileComponent
-											name={`ISO: ${
-												tooth ? tooth.ISO : ""
-											} - Universal: ${
-												tooth ? tooth.Universal : ""
-											}`}
-											secondaryElement={
-												<span>
-													{tooth
-														? tooth.Name.split(" ")
-																.filter(
-																	(x, i) => i
-																)
-																.join(" ")
-														: ""}
-												</span>
+									<PanelTabs
+										currentSelectedKey={"details"}
+										onSelect={() => {}}
+										items={[
+											{
+												key: "details",
+												icon: "teeth",
+												title: "Tooth Details"
 											}
-											onRenderInitials={() => (
-												<span className="palmer">
-													{tooth ? tooth.Palmer : ""}
-												</span>
-											)}
-											size={2}
-										/>
-									</Col>
-									<Col span={2} className="close">
-										<IconButton
-											iconProps={{ iconName: "cancel" }}
-											onClick={() => {
-												core.router.unSelectSub();
-											}}
-										/>
-									</Col>
-								</Row>
-								<PanelTabs
-									currentSelectedKey={"details"}
-									onSelect={() => {}}
-									items={[
-										{
-											key: "details",
-											icon: "teeth",
-											title: "Tooth Details"
-										}
-									]}
+										]}
+									/>
+								</div>
+							);
+						}}
+					>
+						{this.props.patient.teeth[
+							Number(core.router.selectedSub)
+						] ? (
+							<div className="tooth-details">
+								<Dropdown
+									label={text(`Tooth condition`)}
+									onChange={(ev, newVal: any) => {
+										this.props.patient.teeth[
+											Number(core.router.selectedSub)
+										].condition = newVal.key.toString();
+										this.props.patient.saveToPouch();
+									}}
+									selectedKey={
+										this.props.patient.teeth[
+											Number(core.router.selectedSub)
+										].condition
+									}
+									className="single-tooth-condition"
+									options={Object.keys(ToothCondition).map(
+										c => ({
+											key: c,
+											text: text(c)
+										})
+									)}
+									disabled={!this.canEdit}
+								/>
+								<EditableListComponent
+									label={text("Tooth history")}
+									value={
+										this.props.patient.teeth[
+											Number(core.router.selectedSub)
+										].notes
+									}
+									disabled={!this.canEdit}
+									onChange={e => {
+										this.props.patient.teeth[
+											Number(core.router.selectedSub)
+										].notes = e;
+										this.props.patient.saveToPouch();
+									}}
 								/>
 							</div>
-						);
-					}}
-				>
-					{this.props.patient.teeth[
-						Number(core.router.selectedSub)
-					] ? (
-						<div className="tooth-details">
-							<Dropdown
-								label={text(`Tooth condition`)}
-								onChange={(ev, newVal: any) => {
-									this.props.patient.teeth[
-										Number(core.router.selectedSub)
-									].condition = newVal.key.toString();
-									this.props.patient.saveToPouch();
-								}}
-								selectedKey={
-									this.props.patient.teeth[
-										Number(core.router.selectedSub)
-									].condition
-								}
-								className="single-tooth-condition"
-								options={Object.keys(ToothCondition).map(c => ({
-									key: c,
-									text: text(c)
-								}))}
-								disabled={!this.canEdit}
-							/>
-							<EditableListComponent
-								label={text("Tooth history")}
-								value={
-									this.props.patient.teeth[
-										Number(core.router.selectedSub)
-									].notes
-								}
-								disabled={!this.canEdit}
-								onChange={e => {
-									this.props.patient.teeth[
-										Number(core.router.selectedSub)
-									].notes = e;
-									this.props.patient.saveToPouch();
-								}}
-							/>
-						</div>
-					) : (
-						""
-					)}
-				</Panel>
+						) : (
+							""
+						)}
+					</Panel>
+				) : (
+					""
+				)}
 			</div>
 		);
 	}

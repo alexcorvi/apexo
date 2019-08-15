@@ -2,6 +2,7 @@ import {
 	AppointmentsListNoDate,
 	Col,
 	PanelTabs,
+	PanelTop,
 	ProfileComponent,
 	Row,
 	SectionComponent
@@ -53,45 +54,11 @@ export class UserPanelView extends React.Component {
 				data-testid="user-panel"
 				onRenderNavigation={() => (
 					<div className="panel-heading">
-						<Row>
-							<Col span={20}>
-								<ProfileComponent
-									name={core.user.currentUser!.name}
-									size={3}
-									secondaryElement={
-										<div>
-											<Link
-												onClick={() => {
-													core.status.logout();
-												}}
-												data-testid="logout"
-											>
-												{text("Logout")}
-											</Link>
-											{" / "}
-											<Link
-												className="reset-user"
-												onClick={() => {
-													core.status.resetUser();
-												}}
-												data-testid="switch"
-											>
-												{text("Switch user")}
-											</Link>
-										</div>
-									}
-								/>
-							</Col>
-							<Col span={4} className="close">
-								<IconButton
-									iconProps={{ iconName: "cancel" }}
-									onClick={() => {
-										core.user.hide();
-									}}
-									data-testid="dismiss"
-								/>
-							</Col>
-						</Row>
+						<PanelTop
+							title={core.user.currentUser!.name}
+							type={"Staff member"}
+							onDismiss={() => core.user.hide()}
+						/>
 						<PanelTabs
 							currentSelectedKey={core.router.selectedTab}
 							onSelect={key => {
@@ -104,9 +71,9 @@ export class UserPanelView extends React.Component {
 									title: "Appointments for Today"
 								},
 								{
-									key: "tomorrow",
+									key: "upcoming",
 									icon: "Calendar",
-									title: "Appointments for Tomorrow"
+									title: "Upcoming appointments"
 								},
 								{
 									key: "actions",
@@ -151,14 +118,15 @@ export class UserPanelView extends React.Component {
 					""
 				)}
 
-				{core.router.selectedTab === "tomorrow" ? (
-					<SectionComponent title={text("Appointments for tomorrow")}>
-						{core.user.tomorrowAppointments.length === 0 ? (
+				{core.router.selectedTab === "upcoming" ? (
+					<SectionComponent title={text("All upcoming appointments")}>
+						{core.user.currentUser!.nextAppointments.length ===
+						0 ? (
 							<MessageBar
 								messageBarType={MessageBarType.info}
 								data-testid="no-appointments"
 							>
-								{text("No appointments for tomorrow")}
+								{text("No upcoming appointments")}
 							</MessageBar>
 						) : (
 							<div
@@ -168,7 +136,8 @@ export class UserPanelView extends React.Component {
 								{
 									<AppointmentsListNoDate
 										appointments={
-											core.user.tomorrowAppointments
+											core.user.currentUser!
+												.nextAppointments
 										}
 										onClick={id => {
 											this.selectedAppointmentId = id;

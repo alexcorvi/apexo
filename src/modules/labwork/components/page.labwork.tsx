@@ -3,6 +3,7 @@ import {
 	DataTableComponent,
 	getRandomTagType,
 	PanelTabs,
+	PanelTop,
 	ProfileComponent,
 	ProfileSquaredComponent,
 	Row,
@@ -227,34 +228,17 @@ export class LabworkPage extends React.Component {
 						}}
 						onRenderNavigation={() => (
 							<div className="panel-heading">
-								<Row>
-									<Col span={20}>
-										{this.selectedLabwork ? (
-											<ProfileSquaredComponent
-												text={
-													this.selectedLabwork
-														.caseTitle
-												}
-												subText={
-													this.selectedLabwork.patient
-														? this.selectedLabwork
-																.patient.name
-														: ""
-												}
-											/>
-										) : (
-											<p />
-										)}
-									</Col>
-									<Col span={4} className="close">
-										<IconButton
-											iconProps={{ iconName: "cancel" }}
-											onClick={() => {
-												core.router.unSelect();
-											}}
-										/>
-									</Col>
-								</Row>
+								<PanelTop
+									title={this.selectedLabwork!.caseTitle}
+									type={"Labwork"}
+									subTitle={
+										this.selectedLabwork!.patient
+											? this.selectedLabwork!.patient.name
+											: ""
+									}
+									square
+									onDismiss={() => core.user.hide()}
+								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
 									onSelect={key => core.router.selectTab(key)}

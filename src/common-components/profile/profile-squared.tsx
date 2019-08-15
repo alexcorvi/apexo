@@ -6,10 +6,12 @@ interface Props {
 	text?: string;
 	subText?: string;
 	onRenderInitials?: () => JSX.Element;
-	initialsColor?: PersonaInitialsColor;
+	onRenderPrimaryText?: () => JSX.Element;
+	initialsColor?: PersonaInitialsColor | string;
 	size?: number;
 	onClick?: () => void;
 	className?: string;
+	avatar?: string;
 }
 @observer
 export class ProfileSquaredComponent extends React.Component<Props, {}> {
@@ -22,9 +24,21 @@ export class ProfileSquaredComponent extends React.Component<Props, {}> {
 				text={this.props.text || ""}
 				size={this.props.size || 3}
 				onRenderInitials={this.props.onRenderInitials}
+				imageInitials={
+					this.props.text
+						? this.props.text
+								.split(" ")
+								.filter((x, i) => i < (this.props.size || 3))
+								.map(x => x.charAt(0))
+								.join("")
+								.toUpperCase()
+						: undefined
+				}
 				secondaryText={this.props.subText}
 				onClick={this.props.onClick}
 				initialsColor={this.props.initialsColor}
+				onRenderPrimaryText={this.props.onRenderPrimaryText}
+				imageUrl={this.props.avatar}
 			/>
 		);
 	}

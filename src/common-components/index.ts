@@ -11,3 +11,4 @@ export * from "./page-loader";
 export * from "./table-actions";
 export * from "./panel-tabs";
 export * from "./appointments-lnd";
+export * from "./panel-top";

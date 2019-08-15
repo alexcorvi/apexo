@@ -2,14 +2,15 @@ import {
 	Col,
 	DataTableComponent,
 	PanelTabs,
+	PanelTop,
 	ProfileComponent,
 	ProfileSquaredComponent,
 	Row,
 	TableActions,
 	TagComponent
 	} from "@common-components";
-import { imagesTable, text } from "@core";
 import * as core from "@core";
+import { imagesTable, text } from "@core";
 import { Patient, PatientAppointmentsPanel, PatientGalleryPanel } from "@modules";
 import * as modules from "@modules";
 import { formatDate } from "@utils";
@@ -123,46 +124,32 @@ export class PatientsPage extends React.Component {
 						onRenderNavigation={() => {
 							return (
 								<div className="panel-heading">
-									<Row>
-										<Col span={22}>
-											<ProfileComponent
-												name={
-													this.selectedPatient!.name
-												}
-												size={2}
-												avatar={
-													this.selectedPatient!.avatar
-														? imagesTable.table[
-																this
-																	.selectedPatient!
-																	.avatar
-														  ]
-															? imagesTable.table[
-																	this
-																		.selectedPatient!
-																		.avatar
-															  ]
-															: imagesTable.fetchImage(
-																	this
-																		.selectedPatient!
-																		.avatar
-															  )
-														: undefined
-												}
-											/>
-										</Col>
-										<Col span={2} className="close">
-											<IconButton
-												data-testid="close-panel"
-												iconProps={{
-													iconName: "cancel"
-												}}
-												onClick={() => {
-													core.router.unSelect();
-												}}
-											/>
-										</Col>
-									</Row>
+									<PanelTop
+										title={this.selectedPatient!.name}
+										type={"Patient"}
+										subTitle={`${
+											this.selectedPatient!.gender
+										} - ${this.selectedPatient!.age} years`}
+										onDismiss={() => core.user.hide()}
+										avatar={
+											this.selectedPatient!.avatar
+												? imagesTable.table[
+														this.selectedPatient!
+															.avatar
+												  ]
+													? imagesTable.table[
+															this
+																.selectedPatient!
+																.avatar
+													  ]
+													: imagesTable.fetchImage(
+															this
+																.selectedPatient!
+																.avatar
+													  )
+												: undefined
+										}
+									/>
 									<PanelTabs
 										currentSelectedKey={
 											core.router.selectedTab

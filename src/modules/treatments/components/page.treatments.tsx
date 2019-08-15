@@ -2,6 +2,7 @@ import {
 	Col,
 	DataTableComponent,
 	PanelTabs,
+	PanelTop,
 	ProfileSquaredComponent,
 	Row,
 	SectionComponent
@@ -173,35 +174,18 @@ export class Treatments extends React.Component {
 						}}
 						onRenderNavigation={() => (
 							<div className="panel-heading">
-								<Row>
-									<Col span={20}>
-										{this.selectedTreatment ? (
-											<ProfileSquaredComponent
-												text={
-													this.selectedTreatment.type
-												}
-												subText={`${text(
-													"Expenses"
-												)}: ${modules.setting!.getSetting(
-													"currencySymbol"
-												)}${
-													this.selectedTreatment
-														.expenses
-												} ${text("per unit")}`}
-											/>
-										) : (
-											<p />
-										)}
-									</Col>
-									<Col span={4} className="close">
-										<IconButton
-											iconProps={{ iconName: "cancel" }}
-											onClick={() => {
-												core.router.unSelect();
-											}}
-										/>
-									</Col>
-								</Row>
+								<PanelTop
+									title={this.selectedTreatment!.type}
+									type={"Treatment"}
+									subTitle={`${text(
+										"Expenses"
+									)}: ${modules.setting!.getSetting(
+										"currencySymbol"
+									)}${
+										this.selectedTreatment!.expenses
+									} ${text("per unit")}`}
+									onDismiss={() => core.user.hide()}
+								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
 									onSelect={key => core.router.selectTab(key)}

@@ -6142,6 +6142,9 @@ hr {
 .single-tooth-condition {
   margin-top: 10px; }
 
+.panel-heading-tooth .ms-Persona-initials {
+  color: rgba(0, 0, 0, 0.5); }
+
 .elc-c .new-item {
   margin-bottom: -1.5px !important;
   border-bottom: 0; }
@@ -6806,7 +6809,6 @@ hr {
     .cl-section .cl-section-title:hover {
       color: #004578; }
     .cl-section .cl-section-title.only-title {
-      margin-bottom: 0;
       padding: 0;
       border: none;
       padding-left: 12px; }

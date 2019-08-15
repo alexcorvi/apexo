@@ -1,6 +1,7 @@
 import {
 	Col,
 	PanelTabs,
+	PanelTop,
 	ProfileComponent,
 	ProfileSquaredComponent,
 	Row,
@@ -172,60 +173,35 @@ export class AppointmentEditorPanel extends React.Component<
 				}}
 				onRenderNavigation={() => (
 					<div className="panel-heading">
-						<Row>
-							<Col span={22}>
-								<ProfileComponent
-									name={this.props.appointment!.patient!.name}
-									onRenderPrimaryText={() => (
-										<div>
-											<span>
-												{
-													this.props.appointment!
-														.patient!.name
-												}
-											</span>
-											<br />
-											<i style={{ fontSize: 12 }}>
-												Appointment:{" "}
-												{
-													(
-														this.props.appointment!
-															.treatment || {
-															type: ""
-														}
-													).type
-												}
-											</i>
-										</div>
-									)}
-									size={2}
-									avatar={
-										this.props.appointment!.patient!.avatar
-											? imagesTable.table[
-													this.props.appointment!
-														.patient!.avatar
-											  ]
-												? imagesTable.table[
-														this.props.appointment!
-															.patient!.avatar
-												  ]
-												: imagesTable.fetchImage(
-														this.props.appointment!
-															.patient!.avatar
-												  )
-											: undefined
+						<PanelTop
+							title={
+								(
+									this.props.appointment!.treatment || {
+										type: ""
 									}
-								/>
-							</Col>
-							<Col span={2} className="close">
-								<IconButton
-									iconProps={{ iconName: "cancel" }}
-									onClick={() => {
-										this.props.onDismiss();
-									}}
-								/>
-							</Col>
-						</Row>
+								).type
+							}
+							square
+							type={"Appointment"}
+							subTitle={this.props.appointment!.patient!.name}
+							onDismiss={() => core.user.hide()}
+							avatar={
+								this.props.appointment!.patient!.avatar
+									? imagesTable.table[
+											this.props.appointment!.patient!
+												.avatar
+									  ]
+										? imagesTable.table[
+												this.props.appointment!.patient!
+													.avatar
+										  ]
+										: imagesTable.fetchImage(
+												this.props.appointment!.patient!
+													.avatar
+										  )
+									: undefined
+							}
+						/>
 						<PanelTabs
 							items={this.tabs}
 							onSelect={key => core.router.selectSub(key)}
