@@ -544,8 +544,9 @@ export class AppointmentEditorPanel extends React.Component<
 												{
 													(
 														this.props.appointment!
-															.patient ||
-														modules.patients!.new()
+															.patient || {
+															name: ""
+														}
 													).name
 												}
 											</h3>
@@ -557,8 +558,9 @@ export class AppointmentEditorPanel extends React.Component<
 															(
 																this.props
 																	.appointment!
-																	.patient ||
-																modules.patients!.new()
+																	.patient || {
+																	age: 0
+																}
 															).age
 														}
 													</h4>
@@ -566,14 +568,16 @@ export class AppointmentEditorPanel extends React.Component<
 												<Col span={12}>
 													<h4>
 														Gender:{" "}
-														{(
-															this.props
-																.appointment!
-																.patient ||
-															modules.patients!.new()
-														).gender
-															? "Female"
-															: "Male"}
+														{
+															(
+																this.props
+																	.appointment!
+																	.patient || {
+																	gender:
+																		"male"
+																}
+															).gender
+														}
 													</h4>
 												</Col>
 											</Row>

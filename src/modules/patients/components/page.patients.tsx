@@ -524,6 +524,7 @@ export class PatientsPage extends React.Component {
 										name: text("Add new"),
 										onClick: () => {
 											const patient = modules.patients!.new();
+											patient.fromJSON(patient.toJSON()); // init. teeth
 											modules.patients!.add(patient);
 											core.router.selectID(
 												patient._id,

@@ -170,8 +170,7 @@ export class OrthoPage extends React.Component {
 					rows={modules
 						.orthoCases!.docs.filter(orthoCase => orthoCase.patient)
 						.map(orthoCase => {
-							const patient =
-								orthoCase.patient || modules.patients!.new();
+							const patient = orthoCase.patient!;
 							return {
 								id: orthoCase._id,
 								searchableString: orthoCase.searchableString,
@@ -557,6 +556,7 @@ export class OrthoPage extends React.Component {
 						onClick={() => {
 							const newPatient = modules.patients!.new();
 							newPatient.name = this.newPatientName;
+							newPatient.fromJSON(newPatient.toJSON()); // init. teeth
 							modules.patients!.add(newPatient);
 
 							const orthoCase = modules.orthoCases!.new();

@@ -39,7 +39,7 @@ export class AppointmentsListNoDate extends React.Component<
 
 	rightColumn(appointment: modules.Appointment) {
 		if (this.props.rightColumn === ALRightColumn.patient) {
-			const patient = appointment.patient || modules.patients!.new();
+			const patient = appointment.patient!;
 			return (
 				<div key={patient._id}>
 					<CC.Col xxl={0} xl={0} lg={0} md={0} sm={0} xs={24}>
