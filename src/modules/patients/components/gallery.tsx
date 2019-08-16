@@ -1,4 +1,4 @@
-import { fileTypes, PickAndUploadComponent, SectionComponent } from "@common-components";
+import { Col, fileTypes, PickAndUploadComponent, Row, SectionComponent } from "@common-components";
 import { GALLERIES_DIR, imagesTable, status, text } from "@core";
 import * as core from "@core";
 import { Patient, StaffMember } from "@modules";
@@ -31,118 +31,143 @@ export class PatientGalleryPanel extends React.Component<{
 				{status.isOnline.client ? (
 					status.isOnline.dropbox ? (
 						<div className="spg-p">
-							{this.props.patient.gallery.length === 0 ? (
-								<MessageBar
-									messageBarType={MessageBarType.info}
-								>
-									{text(
-										"This patient does not seem to have any photo record uploaded, press the plus sign button below to start uploading"
-									)}
-								</MessageBar>
-							) : (
-								""
-							)}
-							<br />
-							<div className="thumbs">
-								{this.canEdit ? (
-									this.uploading ? (
-										<Icon
-											iconName="sync"
-											className="rotate"
-											style={{ padding: 10 }}
-										/>
-									) : (
-										<PickAndUploadComponent
-											allowMultiple={true}
-											accept={fileTypes.image}
-											onFinish={paths => {
-												this.props.patient.gallery.push(
-													...paths
+							<Row gutter={8}>
+								<Col xs={6} sm={4} md={3}>
+									<div className="thumbs">
+										{this.canEdit ? (
+											this.uploading ? (
+												<Icon
+													iconName="sync"
+													className="rotate"
+													style={{ padding: 10 }}
+												/>
+											) : (
+												<PickAndUploadComponent
+													allowMultiple={true}
+													accept={fileTypes.image}
+													onFinish={paths => {
+														this.props.patient.gallery.push(
+															...paths
+														);
+														paths.forEach(x =>
+															imagesTable.fetchImage(
+																x
+															)
+														);
+													}}
+													onStartLoading={() => {
+														this.uploading = true;
+													}}
+													onFinishLoading={() => {
+														this.uploading = false;
+													}}
+													targetDir={`${GALLERIES_DIR}/${
+														this.props.patient._id
+													}`}
+												>
+													<TooltipHost
+														content={text(
+															"Add photo"
+														)}
+													>
+														<IconButton
+															className={`add-photo`}
+															iconProps={{
+																iconName:
+																	"Photo2Add"
+															}}
+														/>
+													</TooltipHost>
+												</PickAndUploadComponent>
+											)
+										) : (
+											""
+										)}
+										{this.props.patient.gallery.map(
+											imagePath => {
+												const URI =
+													imagesTable.table[
+														imagePath
+													];
+												return URI ? (
+													<span
+														className={`thumb ${
+															this
+																.selectedImagePath ===
+															imagePath
+																? "selected"
+																: ""
+														}`}
+														key={imagePath}
+														style={{
+															backgroundImage: `url('${
+																URI ? URI : ""
+															}')`
+														}}
+														onClick={() => {
+															this.selectedImagePath = imagePath;
+														}}
+													/>
+												) : (
+													<div
+														key={
+															imagePath +
+															"-placeholder"
+														}
+														className="placeholder"
+													>
+														<Icon
+															iconName="sync"
+															className="rotate"
+														/>
+													</div>
 												);
-												paths.forEach(x =>
-													imagesTable.fetchImage(x)
-												);
-											}}
-											onStartLoading={() => {
-												this.uploading = true;
-											}}
-											onFinishLoading={() => {
-												this.uploading = false;
-											}}
-											targetDir={`${GALLERIES_DIR}/${
-												this.props.patient._id
-											}`}
+											}
+										)}
+									</div>
+								</Col>
+								<Col xs={18} sm={20} md={21}>
+									{this.props.patient.gallery.length === 0 ? (
+										<MessageBar
+											messageBarType={MessageBarType.info}
 										>
-											<TooltipHost
-												content={text("Add photo")}
-											>
+											{text(
+												"This patient does not seem to have any photo record uploaded, press the plus sign button below to start uploading"
+											)}
+										</MessageBar>
+									) : this.selectedImagePath ? (
+										<div className="viewport">
+											<img
+												key={this.selectedImagePath}
+												src={this.selectedImageURI}
+											/>
+											{this.canEdit ? (
 												<IconButton
-													className={`add-photo`}
+													className="delete-photo"
 													iconProps={{
-														iconName: "Photo2Add"
+														iconName: "trash"
+													}}
+													onClick={async () => {
+														await this.removeImage();
+														this.selectedImagePath =
+															"";
 													}}
 												/>
-											</TooltipHost>
-										</PickAndUploadComponent>
-									)
-								) : (
-									""
-								)}
-								{this.props.patient.gallery.map(imagePath => {
-									const URI = imagesTable.table[imagePath];
-									return URI ? (
-										<span
-											className={`thumb ${
-												this.selectedImagePath ===
-												imagePath
-													? "selected"
-													: ""
-											}`}
-											key={imagePath}
-											style={{
-												backgroundImage: `url('${
-													URI ? URI : ""
-												}')`
-											}}
-											onClick={() => {
-												this.selectedImagePath = imagePath;
-											}}
-										/>
-									) : (
-										<div
-											key={imagePath + "-placeholder"}
-											className="placeholder"
-										>
-											<Icon
-												iconName="sync"
-												className="rotate"
-											/>
+											) : (
+												""
+											)}
 										</div>
-									);
-								})}
-							</div>
-							{this.selectedImagePath ? (
-								<div className="viewport">
-									<img
-										key={this.selectedImagePath}
-										src={this.selectedImageURI}
-									/>
-									{this.canEdit ? (
-										<IconButton
-											className="delete-photo"
-											iconProps={{ iconName: "trash" }}
-											onClick={async () => {
-												await this.removeImage();
-												this.selectedImagePath = "";
-											}}
-										/>
 									) : (
-										""
+										<MessageBar
+											messageBarType={MessageBarType.info}
+										>
+											{text(
+												"Click a thumbnail to expand it"
+											)}
+										</MessageBar>
 									)}
-								</div>
-							) : (
-								""
-							)}
+								</Col>
+							</Row>
 						</div>
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
