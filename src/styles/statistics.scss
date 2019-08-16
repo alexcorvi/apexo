@@ -1,5 +1,21 @@
 @import "./global-styles/shadows.scss";
 .sc-pg {
+	.dt-msg-bar {
+		display: none;
+	}
+
+	.totals {
+		background: #f5f5f5;
+		text-align: center;
+		border-bottom: 1px solid #f5f5f5;
+		label {
+			font-weight: 400;
+		}
+		.label {
+			padding: 5px;
+		}
+	}
+
 	.ms-CommandBar-primaryCommand {
 		& > div {
 			margin-top: 4px;
@@ -67,6 +83,14 @@
 					padding-top: 0;
 				}
 			}
+		}
+	}
+}
+
+@media screen and (max-width: 999px) {
+	.sc-pg {
+		.appointments-data-table {
+			display: none;
 		}
 	}
 }

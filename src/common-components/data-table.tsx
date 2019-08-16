@@ -254,13 +254,19 @@ export class DataTableComponent extends React.Component<Props, {}> {
 				)}
 
 				{this.props.rows.length === 0 ? (
-					<MessageBar messageBarType={MessageBarType.info}>
+					<MessageBar
+						className="dt-msg-bar"
+						messageBarType={MessageBarType.info}
+					>
 						{core.text(
 							"No data in this section yet, you can add new data by clicking the button above"
 						)}
 					</MessageBar>
 				) : this.filteredRows.length === 0 ? (
-					<MessageBar messageBarType={MessageBarType.info}>
+					<MessageBar
+						className="dt-msg-bar"
+						messageBarType={MessageBarType.info}
+					>
 						{core.text(
 							"Did not find anything that matches your search criteria"
 						)}

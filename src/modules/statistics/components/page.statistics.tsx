@@ -15,7 +15,7 @@ import { Appointment } from "@modules";
 import { formatDate, round } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { DatePicker, Dropdown, Label, Shimmer } from "office-ui-fabric-react";
+import { DatePicker, Dropdown, Icon, Label, Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
 const AppointmentEditorPanel = loadable({
@@ -86,136 +86,157 @@ export class StatisticsPage extends React.Component {
 						text("Expenses"),
 						text("Profits")
 					]}
-					rows={modules.statistics.selectedAppointments.map(
-						appointment => ({
-							id: appointment._id,
-							searchableString: appointment.searchableString,
-							cells: [
-								{
-									dataValue: (
-										appointment.patient ||
-										modules.patients!.new()
-									).name,
-									component: (
-										<ProfileComponent
-											secondaryElement={
-												<span>
-													{formatDate(
-														appointment.date,
-														modules.setting!.getSetting(
-															"date_format"
-														)
-													)}{" "}
-													/{" "}
-													{appointment.operatingStaff.map(
-														x => (
-															<i key={x._id}>
-																{x.name}{" "}
-															</i>
-														)
-													)}
-												</span>
-											}
-											name={
-												(
-													appointment!.patient ||
-													modules.patients!.new()
-												).name
-											}
-											size={3}
-										/>
-									),
-									onClick: () => {
-										core.router.selectID(appointment._id);
-										setTimeout(
-											() =>
-												core.router.selectSub(
-													"details"
+					rows={
+						core.router.innerWidth > 999
+							? modules.statistics.selectedAppointments.map(
+									appointment => ({
+										id: appointment._id,
+										searchableString:
+											appointment.searchableString,
+										cells: [
+											{
+												dataValue: (
+													appointment.patient || {
+														name: ""
+													}
+												).name,
+												component: (
+													<ProfileComponent
+														secondaryElement={
+															<span>
+																{formatDate(
+																	appointment.date,
+																	modules.setting!.getSetting(
+																		"date_format"
+																	)
+																)}{" "}
+																/{" "}
+																{appointment.operatingStaff.map(
+																	x => (
+																		<i
+																			key={
+																				x._id
+																			}
+																		>
+																			{
+																				x.name
+																			}{" "}
+																		</i>
+																	)
+																)}
+															</span>
+														}
+														name={
+															(
+																appointment!
+																	.patient || {
+																	name: ""
+																}
+															).name
+														}
+														size={3}
+													/>
 												),
-											100
-										);
-									},
-									className: "no-label"
-								},
-								{
-									dataValue: appointment.treatmentID,
-									component: (
-										<ProfileSquaredComponent
-											text={
-												appointment.treatment
-													? appointment.treatment.type
-													: ""
+												onClick: () => {
+													core.router.selectID(
+														appointment._id
+													);
+													setTimeout(
+														() =>
+															core.router.selectSub(
+																"details"
+															),
+														100
+													);
+												},
+												className: "no-label"
+											},
+											{
+												dataValue:
+													appointment.treatmentID,
+												component: (
+													<ProfileSquaredComponent
+														text={
+															appointment.treatment
+																? appointment
+																		.treatment
+																		.type
+																: ""
+														}
+														subText={formatDate(
+															appointment.date,
+															modules.setting!.getSetting(
+																"date_format"
+															)
+														)}
+														size={3}
+													/>
+												),
+												className: "hidden-xs"
+											},
+											{
+												dataValue:
+													appointment.paidAmount,
+												component: (
+													<span>
+														{modules.setting!.getSetting(
+															"currencySymbol"
+														) +
+															round(
+																appointment.paidAmount
+															).toString()}
+													</span>
+												),
+												className: "hidden-xs"
+											},
+											{
+												dataValue:
+													appointment.outstandingAmount,
+												component: (
+													<span>
+														{modules.setting!.getSetting(
+															"currencySymbol"
+														) +
+															round(
+																appointment.outstandingAmount
+															).toString()}
+													</span>
+												),
+												className: "hidden-xs"
+											},
+											{
+												dataValue: appointment.expenses,
+												component: (
+													<span>
+														{modules.setting!.getSetting(
+															"currencySymbol"
+														) +
+															round(
+																appointment.expenses
+															).toString()}
+													</span>
+												),
+												className: "hidden-xs"
+											},
+											{
+												dataValue: appointment.profit,
+												component: (
+													<span>
+														{modules.setting!.getSetting(
+															"currencySymbol"
+														) +
+															round(
+																appointment.profit
+															).toString()}
+													</span>
+												),
+												className: "hidden-xs"
 											}
-											subText={formatDate(
-												appointment.date,
-												modules.setting!.getSetting(
-													"date_format"
-												)
-											)}
-											size={3}
-										/>
-									),
-									className: "hidden-xs"
-								},
-								{
-									dataValue: appointment.paidAmount,
-									component: (
-										<span>
-											{modules.setting!.getSetting(
-												"currencySymbol"
-											) +
-												round(
-													appointment.paidAmount
-												).toString()}
-										</span>
-									),
-									className: "hidden-xs"
-								},
-								{
-									dataValue: appointment.outstandingAmount,
-									component: (
-										<span>
-											{modules.setting!.getSetting(
-												"currencySymbol"
-											) +
-												round(
-													appointment.outstandingAmount
-												).toString()}
-										</span>
-									),
-									className: "hidden-xs"
-								},
-								{
-									dataValue: appointment.expenses,
-									component: (
-										<span>
-											{modules.setting!.getSetting(
-												"currencySymbol"
-											) +
-												round(
-													appointment.expenses
-												).toString()}
-										</span>
-									),
-									className: "hidden-xs"
-								},
-								{
-									dataValue: appointment.profit,
-									component: (
-										<span>
-											{modules.setting!.getSetting(
-												"currencySymbol"
-											) +
-												round(
-													appointment.profit
-												).toString()}
-										</span>
-									),
-									className: "hidden-xs"
-								}
-							]
-						})
-					)}
+										]
+									})
+							  )
+							: []
+					}
 					farItems={[
 						{
 							key: "1",
@@ -316,71 +337,69 @@ export class StatisticsPage extends React.Component {
 					""
 				)}
 
-				<div className="container-fluid m-t-20 quick">
-					<SectionComponent title={text("Quick stats")}>
-						<Row>
-							<Col sm={6} xs={12}>
-								<Label>
-									{text("Appointments")}:{" "}
-									<TagComponent
-										text={round(
-											modules.statistics
-												.selectedAppointments.length
-										).toString()}
-										type={tagType.primary}
-									/>
-								</Label>
-							</Col>
-							<Col sm={6} xs={12}>
-								<Label>
-									{text("Payments")}:{" "}
-									<TagComponent
-										text={
-											modules.setting!.getSetting(
-												"currencySymbol"
-											) +
-											round(
-												modules.statistics.totalPayments
-											).toString()
-										}
-										type={tagType.warning}
-									/>
-								</Label>
-							</Col>
-							<Col sm={6} xs={12}>
-								<Label>
-									{text("Expenses")}:{" "}
-									<TagComponent
-										text={
-											modules.setting!.getSetting(
-												"currencySymbol"
-											) +
-											round(
-												modules.statistics.totalExpenses
-											).toString()
-										}
-										type={tagType.danger}
-									/>
-								</Label>
-							</Col>
-							<Col sm={6} xs={12}>
-								<Label>
-									{text("Profits")}:{" "}
-									<TagComponent
-										text={
-											modules.setting!.getSetting(
-												"currencySymbol"
-											) +
-											round(
-												modules.statistics.totalProfits
-											).toString()
-										}
-										type={tagType.success}
-									/>
-								</Label>
-							</Col>
-						</Row>
-					</SectionComponent>
+				<div className="totals">
+					<Row>
+						<Col sm={6} xs={12}>
+							<Label>
+								{text("Appointments")}:{" "}
+								<TagComponent
+									text={round(
+										modules.statistics.selectedAppointments
+											.length
+									).toString()}
+									type={tagType.primary}
+								/>
+							</Label>
+						</Col>
+						<Col sm={6} xs={12}>
+							<Label>
+								{text("Payments")}:{" "}
+								<TagComponent
+									text={
+										modules.setting!.getSetting(
+											"currencySymbol"
+										) +
+										round(
+											modules.statistics.totalPayments
+										).toString()
+									}
+									type={tagType.warning}
+								/>
+							</Label>
+						</Col>
+						<Col sm={6} xs={12}>
+							<Label>
+								{text("Expenses")}:{" "}
+								<TagComponent
+									text={
+										modules.setting!.getSetting(
+											"currencySymbol"
+										) +
+										round(
+											modules.statistics.totalExpenses
+										).toString()
+									}
+									type={tagType.danger}
+								/>
+							</Label>
+						</Col>
+						<Col sm={6} xs={12}>
+							<Label>
+								{text("Profits")}:{" "}
+								<TagComponent
+									text={
+										modules.setting!.getSetting(
+											"currencySymbol"
+										) +
+										round(
+											modules.statistics.totalProfits
+										).toString()
+									}
+									type={tagType.success}
+								/>
+							</Label>
+						</Col>
+					</Row>
 				</div>
 
 				<div className="charts container-fluid">
