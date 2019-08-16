@@ -49,7 +49,7 @@ class Statistics {
 				let male = 0;
 				let female = 0;
 				if (
-					(appointment.patient || modules.patients!.new()).gender ===
+					(appointment.patient || { gender: "male" }).gender ===
 					gender.female
 				) {
 					female++;

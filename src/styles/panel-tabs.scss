@@ -6,8 +6,23 @@
 	padding-right: 25px;
 	.ms-Pivot {
 		margin-bottom: -15px;
+	}
+	.ms-Pivot-linkContent {
+		line-height: 1.5;
+	}
+}
+
+@media (max-width: 400px), (min-width: 480px) and (max-width: 640px) {
+	.panel-tabs .ms-Pivot {
 		.ms-Pivot-link {
-			font-size: 13px;
+			font-size: 0;
+			.ms-Pivot-icon {
+				font-size: 16px;
+				line-height: 3.5em;
+			}
+			.ms-Pivot-text {
+				margin-left: 0;
+			}
 		}
 	}
 }

@@ -87,7 +87,7 @@ export class PatientsPage extends React.Component {
 			},
 			{
 				key: "gallery",
-				title: "Gallery and X-Rays",
+				title: "Gallery",
 				icon: "PhotoCollection",
 				bubbleContent: patient.gallery.length
 			},

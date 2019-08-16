@@ -118,7 +118,7 @@ export class OrthoPage extends React.Component {
 			},
 			{
 				key: "sheet",
-				title: "Orthodontic Case Sheet",
+				title: "Case Sheet",
 				icon: "GroupedList",
 				bubbleContent:
 					orthoCase.computedProblems.length +
@@ -132,7 +132,7 @@ export class OrthoPage extends React.Component {
 			},
 			{
 				key: "gallery",
-				title: "Gallery and X-Rays",
+				title: "Gallery",
 				icon: "PhotoCollection",
 				bubbleContent:
 					orthoCase.patient!.gallery.length +
@@ -140,7 +140,7 @@ export class OrthoPage extends React.Component {
 			},
 			{
 				key: "appointments",
-				title: "Upcoming Appointments",
+				title: "Appointments",
 				icon: "Calendar",
 				hidden: !core.user.currentUser!.canViewAppointments,
 				bubbleContent: orthoCase.patient!.appointments.length
