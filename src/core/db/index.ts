@@ -104,20 +104,13 @@ export async function connect<S>(dbName: string) {
 	compressDB(localDatabase);
 	encryptDB(localDatabase, unique);
 
-	let noServerMode = false;
-	if (status.server.indexOf("no-server-mode") !== -1) {
-		noServerMode = true;
-	}
-
-	const remoteDatabase = noServerMode
-		? null
-		: new PouchDB(`${status.server}/${dbName}`, {
-				fetch: (url, opts) =>
-					PouchDB.fetch(url, {
-						...opts,
-						credentials: "include"
-					})
-		  });
+	const remoteDatabase = new PouchDB(`${status.server}/${dbName}`, {
+		fetch: (url, opts) =>
+			PouchDB.fetch(url, {
+				...opts,
+				credentials: "include"
+			})
+	});
 
 	// preventing duplicates
 	const oldIndex = DBNames.indexOf(dbName);

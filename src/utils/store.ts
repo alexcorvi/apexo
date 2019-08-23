@@ -4,7 +4,6 @@ export const dict = {
 	LSL_hash: "", // when truly logging in
 	LSL_TS: "", // when starting
 	user_id: "", // current user ID
-	no_server_mode: "", // is in no-server-mode
 	server_location: "" // current server location
 };
 

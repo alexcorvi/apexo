@@ -30,8 +30,7 @@ export enum LoginType {
 	initialActiveSession = "initial-active-session",
 	initialLSLHashTS = "initial-lsl-hash-ts",
 	loginCredentialsOnline = "login-credentials-online",
-	loginCredentialsOffline = "login-credentials-offline",
-	noServer = "no-server"
+	loginCredentialsOffline = "login-credentials-offline"
 }
 
 export class Status {
@@ -69,12 +68,6 @@ export class Status {
 		if (demoHosts.indexOf(location.host) !== -1) {
 			console.log("Login: Demo mode");
 			return await this.startDemoServer();
-		}
-
-		// if we're running on no server mode
-		if (store.found("no_server_mode")) {
-			console.log("Login: No server mode");
-			return await this.startNoServer();
 		}
 
 		this.initialLoadingIndicatorText = "checking online status";
@@ -201,22 +194,7 @@ export class Status {
 	}
 
 	async startDemoServer() {
-		await this.startNoServer();
 		(await import("core/demo")).loadDemoData();
-	}
-
-	async startNoServer() {
-		this.isOnline = {
-			server: false,
-			client: false,
-			dropbox: false
-		};
-		this.keepServerOffline = true;
-		this.loginType = LoginType.noServer;
-		await this.start({
-			server: "http://apexo-no-server-mode"
-		});
-		store.set("no_server_mode", "true");
 	}
 
 	async start({ server }: { server: string }) {

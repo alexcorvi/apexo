@@ -95,16 +95,6 @@ export class LoginView extends React.Component {
 								iconName: "Sync"
 							}}
 						/>
-						<DefaultButton
-							text="no-server mode"
-							className="no-server-mode m-t-15 m-b-15 m-r-5"
-							onClick={() => {
-								core.status.startNoServer();
-							}}
-							iconProps={{
-								iconName: "StatusErrorFull"
-							}}
-						/>
 					</div>
 				) : (
 					<div className="login-forum">
@@ -205,15 +195,6 @@ export class LoginView extends React.Component {
 								) : (
 									""
 								)}
-								<DefaultButton
-									onClick={() => core.status.startNoServer()}
-									className="no-server-mode m-t-15 m-b-15 m-l-5 m-r-5"
-									iconProps={{
-										iconName: "StatusErrorFull"
-									}}
-								>
-									no-server mode
-								</DefaultButton>
 							</div>
 						) : (
 							<div className="spinner-container">
