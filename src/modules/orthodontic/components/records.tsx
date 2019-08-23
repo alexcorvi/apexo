@@ -6,18 +6,11 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import {
-	files,
-	modals,
-	ORTHO_RECORDS_DIR,
-	status,
-	text,
-	user
-	} from "@core";
-import { OrthoCase, Photo, setting, Visit } from "@modules";
+import { imagesTable, ModalInterface, ORTHO_RECORDS_DIR, status, text } from "@core";
+import * as core from "@core";
+import { OrthoCase, Photo, StaffMember, Visit } from "@modules";
+import * as modules from "@modules";
 import { day, formatDate, num } from "@utils";
-import { EditableListComponent } from "common-components/editable-list/editable-list";
-import { diff } from "fast-array-diff";
 import { computed, observable, observe } from "mobx";
 import { observer } from "mobx-react";
 import {
@@ -31,11 +24,19 @@ import {
 	MessageBar,
 	MessageBarType,
 	SelectionMode,
+	Shimmer,
 	TextField,
 	Toggle,
 	TooltipHost
 	} from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const EditableListComponent = loadable({
+	loading: () => <Shimmer />,
+	loader: async () =>
+		(await import("common-components/editable-list")).EditableListComponent
+});
 
 const viewsTerms = [
 	"Frontal",
@@ -56,8 +57,6 @@ export class OrthoRecordsPanel extends React.Component<{
 
 	@observable uploadingPhotoID: string = "";
 
-	@observable imagesTable: { [key: string]: string } = {};
-
 	@observable showGrid: boolean = false;
 
 	@observable overlayWithPrev: boolean = false;
@@ -66,19 +65,24 @@ export class OrthoRecordsPanel extends React.Component<{
 	@observable openCallouts: string[] = [];
 
 	@computed get canEdit() {
-		return user.currentUser.canEditOrtho;
+		return core.user.currentUser!.canEditOrtho;
 	}
 
-	@computed get dates() {
+	@computed get patientAppointments() {
 		if (!this.props.orthoCase.patient) {
 			return [];
 		}
 		return this.props.orthoCase.patient.appointments
 			.map(appointment => ({
 				date: appointment.date,
-				treatmentType: (appointment.treatment || { type: "" }).type
+				treatmentType: (appointment.treatment || { type: "" }).type,
+				appointment
 			}))
 			.sort((a, b) => b.date - a.date);
+	}
+
+	@computed get patientDoneAppointments() {
+		return this.patientAppointments.filter(x => x.appointment.isDone);
 	}
 
 	@computed get allImages() {
@@ -98,43 +102,17 @@ export class OrthoRecordsPanel extends React.Component<{
 
 	componentDidMount() {
 		this.allImages.forEach(async path => {
-			await this.addImage(path);
+			await imagesTable.fetchImage(path);
 		});
-		this.stopObservation = this.observe();
 	}
 
 	componentWillUnmount() {
 		this.stopObservation();
 	}
 
-	async addImage(path: string) {
-		this.imagesTable[path] = "";
-		const uri = await files.get(path);
-		this.imagesTable[path] = uri;
-		return;
-	}
-
 	async removeImage(path: string) {
-		await files.remove(path);
-		delete this.imagesTable[path];
+		await core.files.remove(path);
 		return;
-	}
-
-	observe() {
-		return observe(this.props.orthoCase, change => {
-			if (change.name === "visits") {
-				const diffResult = diff(
-					Object.keys(this.imagesTable).sort(),
-					this.allImages.sort()
-				);
-				diffResult.added.forEach(path => {
-					this.addImage(path);
-				});
-				diffResult.removed.forEach(path => {
-					this.removeImage(path);
-				});
-			}
-		});
 	}
 
 	render() {
@@ -179,13 +157,12 @@ export class OrthoRecordsPanel extends React.Component<{
 						value={this.props.orthoCase.treatmentPlan_appliance}
 						onChange={val => {
 							this.props.orthoCase.treatmentPlan_appliance = val;
-							this.tu();
 						}}
 						disabled={!this.canEdit}
 					/>
 				</SectionComponent>
 				<SectionComponent title={text(`Started/Finished`)}>
-					<Row gutter={12}>
+					<Row gutter={8}>
 						<Col span={12}>
 							<Toggle
 								onText={text("Started")}
@@ -199,21 +176,25 @@ export class OrthoRecordsPanel extends React.Component<{
 							{this.props.orthoCase.isStarted ? (
 								<Dropdown
 									selectedKey={this.props.orthoCase.startedDate.toString()}
-									options={this.dates.map(date => {
-										return {
-											key: date.date.toString(),
-											text: `${formatDate(
-												date.date,
-												setting.getSetting(
-													"date_format"
-												)
-											)} ${
-												date.treatmentType
-													? `, ${date.treatmentType}`
-													: ""
-											}`
-										};
-									})}
+									options={this.patientDoneAppointments.map(
+										date => {
+											return {
+												key: date.date.toString(),
+												text: `${formatDate(
+													date.date,
+													modules.setting!.getSetting(
+														"date_format"
+													)
+												)} ${
+													date.treatmentType
+														? `, ${
+																date.treatmentType
+														  }`
+														: ""
+												}`
+											};
+										}
+									)}
 									disabled={!this.canEdit}
 									onChange={(ev, newValue) => {
 										this.props.orthoCase.startedDate = num(
@@ -238,21 +219,25 @@ export class OrthoRecordsPanel extends React.Component<{
 							{this.props.orthoCase.isFinished ? (
 								<Dropdown
 									selectedKey={this.props.orthoCase.finishedDate.toString()}
-									options={this.dates.map(date => {
-										return {
-											key: date.date.toString(),
-											text: `${formatDate(
-												date.date,
-												setting.getSetting(
-													"date_format"
-												)
-											)} ${
-												date.treatmentType
-													? `, ${date.treatmentType}`
-													: ""
-											}`
-										};
-									})}
+									options={this.patientDoneAppointments.map(
+										date => {
+											return {
+												key: date.date.toString(),
+												text: `${formatDate(
+													date.date,
+													modules.setting!.getSetting(
+														"date_format"
+													)
+												)} ${
+													date.treatmentType
+														? `, ${
+																date.treatmentType
+														  }`
+														: ""
+												}`
+											};
+										}
+									)}
 									disabled={!this.canEdit}
 									onChange={(ev, newValue) => {
 										this.props.orthoCase.finishedDate = num(
@@ -267,8 +252,8 @@ export class OrthoRecordsPanel extends React.Component<{
 					</Row>
 				</SectionComponent>
 				<SectionComponent title={text(`Records`)}>
-					{status.online ? (
-						status.dropboxActive ? (
+					{status.isOnline.client ? (
+						status.isOnline.dropbox ? (
 							<div className="album">
 								{this.props.orthoCase.visits.length ? (
 									<table>
@@ -407,7 +392,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																			visit.visitNumber
 																		}, ${formatDate(
 																			visit.date,
-																			setting.getSetting(
+																			modules.setting!.getSetting(
 																				"date_format"
 																			)
 																		)}`}
@@ -476,7 +461,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																									].visitNumber = num(
 																										val!
 																									);
-																									this.tu();
 																								}}
 																							/>
 																						) : (
@@ -502,13 +486,13 @@ export class OrthoRecordsPanel extends React.Component<{
 																									!this
 																										.canEdit
 																								}
-																								options={this.dates.map(
+																								options={this.patientDoneAppointments.map(
 																									date => {
 																										return {
 																											key: date.date.toString(),
 																											text: `${formatDate(
 																												date.date,
-																												setting.getSetting(
+																												modules.setting!.getSetting(
 																													"date_format"
 																												)
 																											)} ${
@@ -531,7 +515,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																										newValue!
 																											.key
 																									);
-																									this.tu();
 																								}}
 																							/>
 																						) : (
@@ -539,7 +522,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																								"Date"
 																							)}: ${formatDate(
 																								visit.date,
-																								setting.getSetting(
+																								modules.setting!.getSetting(
 																									"date_format"
 																								)
 																							)}`
@@ -575,7 +558,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																									this.props.orthoCase.visits[
 																										visitIndex
 																									].appliance = val!;
-																									this.tu();
 																								}}
 																							/>
 																						) : (
@@ -586,6 +568,50 @@ export class OrthoRecordsPanel extends React.Component<{
 																									? visit.appliance
 																									: text(
 																											"No appliance info"
+																									  )
+																							}`
+																						)}
+																					</div>
+																				],
+																				[
+																					<div id="gf-target">
+																						{this
+																							.expandedField ===
+																						"gf-target" ? (
+																							<TextField
+																								autoFocus
+																								label={text(
+																									`Target & expectations`
+																								)}
+																								disabled={
+																									!this
+																										.canEdit
+																								}
+																								value={
+																									visit.target
+																								}
+																								onBlur={() => {
+																									this.expandedField =
+																										"";
+																								}}
+																								multiline
+																								onChange={(
+																									ev,
+																									val
+																								) => {
+																									this.props.orthoCase.visits[
+																										visitIndex
+																									].target = val!;
+																								}}
+																							/>
+																						) : (
+																							`${text(
+																								"Target & expectations"
+																							)}: ${
+																								visit.target
+																									? visit.target
+																									: text(
+																											"No target info"
 																									  )
 																							}`
 																						)}
@@ -636,8 +662,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																				this
 																					.zoomedColumn ===
 																					photoIndex &&
-																				this
-																					.imagesTable[
+																				imagesTable
+																					.table[
 																					photo
 																						.photoID
 																				] ? (
@@ -646,8 +672,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																					""
 																				)}
 																				{photo.photoID ? (
-																					this
-																						.imagesTable[
+																					imagesTable
+																						.table[
 																						photo
 																							.photoID
 																					] ? (
@@ -671,8 +697,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																										"100%"
 																								}}
 																								src={
-																									this
-																										.imagesTable[
+																									imagesTable
+																										.table[
 																										photo
 																											.photoID
 																									]
@@ -707,8 +733,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																													"100%"
 																											}}
 																											src={
-																												this
-																													.imagesTable[
+																												imagesTable
+																													.table[
 																													photo
 																														.photoID
 																												]
@@ -719,8 +745,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																											<img
 																												className="overlay-img"
 																												src={
-																													this
-																														.imagesTable[
+																													imagesTable
+																														.table[
 																														nextVisit
 																															.photos[
 																															photoIndex
@@ -737,8 +763,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																											<img
 																												className="overlay-img"
 																												src={
-																													this
-																														.imagesTable[
+																													imagesTable
+																														.table[
 																														prevVisit
 																															.photos[
 																															photoIndex
@@ -784,7 +810,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																																].visitNumber = num(
 																																	val!
 																																);
-																																this.tu();
 																															}}
 																														/>
 																													) : (
@@ -810,13 +835,13 @@ export class OrthoRecordsPanel extends React.Component<{
 																																	.canEdit
 																															}
 																															selectedKey={visit.date.toString()}
-																															options={this.dates.map(
+																															options={this.patientDoneAppointments.map(
 																																date => {
 																																	return {
 																																		key: date.date.toString(),
 																																		text: `${formatDate(
 																																			date.date,
-																																			setting.getSetting(
+																																			modules.setting!.getSetting(
 																																				"date_format"
 																																			)
 																																		)} ${
@@ -839,7 +864,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																																	newValue!
 																																		.key
 																																);
-																																this.tu();
 																															}}
 																														/>
 																													) : (
@@ -847,7 +871,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																															"Date"
 																														)}: ${formatDate(
 																															visit.date,
-																															setting.getSetting(
+																															modules.setting!.getSetting(
 																																"date_format"
 																															)
 																														)}`
@@ -883,7 +907,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																																this.props.orthoCase.visits[
 																																	visitIndex
 																																].appliance = val!;
-																																this.tu();
 																															}}
 																														/>
 																													) : (
@@ -930,7 +953,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																																].photos[
 																																	photoIndex
 																																].comment = val!;
-																																this.tu();
 																															}}
 																														/>
 																													) : (
@@ -978,8 +1000,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																													this.overlayWithPrev = !this
 																														.overlayWithPrev;
 																												},
-																												hidden: !this
-																													.imagesTable[
+																												hidden: !imagesTable
+																													.table[
 																													prevVisit
 																														.photos[
 																														photoIndex
@@ -1005,8 +1027,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																													this.overlayWithNext = !this
 																														.overlayWithNext;
 																												},
-																												hidden: !this
-																													.imagesTable[
+																												hidden: !imagesTable
+																													.table[
 																													nextVisit
 																														.photos[
 																														photoIndex
@@ -1029,6 +1051,18 @@ export class OrthoRecordsPanel extends React.Component<{
 																												disabled: !this
 																													.canEdit,
 																												onClick: () => {
+																													this.removeImage(
+																														this
+																															.props
+																															.orthoCase
+																															.visits[
+																															visitIndex
+																														]
+																															.photos[
+																															photoIndex
+																														]
+																															.photoID
+																													);
 																													this.props.orthoCase.visits[
 																														visitIndex
 																													].photos[
@@ -1036,7 +1070,6 @@ export class OrthoRecordsPanel extends React.Component<{
 																													] = new Photo();
 																													this.selectedPhotoId =
 																														"";
-																													this.tu();
 																												}
 																											}
 																										]}
@@ -1059,14 +1092,15 @@ export class OrthoRecordsPanel extends React.Component<{
 																							allowMultiple: false,
 																							accept:
 																								fileTypes.image,
-																							prevSrc: this
-																								.imagesTable[
-																								prevVisit
-																									.photos[
-																									photoIndex
-																								]
-																									.photoID
-																							],
+																							prevSrc:
+																								imagesTable
+																									.table[
+																									prevVisit
+																										.photos[
+																										photoIndex
+																									]
+																										.photoID
+																								],
 																							disabled: !this
 																								.canEdit,
 																							onFinish: e => {
@@ -1079,7 +1113,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																										photoIndex
 																									].photoID =
 																										e[0];
-																									this.tu();
+																									imagesTable.fetchImage(
+																										e[0]
+																									);
 																								}
 																							},
 																							onStartLoading: () => {
@@ -1141,17 +1177,22 @@ export class OrthoRecordsPanel extends React.Component<{
 																					"DeleteRows"
 																			}}
 																			onClick={() => {
-																				modals.newModal(
+																				core.modals.newModal(
 																					{
-																						message: text(
+																						text: text(
 																							"This visit data will be deleted along with all photos and notes"
 																						),
 																						onConfirm: () => {
-																							this.props.orthoCase.visits.splice(
+																							const deletedVisit = this.props.orthoCase.visits.splice(
 																								visitIndex,
 																								1
 																							);
-																							this.tu();
+																							deletedVisit[0].photos.forEach(
+																								photo =>
+																									this.removeImage(
+																										photo.photoID
+																									)
+																							);
 																						},
 																						showCancelButton: true,
 																						showConfirmButton: true,
@@ -1220,9 +1261,10 @@ export class OrthoRecordsPanel extends React.Component<{
 													)[0].visitNumber + 1
 											: 1;
 										this.props.orthoCase.visits.push(
-											new Visit(undefined, visitNumber)
+											new Visit().withVisitNumber(
+												visitNumber
+											)
 										);
-										this.tu();
 									}}
 								/>
 							</div>
@@ -1247,15 +1289,11 @@ export class OrthoRecordsPanel extends React.Component<{
 						value={this.props.orthoCase.nextVisitNotes}
 						onChange={val => {
 							this.props.orthoCase.nextVisitNotes = val;
-							this.tu();
 						}}
 						disabled={!this.canEdit}
 					/>
 				</SectionComponent>
 			</div>
 		);
-	}
-	tu() {
-		this.props.orthoCase.triggerUpdate++;
 	}
 }

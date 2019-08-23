@@ -1,17 +1,5 @@
-import {
-	BACKUPS_DIR,
-	compact,
-	DBsList,
-	destroyLocal,
-	files,
-	Message,
-	messages,
-	modals,
-	resync,
-	status,
-	text
-	} from "./";
-import { decode, encode, second } from "@utils";
+import * as core from "@core";
+import { decode, encode, generateID, second } from "@utils";
 import { saveAs } from "file-saver";
 const ext = "apx";
 
@@ -29,52 +17,43 @@ export interface DatabaseDump {
 }
 
 export const backup = {
-	toJSON: function() {
-		return new Promise(async (resolve, reject) => {
-			const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
-				.default;
+	toJSON: async function() {
+		const PouchDB: PouchDB.Static = ((await import(
+			"pouchdb-browser"
+		)) as any).default;
 
-			await compact.compact();
+		await core.dbAction("compact");
 
-			const dumps: DatabaseDump[] = [];
+		const dumps: DatabaseDump[] = [];
 
-			let done = 0;
+		for (let index = 0; index < core.DBNames.length; index++) {
+			const dbName = core.DBNames[index];
 
-			DBsList.forEach(async dbName => {
-				const remoteDatabase = new PouchDB(
-					`${status.server}/${dbName}`,
-					{
-						fetch: (url, opts) =>
-							PouchDB.fetch(url, {
-								...opts,
-								credentials: "include"
-							})
-					}
-				);
+			const remoteDatabase = new PouchDB(
+				`${core.status.server}/${dbName}`,
+				{
+					fetch: (url, opts) =>
+						PouchDB.fetch(url, {
+							...opts,
+							credentials: "include"
+						})
+				}
+			);
 
-				const data = (await remoteDatabase.allDocs({
-					include_docs: true,
-					attachments: true
-				})).rows.map(entry => {
-					if (entry.doc) {
-						delete entry.doc._rev;
-					}
-					return entry.doc;
-				});
-
-				dumps.push({ dbName, data });
-
-				done++;
-				return;
+			const data = (await remoteDatabase.allDocs({
+				include_docs: true,
+				attachments: true
+			})).rows.map(entry => {
+				if (entry.doc) {
+					delete entry.doc._rev;
+				}
+				return entry.doc;
 			});
 
-			const checkInterval = setInterval(() => {
-				if (done === DBsList.length) {
-					clearInterval(checkInterval);
-					resolve(dumps);
-				}
-			}, second / 2);
-		});
+			dumps.push({ dbName, data });
+		}
+
+		return dumps;
 	},
 
 	toBase64: async function() {
@@ -91,33 +70,39 @@ export const backup = {
 
 	toDropbox: async function(): Promise<string> {
 		const blob = await backup.toBlob();
-		const path = await files.save(blob, ext, BACKUPS_DIR);
+		const path = await core.files.save({
+			blob,
+			ext,
+			dir: core.BACKUPS_DIR
+		});
 		return path;
 	},
 
 	list: async function() {
-		return await files.list(BACKUPS_DIR);
+		return await core.files.list(core.BACKUPS_DIR);
 	},
 
-	deleteOld: async function(path: string) {
-		return await files.remove(path);
+	deleteFromDropbox: async function(path: string) {
+		return await core.files.remove(path);
 	}
 };
 
 export const restore = {
 	fromJSON: async function(json: DatabaseDump[]) {
+		view.hideEverything();
 		return new Promise(async (resolve, reject) => {
-			const PouchDB: PouchDB.Static = ((await import("pouchdb-browser")) as any)
-				.default;
+			const PouchDB: PouchDB.Static = ((await import(
+				"pouchdb-browser"
+			)) as any).default;
 
-			status.resetUser();
-			let done = 0;
+			core.status.resetUser();
 
-			json.forEach(async dump => {
+			for (let index = 0; index < json.length; index++) {
+				const dump = json[index];
+				view.msg(`starting: deleting all server/"${dump.dbName}"`);
 				const dbName = dump.dbName;
-
 				const remoteDatabase1 = new PouchDB(
-					`${status.server}/${dbName}`,
+					`${core.status.server}/${dbName}`,
 					{
 						fetch: (url, opts) =>
 							PouchDB.fetch(url, {
@@ -127,8 +112,13 @@ export const restore = {
 					}
 				);
 				await remoteDatabase1.destroy();
+				view.msg(
+					`finished: deleting all server/"${dump.dbName}"`,
+					true
+				);
+				view.msg(`starting: uploading data to server/"${dump.dbName}"`);
 				const remoteDatabase2 = new PouchDB(
-					`${status.server}/${dbName}`,
+					`${core.status.server}/${dbName}`,
 					{
 						fetch: (url, opts) =>
 							PouchDB.fetch(url, {
@@ -137,19 +127,24 @@ export const restore = {
 							})
 					}
 				);
-				const a = await remoteDatabase2.bulkDocs(dump.data);
-				done++;
-				return;
-			});
+				await remoteDatabase2.bulkDocs(dump.data);
+				view.msg(
+					`finished: uploading data to server/"${dump.dbName}"`,
+					true
+				);
+			}
 
-			const checkInterval = setInterval(async () => {
-				if (done === json.length) {
-					clearInterval(checkInterval);
-					await destroyLocal.destroy();
-					await resync.resync();
-					location.reload();
-				}
-			}, second / 100);
+			view.msg(`finished: all data are now in the server`, true);
+			view.msg(`starting: destroying local data`);
+			await core.dbAction("destroy");
+			view.msg(`finished: destroying local data`, true);
+			view.msg(`starting: downloading remote data`);
+			await core.dbAction("resync");
+			view.msg(`finished: downloading remote data`, true);
+			view.msg(`Everything is done, will reload in 5 seconds`, true);
+			setTimeout(() => {
+				location.reload();
+			}, second * 5);
 		});
 	},
 
@@ -160,8 +155,8 @@ export const restore = {
 				await restore.fromJSON(json);
 				resolve();
 			} else {
-				modals.newModal({
-					message: text(
+				core.modals.newModal({
+					text: core.text(
 						`All unsaved data will be lost. All data will be removed and replaced by the backup file. Type "yes" to confirm`
 					),
 					onConfirm: async (input: string) => {
@@ -170,17 +165,17 @@ export const restore = {
 							await restore.fromJSON(json);
 							resolve();
 						} else {
-							const msg = new Message(
-								text("Restoration cancelled")
-							);
-							messages.addMessage(msg);
+							core.messages.newMessage({
+								id: generateID(),
+								text: core.text("Restoration cancelled")
+							});
 							return reject();
 						}
 					},
 					input: true,
 					showCancelButton: false,
 					showConfirmButton: true,
-					id: Math.random()
+					id: generateID()
 				});
 			}
 		});
@@ -189,8 +184,10 @@ export const restore = {
 	fromFile: async function(file: Blob) {
 		return new Promise((resolve, reject) => {
 			function terminate() {
-				const msg = new Message(text("Invalid file"));
-				messages.addMessage(msg);
+				core.messages.newMessage({
+					id: generateID(),
+					text: core.text("Invalid file")
+				});
 				return reject();
 			}
 			const reader = new FileReader();
@@ -215,20 +212,25 @@ export const restore = {
 	},
 
 	fromDropbox: async function(filePath: string) {
-		const base64File = (await files.get(filePath)).split(";base64,")[1];
+		const base64File = (await core.files.get(filePath)).split(
+			";base64,"
+		)[1];
 		const base64Data = decode(base64File).split("apexo-backup:")[1];
 		this.fromBase64(base64Data);
 	}
 };
 
-export async function downloadCurrent() {
+export async function downloadCurrentStateAsBackup() {
 	const blob = await backup.toBlob();
 	return new Promise(resolve => {
-		modals.newModal({
-			id: Math.random(),
-			message: text("Please enter file name"),
+		core.modals.newModal({
+			id: generateID(),
+			text: core.text("Please enter file name"),
 			onConfirm: fileName => {
 				saveAs(blob, `${fileName || "apexo-backup"}.${ext}`);
+				resolve();
+			},
+			onDismiss: () => {
 				resolve();
 			},
 			input: true,
@@ -237,3 +239,43 @@ export async function downloadCurrent() {
 		});
 	});
 }
+
+const view = {
+	el: document.getElementById("root"),
+	hideEverything: function() {
+		this.el!.innerHTML = `
+		<style>
+		#root {
+			background: #f4f4f4;
+			padding: 30px;
+			font-family: monospace;
+		  }
+		  
+		  h2 {
+			font-style: italic;
+		  }
+		  
+		  p {
+			background: #e3e3e3;
+			padding: 5px;
+			border-left: 10px solid #aaaa;
+		  }
+		  p.start {
+			  border-left-color: #3f51b5
+		  }
+		  p.finish {
+			  border-left-color: #009688
+		  }
+		  </style>
+		<h1>Restore</h1>
+		<h2>Please do not close this window, it will automatically reload when done</h2>
+		<hr>
+	`;
+	},
+	msg: function(str: string, finish?: boolean) {
+		this.el!.innerHTML = `${this.el!.innerHTML}<p class="${
+			finish ? "finish" : "start"
+		}">${str}</p>`;
+		window.scrollTo(0, document.body.scrollHeight);
+	}
+};

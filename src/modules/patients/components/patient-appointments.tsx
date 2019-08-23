@@ -1,25 +1,19 @@
 import { SectionComponent } from "@common-components";
-import { text, user } from "@core";
-import { Appointment, appointments, AppointmentsList, Patient } from "@modules";
+import { text } from "@core";
+import * as core from "@core";
+import { Appointment, AppointmentsList, Patient, PrescriptionItem, StaffMember } from "@modules";
+import * as modules from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
-import { DefaultButton, MessageBar, MessageBarType, PrimaryButton } from "office-ui-fabric-react";
+import { DefaultButton, Dropdown, Link, MessageBar, MessageBarType } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
-export class PatientAppointmentsPanel extends React.Component<
-	{ patient: Patient },
-	{}
-> {
-	@computed
-	get appointments() {
-		return appointments.list.filter(item => {
-			return item.patientID === this.props.patient._id;
-		});
-	}
-
+export class PatientAppointmentsPanel extends React.Component<{
+	patient: Patient;
+}> {
 	@computed get canEdit() {
-		return user.currentUser.canEditPatients;
+		return core.user.currentUser!.canEditPatients;
 	}
 
 	l: AppointmentsList | null = null;
@@ -30,30 +24,85 @@ export class PatientAppointmentsPanel extends React.Component<
 				<SectionComponent title={text(`Patient Appointments`)}>
 					<AppointmentsList
 						ref={l => (this.l = l)}
-						list={this.appointments}
+						list={this.props.patient.appointments}
+						operatorsAsSecondaryText
 					/>
-					{this.appointments.length ? (
+					{this.props.patient.appointments.length ? (
 						""
 					) : (
-						<MessageBar messageBarType={MessageBarType.info}>
-							{text("This patient does not have any appointment")}
-						</MessageBar>
+						<div style={{ marginTop: 15 }}>
+							<MessageBar messageBarType={MessageBarType.info}>
+								{text(
+									"This patient does not have any appointment"
+								)}
+							</MessageBar>
+						</div>
 					)}
 					<br />
 					{this.canEdit ? (
-						<DefaultButton
-							onClick={() => {
-								const apt = new Appointment();
-								apt.patientID = this.props.patient._id;
-								apt.date = new Date().getTime();
-								appointments.list.push(apt);
-								if (this.l) {
-									this.l.selectedAppointmentID = apt._id;
-								}
-							}}
-							iconProps={{ iconName: "add" }}
-							text={text("Book new appointment")}
-						/>
+						<div>
+							{modules.treatments!.docs.length ? (
+								<div>
+									<Dropdown
+										className="new-appointment"
+										onChange={(ev, option) => {
+											const newApt = modules.appointments!.new();
+											newApt.patientID = this.props.patient._id;
+											newApt.date = new Date().getTime();
+											newApt.treatmentID = option!.key.toString();
+											modules.appointments!.add(newApt);
+											if (this.l) {
+												this.l.selectedAppointmentID =
+													newApt._id;
+											}
+										}}
+										onRenderItem={(item, render) => {
+											return item!.key === "ph" ? (
+												<span />
+											) : (
+												render!(item)
+											);
+										}}
+										options={modules
+											.treatments!.docs.map(
+												treatment => ({
+													text: treatment.type,
+													key: treatment._id
+												})
+											)
+											.concat([
+												{
+													key: "ph",
+													text:
+														"＋ " +
+														text(
+															"Book new appointment"
+														)
+												}
+											])}
+										selectedKey="ph"
+									/>
+								</div>
+							) : (
+								<MessageBar
+									messageBarType={MessageBarType.info}
+								>
+									{text(
+										"You need to add treatments in the treatments section before being able to book new appointments"
+									)}
+									<br />
+									<Link
+										onClick={() => {
+											core.router.go([
+												modules.treatmentsNamespace
+											]);
+										}}
+									>
+										Go to treatments
+									</Link>
+								</MessageBar>
+							)}
+						</div>
 					) : (
 						""
 					)}

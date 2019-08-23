@@ -1,9 +1,6 @@
-@import "./global-styles/shadows.scss";
-
 .appointment-hr {
 	border: none;
 	margin-bottom: 20px;
-	border-top: 1px dotted #e0e0e0;
 }
 
 .appointment-top {
@@ -29,13 +26,16 @@
 	}
 	.appendage {
 		position: absolute;
+		width: 25%;
+		min-width: auto;
+		border-radius: 0 3px 3px 0;
+		font-size: 12px;
 		&.stop {
 			background: #ff9800;
 		}
 	}
 	label:not(.ms-Checkbox-label) {
 		display: block;
-		margin-bottom: 10px;
 	}
 
 	.ms-Checkbox {

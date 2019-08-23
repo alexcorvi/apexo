@@ -1,63 +1,38 @@
-import {
-	registerAppointments,
-	registerOrthodontic,
-	registerPatients,
-	registerPrescriptions,
-	registerSettings,
-	registerStaff,
-	registerStats,
-	registerTreatments
-	} from "@modules";
+import { dbAction } from "@core";
+import * as core from "@core";
+import * as modules from "@modules";
+import * as utils from "@utils";
 
 const register = [
-	registerAppointments,
-	registerPatients,
-	registerSettings,
-	registerStats,
-	registerTreatments,
-	registerPrescriptions,
-	registerStaff,
-	registerOrthodontic
+	modules.registerSettings,
+	modules.registerStaff,
+	modules.registerTreatments,
+	modules.registerPatients,
+	modules.registerAppointments,
+	modules.registerOrthodontic,
+	modules.registerLabwork,
+	modules.registerPrescriptions,
+	modules.registerStats
 ];
 
-let alreadyRegistered = false;
+async function initResync() {
+	// resync on function call
+	await dbAction("resync");
+	// resync on interval of 2 minutes
+	setTimeout(initResync, 2 * utils.minute);
+}
 
 export async function registerModules() {
-	return new Promise<boolean>(resolve => {
-		if (alreadyRegistered) {
-			resolve(true);
-		}
-		alreadyRegistered = true;
-		let done = 0;
-		register
-			.sort((a, b) => a.order - b.order)
-			.forEach(async module => {
-				try {
-					await module.register();
-				} catch (e) {
-					try {
-						console.error(
-							"Failed to register module with order:",
-							module.order,
-							e,
-							"Will try again"
-						);
-						await module.register();
-					} catch (e) {
-						console.error(
-							"Failed to register module with order:",
-							module.order,
-							e
-						);
-					}
-				}
-				done++;
-			});
-		const checkRegistered = setInterval(() => {
-			if (done === register.length) {
-				resolve(true);
-				clearInterval(checkRegistered);
-			}
-		}, 300);
-	});
+	for (let index = 0; index < register.length; index++) {
+		core.status.loadingIndicatorText = "Registering module " + index;
+		const reg = register[index];
+		await reg();
+	}
+
+	// resync on load: only staff database initially
+	// because we need it in login
+	core.status.loadingIndicatorText = "Resyncing basic info";
+	await dbAction("resync", "doctors");
+
+	initResync();
 }

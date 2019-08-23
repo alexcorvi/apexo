@@ -1,8 +1,16 @@
 import { SectionComponent, TagInputComponent } from "@common-components";
-import { text, user } from "@core";
-import { FacialProfile, ISOTeethArr, Lips, OralHygiene, OrthoCase } from "@modules";
+import { text } from "@core";
+import * as core from "@core";
+import {
+	FacialProfile,
+	ISOTeethArr,
+	Lips,
+	OralHygiene,
+	OrthoCase,
+	StaffMember
+	} from "@modules";
+import * as modules from "@modules";
 import { num } from "@utils";
-import { EditableListComponent } from "common-components/editable-list/editable-list";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import {
@@ -12,16 +20,24 @@ import {
 	MessageBar,
 	MessageBarType,
 	SelectionMode,
+	Shimmer,
 	TextField
 	} from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const EditableListComponent = loadable({
+	loading: () => <Shimmer />,
+	loader: async () =>
+		(await import("common-components/editable-list")).EditableListComponent
+});
 
 @observer
 export class OrthoCaseSheetPanel extends React.Component<{
 	orthoCase: OrthoCase;
 }> {
 	@computed get canEdit() {
-		return user.currentUser.canEditOrtho;
+		return core.user.currentUser!.canEditOrtho;
 	}
 
 	render() {
@@ -35,7 +51,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 							key: x,
 							text: text((Lips as any)[x])
 						}))}
-						defaultSelectedKey={this.props.orthoCase.lips}
+						selectedKey={this.props.orthoCase.lips}
 						onChange={(ev, has: any) => {
 							this.props.orthoCase.lips = has.key;
 						}}
@@ -47,7 +63,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 							key: x,
 							text: text((FacialProfile as any)[x])
 						}))}
-						defaultSelectedKey={this.props.orthoCase.facialProfile}
+						selectedKey={this.props.orthoCase.facialProfile}
 						onChange={(ev, has: any) => {
 							this.props.orthoCase.facialProfile = has.key;
 						}}
@@ -59,7 +75,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 							key: x,
 							text: text((OralHygiene as any)[x])
 						}))}
-						defaultSelectedKey={this.props.orthoCase.oralHygiene}
+						selectedKey={this.props.orthoCase.oralHygiene}
 						onChange={(ev, has: any) => {
 							this.props.orthoCase.oralHygiene = has.key;
 						}}
@@ -85,7 +101,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 							key: n.toString(),
 							text: text("Skeletal relationship: Class ") + n
 						}))}
-						defaultSelectedKey={this.props.orthoCase.skeletalRelationship.toString()}
+						selectedKey={this.props.orthoCase.skeletalRelationship.toString()}
 						onChange={(ev, n) => {
 							this.props.orthoCase.skeletalRelationship = num(
 								n!.key
@@ -99,7 +115,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 							key: n.toString(),
 							text: text("Molars relationship: Class ") + n
 						}))}
-						defaultSelectedKey={this.props.orthoCase.molarsRelationship.toString()}
+						selectedKey={this.props.orthoCase.molarsRelationship.toString()}
 						onChange={(ev, n) => {
 							this.props.orthoCase.molarsRelationship = num(
 								n!.key
@@ -113,7 +129,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 							key: n.toString(),
 							text: text("Canine relationship: Class ") + n
 						}))}
-						defaultSelectedKey={this.props.orthoCase.canineRelationship.toString()}
+						selectedKey={this.props.orthoCase.canineRelationship.toString()}
 						onChange={(ev, n) => {
 							this.props.orthoCase.canineRelationship = num(
 								n!.key
@@ -144,15 +160,16 @@ export class OrthoCaseSheetPanel extends React.Component<{
 						}}
 					/>
 					<TagInputComponent
-						disabled={!this.canEdit}
-						strict
-						placeholder={text("Cross/scissors bite")}
+						label={text("Cross/scissors bite")}
 						options={ISOTeethArr.map(x => {
 							return {
 								key: x.toString(),
 								text: x.toString()
 							};
 						})}
+						suggestionsHeaderText={text("Cross/scissors bite")}
+						noResultsFoundText={text("No teeth found")}
+						disabled={!this.canEdit}
 						value={Array.from(
 							this.props.orthoCase.crossScissorBite
 						).map(x => ({
@@ -161,7 +178,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 						}))}
 						onChange={newValue => {
 							this.props.orthoCase.crossScissorBite = newValue.map(
-								x => num(x.key)
+								x => num(x)
 							);
 						}}
 					/>
@@ -258,7 +275,6 @@ export class OrthoCaseSheetPanel extends React.Component<{
 						value={this.props.orthoCase.problemsList}
 						onChange={v => {
 							this.props.orthoCase.problemsList = v;
-							this.props.orthoCase.triggerUpdate++;
 						}}
 					/>
 					<br />

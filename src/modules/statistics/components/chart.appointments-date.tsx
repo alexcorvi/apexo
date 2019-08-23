@@ -1,13 +1,19 @@
 import { BarChartComponent } from "@common-components";
 import { text } from "@core";
-import { Chart, setting, statistics } from "@modules";
+import { Appointment } from "@modules";
+import * as modules from "@modules";
 import { formatDate } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 @observer
-class Component extends React.Component<{}, {}> {
+export class AppointmentsByDateChart extends React.Component<{
+	selectedAppointmentsByDay: {
+		appointments: Appointment[];
+		day: Date;
+	}[];
+}> {
 	@computed
 	get values() {
 		const initialValue: {
@@ -22,14 +28,19 @@ class Component extends React.Component<{}, {}> {
 			paid: []
 		};
 
-		return statistics.selectedAppointmentsByDay.reduce((acc, val) => {
-			acc.paid.push(val.appointments.filter(a => a.isPaid).length);
+		return this.props.selectedAppointmentsByDay.reduce((acc, val) => {
+			acc.paid.push(
+				val.appointments.filter(a => a.isPaid && !a.isMissed).length
+			);
 			acc.outstanding.push(
 				val.appointments.filter(a => a.isOutstanding).length
 			);
-			acc.missed.push(val.appointments.filter(a => a.missed).length);
+			acc.missed.push(val.appointments.filter(a => a.isMissed).length);
 			acc.days.push(
-				formatDate(val.day.getTime(), setting.getSetting("date_format"))
+				formatDate(
+					val.day.getTime(),
+					modules.setting!.getSetting("date_format")
+				)
 			);
 			return acc;
 		}, initialValue);
@@ -61,11 +72,3 @@ class Component extends React.Component<{}, {}> {
 		);
 	}
 }
-
-export const appointmentsByDateChart: Chart = {
-	Component,
-	name: "Appointments by Date",
-	description: "Number of appointments",
-	tags: "appointments date number how many",
-	className: "col-xs-12"
-};

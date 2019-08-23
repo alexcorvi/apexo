@@ -1,16 +1,17 @@
 import { PieChartComponent } from "@common-components";
-import { text } from "@core";
-import { Chart, colors, statistics } from "@modules";
+import { Appointment, colors } from "@modules";
 import { convert, num } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 @observer
-class Component extends React.Component<{}, {}> {
+export class MostInvolvedTeethChart extends React.Component<{
+	selectedAppointments: Appointment[];
+}> {
 	@computed
 	get data() {
-		return statistics.selectedAppointments
+		return this.props.selectedAppointments
 			.map(x => x.involvedTeeth)
 			.reduce((result: { label: number; value: number }[], arr) => {
 				arr.forEach(n => {
@@ -73,11 +74,3 @@ class Component extends React.Component<{}, {}> {
 		);
 	}
 }
-
-export const mostInvolvedTeethChart: Chart = {
-	Component,
-	name: "Most Involved Teeth",
-	description: "Top 5 most treated teeth",
-	tags: "teeth most involved tooth treated",
-	className: "col-xs-12 col-lg-6"
-};

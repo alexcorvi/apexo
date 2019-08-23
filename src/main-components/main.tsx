@@ -1,9 +1,37 @@
-import { AsyncComponent } from "@common-components";
-import { LoginStep, router, status, text } from "@core";
+import { PageLoader } from "@common-components";
+import { LoginStep, text } from "@core";
+import * as core from "@core";
+import { MessagesView, ModalsView } from "@main-components";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { MessageBar, PrimaryButton, Spinner, SpinnerSize } from "office-ui-fabric-react";
+import { MessageBar, PrimaryButton, Shimmer, Spinner, SpinnerSize } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const MenuView = loadable({
+	loader: async () => (await import("./menu")).MenuView,
+	loading: () => <Shimmer />
+});
+
+const HeaderView = loadable({
+	loader: async () => (await import("./header")).HeaderView,
+	loading: () => <Shimmer />
+});
+
+const UserPanelView = loadable({
+	loader: async () => (await import("./user")).UserPanelView,
+	loading: () => <Shimmer />
+});
+
+const ChooseUserComponent = loadable({
+	loader: async () => (await import("./choose-user")).ChooseUserComponent,
+	loading: () => <Shimmer />
+});
+
+const LoginView = loadable({
+	loader: async () => (await import("./login")).LoginView,
+	loading: () => <Shimmer />
+});
 
 @observer
 export class ErrorBoundaryView extends React.Component<{}> {
@@ -29,7 +57,7 @@ export class ErrorBoundaryView extends React.Component<{}> {
 				<MessageBar className="eb" messageBarType={1}>
 					Error occurred
 					<br /> send a screenshot of the following details
-					<textarea defaultValue={this.stackTrace} />
+					<textarea value={this.stackTrace} />
 					<PrimaryButton
 						onClick={() => {
 							location.href = location.href.split("#")[0];
@@ -45,66 +73,45 @@ export class ErrorBoundaryView extends React.Component<{}> {
 }
 
 @observer
-export class MainView extends React.Component<{}, {}> {
-	@computed get view() {
-		if (status.step === LoginStep.allDone) {
+export class MainView extends React.Component {
+	@computed get conditionalView() {
+		if (core.status.step === LoginStep.allDone) {
 			return (
 				<div className="main-component">
-					<AsyncComponent
-						key={router.currentNamespace}
-						loader={async () => {
-							const HeaderView = (await import("./header"))
-								.HeaderView;
-							const UserPanelView = (await import("./user"))
-								.UserPanelView;
-							const MenuView = (await import("./menu")).MenuView;
-							return (
-								<div>
-									<div key="router" id="router-outlet">
-										<AsyncComponent
-											key={router.currentNamespace}
-											loader={async () => {
-												await router.currentLoader();
-												return await router.currentComponent();
-											}}
-										/>
-									</div>
-									<HeaderView key="header" />
-									<UserPanelView key="user" />
-									<MenuView key="menu" />
-								</div>
-							);
-						}}
-					/>
+					<div
+						key="router"
+						id="router-outlet"
+						data-current-namespace={core.router.currentNamespace.toLowerCase()}
+					>
+						<PageLoader
+							key={core.router.currentNamespace}
+							pageComponent={async () => {
+								await core.router.currentLoader();
+								return await core.router.currentComponent();
+							}}
+						/>
+					</div>
+					<HeaderView />
+					<UserPanelView />
+					<MenuView />
 				</div>
 			);
-		} else if (status.step === LoginStep.chooseUser) {
-			return (
-				<AsyncComponent
-					key="choose-user"
-					loader={async () => {
-						const ChooseUserComponent = (await import("./choose-user"))
-							.ChooseUserComponent;
-						return <ChooseUserComponent />;
-					}}
-				/>
-			);
-		} else if (status.step === LoginStep.initial) {
-			return (
-				<AsyncComponent
-					key="choose-user"
-					loader={async () => {
-						const LoginView = (await import("./login")).LoginView;
-						return <LoginView />;
-					}}
-				/>
-			);
+		} else if (core.status.step === LoginStep.chooseUser) {
+			return <ChooseUserComponent />;
+		} else if (core.status.step === LoginStep.initial) {
+			return <LoginView />;
 		} else {
 			return (
 				<div className="spinner-container">
 					<Spinner
 						size={SpinnerSize.large}
-						label={text(`Please wait`)}
+						label={
+							core.status.loadingIndicatorText
+								? `Please wait: ${
+										core.status.loadingIndicatorText
+								  }`
+								: "Please wait"
+						}
 					/>
 				</div>
 			);
@@ -129,7 +136,13 @@ export class MainView extends React.Component<{}, {}> {
 
 	render() {
 		return (
-			<ErrorBoundaryView key={status.step}>{this.view}</ErrorBoundaryView>
+			<ErrorBoundaryView key={core.status.step}>
+				<div>
+					<ModalsView />
+					<MessagesView />
+				</div>
+				{this.conditionalView}
+			</ErrorBoundaryView>
 		);
 	}
 }

@@ -2,19 +2,25 @@
 	background: #fff;
 	margin-top: 10px;
 	padding: 15px;
-	border-radius: 3px;
-	border: 1px solid #e3e3e3;
+	padding-bottom: 0;
+	border: 1px solid #f3f3f3;
 	position: relative;
 	h3 {
 		margin-bottom: 12px;
 		padding-bottom: 12px;
-		border-bottom: 1px dotted #e0e0e0;
-		margin-top: 0;
+		border-bottom: 1px solid #f3f3f3;
+		margin-left: -15px;
+		margin-right: -15px;
+		padding-left: 12px;
+		padding-right: 12px;
+		margin-top: -5px;
 	}
 	.chevron {
-		position: absolute;
-		top: 7px;
-		right: 7px;
+		float: right;
+		position: relative;
+		top: -7px;
+		right: -8px;
+		height: 28px;
 	}
 	.cl-section-title {
 		&:hover {
@@ -22,9 +28,9 @@
 		}
 		cursor: pointer;
 		&.only-title {
-			margin-bottom: 0;
 			padding: 0;
 			border: none;
+			padding-left: 12px;
 		}
 	}
 }

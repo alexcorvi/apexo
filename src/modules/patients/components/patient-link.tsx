@@ -1,5 +1,5 @@
-import { router } from "@core";
-import { patients } from "@modules";
+import * as core from "@core";
+import * as modules from "@modules";
 import { observer } from "mobx-react";
 import { Icon } from "office-ui-fabric-react";
 import * as React from "react";
@@ -8,29 +8,22 @@ import * as React from "react";
 export class PatientLinkComponent extends React.Component<
 	{
 		id: string;
-
-		notClickable?: boolean;
-
+		name: string;
 		className?: string;
 	},
 	{}
 > {
 	render() {
-		const patient = patients.list.find(pt => pt._id === this.props.id) || {
-			name: "not found"
-		};
 		return (
 			<a
 				className={"plk-c " + this.props.className}
 				onClick={() => {
-					if (!this.props.notClickable) {
-						router.go(["patients", this.props.id]);
-					}
+					core.router.go([modules.patientsNamespace, this.props.id]);
 				}}
 			>
-				<Icon iconName="ContactCard" className="icon" />
+				<Icon iconName="Contact" className="icon" />
 				&nbsp;
-				{patient.name}
+				{this.props.name}
 			</a>
 		);
 	}

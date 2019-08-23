@@ -1,75 +1,90 @@
-import { AsyncComponent, Col, ProfileComponent, Row, SectionComponent } from "@common-components";
-import { text, user } from "@core";
-import { conditionToColor, Patient, ToothCondition } from "@modules";
-import { EditableListComponent } from "common-components/editable-list/editable-list";
+import {
+	Col,
+	PanelTabs,
+	PanelTop,
+	ProfileComponent,
+	Row,
+	SectionComponent
+	} from "@common-components";
+import { text } from "@core";
+import * as core from "@core";
+import { conditionToColor, Patient, StaffMember, ToothCondition } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { Dropdown, IconButton, Panel, PanelType, Toggle } from "office-ui-fabric-react";
+import {
+	Dropdown,
+	Icon,
+	IconButton,
+	Panel,
+	PanelType,
+	Shimmer,
+	Toggle
+	} from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const EditableListComponent = loadable({
+	loading: () => <Shimmer />,
+	loader: async () =>
+		(await import("common-components/editable-list")).EditableListComponent
+});
+
+const TeethDeciduousChart = loadable({
+	loader: async () =>
+		(await import("modules/patients/components/teeth-deciduous"))
+			.TeethDeciduousChart,
+	loading: () => <Shimmer />
+});
+
+const TeethPermanentChart = loadable({
+	loader: async () =>
+		(await import("modules/patients/components/teeth-permanent"))
+			.TeethPermanentChart,
+	loading: () => <Shimmer />
+});
 
 @observer
 export class DentalHistoryPanel extends React.Component<
-	{ patient: Patient },
+	{
+		patient: Patient;
+	},
 	{}
 > {
 	@observable viewChart: boolean = true;
-	@observable viewToothISO: number = 0;
-	@observable triggerUpdate: number = 0;
 
 	@computed get canEdit() {
-		return user.currentUser.canEditPatients;
-	}
-
-	componentWillMount() {
-		this.viewToothISO = 0;
+		return core.user.currentUser!.canEditPatients;
 	}
 
 	render() {
 		return (
-			<div className="dental-history teeth">
-				<Toggle
-					defaultChecked={true}
-					onText={text("View graphic chart")}
-					offText={text("View sorted table")}
-					onChange={(ev, newVal) => {
-						this.viewChart = newVal!;
-					}}
-				/>
-				<div className="m-t-20">
+			<div className="dental-history teeth m-t-10">
+				<div>
+					<Toggle
+						defaultChecked={true}
+						onText={text("View graphic chart")}
+						offText={text("View sorted table")}
+						onChange={(ev, newVal) => {
+							this.viewChart = newVal!;
+						}}
+						className={"hidden-xs"}
+					/>
 					{this.viewChart ? (
 						<div className="chart">
 							<SectionComponent title={text(`Permanent Teeth`)}>
-								<AsyncComponent
-									key="teeth-permanent"
-									loader={async () => {
-										const Component = (await import("./teeth-permanent"))
-											.TeethPermanentChart;
-										return (
-											<Component
-												teeth={this.props.patient.teeth}
-												onClick={number =>
-													(this.viewToothISO = number)
-												}
-											/>
-										);
-									}}
+								<TeethPermanentChart
+									teeth={this.props.patient.teeth}
+									onClick={number =>
+										core.router.selectSub(number.toString())
+									}
 								/>
 							</SectionComponent>
 							<SectionComponent title={text(`Deciduous Teeth`)}>
-								<AsyncComponent
-									key="teeth-primary"
-									loader={async () => {
-										const Component = (await import("./teeth-deciduous"))
-											.TeethDeciduousChart;
-										return (
-											<Component
-												teeth={this.props.patient.teeth}
-												onClick={number =>
-													(this.viewToothISO = number)
-												}
-											/>
-										);
-									}}
+								<TeethDeciduousChart
+									teeth={this.props.patient.teeth}
+									onClick={number =>
+										core.router.selectSub(number.toString())
+									}
 								/>
 							</SectionComponent>
 						</div>
@@ -114,99 +129,103 @@ export class DentalHistoryPanel extends React.Component<
 						</div>
 					)}
 				</div>
+				{this.props.patient.teeth[Number(core.router.selectedSub)] ? (
+					<Panel
+						isOpen={
+							!!this.props.patient.teeth[
+								Number(core.router.selectedSub)
+							]
+						}
+						type={PanelType.smallFixedFar}
+						closeButtonAriaLabel="Close"
+						isLightDismiss={true}
+						onDismiss={() => core.router.unSelectSub()}
+						onRenderNavigation={() => {
+							const tooth = this.props.patient.teeth[
+								Number(core.router.selectedSub)
+							];
 
-				<Panel
-					isOpen={!!this.props.patient.teeth[this.viewToothISO]}
-					type={PanelType.smallFixedFar}
-					closeButtonAriaLabel="Close"
-					isLightDismiss={true}
-					onDismiss={() => (this.viewToothISO = 0)}
-					onRenderNavigation={() => {
-						const tooth = this.props.patient.teeth[
-							this.viewToothISO
-						];
-
-						return (
-							<Row className="panel-heading">
-								<Col span={22}>
-									<ProfileComponent
-										name={`ISO: ${
+							return (
+								<div className="panel-heading panel-heading-tooth">
+									<PanelTop
+										title={`ISO: ${
 											tooth ? tooth.ISO : ""
 										} - Universal: ${
 											tooth ? tooth.Universal : ""
 										}`}
-										secondaryElement={
-											<span>
-												{tooth
-													? tooth.Name.split(" ")
-															.filter((x, i) => i)
-															.join(" ")
-													: ""}
-											</span>
-										}
-										onRenderInitials={() => (
-											<span className="palmer">
-												{tooth ? tooth.Palmer : ""}
-											</span>
+										type={tooth.Name}
+										onDismiss={() => core.user.hide()}
+										initials={<Icon iconName="teeth" />}
+										initialsColor={conditionToColor(
+											tooth.condition
 										)}
-										size={3}
+										square
 									/>
-								</Col>
-								<Col span={2} className="close">
-									<IconButton
-										iconProps={{ iconName: "cancel" }}
-										onClick={() => {
-											this.viewToothISO = 0;
-										}}
+
+									<PanelTabs
+										currentSelectedKey={"details"}
+										onSelect={() => {}}
+										items={[
+											{
+												key: "details",
+												icon: "teeth",
+												title: "Tooth Details"
+											}
+										]}
 									/>
-								</Col>
-							</Row>
-						);
-					}}
-				>
-					<br />
-					<br />
-					{this.props.patient.teeth[this.viewToothISO] ? (
-						<div className="tooth-details">
-							<Dropdown
-								placeholder={text(`Condition`)}
-								onChange={(ev, newVal: any) => {
-									this.props.patient.teeth[
-										this.viewToothISO
-									].condition = newVal.key.toString();
-									this.props.patient.triggerUpdate++;
-									this.forceUpdate();
-								}}
-								defaultSelectedKey={
-									this.props.patient.teeth[this.viewToothISO]
-										.condition
-								}
-								className="single-tooth-condition"
-								options={Object.keys(ToothCondition).map(c => ({
-									key: c,
-									text: text(c)
-								}))}
-								disabled={!this.canEdit}
-							/>
-							<EditableListComponent
-								label={text("History notes")}
-								value={
-									this.props.patient.teeth[this.viewToothISO]
-										.notes
-								}
-								disabled={!this.canEdit}
-								onChange={e => {
-									this.props.patient.teeth[
-										this.viewToothISO
-									].notes = e;
-									this.props.patient.triggerUpdate++;
-								}}
-							/>
-						</div>
-					) : (
-						""
-					)}
-				</Panel>
+								</div>
+							);
+						}}
+					>
+						{this.props.patient.teeth[
+							Number(core.router.selectedSub)
+						] ? (
+							<div className="tooth-details">
+								<Dropdown
+									label={text(`Tooth condition`)}
+									onChange={(ev, newVal: any) => {
+										this.props.patient.teeth[
+											Number(core.router.selectedSub)
+										].condition = newVal.key.toString();
+										this.props.patient.saveToPouch();
+									}}
+									selectedKey={
+										this.props.patient.teeth[
+											Number(core.router.selectedSub)
+										].condition
+									}
+									className="single-tooth-condition"
+									options={Object.keys(ToothCondition).map(
+										c => ({
+											key: c,
+											text: text(c)
+										})
+									)}
+									disabled={!this.canEdit}
+								/>
+								<EditableListComponent
+									label={text("Tooth history")}
+									value={
+										this.props.patient.teeth[
+											Number(core.router.selectedSub)
+										].notes
+									}
+									disabled={!this.canEdit}
+									onChange={e => {
+										this.props.patient.teeth[
+											Number(core.router.selectedSub)
+										].notes = e;
+										this.props.patient.saveToPouch();
+									}}
+								/>
+							</div>
+						) : (
+							""
+						)}
+					</Panel>
+				) : (
+					""
+				)}
 			</div>
 		);
 	}
@@ -219,7 +238,7 @@ export class DentalHistoryPanel extends React.Component<
 			<td
 				key={"tooth" + tooth.ISO}
 				style={{ background: conditionToColor(tooth.condition) }}
-				onClick={() => (this.viewToothISO = tooth.ISO)}
+				onClick={() => core.router.selectSub(tooth.ISO.toString())}
 			>
 				<span
 					className="has-notes"

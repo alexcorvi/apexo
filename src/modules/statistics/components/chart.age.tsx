@@ -1,15 +1,17 @@
 import { BarChartComponent } from "@common-components";
 import { text } from "@core";
-import { Chart, statistics } from "@modules";
+import { Patient } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 @observer
-class Component extends React.Component<{}, {}> {
+export class AgeBarChart extends React.Component<{
+	selectedPatients: Patient[];
+}> {
 	@computed
 	get values() {
-		return statistics.selectedPatients
+		return this.props.selectedPatients
 			.filter(x => x && x.birthYear)
 			.map(x => {
 				if (!x || x.birthYear === 0) {
@@ -55,11 +57,3 @@ class Component extends React.Component<{}, {}> {
 		);
 	}
 }
-
-export const ageBarChart: Chart = {
-	Component,
-	name: "Patients' Age",
-	description: "Comparing patients age",
-	tags: "patient age patients",
-	className: "col-xs-12 col-lg-6"
-};

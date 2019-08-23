@@ -146,7 +146,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[11].notes.length
+							{...(this.props.teeth[11] &&
+							this.props.teeth[11].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -164,7 +165,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[12].notes.length
+							{...(this.props.teeth[12] &&
+							this.props.teeth[12].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -182,7 +184,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[13].notes.length
+							{...(this.props.teeth[13] &&
+							this.props.teeth[13].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -200,7 +203,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[14].notes.length
+							{...(this.props.teeth[14] &&
+							this.props.teeth[14].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -218,7 +222,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[15].notes.length
+							{...(this.props.teeth[15] &&
+							this.props.teeth[15].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -236,7 +241,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[16].notes.length
+							{...(this.props.teeth[16] &&
+							this.props.teeth[16].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -254,7 +260,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[17].notes.length
+							{...(this.props.teeth[17] &&
+							this.props.teeth[17].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -272,7 +279,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[18].notes.length
+							{...(this.props.teeth[18] &&
+							this.props.teeth[18].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -393,7 +401,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[21].notes.length
+							{...(this.props.teeth[21] &&
+							this.props.teeth[21].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -411,7 +420,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[22].notes.length
+							{...(this.props.teeth[22] &&
+							this.props.teeth[22].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -429,7 +439,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[23].notes.length
+							{...(this.props.teeth[23] &&
+							this.props.teeth[23].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -447,7 +458,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[24].notes.length
+							{...(this.props.teeth[24] &&
+							this.props.teeth[24].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -465,7 +477,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[25].notes.length
+							{...(this.props.teeth[25] &&
+							this.props.teeth[25].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -483,7 +496,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[26].notes.length
+							{...(this.props.teeth[26] &&
+							this.props.teeth[26].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -501,7 +515,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[27].notes.length
+							{...(this.props.teeth[27] &&
+							this.props.teeth[27].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -519,7 +534,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[28].notes.length
+							{...(this.props.teeth[28] &&
+							this.props.teeth[28].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -645,7 +661,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[41].notes.length
+							{...(this.props.teeth[41] &&
+							this.props.teeth[41].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -663,7 +680,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[42].notes.length
+							{...(this.props.teeth[42] &&
+							this.props.teeth[42].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -681,7 +699,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[43].notes.length
+							{...(this.props.teeth[43] &&
+							this.props.teeth[43].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -699,7 +718,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[44].notes.length
+							{...(this.props.teeth[44] &&
+							this.props.teeth[44].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -717,7 +737,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[45].notes.length
+							{...(this.props.teeth[45] &&
+							this.props.teeth[45].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -735,7 +756,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[46].notes.length
+							{...(this.props.teeth[46] &&
+							this.props.teeth[46].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -753,7 +775,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[47].notes.length
+							{...(this.props.teeth[47] &&
+							this.props.teeth[47].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -771,7 +794,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[48].notes.length
+							{...(this.props.teeth[48] &&
+							this.props.teeth[48].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -879,7 +903,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[31].notes.length
+							{...(this.props.teeth[31] &&
+							this.props.teeth[31].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -897,7 +922,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[32].notes.length
+							{...(this.props.teeth[32] &&
+							this.props.teeth[32].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -915,7 +941,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[34].notes.length
+							{...(this.props.teeth[34] &&
+							this.props.teeth[34].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -933,7 +960,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[33].notes.length
+							{...(this.props.teeth[33] &&
+							this.props.teeth[33].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -951,7 +979,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[35].notes.length
+							{...(this.props.teeth[35] &&
+							this.props.teeth[35].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -969,7 +998,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[36].notes.length
+							{...(this.props.teeth[36] &&
+							this.props.teeth[36].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -987,7 +1017,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[37].notes.length
+							{...(this.props.teeth[37] &&
+							this.props.teeth[37].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>
@@ -1005,7 +1036,8 @@ export class TeethPermanentChart extends React.Component<
 							x="241.89"
 							dy="0em"
 							dominantBaseline="text-before-edge"
-							{...(this.props.teeth[38].notes.length
+							{...(this.props.teeth[38] &&
+							this.props.teeth[38].notes.length
 								? { stroke: "#212121" }
 								: {})}
 						>

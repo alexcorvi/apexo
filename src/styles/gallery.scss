@@ -3,11 +3,11 @@
 		text-align: center;
 		border: 1px solid #f1f1f1;
 		padding: 5px;
-		width: 52px;
+		width: 100%;
 		float: left;
 		.thumb {
 			height: 40px;
-			width: 40px;
+			width: 100%;
 			background-size: cover;
 			display: inline-block;
 			margin-right: 5px;
@@ -29,7 +29,7 @@
 		margin-left: 5px;
 		border: 1px solid #f1f1f1;
 		padding: 5px;
-		width: calc(100% - 60px);
+		width: 100%;
 		position: relative;
 		img {
 			width: 100%;

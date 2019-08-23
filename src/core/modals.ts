@@ -1,32 +1,26 @@
+import { generateID } from "@utils";
 import { observable } from "mobx";
 
-interface ModalInterface {
-	message: string;
+export interface ModalInterface {
+	text: string;
 	input?: boolean;
 	onConfirm: (inputValue: string) => void;
-	id: number;
+	onDismiss?: () => void;
+	id: string | number;
 	showConfirmButton: boolean;
 	showCancelButton: boolean;
 }
 
-class ModalData {
+export class Modals {
 	@observable activeModals: ModalInterface[] = [];
-	newModal({
-		message,
-		onConfirm,
-		input,
-		showCancelButton,
-		showConfirmButton
-	}: ModalInterface) {
-		this.activeModals.push({
-			message,
-			onConfirm,
-			input,
-			id: Math.random(),
-			showCancelButton,
-			showConfirmButton
-		});
+	newModal(modal: ModalInterface) {
+		modal.id = generateID();
+		this.activeModals.push(modal);
+	}
+
+	deleteModal(index: number) {
+		this.activeModals.splice(index, 1);
 	}
 }
 
-export const modals = new ModalData();
+export const modals = new Modals();

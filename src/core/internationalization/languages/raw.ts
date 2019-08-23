@@ -4,8 +4,9 @@ export const raw = {
 	 */
 
 	Welcome: "",
-	"Today's Appointments": "",
-	"Tomorrow's Appointments": "",
+	"Appointments for today": "",
+	"Appointments for tomorrow": "",
+	"Appointments for this week": "",
 	"There are no appointments for tomorrow": "",
 	"There are no appointments for today": "",
 
@@ -36,6 +37,7 @@ export const raw = {
 	Operators: "",
 	Missed: "",
 	"Switch user": "",
+	"Who are you?": "",
 	Expenses: "",
 	Profit: "",
 	male: "",
@@ -45,6 +47,9 @@ export const raw = {
 	Label: "",
 	"years old": "",
 	"Not registered": "",
+	Today: "",
+	Tomorrow: "",
+	Yesterday: "",
 
 	/**========================================
 	 * Section Title
@@ -481,6 +486,9 @@ export const raw = {
 	 */
 	Backup: "",
 	Actions: "",
+	"Settings are locked": "",
+	"To prevent unintentional changes, solve the mathematical equation to unlock":
+		"",
 
 	/**========================================
 	 * other
@@ -518,7 +526,7 @@ export const raw = {
 	"Finances by date": "",
 	"Applied times": "",
 	"Filter By Staff Member": "",
-	"All members": "",
+	"All staff members": "",
 
 	/**========================================
 	 * Treatments page

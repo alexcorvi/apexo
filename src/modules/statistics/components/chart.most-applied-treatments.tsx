@@ -1,18 +1,18 @@
 import { PieChartComponent } from "@common-components";
-import { text } from "@core";
-import { Chart, colors, statistics, treatments } from "@modules";
+import { Appointment, colors } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 @observer
-class Component extends React.Component<{}, {}> {
+export class MostAppliedTreatmentsChart extends React.Component<{
+	selectedAppointments: Appointment[];
+}> {
 	@computed
 	get data() {
-		return statistics.selectedAppointments
-			.map(x => x.treatmentID)
-			.reduce((result: { label: string; value: number }[], id) => {
-				const treatment = treatments.list[treatments.getIndexByID(id)];
+		return this.props.selectedAppointments
+			.map(x => x.treatment)
+			.reduce((result: { label: string; value: number }[], treatment) => {
 				if (!treatment) {
 					return result;
 				}
@@ -68,11 +68,3 @@ class Component extends React.Component<{}, {}> {
 		return <PieChartComponent height={400} data={this.data} />;
 	}
 }
-
-export const mostAppliedTreatmentsChart: Chart = {
-	Component,
-	name: "Most Applied Treatments",
-	description: "Top 5 most applied treatments",
-	tags: "most applied used administered treatments",
-	className: "col-xs-12 col-lg-6"
-};

@@ -1,15 +1,26 @@
-import { AsyncComponent } from "@common-components";
-import { text, user } from "@core";
-import { Appointment, appointments, AppointmentThumbComponent } from "@modules";
+import { ALRightColumn, ALSecondaryText, AppointmentsListNoDate } from "@common-components";
+import * as core from "@core";
+import { Appointment } from "@modules";
 import { textualFilter } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { TextField } from "office-ui-fabric-react";
+import { Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const AppointmentEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/appointments/components/appointment-editor"))
+			.AppointmentEditorPanel,
+	loading: () => <Shimmer />
+});
 
 @observer
 export class AppointmentsList extends React.Component<
-	{ list: Appointment[] },
+	{
+		list: Appointment[];
+		operatorsAsSecondaryText?: boolean;
+	},
 	{}
 > {
 	@observable filter: string = "";
@@ -17,13 +28,19 @@ export class AppointmentsList extends React.Component<
 	@observable selectedAppointmentID: string = "";
 
 	@computed
-	get filtered() {
-		return this.filter
+	get filteredAndSorted() {
+		return (this.filter
 			? textualFilter(this.props.list, this.filter)
-			: this.props.list;
+			: this.props.list
+		).sort((a, b) => a.date - b.date);
 	}
+
 	@computed get canEdit() {
-		return user.currentUser.canEditOrtho;
+		return core.user.currentUser!.canEditAppointments;
+	}
+
+	@computed get selectedAppointment() {
+		return this.props.list.find(x => x._id === this.selectedAppointmentID);
 	}
 
 	render() {
@@ -31,78 +48,37 @@ export class AppointmentsList extends React.Component<
 			<div className="appointments-list">
 				{this.props.list.length > 0 ? (
 					<div className="main">
-						<TextField
-							label={text("Filter")}
-							value={this.filter}
-							onChange={(e, v) => {
-								this.filter = v!;
-							}}
-						/>
-
-						<hr />
-						<p
-							style={{
-								textAlign: "right",
-								fontSize: "13px",
-								color: "#9E9E9E"
-							}}
-						>
-							{text("Results")}: {this.filtered.length}{" "}
-							{text("out of")} {this.props.list.length}
-						</p>
-
-						{this.filtered.length ? (
-							this.filtered
-								.sort((a, b) => a.date - b.date)
-								.map(appointment => {
-									return (
-										<AppointmentThumbComponent
-											key={appointment._id}
-											onClick={() =>
-												(this.selectedAppointmentID =
-													appointment._id)
-											}
-											appointment={appointment}
-											canDelete={this.canEdit}
-										/>
-									);
-								})
-						) : (
-							<p className="no-appointments">
-								{text("Nothing found") + "..."}
-							</p>
-						)}
+						{
+							<AppointmentsListNoDate
+								appointments={this.filteredAndSorted}
+								onClick={id => {
+									this.selectedAppointmentID = id;
+									core.router.selectSub("details");
+								}}
+								secondaryText={
+									this.props.operatorsAsSecondaryText
+										? ALSecondaryText.operators
+										: ALSecondaryText.patient
+								}
+								rightColumn={ALRightColumn.deleteButton}
+								canDelete={this.canEdit}
+							/>
+						}
 					</div>
 				) : (
 					""
 				)}
-				{appointments.list[
-					appointments.getIndexByID(this.selectedAppointmentID)
-				] ? (
-					<AsyncComponent
-						key="ae"
-						loader={async () => {
-							const AppointmentEditorPanel = (await import("./appointment-editor"))
-								.AppointmentEditorPanel;
-							return (
-								<AppointmentEditorPanel
-									onDismiss={() =>
-										(this.selectedAppointmentID = "")
-									}
-									appointment={
-										appointments.list[
-											appointments.getIndexByID(
-												this.selectedAppointmentID
-											)
-										]
-									}
-									onDelete={() =>
-										(this.selectedAppointmentID = "")
-									}
-								/>
-							);
-						}}
-					/>
+				{this.selectedAppointment && core.router.selectedSub ? (
+					<div>
+						{core.router.selectedSub}{" "}
+						<AppointmentEditorPanel
+							appointment={this.selectedAppointment}
+							onDismiss={() => {
+								this.selectedAppointmentID = "";
+								core.router.unSelectSub();
+							}}
+						/>
+					</div>
 				) : (
 					""
 				)}

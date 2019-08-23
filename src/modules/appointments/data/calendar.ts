@@ -1,6 +1,6 @@
 import { setting } from "@modules";
 import { dateNames } from "@utils";
-import { computed, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 
 export interface WeekDayInfo {
 	dayLiteral: string;
@@ -19,29 +19,30 @@ export class Calendar {
 	currentMonth: number = new Date().getMonth();
 	currentDay: number = new Date().getDate();
 
-	// selected
-	@observable selectedYear: number = this.currentYear;
-	@observable selectedMonth: number = this.currentMonth;
-	@observable selectedDay: number = this.currentDay;
+	@observable selected: { year: number; month: number; day: number } = {
+		year: this.currentYear,
+		month: this.currentMonth,
+		day: this.currentDay
+	};
 
 	@computed get weekendsOn(): number {
-		return isNaN(Number(setting.getSetting("weekend_num")))
+		return isNaN(Number(setting!.getSetting("weekend_num")))
 			? 6
-			: Number(setting.getSetting("weekend_num"));
+			: Number(setting!.getSetting("weekend_num"));
 	}
 
 	@computed get selectedMonthCalendar() {
 		const month: DayInfo[][] = [[]];
 
 		const numberOfDays = this.numberOfDays(
-			this.selectedMonth,
-			this.selectedYear
+			this.selected.month,
+			this.selected.year
 		);
 
 		for (let date = 0; date < numberOfDays; date++) {
 			const obj = new Date(
-				this.selectedYear,
-				this.selectedMonth,
+				this.selected.year,
+				this.selected.month,
 				date + 1
 			);
 			const dayLiteral = obj.toLocaleDateString("en-us", {
@@ -51,7 +52,7 @@ export class Calendar {
 				weekday: "short"
 			});
 			const isWeekend =
-				dateNames.days(true).indexOf(dayLiteral) === this.weekendsOn;
+				dateNames.days().indexOf(dayLiteral) === this.weekendsOn;
 			month[month.length - 1].push({
 				dateNum: date + 1,
 				weekDay: {
@@ -83,13 +84,33 @@ export class Calendar {
 			const w = this.selectedMonthCalendar[wi];
 			for (let di = 0; di < w.length; di++) {
 				const d = w[di];
-				if (d.dateNum === this.selectedDay) {
+				if (d.dateNum === this.selected.day) {
 					week = w;
 					return week;
 				}
 			}
 		}
 		return week;
+	}
+
+	select({
+		year,
+		month,
+		day
+	}: {
+		year?: number;
+		month?: number;
+		day?: number;
+	}) {
+		if (typeof year === "number") {
+			this.selected.year = year;
+		}
+		if (typeof month === "number") {
+			this.selected.month = month;
+		}
+		if (typeof day === "number") {
+			this.selected.day = day;
+		}
 	}
 
 	numberOfDays(month: number, year: number): number {
@@ -103,4 +124,4 @@ export class Calendar {
 	}
 }
 
-export const calendar = new Calendar();
+export const calendar = observable(new Calendar());

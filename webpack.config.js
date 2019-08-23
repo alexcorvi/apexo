@@ -1,9 +1,12 @@
 var webpack = require("webpack");
 var production = process.argv.find(x => x === "-p");
 var fs = require("fs");
+var StringReplacePlugin = require("string-replace-webpack-plugin");
+var appVersion = require("./package.json").version;
 
 var nonJSAssets = [
 	"style.css",
+	"apple-touch-icon.png",
 	"fonts/fabric-icons-d40e9e78.woff",
 	"fonts/segoeui-westeuropean/segoeui-light.woff",
 	"fonts/segoeui-westeuropean/segoeui-light.woff2",
@@ -45,14 +48,27 @@ module.exports = {
 		plugins: [new TsconfigPathsPlugin({})]
 	},
 	externals: {
-		moment: "moment"
+		moment: "moment",
+		fs: "fs",
+		path: "path",
+		crypto: "crypto"
 	},
 	mode: production ? "production" : "development",
 	module: {
 		rules: [
 			{
 				test: /\.tsx?$/,
-				loader: "ts-loader"
+				loader: [
+					"ts-loader",
+					StringReplacePlugin.replace({
+						replacements: [
+							{
+								pattern: /--VERSION--/g,
+								replacement: () => appVersion
+							}
+						]
+					})
+				]
 			},
 			{
 				enforce: "pre",
@@ -67,7 +83,8 @@ module.exports = {
 				processHTML,
 				new webpack.DefinePlugin({
 					"process.env.NODE_ENV": JSON.stringify("production")
-				})
+				}),
+				new StringReplacePlugin()
 		  ]
-		: [processHTML]
+		: [processHTML, new StringReplacePlugin()]
 };

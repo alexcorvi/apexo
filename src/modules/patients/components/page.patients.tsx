@@ -1,21 +1,18 @@
 import {
-	AsyncComponent,
 	Col,
 	DataTableComponent,
+	PanelTabs,
+	PanelTop,
 	ProfileComponent,
 	ProfileSquaredComponent,
 	Row,
+	TableActions,
 	TagComponent
 	} from "@common-components";
-import { router, text, user } from "@core";
-import {
-	genderToString,
-	Patient,
-	PatientAppointmentsPanel,
-	PatientGalleryPanel,
-	patients,
-	setting
-	} from "@modules";
+import * as core from "@core";
+import { imagesTable, text } from "@core";
+import { Patient, PatientAppointmentsPanel, PatientGalleryPanel } from "@modules";
+import * as modules from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -25,124 +22,208 @@ import {
 	Panel,
 	PanelType,
 	PersonaInitialsColor,
-	TooltipHost
+	Shimmer
 	} from "office-ui-fabric-react";
+import { MessageBar, MessageBarType, PrimaryButton } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const PatientDetailsPanel = loadable({
+	loader: async () =>
+		(await import("modules/patients/components/patient-details"))
+			.PatientDetailsPanel,
+	loading: () => <Shimmer />
+});
+const DentalHistoryPanel = loadable({
+	loader: async () =>
+		(await import("modules/patients/components/dental-history"))
+			.DentalHistoryPanel,
+	loading: () => <Shimmer />
+});
+
+const AppointmentEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/appointments/components/appointment-editor"))
+			.AppointmentEditorPanel,
+	loading: () => <Shimmer />
+});
 
 @observer
-export class PatientsPage extends React.Component<{}, {}> {
-	@observable selectedId: string = router.currentLocation.split("/")[1];
-
-	@observable viewWhich: number = router.currentLocation.split("/")[1]
-		? 1
-		: 0;
+export class PatientsPage extends React.Component {
+	dt: DataTableComponent | null = null;
+	@observable selectedAppointmentId = "";
 
 	@computed
-	get patient() {
-		return patients.list.find(patient => patient._id === this.selectedId);
+	get selectedPatient() {
+		return modules.patients!.docs.find(
+			patient => patient._id === core.router.selectedID
+		);
 	}
 
 	@computed get canEdit() {
-		return user.currentUser.canEditPatients;
+		return core.user.currentUser!.canEditPatients;
+	}
+
+	@computed get selectedAppointment() {
+		return modules.appointments!.docs.find(
+			x => x._id === this.selectedAppointmentId
+		);
+	}
+
+	tabs(patient: Patient) {
+		return [
+			{
+				key: "details",
+				title: "Patient Details",
+				icon: "DietPlanNotebook"
+			},
+			{
+				key: "dental",
+				title: "Dental History",
+				icon: "teeth",
+				bubbleContent: patient.teeth.filter(
+					x => x.notes.length || x.condition !== "sound"
+				).length
+			},
+			{
+				key: "gallery",
+				title: "Gallery",
+				icon: "PhotoCollection",
+				bubbleContent: patient.gallery.length
+			},
+			{
+				key: "appointments",
+				title: "Appointments",
+				icon: "Calendar",
+				hidden: !core.user.currentUser!.canViewAppointments,
+				bubbleContent: patient.appointments.length
+			},
+			{
+				key: "delete",
+				title: "Delete",
+				icon: "Trash",
+				hidden: !this.canEdit,
+				hiddenOnPanel: true
+			}
+		];
 	}
 
 	render() {
 		return (
-			<div className="patients-component p-15 p-l-10 p-r-10">
-				{this.patient ? (
+			<div className="patients-component">
+				{this.selectedPatient ? (
 					<Panel
-						key={this.selectedId + this.viewWhich}
-						isOpen={!!this.patient}
+						key={core.router.selectedID}
+						isOpen={!!this.selectedPatient}
 						type={PanelType.medium}
 						closeButtonAriaLabel="Close"
 						isLightDismiss={true}
 						onDismiss={() => {
-							this.selectedId = "";
-							this.viewWhich = 0;
+							core.router.unSelect();
 						}}
 						onRenderNavigation={() => {
 							return (
-								<Row className="panel-heading">
-									<Col span={22}>
-										<ProfileComponent
-											name={this.patient!.name}
-											secondaryElement={
-												<div>
-													{this.viewWhich === 1
-														? text(
-																"Patient Details"
-														  )
-														: ""}
-													{this.viewWhich === 2
-														? text("Dental History")
-														: ""}
-													{this.viewWhich === 3
-														? text(
-																"Gallery and X-Rays"
-														  )
-														: ""}
-													{this.viewWhich === 4
-														? text(
-																"Patient Appointments"
-														  )
-														: ""}
-												</div>
-											}
-											size={3}
-										/>
-									</Col>
-									<Col span={2} className="close">
-										<IconButton
-											iconProps={{ iconName: "cancel" }}
-											onClick={() => {
-												this.selectedId = "";
-												this.viewWhich = 0;
-											}}
-										/>
-									</Col>
-								</Row>
+								<div className="panel-heading">
+									<PanelTop
+										title={this.selectedPatient!.name}
+										type={"Patient"}
+										subTitle={`${
+											this.selectedPatient!.gender
+										} - ${this.selectedPatient!.age} years`}
+										onDismiss={() => core.user.hide()}
+										avatar={
+											this.selectedPatient!.avatar
+												? imagesTable.table[
+														this.selectedPatient!
+															.avatar
+												  ]
+													? imagesTable.table[
+															this
+																.selectedPatient!
+																.avatar
+													  ]
+													: imagesTable.fetchImage(
+															this
+																.selectedPatient!
+																.avatar
+													  )
+												: undefined
+										}
+									/>
+									<PanelTabs
+										currentSelectedKey={
+											core.router.selectedTab
+										}
+										onSelect={key => {
+											core.router.selectTab(key);
+										}}
+										items={this.tabs(this.selectedPatient!)}
+									/>
+								</div>
 							);
 						}}
 					>
-						{this.viewWhich === 1 ? (
-							<AsyncComponent
-								key=""
-								loader={async () => {
-									const PatientDetailsPanel = (await import("./patient-details"))
-										.PatientDetailsPanel;
-									return (
-										<PatientDetailsPanel
-											patient={this.patient!}
-										/>
-									);
-								}}
+						{core.router.selectedTab === "details" ? (
+							<PatientDetailsPanel
+								patient={this.selectedPatient!}
+								onChangeViewWhich={key =>
+									core.router.selectTab(key)
+								}
 							/>
 						) : (
 							""
 						)}
-						{this.viewWhich === 2 ? (
-							<AsyncComponent
-								key=""
-								loader={async () => {
-									const DentalHistoryPanel = (await import("./dental-history"))
-										.DentalHistoryPanel;
-									return (
-										<DentalHistoryPanel
-											patient={this.patient!}
-										/>
-									);
-								}}
+						{core.router.selectedTab === "dental" ? (
+							<DentalHistoryPanel
+								patient={this.selectedPatient!}
 							/>
 						) : (
 							""
 						)}
-						{this.viewWhich === 3 ? (
-							<PatientGalleryPanel patient={this.patient} />
+						{core.router.selectedTab === "gallery" ? (
+							<PatientGalleryPanel
+								patient={this.selectedPatient}
+							/>
 						) : (
 							""
 						)}
-						{this.viewWhich === 4 ? (
-							<PatientAppointmentsPanel patient={this.patient} />
+						{core.router.selectedTab === "appointments" ? (
+							<PatientAppointmentsPanel
+								patient={this.selectedPatient}
+							/>
+						) : (
+							""
+						)}
+
+						{core.router.selectedTab === "delete" ? (
+							<div>
+								<br />
+								<MessageBar
+									messageBarType={MessageBarType.warning}
+								>
+									{`${text("All of the patient")} ${
+										this.selectedPatient.name
+									}${text(
+										"'s data will be deleted along with"
+									)} ${
+										this.selectedPatient.appointments.length
+									} ${text("of appointments")}.`}
+								</MessageBar>
+								<br />
+								<PrimaryButton
+									className="delete"
+									iconProps={{
+										iconName: "delete"
+									}}
+									text={text("Delete")}
+									onClick={() => {
+										modules.patients!.delete(
+											core.router.selectedID
+										);
+										core.router.unSelect();
+									}}
+								/>
+							</div>
 						) : (
 							""
 						)}
@@ -151,6 +232,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 					""
 				)}
 				<DataTableComponent
+					ref={dt => (this.dt = dt)}
 					maxItemsOnLoad={10}
 					className={"patients-data-table"}
 					heads={[
@@ -159,29 +241,41 @@ export class PatientsPage extends React.Component<{}, {}> {
 						text("Total/Outstanding Payments"),
 						text("Label")
 					]}
-					rows={patients.list.map(patient => ({
+					rows={modules.patients!.docs.map(patient => ({
 						id: patient._id,
+						className:
+							"pg-pn-" +
+							patient.name.toLowerCase().replace(/\s/g, ""),
 						searchableString: patient.searchableString,
 						cells: [
 							{
 								dataValue:
 									patient.name +
 									" " +
-									patient.age +
+									patient.gender +
 									" " +
-									genderToString(patient.gender),
+									patient.age,
 								component: (
 									<div>
 										<ProfileComponent
 											name={patient.name}
+											avatar={
+												patient.avatar
+													? imagesTable.table[
+															patient.avatar
+													  ]
+														? imagesTable.table[
+																patient.avatar
+														  ]
+														: imagesTable.fetchImage(
+																patient.avatar
+														  )
+													: undefined
+											}
 											secondaryElement={
 												<span>
-													{text(
-														genderToString(
-															patient.gender
-														)
-													)}{" "}
-													- {patient.age}{" "}
+													{text(patient.gender)} -{" "}
+													{patient.age}{" "}
 													{text("years old")}
 												</span>
 											}
@@ -189,93 +283,30 @@ export class PatientsPage extends React.Component<{}, {}> {
 										/>
 										<br />
 
-										<TooltipHost
-											content={text("Patient Details")}
-										>
-											<IconButton
-												className="action-button"
-												iconProps={{
-													iconName: "DietPlanNotebook"
-												}}
-												onClick={() => {
-													this.selectedId =
-														patient._id;
-													this.viewWhich = 1;
-												}}
-											/>
-										</TooltipHost>
-
-										<TooltipHost
-											content={text("Dental History")}
-										>
-											<IconButton
-												className="action-button"
-												iconProps={{
-													iconName: "Teeth"
-												}}
-												onClick={() => {
-													this.selectedId =
-														patient._id;
-													this.viewWhich = 2;
-												}}
-											/>
-										</TooltipHost>
-
-										<TooltipHost
-											content={text("Gallery and X-Rays")}
-										>
-											<IconButton
-												className="action-button"
-												iconProps={{
-													iconName: "PhotoCollection"
-												}}
-												onClick={() => {
-													this.selectedId =
-														patient._id;
-													this.viewWhich = 3;
-												}}
-											/>
-										</TooltipHost>
-
-										{user.currentUser
-											.canViewAppointments ? (
-											<TooltipHost
-												content={text(
-													"Patient Appointments"
-												)}
-											>
-												<IconButton
-													className="action-button"
-													iconProps={{
-														iconName: "Calendar"
-													}}
-													onClick={() => {
-														this.selectedId =
-															patient._id;
-														this.viewWhich = 4;
-													}}
-												/>
-											</TooltipHost>
-										) : (
-											""
-										)}
-										<TooltipHost content={text("Delete")}>
-											<IconButton
-												className="action-button delete"
-												iconProps={{
-													iconName: "Trash"
-												}}
-												onClick={() =>
-													patients.deleteModal(
+										<TableActions
+											items={this.tabs(patient)}
+											onSelect={key => {
+												if (key === "delete") {
+													modules.patients!.deleteModal(
 														patient._id
-													)
+													);
+												} else {
+													core.router.selectID(
+														patient._id,
+														key
+													);
 												}
-												disabled={!this.canEdit}
-											/>
-										</TooltipHost>
+											}}
+										/>
 									</div>
 								),
-								className: "no-label"
+								className: "no-label",
+								onClick: () => {
+									core.router.selectID(
+										patient._id,
+										"details"
+									);
+								}
 							},
 							{
 								dataValue: (
@@ -301,7 +332,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 															patient
 																.lastAppointment
 																.date,
-															setting.getSetting(
+															modules.setting!.getSetting(
 																"date_format"
 															)
 													  )
@@ -310,10 +341,20 @@ export class PatientsPage extends React.Component<{}, {}> {
 													  )
 											}
 											size={3}
+											onClick={
+												patient.lastAppointment
+													? () => {
+															this.selectedAppointmentId =
+																patient.lastAppointment._id;
+															core.router.selectSub(
+																"details"
+															);
+													  }
+													: undefined
+											}
 											onRenderInitials={() => (
 												<Icon iconName="Previous" />
 											)}
-											onClick={() => {}}
 											initialsColor={
 												patient.lastAppointment
 													? undefined
@@ -338,7 +379,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 															patient
 																.nextAppointment
 																.date,
-															setting.getSetting(
+															modules.setting!.getSetting(
 																"date_format"
 															)
 													  )
@@ -350,7 +391,17 @@ export class PatientsPage extends React.Component<{}, {}> {
 											onRenderInitials={() => (
 												<Icon iconName="Next" />
 											)}
-											onClick={() => {}}
+											onClick={
+												patient.nextAppointment
+													? () => {
+															this.selectedAppointmentId =
+																patient.nextAppointment._id;
+															core.router.selectSub(
+																"details"
+															);
+													  }
+													: undefined
+											}
 											initialsColor={
 												patient.nextAppointment
 													? undefined
@@ -367,7 +418,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 									<div>
 										<ProfileSquaredComponent
 											text={
-												setting.getSetting(
+												modules.setting!.getSetting(
 													"currencySymbol"
 												) +
 												patient.totalPayments.toString()
@@ -377,7 +428,6 @@ export class PatientsPage extends React.Component<{}, {}> {
 											onRenderInitials={() => (
 												<Icon iconName="CheckMark" />
 											)}
-											onClick={() => {}}
 											initialsColor={
 												patient.totalPayments > 0
 													? PersonaInitialsColor.darkBlue
@@ -387,7 +437,7 @@ export class PatientsPage extends React.Component<{}, {}> {
 										<br />
 										<ProfileSquaredComponent
 											text={
-												setting.getSetting(
+												modules.setting!.getSetting(
 													"currencySymbol"
 												) +
 												(patient.differenceAmount < 0
@@ -411,7 +461,6 @@ export class PatientsPage extends React.Component<{}, {}> {
 											onRenderInitials={() => (
 												<Icon iconName="Cancel" />
 											)}
-											onClick={() => {}}
 											initialsColor={
 												patient.differenceAmount !== 0
 													? PersonaInitialsColor.darkRed
@@ -434,6 +483,29 @@ export class PatientsPage extends React.Component<{}, {}> {
 													key={index}
 													text={label.text}
 													type={label.type}
+													highlighted={
+														this.dt
+															? this.dt
+																	.filterString ===
+															  label.text
+															: false
+													}
+													onClick={() => {
+														if (this.dt) {
+															if (
+																this.dt
+																	.filterString ===
+																label.text
+															) {
+																this.dt.filterString =
+																	"";
+															} else {
+																this.dt.filterString =
+																	label.text;
+															}
+														}
+														this.forceUpdate();
+													}}
 												/>
 											);
 										})}
@@ -451,10 +523,13 @@ export class PatientsPage extends React.Component<{}, {}> {
 										title: "Add new",
 										name: text("Add new"),
 										onClick: () => {
-											const patient = new Patient();
-											patients.list.push(patient);
-											this.selectedId = patient._id;
-											this.viewWhich = 1;
+											const patient = modules.patients!.new();
+											patient.fromJSON(patient.toJSON()); // init. teeth
+											modules.patients!.add(patient);
+											core.router.selectID(
+												patient._id,
+												"details"
+											);
 										},
 										iconProps: {
 											iconName: "Add"
@@ -464,6 +539,14 @@ export class PatientsPage extends React.Component<{}, {}> {
 							: []
 					}
 				/>
+				{this.selectedAppointment ? (
+					<AppointmentEditorPanel
+						appointment={this.selectedAppointment}
+						onDismiss={() => (this.selectedAppointmentId = "")}
+					/>
+				) : (
+					""
+				)}
 			</div>
 		);
 	}

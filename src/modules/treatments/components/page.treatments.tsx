@@ -1,39 +1,51 @@
-import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
-import { router, text, user } from "@core";
-import { appointments, setting, Treatment, treatments } from "@modules";
+import {
+	Col,
+	DataTableComponent,
+	PanelTabs,
+	PanelTop,
+	ProfileSquaredComponent,
+	Row,
+	SectionComponent
+	} from "@common-components";
+import { text } from "@core";
+import * as core from "@core";
+import * as modules from "@modules";
 import { num } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { IconButton, Panel, PanelType, TextField } from "office-ui-fabric-react";
+import {
+	IconButton,
+	MessageBar,
+	MessageBarType,
+	Panel,
+	PanelType,
+	PrimaryButton,
+	TextField
+	} from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
-export class Treatments extends React.Component<{}, {}> {
-	@observable selectedID: string = router.currentLocation.split("/")[1];
-
+export class Treatments extends React.Component {
 	@computed
 	get canEdit() {
-		return user.currentUser.canEditTreatments;
-	}
-
-	@computed
-	get selectedIndex() {
-		return treatments.list.findIndex(x => x._id === this.selectedID);
+		return core.user.currentUser!.canEditTreatments;
 	}
 
 	@computed
 	get selectedTreatment() {
-		return treatments.list[this.selectedIndex];
+		return modules.treatments!.docs.find(
+			x => x._id === core.router.selectedID
+		);
 	}
 
 	render() {
 		return (
-			<div className="tc-pg p-15 p-l-10 p-r-10">
+			<div className="tc-pg">
 				<DataTableComponent
 					onDelete={
 						this.canEdit
 							? id => {
-									treatments.deleteModal(id);
+									modules.treatments!.deleteModal(id);
 							  }
 							: undefined
 					}
@@ -45,9 +57,12 @@ export class Treatments extends React.Component<{}, {}> {
 										title: "Add new",
 										name: text("Add new"),
 										onClick: () => {
-											const treatment = new Treatment();
-											treatments.list.push(treatment);
-											this.selectedID = treatment._id;
+											const treatment = modules.treatments!.new();
+											modules.treatments!.add(treatment);
+											core.router.selectID(
+												treatment._id,
+												"details"
+											);
 										},
 										iconProps: {
 											iconName: "Add"
@@ -62,12 +77,12 @@ export class Treatments extends React.Component<{}, {}> {
 						text("Done appointments"),
 						text("Upcoming appointments")
 					]}
-					rows={treatments.list.map(treatment => {
+					rows={modules.treatments!.docs.map(treatment => {
 						const now = new Date().getTime();
 						let done = 0;
 						let upcoming = 0;
 
-						const appointmentsArr = appointments.list;
+						const appointmentsArr = modules.appointments!.docs;
 
 						for (
 							let index = 0;
@@ -97,7 +112,7 @@ export class Treatments extends React.Component<{}, {}> {
 											text={treatment.type}
 											subText={`${text(
 												"Expenses"
-											)}: ${setting.getSetting(
+											)}: ${modules.setting!.getSetting(
 												"currencySymbol"
 											)}${treatment.expenses} ${text(
 												"per unit"
@@ -105,7 +120,10 @@ export class Treatments extends React.Component<{}, {}> {
 										/>
 									),
 									onClick: () => {
-										this.selectedID = treatment._id;
+										core.router.selectID(
+											treatment._id,
+											"details"
+										);
 									},
 									className: "no-label"
 								},
@@ -113,7 +131,7 @@ export class Treatments extends React.Component<{}, {}> {
 									dataValue: treatment.expenses,
 									component: (
 										<span>
-											{setting.getSetting(
+											{modules.setting!.getSetting(
 												"currencySymbol"
 											)}
 											{treatment.expenses}
@@ -152,68 +170,105 @@ export class Treatments extends React.Component<{}, {}> {
 						closeButtonAriaLabel="Close"
 						isLightDismiss={true}
 						onDismiss={() => {
-							this.selectedID = "";
+							core.router.unSelect();
 						}}
 						onRenderNavigation={() => (
-							<Row className="panel-heading">
-								<Col span={20}>
-									{this.selectedTreatment ? (
-										<ProfileSquaredComponent
-											text={this.selectedTreatment.type}
-											subText={`${text(
-												"Expenses"
-											)}: ${setting.getSetting(
-												"currencySymbol"
-											)}${
-												this.selectedTreatment.expenses
-											} ${text("per unit")}`}
-										/>
-									) : (
-										<p />
-									)}
-								</Col>
-								<Col span={4} className="close">
-									<IconButton
-										iconProps={{ iconName: "cancel" }}
-										onClick={() => {
-											this.selectedID = "";
-										}}
-									/>
-								</Col>
-							</Row>
+							<div className="panel-heading">
+								<PanelTop
+									title={this.selectedTreatment!.type}
+									type={"Treatment"}
+									subTitle={`${text(
+										"Expenses"
+									)}: ${modules.setting!.getSetting(
+										"currencySymbol"
+									)}${
+										this.selectedTreatment!.expenses
+									} ${text("per unit")}`}
+									onDismiss={() => core.user.hide()}
+								/>
+								<PanelTabs
+									currentSelectedKey={core.router.selectedTab}
+									onSelect={key => core.router.selectTab(key)}
+									items={[
+										{
+											key: "details",
+											icon: "cricket",
+											title: "Treatment Details"
+										},
+										{
+											key: "delete",
+											icon: "trash",
+											title: "Delete"
+										}
+									]}
+								/>
+							</div>
 						)}
 					>
 						<div className="treatment-editor">
-							<SectionComponent title={text("Treatment Details")}>
-								<div className="treatment-input">
-									<TextField
-										label={text("Treatment title")}
-										value={this.selectedTreatment.type}
-										onChange={(ev, val) =>
-											(treatments.list[
-												this.selectedIndex
-											].type = val!)
-										}
-										disabled={!this.canEdit}
-									/>
-									<TextField
-										label={text(
-											"Treatment expenses (per unit)"
+							{core.router.selectedTab === "details" ? (
+								<SectionComponent
+									title={text("Treatment Details")}
+								>
+									<div className="treatment-input">
+										<TextField
+											label={text("Treatment title")}
+											value={this.selectedTreatment.type}
+											onChange={(ev, val) =>
+												(this.selectedTreatment!.type = val!)
+											}
+											disabled={!this.canEdit}
+											data-testid="treatment-title"
+										/>
+										<TextField
+											label={text(
+												"Treatment expenses (per unit)"
+											)}
+											type="number"
+											value={this.selectedTreatment.expenses.toString()}
+											onChange={(ev, val) =>
+												(this.selectedTreatment!.expenses = num(
+													val!
+												))
+											}
+											prefix={modules.setting!.getSetting(
+												"currencySymbol"
+											)}
+											disabled={!this.canEdit}
+										/>
+									</div>
+								</SectionComponent>
+							) : (
+								""
+							)}
+							{core.router.selectedTab === "delete" ? (
+								<div>
+									<br />
+									<MessageBar
+										messageBarType={MessageBarType.warning}
+									>
+										{text(
+											"Are you sure you want to delete"
 										)}
-										type="number"
-										value={this.selectedTreatment.expenses.toString()}
-										onChange={(ev, val) =>
-											(treatments.list[
-												this.selectedIndex
-											].expenses = num(val!))
-										}
-										prefix={setting.getSetting(
-											"currencySymbol"
-										)}
-										disabled={!this.canEdit}
+									</MessageBar>
+									<br />
+									<PrimaryButton
+										className="delete"
+										iconProps={{
+											iconName: "delete"
+										}}
+										text={text("Delete")}
+										onClick={() => {
+											modules.treatments!.delete(
+												core.router.selectedID
+											);
+											core.router.unSelect();
+										}}
 									/>
 								</div>
-							</SectionComponent>
+							) : (
+								""
+							)}
 						</div>
 					</Panel>
 				) : (

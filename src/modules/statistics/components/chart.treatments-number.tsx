@@ -1,50 +1,25 @@
 import { BarChartComponent } from "@common-components";
 import { text } from "@core";
-import { Chart, statistics, Treatment, treatments } from "@modules";
+import { Treatment } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 @observer
-class Component extends React.Component<{}, {}> {
-	@computed
-	get selectedTreatments() {
-		const selectedTreatments: {
-			treatment: Treatment;
-			profit: number;
-			times: number;
-		}[] = [];
-		statistics.selectedAppointments.forEach(appointment => {
-			if (!appointment.isPaid || appointment.treatment === undefined) {
-				return;
-			}
-			const i = selectedTreatments.findIndex(
-				t => t.treatment._id === appointment.treatment!._id
-			);
-			if (i === -1) {
-				selectedTreatments.push({
-					treatment: appointment.treatment,
-					profit: appointment.profit,
-					times: 1
-				});
-			} else {
-				selectedTreatments[i].times++;
-				selectedTreatments[i].profit =
-					selectedTreatments[i].profit + appointment.profit;
-			}
-		});
-		return selectedTreatments;
-	}
+export class TreatmentsNumberChart extends React.Component<{
+	selectedTreatments: {
+		treatment: Treatment;
+		profit: number;
+		times: number;
+	}[];
+}> {
 	@computed
 	get values() {
-		return this.selectedTreatments.map((treatment, i) => ({
+		return this.props.selectedTreatments.map((treatment, i) => ({
 			x: i,
 			y: treatment.profit,
 			times: treatment.times,
-			title:
-				treatments.list[
-					treatments.getIndexByID(treatment.treatment._id)
-				].type
+			title: treatment.treatment.type
 		}));
 	}
 	render() {
@@ -73,11 +48,3 @@ class Component extends React.Component<{}, {}> {
 		);
 	}
 }
-
-export const treatmentsNumberChart: Chart = {
-	Component,
-	name: "Treatments by profits",
-	description: "Treatments by profit",
-	tags: "treatments number profit",
-	className: "col-xs-12 col-lg-6"
-};

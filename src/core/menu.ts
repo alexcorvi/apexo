@@ -11,13 +11,13 @@ export interface MenuItem {
 	condition?: () => boolean;
 }
 
-class MenuData {
+export class Menu {
 	@observable
 	items: MenuItem[] = [
 		{
 			icon: "Home",
 			name: "Home",
-			order: -99,
+			order: -999,
 			key: "Home",
 			url: "",
 			onClick: () => {
@@ -25,8 +25,6 @@ class MenuData {
 			}
 		}
 	];
-
-	@observable visible: boolean = false;
 
 	@computed
 	get sortedItems() {
@@ -42,20 +40,13 @@ class MenuData {
 			.filter(item => !item.condition || item.condition());
 	}
 
-	@computed
-	get currentIndex() {
-		return this.sortedItems.findIndex(
-			x => x.name === router.currentNamespace
-		);
-	}
-
 	hide() {
-		this.visible = false;
+		router.unSelectMain();
 	}
 
 	show() {
-		this.visible = true;
+		router.selectMain("menu");
 	}
 }
 
-export const menu = new MenuData();
+export const menu = new Menu();

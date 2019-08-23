@@ -1,4 +1,4 @@
-import { colors } from "@common-components";
+import * as commonComponents from "@common-components";
 import { observer } from "mobx-react";
 import * as React from "react";
 
@@ -27,15 +27,15 @@ export class LineChartComponent extends React.Component<
 		const ctx = (document.getElementById(
 			this.id
 		) as HTMLCanvasElement).getContext("2d") as CanvasRenderingContext2D;
-		const chart = new Chart(ctx, {
+		const chart: Chart = new (Chart as any)(ctx, {
 			type: "line",
 			data: {
 				labels: this.props.data.xLabels,
 				datasets: this.props.data.lines.map((x, i) => ({
 					label: x.label,
 					data: x.data,
-					borderColor: colors[i],
-					backgroundColor: colors[i],
+					borderColor: commonComponents.colors[i],
+					backgroundColor: commonComponents.colors[i],
 					fill: false
 				}))
 			},

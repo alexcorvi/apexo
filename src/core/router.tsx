@@ -1,6 +1,8 @@
-import { menu, resync } from "@core";
+import * as core from "@core";
 import { HomeView } from "@main-components";
+import * as modules from "@modules";
 import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
 import * as React from "react";
 
 export interface Route {
@@ -10,8 +12,26 @@ export interface Route {
 	condition?: () => boolean;
 }
 
-class Router {
-	@observable reSyncing = false;
+export class Router {
+	@observable private _selectedID = "";
+	@observable private _selectedTab = "";
+
+	@observable private _selectedSub = "";
+
+	@observable private _selectedMain = "";
+
+	@computed get selectedID() {
+		return this._selectedID;
+	}
+	@computed get selectedTab() {
+		return this._selectedTab;
+	}
+	@computed get selectedSub() {
+		return this._selectedSub;
+	}
+	@computed get selectedMain() {
+		return this._selectedMain;
+	}
 
 	@observable currentLocation = "";
 
@@ -46,18 +66,15 @@ class Router {
 
 	async currentLoader() {
 		const namespace = this.currentLocation.split("/")[0];
-		this.reSyncing = true;
 		try {
-			const resyncModule = resync.modules.find(
-				x => x.namespace === namespace
+			// resync on page navigation
+			core.dbAction(
+				"resync",
+				namespace === "staff" ? "doctors" : namespace
 			);
-			if (resyncModule) {
-				await resyncModule.resync();
-			}
 		} catch (e) {
 			console.log(e);
 		}
-		this.reSyncing = false;
 		return true;
 	}
 
@@ -75,19 +92,109 @@ class Router {
 	}
 
 	go(routes: string[]) {
-		location.hash = "#!/" + routes.join("/");
+		location.hash = "#!/" + routes.join("/").replace(/\/\//g, "/");
 		scrollTo(0, 0);
-		menu.hide();
 	}
 
-	history(location: number) {
-		history.go(location);
+	selectID(id: string, tab?: string) {
+		const newLocation = this.currentLocation
+			.split("/")
+			.map(x => {
+				return x;
+			})
+			.filter(x => !x.startsWith("id:"));
+		newLocation.push(`id:${id}`);
+		this.go(newLocation);
+
+		if (tab) {
+			setTimeout(() => this.selectTab(tab), 100);
+		}
+	}
+	selectTab(tab?: string) {
+		const newLocation = this.currentLocation
+			.split("/")
+			.map(x => {
+				return x;
+			})
+			.filter(x => !x.startsWith("tab:"));
+		if (tab) {
+			newLocation.push(`tab:${tab}`);
+		}
+		this.go(newLocation);
+	}
+
+	selectSub(sub?: string) {
+		const newLocation = this.currentLocation
+			.split("/")
+			.map(x => {
+				return x;
+			})
+			.filter(x => !x.startsWith("sub:"));
+		if (sub) {
+			newLocation.push(`sub:${sub}`);
+		}
+		this.go(newLocation);
+	}
+
+	selectMain(main?: "user" | "menu") {
+		const newLocation = this.currentLocation
+			.split("/")
+			.filter(x => !x.startsWith("main:"));
+		if (main) {
+			newLocation.push(`main:${main}`);
+		}
+		this.go(newLocation);
+	}
+
+	unSelect() {
+		this.go([this.currentNamespace]);
+	}
+
+	unSelectSub() {
+		this.selectSub();
+	}
+
+	unSelectMain() {
+		this.selectMain();
 	}
 
 	private async checkAndLoad() {
-		const newLocation = location.hash.substr(3);
-		if (newLocation !== this.currentLocation) {
-			this.currentLocation = location.hash.substr(3);
+		this.currentLocation = location.hash.substr(3);
+
+		const id = this.currentLocation
+			.split("/")
+			.find(x => x.startsWith("id:"));
+
+		const tab = this.currentLocation
+			.split("/")
+			.find(x => x.startsWith("tab:"));
+
+		const sub = this.currentLocation
+			.split("/")
+			.find(x => x.startsWith("sub:"));
+
+		const main = this.currentLocation
+			.split("/")
+			.find(x => x.startsWith("main:"));
+		if (id) {
+			this._selectedID = id.replace(/id:/, "");
+		} else {
+			this._selectedID = "";
+		}
+		if (sub) {
+			this._selectedSub = sub.replace(/sub:/, "");
+		} else {
+			this._selectedSub = "";
+		}
+		if (main) {
+			this._selectedMain = main.replace(/main:/, "");
+		} else {
+			this._selectedMain = "";
+		}
+		if (tab) {
+			this._selectedTab = tab.replace(/tab:/, "");
+		} else {
+			this._selectedTab = "";
 		}
 	}
 

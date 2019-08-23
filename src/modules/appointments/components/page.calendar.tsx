@@ -1,31 +1,46 @@
-import { AsyncComponent, Col, ProfileSquaredComponent, Row } from "@common-components";
-import { router, text, user } from "@core";
-import { Appointment, appointments, calendar, Patient, PatientLinkComponent } from "@modules";
+import { Col, ProfileSquaredComponent, Row } from "@common-components";
+import * as core from "@core";
+import { text } from "@core";
+import { Calendar, calendar } from "@modules";
+import {
+	Appointment,
+	DayInfo,
+	PatientLinkComponent,
+	patientsNamespace,
+	PrescriptionItem,
+	StaffMember
+	} from "@modules";
+import * as modules from "@modules";
 import { dateNames, num } from "@utils";
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { Icon, TextField, Toggle } from "office-ui-fabric-react";
+import { Icon, Shimmer, TextField, Toggle } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const AppointmentEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/appointments/components/appointment-editor"))
+			.AppointmentEditorPanel,
+	loading: () => <Shimmer />
+});
 
 @observer
-export class CalendarPage extends React.Component<{}, {}> {
+export class CalendarPage extends React.Component {
 	@observable filter: string = "";
 
-	@observable appointment: Appointment | null = null;
+	@computed get appointment() {
+		return modules.appointments!.docs.find(
+			a => a._id === core.router.selectedID
+		);
+	}
 
 	@observable showAll: boolean = true;
 
+	@observable c: Calendar = calendar;
+
 	componentDidMount() {
 		this.unifyHeight();
-
-		const dateString = router.currentLocation.split("/")[1];
-		if (!dateString) {
-			return;
-		}
-		const dateArray = dateString.split(/\W/);
-		calendar.selectedYear = num(dateArray[0]);
-		calendar.selectedMonth = num(dateArray[1]) - 1;
-		calendar.selectedDay = num(dateArray[2]);
 	}
 
 	componentDidUpdate() {
@@ -54,28 +69,31 @@ export class CalendarPage extends React.Component<{}, {}> {
 
 	render() {
 		return (
-			<div className="calendar-component container-fluid">
+			<div className="calendar-component">
 				<div className="selector year-selector">
 					<Row>
 						{[
-							calendar.currentYear - 2,
-							calendar.currentYear - 1,
-							calendar.currentYear,
-							calendar.currentYear + 1
+							this.c.currentYear - 2,
+							this.c.currentYear - 1,
+							this.c.currentYear,
+							this.c.currentYear + 1
 						].map(year => {
 							return (
 								<Col key={year} span={6} className="centered">
 									<a
 										onClick={() => {
-											calendar.selectedYear = year;
-											calendar.selectedMonth = 0;
-											calendar.selectedDay = 1;
+											this.c.select({
+												year,
+												month: 0,
+												day: 1
+											});
+											this.forceUpdate();
 										}}
 										className={
-											(calendar.selectedYear === year
+											(this.c.selected.year === year
 												? "selected"
 												: "") +
-											(calendar.currentYear === year
+											(this.c.currentYear === year
 												? " current"
 												: "")
 										}
@@ -99,21 +117,23 @@ export class CalendarPage extends React.Component<{}, {}> {
 								>
 									<a
 										onClick={() => {
-											calendar.selectedMonth = index;
-											calendar.selectedDay = 1;
+											this.c.select({
+												month: index,
+												day: 1
+											});
 										}}
 										className={
-											(calendar.selectedMonth === index
+											(this.c.selected.month === index
 												? "selected"
 												: "") +
-											(calendar.currentMonth === index &&
-											calendar.currentYear ===
-												calendar.selectedYear
+											(this.c.currentMonth === index &&
+											this.c.currentYear ===
+												this.c.selected.year
 												? " current"
 												: "")
 										}
 									>
-										{monthShort}
+										{text(monthShort)}
 									</a>
 								</Col>
 							);
@@ -121,111 +141,118 @@ export class CalendarPage extends React.Component<{}, {}> {
 					</Row>
 				</div>
 				<div className="selector day-selector">
-					<div className="day-selector-wrapper">
-						<div>
-							{calendar.selectedMonthDays.map(day => {
-								return (
-									<div
-										key={day.dateNum}
-										onClick={() => {
-											calendar.selectedDay = day.dateNum;
-											setTimeout(() => {
-												scroll(
-													0,
-													this.findPos(
-														document.getElementById(
-															"day_" + day.dateNum
+					<div className="day-selector-border">
+						<div className="day-selector-wrapper">
+							<div>
+								{this.c.selectedMonthDays.map(day => {
+									return (
+										<div
+											key={day.dateNum}
+											onClick={() => {
+												this.c.select({
+													day: day.dateNum
+												});
+												setTimeout(() => {
+													scroll(
+														0,
+														this.findPos(
+															document.getElementById(
+																"day_" +
+																	day.dateNum
+															)
 														)
-													)
-												);
-											}, 0);
-										}}
-										className={
-											"day-col" +
-											(calendar.selectedDay ===
-											day.dateNum
-												? " selected"
-												: "") +
-											(user.currentUser.onDutyDays.indexOf(
-												day.weekDay.dayLiteral
-											) === -1
-												? " holiday"
-												: "") +
-											(day.weekDay.isWeekend
-												? " weekend"
-												: "")
-										}
-									>
-										<div className="day-name">
-											{text(
-												day.weekDay.dayLiteralShort
-													.substr(0, 2)
-													.toUpperCase()
-											)}
-										</div>
-										<a
+													);
+												}, 0);
+											}}
 											className={
-												"day-number info-row" +
-												(day.dateNum ===
-													calendar.currentDay &&
-												calendar.currentMonth ===
-													calendar.selectedMonth &&
-												calendar.selectedYear ===
-													calendar.currentYear
-													? " current"
+												"day-col" +
+												(this.c.selected.day ===
+												day.dateNum
+													? " selected"
+													: "") +
+												(core.user.currentUser!.onDutyDays.indexOf(
+													day.weekDay.dayLiteral
+												) === -1
+													? " holiday"
+													: "") +
+												(day.weekDay.isWeekend
+													? " weekend"
 													: "")
 											}
 										>
-											{day.dateNum}
-										</a>
-									</div>
-								);
-							})}
-						</div>
-						<div>
-							{calendar.selectedMonthDays.map(day => {
-								const number = appointments.appointmentsForDay(
-									calendar.selectedYear,
-									calendar.selectedMonth + 1,
-									day.dateNum,
-									undefined,
-									this.showAll
-										? undefined
-										: user.currentUser._id
-								).length;
-								return (
-									<div
-										key={day.dateNum}
-										onClick={() => {
-											calendar.selectedDay = day.dateNum;
-										}}
-										className={
-											"day-col" +
-											(calendar.selectedDay ===
-											day.dateNum
-												? " selected"
-												: "") +
-											(user.currentUser.onDutyDays.indexOf(
-												day.weekDay.dayLiteral
-											) === -1
-												? " holiday"
-												: "") +
-											(day.weekDay.isWeekend
-												? " weekend"
-												: "")
-										}
-									>
+											<div className="day-name">
+												{text(
+													day.weekDay.dayLiteralShort
+														.substr(0, 2)
+														.toUpperCase()
+												)}
+											</div>
+											<a
+												className={
+													"day-number info-row" +
+													(day.dateNum ===
+														this.c.currentDay &&
+													this.c.currentMonth ===
+														this.c.selected.month &&
+													this.c.selected.year ===
+														this.c.currentYear
+														? " current"
+														: "")
+												}
+											>
+												{day.dateNum}
+											</a>
+										</div>
+									);
+								})}
+							</div>
+							<div>
+								{this.c.selectedMonthDays.map(day => {
+									const number = modules.appointments!.appointmentsForDay(
+										this.c.selected.year,
+										this.c.selected.month + 1,
+										day.dateNum,
+										undefined,
+										this.showAll
+											? undefined
+											: core.user.currentUser!._id
+									).length;
+									return (
 										<div
+											key={day.dateNum}
+											onClick={() => {
+												this.c.select({
+													day: day.dateNum
+												});
+											}}
 											className={
-												"info-row appointments-num num-" +
-												number
+												"day-col" +
+												(this.c.selected.day ===
+												day.dateNum
+													? " selected"
+													: "") +
+												(core.user.currentUser!.onDutyDays.indexOf(
+													day.weekDay.dayLiteral
+												) === -1
+													? " holiday"
+													: "") +
+												(day.weekDay.isWeekend
+													? " weekend"
+													: "")
 											}
 										>
-											{number}
+											<div
+												className={
+													"info-row appointments-num num-" +
+													number
+												}
+											>
+												{number}
+											</div>
 										</div>
-									</div>
-								);
-							})}
+									);
+								})}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -234,7 +261,7 @@ export class CalendarPage extends React.Component<{}, {}> {
 						<Row>
 							<Col sm={12} md={6} xs={24}>
 								<Toggle
-									defaultChecked={this.showAll}
+									checked={this.showAll}
 									onText={text("All appointments")}
 									offText={text("My appointments only")}
 									onChange={(ev, newValue) => {
@@ -252,31 +279,43 @@ export class CalendarPage extends React.Component<{}, {}> {
 							</Col>
 						</Row>
 					</div>
-					<div id="full-day-cols">
-						{calendar.selectedWeekDays.map(day => {
+					<div
+						id="full-day-cols"
+						key={JSON.stringify(this.c.selected)}
+					>
+						{this.c.selectedWeekDays.map(day => {
 							return (
 								<div
 									key={day.dateNum}
 									id={"day" + "_" + day.dateNum}
 									className={
 										"full-day-col" +
-										(user.currentUser.onDutyDays.indexOf(
+										(core.user.currentUser!.onDutyDays.indexOf(
 											day.weekDay.dayLiteral
 										) === -1
 											? " holiday"
 											: "") +
-										(calendar.selectedDay === day.dateNum
+										(this.c.selected.day === day.dateNum
 											? " selected"
+											: "") +
+										(day.dateNum === this.c.currentDay &&
+										this.c.currentMonth ===
+											this.c.selected.month &&
+										this.c.selected.year ===
+											this.c.currentYear
+											? " current"
 											: "")
 									}
 									onClick={() => {
-										calendar.selectedDay = day.dateNum;
+										this.c.select({
+											day: day.dateNum
+										});
 									}}
 									style={{
 										width:
 											(
 												100 /
-												calendar.selectedWeekDays.length
+												this.c.selectedWeekDays.length
 											).toString() + "%"
 									}}
 								>
@@ -287,15 +326,15 @@ export class CalendarPage extends React.Component<{}, {}> {
 											{text(day.weekDay.dayLiteral)}
 										</span>
 									</h4>
-									{appointments
-										.appointmentsForDay(
-											calendar.selectedYear,
-											calendar.selectedMonth + 1,
+									{modules
+										.appointments!.appointmentsForDay(
+											this.c.selected.year,
+											this.c.selected.month + 1,
 											day.dateNum,
 											this.filter,
 											this.showAll
 												? undefined
-												: user.currentUser._id
+												: core.user.currentUser!._id
 										)
 										.sort((a, b) => a.date - b.date)
 										.map(appointment => {
@@ -304,18 +343,34 @@ export class CalendarPage extends React.Component<{}, {}> {
 													key={appointment._id}
 													className="appointment"
 													onClick={() => {
-														this.appointment =
-															appointments.list[
-																appointments.getIndexByID(
-																	appointment._id
-																)
-															];
+														core.router.selectID(
+															appointment._id
+														);
+
+														setTimeout(
+															() =>
+																core.router.selectSub(
+																	"details"
+																),
+															100
+														);
 													}}
 												>
-													<div className="time">
-														{
-															appointment.formattedTime
+													<div
+														className={
+															"time" +
+															(appointment.isMissed
+																? " missed"
+																: appointment.isDone
+																? " done"
+																: "")
 														}
+													>
+														{appointment.isMissed
+															? text("Missed")
+															: appointment.isDone
+															? text("Done")
+															: appointment.formattedTime}
 													</div>
 													<div className="m-b-5">
 														<ProfileSquaredComponent
@@ -332,9 +387,17 @@ export class CalendarPage extends React.Component<{}, {}> {
 													<PatientLinkComponent
 														id={
 															(
-																appointment.patient ||
-																new Patient()
+																appointment.patient || {
+																	_id: ""
+																}
 															)._id
+														}
+														name={
+															(
+																appointment.patient || {
+																	name: ""
+																}
+															).name
 														}
 													/>
 													{appointment.operatingStaff.map(
@@ -346,7 +409,7 @@ export class CalendarPage extends React.Component<{}, {}> {
 																	}
 																	className="m-t-5 fs-11"
 																>
-																	<Icon iconName="Contact" />{" "}
+																	<Icon iconName="Medical" />{" "}
 																	{
 																		operator.name
 																	}
@@ -362,20 +425,10 @@ export class CalendarPage extends React.Component<{}, {}> {
 						})}
 					</div>
 				</div>
-				{this.appointment ? (
-					<AsyncComponent
-						key="ae"
-						loader={async () => {
-							const AppointmentEditorPanel = (await import("./appointment-editor"))
-								.AppointmentEditorPanel;
-							return (
-								<AppointmentEditorPanel
-									appointment={this.appointment}
-									onDismiss={() => (this.appointment = null)}
-									onDelete={() => (this.appointment = null)}
-								/>
-							);
-						}}
+				{this.appointment && core.router.selectedSub ? (
+					<AppointmentEditorPanel
+						appointment={this.appointment}
+						onDismiss={() => core.router.unSelect()}
 					/>
 				) : (
 					""
@@ -385,12 +438,12 @@ export class CalendarPage extends React.Component<{}, {}> {
 	}
 
 	findPos(obj: HTMLElement | null) {
-		let curtop = 0;
+		let currentTop = 0;
 		if (obj && obj.offsetParent) {
 			do {
-				curtop += obj.offsetTop;
+				currentTop += obj.offsetTop;
 			} while ((obj = obj.offsetParent as HTMLElement));
-			return curtop - 70;
+			return currentTop - 70;
 		}
 		return 0;
 	}

@@ -1,22 +1,18 @@
 import {
-	AsyncComponent,
 	Col,
 	DataTableComponent,
+	PanelTabs,
+	PanelTop,
 	ProfileComponent,
 	ProfileSquaredComponent,
 	Row,
+	TableActions,
 	TagInputComponent
 	} from "@common-components";
-import { text, user } from "@core";
-import {
-	genderToString,
-	OrthoCase,
-	orthoCases,
-	Patient,
-	PatientAppointmentsPanel,
-	patients,
-	setting
-	} from "@modules";
+import { imagesTable, text } from "@core";
+import * as core from "@core";
+import { PatientAppointmentsPanel } from "@modules";
+import * as modules from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -24,25 +20,66 @@ import {
 	DefaultButton,
 	Icon,
 	IconButton,
+	MessageBar,
+	MessageBarType,
 	Panel,
 	PanelType,
 	PersonaInitialsColor,
-	TextField,
-	TooltipHost
+	PrimaryButton,
+	Shimmer,
+	TextField
 	} from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const PatientDetailsPanel = loadable({
+	loader: async () =>
+		(await import("modules/patients/components/patient-details"))
+			.PatientDetailsPanel,
+	loading: () => <Shimmer />
+});
+const DentalHistoryPanel = loadable({
+	loader: async () =>
+		(await import("modules/patients/components/dental-history"))
+			.DentalHistoryPanel,
+	loading: () => <Shimmer />
+});
+const OrthoCaseSheetPanel = loadable({
+	loader: async () =>
+		(await import("modules/orthodontic/components/case-sheet"))
+			.OrthoCaseSheetPanel,
+	loading: () => <Shimmer />
+});
+const OrthoRecordsPanel = loadable({
+	loader: async () =>
+		(await import("modules/orthodontic/components/records"))
+			.OrthoRecordsPanel,
+	loading: () => <Shimmer />
+});
+const OrthoGalleryPanel = loadable({
+	loader: async () =>
+		(await import("modules/orthodontic/components/ortho-gallery"))
+			.OrthoGalleryPanel,
+	loading: () => <Shimmer />
+});
+
+const AppointmentEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/appointments/components/appointment-editor"))
+			.AppointmentEditorPanel,
+	loading: () => <Shimmer />
+});
 
 @observer
-export class OrthoPage extends React.Component<{}, {}> {
+export class OrthoPage extends React.Component {
 	@observable showAdditionPanel: boolean = false;
 	@observable newPatientName: string = "";
 
-	@observable selectedId: string = "";
-	@observable viewWhich: number = 0;
+	@observable selectedAppointmentId = "";
 
 	@computed get selectedCase() {
-		return orthoCases.list.find(
-			orthoCase => orthoCase._id === this.selectedId
+		return modules.orthoCases!.docs.find(
+			orthoCase => orthoCase._id === core.router.selectedID
 		);
 	}
 
@@ -55,12 +92,72 @@ export class OrthoPage extends React.Component<{}, {}> {
 	}
 
 	@computed get canEdit() {
-		return user.currentUser.canEditOrtho;
+		return core.user.currentUser!.canEditOrtho;
+	}
+
+	@computed get selectedAppointment() {
+		return modules.appointments!.docs.find(
+			x => x._id === this.selectedAppointmentId
+		);
+	}
+
+	tabs(orthoCase: modules.OrthoCase) {
+		return [
+			{
+				key: "details",
+				title: "Patient Details",
+				icon: "DietPlanNotebook"
+			},
+			{
+				key: "dental",
+				title: "Dental History",
+				icon: "teeth",
+				bubbleContent: orthoCase.patient!.teeth.filter(
+					x => x.notes.length || x.condition !== "sound"
+				).length
+			},
+			{
+				key: "sheet",
+				title: "Case Sheet",
+				icon: "GroupedList",
+				bubbleContent:
+					orthoCase.computedProblems.length +
+					orthoCase.problemsList.length
+			},
+			{
+				key: "archive",
+				title: "Visits Archive",
+				icon: "Archive",
+				bubbleContent: orthoCase.visits.length
+			},
+			{
+				key: "gallery",
+				title: "Gallery",
+				icon: "PhotoCollection",
+				bubbleContent:
+					orthoCase.patient!.gallery.length +
+					orthoCase.cephalometricHistory.length
+			},
+			{
+				key: "appointments",
+				title: "Appointments",
+				icon: "Calendar",
+				hidden: !core.user.currentUser!.canViewAppointments,
+				bubbleContent: orthoCase.patient!.appointments.length
+			},
+			{
+				key: "delete",
+				title: "Delete",
+				icon: "Trash",
+				hidden: !this.canEdit,
+				hiddenOnPanel: true
+			}
+		];
 	}
 
 	render() {
 		return (
-			<div className="orthodontic-cases-component p-15 p-l-10 p-r-10">
+			<div className="orthodontic-cases-component">
 				<DataTableComponent
 					maxItemsOnLoad={10}
 					className={"orthodontic-cases-data-table"}
@@ -70,10 +167,10 @@ export class OrthoPage extends React.Component<{}, {}> {
 						text("Last/Next Appointment"),
 						text("Total/Outstanding Payments")
 					]}
-					rows={orthoCases.filtered
-						.filter(orthoCase => orthoCase.patient)
+					rows={modules
+						.orthoCases!.docs.filter(orthoCase => orthoCase.patient)
 						.map(orthoCase => {
-							const patient = orthoCase.patient || new Patient();
+							const patient = orthoCase.patient!;
 							return {
 								id: orthoCase._id,
 								searchableString: orthoCase.searchableString,
@@ -84,12 +181,26 @@ export class OrthoPage extends React.Component<{}, {}> {
 											<div>
 												<ProfileComponent
 													name={patient.name}
+													avatar={
+														patient.avatar
+															? imagesTable.table[
+																	patient
+																		.avatar
+															  ]
+																? imagesTable
+																		.table[
+																		patient
+																			.avatar
+																  ]
+																: imagesTable.fetchImage(
+																		patient.avatar
+																  )
+															: undefined
+													}
 													secondaryElement={
 														<span>
 															{text(
-																genderToString(
-																	patient.gender
-																)
+																patient.gender
 															)}{" "}
 															- {patient.age}{" "}
 															{text("years old")}
@@ -98,142 +209,30 @@ export class OrthoPage extends React.Component<{}, {}> {
 													size={3}
 												/>
 												<br />
-												<TooltipHost
-													content={text(
-														"Patient Details"
-													)}
-												>
-													<IconButton
-														className="action-button"
-														iconProps={{
-															iconName:
-																"DietPlanNotebook"
-														}}
-														onClick={() => {
-															this.selectedId =
-																orthoCase._id;
-															this.viewWhich = 1;
-														}}
-													/>
-												</TooltipHost>
-
-												<TooltipHost
-													content={text(
-														"Dental History"
-													)}
-												>
-													<IconButton
-														className="action-button"
-														iconProps={{
-															iconName: "Teeth"
-														}}
-														onClick={() => {
-															this.selectedId =
-																orthoCase._id;
-															this.viewWhich = 2;
-														}}
-													/>
-												</TooltipHost>
-
-												<TooltipHost
-													content={text(
-														"Orthodontic Case Sheet"
-													)}
-												>
-													<IconButton
-														className="action-button"
-														iconProps={{
-															iconName:
-																"GroupedList"
-														}}
-														onClick={() => {
-															this.selectedId =
-																orthoCase._id;
-															this.viewWhich = 3;
-														}}
-													/>
-												</TooltipHost>
-
-												<TooltipHost
-													content={text(
-														"Orthodontic Album"
-													)}
-												>
-													<IconButton
-														className="action-button"
-														iconProps={{
-															iconName:
-																"TripleColumn"
-														}}
-														onClick={() => {
-															this.selectedId =
-																orthoCase._id;
-															this.viewWhich = 4;
-														}}
-													/>
-												</TooltipHost>
-
-												<TooltipHost
-													content={text(
-														"Gallery and X-Rays"
-													)}
-												>
-													<IconButton
-														className="action-button"
-														iconProps={{
-															iconName:
-																"PhotoCollection"
-														}}
-														onClick={() => {
-															this.selectedId =
-																orthoCase._id;
-															this.viewWhich = 5;
-														}}
-													/>
-												</TooltipHost>
-
-												{user.currentUser
-													.canViewAppointments ? (
-													<TooltipHost
-														content={text(
-															"Patient Appointments"
-														)}
-													>
-														<IconButton
-															className="action-button"
-															iconProps={{
-																iconName:
-																	"Calendar"
-															}}
-															onClick={() => {
-																this.selectedId =
-																	orthoCase._id;
-																this.viewWhich = 6;
-															}}
-														/>
-													</TooltipHost>
-												) : (
-													""
-												)}
-												<TooltipHost
-													content={text("Delete")}
-												>
-													<IconButton
-														className="action-button delete"
-														iconProps={{
-															iconName: "Trash"
-														}}
-														onClick={() =>
-															orthoCases.deleteModal(
+												<TableActions
+													items={this.tabs(orthoCase)}
+													onSelect={key => {
+														if (key === "delete") {
+															modules.orthoCases!.deleteModal(
 																orthoCase._id
-															)
+															);
+														} else {
+															core.router.selectID(
+																orthoCase._id,
+																key
+															);
 														}
-														disabled={!this.canEdit}
-													/>
-												</TooltipHost>
+													}}
+												/>
 											</div>
 										),
-										className: "no-label"
+										className: "no-label",
+										onClick: () => {
+											core.router.selectID(
+												orthoCase._id,
+												"sheet"
+											);
+										}
 									},
 									{
 										dataValue: orthoCase.isFinished
@@ -246,7 +245,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 														orthoCase.isStarted
 															? formatDate(
 																	orthoCase.startedDate,
-																	setting.getSetting(
+																	modules.setting!.getSetting(
 																		"date_format"
 																	)
 															  )
@@ -265,7 +264,6 @@ export class OrthoPage extends React.Component<{}, {}> {
 													onRenderInitials={() => (
 														<Icon iconName="info" />
 													)}
-													onClick={() => {}}
 													initialsColor={
 														orthoCase.isStarted
 															? PersonaInitialsColor.teal
@@ -278,7 +276,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 														orthoCase.isFinished
 															? formatDate(
 																	orthoCase.finishedDate,
-																	setting.getSetting(
+																	modules.setting!.getSetting(
 																		"date_format"
 																	)
 															  )
@@ -297,7 +295,6 @@ export class OrthoPage extends React.Component<{}, {}> {
 													onRenderInitials={() => (
 														<Icon iconName="CheckMark" />
 													)}
-													onClick={() => {}}
 													initialsColor={
 														orthoCase.isFinished
 															? PersonaInitialsColor.blue
@@ -335,7 +332,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 																	patient
 																		.lastAppointment
 																		.date,
-																	setting.getSetting(
+																	modules.setting!.getSetting(
 																		"date_format"
 																	)
 															  )
@@ -347,11 +344,21 @@ export class OrthoPage extends React.Component<{}, {}> {
 													onRenderInitials={() => (
 														<Icon iconName="Previous" />
 													)}
-													onClick={() => {}}
 													initialsColor={
 														patient.lastAppointment
 															? undefined
 															: PersonaInitialsColor.transparent
+													}
+													onClick={
+														patient.lastAppointment
+															? () => {
+																	this.selectedAppointmentId =
+																		patient.lastAppointment._id;
+																	core.router.selectSub(
+																		"details"
+																	);
+															  }
+															: undefined
 													}
 												/>
 												<br />
@@ -374,7 +381,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 																	patient
 																		.nextAppointment
 																		.date,
-																	setting.getSetting(
+																	modules.setting!.getSetting(
 																		"date_format"
 																	)
 															  )
@@ -382,11 +389,21 @@ export class OrthoPage extends React.Component<{}, {}> {
 																	"No next appointment"
 															  )
 													}
+													onClick={
+														patient.nextAppointment
+															? () => {
+																	this.selectedAppointmentId =
+																		patient.nextAppointment._id;
+																	core.router.selectSub(
+																		"details"
+																	);
+															  }
+															: undefined
+													}
 													size={3}
 													onRenderInitials={() => (
 														<Icon iconName="Next" />
 													)}
-													onClick={() => {}}
 													initialsColor={
 														patient.nextAppointment
 															? undefined
@@ -403,7 +420,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 											<div>
 												<ProfileSquaredComponent
 													text={
-														setting.getSetting(
+														modules.setting!.getSetting(
 															"currencySymbol"
 														) +
 														patient.totalPayments.toString()
@@ -415,7 +432,6 @@ export class OrthoPage extends React.Component<{}, {}> {
 													onRenderInitials={() => (
 														<Icon iconName="CheckMark" />
 													)}
-													onClick={() => {}}
 													initialsColor={
 														patient.totalPayments >
 														0
@@ -426,7 +442,7 @@ export class OrthoPage extends React.Component<{}, {}> {
 												<br />
 												<ProfileSquaredComponent
 													text={
-														setting.getSetting(
+														modules.setting!.getSetting(
 															"currencySymbol"
 														) +
 														(patient.differenceAmount <
@@ -456,7 +472,6 @@ export class OrthoPage extends React.Component<{}, {}> {
 													onRenderInitials={() => (
 														<Icon iconName="Cancel" />
 													)}
-													onClick={() => {}}
 													initialsColor={
 														patient.differenceAmount !==
 														0
@@ -497,47 +512,59 @@ export class OrthoPage extends React.Component<{}, {}> {
 						this.showAdditionPanel = false;
 					}}
 				>
-					<h4>{text("Choose patient")}</h4>
 					<br />
 					<TagInputComponent
-						strict
+						label={text("Choose patient")}
+						options={modules.patients!.docs.map(patient => ({
+							text: patient.name,
+							key: patient._id
+						}))}
+						suggestionsHeaderText={text("Select patient")}
+						noResultsFoundText={text("No patients found")}
+						maxItems={1}
+						disabled={!this.canEdit}
 						value={[]}
-						options={orthoCases.patientsWithNoOrtho.map(
-							patient => ({
-								key: patient._id,
-								text: patient.name
-							})
-						)}
-						onAdd={val => {
-							this.showAdditionPanel = false;
-							const orthoCase = new OrthoCase();
-							orthoCase.patientID = val.key;
-							orthoCases.list.push(orthoCase);
-							this.selectedId = orthoCase._id;
-							this.viewWhich = 3;
+						onChange={selectedKeys => {
+							if (selectedKeys[0]) {
+								this.showAdditionPanel = false;
+								const orthoCase = modules.orthoCases!.new();
+								orthoCase.patientID = selectedKeys[0];
+								modules.orthoCases!.add(orthoCase);
+								core.router.selectID(orthoCase._id, "sheet");
+							}
 						}}
-						placeholder={text(`Type to select patient`)}
 					/>
-					<br />
-					<hr />
-					<h4>Or add new patient</h4>
-					<br />
+					<Row className="m-t-15">
+						<Col xs={10}>
+							<hr />
+						</Col>
+
+						<Col xs={4}>
+							<i className="new-or">or</i>
+						</Col>
+						<Col xs={10}>
+							<hr />
+						</Col>
+					</Row>
 					<TextField
+						label="Add new patient"
 						placeholder={text(`Patient name`)}
 						value={this.newPatientName}
 						onChange={(e, v) => (this.newPatientName = v!)}
 					/>
 					<DefaultButton
 						onClick={() => {
-							const newPatient = new Patient();
+							const newPatient = modules.patients!.new();
 							newPatient.name = this.newPatientName;
-							const orthoCase = new OrthoCase();
+							newPatient.fromJSON(newPatient.toJSON()); // init. teeth
+							modules.patients!.add(newPatient);
+
+							const orthoCase = modules.orthoCases!.new();
 							orthoCase.patientID = newPatient._id;
-							patients.list.push(newPatient);
-							orthoCases.list.push(orthoCase);
+							modules.orthoCases!.add(orthoCase);
+
 							this.newPatientName = "";
-							this.selectedId = orthoCase._id;
-							this.viewWhich = 3;
+							core.router.selectID(orthoCase._id, "details");
 						}}
 						iconProps={{
 							iconName: "add"
@@ -551,15 +578,14 @@ export class OrthoPage extends React.Component<{}, {}> {
 						!!(
 							this.selectedCase &&
 							this.selectedPatient &&
-							this.viewWhich
+							core.router.selectedTab
 						)
 					}
 					type={PanelType.medium}
 					closeButtonAriaLabel="Close"
 					isLightDismiss={true}
 					onDismiss={() => {
-						this.selectedId = "";
-						this.viewWhich = 0;
+						core.router.unSelect();
 					}}
 					onRenderNavigation={() => {
 						if (!this.selectedCase) {
@@ -569,160 +595,119 @@ export class OrthoPage extends React.Component<{}, {}> {
 							return <div />;
 						}
 						return (
-							<Row className="panel-heading">
-								<Col span={22}>
-									<ProfileComponent
-										name={this.selectedPatient!.name}
-										secondaryElement={
-											<span>
-												{this.viewWhich === 1
-													? text("Patient Details")
-													: ""}
-												{this.viewWhich === 2
-													? text("Dental History")
-													: ""}
-												{this.viewWhich === 3
-													? text(
-															"Orthodontic Case Sheet"
-													  )
-													: ""}
-												{this.viewWhich === 4
-													? text("Orthodontic Album")
-													: ""}
-												{this.viewWhich === 5
-													? text("Gallery and X-Rays")
-													: ""}
-												{this.viewWhich === 6
-													? text(
-															"Patient Appointments"
-													  )
-													: ""}
-											</span>
-										}
-										size={3}
-									/>
-								</Col>
-								<Col span={2} className="close">
-									<IconButton
-										iconProps={{ iconName: "cancel" }}
-										onClick={() => {
-											this.selectedId = "";
-											this.viewWhich = 0;
-										}}
-									/>
-								</Col>
-							</Row>
+							<div className="panel-heading">
+								<PanelTop
+									title={this.selectedPatient!.name}
+									type={"Orthodontic case"}
+									onDismiss={() => core.user.hide()}
+									avatar={
+										this.selectedPatient!.avatar
+											? imagesTable.table[
+													this.selectedPatient!.avatar
+											  ]
+												? imagesTable.table[
+														this.selectedPatient!
+															.avatar
+												  ]
+												: imagesTable.fetchImage(
+														this.selectedPatient!
+															.avatar
+												  )
+											: undefined
+									}
+								/>
+								<PanelTabs
+									currentSelectedKey={core.router.selectedTab}
+									onSelect={key => {
+										core.router.selectTab(key);
+									}}
+									items={this.tabs(this.selectedCase)}
+								/>
+							</div>
 						);
 					}}
 				>
 					<div>
 						{this.selectedCase && this.selectedPatient ? (
 							<div className="ortho-single-component">
-								{this.viewWhich === 1 ? (
-									<AsyncComponent
-										key="patient-detail"
-										loader={async () => {
-											const PatientDetailsPanel = (await import("../../patients/components/patient-details"))
-												.PatientDetailsPanel;
-											return (
-												<PatientDetailsPanel
-													patient={
-														this.selectedPatient!
-													}
-												/>
-											);
-										}}
+								{core.router.selectedTab === "details" ? (
+									<PatientDetailsPanel
+										patient={this.selectedPatient!}
+										onChangeViewWhich={key =>
+											core.router.selectTab(key)
+										}
 									/>
 								) : (
 									""
 								)}
 
-								{this.viewWhich === 2 ? (
-									<AsyncComponent
-										key="patient-detail"
-										loader={async () => {
-											const DentalHistoryPanel = (await import("../../patients/components/dental-history"))
-												.DentalHistoryPanel;
-											return (
-												<DentalHistoryPanel
-													patient={
-														this.selectedPatient!
-													}
-												/>
-											);
-										}}
+								{core.router.selectedTab === "dental" ? (
+									<DentalHistoryPanel
+										patient={this.selectedPatient!}
 									/>
 								) : (
 									""
 								)}
 
-								{this.viewWhich === 3 ? (
-									<AsyncComponent
-										key="ortho-case-sheet"
-										loader={async () => {
-											const Component = (await import("./case-sheet"))
-												.OrthoCaseSheetPanel;
-											return this.selectedCase ? (
-												<Component
-													orthoCase={
-														this.selectedCase
-													}
-												/>
-											) : (
-												<div />
-											);
-										}}
+								{core.router.selectedTab === "sheet" ? (
+									<OrthoCaseSheetPanel
+										orthoCase={this.selectedCase}
 									/>
 								) : (
 									""
 								)}
 
-								{this.viewWhich === 4 ? (
-									<AsyncComponent
-										key="ortho-records"
-										loader={async () => {
-											const Component = (await import("./records"))
-												.OrthoRecordsPanel;
-											return this.selectedCase ? (
-												<Component
-													orthoCase={
-														this.selectedCase
-													}
-												/>
-											) : (
-												<div />
-											);
-										}}
+								{core.router.selectedTab === "archive" ? (
+									<OrthoRecordsPanel
+										orthoCase={this.selectedCase}
 									/>
 								) : (
 									""
 								)}
 
-								{this.viewWhich === 5 ? (
-									<AsyncComponent
-										key="ortho-gallery"
-										loader={async () => {
-											const Component = (await import("./ortho-gallery"))
-												.OrthoGalleryPanel;
-											return this.selectedCase ? (
-												<Component
-													orthoCase={
-														this.selectedCase
-													}
-												/>
-											) : (
-												<div />
-											);
-										}}
+								{core.router.selectedTab === "gallery" ? (
+									<OrthoGalleryPanel
+										orthoCase={this.selectedCase}
 									/>
 								) : (
 									""
 								)}
 
-								{this.viewWhich === 6 ? (
+								{core.router.selectedTab === "appointments" ? (
 									<PatientAppointmentsPanel
 										patient={this.selectedPatient}
 									/>
+								) : (
+									""
+								)}
+
+								{core.router.selectedTab === "delete" ? (
+									<div>
+										<br />
+										<MessageBar
+											messageBarType={
+												MessageBarType.warning
+											}
+										>
+											{text(
+												"Orthodontic case will be deleted"
+											)}
+										</MessageBar>
+										<br />
+										<PrimaryButton
+											className="delete"
+											iconProps={{
+												iconName: "delete"
+											}}
+											text={text("Delete")}
+											onClick={() => {
+												modules.orthoCases!.delete(
+													core.router.selectedID
+												);
+												core.router.unSelect();
+											}}
+										/>
+									</div>
 								) : (
 									""
 								)}
@@ -732,6 +717,14 @@ export class OrthoPage extends React.Component<{}, {}> {
 						)}
 					</div>
 				</Panel>
+				{this.selectedAppointment ? (
+					<AppointmentEditorPanel
+						appointment={this.selectedAppointment}
+						onDismiss={() => (this.selectedAppointmentId = "")}
+					/>
+				) : (
+					""
+				)}
 			</div>
 		);
 	}

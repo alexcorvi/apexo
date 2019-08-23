@@ -1,5 +1,4 @@
 import {
-	AsyncComponent,
 	Col,
 	fileTypes,
 	PickAndUploadComponent,
@@ -7,26 +6,35 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import { CEPHALOMETRIC_DIR, status, text, user } from "@core";
-import { CephalometricItem, OrthoCase, PatientGalleryPanel, setting } from "@modules";
+import * as core from "@core";
+import { CEPHALOMETRIC_DIR, status, text } from "@core";
+import { CephalometricItemInterface, OrthoCase, PatientGalleryPanel, StaffMember } from "@modules";
+import * as modules from "@modules";
 import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { DefaultButton, IconButton, MessageBar, MessageBarType } from "office-ui-fabric-react";
+import { DefaultButton, IconButton, MessageBar, MessageBarType, Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
 
+const CephalometricEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/orthodontic/components/cephalometric"))
+			.CephalometricEditorPanel,
+	loading: () => <Shimmer />
+});
 @observer
 export class OrthoGalleryPanel extends React.Component<{
 	orthoCase: OrthoCase;
 }> {
 	@observable openCephalometricItem:
-		| CephalometricItem
+		| CephalometricItemInterface
 		| undefined = undefined;
 
 	@observable
 	cephalometricToViewIndex: number = -1;
 	@computed get canEdit() {
-		return user.currentUser.canEditOrtho;
+		return core.user.currentUser!.canEditOrtho;
 	}
 
 	@computed
@@ -48,31 +56,22 @@ export class OrthoGalleryPanel extends React.Component<{
 				)}
 
 				{this.openCephalometricItem ? (
-					<AsyncComponent
-						key="ortho-records"
-						loader={async () => {
-							const Component = (await import("./cephalometric"))
-								.CephalometricEditorPanel;
-							return this.openCephalometricItem ? (
-								<Component
-									onDismiss={() => {
-										this.openCephalometricItem = undefined;
-										this.props.orthoCase.triggerUpdate++;
-									}}
-									item={this.openCephalometricItem}
-								/>
-							) : (
-								<div />
-							);
+					<CephalometricEditorPanel
+						onDismiss={() => {
+							this.openCephalometricItem = undefined;
 						}}
+						item={this.openCephalometricItem}
+						onSave={coordinates =>
+							(this.openCephalometricItem!.pointCoordinates = coordinates)
+						}
 					/>
 				) : (
 					""
 				)}
 
 				<SectionComponent title={text(`Cephalometric Analysis`)}>
-					{status.online ? (
-						status.dropboxActive ? (
+					{status.isOnline.client ? (
+						status.isOnline.dropbox ? (
 							<div>
 								{this.props.orthoCase.cephalometricHistory.map(
 									(c, i) => (
@@ -103,7 +102,7 @@ export class OrthoGalleryPanel extends React.Component<{
 															<span>
 																{formatDate(
 																	c.date,
-																	setting.getSetting(
+																	modules.setting!.getSetting(
 																		"date_format"
 																	)
 																)}
@@ -134,6 +133,7 @@ export class OrthoGalleryPanel extends React.Component<{
 															1
 														)
 													}
+													disabled={this.canEdit}
 												/>
 											</Col>
 										</Row>

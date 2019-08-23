@@ -1,5 +1,4 @@
 import {
-	AsyncComponent,
 	Col,
 	DataTableComponent,
 	ProfileComponent,
@@ -7,48 +6,75 @@ import {
 	Row,
 	SectionComponent,
 	TagComponent,
-	TagType
+	tagType
 	} from "@common-components";
 import { text } from "@core";
-import {
-	ageBarChart,
-	Appointment,
-	appointmentsByDateChart,
-	financesByDateChart,
-	genderPieChart,
-	mostAppliedTreatmentsChart,
-	mostInvolvedTeethChart,
-	Patient,
-	setting,
-	staff,
-	statistics,
-	treatmentsByGenderChart,
-	treatmentsNumberChart
-	} from "@modules";
+import * as core from "@core";
+import * as modules from "@modules";
+import { Appointment } from "@modules";
 import { formatDate, round } from "@utils";
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { DatePicker, Dropdown } from "office-ui-fabric-react";
+import { DatePicker, Dropdown, Icon, Label, Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+const AppointmentEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/appointments/components/appointment-editor"))
+			.AppointmentEditorPanel,
+	loading: () => <Shimmer />
+});
+
+const AgeBarChart = loadable({
+	loader: async () => (await import("./chart.age")).AgeBarChart,
+	loading: () => <Shimmer />
+});
+const AppointmentsByDateChart = loadable({
+	loader: async () =>
+		(await import("./chart.appointments-date")).AppointmentsByDateChart,
+	loading: () => <Shimmer />
+});
+const FinancesByDateChart = loadable({
+	loader: async () => (await import("./chart.finance")).FinancesByDateChart,
+	loading: () => <Shimmer />
+});
+const GenderPieChart = loadable({
+	loader: async () => (await import("./chart.gender")).GenderPieChart,
+	loading: () => <Shimmer />
+});
+const MostAppliedTreatmentsChart = loadable({
+	loader: async () =>
+		(await import("./chart.most-applied-treatments"))
+			.MostAppliedTreatmentsChart,
+	loading: () => <Shimmer />
+});
+const MostInvolvedTeethChart = loadable({
+	loader: async () =>
+		(await import("./chart.most-involved-teeth")).MostInvolvedTeethChart,
+	loading: () => <Shimmer />
+});
+const TreatmentsByGenderChart = loadable({
+	loader: async () =>
+		(await import("./chart.treatments-gender")).TreatmentsByGenderChart,
+	loading: () => <Shimmer />
+});
+const TreatmentsNumberChart = loadable({
+	loader: async () =>
+		(await import("./chart.treatments-number")).TreatmentsNumberChart,
+	loading: () => <Shimmer />
+});
 
 @observer
-export class StatisticsPage extends React.Component<{}, {}> {
-	@observable appointment: Appointment | null = null;
-
-	@observable charts = [
-		appointmentsByDateChart,
-		financesByDateChart,
-		treatmentsNumberChart,
-		mostAppliedTreatmentsChart,
-		genderPieChart,
-		treatmentsByGenderChart,
-		mostInvolvedTeethChart,
-		ageBarChart
-	];
+export class StatisticsPage extends React.Component {
+	@computed get appointment() {
+		return modules.appointments!.docs.find(
+			x => x._id === core.router.selectedID
+		);
+	}
 
 	render() {
 		return (
-			<div className="sc-pg p-15 p-l-10 p-r-10">
+			<div className="sc-pg">
 				<DataTableComponent
 					maxItemsOnLoad={20}
 					className={"appointments-data-table"}
@@ -60,142 +86,181 @@ export class StatisticsPage extends React.Component<{}, {}> {
 						text("Expenses"),
 						text("Profits")
 					]}
-					rows={statistics.selectedAppointments.map(appointment => ({
-						id: appointment._id,
-						searchableString: appointment.searchableString,
-						cells: [
-							{
-								dataValue: (
-									appointment.patient || new Patient()
-								).name,
-								component: (
-									<ProfileComponent
-										secondaryElement={
-											<span>
-												{formatDate(
-													appointment.date,
-													setting.getSetting(
-														"date_format"
-													)
-												)}{" "}
-												/{" "}
-												{appointment.operatingStaff.map(
-													x => (
-														<i key={x._id}>
-															{x.name}{" "}
-														</i>
-													)
-												)}
-											</span>
-										}
-										name={
-											(
-												appointment!.patient ||
-												new Patient()
-											).name
-										}
-										size={3}
-									/>
-								),
-								onClick: () => {
-									this.appointment = appointment;
-								},
-								className: "no-label"
-							},
-							{
-								dataValue: appointment.treatmentID,
-								component: (
-									<ProfileSquaredComponent
-										text={
-											appointment.treatment
-												? appointment.treatment.type
-												: ""
-										}
-										subText={formatDate(
-											appointment.date,
-											setting.getSetting("date_format")
-										)}
-										size={3}
-										onClick={() => {}}
-									/>
-								),
-								className: "hidden-xs"
-							},
-							{
-								dataValue: appointment.paidAmount,
-								component: (
-									<span>
-										{setting.getSetting("currencySymbol") +
-											round(
-												appointment.paidAmount
-											).toString()}
-									</span>
-								),
-								className: "hidden-xs"
-							},
-							{
-								dataValue: appointment.outstandingAmount,
-								component: (
-									<span>
-										{setting.getSetting("currencySymbol") +
-											round(
-												appointment.outstandingAmount
-											).toString()}
-									</span>
-								),
-								className: "hidden-xs"
-							},
-							{
-								dataValue: appointment.expenses,
-								component: (
-									<span>
-										{setting.getSetting("currencySymbol") +
-											round(
-												appointment.expenses
-											).toString()}
-									</span>
-								),
-								className: "hidden-xs"
-							},
-							{
-								dataValue: appointment.profit,
-								component: (
-									<span>
-										{setting.getSetting("currencySymbol") +
-											round(
-												appointment.profit
-											).toString()}
-									</span>
-								),
-								className: "hidden-xs"
-							}
-						]
-					}))}
+					rows={
+						core.router.innerWidth > 999
+							? modules.statistics.selectedAppointments.map(
+									appointment => ({
+										id: appointment._id,
+										searchableString:
+											appointment.searchableString,
+										cells: [
+											{
+												dataValue: (
+													appointment.patient || {
+														name: ""
+													}
+												).name,
+												component: (
+													<ProfileComponent
+														secondaryElement={
+															<span>
+																{formatDate(
+																	appointment.date,
+																	modules.setting!.getSetting(
+																		"date_format"
+																	)
+																)}{" "}
+																/{" "}
+																{appointment.operatingStaff.map(
+																	x => (
+																		<i
+																			key={
+																				x._id
+																			}
+																		>
+																			{
+																				x.name
+																			}{" "}
+																		</i>
+																	)
+																)}
+															</span>
+														}
+														name={
+															(
+																appointment!
+																	.patient || {
+																	name: ""
+																}
+															).name
+														}
+														size={3}
+													/>
+												),
+												onClick: () => {
+													core.router.selectID(
+														appointment._id
+													);
+													setTimeout(
+														() =>
+															core.router.selectSub(
+																"details"
+															),
+														100
+													);
+												},
+												className: "no-label"
+											},
+											{
+												dataValue:
+													appointment.treatmentID,
+												component: (
+													<ProfileSquaredComponent
+														text={
+															appointment.treatment
+																? appointment
+																		.treatment
+																		.type
+																: ""
+														}
+														subText={formatDate(
+															appointment.date,
+															modules.setting!.getSetting(
+																"date_format"
+															)
+														)}
+														size={3}
+													/>
+												),
+												className: "hidden-xs"
+											},
+											{
+												dataValue:
+													appointment.paidAmount,
+												component: (
+													<span>
+														{modules.setting!.getSetting(
+															"currencySymbol"
+														) +
+															round(
+																appointment.paidAmount
+															).toString()}
+													</span>
+												),
+												className: "hidden-xs"
+											},
+											{
+												dataValue:
+													appointment.outstandingAmount,
+												component: (
+													<span>
+														{modules.setting!.getSetting(
+															"currencySymbol"
+														) +
+															round(
+																appointment.outstandingAmount
+															).toString()}
+													</span>
+												),
+												className: "hidden-xs"
+											},
+											{
+												dataValue: appointment.expenses,
+												component: (
+													<span>
+														{modules.setting!.getSetting(
+															"currencySymbol"
+														) +
+															round(
+																appointment.expenses
+															).toString()}
+													</span>
+												),
+												className: "hidden-xs"
+											},
+											{
+												dataValue: appointment.profit,
+												component: (
+													<span>
+														{modules.setting!.getSetting(
+															"currencySymbol"
+														) +
+															round(
+																appointment.profit
+															).toString()}
+													</span>
+												),
+												className: "hidden-xs"
+											}
+										]
+									})
+							  )
+							: []
+					}
 					farItems={[
 						{
 							key: "1",
 							onRender: () => {
 								return (
 									<Dropdown
-										placeholder={text(
-											"Filter by staff member"
-										)}
-										defaultValue=""
+										defaultSelectedKey="all"
 										options={[
 											{
-												key: "",
-												text: text("All members")
+												key: "all",
+												text: text("All staff members")
 											}
 										].concat(
-											staff.list.map(member => {
-												return {
-													key: member._id,
-													text: member.name
-												};
-											})
+											modules.staff!.operatingStaff.map(
+												member => {
+													return {
+														key: member._id,
+														text: member.name
+													};
+												}
+											)
 										)}
 										onChange={(ev, member) => {
-											statistics.filterByMember = member!.key.toString();
+											modules.statistics.specificMemberID = member!.key.toString();
 										}}
 									/>
 								);
@@ -211,18 +276,19 @@ export class StatisticsPage extends React.Component<{}, {}> {
 									<DatePicker
 										onSelectDate={date => {
 											if (date) {
-												statistics.startingDate = statistics.getDayStartingPoint(
-													date.getTime()
-												);
+												date.setHours(0, 0, 0, 0);
+												modules.statistics.startingDate = date.getTime();
 											}
 										}}
 										value={
-											new Date(statistics.startingDate)
+											new Date(
+												modules.statistics.startingDate
+											)
 										}
 										formatDate={d =>
 											`${text("From")}: ${formatDate(
 												d,
-												setting.getSetting(
+												modules.setting!.getSetting(
 													"date_format"
 												)
 											)}`
@@ -238,16 +304,19 @@ export class StatisticsPage extends React.Component<{}, {}> {
 									<DatePicker
 										onSelectDate={date => {
 											if (date) {
-												statistics.endingDate = statistics.getDayStartingPoint(
-													date.getTime()
-												);
+												date.setHours(0, 0, 0, 0);
+												modules.statistics.endingDate = date.getTime();
 											}
 										}}
-										value={new Date(statistics.endingDate)}
+										value={
+											new Date(
+												modules.statistics.endingDate
+											)
+										}
 										formatDate={d =>
 											`${text("Until")}: ${formatDate(
 												d,
-												setting.getSetting(
+												modules.setting!.getSetting(
 													"date_format"
 												)
 											)}`
@@ -260,109 +329,174 @@ export class StatisticsPage extends React.Component<{}, {}> {
 				/>
 
 				{this.appointment ? (
-					<AsyncComponent
-						key="ae"
-						loader={async () => {
-							const AppointmentEditorPanel = (await import("../../appointments/components/appointment-editor"))
-								.AppointmentEditorPanel;
-							return (
-								<AppointmentEditorPanel
-									appointment={this.appointment}
-									onDismiss={() => (this.appointment = null)}
-									onDelete={() => (this.appointment = null)}
-								/>
-							);
-						}}
+					<AppointmentEditorPanel
+						appointment={this.appointment}
+						onDismiss={() => core.router.unSelect()}
 					/>
 				) : (
 					""
 				)}
 
-				<div className="container-fluid m-t-20 quick">
-					<SectionComponent title={text("Quick stats")}>
-						<Row>
-							<Col sm={6} xs={12}>
-								<label>
-									{text("Appointments")}:{" "}
-									<TagComponent
-										text={round(
-											statistics.selectedAppointments
-												.length
-										).toString()}
-										type={TagType.primary}
-									/>
-								</label>
-							</Col>
-							<Col sm={6} xs={12}>
-								<label>
-									{text("Payments")}:{" "}
-									<TagComponent
-										text={
-											setting.getSetting(
-												"currencySymbol"
-											) +
-											round(
-												statistics.totalPayments
-											).toString()
-										}
-										type={TagType.warning}
-									/>
-								</label>
-							</Col>
-							<Col sm={6} xs={12}>
-								<label>
-									{text("Expenses")}:{" "}
-									<TagComponent
-										text={
-											setting.getSetting(
-												"currencySymbol"
-											) +
-											round(
-												statistics.totalExpenses
-											).toString()
-										}
-										type={TagType.danger}
-									/>
-								</label>
-							</Col>
-							<Col sm={6} xs={12}>
-								<label>
-									{text("Profits")}:{" "}
-									<TagComponent
-										text={
-											setting.getSetting(
-												"currencySymbol"
-											) +
-											round(
-												statistics.totalProfits
-											).toString()
-										}
-										type={TagType.success}
-									/>
-								</label>
-							</Col>
-						</Row>
-					</SectionComponent>
+				<div className="totals">
+					<Row>
+						<Col sm={6} xs={12}>
+							<Label>
+								{text("Appointments")}:{" "}
+								<TagComponent
+									text={round(
+										modules.statistics.selectedAppointments
+											.length
+									).toString()}
+									type={tagType.primary}
+								/>
+							</Label>
+						</Col>
+						<Col sm={6} xs={12}>
+							<Label>
+								{text("Payments")}:{" "}
+								<TagComponent
+									text={
+										modules.setting!.getSetting(
+											"currencySymbol"
+										) +
+										round(
+											modules.statistics.totalPayments
+										).toString()
+									}
+									type={tagType.warning}
+								/>
+							</Label>
+						</Col>
+						<Col sm={6} xs={12}>
+							<Label>
+								{text("Expenses")}:{" "}
+								<TagComponent
+									text={
+										modules.setting!.getSetting(
+											"currencySymbol"
+										) +
+										round(
+											modules.statistics.totalExpenses
+										).toString()
+									}
+									type={tagType.danger}
+								/>
+							</Label>
+						</Col>
+						<Col sm={6} xs={12}>
+							<Label>
+								{text("Profits")}:{" "}
+								<TagComponent
+									text={
+										modules.setting!.getSetting(
+											"currencySymbol"
+										) +
+										round(
+											modules.statistics.totalProfits
+										).toString()
+									}
+									type={tagType.success}
+								/>
+							</Label>
+						</Col>
+					</Row>
 				</div>
 
 				<div className="charts container-fluid">
 					<div className="row">
-						{this.charts.map((chart, index) => {
-							return (
-								<div
-									key={index + chart.name}
-									className={
-										"chart-wrapper " +
-										(chart.className ||
-											"col-xs-12 col-md-5 col-lg-4")
+						<div className={"chart-wrapper col-xs-12"}>
+							<SectionComponent
+								title={text("Appointments by Date")}
+							>
+								<AppointmentsByDateChart
+									selectedAppointmentsByDay={
+										modules.statistics
+											.selectedAppointmentsByDay
 									}
-								>
-									<SectionComponent title={text(chart.name)}>
-										<chart.Component />
-									</SectionComponent>
-								</div>
-							);
-						})}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12"}>
+							<SectionComponent title={text("Finances by Date")}>
+								<FinancesByDateChart
+									dateFormat={modules.setting!.getSetting(
+										"date_format"
+									)}
+									selectedFinancesByDay={
+										modules.statistics.selectedFinancesByDay
+									}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
+							<SectionComponent title={text("Patients' Gender")}>
+								<GenderPieChart
+									selectedPatients={
+										modules.statistics.selectedPatients
+									}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
+							<SectionComponent
+								title={text("Most Applied Treatments")}
+							>
+								<MostAppliedTreatmentsChart
+									selectedAppointments={
+										modules.statistics.selectedAppointments
+									}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
+							<SectionComponent
+								title={text("Most Involved Teeth")}
+							>
+								<MostInvolvedTeethChart
+									selectedAppointments={
+										modules.statistics.selectedAppointments
+									}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
+							<SectionComponent
+								title={text("Treatments by gender")}
+							>
+								<TreatmentsByGenderChart
+									selectedTreatments={
+										modules.statistics.selectedTreatments
+									}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
+							<SectionComponent
+								title={text("Treatments by profits")}
+							>
+								<TreatmentsNumberChart
+									selectedTreatments={
+										modules.statistics.selectedTreatments
+									}
+								/>
+							</SectionComponent>
+						</div>
+
+						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
+							<SectionComponent title={text("Patients' Age")}>
+								<AgeBarChart
+									selectedPatients={
+										modules.statistics.selectedPatients
+									}
+								/>
+							</SectionComponent>
+						</div>
 					</div>
 				</div>
 			</div>

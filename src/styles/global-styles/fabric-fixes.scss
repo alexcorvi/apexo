@@ -22,7 +22,6 @@ h5 {
 }
 
 .ms-table {
-	@include box_shadow(2);
 	width: 100%;
 	border-collapse: collapse;
 	thead tr th {
@@ -39,14 +38,14 @@ h5 {
 		font-weight: 300;
 		font-size: 13px;
 		padding: 12px 15px;
+		padding-bottom: 13px;
 		background: #fafafa;
 		.sort-indicators .positive,
 		.sort-indicators .negative {
 			display: none;
 		}
 		&.current {
-			background: #212121;
-			color: #fff;
+			background: #eee;
 			.sort-indicators {
 				float: right;
 			}
@@ -107,14 +106,6 @@ h5 {
 		}
 	}
 }
-.ms-BasePicker {
-	.ms-BasePicker-text {
-		border-color: #a6a6a6;
-	}
-	.ms-BasePicker-input {
-		height: auto;
-	}
-}
 
 .ms-Persona.treatment-link.ms-Persona--xxs {
 	height: 25px;
@@ -152,12 +143,10 @@ h5 {
 
 .ms-Panel-content {
 	height: 100%;
-	padding-top: 35px;
+	padding-top: 5px;
 	padding-bottom: 35px;
 	overflow-y: auto;
 }
-
-
 
 html,
 body {
@@ -168,9 +157,7 @@ body {
 }
 
 body {
-	background: #f5f5f5 !important;
 	font-family: "Segoe UI WestEuropean";
-
 	line-height: 1;
 	height: auto;
 }
@@ -178,7 +165,7 @@ body {
 hr {
 	border: none;
 	margin-bottom: 20px;
-	border-top: 1px dotted #e0e0e0;
+	border-top: 1px solid #e0e0e0;
 }
 
 .hidden {
@@ -211,4 +198,28 @@ hr {
 			}
 		}
 	}
+}
+
+.ms-Tooltip {
+	pointer-events: none;
+}
+
+.ms-TooltipHost,
+.ms-Persona-details,
+.ms-Layer,
+.ms-TextField-field {
+	line-height: initial;
+}
+
+.ms-Persona-initials i {
+	font-weight: 100;
+}
+
+.ms-TextField-prefix,
+.ms-TextField-suffix {
+	margin: 1px;
+}
+
+.ms-Toggle-stateText {
+	line-height: 1;
 }

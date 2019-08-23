@@ -3,9 +3,8 @@ import { decrypt, encrypt } from "@utils";
 export const dict = {
 	LSL_hash: "", // when truly logging in
 	LSL_TS: "", // when starting
-	user_id: "",
-	no_server_mode: "",
-	server_location: ""
+	user_id: "", // current user ID
+	server_location: "" // current server location
 };
 
 export const store = {

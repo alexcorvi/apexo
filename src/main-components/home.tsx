@@ -1,160 +1,69 @@
-import { Col, ProfileComponent, ProfileSquaredComponent, Row } from "@common-components";
-import { router, text, user } from "@core";
-import { appointments, appointmentsByDateChart, setting } from "@modules";
+import { AppointmentsListNoDate, Col, ProfileComponent, Row } from "@common-components";
+import * as core from "@core";
+import { text } from "@core";
+import { Appointment, PrescriptionItem, setting, StaffMember } from "@modules";
+import * as modules from "@modules";
+import { dateNames, isToday, isTomorrow } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
+import { Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const AppointmentEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/appointments/components/appointment-editor"))
+			.AppointmentEditorPanel,
+	loading: () => <Shimmer />
+});
 
 @observer
-export class HomeView extends React.Component<{}, {}> {
-	@observable
-	time = {
-		year: new Date().getFullYear(),
-		month: new Date().getMonth(),
-		day: new Date().getDate(),
-		monthName: new Date().toLocaleDateString("en-EN", { month: "long" }),
-		dayName: new Date().toLocaleDateString("en-EN", { weekday: "long" }),
-		time: new Date().toLocaleTimeString("en-EN", {})
-	};
+export class HomeView extends React.Component {
+	@observable selectedAppointmentId: string = "";
 
-	@computed
-	get todayAppointments() {
-		return appointments.appointmentsForDay(
-			this.time.year,
-			this.time.month + 1,
-			this.time.day
+	@computed get selectedAppointment() {
+		return modules.appointments!.docs.find(
+			appointment => appointment._id === this.selectedAppointmentId
 		);
 	}
 
-	@computed
-	get tomorrowAppointments() {
-		return appointments.appointmentsForDay(
-			new Date().getTime() + 86400000,
-			0,
-			0
-		);
+	@computed get weekdays() {
+		const weekendNum = Number(setting!.getSetting("weekend_num"));
+		return dateNames.days().reduce((arr: string[], date, index) => {
+			if (index <= weekendNum) {
+				arr.push(date);
+			} else {
+				arr.splice(index - weekendNum - 1, 0, date);
+			}
+			return arr;
+		}, []);
 	}
 
 	render() {
 		return (
-			<div className="home p-l-10 p-r-10">
-				<div className="container">
-					<h2 className="m-b-20">
-						{text("Welcome")}, {user.currentUser.name}
+			<div className="home">
+				<div>
+					<h2 className="welcome">
+						{text("Welcome")}, {core.user.currentUser!.name}
 					</h2>
-					<hr />
-					<div>
-						{setting.getSetting("module_statistics") ? (
-							<appointmentsByDateChart.Component />
-						) : (
-							""
-						)}
-					</div>
-					<Row gutter={12}>
-						<Col md={12}>
+					<Row gutter={0}>
+						<Col md={14}>
 							<h3 className="appointments-table-heading">
-								{text("Today's Appointments")}
+								{text("Appointments for today")}
 							</h3>
-							<br />
-							<table className="ms-table">
-								<thead>
-									<tr>
-										<th>{text("Appointment")}</th>
-										<th>{text("Operators")}</th>
-									</tr>
-								</thead>
-								<tbody>
-									{this.todayAppointments.map(appointment => (
-										<tr
-											key={appointment._id}
-											className="home-td"
-										>
-											<td>
-												<ProfileSquaredComponent
-													text={
-														appointment.treatment
-															? appointment
-																	.treatment
-																	.type
-															: ""
-													}
-													subText={
-														(
-															appointment.patient || {
-																name: ""
-															}
-														).name
-													}
-												/>
-											</td>
-											<td>
-												{appointment.operatingStaff.map(
-													operator => (
-														<div key={operator._id}>
-															<Col
-																xxl={0}
-																xl={0}
-																lg={0}
-																md={0}
-																sm={0}
-																xs={24}
-															>
-																<div
-																	key={
-																		operator._id
-																	}
-																	className="m-t-5 fs-11"
-																>
-																	{
-																		operator.name
-																	}
-																</div>
-															</Col>
-															<Col
-																xxl={24}
-																xl={24}
-																lg={24}
-																md={24}
-																sm={24}
-																xs={0}
-															>
-																<ProfileComponent
-																	key={
-																		operator._id
-																	}
-																	name={
-																		operator.name
-																	}
-																	onRenderInitials={() => (
-																		<span>
-																			{
-																				operator
-																					.name[0]
-																			}
-																		</span>
-																	)}
-																	size={3}
-																	onClick={() => {
-																		router.go(
-																			[
-																				"staff",
-																				operator._id
-																			]
-																		);
-																	}}
-																	className="pointer"
-																/>
-															</Col>
-														</div>
-													)
-												)}
-											</td>
-										</tr>
-									))}
-								</tbody>
-							</table>
-
-							{this.todayAppointments.length === 0 ? (
+							<AppointmentsListNoDate
+								className="today-appointments"
+								appointments={modules.appointments!.todayAppointments.filter(
+									x => isToday(x.date)
+								)}
+								onClick={id => {
+									this.selectedAppointmentId = id;
+									core.router.selectSub("details");
+								}}
+								canDelete={false}
+							/>
+							{modules.appointments!.todayAppointments.length ===
+							0 ? (
 								<p className="no-appointments">
 									{text(
 										"There are no appointments for today"
@@ -163,115 +72,22 @@ export class HomeView extends React.Component<{}, {}> {
 							) : (
 								""
 							)}
-						</Col>
-						<Col md={12}>
 							<h3 className="appointments-table-heading">
-								{text("Tomorrow's Appointments")}
+								{text("Appointments for tomorrow")}
 							</h3>
-							<br />
-							<table className="ms-table">
-								<thead>
-									<tr>
-										<th>{text("Appointment")}</th>
-										<th>{text("Operators")}</th>
-									</tr>
-								</thead>
-								<tbody>
-									{this.tomorrowAppointments.map(
-										appointment => (
-											<tr
-												key={appointment._id}
-												className="home-td"
-											>
-												<td>
-													<ProfileSquaredComponent
-														text={
-															appointment.treatment
-																? appointment
-																		.treatment
-																		.type
-																: ""
-														}
-														subText={
-															(
-																appointment.patient || {
-																	name: ""
-																}
-															).name
-														}
-													/>
-												</td>
-												<td>
-													{appointment.operatingStaff.map(
-														operator => (
-															<div
-																key={
-																	operator._id
-																}
-															>
-																<Col
-																	xxl={0}
-																	xl={0}
-																	lg={0}
-																	md={0}
-																	sm={0}
-																	xs={24}
-																>
-																	<div
-																		key={
-																			operator._id
-																		}
-																		className="m-t-5 fs-11"
-																	>
-																		{
-																			operator.name
-																		}
-																	</div>
-																</Col>
-																<Col
-																	xxl={24}
-																	xl={24}
-																	lg={24}
-																	md={24}
-																	sm={24}
-																	xs={0}
-																>
-																	<ProfileComponent
-																		key={
-																			operator._id
-																		}
-																		name={
-																			operator.name
-																		}
-																		size={3}
-																		onRenderInitials={() => (
-																			<span>
-																				{
-																					operator
-																						.name[0]
-																				}
-																			</span>
-																		)}
-																		onClick={() => {
-																			router.go(
-																				[
-																					"staff",
-																					operator._id
-																				]
-																			);
-																		}}
-																	/>
-																</Col>
-															</div>
-														)
-													)}
-												</td>
-											</tr>
-										)
-									)}
-								</tbody>
-							</table>
-							{this.tomorrowAppointments.length === 0 ? (
+							<AppointmentsListNoDate
+								className="tomorrow-appointments"
+								appointments={modules.appointments!.tomorrowAppointments.filter(
+									x => isTomorrow(x.date)
+								)}
+								onClick={id => {
+									this.selectedAppointmentId = id;
+									core.router.selectSub("details");
+								}}
+								canDelete={false}
+							/>
+							{modules.appointments!.tomorrowAppointments
+								.length === 0 ? (
 								<p className="no-appointments">
 									{text(
 										"There are no appointments for tomorrow"
@@ -281,8 +97,93 @@ export class HomeView extends React.Component<{}, {}> {
 								""
 							)}
 						</Col>
+						<Col md={10}>
+							<h3 className="appointments-table-heading">
+								{text("Appointments for this week")}
+							</h3>
+							<table className="ms-table duty-table">
+								<tbody>
+									{this.weekdays.map(dayName => {
+										return (
+											<tr key={dayName}>
+												<th className="day-name">
+													{text(dayName)}
+												</th>
+												<td className="names">
+													{modules
+														.staff!.docs.filter(
+															member =>
+																member.onDutyDays.indexOf(
+																	dayName
+																) !== -1
+														)
+														.map(member => {
+															return (
+																<ProfileComponent
+																	className="m-b-5"
+																	size={3}
+																	onClick={() => {
+																		core.router.go(
+																			[
+																				modules.staffNamespace,
+																				member._id,
+																				"appointments"
+																			]
+																		);
+																	}}
+																	style={{
+																		cursor:
+																			"pointer"
+																	}}
+																	key={
+																		member._id
+																	}
+																	name={
+																		member.name
+																	}
+																	secondaryElement={
+																		<span>
+																			{
+																				(
+																					member
+																						.weeksAppointments[
+																						dayName
+																					] ||
+																					[]
+																				)
+																					.length
+																			}{" "}
+																			{text(
+																				"appointments for"
+																			)}{" "}
+																			{text(
+																				dayName
+																			)}
+																		</span>
+																	}
+																/>
+															);
+														})}
+												</td>
+											</tr>
+										);
+									})}
+								</tbody>
+							</table>
+						</Col>
 					</Row>
 				</div>
+				{this.selectedAppointment && core.router.selectedSub ? (
+					<AppointmentEditorPanel
+						appointment={this.selectedAppointment}
+						onDismiss={() => {
+							this.selectedAppointmentId = "";
+							core.router.unSelectSub();
+						}}
+					/>
+				) : (
+					""
+				)}
 			</div>
 		);
 	}

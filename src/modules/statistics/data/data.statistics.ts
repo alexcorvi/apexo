@@ -1,25 +1,24 @@
-import { appointments } from "@modules";
-import { day } from "@utils";
+import { appointments, gender, Patient, Treatment } from "@modules";
+import * as modules from "@modules";
+import { day, getDayStartingPoint } from "@utils";
 import { computed, observable } from "mobx";
 
 class Statistics {
-	@observable filterByMember: string = "";
-
-	readonly msInDay = day;
+	@observable specificMemberID: string = "";
 
 	readonly todayDateObject: Date = new Date();
 
-	readonly todayStartsWith: number = this.getDayStartingPoint(
+	readonly todayStartsWith: number = getDayStartingPoint(
 		this.todayDateObject.getTime()
 	);
 
-	@observable startingDate: number = this.todayStartsWith - this.msInDay * 31;
+	@observable startingDate: number = this.todayStartsWith - day * 31;
 
 	@observable endingDate: number = this.todayStartsWith;
 
 	@computed
 	private get numberOfSelectedDays() {
-		return (this.endingDate - this.startingDate) / this.msInDay;
+		return (this.endingDate - this.startingDate) / day;
 	}
 
 	@computed
@@ -27,16 +26,65 @@ class Statistics {
 		const days: Date[] = [];
 		let i = 0;
 		while (i <= this.numberOfSelectedDays) {
-			days.push(new Date(this.startingDate + this.msInDay * i));
+			days.push(new Date(this.startingDate + day * i));
 			i++;
 		}
 		return days;
 	}
 
 	@computed
+	get selectedTreatments() {
+		const selectedTreatments: {
+			treatment: Treatment;
+			male: number;
+			female: number;
+			profit: number;
+			times: number;
+		}[] = [];
+		statistics.selectedAppointments.forEach(appointment => {
+			if (appointment.treatment) {
+				const i = selectedTreatments.findIndex(
+					t => t.treatment._id === appointment.treatment!._id
+				);
+				let male = 0;
+				let female = 0;
+				if (
+					(appointment.patient || { gender: "male" }).gender ===
+					gender.female
+				) {
+					female++;
+				} else {
+					male++;
+				}
+
+				if (i === -1) {
+					// add new
+					selectedTreatments.push({
+						treatment: appointment.treatment,
+						male,
+						female,
+						profit: appointment.profit,
+						times: 1
+					});
+				} else {
+					// just increment
+					selectedTreatments[i].male =
+						selectedTreatments[i].male + male;
+					selectedTreatments[i].female =
+						selectedTreatments[i].female + female;
+					selectedTreatments[i].times++;
+					selectedTreatments[i].profit =
+						selectedTreatments[i].profit + appointment.profit;
+				}
+			}
+		});
+		return selectedTreatments;
+	}
+
+	@computed
 	private get _selectedAppointmentsByDay() {
 		return this.selectedDays.map(calDay =>
-			appointments
+			appointments!
 				.appointmentsForDay(
 					calDay.getFullYear(),
 					calDay.getMonth() + 1,
@@ -44,8 +92,8 @@ class Statistics {
 				)
 				.filter(
 					appointment =>
-						!this.filterByMember ||
-						appointment.staffID.indexOf(this.filterByMember) > -1
+						!this.specificMemberID ||
+						appointment.staffID.indexOf(this.specificMemberID) > -1
 				)
 				.filter(appointment => appointment.treatment)
 		);
@@ -81,21 +129,30 @@ class Statistics {
 
 	@computed
 	get selectedPatients() {
-		return this.selectedAppointments.map(
-			appointment => appointment.patient
+		return this.selectedAppointments.reduce(
+			(patients: Patient[], appointment) => {
+				if (appointment.patient) {
+					patients.push(appointment.patient);
+				}
+				return patients;
+			},
+			[]
 		);
 	}
 
 	@computed
-	get selectedFinances() {
+	get selectedFinancesByDay(): {
+		day: Date;
+		appointments: Partial<modules.Appointment>[];
+	}[] {
 		return this.selectedAppointmentsByDay.map(date => {
 			const appointmentsList = date.appointments.map(appointment => {
-				const paid = appointment.paidAmount;
+				const paidAmount = appointment.paidAmount;
 				const expenses = appointment.expenses;
 				const profit = appointment.profit;
 				const profitPercentage = appointment.profitPercentage;
 				return {
-					paid,
+					paidAmount,
 					expenses,
 					profit,
 					profitPercentage,
@@ -129,11 +186,6 @@ class Statistics {
 		return this.selectedAppointments
 			.map(x => x.paidAmount)
 			.reduce((total, single) => (total = total + single), 0);
-	}
-
-	getDayStartingPoint(t: number) {
-		const d = new Date(t);
-		return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
 	}
 }
 

@@ -1,40 +1,50 @@
-import { Col, DataTableComponent, ProfileSquaredComponent, Row, SectionComponent } from "@common-components";
-import { router, text, user } from "@core";
-import { itemFormToString, PrescriptionItem, prescriptionItemForms, prescriptions, stringToItemForm } from "@modules";
+import {
+	Col,
+	DataTableComponent,
+	PanelTabs,
+	PanelTop,
+	ProfileSquaredComponent,
+	Row,
+	SectionComponent
+	} from "@common-components";
+import { text, user } from "@core";
+import * as core from "@core";
+import { prescriptionItemForm, prescriptions } from "@modules";
+import * as modules from "@modules";
 import { num } from "@utils";
-import { computed, observable } from "mobx";
+import { computed } from "mobx";
 import { observer } from "mobx-react";
-import { Dropdown, IconButton, Panel, PanelType, TextField } from "office-ui-fabric-react";
+import {
+	Dropdown,
+	MessageBar,
+	MessageBarType,
+	Panel,
+	PanelType,
+	PrimaryButton,
+	TextField
+	} from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
-export class PrescriptionsPage extends React.Component<{}, {}> {
-	@observable showMenu: boolean = true;
-
-	@observable selectedID: string = router.currentLocation.split("/")[1];
-
-	@computed
-	get selectedIndex() {
-		return prescriptions.list.findIndex(x => x._id === this.selectedID);
-	}
-
-	@computed
-	get selectedPrescription() {
-		return prescriptions.list[this.selectedIndex];
+export class PrescriptionsPage extends React.Component {
+	@computed get selectedPrescription() {
+		return modules.prescriptions!.docs.find(
+			p => p._id === core.router.selectedID
+		);
 	}
 
 	@computed get canEdit() {
-		return user.currentUser.canEditPrescriptions;
+		return user.currentUser && user.currentUser.canEditPrescriptions;
 	}
 
 	render() {
 		return (
-			<div className="pc-pg p-15 p-l-10 p-r-10">
+			<div className="pc-pg">
 				<DataTableComponent
 					onDelete={
 						this.canEdit
 							? id => {
-									prescriptions.deleteModal(id);
+									prescriptions!.deleteModal(id);
 							  }
 							: undefined
 					}
@@ -46,11 +56,15 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 										title: "Add new",
 										name: text("Add new"),
 										onClick: () => {
-											const prescription = new PrescriptionItem();
-											prescriptions.list.push(
-												prescription
-											);
-											this.selectedID = prescription._id;
+											const newDoc = prescriptions!.new();
+											prescriptions!
+												.add(newDoc)
+												.then(() => {
+													core.router.selectID(
+														newDoc._id,
+														"details"
+													);
+												});
 										},
 										iconProps: {
 											iconName: "Add"
@@ -65,7 +79,7 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 						text("Frequency"),
 						text("Form")
 					]}
-					rows={prescriptions.list.map(prescription => {
+					rows={prescriptions!.docs.map(prescription => {
 						return {
 							id: prescription._id,
 							searchableString: prescription.searchableString,
@@ -81,15 +95,14 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 												prescription.timesPerDay
 											}X${
 												prescription.unitsPerTime
-											} ${text(
-												itemFormToString(
-													prescription.form
-												)
-											)}`}
+											} ${text(prescription.form)}`}
 										/>
 									),
 									onClick: () => {
-										this.selectedID = prescription._id;
+										core.router.selectID(
+											prescription._id,
+											"details"
+										);
 									},
 									className: "no-label"
 								},
@@ -115,13 +128,7 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 								{
 									dataValue: prescription.form,
 									component: (
-										<span>
-											{text(
-												itemFormToString(
-													prescription.form
-												)
-											)}
-										</span>
+										<span>{text(prescription.form)}</span>
 									),
 									className: "hidden-xs"
 								}
@@ -138,125 +145,148 @@ export class PrescriptionsPage extends React.Component<{}, {}> {
 						closeButtonAriaLabel="Close"
 						isLightDismiss={true}
 						onDismiss={() => {
-							this.selectedID = "";
+							core.router.unSelect();
 						}}
 						onRenderNavigation={() => (
-							<Row className="panel-heading">
-								<Col span={20}>
-									{this.selectedPrescription ? (
-										<ProfileSquaredComponent
-											text={
-												this.selectedPrescription.name
-											}
-											subText={`${
-												this.selectedPrescription
-													.doseInMg
-											}${text("mg")} ${
-												this.selectedPrescription
-													.timesPerDay
-											}X${
-												this.selectedPrescription
-													.unitsPerTime
-											} ${text(
-												itemFormToString(
-													this.selectedPrescription
-														.form
-												)
-											)}`}
-										/>
-									) : (
-										<p />
-									)}
-								</Col>
-								<Col span={4} className="close">
-									<IconButton
-										iconProps={{ iconName: "cancel" }}
-										onClick={() => {
-											this.selectedID = "";
-										}}
-									/>
-								</Col>
-							</Row>
+							<div className="panel-heading">
+								<PanelTop
+									title={this.selectedPrescription!.name}
+									type={"Prescription"}
+									subTitle={`${
+										this.selectedPrescription!.doseInMg
+									}${text("mg")} ${
+										this.selectedPrescription!.timesPerDay
+									}X${
+										this.selectedPrescription!.unitsPerTime
+									} ${text(this.selectedPrescription!.form)}`}
+									onDismiss={() => core.user.hide()}
+									square
+								/>
+								<PanelTabs
+									currentSelectedKey={core.router.selectedTab}
+									onSelect={key => core.router.selectTab(key)}
+									items={[
+										{
+											key: "details",
+											icon: "pill",
+											title: "Prescription Details"
+										},
+										{
+											key: "delete",
+											icon: "trash",
+											title: "Delete"
+										}
+									]}
+								/>
+							</div>
 						)}
 					>
 						<div className="prescription-editor">
-							<SectionComponent
-								title={text("Prescription Details")}
-							>
-								<TextField
-									label={text("Item name")}
-									value={this.selectedPrescription.name}
-									onChange={(ev, val) =>
-										(prescriptions.list[
-											this.selectedIndex
-										].name = val!)
-									}
-									disabled={!this.canEdit}
-								/>
+							{core.router.selectedTab === "details" ? (
+								<SectionComponent
+									title={text("Prescription Details")}
+								>
+									<TextField
+										label={text("Item name")}
+										value={this.selectedPrescription.name}
+										onChange={(ev, val) =>
+											(this.selectedPrescription!.name = val!)
+										}
+										disabled={!this.canEdit}
+									/>
 
-								<Row gutter={6}>
-									<Col md={8}>
-										<TextField
-											label={text("Dosage in mg")}
-											type="number"
-											value={this.selectedPrescription.doseInMg.toString()}
-											onChange={(ev, val) =>
-												(prescriptions.list[
-													this.selectedIndex
-												].doseInMg = num(val!))
-											}
-											disabled={!this.canEdit}
-										/>
-									</Col>
-									<Col md={8}>
-										<TextField
-											label={text("Times per day")}
-											type="number"
-											value={this.selectedPrescription.timesPerDay.toString()}
-											onChange={(ev, val) =>
-												(prescriptions.list[
-													this.selectedIndex
-												].timesPerDay = num(val!))
-											}
-											disabled={!this.canEdit}
-										/>
-									</Col>
-									<Col md={8}>
-										<TextField
-											label={text("Units per time")}
-											type="number"
-											value={this.selectedPrescription.unitsPerTime.toString()}
-											onChange={(ev, val) =>
-												(prescriptions.list[
-													this.selectedIndex
-												].unitsPerTime = num(val!))
-											}
-											disabled={!this.canEdit}
-										/>
-									</Col>
-								</Row>
-								<Dropdown
-									disabled={!this.canEdit}
-									label={text("Item form")}
-									className="form-picker"
-									selectedKey={itemFormToString(
-										this.selectedPrescription.form
-									)}
-									options={prescriptionItemForms.map(form => {
-										return {
-											key: form,
-											text: text(form)
-										};
-									})}
-									onChange={(ev, newValue) => {
-										prescriptions.list[
-											this.selectedIndex
-										].form = stringToItemForm(
-											newValue!.text
-										);
-									}}
-								/>
-							</SectionComponent>
+									<Row gutter={8}>
+										<Col md={8}>
+											<TextField
+												label={text("Dosage in mg")}
+												type="number"
+												value={this.selectedPrescription.doseInMg.toString()}
+												onChange={(ev, val) =>
+													(this.selectedPrescription!.doseInMg = num(
+														val!
+													))
+												}
+												disabled={!this.canEdit}
+											/>
+										</Col>
+										<Col md={8}>
+											<TextField
+												label={text("Times per day")}
+												type="number"
+												value={this.selectedPrescription.timesPerDay.toString()}
+												onChange={(ev, val) =>
+													(this.selectedPrescription!.timesPerDay = num(
+														val!
+													))
+												}
+												disabled={!this.canEdit}
+											/>
+										</Col>
+										<Col md={8}>
+											<TextField
+												label={text("Units per time")}
+												type="number"
+												value={this.selectedPrescription.unitsPerTime.toString()}
+												onChange={(ev, val) =>
+													(this.selectedPrescription!.unitsPerTime = num(
+														val!
+													))
+												}
+												disabled={!this.canEdit}
+											/>
+										</Col>
+									</Row>
+									<Dropdown
+										disabled={!this.canEdit}
+										label={text("Item form")}
+										className="form-picker"
+										selectedKey={
+											this.selectedPrescription.form
+										}
+										options={Object.keys(
+											prescriptionItemForm
+										).map(form => {
+											return {
+												key: form,
+												text: text(form)
+											};
+										})}
+										onChange={(ev, newValue) => {
+											this.selectedPrescription!.form = (newValue as any).text;
+										}}
+									/>
+								</SectionComponent>
+							) : (
+								""
+							)}
+							{core.router.selectedTab === "delete" ? (
+								<div>
+									<br />
+									<MessageBar
+										messageBarType={MessageBarType.warning}
+									>
+										{text(
+											"Are you sure you want to delete"
+										)}
+									</MessageBar>
+									<br />
+									<PrimaryButton
+										className="delete"
+										iconProps={{
+											iconName: "delete"
+										}}
+										text={text("Delete")}
+										onClick={() => {
+											modules.prescriptions!.delete(
+												core.router.selectedID
+											);
+											core.router.unSelect();
+										}}
+									/>
+								</div>
+							) : (
+								""
+							)}
 						</div>
 					</Panel>
 				) : (

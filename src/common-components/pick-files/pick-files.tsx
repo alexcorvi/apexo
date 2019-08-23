@@ -1,10 +1,14 @@
-import { AsyncComponent } from "@common-components";
-import { files } from "@core";
+import * as core from "@core";
 import { generateID, second } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { Icon } from "office-ui-fabric-react";
+import { Icon, Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+const CropComponent = loadable({
+	loader: async () => (await import("./crop")).CropComponent,
+	loading: () => <Shimmer />
+});
 
 function dataURItoBlob(dataURI: string) {
 	const byteString = atob(dataURI.split(",")[1]);
@@ -32,7 +36,16 @@ function dataURItoBlob(dataURI: string) {
 }
 
 export const fileTypes = {
-	image: ["png", "jpg", "jpeg", "gif", "image/png", "image/gif", "image/jpeg"]
+	image: [
+		"png",
+		"jpg",
+		"jpeg",
+		"gif",
+		"image/png",
+		"image/gif",
+		"image/jpeg",
+		"image/heic"
+	]
 };
 
 @observer
@@ -71,7 +84,7 @@ export class PickAndUploadComponent extends React.Component<
 					ref={el => (el ? (this.pickFileEl = el) : "")}
 					className="hidden"
 					accept={this.props.accept.join(",")}
-					onChange={() => {
+					onChange={async () => {
 						const fileList = this.pickFileEl!.files;
 						if (!fileList || !fileList[0]) {
 							return;
@@ -82,7 +95,18 @@ export class PickAndUploadComponent extends React.Component<
 						}
 						this.filesNumber = fileList.length;
 						for (let index = 0; index < fileList.length; index++) {
-							const file = fileList.item(index);
+							let file = fileList.item(index);
+							if (
+								file &&
+								file.name.toLowerCase().endsWith("heic")
+							) {
+								const heic2any = (await import("heic2any"))
+									.default;
+								file = (await heic2any({
+									blob: file,
+									toType: "image/jpeg"
+								})) as any;
+							}
 							const reader = new FileReader();
 							reader.onload = async (event: Event) => {
 								const base64DataURI = (event.target as any)
@@ -114,28 +138,17 @@ export class PickAndUploadComponent extends React.Component<
 						<Icon iconName="sync" className="rotate" />
 						{Object.keys(this.toCrop).map(id => {
 							return (
-								<AsyncComponent
-									key=""
-									loader={async () => {
-										const CropComponent = (await import("./crop"))
-											.CropComponent;
-										return (
-											<CropComponent
-												key={id}
-												src={this.toCrop[id]}
-												prevSrc={
-													this.props.prevSrc || ""
-												}
-												onSave={result => {
-													this.saveBase64(result);
-													delete this.toCrop[id];
-												}}
-												onDismiss={() => {
-													this.filesNumber--;
-													delete this.toCrop[id];
-												}}
-											/>
-										);
+								<CropComponent
+									key={id}
+									src={this.toCrop[id]}
+									prevSrc={this.props.prevSrc || ""}
+									onSave={result => {
+										this.saveBase64(result);
+										delete this.toCrop[id];
+									}}
+									onDismiss={() => {
+										this.filesNumber--;
+										delete this.toCrop[id];
 									}}
 								/>
 							);
@@ -155,11 +168,11 @@ export class PickAndUploadComponent extends React.Component<
 
 	async saveBase64(base64DataURI: string) {
 		const blob = dataURItoBlob(base64DataURI);
-		const filePath = await files.save(
-			blob,
-			base64DataURI.replace(/data:[a-z]*\/([a-z]*);.*/, "$1"),
-			this.props.targetDir
-		);
+		const filePath = await core.files.save({
+			blob: blob,
+			ext: base64DataURI.replace(/data:[a-z]*\/([a-z]*);.*/, "$1"),
+			dir: this.props.targetDir
+		});
 		this.resultArr.push(filePath);
 	}
 }

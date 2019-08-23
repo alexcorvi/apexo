@@ -1,70 +1,92 @@
 import { Col, Row } from "@common-components";
-import {
-	menu,
-	resync,
-	router,
-	status,
-	text,
-	user
-	} from "@core";
+import { status, text } from "@core";
+import * as core from "@core";
 import { observer } from "mobx-react";
 import { Icon, IconButton, TooltipHost } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
-export class HeaderView extends React.Component<{}, {}> {
+export class HeaderView extends React.Component {
 	render() {
 		return (
-			<div className="header-component">
+			<div
+				className="header-component"
+				data-login-type={status.loginType}
+			>
 				<Row>
 					<Col span={8}>
 						<section className="menu-button">
 							<IconButton
-								onClick={() => {
-									menu.show();
-								}}
+								onClick={() => core.menu.show()}
 								disabled={false}
 								iconProps={{ iconName: "GlobalNavButton" }}
-								title="GlobalNavButton"
-								ariaLabel="GlobalNavButton"
+								ariaLabel="Menu"
+								data-testid="expand-menu"
 							/>
 						</section>
 					</Col>
 					<Col span={8}>
-						<section className="title">
-							{text(router.currentNamespace || "Home")}
+						<section className="title" data-testid="page-title">
+							{text(core.router.currentNamespace || "Home")}
 						</section>
 					</Col>
 					<Col span={8}>
 						<section className="right-buttons">
-							{status.online ? (
-								<TooltipHost content={text("Sync with server")}>
-									<IconButton
-										onClick={async () => {
-											router.reSyncing = true;
-											await resync.resync();
-											router.reSyncing = false;
-										}}
-										iconProps={{ iconName: "Sync" }}
-										className={
-											router.reSyncing ? "rotate" : ""
-										}
-										title="Re-Sync"
-									/>
-								</TooltipHost>
-							) : (
-								<span className="offline">
-									<Icon iconName="WifiWarning4" />
-								</span>
-							)}
-
 							<TooltipHost content={text("User panel")}>
 								<IconButton
-									onClick={() => (user.visible = true)}
-									disabled={false}
+									onClick={() => core.user.show()}
 									iconProps={{ iconName: "Contact" }}
+									data-testid="expand-user"
 								/>
 							</TooltipHost>
+							{core.status.keepServerOffline ? (
+								""
+							) : (
+								<TooltipHost
+									content={
+										!core.status.isOnline.server
+											? text(
+													"Server is unavailable/offline"
+											  )
+											: core.status.invalidLogin
+											? text(
+													"Can't login to remote server"
+											  )
+											: text("Sync with server")
+									}
+								>
+									<IconButton
+										data-test-id="resync-btn"
+										disabled={
+											core.status.dbActionProgress ||
+											core.status.invalidLogin ||
+											!core.status.isOnline.server
+										}
+										onClick={async () => {
+											// resync on clicking (manual)
+											await core.dbAction("resync");
+										}}
+										iconProps={{
+											iconName: !core.status.isOnline
+												.server
+												? "WifiWarning4"
+												: core.status.invalidLogin
+												? "Important"
+												: "Sync"
+										}}
+										className={
+											"resync " +
+											(core.status.invalidLogin ||
+											!core.status.isOnline.server
+												? "error"
+												: core.status.dbActionProgress
+												? "rotate"
+												: "")
+										}
+										data-testid="resync"
+									/>
+								</TooltipHost>
+							)}
 						</section>
 					</Col>
 				</Row>

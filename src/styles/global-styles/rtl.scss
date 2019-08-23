@@ -4,6 +4,59 @@
 		text-align: right;
 	}
 
+	.home {
+		h2 {
+			text-align: right;
+		}
+	}
+
+	.appointments-lnd .appointment-body .delete {
+		float: left;
+	}
+
+	.editable-list {
+		.ms-DetailsRow-cell {
+			.el-expander {
+				text-align: right;
+			}
+			.ms-Button {
+				float: left;
+			}
+		}
+	}
+
+	.staff-editor .ms-Checkbox-text {
+		margin-left: 0;
+		margin-right: 2px;
+	}
+
+	.menu .ms-Panel-main {
+		right: 0;
+		left: auto;
+	}
+
+	.user-component .ms-Panel-main {
+		left: 0;
+		right: auto;
+	}
+
+	.elc-c .input .input-icon {
+		float: left;
+		border-right: 1px solid #e3e3e3;
+	}
+
+	.calendar-component .filters .ms-Toggle {
+		padding: 15px 15px 0 0;
+	}
+
+	.ms-DatePicker .ms-TextField-field {
+		padding-right: 30px !important;
+	}
+
+	.menu-item-tt .ms-Callout-beak {
+		right: -5px !important;
+	}
+
 	.header-component .right-buttons {
 		text-align: left;
 	}
@@ -25,10 +78,25 @@
 		text-align: right;
 	}
 
-	.cl-section .chevron {
-		position: absolute;
-		right: auto;
-		left: 7px;
+	.cl-section {
+		padding-right: 15px;
+		h3.cl-section-title {
+			margin-right: -15px;
+			margin-left: -15px;
+		}
+		.chevron {
+			float: left;
+			position: relative;
+			right: 8px;
+		}
+		.cl-section-title.only-title {
+			padding-right: 12px;
+			padding-left: 0;
+		}
+	}
+
+	.ms-Pivot-text {
+		margin-right: 5px;
 	}
 
 	.atc-c .delete {
@@ -183,12 +251,12 @@
 			right: 0;
 			left: auto;
 			margin-left: auto;
-			margin-right: 12px;
+			border-left: 1px solid #f5f5f5;
+			border-right: 0;
 		}
 		#router-outlet {
-			margin-right: 85px;
+			margin-right: 65px;
 			margin-left: auto;
-			margin-top: 53px;
 		}
 	}
 
@@ -228,7 +296,7 @@
 		.day-selector
 		.day-selector-wrapper
 		.day-col.weekend:not(:last-child) {
-		border-left: 1px dotted #e0e0e0;
+		border-left: 1px solid #e0e0e0;
 		padding-left: 13px;
 		margin-left: 10px;
 		border-right: none;

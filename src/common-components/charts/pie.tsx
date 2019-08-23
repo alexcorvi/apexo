@@ -1,4 +1,4 @@
-import { colors } from "@common-components";
+import * as commonComponents from "@common-components";
 import { observer } from "mobx-react";
 import * as React from "react";
 
@@ -24,14 +24,14 @@ export class PieChartComponent extends React.Component<
 		const ctx = (document.getElementById(
 			this.id
 		) as HTMLCanvasElement).getContext("2d") as CanvasRenderingContext2D;
-		const chart = new Chart(ctx, {
+		const chart: Chart = new (Chart as any)(ctx, {
 			type: "pie",
 			data: {
 				datasets: [
 					{
 						data: this.props.data.map(x => x.value),
 						backgroundColor: this.props.data.map(
-							(x, i) => colors[i]
+							(x, i) => commonComponents.colors[i]
 						)
 					}
 				],

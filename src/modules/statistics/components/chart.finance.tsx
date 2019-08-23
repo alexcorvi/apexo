@@ -1,36 +1,46 @@
 import { LineChartComponent } from "@common-components";
 import { text } from "@core";
-import { Chart, setting, statistics } from "@modules";
+import * as modules from "@modules";
 import { formatDate, round } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 @observer
-class Component extends React.Component<{}, {}> {
+export class FinancesByDateChart extends React.Component<{
+	selectedFinancesByDay: {
+		day: Date;
+		appointments: Partial<modules.Appointment>[];
+	}[];
+	dateFormat: string;
+}> {
 	@computed
 	private get _unsortedValues() {
-		return statistics.selectedFinances.map(date => {
-			const timestamp = date.day.getTime();
+		return this.props.selectedFinancesByDay.map(dateFinances => {
+			const timestamp = dateFinances.day.getTime();
 			let totalExpenses = 0;
 			let totalPayments = 0;
 			let totalProfits = 0;
 
-			for (let index = 0; index < date.appointments.length; index++) {
-				const appointment = date.appointments[index];
+			for (
+				let index = 0;
+				index < dateFinances.appointments.length;
+				index++
+			) {
+				const appointment = dateFinances.appointments[index];
 				if (appointment.isDone) {
-					totalExpenses = totalExpenses + appointment.expenses;
+					totalExpenses = totalExpenses + appointment.expenses!;
 				}
 				if (appointment.isPaid) {
-					totalPayments = totalPayments + appointment.paid;
-					totalProfits = totalProfits + appointment.profit;
+					totalPayments = totalPayments + appointment.paidAmount!;
+					totalProfits = totalProfits + appointment.profit!;
 				}
 			}
 			totalExpenses = round(totalExpenses);
 			totalPayments = round(totalPayments);
 			totalProfits = round(totalProfits);
 			return {
-				label: formatDate(timestamp, setting.getSetting("date_format")),
+				label: formatDate(timestamp, this.props.dateFormat),
 				totalPayments,
 				totalExpenses,
 				totalProfits
@@ -70,11 +80,3 @@ class Component extends React.Component<{}, {}> {
 		);
 	}
 }
-
-export const financesByDateChart: Chart = {
-	Component,
-	name: "Finances by Date",
-	description: "A calculation of finances",
-	tags: "net profit by per day date",
-	className: "col-xs-12"
-};

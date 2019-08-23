@@ -18,11 +18,11 @@
 		"importHelpers": true,
 		"baseUrl": "src",
 		"paths": {
-			"@core": ["core/index"],
-			"@main-components": ["main-components/index"],
-			"@common-components": ["common-components/index"],
-			"@modules": ["modules/index"],
-			"@utils": ["utils/index"]
+			"@core": ["core"],
+			"@main-components": ["main-components"],
+			"@common-components": ["common-components"],
+			"@modules": ["modules"],
+			"@utils": ["utils"]
 		}
 	},
 	"include": ["./src/**/*"],

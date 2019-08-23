@@ -1,19 +1,21 @@
 import { PieChartComponent } from "@common-components";
 import { text } from "@core";
-import { appointments, Chart, Gender, Patient, statistics } from "@modules";
+import { gender, Patient } from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 @observer
-class Component extends React.Component<{}, {}> {
+export class GenderPieChart extends React.Component<{
+	selectedPatients: Patient[];
+}> {
 	@computed
 	get malePercentile() {
-		return this.calculateGenderPercentile(Gender.male);
+		return this.calculateGenderPercentile(gender.male);
 	}
 	@computed
 	get femalePercentile() {
-		return this.calculateGenderPercentile(Gender.female);
+		return this.calculateGenderPercentile(gender.female);
 	}
 	render() {
 		return (
@@ -28,30 +30,9 @@ class Component extends React.Component<{}, {}> {
 			/>
 		);
 	}
-	calculateGenderPercentile(gender: Gender) {
-		return statistics.selectedDays
-			.map(
-				day =>
-					appointments
-						.appointmentsForDay(
-							day.getFullYear(),
-							day.getMonth() + 1,
-							day.getDate()
-						)
-						.filter(
-							appointment =>
-								(appointment.patient || new Patient())
-									.gender === gender
-						).length
-			)
-			.reduce((total, males) => (total = total + males), 0);
+	calculateGenderPercentile(requiredG: keyof typeof gender) {
+		return this.props.selectedPatients.filter(
+			patient => patient.gender === requiredG
+		).length;
 	}
 }
-
-export const genderPieChart: Chart = {
-	Component,
-	name: "Patients' Gender",
-	description: "treated patients gender",
-	tags: "gender patients pie chart",
-	className: "col-xs-12 col-lg-6"
-};

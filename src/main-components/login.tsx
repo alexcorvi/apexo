@@ -1,12 +1,21 @@
 import { status, text } from "@core";
-import { store } from "@utils";
+import * as core from "@core";
+import { second, store } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { DefaultButton, MessageBar, MessageBarType, PrimaryButton, TextField } from "office-ui-fabric-react";
+import {
+	DefaultButton,
+	MessageBar,
+	MessageBarType,
+	PrimaryButton,
+	Spinner,
+	SpinnerSize,
+	TextField
+	} from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer
-export class LoginView extends React.Component<{}, {}> {
+export class LoginView extends React.Component {
 	@observable usernameFieldValue = "";
 	@observable passwordFieldValue = "";
 	@observable serverFieldValue =
@@ -16,45 +25,88 @@ export class LoginView extends React.Component<{}, {}> {
 
 	@observable errorMessage: string = "";
 	@observable disableInputs: boolean = false;
-	@observable step: number = 1;
-
-	@observable editServerLocation: boolean = false;
 
 	@observable initiallyChecked: boolean = false;
 
 	@computed get impossibleToLogin() {
-		return !navigator.onLine && !store.found("LSL_hash");
+		return (
+			!status.isOnline.server &&
+			!status.isOnline.client &&
+			!store.found("LSL_hash")
+		);
 	}
 
-	componentWillMount() {
-		status
+	componentDidMount() {
+		core.status
 			.initialCheck(this.serverFieldValue)
-			.then(() => (this.initiallyChecked = true));
+			.finally(() => (this.initiallyChecked = true));
+	}
+
+	async login(offline?: boolean) {
+		if (
+			!(
+				this.usernameFieldValue &&
+				this.passwordFieldValue &&
+				this.serverFieldValue
+			)
+		) {
+			this.errorMessage = "All fields are necessary";
+			return;
+		}
+		this.errorMessage = "";
+		const result = offline
+			? await core.status.loginWithCredentialsOffline({
+					username: this.usernameFieldValue,
+					password: this.passwordFieldValue,
+					server: this.serverFieldValue.replace(
+						/([^\/])\/[^\/].+/,
+						"$1"
+					)
+			  })
+			: await core.status.loginWithCredentials({
+					username: this.usernameFieldValue,
+					password: this.passwordFieldValue,
+					server: this.serverFieldValue.replace(
+						/([^\/])\/[^\/].+/,
+						"$1"
+					)
+			  });
+		if (typeof result !== "boolean") {
+			this.errorMessage = result;
+		}
 	}
 
 	render() {
 		return (
 			<div className="login-component">
 				{this.impossibleToLogin ? (
-					<div className="impossible">
+					<div data-testid="impossible">
 						<MessageBar messageBarType={MessageBarType.error}>
 							You're offline and unable to login
 							<br />
 						</MessageBar>
 						<DefaultButton
 							text="Reload"
-							className="m-t-15 m-b-15"
+							className="m-t-15 m-b-15 m-r-5"
 							onClick={() => {
 								location.reload();
+							}}
+							iconProps={{
+								iconName: "Sync"
 							}}
 						/>
 					</div>
 				) : (
-					<div>
+					<div className="login-forum">
 						{this.initiallyChecked ? (
 							<div className="login-step">
 								<div
-									className={navigator.onLine ? "hidden" : ""}
+									className={
+										status.isOnline.server ||
+										!store.found("LSL_hash")
+											? "hidden"
+											: "offline-msg"
+									}
 								>
 									<MessageBar
 										messageBarType={MessageBarType.warning}
@@ -67,45 +119,26 @@ export class LoginView extends React.Component<{}, {}> {
 									</MessageBar>
 								</div>
 
-								<br />
-								<hr />
-
 								<div
-									className={navigator.onLine ? "" : "hidden"}
+									className={
+										status.isOnline.server ||
+										!store.found("LSL_hash")
+											? ""
+											: "hidden"
+									}
 								>
-									<div
-										style={{
-											display: "inline-block",
-											width: "75%"
-										}}
-									>
-										<TextField
-											name="server"
-											label={text(`Server location`)}
-											value={this.serverFieldValue}
-											disabled={
-												this.disableInputs ||
-												!this.editServerLocation
-											}
-											onChange={(ev, v) =>
-												(this.serverFieldValue = v!)
-											}
-										/>
-									</div>
-
-									<DefaultButton
-										className="edit-server-location"
-										onClick={() => {
-											this.editServerLocation = true;
-										}}
-									>
-										Change
-									</DefaultButton>
+									<TextField
+										name="server"
+										label={text(`Server location`)}
+										value={this.serverFieldValue}
+										disabled={this.disableInputs}
+										onChange={(ev, v) =>
+											(this.serverFieldValue = v!)
+										}
+										className="input-server"
+									/>
 								</div>
 
-								<br />
-								<br />
-								<hr />
 								<TextField
 									name="identification"
 									label={text(`Username`)}
@@ -114,6 +147,12 @@ export class LoginView extends React.Component<{}, {}> {
 									onChange={(e, v) =>
 										(this.usernameFieldValue = v!)
 									}
+									data-testid="input-identification"
+									onKeyDown={ev => {
+										if (ev.keyCode === 13) {
+											this.login();
+										}
+									}}
 								/>
 								<TextField
 									name="password"
@@ -124,99 +163,59 @@ export class LoginView extends React.Component<{}, {}> {
 									onChange={(e, v) =>
 										(this.passwordFieldValue = v!)
 									}
-								/>
-								<PrimaryButton
-									text={text("Login")}
-									disabled={this.disableInputs}
-									className="m-t-15 m-b-15"
-									onClick={async () => {
-										if (
-											!(
-												this.usernameFieldValue &&
-												this.passwordFieldValue &&
-												this.serverFieldValue
-											)
-										) {
-											this.errorMessage =
-												"All fields are necessary";
-											return;
-										}
-										this.errorMessage = "";
-										const result = await status.loginWithCredentials(
-											{
-												username: this
-													.usernameFieldValue,
-												password: this
-													.passwordFieldValue,
-												server: this.serverFieldValue.replace(
-													/([^\/])\/[^\/].+/,
-													"$1"
-												)
-											}
-										);
-										if (
-											typeof result !== "boolean" ||
-											result !== true
-										) {
-											this.errorMessage = result;
+									data-testid="input-password"
+									onKeyDown={ev => {
+										if (ev.keyCode === 13) {
+											this.login();
 										}
 									}}
 								/>
-								{status.tryOffline ? (
+								<PrimaryButton
+									iconProps={{
+										iconName: "Permissions"
+									}}
+									text={text("Login")}
+									disabled={this.disableInputs}
+									className="m-t-15 m-b-15"
+									data-testid="proceed-primary"
+									onClick={() => {
+										this.login();
+									}}
+								/>
+								{core.status.tryOffline ? (
 									<PrimaryButton
 										text={text("Access offline")}
 										disabled={this.disableInputs}
 										className="m-t-15 m-b-15 m-l-5 m-r-5"
-										onClick={async () => {
-											if (
-												!(
-													this.usernameFieldValue &&
-													this.passwordFieldValue &&
-													this.serverFieldValue
-												)
-											) {
-												this.errorMessage =
-													"All fields are necessary";
-												return;
-											}
-											this.errorMessage = "";
-											const result = await status.loginWithCredentialsOffline(
-												{
-													username: this
-														.usernameFieldValue,
-													password: this
-														.passwordFieldValue,
-													server: this.serverFieldValue.replace(
-														/([^\/])\/[^\/].+/,
-														"$1"
-													)
-												}
-											);
-											if (
-												typeof result !== "boolean" ||
-												result !== true
-											) {
-												this.errorMessage = result;
-											}
+										data-testid="proceed-offline"
+										onClick={() => {
+											this.login(true);
 										}}
 									/>
 								) : (
 									""
 								)}
-								<DefaultButton
-									onClick={() => {
-										status.startNoServer();
-									}}
-									className="no-server-mode"
-								>
-									no-server mode
-								</DefaultButton>
 							</div>
 						) : (
-							""
+							<div className="spinner-container">
+								<Spinner
+									size={SpinnerSize.large}
+									label={
+										core.status.initialLoadingIndicatorText
+											? `Please wait: ${
+													core.status
+														.initialLoadingIndicatorText
+											  }`
+											: "Please wait"
+									}
+								/>
+							</div>
 						)}
 						{this.errorMessage ? (
-							<MessageBar messageBarType={MessageBarType.error}>
+							<MessageBar
+								data-testid="error-msg"
+								messageBarType={MessageBarType.error}
+							>
 								{this.errorMessage}
 							</MessageBar>
 						) : (

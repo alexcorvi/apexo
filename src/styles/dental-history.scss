@@ -12,10 +12,10 @@
 			tr {
 				td {
 					&:nth-child(8) {
-						border-right: 2px solid #000;
+						border-right: 1px solid #e91e63;
 					}
 					&:nth-child(9) {
-						border-left: 2px solid #000;
+						border-left: 1px solid #e91e63;
 					}
 				}
 			}
@@ -24,17 +24,26 @@
 			tr {
 				td {
 					&:nth-child(5) {
-						border-right: 2px solid #000;
+						border-right: 1px solid #e91e63;
 					}
 					&:nth-child(6) {
-						border-left: 2px solid #000;
+						border-left: 1px solid #e91e63;
 					}
 				}
 			}
 		}
-		width: 100%;
+		direction: ltr !important;
+		margin-bottom: 20px;
+		width: calc(100% + 32px);
 		border-collapse: collapse;
+		margin-left: -16px;
+		margin-right: -16px;
 		tr {
+			&:nth-child(2) {
+				td {
+					border-bottom: none;
+				}
+			}
 			td {
 				.has-notes {
 					transition: 0.4s all;
@@ -51,13 +60,15 @@
 				position: relative;
 				background: #fff;
 				transition: 0.4s all;
-				&:hover {
-					@include box_shadow(5);
-				}
 				cursor: pointer;
 				text-align: center;
-				padding: 10px;
-				color: #000;
+				padding: 0.7%;
+				font-size: 12px;
+				border: 1px solid #e3e3e3;
+				border-top: none;
+				&:hover {
+					background: #f3f3f3 !important;
+				}
 				&.filled {
 					.has-notes {
 						background: #ff6f00;
@@ -86,7 +97,6 @@
 					color: #eee;
 					background: #bdbdbd;
 				}
-				@include box_shadow(1);
 			}
 		}
 	}
@@ -123,4 +133,10 @@
 
 .single-tooth-condition {
 	margin-top: 10px;
+}
+
+.panel-heading-tooth {
+	.ms-Persona-initials {
+		color: rgba(0, 0, 0, 0.5);
+	}
 }

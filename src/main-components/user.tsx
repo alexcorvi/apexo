@@ -1,31 +1,46 @@
-import { AsyncComponent, Col, ProfileComponent, Row, SectionComponent } from "@common-components";
-import { status, text, user } from "@core";
-import { Appointment, AppointmentThumbComponent } from "@modules";
+import {
+	AppointmentsListNoDate,
+	Col,
+	PanelTabs,
+	PanelTop,
+	ProfileComponent,
+	Row,
+	SectionComponent
+	} from "@common-components";
+import { text } from "@core";
+import * as core from "@core";
+import { Appointment, PrescriptionItem, StaffMember } from "@modules";
+import * as modules from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
+	DefaultButton,
 	IconButton,
 	Link,
 	MessageBar,
 	MessageBarType,
 	Panel,
-	PanelType
+	PanelType,
+	Shimmer
 	} from "office-ui-fabric-react";
+import { PrimaryButton } from "office-ui-fabric-react";
 import * as React from "react";
+import * as loadable from "react-loadable";
+
+const AppointmentEditorPanel = loadable({
+	loader: async () =>
+		(await import("modules/appointments/components/appointment-editor"))
+			.AppointmentEditorPanel,
+	loading: () => <Shimmer />
+});
 
 @observer
-export class UserPanelView extends React.Component<{}, {}> {
-	@observable appointment: Appointment | null = null;
-
-	@computed
-	get todayAppointments() {
-		if (!user.currentUser) {
-			return [];
-		} else if (user.todayAppointments) {
-			return user.todayAppointments;
-		} else {
-			return [];
-		}
+export class UserPanelView extends React.Component {
+	@observable selectedAppointmentId: string = "";
+	@computed get selectedAppointment() {
+		return modules.appointments!.docs.find(
+			x => x._id === this.selectedAppointmentId
+		);
 	}
 
 	render() {
@@ -34,86 +49,135 @@ export class UserPanelView extends React.Component<{}, {}> {
 				className="user-component"
 				type={PanelType.medium}
 				isLightDismiss
-				isOpen={user.visible}
-				onDismiss={() => (user.visible = false)}
+				isOpen={core.router.selectedMain === "user"}
+				onDismiss={() => core.user.hide()}
+				data-testid="user-panel"
 				onRenderNavigation={() => (
-					<Row className="panel-heading">
-						<Col span={20}>
-							<ProfileComponent
-								name={user.currentUser.name}
-								size={3}
-								secondaryElement={
-									<div>
-										<Link
-											onClick={() => {
-												status.logout();
-											}}
-										>
-											{text("Logout")}
-										</Link>
-										{" / "}
-										<Link
-											className="reset-user"
-											onClick={() => {
-												status.resetUser();
-											}}
-										>
-											{text("Switch user")}
-										</Link>
-									</div>
+					<div className="panel-heading">
+						<PanelTop
+							title={core.user.currentUser!.name}
+							type={"Staff member"}
+							onDismiss={() => core.user.hide()}
+						/>
+						<PanelTabs
+							currentSelectedKey={core.router.selectedTab}
+							onSelect={key => {
+								core.router.selectTab(key);
+							}}
+							items={[
+								{
+									key: "today",
+									icon: "GotoToday",
+									title: "Appointments for Today"
+								},
+								{
+									key: "upcoming",
+									icon: "Calendar",
+									title: "Upcoming appointments"
+								},
+								{
+									key: "actions",
+									icon: "Lock",
+									title: "Actions"
 								}
-							/>
-						</Col>
-						<Col span={4} className="close">
-							<IconButton
-								iconProps={{ iconName: "cancel" }}
-								onClick={() => {
-									user.visible = false;
-								}}
-							/>
-						</Col>
-					</Row>
+							]}
+						/>
+					</div>
 				)}
 			>
-				<SectionComponent title={text("Today's Appointments")}>
-					{this.todayAppointments.length === 0 ? (
-						<MessageBar messageBarType={MessageBarType.info}>
-							{text("No appointments today")}
-						</MessageBar>
-					) : (
-						<div className="appointments-listing">
-							{this.todayAppointments.map(appointment => {
-								const date = new Date(appointment.date);
-								const dateLink = `${date.getFullYear()}-${date.getMonth() +
-									1}-${date.getDate()}`;
-								return (
-									<AppointmentThumbComponent
-										key={appointment._id}
-										appointment={appointment}
-										hideDate={true}
-										showPatient={true}
-										onClick={() => {
-											this.appointment = appointment;
+				{core.router.selectedTab === "today" ? (
+					<SectionComponent title={text("Appointments for today")}>
+						{core.user.todayAppointments.length === 0 ? (
+							<MessageBar
+								messageBarType={MessageBarType.info}
+								data-testid="no-appointments"
+							>
+								{text("No appointments today")}
+							</MessageBar>
+						) : (
+							<div
+								className="appointments-listing"
+								data-testid="appointments-list"
+							>
+								{
+									<AppointmentsListNoDate
+										appointments={
+											core.user.todayAppointments
+										}
+										onClick={id => {
+											this.selectedAppointmentId = id;
+											core.router.selectSub("details");
 										}}
+										canDelete={false}
 									/>
-								);
-							})}
-						</div>
-					)}
-				</SectionComponent>
-				{this.appointment ? (
-					<AsyncComponent
-						key="ae"
-						loader={async () => {
-							const AppointmentEditorPanel = (await import("../modules/appointments/components/appointment-editor"))
-								.AppointmentEditorPanel;
-							return (
-								<AppointmentEditorPanel
-									appointment={this.appointment}
-									onDismiss={() => (this.appointment = null)}
-									onDelete={() => (this.appointment = null)}
-								/>
-							);
+								}
+							</div>
+						)}
+					</SectionComponent>
+				) : (
+					""
+				)}
+
+				{core.router.selectedTab === "upcoming" ? (
+					<SectionComponent title={text("All upcoming appointments")}>
+						{core.user.currentUser!.nextAppointments.length ===
+						0 ? (
+							<MessageBar
+								messageBarType={MessageBarType.info}
+								data-testid="no-appointments"
+							>
+								{text("No upcoming appointments")}
+							</MessageBar>
+						) : (
+							<div
+								className="appointments-listing"
+								data-testid="appointments-list"
+							>
+								{
+									<AppointmentsListNoDate
+										appointments={
+											core.user.currentUser!
+												.nextAppointments
+										}
+										onClick={id => {
+											this.selectedAppointmentId = id;
+											core.router.selectSub("details");
+										}}
+										canDelete={false}
+									/>
+								}
+							</div>
+						)}
+					</SectionComponent>
+				) : (
+					""
+				)}
+
+				{core.router.selectedTab === "actions" ? (
+					<div className="m-t-20" style={{ textAlign: "center" }}>
+						<PrimaryButton
+							className="m-5"
+							text={text("Logout")}
+							iconProps={{ iconName: "lock" }}
+							onClick={() => core.status.logout()}
+						/>
+						<DefaultButton
+							iconProps={{ iconName: "ContactInfo" }}
+							className="m-5"
+							text={text("Switch user")}
+							onClick={() => core.status.resetUser()}
+						/>
+					</div>
+				) : (
+					""
+				)}
+
+				{this.selectedAppointment && core.router.selectedSub ? (
+					<AppointmentEditorPanel
+						appointment={this.selectedAppointment}
+						onDismiss={() => {
+							this.selectedAppointmentId = "";
+							core.router.unSelectSub();
 						}}
 					/>
 				) : (

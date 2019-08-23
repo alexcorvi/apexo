@@ -8,7 +8,7 @@
 	width: 100%;
 	top: 0;
 	background: #fff;
-	@include box_shadow(1);
+	border-bottom: 1px solid #f3f3f3;
 	section {
 		float: left;
 		padding: 10px 10px 0px;
@@ -48,12 +48,16 @@
 	}
 	.right-buttons {
 		text-align: right;
+		padding-top: 8px;
 	}
-	.offline {
-		display: inline-block;
-		background: #ff5722;
-		color: #fff;
-		margin-right: 12px;
-		padding: 8px;
+	.resync.rotate {
+		border-radius: 50%;
+	}
+	.resync.error {
+		background: #fff;
+		border: 1px solid #ff5722;
+		i {
+			color: #ff5722;
+		}
 	}
 }
