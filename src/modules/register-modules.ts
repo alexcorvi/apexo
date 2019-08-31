@@ -23,16 +23,10 @@ async function initResync() {
 }
 
 export async function registerModules() {
-	for (let index = 0; index < register.length; index++) {
-		core.status.loadingIndicatorText = "Registering module " + index;
-		const reg = register[index];
-		await reg();
-	}
-
+	await Promise.all(register.map(singleModule => singleModule()));
 	// resync on load: only staff database initially
 	// because we need it in login
 	core.status.loadingIndicatorText = "Resyncing basic info";
 	await dbAction("resync", "doctors");
-
 	initResync();
 }
