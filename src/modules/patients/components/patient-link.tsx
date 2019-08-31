@@ -17,8 +17,13 @@ export class PatientLinkComponent extends React.Component<
 		return (
 			<a
 				className={"plk-c " + this.props.className}
-				onClick={() => {
-					core.router.go([modules.patientsNamespace, this.props.id]);
+				onClick={ev => {
+					core.router.go([modules.patientsNamespace]);
+					setTimeout(
+						() => core.router.selectID(this.props.id, "details"),
+						100
+					);
+					ev.stopPropagation();
 				}}
 			>
 				<Icon iconName="Contact" className="icon" />
