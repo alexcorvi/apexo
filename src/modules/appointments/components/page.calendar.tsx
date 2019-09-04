@@ -2,14 +2,7 @@ import { Col, ProfileSquaredComponent, Row } from "@common-components";
 import * as core from "@core";
 import { text } from "@core";
 import { Calendar, calendar } from "@modules";
-import {
-	Appointment,
-	DayInfo,
-	PatientLinkComponent,
-	patientsNamespace,
-	PrescriptionItem,
-	StaffMember
-	} from "@modules";
+import { PatientLinkComponent } from "@modules";
 import * as modules from "@modules";
 import { dateNames, num } from "@utils";
 import { computed, observable } from "mobx";
@@ -352,7 +345,7 @@ export class CalendarPage extends React.Component {
 																core.router.selectSub(
 																	"details"
 																),
-															100
+															50
 														);
 													}}
 												>

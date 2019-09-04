@@ -92,8 +92,13 @@ export class Router {
 	}
 
 	go(routes: string[]) {
+		const oldNamespace = this.currentNamespace;
 		location.hash = "#!/" + routes.join("/").replace(/\/\//g, "/");
-		scrollTo(0, 0);
+		setTimeout(() => {
+			if (oldNamespace !== this.currentNamespace) {
+				scrollTo(0, 0);
+			}
+		}, 50);
 	}
 
 	selectID(id: string, tab?: string) {
