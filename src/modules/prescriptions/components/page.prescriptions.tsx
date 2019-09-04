@@ -159,7 +159,7 @@ export class PrescriptionsPage extends React.Component {
 									}X${
 										this.selectedPrescription!.unitsPerTime
 									} ${text(this.selectedPrescription!.form)}`}
-									onDismiss={() => core.user.hide()}
+									onDismiss={() => core.router.unSelect()}
 									square
 								/>
 								<PanelTabs

@@ -9,8 +9,8 @@ import {
 	TableActions,
 	TagInputComponent
 	} from "@common-components";
-import { imagesTable, text } from "@core";
 import * as core from "@core";
+import { imagesTable, text } from "@core";
 import { PatientAppointmentsPanel } from "@modules";
 import * as modules from "@modules";
 import { formatDate } from "@utils";
@@ -599,7 +599,7 @@ export class OrthoPage extends React.Component {
 								<PanelTop
 									title={this.selectedPatient!.name}
 									type={"Orthodontic case"}
-									onDismiss={() => core.user.hide()}
+									onDismiss={() => core.router.unSelect()}
 									avatar={
 										this.selectedPatient!.avatar
 											? imagesTable.table[

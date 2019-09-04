@@ -237,7 +237,7 @@ export class LabworkPage extends React.Component {
 											: ""
 									}
 									square
-									onDismiss={() => core.user.hide()}
+									onDismiss={() => core.router.unSelect()}
 								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}

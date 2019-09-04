@@ -184,7 +184,7 @@ export class Treatments extends React.Component {
 									)}${
 										this.selectedTreatment!.expenses
 									} ${text("per unit")}`}
-									onDismiss={() => core.user.hide()}
+									onDismiss={() => core.router.unSelect()}
 								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}

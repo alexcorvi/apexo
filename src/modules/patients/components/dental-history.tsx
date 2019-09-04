@@ -154,7 +154,9 @@ export class DentalHistoryPanel extends React.Component<
 											tooth ? tooth.Universal : ""
 										}`}
 										type={tooth.Name}
-										onDismiss={() => core.user.hide()}
+										onDismiss={() =>
+											core.router.unSelectSub()
+										}
 										initials={<Icon iconName="teeth" />}
 										initialsColor={conditionToColor(
 											tooth.condition

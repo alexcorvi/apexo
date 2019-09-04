@@ -10,8 +10,8 @@ import {
 	TagInputComponent,
 	tagType
 	} from "@common-components";
-import { imagesTable, text } from "@core";
 import * as core from "@core";
+import { imagesTable, text } from "@core";
 import {
 	Appointment,
 	ISOTeethArr,
@@ -184,7 +184,7 @@ export class AppointmentEditorPanel extends React.Component<
 							square
 							type={"Appointment"}
 							subTitle={this.props.appointment!.patient!.name}
-							onDismiss={() => core.user.hide()}
+							onDismiss={this.props.onDismiss}
 							avatar={
 								this.props.appointment!.patient!.avatar
 									? imagesTable.table[
