@@ -58,7 +58,8 @@ export class HeaderView extends React.Component {
 									<IconButton
 										data-test-id="resync-btn"
 										disabled={
-											core.status.dbActionProgress ||
+											core.status.dbActionProgress
+												.length > 0 ||
 											core.status.invalidLogin ||
 											!core.status.isOnline.server
 										}
@@ -80,6 +81,7 @@ export class HeaderView extends React.Component {
 											!core.status.isOnline.server
 												? "error"
 												: core.status.dbActionProgress
+														.length > 0
 												? "rotate"
 												: "")
 										}

@@ -20,7 +20,8 @@ const methods: {
 };
 
 export async function dbAction(action: keyof typeof methods, dbName?: string) {
-	status.dbActionProgress = true;
+	const progressID = Math.random().toString();
+	status.dbActionProgress.push(progressID);
 	try {
 		if (dbName) {
 			// apply on specific DB
@@ -36,7 +37,10 @@ export async function dbAction(action: keyof typeof methods, dbName?: string) {
 		console.log(e);
 		console.log(JSON.stringify(e));
 	}
-	status.dbActionProgress = false;
+	status.dbActionProgress.splice(
+		status.dbActionProgress.indexOf(progressID),
+		1
+	);
 }
 
 export async function importPouchDB() {

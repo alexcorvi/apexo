@@ -30,7 +30,7 @@ export enum LoginType {
 
 export class Status {
 	private currentlyValidating: string | null = null;
-	@observable dbActionProgress = false;
+	@observable dbActionProgress: string[] = [];
 	@observable loadingIndicatorText = "";
 	@observable initialLoadingIndicatorText = "";
 	@observable server: string = "";
