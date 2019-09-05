@@ -129,7 +129,9 @@ export async function connect<S>(dbName: string) {
 	DBNames.push(dbName);
 	methods.resync.push(async () => {
 		if (remoteDatabase) {
-			await localDatabase.sync(remoteDatabase);
+			await localDatabase.sync(remoteDatabase, {
+				batch_size: 50
+			});
 		}
 	});
 	methods.destroy.push(async () => {
