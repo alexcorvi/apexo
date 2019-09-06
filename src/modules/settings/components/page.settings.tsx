@@ -43,7 +43,7 @@ export class SettingsPage extends React.Component {
 
 	@observable locked: boolean = true;
 
-	componentWillMount() {
+	componentDidMount() {
 		setTimeout(() => modules.setting!.updateDropboxBackups(), second);
 	}
 

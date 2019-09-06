@@ -61,14 +61,10 @@ export class LineChartComponent extends React.Component<
 			</div>
 		);
 	}
-	componentWillUpdate() {
+	componentDidUpdate() {
 		(document.getElementById(
 			this.id + "_container"
-		) as HTMLDivElement).innerHTML = `<canvas id="${
-			this.id
-		}" style="height: 100%; width: 100%" />`;
-	}
-	componentDidUpdate() {
+		) as HTMLDivElement).innerHTML = `<canvas id="${this.id}" style="height: 100%; width: 100%" />`;
 		this.graph();
 	}
 	componentDidMount() {

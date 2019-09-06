@@ -4,7 +4,7 @@ import * as React from "react";
 export class GridTableComponent extends React.Component {
 	interval: number = 0;
 
-	componentWillMount() {
+	componentDidMount() {
 		this.interval = setInterval(() => {
 			document.querySelectorAll(".grid-table").forEach(el => {
 				const parentHeight = el.parentElement!.offsetHeight;
