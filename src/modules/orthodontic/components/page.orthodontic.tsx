@@ -9,8 +9,8 @@ import {
 	TableActions,
 	TagInputComponent
 	} from "@common-components";
-import * as core from "@core";
 import { imagesTable, text } from "@core";
+import * as core from "@core";
 import { PatientAppointmentsPanel } from "@modules";
 import * as modules from "@modules";
 import { formatDate } from "@utils";
@@ -134,9 +134,7 @@ export class OrthoPage extends React.Component {
 				key: "gallery",
 				title: "Gallery",
 				icon: "PhotoCollection",
-				bubbleContent:
-					orthoCase.patient!.gallery.length +
-					orthoCase.cephalometricHistory.length
+				bubbleContent: orthoCase.patient!.gallery.length
 			},
 			{
 				key: "appointments",

@@ -1,6 +1,6 @@
 import { dbAction, files, modals, text } from "@core";
 import * as core from "@core";
-import { CephalometricItemInterface, OrthoCase, OrthoCaseSchema, patients } from "@modules";
+import { OrthoCase, OrthoCaseSchema, patients } from "@modules";
 import * as modules from "@modules";
 import { escapeRegExp } from "@utils";
 import { computed, observable } from "mobx";
@@ -33,24 +33,6 @@ export class OrthoCases extends Store<OrthoCaseSchema, OrthoCase> {
 		return patients!.docs.filter(
 			patient => this.orthoPatientsIDs.indexOf(patient._id) === -1
 		);
-	}
-
-	cephLoader(obj: CephalometricItemInterface): Promise<string> {
-		return new Promise(async (resolve, reject) => {
-			const img = await files.get(obj.imgPath);
-			const i = new Image();
-			i.onload = function() {
-				const data = `{"imgSource":{"source":"${img}","height":${
-					i.height
-				},"width":${
-					i.width
-				}},"currentAnalysisName":"basic","pointCoordinates":${
-					obj.pointCoordinates ? obj.pointCoordinates : "{}"
-				}}`;
-				resolve(data);
-			};
-			i.src = img;
-		});
 	}
 
 	deleteByPatientID(id: string) {

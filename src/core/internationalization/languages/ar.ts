@@ -62,7 +62,6 @@ export default {
 	"Upper Arch Space Analysis": "تحليل المسافة للفك العلوي",
 	"Lower Arch Space Analysis": "تحليل المسافة للفك السفلي",
 	Problems: "المشاكل",
-	"Cephalometric Analysis": "التحليل الرأسي",
 	"Treatment Plan": "خطة العلاج",
 	"Started/Finished": "البداية والنهاية",
 	Records: "الارشيف",
@@ -108,8 +107,6 @@ export default {
 		"إستمارة التقويم لم تظهر أي مشكلة تستدعي علاج تقويمي",
 	"A valid DropBox access token is required for this section":
 		"هذا القسم يتطلب ادخال رمز دروب بوكس صحيح",
-	"You can not access cephalometric data while offline":
-		"لا يمكنك الوصول الى التحليلات الرأسية لانك غير متصل بالانترنت",
 	"This patient does not seem to have any problems or concerns, have you filled the case sheet?":
 		"لا يوجد أي مشاكل تستدعي التقويم لهذا المراجع، هل قمت بملئ إستمارة التقويم؟",
 	"A treatment plan must be before starting the treatment":

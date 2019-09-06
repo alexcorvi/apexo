@@ -5,7 +5,6 @@ import { generateID } from "@utils";
 export const BACKUPS_DIR = "/backups";
 export const GALLERIES_DIR = "/galleries";
 export const ORTHO_RECORDS_DIR = "/ortho";
-export const CEPHALOMETRIC_DIR = "/ceph";
 
 function arrayBufferToBase64(
 	buffer: ArrayBuffer,

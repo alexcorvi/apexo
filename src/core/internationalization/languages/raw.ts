@@ -62,7 +62,6 @@ export const raw = {
 	"Upper Arch Space Analysis": "",
 	"Lower Arch Space Analysis": "",
 	Problems: "",
-	"Cephalometric Analysis": "",
 	"Treatment Plan": "",
 	"Started/Finished": "",
 	Records: "",
@@ -106,7 +105,6 @@ export const raw = {
 	"The case sheet of this patient does not show any problems that needs orthodontic treatment":
 		"",
 	"A valid DropBox access token is required for this section": "",
-	"You can not access cephalometric data while offline": "",
 	"This patient does not seem to have any problems or concerns, have you filled the case sheet?":
 		"",
 	"A treatment plan must be before starting the treatment": "",

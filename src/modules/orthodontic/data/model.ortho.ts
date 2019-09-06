@@ -1,12 +1,5 @@
 import { text } from "@core";
-import {
-	CephalometricItemInterface,
-	OrthoCaseSchema,
-	patients,
-	PhotoSchema,
-	setting,
-	VisitSchema
-	} from "@modules";
+import { OrthoCaseSchema, patients, PhotoSchema, setting, VisitSchema } from "@modules";
 import { formatDate, generateID } from "@utils";
 import { computed, observable } from "mobx";
 import { Model, observeModel, SubModel } from "pouchx";
@@ -158,7 +151,6 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 	 */
 	@observable problemsList: string[] = [];
 	@observable treatmentPlan_appliance: string[] = [];
-	@observable cephalometricHistory: CephalometricItemInterface[] = [];
 	@observable isFinished: boolean = false;
 	@observable isStarted: boolean = false;
 	@observable finishedDate: number = 0;
@@ -346,7 +338,6 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 			u_spaceAvailable: this.u_spaceAvailable,
 			u_spaceNeeded: this.u_spaceNeeded,
 			crossScissorBite: Array.from(this.crossScissorBite),
-			cephalometricHistory: Array.from(this.cephalometricHistory),
 			isFinished: this.isFinished,
 			finishedDate: this.finishedDate,
 			nextVisitNotes: Array.from(this.nextVisitNotes),
@@ -389,7 +380,6 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 		this.u_spaceAvailable = json.u_spaceAvailable;
 		this.u_spaceNeeded = json.u_spaceNeeded;
 		this.crossScissorBite = json.crossScissorBite;
-		this.cephalometricHistory = json.cephalometricHistory || [];
 		this.isFinished = !!json.isFinished;
 		this.finishedDate = json.finishedDate || 0;
 		this.nextVisitNotes = json.nextVisitNotes || [];
