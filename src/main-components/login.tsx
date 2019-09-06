@@ -202,10 +202,7 @@ export class LoginView extends React.Component {
 									size={SpinnerSize.large}
 									label={
 										core.status.initialLoadingIndicatorText
-											? `Please wait: ${
-													core.status
-														.initialLoadingIndicatorText
-											  }`
+											? `Please wait: ${core.status.initialLoadingIndicatorText}`
 											: "Please wait"
 									}
 								/>
@@ -222,6 +219,20 @@ export class LoginView extends React.Component {
 							""
 						)}
 					</div>
+				)}
+				{(window as any).Cypress ? (
+					<DefaultButton
+						text="cypress-test"
+						className="no-server-mode m-t-15 m-b-15 m-r-5"
+						onClick={() => {
+							core.status.startNoServer();
+						}}
+						iconProps={{
+							iconName: "StatusErrorFull"
+						}}
+					/>
+				) : (
+					""
 				)}
 			</div>
 		);

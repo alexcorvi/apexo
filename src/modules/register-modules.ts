@@ -27,6 +27,8 @@ export async function registerModules() {
 	// resync on load: only staff database initially
 	// because we need it in login
 	core.status.loadingIndicatorText = "Resyncing basic info";
-	await dbAction("resync", "doctors");
-	initResync();
+	if (core.status.server !== "http://cypress") {
+		await dbAction("resync", "doctors");
+		initResync();
+	}
 }
