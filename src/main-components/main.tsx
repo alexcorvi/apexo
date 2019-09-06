@@ -57,7 +57,7 @@ export class ErrorBoundaryView extends React.Component<{}> {
 				<MessageBar className="eb" messageBarType={1}>
 					Error occurred
 					<br /> send a screenshot of the following details
-					<textarea value={this.stackTrace} />
+					<textarea value={this.stackTrace} readOnly />
 					<PrimaryButton
 						onClick={() => {
 							location.href = location.href.split("#")[0];
@@ -107,9 +107,7 @@ export class MainView extends React.Component {
 						size={SpinnerSize.large}
 						label={
 							core.status.loadingIndicatorText
-								? `Please wait: ${
-										core.status.loadingIndicatorText
-								  }`
+								? `Please wait: ${core.status.loadingIndicatorText}`
 								: "Please wait"
 						}
 					/>

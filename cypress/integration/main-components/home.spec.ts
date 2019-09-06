@@ -2,7 +2,7 @@
 /// <reference types="../../cypress" />
 
 describe("home", () => {
-	beforeEach(() => {
+	before(() => {
 		cy.visit("http://localhost:8000");
 		cy.clearCookies();
 		cy.resetEverything();

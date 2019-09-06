@@ -58,6 +58,7 @@ export class PanelTop extends React.Component<
 				<Col span={2} className="close">
 					<IconButton
 						iconProps={{ iconName: "cancel" }}
+						data-testid="close-panel"
 						onClick={() => {
 							this.props.onDismiss();
 						}}

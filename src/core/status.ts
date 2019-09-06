@@ -25,7 +25,8 @@ export enum LoginType {
 	initialActiveSession = "initial-active-session",
 	initialLSLHashTS = "initial-lsl-hash-ts",
 	loginCredentialsOnline = "login-credentials-online",
-	loginCredentialsOffline = "login-credentials-offline"
+	loginCredentialsOffline = "login-credentials-offline",
+	cypress = "no-server"
 }
 
 export class Status {
@@ -186,6 +187,14 @@ export class Status {
 		} else {
 			return "This was not the last username/password combination you used!";
 		}
+	}
+
+	async startNoServer() {
+		this.keepServerOffline = true;
+		this.loginType = LoginType.cypress;
+		await this.start({
+			server: "http://cypress"
+		});
 	}
 
 	async startDemoServer() {

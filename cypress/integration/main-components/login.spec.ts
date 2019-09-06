@@ -11,7 +11,7 @@ describe("login", () => {
 
 	describe("Logging in while online", () => {
 		it("Using active cookie", () => {
-			cy.getByTestId("input-identification").type("test");
+			cy.getByTestId("input-identification", 4 * 1000).type("test");
 			cy.getByTestId("input-password").type("test");
 			cy.getByTestId("proceed-primary").click();
 			cy.getByTestId("user-chooser", timeoutLogin)
@@ -36,7 +36,9 @@ describe("login", () => {
 		});
 		describe("Entering credentials", () => {
 			it("Entering invalid credentials", () => {
-				cy.getByTestId("input-identification").type("invalid");
+				cy.getByTestId("input-identification", 4 * 1000).type(
+					"invalid"
+				);
 				cy.getByTestId("input-password").type("invalid");
 				cy.getByTestId("proceed-primary").click();
 				cy.getByTestId("error-msg")
@@ -45,7 +47,7 @@ describe("login", () => {
 			});
 
 			it("entering valid credentials", () => {
-				cy.getByTestId("input-identification").type("test");
+				cy.getByTestId("input-identification", 4 * 1000).type("test");
 				cy.getByTestId("input-password").type("test");
 				cy.getByTestId("proceed-primary").click();
 				cy.getByTestId("user-chooser", timeoutLogin)
@@ -61,7 +63,7 @@ describe("login", () => {
 		describe("With server", () => {
 			beforeEach(() => {
 				cy.resetEverything();
-				cy.getByTestId("input-identification").type("test");
+				cy.getByTestId("input-identification", 4 * 1000).type("test");
 				cy.getByTestId("input-password").type("test");
 				cy.getByTestId("proceed-primary").click();
 				cy.getByTestId("user-chooser", timeoutLogin)
@@ -81,7 +83,9 @@ describe("login", () => {
 						.should("contain", "Use the latest");
 				});
 				it("Entering invalid credentials", () => {
-					cy.getByTestId("input-identification").type("invalid");
+					cy.getByTestId("input-identification", 4 * 1000).type(
+						"invalid"
+					);
 					cy.getByTestId("input-password").type("invalid");
 					cy.getByTestId("proceed-primary").click();
 					cy.getByTestId("error-msg")
@@ -90,7 +94,7 @@ describe("login", () => {
 				});
 
 				it("Entering valid credentials", () => {
-					cy.getByTestId("input-identification")
+					cy.getByTestId("input-identification", 4 * 1000)
 						.clear()
 						.type("test");
 					cy.getByTestId("input-password")
@@ -128,7 +132,7 @@ describe("login", () => {
 			cy.online();
 		});
 		it("Pressing enter", () => {
-			cy.getByTestId("input-identification").type("{enter}");
+			cy.getByTestId("input-identification", 4 * 1000).type("{enter}");
 			cy.getByTestId("error-msg")
 				.should("exist")
 				.should("contain", "fields are necessary");

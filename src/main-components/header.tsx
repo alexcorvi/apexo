@@ -83,7 +83,7 @@ export class HeaderView extends React.Component {
 												: core.status.dbActionProgress
 														.length > 0
 												? "rotate"
-												: "")
+												: "clickable-sync")
 										}
 										data-testid="resync"
 									/>
