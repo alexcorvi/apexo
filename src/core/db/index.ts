@@ -6,6 +6,8 @@ import { Md5 } from "ts-md5";
 type methodsArr = Array<() => Promise<void>>;
 
 export const DBNames: string[] = [];
+export const localDBRefs: PouchDB.Database[] = [];
+export const remoteDBRefs: PouchDB.Database[] = [];
 
 const methods: {
 	resync: methodsArr;
@@ -107,6 +109,7 @@ export async function connect<S>(dbName: string) {
 	const localDatabase = new PouchDB<S>(localName, { auto_compaction: true });
 	compressDB(localDatabase);
 	encryptDB(localDatabase, unique);
+	localDBRefs.push(localDatabase);
 
 	const remoteDatabase = new PouchDB(`${status.server}/${dbName}`, {
 		fetch: (url, opts) =>
@@ -115,6 +118,7 @@ export async function connect<S>(dbName: string) {
 				credentials: "include"
 			})
 	});
+	remoteDBRefs.push(remoteDatabase);
 
 	// preventing duplicates
 	const oldIndex = DBNames.indexOf(dbName);

@@ -1,4 +1,4 @@
-import { dbAction, files } from "@core";
+import { dbAction, files, localDBRefs } from "@core";
 import { registerModules, staff } from "@modules";
 import * as modules from "@modules";
 import {
@@ -206,6 +206,11 @@ export class Status {
 			}
 		} catch (e) {
 			console.log("Registering modules failed", e);
+			console.log("possible DB corruption, deleting local databases");
+			for (let i = 0; i < localDBRefs.length; i++) {
+				await localDBRefs[i].destroy({});
+			}
+			location.reload();
 		}
 	}
 
