@@ -12,10 +12,10 @@ import * as React from "react";
 export class ChooseUserComponent extends React.Component {
 	@observable newDocName: string = "";
 
-	newDoc() {
+	async newDoc() {
 		const newDoc = modules.staff!.new();
 		newDoc.name = this.newDocName;
-		modules.staff!.add(newDoc);
+		await modules.staff!.add(newDoc);
 		core.status.setUser(newDoc._id);
 	}
 
