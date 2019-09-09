@@ -9,8 +9,8 @@ import {
 	SectionComponent,
 	TableActions
 	} from "@common-components";
-import * as core from "@core";
 import { text } from "@core";
+import * as core from "@core";
 import * as modules from "@modules";
 import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
@@ -84,7 +84,7 @@ export class StaffPage extends React.Component {
 				title: "Upcoming Appointments",
 				icon: "Calendar",
 				hidden: !core.user.currentUser!.canViewAppointments,
-				bubbleContent: staff.nextAppointments.length
+				bubbleContent: staff.upcomingAppointments.length
 			},
 			{
 				key: "delete",
@@ -119,7 +119,8 @@ export class StaffPage extends React.Component {
 											secondaryElement={
 												<span>
 													{
-														member.nextAppointments
+														member
+															.upcomingAppointments
 															.length
 													}{" "}
 													{text(
@@ -883,12 +884,12 @@ export class StaffPage extends React.Component {
 								<SectionComponent
 									title={text(`Upcoming Appointments`)}
 								>
-									{this.selectedMember.nextAppointments
+									{this.selectedMember.upcomingAppointments
 										.length ? (
 										<AppointmentsList
 											list={
 												this.selectedMember
-													.nextAppointments
+													.upcomingAppointments
 											}
 										/>
 									) : (

@@ -130,17 +130,13 @@ export class StaffMember extends Model<StaffMemberSchema>
 
 	@computed
 	get nextAppointment() {
-		return this.nextAppointments[0];
+		return this.upcomingAppointments[0];
 	}
 
 	@computed
-	get nextAppointments() {
+	get upcomingAppointments() {
 		return this.appointments
-			.filter(
-				appointment =>
-					getDayStartingPoint(appointment.date) >=
-					getDayStartingPoint(new Date().getTime())
-			)
+			.filter(appointment => appointment.isUpcoming)
 			.sort((a, b) => a.date - b.date);
 	}
 

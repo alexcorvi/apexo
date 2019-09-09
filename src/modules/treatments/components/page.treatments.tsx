@@ -78,7 +78,6 @@ export class Treatments extends React.Component {
 						text("Upcoming appointments")
 					]}
 					rows={modules.treatments!.docs.map(treatment => {
-						const now = new Date().getTime();
 						let done = 0;
 						let upcoming = 0;
 
@@ -93,7 +92,7 @@ export class Treatments extends React.Component {
 							if (appointment.treatmentID !== treatment._id) {
 								continue;
 							}
-							if (appointment.date > now) {
+							if (appointment.isUpcoming) {
 								upcoming++;
 							}
 							if (appointment.isDone) {

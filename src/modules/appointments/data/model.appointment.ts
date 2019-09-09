@@ -144,13 +144,8 @@ export class Appointment extends Model<AppointmentSchema>
 	}
 
 	@computed
-	get future() {
-		return (
-			!this.dueToday &&
-			!this.dueTomorrow &&
-			!this.isDone &&
-			this.date > new Date().getTime()
-		);
+	get isUpcoming() {
+		return !this.isMissed && !this.isDone;
 	}
 
 	@computed get formattedTime() {
@@ -177,7 +172,7 @@ export class Appointment extends Model<AppointmentSchema>
                 ${this.isMissed ? "missed" : ""}
                 ${this.dueToday ? "today" : ""}
 				${this.dueTomorrow ? "tomorrow" : ""}
-				${this.future ? "future" : ""}
+				${this.isUpcoming ? "upcoming future" : ""}
 				${(this.patient || { name: "" }).name}
 				${this.operatingStaff.map(x => x.name).join(" ")}
 				${this.notes}

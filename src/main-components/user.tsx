@@ -7,8 +7,8 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import * as core from "@core";
 import { text } from "@core";
+import * as core from "@core";
 import { Appointment, PrescriptionItem, StaffMember } from "@modules";
 import * as modules from "@modules";
 import { computed, observable } from "mobx";
@@ -120,7 +120,7 @@ export class UserPanelView extends React.Component {
 
 				{core.router.selectedTab === "upcoming" ? (
 					<SectionComponent title={text("All upcoming appointments")}>
-						{core.user.currentUser!.nextAppointments.length ===
+						{core.user.currentUser!.upcomingAppointments.length ===
 						0 ? (
 							<MessageBar
 								messageBarType={MessageBarType.info}
@@ -137,7 +137,7 @@ export class UserPanelView extends React.Component {
 									<AppointmentsListNoDate
 										appointments={
 											core.user.currentUser!
-												.nextAppointments
+												.upcomingAppointments
 										}
 										onClick={id => {
 											this.selectedAppointmentId = id;
