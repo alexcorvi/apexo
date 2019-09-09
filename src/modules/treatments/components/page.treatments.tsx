@@ -234,6 +234,7 @@ export class Treatments extends React.Component {
 												"currencySymbol"
 											)}
 											disabled={!this.canEdit}
+											data-testid="treatment-expenses"
 										/>
 									</div>
 								</SectionComponent>
