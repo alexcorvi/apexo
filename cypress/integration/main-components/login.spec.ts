@@ -165,6 +165,7 @@ describe("login", () => {
 			cy.get("#login-pin").should("contain.value", "1234");
 			cy.getByTestId("close-panel").click();
 			cy.getByTestId("expand-user").click();
+			cy.clickTabByIcon("Lock");
 			cy.getByTestId("logout").click();
 			cy.wait(1000);
 			cy.get(".no-server-mode").click();

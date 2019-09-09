@@ -7,8 +7,8 @@ import {
 	Row,
 	SectionComponent
 	} from "@common-components";
-import { text } from "@core";
 import * as core from "@core";
+import { text } from "@core";
 import { Appointment, PrescriptionItem, StaffMember } from "@modules";
 import * as modules from "@modules";
 import { computed, observable } from "mobx";
@@ -160,12 +160,14 @@ export class UserPanelView extends React.Component {
 							text={text("Logout")}
 							iconProps={{ iconName: "lock" }}
 							onClick={() => core.status.logout()}
+							data-testid="logout"
 						/>
 						<DefaultButton
 							iconProps={{ iconName: "ContactInfo" }}
 							className="m-5"
 							text={text("Switch user")}
 							onClick={() => core.status.resetUser()}
+							data-testid="switch"
 						/>
 					</div>
 				) : (

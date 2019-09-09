@@ -21,20 +21,25 @@ describe("user panel", () => {
 			cy.getByTestId("expand-user", timeoutUserPanel).click();
 			cy.get(".user-component .ms-Persona").should("be.visible");
 		});
-		it("action: logout", () => {
+	});
+
+	describe("lock", () => {
+		beforeEach(() => {
 			cy.getByTestId("expand-user").click();
+			cy.clickTabByIcon("Lock");
+		});
+		it("action: logout", () => {
 			cy.getByTestId("logout").click();
 			cy.get(".login-component").should("be.visible");
 		});
 		it("action: reset user", () => {
-			cy.getByTestId("expand-user").click();
 			cy.getByTestId("switch").click();
 			cy.getByTestId("user-chooser").should("be.visible");
 		});
 	});
 
 	describe("Appointments", () => {
-		it("listing upcoming appointments", () => {
+		it("listing today appointments", () => {
 			const patientName = "Dina";
 			const treatmentName = "Filling";
 			cy.goToPage("treatments");
@@ -63,6 +68,41 @@ describe("user panel", () => {
 			);
 			cy.getByTestId("appointments-list").should("contain.text", "Alex");
 			cy.getByTestId("appointments-list").should("contain.text", "Today");
+		});
+		it("listing upcoming appointments", () => {
+			const patientName = "Dina";
+			const treatmentName = "Filling";
+			cy.goToPage("treatments");
+			cy.get(`[title="Add new"]`).click();
+			cy.getByTestId("treatment-title").type(treatmentName);
+			cy.closePanel();
+			cy.goToPage("patients");
+			cy.get(`[title="Add new"]`).click();
+			cy.getByTestId("patient-name").type(patientName);
+			cy.clickTabByIcon("Calendar");
+			cy.chooseFromDropdown("new-appointment", treatmentName);
+			cy.get(".operating-staff input").type("Al");
+			cy.get(".ms-Suggestions-item")
+				.first()
+				.click();
+			cy.pickDate("appointment-date", "tomorrow");
+			cy.closePanel();
+			cy.closePanel();
+			cy.getByTestId("expand-user").click();
+			cy.clickTabByIcon("Calendar");
+			cy.getByTestId("appointments-list").should(
+				"contain.text",
+				treatmentName
+			);
+			cy.getByTestId("appointments-list").should(
+				"contain.text",
+				patientName
+			);
+			cy.getByTestId("appointments-list").should("contain.text", "Alex");
+			cy.getByTestId("appointments-list").should(
+				"contain.text",
+				"Tomorrow"
+			);
 		});
 	});
 });
