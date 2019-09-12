@@ -1,20 +1,11 @@
-import {
-	Col,
-	DataTableComponent,
-	PanelTabs,
-	PanelTop,
-	ProfileSquaredComponent,
-	Row,
-	SectionComponent
-	} from "@common-components";
+import { DataTableComponent, PanelTabs, PanelTop, ProfileSquaredComponent, SectionComponent } from "@common-components";
 import { text } from "@core";
 import * as core from "@core";
 import * as modules from "@modules";
 import { num } from "@utils";
-import { computed, observable } from "mobx";
+import { computed } from "mobx";
 import { observer } from "mobx-react";
 import {
-	IconButton,
 	MessageBar,
 	MessageBarType,
 	Panel,
@@ -109,13 +100,15 @@ export class Treatments extends React.Component {
 									component: (
 										<ProfileSquaredComponent
 											text={treatment.type}
-											subText={`${text(
-												"Expenses"
-											)}: ${modules.setting!.getSetting(
-												"currencySymbol"
-											)}${treatment.expenses} ${text(
-												"per unit"
-											)}`}
+											onRenderSecondaryText={() => (
+												<span className="itl">{`${text(
+													"Expenses"
+												)}: ${modules.setting!.getSetting(
+													"currencySymbol"
+												)}${treatment.expenses} ${text(
+													"per unit"
+												)}`}</span>
+											)}
 										/>
 									),
 									onClick: () => {

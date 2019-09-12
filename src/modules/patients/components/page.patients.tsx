@@ -273,9 +273,11 @@ export class PatientsPage extends React.Component {
 													: undefined
 											}
 											secondaryElement={
-												<span>
-													{text(patient.gender)} -{" "}
-													{patient.age}{" "}
+												<span className="itl">
+													<span className="cap">
+														{text(patient.gender)}
+													</span>{" "}
+													- {patient.age}{" "}
 													{text("years old")}
 												</span>
 											}

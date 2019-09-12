@@ -89,13 +89,19 @@ export class PrescriptionsPage extends React.Component {
 									component: (
 										<ProfileSquaredComponent
 											text={prescription.name}
-											subText={`${
-												prescription.doseInMg
-											}${text("mg")} ${
-												prescription.timesPerDay
-											}X${
-												prescription.unitsPerTime
-											} ${text(prescription.form)}`}
+											onRenderSecondaryText={() => (
+												<span className="itl">
+													{`${
+														prescription.doseInMg
+													}${text("mg")} ${
+														prescription.timesPerDay
+													}X${
+														prescription.unitsPerTime
+													} ${text(
+														prescription.form
+													)}`}
+												</span>
+											)}
 										/>
 									),
 									onClick: () => {

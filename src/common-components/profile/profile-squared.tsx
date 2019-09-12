@@ -7,6 +7,7 @@ interface Props {
 	subText?: string;
 	onRenderInitials?: () => JSX.Element;
 	onRenderPrimaryText?: () => JSX.Element;
+	onRenderSecondaryText?: () => JSX.Element;
 	initialsColor?: PersonaInitialsColor | string;
 	size?: number;
 	onClick?: () => void;
@@ -35,6 +36,7 @@ export class ProfileSquaredComponent extends React.Component<Props, {}> {
 						: undefined
 				}
 				secondaryText={this.props.subText}
+				onRenderSecondaryText={this.props.onRenderSecondaryText}
 				onClick={this.props.onClick}
 				initialsColor={this.props.initialsColor}
 				onRenderPrimaryText={this.props.onRenderPrimaryText}

@@ -97,12 +97,42 @@ export class LabworkPage extends React.Component {
 									component: (
 										<ProfileSquaredComponent
 											text={labwork.caseTitle}
-											subText={
-												labwork.patient
-													? "for " +
-													  labwork.patient.name
-													: ""
-											}
+											onRenderPrimaryText={() => {
+												return (
+													<div>
+														<span
+															style={{
+																display:
+																	"block",
+																marginBottom:
+																	"-5px"
+															}}
+														>
+															{labwork.caseTitle}
+														</span>
+														<i
+															style={{
+																fontSize: 12
+															}}
+														>
+															{(labwork
+																.involvedTeeth
+																.length
+																? labwork
+																		.involvedTeeth
+																		.length +
+																  " units"
+																: "") +
+																(labwork.patient
+																	? " for " +
+																	  labwork
+																			.patient
+																			.name
+																	: "")}
+														</i>
+													</div>
+												);
+											}}
 										/>
 									),
 									onClick: () => {
@@ -280,11 +310,13 @@ export class LabworkPage extends React.Component {
 													(this.selectedLabwork!.caseTitle = val!)
 												}
 												disabled={!this.canEdit}
+												data-testid="lw-title"
 											/>
 										</Col>
 										<Col sm={12}>
 											<TagInputComponent
 												label={text("Patient")}
+												data-testid="lw-patient"
 												options={modules.patients!.docs.map(
 													patient => ({
 														text: patient.name,
@@ -324,6 +356,7 @@ export class LabworkPage extends React.Component {
 									</Row>
 									<TagInputComponent
 										label={text("Involved teeth")}
+										data-testid="lw-teeth"
 										options={modules.ISOTeethArr.map(x => {
 											return {
 												key: x.toString(),
@@ -352,6 +385,7 @@ export class LabworkPage extends React.Component {
 									<br />
 									<TextField
 										label={text("Case Details")}
+										data-testid="lw-case"
 										value={this.selectedLabwork.caseDetails}
 										onChange={(ev, val) =>
 											(this.selectedLabwork!.caseDetails = val!)
@@ -361,6 +395,7 @@ export class LabworkPage extends React.Component {
 									/>
 									<TagInputComponent
 										label={text("Operating staff")}
+										data-testid="lw-staff"
 										options={modules
 											.staff!.operatingStaff.sort(
 												(a, b) =>

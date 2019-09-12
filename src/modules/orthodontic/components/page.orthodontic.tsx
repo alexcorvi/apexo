@@ -196,10 +196,12 @@ export class OrthoPage extends React.Component {
 															: undefined
 													}
 													secondaryElement={
-														<span>
-															{text(
-																patient.gender
-															)}{" "}
+														<span className="itl">
+															<span className="cap">
+																{text(
+																	patient.gender
+																)}
+															</span>{" "}
 															- {patient.age}{" "}
 															{text("years old")}
 														</span>

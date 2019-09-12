@@ -12,7 +12,7 @@ import {
 import * as core from "@core";
 import { text } from "@core";
 import * as modules from "@modules";
-import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
+import { AppointmentsList } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -117,7 +117,7 @@ export class StaffPage extends React.Component {
 										<ProfileComponent
 											name={member.name}
 											secondaryElement={
-												<span>
+												<span className="itl">
 													{
 														member
 															.upcomingAppointments
