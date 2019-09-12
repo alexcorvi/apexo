@@ -195,6 +195,7 @@ export class PrescriptionsPage extends React.Component {
 											(this.selectedPrescription!.name = val!)
 										}
 										disabled={!this.canEdit}
+										data-testid="rx-name"
 									/>
 
 									<Row gutter={8}>
@@ -209,6 +210,7 @@ export class PrescriptionsPage extends React.Component {
 													))
 												}
 												disabled={!this.canEdit}
+												data-testid="rx-dose"
 											/>
 										</Col>
 										<Col md={8}>
@@ -222,6 +224,7 @@ export class PrescriptionsPage extends React.Component {
 													))
 												}
 												disabled={!this.canEdit}
+												data-testid="rx-times"
 											/>
 										</Col>
 										<Col md={8}>
@@ -235,6 +238,7 @@ export class PrescriptionsPage extends React.Component {
 													))
 												}
 												disabled={!this.canEdit}
+												data-testid="rx-units"
 											/>
 										</Col>
 									</Row>
@@ -256,6 +260,7 @@ export class PrescriptionsPage extends React.Component {
 										onChange={(ev, newValue) => {
 											this.selectedPrescription!.form = (newValue as any).text;
 										}}
+										data-testid="rx-form"
 									/>
 								</SectionComponent>
 							) : (

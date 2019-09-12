@@ -3,6 +3,7 @@ declare namespace Cypress {
 		offline(): void;
 		online(): void;
 		resetEverything(): void;
+		solveMath(): void;
 		getByTestId(
 			testid: string,
 			timeout?: number
@@ -13,7 +14,7 @@ declare namespace Cypress {
 		slowType(input: string): void;
 		closePanel(): void;
 		clickTabByIcon(icon: string): void;
-		chooseFromDropdown(className: string, choice: string): void;
+		chooseFromDropdown(className: string, choice: string | number): void;
 		pickDate(
 			className: string,
 			pick: "today" | "tomorrow" | "yesterday"

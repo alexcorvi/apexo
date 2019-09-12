@@ -60,8 +60,10 @@ export class SettingsPage extends React.Component {
 						</h3>
 						<hr />
 						<div className="math-question">
-							{this.chosenCombination[0]} +{" "}
-							{this.chosenCombination[1]} ={" "}
+							{<span id="cc-1">{this.chosenCombination[0]}</span>}{" "}
+							+{" "}
+							{<span id="cc-2">{this.chosenCombination[1]}</span>}{" "}
+							={" "}
 							<TextField
 								type="number"
 								onChange={(e, v) =>

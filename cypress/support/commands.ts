@@ -72,6 +72,16 @@ Cypress.Commands.add("closePanel", () => {
 		.click();
 });
 
+Cypress.Commands.add("solveMath", () => {
+	cy.get(".math-question")
+		.invoke("text")
+		.then(x => {
+			// tslint:disable-next-line:no-eval
+			const res = eval(((x as unknown) as string).replace("=", ""));
+			cy.get(".math-question .ms-TextField-field").type(res);
+		});
+});
+
 Cypress.Commands.add(
 	"pickDate",
 	(
@@ -111,9 +121,15 @@ Cypress.Commands.add("clickTabByIcon", (icon: string) => {
 
 Cypress.Commands.add(
 	"chooseFromDropdown",
-	(dropdownClassName: string, choice: string) => {
+	(dropdownClassName: string, choice: string | number) => {
 		cy.get(`.${dropdownClassName}`).click();
-		cy.get(`[role="option"][title="${choice}"]`).click();
+		if (typeof choice === "string") {
+			cy.get(`[role="option"][title="${choice}"]`).click();
+		} else {
+			cy.get(`[role="option"]`)
+				.eq(choice)
+				.click();
+		}
 	}
 );
 
