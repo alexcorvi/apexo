@@ -15,17 +15,17 @@ function setUserB() {
 describe("@core: user panel", () => {
 	it("User panel is hidden by default", () => {
 		user.hide();
-		expect(user.isVisible).toBe(false);
+		expect(core.router.selectedMain).toBe("");
 	});
 
 	it("Showing the user panel", () => {
 		user.show();
-		expect(user.isVisible).toBe(true);
+		expect(core.router.selectedMain).toBe("user");
 	});
 
 	it("Hiding the user panel", () => {
 		user.hide();
-		expect(user.isVisible).toBe(false);
+		expect(core.router.selectedMain).toBe("");
 	});
 });
 

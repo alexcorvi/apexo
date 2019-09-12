@@ -1,4 +1,4 @@
-import { Menu } from "@core";
+import { Menu, router } from "@core";
 describe("@core: menu", () => {
 	const menu = new Menu();
 	menu.items = [];
@@ -64,14 +64,14 @@ describe("@core: menu", () => {
 	});
 
 	it("Show menu", () => {
-		menu.isVisible = false;
 		menu.show();
-		expect(menu.isVisible).toBe(true);
+		expect(router.selectMain).toBe("menu");
+		menu.hide();
 	});
 
 	it("Hide menu", () => {
-		menu.isVisible = true;
+		menu.show();
 		menu.hide();
-		expect(menu.isVisible).toBe(false);
+		expect(router.selectMain).toBe("");
 	});
 });
