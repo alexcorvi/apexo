@@ -1,6 +1,6 @@
 import { Col, ProfileSquaredComponent, Row } from "@common-components";
-import * as core from "@core";
 import { text } from "@core";
+import * as core from "@core";
 import { Calendar, calendar } from "@modules";
 import { PatientLinkComponent } from "@modules";
 import * as modules from "@modules";
@@ -336,17 +336,10 @@ export class CalendarPage extends React.Component {
 													key={appointment._id}
 													className="appointment"
 													onClick={() => {
-														core.router.selectID(
-															appointment._id
-														);
-
-														setTimeout(
-															() =>
-																core.router.selectSub(
-																	"details"
-																),
-															50
-														);
+														core.router.select({
+															id: appointment._id,
+															sub: "details"
+														});
 													}}
 												>
 													<div

@@ -2,7 +2,7 @@ import { Col, Row } from "@common-components";
 import { status, text } from "@core";
 import * as core from "@core";
 import { observer } from "mobx-react";
-import { Icon, IconButton, TooltipHost } from "office-ui-fabric-react";
+import { IconButton, TooltipHost } from "office-ui-fabric-react";
 import * as React from "react";
 
 @observer

@@ -53,7 +53,7 @@ export class AppointmentsList extends React.Component<
 								appointments={this.filteredAndSorted}
 								onClick={id => {
 									this.selectedAppointmentID = id;
-									core.router.selectSub("details");
+									core.router.select({ sub: "details" });
 								}}
 								secondaryText={
 									this.props.operatorsAsSecondaryText
@@ -70,7 +70,6 @@ export class AppointmentsList extends React.Component<
 				)}
 				{this.selectedAppointment && core.router.selectedSub ? (
 					<div>
-						{core.router.selectedSub}{" "}
 						<AppointmentEditorPanel
 							appointment={this.selectedAppointment}
 							onDismiss={() => {

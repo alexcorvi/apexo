@@ -9,8 +9,8 @@ import {
 	SectionComponent,
 	TableActions
 	} from "@common-components";
-import { text } from "@core";
 import * as core from "@core";
+import { text } from "@core";
 import * as modules from "@modules";
 import { Appointment, AppointmentsList, PrescriptionItem, StaffMember } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
@@ -139,10 +139,10 @@ export class StaffPage extends React.Component {
 														member._id
 													);
 												} else {
-													core.router.selectID(
-														member._id,
-														key
-													);
+													core.router.select({
+														id: member._id,
+														tab: key
+													});
 												}
 											}}
 										/>
@@ -150,7 +150,10 @@ export class StaffPage extends React.Component {
 								),
 								className: "no-label",
 								onClick: () => {
-									core.router.selectID(member._id, "details");
+									core.router.select({
+										id: member._id,
+										tab: "details"
+									});
 								}
 							},
 							{
@@ -195,9 +198,9 @@ export class StaffPage extends React.Component {
 													? () => {
 															this.selectedAppointmentId =
 																member.lastAppointment._id;
-															core.router.selectSub(
-																"details"
-															);
+															core.router.select({
+																sub: "details"
+															});
 													  }
 													: undefined
 											}
@@ -241,9 +244,9 @@ export class StaffPage extends React.Component {
 													? () => {
 															this.selectedAppointmentId =
 																member.nextAppointment._id;
-															core.router.selectSub(
-																"details"
-															);
+															core.router.select({
+																sub: "details"
+															});
 													  }
 													: undefined
 											}
@@ -311,10 +314,10 @@ export class StaffPage extends React.Component {
 										onClick: () => {
 											const member = modules.staff!.new();
 											modules.staff!.add(member);
-											core.router.selectID(
-												member._id,
-												"details"
-											);
+											core.router.select({
+												id: member._id,
+												tab: "details"
+											});
 										},
 										iconProps: {
 											iconName: "Add"
@@ -347,7 +350,7 @@ export class StaffPage extends React.Component {
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
 									onSelect={key => {
-										core.router.selectTab(key);
+										core.router.select({ tab: key });
 									}}
 									items={this.tabs(this.selectedMember!)}
 								/>

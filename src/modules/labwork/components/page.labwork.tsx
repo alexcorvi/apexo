@@ -69,10 +69,10 @@ export class LabworkPage extends React.Component {
 										onClick: () => {
 											const labwork = modules.labworks!.new();
 											modules.labworks!.add(labwork);
-											core.router.selectID(
-												labwork._id,
-												"details"
-											);
+											core.router.select({
+												id: labwork._id,
+												tab: "details"
+											});
 										},
 										iconProps: {
 											iconName: "Add"
@@ -106,10 +106,10 @@ export class LabworkPage extends React.Component {
 										/>
 									),
 									onClick: () => {
-										core.router.selectID(
-											labwork._id,
-											"details"
-										);
+										core.router.select({
+											id: labwork._id,
+											tab: "details"
+										});
 									},
 									className: "no-label"
 								},
@@ -241,7 +241,9 @@ export class LabworkPage extends React.Component {
 								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
-									onSelect={key => core.router.selectTab(key)}
+									onSelect={key =>
+										core.router.select({ tab: key })
+									}
 									items={[
 										{
 											key: "details",

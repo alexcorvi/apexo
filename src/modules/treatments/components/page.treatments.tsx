@@ -59,10 +59,10 @@ export class Treatments extends React.Component {
 										onClick: () => {
 											const treatment = modules.treatments!.new();
 											modules.treatments!.add(treatment);
-											core.router.selectID(
-												treatment._id,
-												"details"
-											);
+											core.router.select({
+												id: treatment._id,
+												tab: "details"
+											});
 										},
 										iconProps: {
 											iconName: "Add"
@@ -119,10 +119,10 @@ export class Treatments extends React.Component {
 										/>
 									),
 									onClick: () => {
-										core.router.selectID(
-											treatment._id,
-											"details"
-										);
+										core.router.select({
+											id: treatment._id,
+											tab: "details"
+										});
 									},
 									className: "no-label"
 								},
@@ -187,7 +187,9 @@ export class Treatments extends React.Component {
 								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
-									onSelect={key => core.router.selectTab(key)}
+									onSelect={key =>
+										core.router.select({ tab: key })
+									}
 									items={[
 										{
 											key: "details",

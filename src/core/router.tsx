@@ -101,66 +101,65 @@ export class Router {
 		}, 50);
 	}
 
-	selectID(id: string, tab?: string) {
-		const newLocation = this.currentLocation
-			.split("/")
-			.map(x => {
-				return x;
-			})
-			.filter(x => !x.startsWith("id:"));
-		newLocation.push(`id:${id}`);
-		this.go(newLocation);
-
-		if (tab) {
-			setTimeout(() => this.selectTab(tab), 100);
-		}
-	}
-	selectTab(tab?: string) {
-		const newLocation = this.currentLocation
-			.split("/")
-			.map(x => {
-				return x;
-			})
-			.filter(x => !x.startsWith("tab:"));
-		if (tab) {
-			newLocation.push(`tab:${tab}`);
-		}
-		this.go(newLocation);
+	private filterOutCategory(input: string[], category: string) {
+		return input.filter(x => !x.startsWith(category + ":"));
 	}
 
-	selectSub(sub?: string) {
-		const newLocation = this.currentLocation
-			.split("/")
-			.map(x => {
-				return x;
-			})
-			.filter(x => !x.startsWith("sub:"));
-		if (sub) {
-			newLocation.push(`sub:${sub}`);
+	select({
+		id,
+		tab,
+		sub,
+		main
+	}: {
+		id?: string;
+		tab?: string;
+		sub?: string;
+		main?: "user" | "menu" | "";
+	}) {
+		let newLocation: string[] = this.currentLocation.split("/");
+		if (typeof id === "string") {
+			newLocation = this.filterOutCategory(newLocation, "id");
+			if (id.length) {
+				newLocation.push(`id:${id}`);
+			}
 		}
-		this.go(newLocation);
-	}
+		if (typeof tab === "string") {
+			newLocation = this.filterOutCategory(newLocation, "tab");
+			if (tab.length) {
+				newLocation.push(`tab:${tab}`);
+			}
+		}
+		if (typeof sub === "string") {
+			newLocation = this.filterOutCategory(newLocation, "sub");
+			if (sub.length) {
+				newLocation.push(`sub:${sub}`);
+			}
+		}
+		if (typeof main === "string") {
+			newLocation = this.filterOutCategory(newLocation, "main");
+			if (main.length) {
+				newLocation.push(`main:${main}`);
+			}
+		}
 
-	selectMain(main?: "user" | "menu") {
-		const newLocation = this.currentLocation
-			.split("/")
-			.filter(x => !x.startsWith("main:"));
-		if (main) {
-			newLocation.push(`main:${main}`);
-		}
 		this.go(newLocation);
 	}
 
 	unSelect() {
-		this.go([this.currentNamespace]);
+		this.select({
+			id: "",
+			tab: "",
+			main: "",
+			sub: ""
+		});
 	}
 
 	unSelectSub() {
-		this.selectSub();
+		this.select({ sub: "" });
 	}
 
 	unSelectMain() {
-		this.selectMain();
+		this.select({ main: "" });
 	}
 
 	private async checkAndLoad() {

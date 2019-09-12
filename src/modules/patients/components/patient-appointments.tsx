@@ -54,9 +54,9 @@ export class PatientAppointmentsPanel extends React.Component<{
 											if (this.l) {
 												this.l.selectedAppointmentID =
 													newApt._id;
-												core.router.selectSub(
-													"details"
-												);
+												core.router.select({
+													sub: "details"
+												});
 											}
 										}}
 										onRenderItem={(item, render) => {

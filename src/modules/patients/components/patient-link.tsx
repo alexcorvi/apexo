@@ -20,7 +20,11 @@ export class PatientLinkComponent extends React.Component<
 				onClick={ev => {
 					core.router.go([modules.patientsNamespace]);
 					setTimeout(
-						() => core.router.selectID(this.props.id, "details"),
+						() =>
+							core.router.select({
+								id: this.props.id,
+								tab: "details"
+							}),
 						100
 					);
 					ev.stopPropagation();

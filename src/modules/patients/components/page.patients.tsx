@@ -155,7 +155,7 @@ export class PatientsPage extends React.Component {
 											core.router.selectedTab
 										}
 										onSelect={key => {
-											core.router.selectTab(key);
+											core.router.select({ tab: key });
 										}}
 										items={this.tabs(this.selectedPatient!)}
 									/>
@@ -167,7 +167,7 @@ export class PatientsPage extends React.Component {
 							<PatientDetailsPanel
 								patient={this.selectedPatient!}
 								onChangeViewWhich={key =>
-									core.router.selectTab(key)
+									core.router.select({ tab: key })
 								}
 							/>
 						) : (
@@ -291,10 +291,10 @@ export class PatientsPage extends React.Component {
 														patient._id
 													);
 												} else {
-													core.router.selectID(
-														patient._id,
-														key
-													);
+													core.router.select({
+														id: patient._id,
+														tab: key
+													});
 												}
 											}}
 										/>
@@ -302,10 +302,10 @@ export class PatientsPage extends React.Component {
 								),
 								className: "no-label",
 								onClick: () => {
-									core.router.selectID(
-										patient._id,
-										"details"
-									);
+									core.router.select({
+										id: patient._id,
+										tab: "details"
+									});
 								}
 							},
 							{
@@ -346,9 +346,9 @@ export class PatientsPage extends React.Component {
 													? () => {
 															this.selectedAppointmentId =
 																patient.lastAppointment._id;
-															core.router.selectSub(
-																"details"
-															);
+															core.router.select({
+																sub: "details"
+															});
 													  }
 													: undefined
 											}
@@ -396,9 +396,9 @@ export class PatientsPage extends React.Component {
 													? () => {
 															this.selectedAppointmentId =
 																patient.nextAppointment._id;
-															core.router.selectSub(
-																"details"
-															);
+															core.router.select({
+																sub: "details"
+															});
 													  }
 													: undefined
 											}
@@ -526,10 +526,10 @@ export class PatientsPage extends React.Component {
 											const patient = modules.patients!.new();
 											patient.fromJSON(patient.toJSON()); // init. teeth
 											modules.patients!.add(patient);
-											core.router.selectID(
-												patient._id,
-												"details"
-											);
+											core.router.select({
+												id: patient._id,
+												tab: "details"
+											});
 										},
 										iconProps: {
 											iconName: "Add"

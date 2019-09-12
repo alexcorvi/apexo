@@ -9,8 +9,8 @@ import {
 	TableActions,
 	TagInputComponent
 	} from "@common-components";
-import { imagesTable, text } from "@core";
 import * as core from "@core";
+import { imagesTable, text } from "@core";
 import { PatientAppointmentsPanel } from "@modules";
 import * as modules from "@modules";
 import { formatDate } from "@utils";
@@ -215,10 +215,11 @@ export class OrthoPage extends React.Component {
 																orthoCase._id
 															);
 														} else {
-															core.router.selectID(
-																orthoCase._id,
-																key
-															);
+															core.router.select({
+																id:
+																	orthoCase._id,
+																tab: key
+															});
 														}
 													}}
 												/>
@@ -226,10 +227,10 @@ export class OrthoPage extends React.Component {
 										),
 										className: "no-label",
 										onClick: () => {
-											core.router.selectID(
-												orthoCase._id,
-												"sheet"
-											);
+											core.router.select({
+												id: orthoCase._id,
+												tab: "sheet"
+											});
 										}
 									},
 									{
@@ -352,8 +353,11 @@ export class OrthoPage extends React.Component {
 															? () => {
 																	this.selectedAppointmentId =
 																		patient.lastAppointment._id;
-																	core.router.selectSub(
-																		"details"
+																	core.router.select(
+																		{
+																			sub:
+																				"details"
+																		}
 																	);
 															  }
 															: undefined
@@ -392,8 +396,11 @@ export class OrthoPage extends React.Component {
 															? () => {
 																	this.selectedAppointmentId =
 																		patient.nextAppointment._id;
-																	core.router.selectSub(
-																		"details"
+																	core.router.select(
+																		{
+																			sub:
+																				"details"
+																		}
 																	);
 															  }
 															: undefined
@@ -528,7 +535,10 @@ export class OrthoPage extends React.Component {
 								const orthoCase = modules.orthoCases!.new();
 								orthoCase.patientID = selectedKeys[0];
 								modules.orthoCases!.add(orthoCase);
-								core.router.selectID(orthoCase._id, "sheet");
+								core.router.select({
+									id: orthoCase._id,
+									tab: "sheet"
+								});
 							}
 						}}
 					/>
@@ -562,7 +572,10 @@ export class OrthoPage extends React.Component {
 							modules.orthoCases!.add(orthoCase);
 
 							this.newPatientName = "";
-							core.router.selectID(orthoCase._id, "details");
+							core.router.select({
+								id: orthoCase._id,
+								tab: "details"
+							});
 						}}
 						iconProps={{
 							iconName: "add"
@@ -617,7 +630,7 @@ export class OrthoPage extends React.Component {
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
 									onSelect={key => {
-										core.router.selectTab(key);
+										core.router.select({ tab: key });
 									}}
 									items={this.tabs(this.selectedCase)}
 								/>
@@ -632,7 +645,7 @@ export class OrthoPage extends React.Component {
 									<PatientDetailsPanel
 										patient={this.selectedPatient!}
 										onChangeViewWhich={key =>
-											core.router.selectTab(key)
+											core.router.select({ tab: key })
 										}
 									/>
 								) : (

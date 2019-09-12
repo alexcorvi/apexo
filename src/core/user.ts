@@ -42,10 +42,7 @@ class UserData {
 	}
 
 	show() {
-		core.router.selectMain("user");
-		setTimeout(() => {
-			core.router.selectTab("today");
-		}, 100);
+		core.router.select({ main: "user", tab: "today" });
 	}
 	hide() {
 		core.router.unSelect();

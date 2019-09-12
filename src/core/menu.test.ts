@@ -65,13 +65,13 @@ describe("@core: menu", () => {
 
 	it("Show menu", () => {
 		menu.show();
-		expect(router.selectMain).toBe("menu");
+		expect(router.selectedMain).toBe("menu");
 		menu.hide();
 	});
 
 	it("Hide menu", () => {
 		menu.show();
 		menu.hide();
-		expect(router.selectMain).toBe("");
+		expect(router.selectedMain).toBe("");
 	});
 });

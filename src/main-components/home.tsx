@@ -58,7 +58,7 @@ export class HomeView extends React.Component {
 								)}
 								onClick={id => {
 									this.selectedAppointmentId = id;
-									core.router.selectSub("details");
+									core.router.select({ sub: "details" });
 								}}
 								canDelete={false}
 							/>
@@ -82,7 +82,7 @@ export class HomeView extends React.Component {
 								)}
 								onClick={id => {
 									this.selectedAppointmentId = id;
-									core.router.selectSub("details");
+									core.router.select({ sub: "details" });
 								}}
 								canDelete={false}
 							/>

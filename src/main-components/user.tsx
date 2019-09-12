@@ -1,22 +1,11 @@
-import {
-	AppointmentsListNoDate,
-	Col,
-	PanelTabs,
-	PanelTop,
-	ProfileComponent,
-	Row,
-	SectionComponent
-	} from "@common-components";
-import { text } from "@core";
+import { AppointmentsListNoDate, PanelTabs, PanelTop, SectionComponent } from "@common-components";
 import * as core from "@core";
-import { Appointment, PrescriptionItem, StaffMember } from "@modules";
+import { text } from "@core";
 import * as modules from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
 	DefaultButton,
-	IconButton,
-	Link,
 	MessageBar,
 	MessageBarType,
 	Panel,
@@ -62,7 +51,7 @@ export class UserPanelView extends React.Component {
 						<PanelTabs
 							currentSelectedKey={core.router.selectedTab}
 							onSelect={key => {
-								core.router.selectTab(key);
+								core.router.select({ tab: key });
 							}}
 							items={[
 								{
@@ -106,7 +95,9 @@ export class UserPanelView extends React.Component {
 										}
 										onClick={id => {
 											this.selectedAppointmentId = id;
-											core.router.selectSub("details");
+											core.router.select({
+												sub: "details"
+											});
 										}}
 										canDelete={false}
 									/>
@@ -141,7 +132,9 @@ export class UserPanelView extends React.Component {
 										}
 										onClick={id => {
 											this.selectedAppointmentId = id;
-											core.router.selectSub("details");
+											core.router.select({
+												sub: "details"
+											});
 										}}
 										canDelete={false}
 									/>

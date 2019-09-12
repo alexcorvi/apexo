@@ -10,8 +10,8 @@ import {
 	TagInputComponent,
 	tagType
 	} from "@common-components";
-import * as core from "@core";
 import { imagesTable, text } from "@core";
+import * as core from "@core";
 import {
 	Appointment,
 	ISOTeethArr,
@@ -204,7 +204,7 @@ export class AppointmentEditorPanel extends React.Component<
 						/>
 						<PanelTabs
 							items={this.tabs}
-							onSelect={key => core.router.selectSub(key)}
+							onSelect={key => core.router.select({ sub: key })}
 							currentSelectedKey={core.router.selectedSub}
 						/>
 					</div>

@@ -60,10 +60,10 @@ export class PrescriptionsPage extends React.Component {
 											prescriptions!
 												.add(newDoc)
 												.then(() => {
-													core.router.selectID(
-														newDoc._id,
-														"details"
-													);
+													core.router.select({
+														id: newDoc._id,
+														tab: "details"
+													});
 												});
 										},
 										iconProps: {
@@ -99,10 +99,10 @@ export class PrescriptionsPage extends React.Component {
 										/>
 									),
 									onClick: () => {
-										core.router.selectID(
-											prescription._id,
-											"details"
-										);
+										core.router.select({
+											id: prescription._id,
+											tab: "details"
+										});
 									},
 									className: "no-label"
 								},
@@ -164,7 +164,9 @@ export class PrescriptionsPage extends React.Component {
 								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
-									onSelect={key => core.router.selectTab(key)}
+									onSelect={key =>
+										core.router.select({ tab: key })
+									}
 									items={[
 										{
 											key: "details",

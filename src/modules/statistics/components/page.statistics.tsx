@@ -138,16 +138,10 @@ export class StatisticsPage extends React.Component {
 													/>
 												),
 												onClick: () => {
-													core.router.selectID(
-														appointment._id
-													);
-													setTimeout(
-														() =>
-															core.router.selectSub(
-																"details"
-															),
-														100
-													);
+													core.router.select({
+														id: appointment._id,
+														sub: "details"
+													});
 												},
 												className: "no-label"
 											},

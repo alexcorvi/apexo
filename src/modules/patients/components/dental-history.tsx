@@ -75,7 +75,9 @@ export class DentalHistoryPanel extends React.Component<
 								<TeethPermanentChart
 									teeth={this.props.patient.teeth}
 									onClick={number =>
-										core.router.selectSub(number.toString())
+										core.router.select({
+											sub: number.toString()
+										})
 									}
 								/>
 							</SectionComponent>
@@ -83,7 +85,9 @@ export class DentalHistoryPanel extends React.Component<
 								<TeethDeciduousChart
 									teeth={this.props.patient.teeth}
 									onClick={number =>
-										core.router.selectSub(number.toString())
+										core.router.select({
+											sub: number.toString()
+										})
 									}
 								/>
 							</SectionComponent>
@@ -240,7 +244,9 @@ export class DentalHistoryPanel extends React.Component<
 			<td
 				key={"tooth" + tooth.ISO}
 				style={{ background: conditionToColor(tooth.condition) }}
-				onClick={() => core.router.selectSub(tooth.ISO.toString())}
+				onClick={() =>
+					core.router.select({ sub: tooth.ISO.toString() })
+				}
 			>
 				<span
 					className="has-notes"

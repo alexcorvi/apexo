@@ -45,7 +45,7 @@ export class Menu {
 	}
 
 	show() {
-		router.selectMain("menu");
+		router.select({ main: "menu" });
 	}
 }
 
