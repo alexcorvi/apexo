@@ -9,7 +9,7 @@ export const prescriptionItemForm = {
 	ointment: "ointment",
 	syrup: "syrup",
 	powder: "powder",
-	mouthWash: "mouthWash",
+	mouthwash: "mouthwash",
 	suspension: "suspension",
 	toothpaste: "toothpaste"
 };
