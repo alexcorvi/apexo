@@ -1,9 +1,8 @@
 @import "./global-styles/shadows.scss";
 .calendar-component {
 	background: #fff;
-	min-height: 500px;
 	font-size: 13px;
-	margin-top: 60px;
+	margin-top: 50px;
 	.selector {
 		a.current {
 			border: 1px solid #03a9f4;
@@ -26,6 +25,9 @@
 			color: #fff;
 			@include box_shadow(2);
 		}
+	}
+	.year-selector {
+		padding: 8px 0 5px 0;
 	}
 	.year-selector,
 	.month-selector {
@@ -133,6 +135,13 @@
 		}
 	}
 	.week-view {
+		i.no-appointments {
+			display: block;
+			margin: 20px 0;
+			text-align: center;
+			color: #9e9e9e;
+			padding-top: 10px;
+		}
 		.filters {
 			border-bottom: 1px solid #f3f3f3;
 			.ms-TextField-wrapper div {
@@ -259,8 +268,87 @@
 }
 
 @media screen and (max-width: 400px) {
-	.calendar-component .full-day-col {
+	.mobile-calendar {
+		background: #fff;
+		width: 100%;
+		position: fixed;
+		top: 50px;
+		z-index: 1;
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+		height: 268px;
+		transition: 0.3s all;
+		.ms-DatePicker-day--outfocus {
+			opacity: 0;
+		}
+		&.collapsed {
+			top: -186px;
+		}
+		.ms-DatePicker-weekBackground {
+			background: #eceff1;
+		}
+		.ms-DatePicker-day--today {
+			background: #607d8b;
+		}
+		.collapse {
+			text-align: center;
+			background: #eceff1;
+			position: absolute;
+			width: 100%;
+			bottom: 0;
+			button {
+				display: block;
+				width: 100%;
+			}
+		}
+	}
+	.calendar-component .full-day-col,
+	.calendar-component .full-day-col.selected {
 		width: 100% !important;
 		min-height: 50px;
+		h4 {
+			background: #607d8b;
+			margin: 10px 0;
+			border-radius: 3px;
+			font-weight: 400;
+			color: #fff;
+			b {
+				background: #eceff1;
+				color: #000;
+				padding: 5px;
+			}
+		}
+	}
+	.ms-DatePicker-monthComponents {
+		align-self: unset;
+	}
+	.ms-DatePicker-table {
+		width: initial;
+		margin: 0 auto;
+		td {
+			width: 40px;
+			font-size: 14px;
+		}
+	}
+	.ms-DatePicker-header {
+		padding-bottom: 40px;
+		width: 100vw;
+		.ms-DatePicker-prevMonth,
+		.ms-DatePicker-nextMonth {
+			margin-right: 5px;
+			border: 1px solid #9e9e9e;
+		}
+	}
+	.ms-DatePicker-wrap {
+		padding: 0;
+	}
+	.ms-DatePicker-weekday {
+		font-weight: 600;
+	}
+	.week-view {
+		margin-top: 320px;
+		transition: 0.3s all;
+		&.full-height {
+			margin-top: 90px;
+		}
 	}
 }
