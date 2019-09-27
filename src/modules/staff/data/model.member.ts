@@ -66,14 +66,13 @@ export class StaffMember extends Model<StaffMemberSchema>
 
 	@computed
 	get weeksAppointments() {
-		const c = new Calendar();
 		const resAppointments: {
 			[key: string]: Appointment[] | undefined;
 		} = {};
-		c.selectedWeekDays.forEach(day => {
+		calendar.currentWeek.forEach(day => {
 			const d = day.dateNum;
-			const m = c.currentMonth;
-			const y = c.currentYear;
+			const m = day.monthNum;
+			const y = day.yearNum;
 			appointments!
 				.appointmentsForDay(y, m + 1, d)
 				.filter(

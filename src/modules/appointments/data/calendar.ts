@@ -1,5 +1,5 @@
 import { setting } from "@modules";
-import { dateNames } from "@utils";
+import { dateNames, day } from "@utils";
 import { action, computed, observable } from "mobx";
 
 export interface WeekDayInfo {
@@ -10,6 +10,8 @@ export interface WeekDayInfo {
 
 export interface DayInfo {
 	dateNum: number;
+	monthNum: number;
+	yearNum: number;
 	weekDay: WeekDayInfo;
 }
 
@@ -31,30 +33,23 @@ export class Calendar {
 			: Number(setting!.getSetting("weekend_num"));
 	}
 
-	@computed get selectedMonthCalendar() {
-		const month: DayInfo[][] = [[]];
-
-		const numberOfDays = this.numberOfDays(
-			this.selected.month,
-			this.selected.year
-		);
-
-		for (let date = 0; date < numberOfDays; date++) {
-			const obj = new Date(
-				this.selected.year,
-				this.selected.month,
-				date + 1
-			);
-			const dayLiteral = obj.toLocaleDateString("en-us", {
+	@computed get weeksCalendar() {
+		let pointer = new Date(this.selected.year, 0, 1).getTime();
+		let weeks: DayInfo[][] = [[]];
+		while (true) {
+			const dateObj = new Date(pointer);
+			const dayLiteral = dateObj.toLocaleDateString("en-us", {
 				weekday: "long"
 			});
-			const dayLiteralShort = obj.toLocaleDateString("en-us", {
+			const dayLiteralShort = dateObj.toLocaleDateString("en-us", {
 				weekday: "short"
 			});
 			const isWeekend =
 				dateNames.days().indexOf(dayLiteral) === this.weekendsOn;
-			month[month.length - 1].push({
-				dateNum: date + 1,
+			weeks[weeks.length - 1].push({
+				dateNum: dateObj.getDate(),
+				monthNum: dateObj.getMonth(),
+				yearNum: dateObj.getFullYear(),
 				weekDay: {
 					dayLiteral,
 					dayLiteralShort,
@@ -62,65 +57,107 @@ export class Calendar {
 				}
 			});
 			if (isWeekend) {
-				month.push([]);
+				weeks.push([]);
+			}
+			pointer = pointer + day;
+			if (new Date(pointer).getFullYear() !== this.selected.year) {
+				break;
 			}
 		}
+		weeks = weeks.filter(x => x.length);
 
-		return month;
-	}
-
-	@computed
-	get selectedMonthDays(): DayInfo[] {
-		return this.selectedMonthCalendar.reduce((month: DayInfo[], week) => {
-			week.forEach(day => month.push(day));
-			return month;
-		}, []);
-	}
-
-	@computed
-	get selectedWeekDays(): DayInfo[] {
-		let week: DayInfo[] = [];
-		for (let wi = 0; wi < this.selectedMonthCalendar.length; wi++) {
-			const w = this.selectedMonthCalendar[wi];
-			for (let di = 0; di < w.length; di++) {
-				const d = w[di];
-				if (d.dateNum === this.selected.day) {
-					week = w;
-					return week;
+		// correcting the first week
+		while (weeks[0].length !== 7) {
+			const dateObj = new Date(
+				new Date(
+					weeks[0][0].yearNum,
+					weeks[0][0].monthNum,
+					weeks[0][0].dateNum
+				).getTime() - day
+			);
+			const dayLiteral = dateObj.toLocaleDateString("en-us", {
+				weekday: "long"
+			});
+			const dayLiteralShort = dateObj.toLocaleDateString("en-us", {
+				weekday: "short"
+			});
+			const isWeekend =
+				dateNames.days().indexOf(dayLiteral) === this.weekendsOn;
+			weeks[0].unshift({
+				dateNum: dateObj.getDate(),
+				monthNum: dateObj.getMonth(),
+				yearNum: dateObj.getFullYear(),
+				weekDay: {
+					dayLiteral,
+					dayLiteralShort,
+					isWeekend
 				}
-			}
+			});
 		}
-		return week;
+
+		// correcting the last week
+		while (weeks[weeks.length - 1].length !== 7) {
+			const dateObj = new Date(
+				new Date(
+					weeks[weeks.length - 1][
+						weeks[weeks.length - 1].length - 1
+					].yearNum,
+					weeks[weeks.length - 1][
+						weeks[weeks.length - 1].length - 1
+					].monthNum,
+					weeks[weeks.length - 1][
+						weeks[weeks.length - 1].length - 1
+					].dateNum
+				).getTime() + day
+			);
+			const dayLiteral = dateObj.toLocaleDateString("en-us", {
+				weekday: "long"
+			});
+			const dayLiteralShort = dateObj.toLocaleDateString("en-us", {
+				weekday: "short"
+			});
+			const isWeekend =
+				dateNames.days().indexOf(dayLiteral) === this.weekendsOn;
+			weeks[weeks.length - 1].push({
+				dateNum: dateObj.getDate(),
+				monthNum: dateObj.getMonth(),
+				yearNum: dateObj.getFullYear(),
+				weekDay: {
+					dayLiteral,
+					dayLiteralShort,
+					isWeekend
+				}
+			});
+		}
+		return weeks;
 	}
 
-	select({
-		year,
-		month,
-		day
-	}: {
-		year?: number;
-		month?: number;
-		day?: number;
-	}) {
-		if (typeof year === "number") {
-			this.selected.year = year;
-		}
-		if (typeof month === "number") {
-			this.selected.month = month;
-		}
-		if (typeof day === "number") {
-			this.selected.day = day;
-		}
+	@computed get selectedWeekIndex() {
+		return this.weeksCalendar.findIndex(x =>
+			x.find(
+				y =>
+					y.dateNum === this.selected.day &&
+					y.monthNum === this.selected.month &&
+					y.yearNum === this.selected.year
+			)
+		);
 	}
 
-	numberOfDays(month: number, year: number): number {
-		let numberOfDays = 28;
-		for (; numberOfDays < 32; numberOfDays++) {
-			if (new Date(year, month, numberOfDays + 1).getMonth() !== month) {
-				return numberOfDays;
-			}
-		}
-		return numberOfDays;
+	@computed get selectedWeek() {
+		return this.weeksCalendar[this.selectedWeekIndex] || [];
+	}
+
+	@computed get currentWeek() {
+		return (
+			this.weeksCalendar.find(x =>
+				x.find(
+					y =>
+						y.dateNum === this.currentDay &&
+						y.monthNum === this.currentMonth &&
+						y.yearNum === this.currentYear
+				)
+			) || []
+		);
 	}
 }
 

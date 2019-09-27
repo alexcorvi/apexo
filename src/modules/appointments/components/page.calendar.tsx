@@ -4,16 +4,17 @@ import { text } from "@core";
 import { Calendar, calendar } from "@modules";
 import { PatientLinkComponent } from "@modules";
 import * as modules from "@modules";
-import { dateNames, firstDayOfTheWeekDayPicker } from "@utils";
+import { dateNames, firstDayOfTheWeekDayPicker, formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
 	Calendar as MSCal,
+	CommandBar,
+	DatePicker,
 	DateRangeType,
 	Icon,
 	IconButton,
 	Shimmer,
-	TextField,
 	Toggle
 	} from "office-ui-fabric-react";
 import * as React from "react";
@@ -28,6 +29,7 @@ const AppointmentEditorPanel = loadable({
 
 @observer
 export class CalendarPage extends React.Component {
+	readonly criticalWidth = 500;
 	@observable filter: string = "";
 
 	@computed get appointment() {
@@ -37,10 +39,10 @@ export class CalendarPage extends React.Component {
 	}
 
 	@computed get selectedAppointments() {
-		return this.c.selectedWeekDays.map(day => {
+		return this.c.selectedWeek.map(day => {
 			return modules.appointments!.appointmentsForDay(
-				this.c.selected.year,
-				this.c.selected.month + 1,
+				day.yearNum,
+				day.monthNum + 1,
 				day.dateNum,
 				this.filter,
 				this.showAll ? undefined : core.user.currentUser!._id
@@ -67,7 +69,7 @@ export class CalendarPage extends React.Component {
 	}
 
 	unifyHeight() {
-		if (!(core.router.innerWidth > 400)) {
+		if (!(core.router.innerWidth > this.criticalWidth)) {
 			return;
 		}
 		const parent = document.getElementById("full-day-cols");
@@ -89,236 +91,188 @@ export class CalendarPage extends React.Component {
 		}
 	}
 
+	nextWeekBTN = () => {
+		return (
+			<IconButton
+				iconProps={{ iconName: "Next" }}
+				onClick={() => {
+					const target = this.c.weeksCalendar[
+						this.c.selectedWeekIndex + 1
+					];
+					if (target) {
+						this.c.selected.year = target[0].yearNum;
+						this.c.selected.month = target[0].monthNum;
+						this.c.selected.day = target[0].dateNum;
+					} else {
+						this.c.selected.year = this.c.selected.year + 1;
+						this.c.selected.month = this.c.weeksCalendar[0][
+							this.c.weeksCalendar[0].length - 1
+						].monthNum;
+						this.c.selected.day = this.c.weeksCalendar[0][
+							this.c.weeksCalendar[0].length - 1
+						].dateNum;
+					}
+				}}
+			></IconButton>
+		);
+	};
+
+	prevWeekBTN = () => {
+		return (
+			<IconButton
+				onClick={() => {
+					const target = this.c.weeksCalendar[
+						this.c.selectedWeekIndex - 1
+					];
+					if (target) {
+						this.c.selected.year = target[0].yearNum;
+						this.c.selected.month = target[0].monthNum;
+						this.c.selected.day = target[0].dateNum;
+					} else {
+						this.c.selected.year = this.c.selected.year - 1;
+						this.c.selected.month = this.c.weeksCalendar[
+							this.c.weeksCalendar.length - 1
+						][0].monthNum;
+						this.c.selected.day = this.c.weeksCalendar[
+							this.c.weeksCalendar.length - 1
+						][0].dateNum;
+					}
+				}}
+				iconProps={{ iconName: "Previous" }}
+			></IconButton>
+		);
+	};
+
 	render() {
 		return (
 			<div className="calendar-component">
-				{core.router.innerWidth > 400 ? (
-					<div>
-						<div className="selector year-selector">
-							<Row>
-								{[
-									this.c.selected.year - 1,
-									this.c.selected.year - 1,
-									this.c.selected.year,
-									this.c.selected.year + 1,
-									this.c.selected.year + 1
-								].map((year, i) => {
-									return (
-										<Col
-											key={year + i}
-											span={i === 2 ? 4 : 5}
-											className="centered"
-										>
-											{i === 0 || i === 4 ? (
-												<IconButton
-													onClick={() => {
-														this.c.select({
-															year,
-															month: 0,
-															day: 1
-														});
-														this.forceUpdate();
-													}}
-													iconProps={{
-														iconName:
-															i === 0
-																? "Previous"
-																: "Next"
-													}}
-												></IconButton>
-											) : (
-												<a
-													onClick={() => {
-														this.c.select({
-															year,
-															month: 0,
-															day: 1
-														});
-														this.forceUpdate();
-													}}
-													className={
-														(this.c.selected
-															.year === year
-															? "selected"
-															: "") +
-														(this.c.currentYear ===
-														year
-															? " current"
-															: "")
-													}
-												>
-													{year}
-												</a>
+				{core.router.innerWidth > this.criticalWidth ? (
+					<CommandBar
+						{...{
+							className: "commandBar fixed",
+							isSearchBoxVisible: true,
+							elipisisAriaLabel: core.text("More options"),
+							farItems: [
+								{
+									key: "my-appointments-only",
+									onRender: () => (
+										<Toggle
+											checked={this.showAll}
+											onText={text("All appointments")}
+											offText={text(
+												"My appointments only"
 											)}
-										</Col>
-									);
-								})}
-							</Row>
-						</div>
+											onChange={(ev, newValue) => {
+												this.showAll = newValue!;
+											}}
+											className="appointments-toggle"
+										/>
+									)
+								}
+							],
+							items: [
+								{
+									key: "prev-week",
+									onRender: () => (
+										<this.prevWeekBTN></this.prevWeekBTN>
+									)
+								},
 
-						<div className="selector month-selector">
-							<Row>
-								{dateNames
-									.monthsShort()
-									.map((monthShort, index) => {
-										return (
-											<Col
-												key={monthShort}
-												sm={2}
-												xs={4}
-												className="centered"
-											>
-												<a
-													onClick={() => {
-														this.c.select({
-															month: index,
-															day: 1
-														});
-													}}
-													className={
-														(this.c.selected
-															.month === index
-															? "selected"
-															: "") +
-														(this.c.currentMonth ===
-															index &&
-														this.c.currentYear ===
-															this.c.selected.year
-															? " current"
-															: "")
-													}
-												>
-													{text(monthShort)}
-												</a>
-											</Col>
-										);
-									})}
-							</Row>
-						</div>
-						<div className="selector day-selector">
-							<div className="day-selector-border">
-								<div className="day-selector-wrapper">
-									<div>
-										{this.c.selectedMonthDays.map(day => {
-											return (
-												<div
-													key={day.dateNum}
-													onClick={() => {
-														this.c.select({
-															day: day.dateNum
-														});
-														setTimeout(() => {
-															scroll(
-																0,
-																this.findPos(
-																	document.getElementById(
-																		"day_" +
-																			day.dateNum
-																	)
-																)
-															);
-														}, 0);
-													}}
-													className={
-														"day-col" +
-														(this.c.selected.day ===
-														day.dateNum
-															? " selected"
-															: "") +
-														(core.user.currentUser!.onDutyDays.indexOf(
-															day.weekDay
-																.dayLiteral
-														) === -1
-															? " holiday"
-															: "") +
-														(day.weekDay.isWeekend
-															? " weekend"
-															: "")
-													}
-												>
-													<div className="day-name">
-														{text(
-															day.weekDay.dayLiteralShort
-																.substr(0, 2)
-																.toUpperCase()
-														)}
-													</div>
-													<a
-														className={
-															"day-number info-row" +
-															(day.dateNum ===
-																this.c
-																	.currentDay &&
-															this.c
-																.currentMonth ===
-																this.c.selected
-																	.month &&
-															this.c.selected
-																.year ===
-																this.c
-																	.currentYear
-																? " current"
-																: "")
-														}
-													>
-														{day.dateNum}
-													</a>
-												</div>
-											);
-										})}
-									</div>
-									<div>
-										{this.c.selectedMonthDays.map(day => {
-											const number = modules.appointments!.appointmentsForDay(
-												this.c.selected.year,
-												this.c.selected.month + 1,
-												day.dateNum,
-												undefined,
-												this.showAll
-													? undefined
-													: core.user.currentUser!._id
-											).length;
-											return (
-												<div
-													key={day.dateNum}
-													onClick={() => {
-														this.c.select({
-															day: day.dateNum
-														});
-													}}
-													className={
-														"day-col" +
-														(this.c.selected.day ===
-														day.dateNum
-															? " selected"
-															: "") +
-														(core.user.currentUser!.onDutyDays.indexOf(
-															day.weekDay
-																.dayLiteral
-														) === -1
-															? " holiday"
-															: "") +
-														(day.weekDay.isWeekend
-															? " weekend"
-															: "")
-													}
-												>
-													<div
-														className={
-															"info-row appointments-num num-" +
-															number
-														}
-													>
-														{number}
-													</div>
-												</div>
-											);
-										})}
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+								{
+									key: "date-selector",
+									onRender: () => (
+										<DatePicker
+											onSelectDate={date => {
+												if (date) {
+													this.c.selected.year = date.getFullYear();
+													this.c.selected.month = date.getMonth();
+													this.c.selected.day = date.getDate();
+												}
+											}}
+											formatDate={() => {
+												return `${formatDate(
+													new Date(
+														this.c.selectedWeek[0].yearNum,
+														this.c.selectedWeek[0].monthNum,
+														this.c.selectedWeek[0].dateNum
+													),
+													modules.setting!.getSetting(
+														"date_format"
+													)
+												)} — ${formatDate(
+													new Date(
+														this.c.selectedWeek[
+															this.c.selectedWeek
+																.length - 1
+														].yearNum,
+														this.c.selectedWeek[
+															this.c.selectedWeek
+																.length - 1
+														].monthNum,
+														this.c.selectedWeek[
+															this.c.selectedWeek
+																.length - 1
+														].dateNum
+													),
+													modules.setting!.getSetting(
+														"date_format"
+													)
+												)}`;
+											}}
+											value={
+												new Date(
+													this.c.selected.year,
+													this.c.selected.month,
+													this.c.selected.day
+												)
+											}
+											firstDayOfWeek={firstDayOfTheWeekDayPicker(
+												modules.setting!.getSetting(
+													"weekend_num"
+												)
+											)}
+											calendarProps={{
+												dateRangeType:
+													DateRangeType.Week,
+												strings: {
+													months: dateNames.months(),
+													shortMonths: dateNames.monthsShort(),
+													days: [
+														"Sunday",
+														"Monday",
+														"Tuesday",
+														"Wednesday",
+														"Thursday",
+														"Friday",
+														"Saturday"
+													],
+													shortDays: [
+														"Su",
+														"Mo",
+														"Tu",
+														"We",
+														"Th",
+														"Fr",
+														"Sa"
+													],
+													goToToday: "Go to today"
+												},
+												autoNavigateOnSelection: true
+											}}
+											isMonthPickerVisible={true}
+											showGoToToday={true}
+										/>
+									)
+								},
+								{
+									key: "next-week",
+									onRender: () => (
+										<this.nextWeekBTN></this.nextWeekBTN>
+									)
+								}
+							]
+						}}
+					/>
 				) : (
 					<div
 						className={`mobile-calendar${
@@ -370,17 +324,28 @@ export class CalendarPage extends React.Component {
 							autoNavigateOnSelection
 						/>
 						<div className="collapse">
-							<IconButton
-								onClick={() =>
-									(this.collapsedMobileCalendar = !this
-										.collapsedMobileCalendar)
-								}
-								iconProps={{
-									iconName: this.collapsedMobileCalendar
-										? "chevronDown"
-										: "ChevronUp"
-								}}
-							></IconButton>
+							<Row gutter={0}>
+								<Col span={4}>
+									<this.prevWeekBTN></this.prevWeekBTN>
+								</Col>
+								<Col span={16}>
+									<IconButton
+										onClick={() =>
+											(this.collapsedMobileCalendar = !this
+												.collapsedMobileCalendar)
+										}
+										iconProps={{
+											iconName: this
+												.collapsedMobileCalendar
+												? "chevronDown"
+												: "ChevronUp"
+										}}
+									></IconButton>
+								</Col>
+								<Col span={4}>
+									<this.nextWeekBTN></this.nextWeekBTN>
+								</Col>
+							</Row>
 						</div>
 					</div>
 				)}
@@ -390,38 +355,11 @@ export class CalendarPage extends React.Component {
 						this.collapsedMobileCalendar ? " full-height" : ""
 					}`}
 				>
-					{core.router.innerWidth > 400 ? (
-						<div className="filters">
-							<Row>
-								<Col sm={12} md={6} xs={24}>
-									<Toggle
-										checked={this.showAll}
-										onText={text("All appointments")}
-										offText={text("My appointments only")}
-										onChange={(ev, newValue) => {
-											this.showAll = newValue!;
-										}}
-									/>
-								</Col>
-								<Col sm={12} md={18} xs={0} className="filter">
-									<TextField
-										placeholder={text("Type to filter")}
-										onChange={(ev, newVal) =>
-											(this.filter = newVal!)
-										}
-									/>
-								</Col>
-							</Row>
-						</div>
-					) : (
-						""
-					)}
-
 					<div
 						id="full-day-cols"
 						key={JSON.stringify(this.c.selected)}
 					>
-						{this.c.selectedWeekDays.map((day, index) => {
+						{this.c.selectedWeek.map((day, index) => {
 							return (
 								<div
 									key={day.dateNum}
@@ -439,25 +377,50 @@ export class CalendarPage extends React.Component {
 											? " current"
 											: "")
 									}
-									onClick={() => {
-										this.c.select({
-											day: day.dateNum
-										});
-									}}
 									style={{
 										width:
 											(
-												100 /
-												this.c.selectedWeekDays.length
+												100 / this.c.selectedWeek.length
 											).toString() + "%"
 									}}
 								>
 									<h4>
-										<b>{day.dateNum}</b>
-										&nbsp;&nbsp;&nbsp;
-										<span className="day-name">
-											{text(day.weekDay.dayLiteral)}
-										</span>
+										<Row>
+											<Col span={20}>
+												<b>
+													{formatDate(
+														new Date(
+															day.yearNum,
+															day.monthNum,
+															day.dateNum
+														),
+														modules.setting!.getSetting(
+															"date_format"
+														)
+													)}
+												</b>
+												&nbsp;&nbsp;
+												<span className="day-name">
+													{text(
+														day.weekDay.dayLiteral
+													)}
+												</span>
+											</Col>
+											<Col span={4}>
+												<div className="appointments-num-wrap">
+													<span
+														className={`appointments-num num-${this.selectedAppointments[index].length}`}
+													>
+														{
+															this
+																.selectedAppointments[
+																index
+															].length
+														}
+													</span>
+												</div>
+											</Col>
+										</Row>
 									</h4>
 									{this.selectedAppointments[index]
 										.sort((a, b) => a.date - b.date)
