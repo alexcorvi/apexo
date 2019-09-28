@@ -13,7 +13,6 @@
 }
 
 .appointment-input {
-	margin-bottom: 20px;
 	position: relative;
 
 	.time-input {
@@ -23,12 +22,24 @@
 		&:not(.seconds) .ms-TextField-wrapper div {
 			border-right: none;
 		}
+		&:nth-of-type(1) {
+			.ms-TextField-fieldGroup {
+				border-radius: 2px 0 0 2px;
+			}
+		}
+		&:nth-of-type(2),
+		&:nth-of-type(3) {
+			.ms-TextField-fieldGroup {
+				border-radius: 0;
+				border-right: 0;
+			}
+		}
 	}
 	.appendage {
 		position: absolute;
 		width: 25%;
 		min-width: auto;
-		border-radius: 0 3px 3px 0;
+		border-radius: 0 2px 2px 0;
 		font-size: 12px;
 		&.stop {
 			background: #ff9800;
