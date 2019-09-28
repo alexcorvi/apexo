@@ -140,6 +140,35 @@ export class AppointmentEditorPanel extends React.Component<
 		return core.user.currentUser!.canEditAppointments;
 	}
 
+	@computed
+	get staffErrorMessage() {
+		if (!this.props.appointment) {
+			return undefined;
+		}
+		if (this.props.appointment.isDone) {
+			return undefined;
+		}
+		if (this.props.appointment.isMissed) {
+			return undefined;
+		}
+		const target = new Date(this.props.appointment.date)
+			.toDateString()
+			.split(" ")[0]
+			.toLowerCase();
+		const hasErrors = this.props.appointment.operatingStaff.filter(
+			staff =>
+				!staff.onDutyDays
+					.map(x => x.toLowerCase())
+					.find(x => x.startsWith(target))
+		);
+		if (hasErrors.length === 0) {
+			return undefined;
+		}
+		return hasErrors
+			.map(x => `${x.name} ${text("might not be available on this day")}`)
+			.join(", ");
+	}
+
 	setTimeFromCombination() {
 		if (!this.props.appointment) {
 			return;
@@ -397,6 +426,7 @@ export class AppointmentEditorPanel extends React.Component<
 									)}
 									noResultsFoundText={text("No staff found")}
 									className={"operating-staff"}
+									errorMessage={this.staffErrorMessage}
 								/>
 							</div>
 						</SectionComponent>
