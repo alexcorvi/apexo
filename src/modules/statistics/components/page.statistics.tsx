@@ -11,11 +11,10 @@ import {
 import { text } from "@core";
 import * as core from "@core";
 import * as modules from "@modules";
-import { Appointment } from "@modules";
-import { formatDate, round } from "@utils";
-import { computed, observable } from "mobx";
+import { firstDayOfTheWeekDayPicker, formatDate, round } from "@utils";
+import { computed } from "mobx";
 import { observer } from "mobx-react";
-import { DatePicker, Dropdown, Icon, Label, Shimmer } from "office-ui-fabric-react";
+import { DatePicker, Dropdown, Label, Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
 const AppointmentEditorPanel = loadable({
