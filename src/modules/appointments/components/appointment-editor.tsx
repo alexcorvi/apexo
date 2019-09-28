@@ -2,30 +2,19 @@ import {
 	Col,
 	PanelTabs,
 	PanelTop,
-	ProfileComponent,
 	ProfileSquaredComponent,
 	Row,
 	SectionComponent,
-	TagComponent,
-	TagInputComponent,
-	tagType
+	TagInputComponent
 	} from "@common-components";
 import { imagesTable, text } from "@core";
 import * as core from "@core";
-import {
-	Appointment,
-	ISOTeethArr,
-	Patient,
-	PrescriptionItem,
-	StaffMember,
-	Treatment
-	} from "@modules";
+import { Appointment, ISOTeethArr, PrescriptionItem, Treatment } from "@modules";
 import * as modules from "@modules";
-import { convert, formatDate, num, round, second } from "@utils";
+import { firstDayOfTheWeekDayPicker, formatDate, num, round, second } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
-	Checkbox,
 	DatePicker,
 	DefaultButton,
 	Dropdown,
@@ -50,7 +39,7 @@ export class AppointmentEditorPanel extends React.Component<
 	},
 	{}
 > {
-	@observable timerInputs: number[] = [];
+	@observable timerInputs: number[] = [0, 0, 0];
 
 	@observable timeComb: {
 		hours: number;
@@ -297,6 +286,7 @@ export class AppointmentEditorPanel extends React.Component<
 											<Row gutter={0}>
 												<Col span={8}>
 													<Dropdown
+														className="ae-hr"
 														options={[
 															12,
 															1,
@@ -330,6 +320,7 @@ export class AppointmentEditorPanel extends React.Component<
 												</Col>
 												<Col span={8}>
 													<Dropdown
+														className="ae-mn"
 														options={[
 															"00",
 															"30"
@@ -351,6 +342,7 @@ export class AppointmentEditorPanel extends React.Component<
 												</Col>
 												<Col span={8}>
 													<Dropdown
+														className="ae-am"
 														options={[
 															{
 																text: "am",
@@ -449,6 +441,7 @@ export class AppointmentEditorPanel extends React.Component<
 								onChange={(e, value) => {
 									this.props.appointment!.notes = value!;
 								}}
+								data-testid="case-details"
 							/>
 							<br />
 							<Row gutter={8}>
@@ -490,6 +483,7 @@ export class AppointmentEditorPanel extends React.Component<
 													newValue!
 												);
 											}}
+											data-testid="units-num"
 										/>
 									</div>
 								</Col>
@@ -696,245 +690,212 @@ export class AppointmentEditorPanel extends React.Component<
 
 					{core.router.selectedSub === "finance" ? (
 						<SectionComponent title={text("Expenses & Price")}>
-							<Row gutter={8}>
-								<Col sm={16}>
-									{modules.setting!.getSetting(
-										"time_tracking"
-									) ? (
-										<div className="appointment-input time">
-											<Label>
-												{text(
-													"Time (hours, minutes, seconds)"
-												)}
-											</Label>
-											<TextField
-												className="time-input hours"
-												type="number"
-												disabled={!this.canEdit}
-												value={
-													this.formatMillisecondsToTime(
-														this.props.appointment!
-															.time
-													).hours
+							{modules.setting!.getSetting("time_tracking") ? (
+								<div
+									className="appointment-input time"
+									style={{ maxWidth: 300 }}
+								>
+									<Label>
+										{text("Time (hours, minutes, seconds)")}
+									</Label>
+									<TextField
+										className="time-input hours"
+										type="number"
+										disabled={!this.canEdit}
+										value={
+											this.formatMillisecondsToTime(
+												this.props.appointment!.time
+											).hours
+										}
+										onChange={(e, v) => {
+											this.timerInputs[0] = num(v!);
+											this.manuallyUpdateTime();
+										}}
+									/>
+									<TextField
+										className="time-input minutes"
+										type="number"
+										disabled={!this.canEdit}
+										value={
+											this.formatMillisecondsToTime(
+												this.props.appointment!.time
+											).minutes
+										}
+										onChange={(e, v) => {
+											this.timerInputs[1] = num(v!);
+											this.manuallyUpdateTime();
+										}}
+									/>
+									<TextField
+										className="time-input seconds"
+										type="number"
+										disabled={!this.canEdit}
+										value={
+											this.formatMillisecondsToTime(
+												this.props.appointment!.time
+											).seconds
+										}
+										onChange={(e, v) => {
+											this.timerInputs[2] = num(v!);
+											this.manuallyUpdateTime();
+										}}
+									/>
+									{this.props.appointment!.timer ? (
+										<PrimaryButton
+											iconProps={{
+												iconName: "Timer"
+											}}
+											disabled={!this.canEdit}
+											className="appendage stop"
+											text={text("Stop")}
+											onClick={() => {
+												const timer = this.props
+													.appointment!.timer;
+												if (timer) {
+													clearInterval(timer);
 												}
-												onChange={(e, v) => {
-													this.timerInputs[0] = num(
-														v!
-													);
-													this.manuallyUpdateTime();
-												}}
-											/>
-											<TextField
-												className="time-input minutes"
-												type="number"
-												disabled={!this.canEdit}
-												value={
-													this.formatMillisecondsToTime(
-														this.props.appointment!
-															.time
-													).minutes
-												}
-												onChange={(e, v) => {
-													this.timerInputs[1] = num(
-														v!
-													);
-													this.manuallyUpdateTime();
-												}}
-											/>
-											<TextField
-												className="time-input seconds"
-												type="number"
-												disabled={!this.canEdit}
-												value={
-													this.formatMillisecondsToTime(
-														this.props.appointment!
-															.time
-													).seconds
-												}
-												onChange={(e, v) => {
-													this.timerInputs[2] = num(
-														v!
-													);
-													this.manuallyUpdateTime();
-												}}
-											/>
-											{this.props.appointment!.timer ? (
-												<PrimaryButton
-													iconProps={{
-														iconName: "Timer"
-													}}
-													disabled={!this.canEdit}
-													className="appendage stop"
-													text={text("Stop")}
-													onClick={() => {
-														const timer = this.props
-															.appointment!.timer;
-														if (timer) {
-															clearInterval(
-																timer
-															);
-														}
-														this.props.appointment!.timer = null;
-													}}
-												/>
-											) : (
-												<PrimaryButton
-													iconProps={{
-														iconName: "Timer"
-													}}
-													disabled={!this.canEdit}
-													className="appendage"
-													text={text("Start")}
-													onClick={() => {
-														this.props.appointment!.timer = window.setInterval(
-															() => {
-																this.props.appointment!.timerAddOneSecond();
-															},
-															second
-														);
-													}}
-												/>
-											)}
-											<p className="payment-insight">
-												<TagComponent
-													text={
-														text("Time value") +
-														": " +
-														modules.setting!.getSetting(
-															"currencySymbol"
-														) +
-														round(
-															this.props
-																.appointment!
-																.spentTimeValue
-														).toString()
-													}
-													type={tagType.info}
-												/>
-												<br />
-												<TagComponent
-													text={
-														text("Expenses") +
-														": " +
-														modules.setting!.getSetting(
-															"currencySymbol"
-														) +
-														round(
-															this.props
-																.appointment!
-																.expenses
-														).toString()
-													}
-													type={tagType.info}
-												/>
-											</p>
-										</div>
+												this.props.appointment!.timer = null;
+											}}
+										/>
 									) : (
-										""
+										<PrimaryButton
+											iconProps={{
+												iconName: "Timer"
+											}}
+											disabled={!this.canEdit}
+											className="appendage"
+											text={text("Start")}
+											onClick={() => {
+												this.props.appointment!.timer = window.setInterval(
+													() => {
+														this.props.appointment!.timerAddOneSecond();
+													},
+													second
+												);
+											}}
+										/>
 									)}
-								</Col>
-								<Col sm={24}>
-									<div className="appointment-input paid">
-										<Row gutter={8}>
-											<Col sm={8}>
-												<TextField
-													type="number"
-													disabled={!this.canEdit}
-													label={text("Price")}
-													value={this.props.appointment!.finalPrice.toString()}
-													onChange={(e, newVal) => {
-														this.props.appointment!.finalPrice = num(
-															newVal!
-														);
-													}}
-													prefix={modules.setting!.getSetting(
-														"currencySymbol"
-													)}
-												/>
-											</Col>
-											<Col sm={8}>
-												<TextField
-													type="number"
-													disabled={!this.canEdit}
-													label={text("Paid")}
-													value={this.props.appointment!.paidAmount.toString()}
-													onChange={(e, newVal) => {
-														this.props.appointment!.paidAmount = num(
-															newVal!
-														);
-													}}
-													prefix={modules.setting!.getSetting(
-														"currencySymbol"
-													)}
-												/>
-											</Col>
-											<Col sm={8}>
-												<TextField
-													type="number"
-													disabled={true}
-													label={
-														this.props.appointment!
-															.outstandingAmount
-															? text(
-																	"Outstanding"
-															  )
-															: this.props
-																	.appointment!
-																	.overpaidAmount
-															? text("Overpaid")
-															: text(
-																	"Outstanding"
-															  )
-													}
-													value={
-														this.props.appointment!
-															.outstandingAmount
-															? this.props.appointment!.outstandingAmount.toString()
-															: this.props
-																	.appointment!
-																	.overpaidAmount
-															? this.props.appointment!.overpaidAmount.toString()
-															: this.props.appointment!.outstandingAmount.toString()
-													}
-													prefix={modules.setting!.getSetting(
-														"currencySymbol"
-													)}
-												/>
-											</Col>
-										</Row>
-										<p className="payment-insight">
-											<TagComponent
-												text={
-													text("Profit") +
-													": " +
-													modules.setting!.getSetting(
-														"currencySymbol"
-													) +
-													round(
-														this.props.appointment!
-															.profit
-													).toString()
-												}
-												type={tagType.success}
-											/>
-											<br />
-											<TagComponent
-												text={
-													text("Profit percentage") +
-													": " +
-													round(
-														this.props.appointment!
-															.profitPercentage *
-															100
-													).toString() +
-													"%"
-												}
-												type={tagType.success}
-											/>
-										</p>
-									</div>
-								</Col>
-							</Row>
+								</div>
+							) : (
+								""
+							)}
+
+							<div className="appointment-input paid">
+								<Row gutter={8}>
+									<Col xs={12}>
+										<TextField
+											type="number"
+											disabled={!this.canEdit}
+											label={text("Price")}
+											value={this.props.appointment!.finalPrice.toString()}
+											onChange={(e, newVal) => {
+												this.props.appointment!.finalPrice = num(
+													newVal!
+												);
+											}}
+											prefix={modules.setting!.getSetting(
+												"currencySymbol"
+											)}
+											data-testid="price"
+										/>
+									</Col>
+									<Col xs={12}>
+										<TextField
+											type="number"
+											disabled={!this.canEdit}
+											label={text("Paid")}
+											value={this.props.appointment!.paidAmount.toString()}
+											onChange={(e, newVal) => {
+												this.props.appointment!.paidAmount = num(
+													newVal!
+												);
+											}}
+											prefix={modules.setting!.getSetting(
+												"currencySymbol"
+											)}
+										/>
+									</Col>
+								</Row>
+								<Row gutter={8}>
+									<Col xs={24} sm={8}>
+										<TextField
+											type="number"
+											disabled
+											label={
+												modules.setting!.getSetting(
+													"time_tracking"
+												)
+													? text(
+															"Expenses + Time value"
+													  )
+													: text("Expenses")
+											}
+											value={round(
+												this.props.appointment!
+													.totalExpenses
+											).toString()}
+											prefix={modules.setting!.getSetting(
+												"currencySymbol"
+											)}
+										/>
+									</Col>
+									<Col xs={12} sm={8}>
+										<TextField
+											type="number"
+											disabled
+											label={text("Profit")}
+											value={round(
+												this.props.appointment!.profit
+											).toString()}
+											prefix={modules.setting!.getSetting(
+												"currencySymbol"
+											)}
+											errorMessage={
+												this.props.appointment!.profit <
+												0
+													? text("price is too low")
+													: undefined
+											}
+										/>
+									</Col>
+									<Col xs={12} sm={8}>
+										<TextField
+											type="number"
+											disabled
+											label={
+												this.props.appointment!
+													.outstandingAmount
+													? text("Outstanding")
+													: this.props.appointment!
+															.overpaidAmount
+													? text("Overpaid")
+													: text("Outstanding")
+											}
+											value={
+												this.props.appointment!
+													.outstandingAmount
+													? this.props.appointment!.outstandingAmount.toString()
+													: this.props.appointment!
+															.overpaidAmount
+													? this.props.appointment!.overpaidAmount.toString()
+													: this.props.appointment!.outstandingAmount.toString()
+											}
+											prefix={modules.setting!.getSetting(
+												"currencySymbol"
+											)}
+											errorMessage={
+												this.props.appointment!
+													.outstandingAmount
+													? text("outstanding amount")
+													: this.props.appointment!
+															.overpaidAmount
+													? text("overpaid amount")
+													: undefined
+											}
+										/>
+									</Col>
+								</Row>
+							</div>
 						</SectionComponent>
 					) : (
 						""
