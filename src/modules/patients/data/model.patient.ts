@@ -54,21 +54,14 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 	@computed
 	get lastAppointment() {
 		return this.appointments
-			.filter(appointment => appointment.isDone === true)
+			.filter(appointment => appointment.isPast)
 			.sort((a, b) => b.date - a.date)[0];
 	}
 
 	@computed
 	get nextAppointment() {
 		return this.appointments
-			.filter(appointment => {
-				if (appointment.isDone) {
-					return false;
-				}
-				const today = new Date().setHours(0, 0, 0, 0);
-				const date = new Date(appointment.date).setHours(0, 0, 0, 0);
-				return today <= date;
-			})
+			.filter(appointment => appointment.isUpcoming)
 			.sort((a, b) => a.date - b.date)[0];
 	}
 

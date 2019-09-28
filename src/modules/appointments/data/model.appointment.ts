@@ -135,12 +135,15 @@ export class Appointment extends Model<AppointmentSchema>
 	}
 
 	@computed
+	get isPast() {
+		const now = new Date().setHours(0, 0, 0, 0);
+		const then = new Date(this.date).setHours(0, 0, 0, 0);
+		return now - then > 0;
+	}
+
+	@computed
 	get isMissed() {
-		return (
-			new Date().getTime() - new Date(this.date).getTime() > 0 &&
-			!this.isDone &&
-			!this.dueToday
-		);
+		return this.isPast && !this.isDone && !this.dueToday;
 	}
 
 	@computed

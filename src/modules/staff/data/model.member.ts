@@ -1,5 +1,5 @@
-import { Appointment, appointments, Calendar, setting, StaffMemberSchema } from "@modules";
-import { dateNames, formatDate, generateID, getDayStartingPoint } from "@utils";
+import { Appointment, appointments, calendar, setting, StaffMemberSchema } from "@modules";
+import { dateNames, formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { Model, observeModel } from "pouchx";
 
@@ -37,14 +37,6 @@ export class StaffMember extends Model<StaffMemberSchema>
 	@observable pin: string | undefined = "";
 
 	@observable onDutyDays: string[] = [];
-
-	@computed
-	get onDuty() {
-		return dateNames
-			.days()
-			.filter(day => this.onDutyDays.indexOf(day) !== -1)
-			.map(day => dateNames.days().indexOf(day));
-	}
 
 	@computed
 	get sortedDays() {
@@ -90,7 +82,9 @@ export class StaffMember extends Model<StaffMemberSchema>
 
 	@computed
 	get lastAppointment() {
-		return this.pastAppointments[0];
+		return this.appointments
+			.filter(appointment => appointment.isPast)
+			.sort((a, b) => b.date - a.date)[0];
 	}
 
 	@computed
@@ -137,17 +131,6 @@ export class StaffMember extends Model<StaffMemberSchema>
 		return this.appointments
 			.filter(appointment => appointment.isUpcoming)
 			.sort((a, b) => a.date - b.date);
-	}
-
-	@computed
-	get pastAppointments() {
-		return this.appointments
-			.filter(
-				appointment =>
-					getDayStartingPoint(appointment.date) <
-					getDayStartingPoint(new Date().getTime())
-			)
-			.sort((a, b) => b.date - a.date);
 	}
 
 	toJSON(): StaffMemberSchema {
