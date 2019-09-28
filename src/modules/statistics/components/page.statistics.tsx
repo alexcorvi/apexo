@@ -287,6 +287,11 @@ export class StatisticsPage extends React.Component {
 												)
 											)}`
 										}
+										firstDayOfWeek={firstDayOfTheWeekDayPicker(
+											modules.setting!.getSetting(
+												"weekend_num"
+											)
+										)}
 									/>
 								);
 							}
@@ -315,6 +320,11 @@ export class StatisticsPage extends React.Component {
 												)
 											)}`
 										}
+										firstDayOfWeek={firstDayOfTheWeekDayPicker(
+											modules.setting!.getSetting(
+												"weekend_num"
+											)
+										)}
 									/>
 								);
 							}

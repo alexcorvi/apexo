@@ -576,6 +576,11 @@ export class LabworkPage extends React.Component {
 												/>
 												{this.selectedLabwork.isSent ? (
 													<DatePicker
+														firstDayOfWeek={firstDayOfTheWeekDayPicker(
+															modules.setting!.getSetting(
+																"weekend_num"
+															)
+														)}
 														label={text(
 															"Sent date"
 														)}
@@ -628,6 +633,11 @@ export class LabworkPage extends React.Component {
 													<DatePicker
 														label={text(
 															"Received date"
+														)}
+														firstDayOfWeek={firstDayOfTheWeekDayPicker(
+															modules.setting!.getSetting(
+																"weekend_num"
+															)
 														)}
 														disabled={!this.canEdit}
 														placeholder={text(

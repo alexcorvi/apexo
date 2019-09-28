@@ -246,6 +246,11 @@ export class AppointmentEditorPanel extends React.Component<
 								<Col sm={12}>
 									<div className="appointment-input date">
 										<DatePicker
+											firstDayOfWeek={firstDayOfTheWeekDayPicker(
+												modules.setting!.getSetting(
+													"weekend_num"
+												)
+											)}
 											label={text("Date")}
 											disabled={!this.canEdit}
 											className="appointment-date"
