@@ -132,6 +132,16 @@ export class Calendar {
 		return weeks;
 	}
 
+	@computed get overview() {
+		return [
+			this.weeksCalendar[this.selectedWeekIndex - 2],
+			this.weeksCalendar[this.selectedWeekIndex - 1],
+			this.weeksCalendar[this.selectedWeekIndex],
+			this.weeksCalendar[this.selectedWeekIndex + 1],
+			this.weeksCalendar[this.selectedWeekIndex + 2]
+		].filter(x => x);
+	}
+
 	@computed get selectedWeekIndex() {
 		return this.weeksCalendar.findIndex(x =>
 			x.find(

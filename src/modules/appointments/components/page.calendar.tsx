@@ -1,6 +1,6 @@
 import { Col, ProfileSquaredComponent, Row } from "@common-components";
-import * as core from "@core";
 import { text } from "@core";
+import * as core from "@core";
 import { Calendar, calendar } from "@modules";
 import { PatientLinkComponent } from "@modules";
 import * as modules from "@modules";
@@ -350,6 +350,168 @@ export class CalendarPage extends React.Component {
 					</div>
 				)}
 
+				{core.router.innerWidth > this.criticalWidth ? (
+					<div className="appointments-overview">
+						<table>
+							<thead>
+								<tr>
+									{this.c.overview
+										.reduce(
+											(arr: modules.DayInfo[], arr2) => {
+												arr2.forEach(x => arr.push(x));
+												return arr;
+											},
+											[]
+										)
+										.map(day => {
+											return (
+												<th
+													onClick={() => {
+														this.c.selected.year =
+															day.yearNum;
+														this.c.selected.month =
+															day.monthNum;
+														this.c.selected.day =
+															day.dateNum;
+													}}
+													className={
+														(day.weekDay.isWeekend
+															? "is-weekend"
+															: "") +
+														(this.c.selectedWeek.find(
+															x => x === day
+														)
+															? " is-selected"
+															: "") +
+														(day.dateNum ===
+															this.c.currentDay &&
+														this.c.currentMonth ===
+															day.monthNum &&
+														day.yearNum ===
+															this.c.currentYear
+															? " is-current"
+															: "")
+													}
+												>
+													{day.weekDay.dayLiteralShort.substr(
+														0,
+														2
+													)}
+												</th>
+											);
+										})}
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									{this.c.overview
+										.reduce(
+											(arr: modules.DayInfo[], arr2) => {
+												arr2.forEach(x => arr.push(x));
+												return arr;
+											},
+											[]
+										)
+										.map(day => {
+											return (
+												<td
+													onClick={() => {
+														this.c.selected.year =
+															day.yearNum;
+														this.c.selected.month =
+															day.monthNum;
+														this.c.selected.day =
+															day.dateNum;
+													}}
+													className={
+														(day.weekDay.isWeekend
+															? "is-weekend"
+															: "") +
+														(this.c.selectedWeek.find(
+															x => x === day
+														)
+															? " is-selected"
+															: "") +
+														(day.dateNum ===
+															this.c.currentDay &&
+														this.c.currentMonth ===
+															day.monthNum &&
+														day.yearNum ===
+															this.c.currentYear
+															? " is-current"
+															: "")
+													}
+												>
+													{day.dateNum}/
+													{day.monthNum + 1}
+												</td>
+											);
+										})}
+								</tr>
+								<tr>
+									{this.c.overview
+										.reduce(
+											(arr: modules.DayInfo[], arr2) => {
+												arr2.forEach(x => arr.push(x));
+												return arr;
+											},
+											[]
+										)
+										.map(day => {
+											const num = modules.appointments!.appointmentsForDay(
+												day.yearNum,
+												day.monthNum + 1,
+												day.dateNum,
+												this.filter,
+												this.showAll
+													? undefined
+													: core.user.currentUser!._id
+											).length;
+											return (
+												<td
+													onClick={() => {
+														this.c.selected.year =
+															day.yearNum;
+														this.c.selected.month =
+															day.monthNum;
+														this.c.selected.day =
+															day.dateNum;
+													}}
+													className={
+														(day.weekDay.isWeekend
+															? "is-weekend"
+															: "") +
+														(this.c.selectedWeek.find(
+															x => x === day
+														)
+															? " is-selected"
+															: "") +
+														(day.dateNum ===
+															this.c.currentDay &&
+														this.c.currentMonth ===
+															day.monthNum &&
+														day.yearNum ===
+															this.c.currentYear
+															? " is-current"
+															: "")
+													}
+												>
+													<span
+														className={`appointments-num num-${num}`}
+													>
+														{num}
+													</span>
+												</td>
+											);
+										})}
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				) : (
+					""
+				)}
+
 				<div
 					className={`week-view${
 						this.collapsedMobileCalendar ? " full-height" : ""
@@ -370,10 +532,8 @@ export class CalendarPage extends React.Component {
 											? " selected"
 											: "") +
 										(day.dateNum === this.c.currentDay &&
-										this.c.currentMonth ===
-											this.c.selected.month &&
-										this.c.selected.year ===
-											this.c.currentYear
+										this.c.currentMonth === day.monthNum &&
+										day.yearNum === this.c.currentYear
 											? " current"
 											: "")
 									}
