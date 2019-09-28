@@ -1,3 +1,5 @@
+import { DayOfWeek } from "office-ui-fabric-react";
+
 export function getDayStartingPoint(t: number): number {
 	return new Date(t).setHours(0, 0, 0, 0);
 }
@@ -97,6 +99,28 @@ export const dateNames = {
 		"December"
 	]
 };
+
+export function firstDayOfTheWeekDayPicker(settingsWeekendNum: string) {
+	const weekendNum = Number(settingsWeekendNum);
+	switch (weekendNum) {
+		case 0:
+			return DayOfWeek.Tuesday;
+		case 1:
+			return DayOfWeek.Wednesday;
+		case 2:
+			return DayOfWeek.Thursday;
+		case 3:
+			return DayOfWeek.Friday;
+		case 4:
+			return DayOfWeek.Saturday;
+		case 5:
+			return DayOfWeek.Sunday;
+		case 6:
+			return DayOfWeek.Monday;
+		default:
+			return DayOfWeek.Monday;
+	}
+}
 
 export const second = 1000;
 export const minute = second * 60;
