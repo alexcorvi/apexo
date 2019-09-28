@@ -15,6 +15,7 @@ export class TagInputComponent extends React.Component<
 		disabled?: boolean;
 		value: { key: string; text: string }[];
 		onChange?: (keys: string[]) => void;
+		errorMessage?: string;
 	},
 	{}
 > {
@@ -47,10 +48,12 @@ export class TagInputComponent extends React.Component<
 
 	render() {
 		return (
-			<div>
+			<div className="tag-input-component">
 				<Label>{this.props.label}</Label>
 				<TagPicker
-					className={this.props.className}
+					className={`${
+						this.props.errorMessage ? "has-error" : ""
+					} ${this.props.className || ""}`}
 					onResolveSuggestions={filter => this.filterOptions(filter)}
 					pickerSuggestionsProps={{
 						suggestionsHeaderText: this.props.suggestionsHeaderText,
@@ -72,6 +75,13 @@ export class TagInputComponent extends React.Component<
 						}
 					}}
 				/>
+				{this.props.errorMessage ? (
+					<div className="error-message">
+						{this.props.errorMessage}
+					</div>
+				) : (
+					""
+				)}
 			</div>
 		);
 	}
