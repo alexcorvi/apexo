@@ -15,20 +15,15 @@ const register = [
 	modules.registerStats
 ];
 
-async function initResync() {
-	// resync on function call
-	await dbAction("resync");
-	// resync on interval of 2 minutes
-	setTimeout(initResync, 2 * utils.minute);
-}
-
 export async function registerModules() {
 	await Promise.all(register.map(singleModule => singleModule()));
 	// resync on load: only staff database initially
 	// because we need it in login
-	core.status.loadingIndicatorText = "Resyncing basic info";
+	core.status.loadingIndicatorText = "Downloading your clinic data";
 	if (core.status.server !== "http://cypress") {
-		await dbAction("resync", "doctors");
-		initResync();
+		await dbAction("resync");
+		setInterval(() => {
+			dbAction("resync");
+		}, 2 * utils.minute);
 	}
 }
