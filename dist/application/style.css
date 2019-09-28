@@ -2087,6 +2087,11 @@ hr {
   to {
     transform: rotate(360deg); } }
 
+@media (max-width: 991px) {
+  .data-table .commandBar.fixed {
+    left: 0 !important;
+    width: 100% !important; } }
+
 @media (max-width: 767px) {
   #router-outlet > div {
     padding: 0; }
@@ -2317,10 +2322,6 @@ hr {
 
 [dir="rtl"] .panel-heading .close {
   text-align: left; }
-
-[dir="rtl"] .tag-input-component .show-all {
-  right: auto;
-  left: 12px; }
 
 [dir="rtl"] .appointment-input .appendage {
   right: auto;
@@ -5603,7 +5604,6 @@ hr {
     right: 0; }
 
 .appointment-input {
-  margin-bottom: 20px;
   position: relative; }
   .appointment-input .time-input {
     display: inline-block;
@@ -5611,11 +5611,16 @@ hr {
     width: 25%; }
     .appointment-input .time-input:not(.seconds) .ms-TextField-wrapper div {
       border-right: none; }
+    .appointment-input .time-input:nth-of-type(1) .ms-TextField-fieldGroup {
+      border-radius: 2px 0 0 2px; }
+    .appointment-input .time-input:nth-of-type(2) .ms-TextField-fieldGroup, .appointment-input .time-input:nth-of-type(3) .ms-TextField-fieldGroup {
+      border-radius: 0;
+      border-right: 0; }
   .appointment-input .appendage {
     position: absolute;
     width: 25%;
     min-width: auto;
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 2px 2px 0;
     font-size: 12px; }
     .appointment-input .appendage.stop {
       background: #ff9800; }
@@ -5717,108 +5722,37 @@ hr {
 
 .calendar-component {
   background: #fff;
-  min-height: 500px;
   font-size: 13px;
-  margin-top: 60px; }
-  .calendar-component .selector {
-    padding-bottom: 10px;
-    margin-bottom: 10px; }
-    .calendar-component .selector a.current {
-      border: 1px solid #03a9f4; }
-    .calendar-component .selector a {
-      cursor: pointer;
-      transition: 0.4s all;
-      border-radius: 4px;
-      border: 1px solid transparent; }
-    .calendar-component .selector a:hover {
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      background: #c5cae9;
-      color: #fff; }
-    .calendar-component .selector a.selected {
-      background: #3f51b5;
-      color: #fff;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-  .calendar-component .year-selector,
-  .calendar-component .month-selector {
-    border-bottom: 1px solid #f3f3f3; }
-    .calendar-component .year-selector a,
-    .calendar-component .month-selector a {
-      display: inline-block;
-      margin-right: 5px;
-      padding: 5px; }
-  .calendar-component .day-selector {
-    overflow-x: auto;
-    margin-bottom: 0;
-    padding-bottom: 0; }
-    .calendar-component .day-selector .day-selector-border {
-      border-bottom: 1px solid #f3f3f3; }
-    .calendar-component .day-selector .day-selector-wrapper {
-      margin: 0 auto;
-      width: 974px;
-      padding-bottom: 10px;
-      text-align: center; }
-      .calendar-component .day-selector .day-selector-wrapper .day-col {
-        cursor: pointer;
-        vertical-align: text-top;
-        display: inline-block;
-        padding: 3px;
-        text-align: center;
-        font-size: 12px; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col .day-name {
-          font-size: 10px;
-          margin-bottom: 10px;
-          color: #9e9e9e; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col .info-row {
-          padding: 5px 0;
-          width: 22px;
-          display: block;
-          border-radius: 4px; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col:hover .day-number {
-          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-          background: #c5cae9;
-          color: #fff;
-          border-radius: 4px; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col.selected .day-number {
-          background: #3f51b5;
-          color: #fff;
-          border-radius: 4px;
-          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-        .calendar-component .day-selector .day-selector-wrapper .day-col.weekend:not(:last-child) {
-          border-right: 1px solid #f3f3f3;
-          padding-right: 13px;
-          margin-right: 10px; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num {
-          border-radius: 200px;
-          font-size: 10px;
-          color: #fff;
-          background: #b71c1c; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-0 {
-            color: #262626;
-            background: transparent; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-1 {
-            background: #ffebee; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-2 {
-            background: #ffcdd2; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-3 {
-            background: #ef9a9a; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-4 {
-            background: #e57373; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-5 {
-            background: #ef5350; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-6 {
-            background: #f44336; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-7 {
-            background: #e53935; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-8 {
-            background: #d32f2f; }
-          .calendar-component .day-selector .day-selector-wrapper .day-col .appointments-num.num-9 {
-            background: #c62828; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col.holiday .info-row {
-          background: transparent;
-          color: #e3e3e3; }
-        .calendar-component .day-selector .day-selector-wrapper .day-col.holiday .day-number {
-          background: transparent;
-          color: #e3e3e3; }
+  margin-top: 94px; }
+  .calendar-component .appointments-toggle {
+    padding: 12px 0 0 12px; }
+    .calendar-component .appointments-toggle .ms-Toggle-stateText {
+      font-size: 12px;
+      line-height: 14px; }
+  .calendar-component .ms-CommandBar-primaryCommand > div {
+    padding-top: 6px; }
+    .calendar-component .ms-CommandBar-primaryCommand > div .ms-TextField-fieldGroup {
+      border: 1px solid #f3f3f3;
+      width: 210px; }
+      .calendar-component .ms-CommandBar-primaryCommand > div .ms-TextField-fieldGroup:hover {
+        background: #f3f3f3; }
+  .calendar-component .ms-CommandBar {
+    box-sizing: content-box;
+    background-color: #fff !important;
+    border-bottom: 1px solid #f3f3f3;
+    margin-top: -1px; }
+  .calendar-component .commandBar.fixed {
+    position: fixed;
+    width: calc(100% - 66px);
+    top: 50px;
+    left: 66px;
+    z-index: 1; }
+  .calendar-component .week-view i.no-appointments {
+    display: block;
+    margin: 20px 0;
+    text-align: center;
+    color: #9e9e9e;
+    padding-top: 10px; }
   .calendar-component .week-view .filters {
     border-bottom: 1px solid #f3f3f3; }
     .calendar-component .week-view .filters .ms-TextField-wrapper div {
@@ -5842,9 +5776,6 @@ hr {
       background: #fafaf7; }
     .calendar-component .full-day-col.current h4 b {
       border: 1px solid #03a9f4; }
-    .calendar-component .full-day-col.selected h4 b {
-      background: #3f51b5;
-      color: #fff; }
     .calendar-component .full-day-col h4 {
       margin: 0 -10px;
       padding: 10px;
@@ -5896,6 +5827,39 @@ hr {
     margin-top: 10px; }
   .calendar-component .filters .ms-Toggle {
     padding: 15px 0 0 15px; }
+  .calendar-component .appointments-num-wrap {
+    text-align: right; }
+  .calendar-component .appointments-num {
+    border-radius: 200px;
+    color: #fff;
+    display: inline-block;
+    line-height: 1.4em;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    margin-top: 2px;
+    background: #b71c1c; }
+    .calendar-component .appointments-num.num-0 {
+      color: #fafafa;
+      background: transparent; }
+    .calendar-component .appointments-num.num-1 {
+      background: #ffebee; }
+    .calendar-component .appointments-num.num-2 {
+      background: #ffcdd2; }
+    .calendar-component .appointments-num.num-3 {
+      background: #ef9a9a; }
+    .calendar-component .appointments-num.num-4 {
+      background: #e57373; }
+    .calendar-component .appointments-num.num-5 {
+      background: #ef5350; }
+    .calendar-component .appointments-num.num-6 {
+      background: #f44336; }
+    .calendar-component .appointments-num.num-7 {
+      background: #e53935; }
+    .calendar-component .appointments-num.num-8 {
+      background: #d32f2f; }
+    .calendar-component .appointments-num.num-9 {
+      background: #c62828; }
 
 @media screen and (max-width: 1250px) {
   .calendar-component .full-day-col {
@@ -5907,10 +5871,78 @@ hr {
     width: 50% !important;
     min-height: 150px; } }
 
-@media screen and (max-width: 400px) {
-  .calendar-component .full-day-col {
+@media screen and (max-width: 500px) {
+  .mobile-calendar {
+    background: #fff;
+    width: 100%;
+    position: fixed;
+    top: 50px;
+    z-index: 1;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    height: 268px;
+    transition: 0.3s all; }
+    .mobile-calendar.collapsed {
+      top: -186px; }
+    .mobile-calendar .ms-DatePicker-weekBackground {
+      background: #eceff1; }
+    .mobile-calendar .ms-DatePicker-day--today {
+      background: #607d8b; }
+    .mobile-calendar .collapse {
+      text-align: center;
+      background: #eceff1;
+      position: absolute;
+      width: 100%;
+      bottom: 0; }
+      .mobile-calendar .collapse button {
+        display: block;
+        width: 100%; }
+  .calendar-component .full-day-col,
+  .calendar-component .full-day-col.selected {
     width: 100% !important;
-    min-height: 50px; } }
+    min-height: 50px; }
+    .calendar-component .full-day-col h4,
+    .calendar-component .full-day-col.selected h4 {
+      background: #607d8b;
+      margin: 10px 0;
+      border-radius: 3px;
+      font-weight: 400;
+      color: #fff; }
+      .calendar-component .full-day-col h4 b,
+      .calendar-component .full-day-col.selected h4 b {
+        background: #eceff1;
+        color: #000;
+        padding: 5px; }
+  .ms-DatePicker-monthComponents {
+    align-self: unset; }
+  .ms-DatePicker-table {
+    width: initial;
+    margin: 0 auto; }
+    .ms-DatePicker-table td {
+      width: 40px;
+      font-size: 14px; }
+  .ms-DatePicker-header {
+    padding-bottom: 40px;
+    width: 100vw; }
+    .ms-DatePicker-header .ms-DatePicker-prevMonth,
+    .ms-DatePicker-header .ms-DatePicker-nextMonth {
+      margin-right: 5px;
+      border: 1px solid #9e9e9e; }
+  .ms-DatePicker-wrap {
+    padding: 0; }
+  .ms-DatePicker-weekday {
+    font-weight: 600; }
+  .week-view {
+    margin-top: 320px;
+    transition: 0.3s all; }
+    .week-view.full-height {
+      margin-top: 90px; }
+  .num-0 {
+    color: #607d8b !important; } }
+
+@media (max-width: 991px) {
+  .calendar-component .commandBar.fixed {
+    left: 0 !important;
+    width: 100% !important; } }
 
 .crop-dialog .ms-Dialog-inner {
   padding: 0;
@@ -5950,6 +5982,13 @@ hr {
 .crop-dialog .active-button {
   background: #e3e3e3; }
 
+.data-table .commandBar.fixed {
+  position: fixed;
+  width: calc(100% - 66px);
+  top: 50px;
+  left: 66px;
+  z-index: 1; }
+
 .data-table .ms-CommandBar {
   box-sizing: content-box;
   background-color: #fff !important;
@@ -5957,6 +5996,7 @@ hr {
   margin-top: -1px; }
 
 .data-table .ms-table {
+  margin-top: 94px;
   background: #fafafa; }
   .data-table .ms-table td.clickable {
     transition: 0.3s all;
@@ -6227,7 +6267,8 @@ hr {
   width: 100%;
   top: 0;
   background: #fff;
-  border-bottom: 1px solid #f3f3f3; }
+  border-bottom: 1px solid #f3f3f3;
+  z-index: 2; }
   .header-component section {
     float: left;
     padding: 10px 10px 0px;
@@ -6951,56 +6992,13 @@ hr {
   .sc-pg .appointments-data-table {
     display: none; } }
 
-.tag-input-component {
-  position: relative;
-  background: #fff;
-  padding: 3px 5px;
-  font-size: 13px;
-  border: 1px solid #a6a6a6; }
-  .tag-input-component .input {
-    border: none;
-    background: #fff;
-    display: block;
-    width: 100%;
-    padding: 5px;
-    border-bottom: 1px solid #a6a6a6; }
-  .tag-input-component .show-all {
-    position: absolute;
-    top: 9px;
-    right: 12px;
-    cursor: pointer; }
-  .tag-input-component .item {
-    background: #eee;
-    padding: 5px;
-    display: inline-block;
-    margin-right: 5px;
-    margin-top: 5px; }
-  .tag-input-component .delete-tag-input-item {
-    font-size: 10px;
-    padding: 5px;
-    margin-left: 5px;
-    cursor: pointer; }
-    .tag-input-component .delete-tag-input-item:hover {
-      background: #e0e0e0; }
-  .tag-input-component .options-menu {
-    z-index: 999;
-    display: block;
-    position: absolute;
-    background: #fff;
-    width: 100%;
-    right: 0;
-    top: 34px;
-    max-height: 200px;
-    overflow-y: auto;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
-    .tag-input-component .options-menu .options-item {
-      display: block;
-      background: #f5f5f5;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-top: 1px solid #e0e0e0; }
-      .tag-input-component .options-menu .options-item:hover, .tag-input-component .options-menu .options-item.selected {
-        background: #e3e3e3; }
+.tag-input-component .has-error .ms-BasePicker-text {
+  border-color: brown; }
+
+.tag-input-component .error-message {
+  font-size: 12px;
+  color: brown;
+  padding-top: 5px; }
 
 .tc-pg table.responsive tbody tr td:not(.no-label):before {
   display: none; }
