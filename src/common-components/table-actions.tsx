@@ -16,8 +16,8 @@ export class TableActions extends React.Component<{
 }> {
 	render() {
 		return (
-			<div className="table-actions">
-				{this.props.items.map((item, index) =>
+			<div className="table-actions hidden-xs">
+				{this.props.items.map(item =>
 					item.hidden ? (
 						""
 					) : (
