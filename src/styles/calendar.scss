@@ -2,7 +2,7 @@
 .calendar-component {
 	background: #fff;
 	font-size: 13px;
-	margin-top: 50px;
+	margin-top: 94px;
 
 	.appointments-toggle {
 		padding: 12px 0 0 12px;
@@ -30,6 +30,14 @@
 		background-color: #fff !important;
 		border-bottom: 1px solid #f3f3f3;
 		margin-top: -1px;
+	}
+
+	.commandBar.fixed {
+		position: fixed;
+		width: calc(100% - 66px);
+		top: 50px;
+		left: 66px;
+		z-index: 1;
 	}
 
 	.week-view {
@@ -152,7 +160,7 @@
 		border-radius: 200px;
 		color: #fff;
 		display: inline-block;
-		padding: 2px 3px;
+		line-height: 1.4em;
 		width: 20px;
 		height: 20px;
 		text-align: center;
@@ -290,5 +298,12 @@
 	}
 	.num-0 {
 		color: #607d8b !important;
+	}
+}
+
+@media (max-width: 991px) {
+	.calendar-component .commandBar.fixed {
+		left: 0 !important;
+		width: 100% !important;
 	}
 }

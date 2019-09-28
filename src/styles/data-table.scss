@@ -1,6 +1,13 @@
 @import "./global-styles/shadows.scss";
 
 .data-table {
+	.commandBar.fixed {
+		position: fixed;
+		width: calc(100% - 66px);
+		top: 50px;
+		left: 66px;
+		z-index: 1;
+	}
 	.ms-CommandBar {
 		box-sizing: content-box;
 		background-color: #fff !important;
@@ -9,6 +16,7 @@
 	}
 
 	.ms-table {
+		margin-top: 94px;
 		background: #fafafa;
 		td.clickable {
 			transition: 0.3s all;
