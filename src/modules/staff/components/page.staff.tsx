@@ -1,6 +1,7 @@
 import {
 	Col,
 	DataTableComponent,
+	LastNextAppointment,
 	PanelTabs,
 	PanelTop,
 	ProfileComponent,
@@ -9,8 +10,8 @@ import {
 	SectionComponent,
 	TableActions
 	} from "@common-components";
-import * as core from "@core";
 import { text } from "@core";
+import * as core from "@core";
 import * as modules from "@modules";
 import { AppointmentsList } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
@@ -296,42 +297,64 @@ export class StaffPage extends React.Component {
 											<Label>
 												{text("Days on duty")}
 											</Label>
-											{dateNames.days().map((day, i) => {
-												return (
-													<Checkbox
-														className="day-selector"
-														key={day}
-														disabled={!this.canEdit}
-														label={text(
-															dateNames.daysShort()[
-																i
-															]
-														)}
-														checked={
-															this.selectedMember!.onDutyDays.indexOf(
-																day
-															) > -1
-														}
-														onChange={(
-															ev,
-															checked
-														) => {
-															if (checked) {
-																this.selectedMember!.onDutyDays.push(
-																	day
-																);
-															} else {
-																this.selectedMember!.onDutyDays.splice(
+											{dateNames
+												.days()
+												.map((day, x) => {
+													const y = Number(
+														modules.setting!.getSetting(
+															"weekend_num"
+														)
+													);
+													return {
+														el: (
+															<Checkbox
+																className="day-selector"
+																key={day}
+																disabled={
+																	!this
+																		.canEdit
+																}
+																label={text(
+																	dateNames.daysShort()[
+																		x
+																	]
+																)}
+																checked={
 																	this.selectedMember!.onDutyDays.indexOf(
 																		day
-																	),
-																	1
-																);
-															}
-														}}
-													/>
-												);
-											})}
+																	) > -1
+																}
+																onChange={(
+																	ev,
+																	checked
+																) => {
+																	if (
+																		checked
+																	) {
+																		this.selectedMember!.onDutyDays.push(
+																			day
+																		);
+																	} else {
+																		this.selectedMember!.onDutyDays.splice(
+																			this.selectedMember!.onDutyDays.indexOf(
+																				day
+																			),
+																			1
+																		);
+																	}
+																}}
+															/>
+														),
+														s:
+															x > y
+																? x - y
+																: x + y + 7
+													};
+												})
+												.sort((a, b) => {
+													return a.s - b.s;
+												})
+												.map(x => x.el)}
 										</div>
 									</SectionComponent>
 
