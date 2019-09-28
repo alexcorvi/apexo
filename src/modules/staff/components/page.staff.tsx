@@ -164,99 +164,16 @@ export class StaffPage extends React.Component {
 									}
 								).date,
 								component: (
-									<div>
-										<ProfileSquaredComponent
-											text={
-												member.lastAppointment
-													? member.lastAppointment
-															.treatment
-														? member.lastAppointment
-																.treatment.type
-														: ""
-													: ""
-											}
-											subText={
-												member.lastAppointment
-													? formatDate(
-															member
-																.lastAppointment
-																.date,
-															modules.setting!.getSetting(
-																"date_format"
-															)
-													  )
-													: text(
-															"No last appointment"
-													  )
-											}
-											size={3}
-											onRenderInitials={() => (
-												<Icon iconName="Previous" />
-											)}
-											onClick={
-												member.lastAppointment
-													? () => {
-															this.selectedAppointmentId =
-																member.lastAppointment._id;
-															core.router.select({
-																sub: "details"
-															});
-													  }
-													: undefined
-											}
-											initialsColor={
-												member.lastAppointment
-													? undefined
-													: PersonaInitialsColor.transparent
-											}
-										/>
-										<br />
-										<ProfileSquaredComponent
-											text={
-												member.nextAppointment
-													? member.nextAppointment
-															.treatment
-														? member.nextAppointment
-																.treatment.type
-														: ""
-													: ""
-											}
-											subText={
-												member.nextAppointment
-													? formatDate(
-															member
-																.nextAppointment
-																.date,
-															modules.setting!.getSetting(
-																"date_format"
-															)
-													  )
-													: text(
-															"No next appointment"
-													  )
-											}
-											size={3}
-											onRenderInitials={() => (
-												<Icon iconName="Next" />
-											)}
-											onClick={
-												member.nextAppointment
-													? () => {
-															this.selectedAppointmentId =
-																member.nextAppointment._id;
-															core.router.select({
-																sub: "details"
-															});
-													  }
-													: undefined
-											}
-											initialsColor={
-												member.nextAppointment
-													? undefined
-													: PersonaInitialsColor.transparent
-											}
-										/>
-									</div>
+									<LastNextAppointment
+										lastAppointment={member.lastAppointment}
+										nextAppointment={member.nextAppointment}
+										onClick={id => {
+											this.selectedAppointmentId = id;
+											core.router.select({
+												sub: "details"
+											});
+										}}
+									></LastNextAppointment>
 								),
 								className: "hidden-xs"
 							},

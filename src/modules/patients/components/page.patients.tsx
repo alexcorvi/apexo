@@ -1,29 +1,20 @@
 import {
-	Col,
 	DataTableComponent,
+	LastNextAppointment,
 	PanelTabs,
 	PanelTop,
 	ProfileComponent,
 	ProfileSquaredComponent,
-	Row,
 	TableActions,
 	TagComponent
 	} from "@common-components";
-import { imagesTable, text } from "@core";
 import * as core from "@core";
+import { imagesTable, text } from "@core";
 import { Patient, PatientAppointmentsPanel, PatientGalleryPanel } from "@modules";
 import * as modules from "@modules";
-import { formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import {
-	Icon,
-	IconButton,
-	Panel,
-	PanelType,
-	PersonaInitialsColor,
-	Shimmer
-	} from "office-ui-fabric-react";
+import { Icon, Panel, PanelType, PersonaInitialsColor, Shimmer } from "office-ui-fabric-react";
 import { MessageBar, MessageBarType, PrimaryButton } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
@@ -316,101 +307,20 @@ export class PatientsPage extends React.Component {
 									patient.nextAppointment || { date: 0 }
 								).date,
 								component: (
-									<div>
-										<ProfileSquaredComponent
-											text={
-												patient.lastAppointment
-													? patient.lastAppointment
-															.treatment
-														? patient
-																.lastAppointment
-																.treatment.type
-														: ""
-													: ""
-											}
-											subText={
-												patient.lastAppointment
-													? formatDate(
-															patient
-																.lastAppointment
-																.date,
-															modules.setting!.getSetting(
-																"date_format"
-															)
-													  )
-													: text(
-															"No last appointment"
-													  )
-											}
-											size={3}
-											onClick={
-												patient.lastAppointment
-													? () => {
-															this.selectedAppointmentId =
-																patient.lastAppointment._id;
-															core.router.select({
-																sub: "details"
-															});
-													  }
-													: undefined
-											}
-											onRenderInitials={() => (
-												<Icon iconName="Previous" />
-											)}
-											initialsColor={
-												patient.lastAppointment
-													? undefined
-													: PersonaInitialsColor.transparent
-											}
-										/>
-										<br />
-										<ProfileSquaredComponent
-											text={
-												patient.nextAppointment
-													? patient.nextAppointment
-															.treatment
-														? patient
-																.nextAppointment
-																.treatment.type
-														: ""
-													: ""
-											}
-											subText={
-												patient.nextAppointment
-													? formatDate(
-															patient
-																.nextAppointment
-																.date,
-															modules.setting!.getSetting(
-																"date_format"
-															)
-													  )
-													: text(
-															"No next appointment"
-													  )
-											}
-											size={3}
-											onRenderInitials={() => (
-												<Icon iconName="Next" />
-											)}
-											onClick={
-												patient.nextAppointment
-													? () => {
-															this.selectedAppointmentId =
-																patient.nextAppointment._id;
-															core.router.select({
-																sub: "details"
-															});
-													  }
-													: undefined
-											}
-											initialsColor={
-												patient.nextAppointment
-													? undefined
-													: PersonaInitialsColor.transparent
-											}
-										/>
-									</div>
+									<LastNextAppointment
+										lastAppointment={
+											patient.lastAppointment
+										}
+										nextAppointment={
+											patient.nextAppointment
+										}
+										onClick={id => {
+											this.selectedAppointmentId = id;
+											core.router.select({
+												sub: "details"
+											});
+										}}
+									></LastNextAppointment>
 								),
 								className: "hidden-xs"
 							},

@@ -12,3 +12,4 @@ export * from "./table-actions";
 export * from "./panel-tabs";
 export * from "./appointments-lnd";
 export * from "./panel-top";
+export * from "./last-next-appointments";

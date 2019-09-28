@@ -1,6 +1,7 @@
 import {
 	Col,
 	DataTableComponent,
+	LastNextAppointment,
 	PanelTabs,
 	PanelTop,
 	ProfileComponent,
@@ -9,8 +10,8 @@ import {
 	TableActions,
 	TagInputComponent
 	} from "@common-components";
-import * as core from "@core";
 import { imagesTable, text } from "@core";
+import * as core from "@core";
 import { PatientAppointmentsPanel } from "@modules";
 import * as modules from "@modules";
 import { formatDate } from "@utils";
@@ -313,111 +314,20 @@ export class OrthoPage extends React.Component {
 											}
 										).date,
 										component: (
-											<div>
-												<ProfileSquaredComponent
-													text={
-														patient.lastAppointment
-															? patient
-																	.lastAppointment
-																	.treatment
-																? patient
-																		.lastAppointment
-																		.treatment
-																		.type
-																: ""
-															: ""
-													}
-													subText={
-														patient.lastAppointment
-															? formatDate(
-																	patient
-																		.lastAppointment
-																		.date,
-																	modules.setting!.getSetting(
-																		"date_format"
-																	)
-															  )
-															: text(
-																	"No last appointment"
-															  )
-													}
-													size={3}
-													onRenderInitials={() => (
-														<Icon iconName="Previous" />
-													)}
-													initialsColor={
-														patient.lastAppointment
-															? undefined
-															: PersonaInitialsColor.transparent
-													}
-													onClick={
-														patient.lastAppointment
-															? () => {
-																	this.selectedAppointmentId =
-																		patient.lastAppointment._id;
-																	core.router.select(
-																		{
-																			sub:
-																				"details"
-																		}
-																	);
-															  }
-															: undefined
-													}
-												/>
-												<br />
-												<ProfileSquaredComponent
-													text={
-														patient.nextAppointment
-															? patient
-																	.nextAppointment
-																	.treatment
-																? patient
-																		.nextAppointment
-																		.treatment
-																		.type
-																: ""
-															: ""
-													}
-													subText={
-														patient.nextAppointment
-															? formatDate(
-																	patient
-																		.nextAppointment
-																		.date,
-																	modules.setting!.getSetting(
-																		"date_format"
-																	)
-															  )
-															: text(
-																	"No next appointment"
-															  )
-													}
-													onClick={
-														patient.nextAppointment
-															? () => {
-																	this.selectedAppointmentId =
-																		patient.nextAppointment._id;
-																	core.router.select(
-																		{
-																			sub:
-																				"details"
-																		}
-																	);
-															  }
-															: undefined
-													}
-													size={3}
-													onRenderInitials={() => (
-														<Icon iconName="Next" />
-													)}
-													initialsColor={
-														patient.nextAppointment
-															? undefined
-															: PersonaInitialsColor.transparent
-													}
-												/>
-											</div>
+											<LastNextAppointment
+												lastAppointment={
+													patient.lastAppointment
+												}
+												nextAppointment={
+													patient.nextAppointment
+												}
+												onClick={id => {
+													this.selectedAppointmentId = id;
+													core.router.select({
+														sub: "details"
+													});
+												}}
+											></LastNextAppointment>
 										),
 										className: "hidden-xs"
 									},
@@ -526,6 +436,7 @@ export class OrthoPage extends React.Component {
 							text: patient.name,
 							key: patient._id
 						}))}
+						className="choose-patient"
 						suggestionsHeaderText={text("Select patient")}
 						noResultsFoundText={text("No patients found")}
 						maxItems={1}
