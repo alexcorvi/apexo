@@ -14,20 +14,10 @@ import {
 import { text } from "@core";
 import * as core from "@core";
 import * as modules from "@modules";
-import { formatDate, num } from "@utils";
-import { computed, observable } from "mobx";
+import { firstDayOfTheWeekDayPicker, formatDate, num } from "@utils";
+import { computed } from "mobx";
 import { observer } from "mobx-react";
-import {
-	Dropdown,
-	IconButton,
-	Label,
-	MessageBarType,
-	Panel,
-	PanelType,
-	TagPicker,
-	TextField,
-	Toggle
-	} from "office-ui-fabric-react";
+import { MessageBarType, Panel, PanelType, TextField, Toggle } from "office-ui-fabric-react";
 import { DatePicker, MessageBar, PrimaryButton } from "office-ui-fabric-react";
 import * as React from "react";
 
@@ -316,7 +306,7 @@ export class LabworkPage extends React.Component {
 										<Col sm={12}>
 											<TagInputComponent
 												label={text("Patient")}
-												data-testid="lw-patient"
+												className="lw-patient"
 												options={modules.patients!.docs.map(
 													patient => ({
 														text: patient.name,
@@ -356,7 +346,7 @@ export class LabworkPage extends React.Component {
 									</Row>
 									<TagInputComponent
 										label={text("Involved teeth")}
-										data-testid="lw-teeth"
+										className="lw-teeth"
 										options={modules.ISOTeethArr.map(x => {
 											return {
 												key: x.toString(),
@@ -395,7 +385,7 @@ export class LabworkPage extends React.Component {
 									/>
 									<TagInputComponent
 										label={text("Operating staff")}
-										data-testid="lw-staff"
+										className="lw-staff"
 										options={modules
 											.staff!.operatingStaff.sort(
 												(a, b) =>
@@ -430,6 +420,7 @@ export class LabworkPage extends React.Component {
 									<Row gutter={8}>
 										<Col sm={12}>
 											<TagInputComponent
+												className="lab-name"
 												label={text("Laboratory")}
 												loose
 												options={modules
@@ -510,6 +501,7 @@ export class LabworkPage extends React.Component {
 										</Col>
 										<Col sm={12}>
 											<TextField
+												data-testid="lab-contact"
 												disabled={!this.canEdit}
 												label={text("Lab contact")}
 												value={
