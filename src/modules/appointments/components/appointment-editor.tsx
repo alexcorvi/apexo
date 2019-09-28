@@ -510,12 +510,12 @@ export class AppointmentEditorPanel extends React.Component<
 												"No teeth found"
 											)}
 											disabled={!this.canEdit}
-											value={this.props.appointment!.involvedTeeth.map(
-												x => ({
+											value={this.props
+												.appointment!.involvedTeeth.sort()
+												.map(x => ({
 													key: x.toString(),
 													text: x.toString()
-												})
-											)}
+												}))}
 											onChange={selectedKeys => {
 												this.props.appointment!.involvedTeeth = selectedKeys.map(
 													x => num(x)
