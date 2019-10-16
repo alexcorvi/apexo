@@ -13,11 +13,10 @@
 	}
 
 	.ms-CommandBar-primaryCommand {
-		& > div {
+		& > div:not(:first-of-type) {
 			padding-top: 6px;
 			.ms-TextField-fieldGroup {
 				border: 1px solid #f3f3f3;
-				width: 210px;
 				&:hover {
 					background: #f3f3f3;
 				}
@@ -306,34 +305,8 @@
 			}
 		}
 	}
-	.ms-DatePicker-monthComponents {
-		align-self: unset;
-	}
-	.ms-DatePicker-table {
-		width: initial;
-		margin: 0 auto;
-		td {
-			width: 40px;
-			font-size: 14px;
-		}
-	}
-	.ms-DatePicker-header {
-		padding-bottom: 40px;
-		width: 100vw;
-		.ms-DatePicker-prevMonth,
-		.ms-DatePicker-nextMonth {
-			margin-right: 5px;
-			border: 1px solid #9e9e9e;
-		}
-	}
-	.ms-DatePicker-wrap {
-		padding: 0;
-	}
-	.ms-DatePicker-weekday {
-		font-weight: 600;
-	}
+
 	.week-view {
-		margin-top: 320px;
 		transition: 0.3s all;
 		&.full-height {
 			margin-top: 90px;

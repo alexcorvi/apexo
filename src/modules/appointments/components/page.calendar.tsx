@@ -1,6 +1,6 @@
-import { Col, ProfileSquaredComponent, Row } from "@common-components";
-import * as core from "@core";
+import { Col, ProfileSquaredComponent, Row, TagInputComponent } from "@common-components";
 import { text } from "@core";
+import * as core from "@core";
 import { Calendar, calendar } from "@modules";
 import { PatientLinkComponent } from "@modules";
 import * as modules from "@modules";
@@ -8,13 +8,14 @@ import { dateNames, firstDayOfTheWeekDayPicker, formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
-	Calendar as MSCal,
 	CommandBar,
 	DatePicker,
 	DateRangeType,
-	DefaultButton,
+	Dropdown,
 	Icon,
 	IconButton,
+	Panel,
+	PanelType,
 	Shimmer,
 	Toggle
 	} from "office-ui-fabric-react";
@@ -32,6 +33,16 @@ const AppointmentEditorPanel = loadable({
 export class CalendarPage extends React.Component {
 	readonly criticalWidth = 500;
 	@observable filter: string = "";
+	@observable showAdditionPanel: boolean = false;
+	@observable newAppointmentForPatientID: string = "";
+	@computed get newAppointmentForPatient() {
+		return modules.patients!.docs.find(
+			x => x._id === this.newAppointmentForPatientID
+		);
+	}
+	@computed get canEdit() {
+		return core.user.currentUser!.canEditAppointments;
+	}
 
 	@computed get appointment() {
 		return modules.appointments!.docs.find(
@@ -147,236 +158,178 @@ export class CalendarPage extends React.Component {
 	render() {
 		return (
 			<div className="calendar-component">
-				{core.router.innerWidth > this.criticalWidth ? (
-					<CommandBar
-						{...{
-							className: "commandBar fixed",
-							isSearchBoxVisible: true,
-							elipisisAriaLabel: core.text("More options"),
-							farItems: [
-								{
-									key: "my-appointments-only",
-									onRender: () => (
-										<Toggle
-											checked={this.showAll}
-											onText={text("All appointments")}
-											offText={text(
-												"My appointments only"
-											)}
-											onChange={(ev, newValue) => {
-												this.showAll = newValue!;
-											}}
-											className="appointments-toggle"
-										/>
-									)
+				<CommandBar
+					{...{
+						className: "commandBar fixed",
+						isSearchBoxVisible: true,
+						elipisisAriaLabel: core.text("More options"),
+						farItems:
+							core.router.innerWidth > 550
+								? [
+										{
+											key: "my-appointments-only",
+											onRender: () => (
+												<Toggle
+													checked={this.showAll}
+													onText={text(
+														"All appointments"
+													)}
+													offText={text(
+														"My appointments only"
+													)}
+													onChange={(
+														ev,
+														newValue
+													) => {
+														this.showAll = newValue!;
+													}}
+													className="appointments-toggle"
+												/>
+											)
+										}
+								  ]
+								: undefined,
+						items: [
+							{
+								key: this.canEdit ? "addNew" : "",
+								title: "Add new",
+								name: text("Add new"),
+								onClick: () => {
+									this.showAdditionPanel = true;
+									this.newAppointmentForPatientID = "";
+								},
+								iconProps: {
+									iconName: "Add"
 								}
-							],
-							items: [
-								{
-									key: "pw",
-									onRender: () => (
-										<this.prevWeekBTN></this.prevWeekBTN>
-									)
-								},
-
-								{
-									key: "ds",
-									onRender: () => (
-										<DatePicker
-											onSelectDate={date => {
-												if (date) {
-													this.c.selected.year = date.getFullYear();
-													this.c.selected.month = date.getMonth();
-													this.c.selected.day = date.getDate();
-												}
-											}}
-											formatDate={() => {
-												return `${formatDate(
-													new Date(
-														this.c.selectedWeek[0].yearNum,
-														this.c.selectedWeek[0].monthNum,
-														this.c.selectedWeek[0].dateNum
-													),
-													modules.setting!.getSetting(
-														"date_format"
-													)
-												)} — ${formatDate(
-													new Date(
-														this.c.selectedWeek[
-															this.c.selectedWeek
-																.length - 1
-														].yearNum,
-														this.c.selectedWeek[
-															this.c.selectedWeek
-																.length - 1
-														].monthNum,
-														this.c.selectedWeek[
-															this.c.selectedWeek
-																.length - 1
-														].dateNum
-													),
-													modules.setting!.getSetting(
-														"date_format"
-													)
-												)}`;
-											}}
-											value={
-												new Date(
-													this.c.selected.year,
-													this.c.selected.month,
-													this.c.selected.day
-												)
-											}
-											firstDayOfWeek={firstDayOfTheWeekDayPicker(
-												modules.setting!.getSetting(
-													"weekend_num"
-												)
-											)}
-											calendarProps={{
-												dateRangeType:
-													DateRangeType.Week,
-												strings: {
-													months: dateNames.months(),
-													shortMonths: dateNames.monthsShort(),
-													days: [
-														"Sunday",
-														"Monday",
-														"Tuesday",
-														"Wednesday",
-														"Thursday",
-														"Friday",
-														"Saturday"
-													],
-													shortDays: [
-														"Su",
-														"Mo",
-														"Tu",
-														"We",
-														"Th",
-														"Fr",
-														"Sa"
-													],
-													goToToday: "Go to today"
-												},
-												autoNavigateOnSelection: true
-											}}
-											isMonthPickerVisible={true}
-											showGoToToday={true}
-										/>
-									)
-								},
-								{
-									key: "nw",
-									onRender: () => (
-										<this.nextWeekBTN></this.nextWeekBTN>
-									)
-								},
-								{
-									key: "tw",
-									onRender: () => (
-										<IconButton
-											disabled={
-												!!this.c.selectedWeek.find(
-													x =>
-														x.dateNum ===
-															this.c.currentDay &&
-														x.monthNum ===
-															this.c
-																.currentMonth &&
-														x.yearNum ===
-															this.c.currentYear
-												)
-											}
-											iconProps={{
-												iconName: "GotoToday"
-											}}
-											onClick={() => {
-												this.c.selected.day = this.c.currentDay;
-												this.c.selected.month = this.c.currentMonth;
-												this.c.selected.year = this.c.currentYear;
-											}}
-										/>
-									)
-								}
-							]
-						}}
-					/>
-				) : (
-					<div
-						className={`mobile-calendar${
-							this.collapsedMobileCalendar ? " collapsed" : ""
-						}`}
-					>
-						<MSCal
-							onSelectDate={date => {
-								this.c.selected.year = date.getFullYear();
-								this.c.selected.month = date.getMonth();
-								this.c.selected.day = date.getDate();
-							}}
-							value={
-								new Date(
-									this.c.selected.year,
-									this.c.selected.month,
-									this.c.selected.day
-								)
-							}
-							strings={{
-								months: dateNames.months(),
-								shortMonths: dateNames.monthsShort(),
-								days: [
-									"Sunday",
-									"Monday",
-									"Tuesday",
-									"Wednesday",
-									"Thursday",
-									"Friday",
-									"Saturday"
-								],
-								shortDays: [
-									"Su",
-									"Mo",
-									"Tu",
-									"We",
-									"Th",
-									"Fr",
-									"Sa"
-								],
-								goToToday: "Go to today"
-							}}
-							firstDayOfWeek={firstDayOfTheWeekDayPicker(
-								modules.setting!.getSetting("weekend_num")
-							)}
-							dateRangeType={DateRangeType.WorkWeek}
-							isMonthPickerVisible={false}
-							showGoToToday={false}
-							autoNavigateOnSelection
-						/>
-						<div className="collapse">
-							<Row gutter={0}>
-								<Col span={4}>
+							},
+							{
+								key: core.router.innerWidth > 600 ? "pw" : "",
+								onRender: () => (
 									<this.prevWeekBTN></this.prevWeekBTN>
-								</Col>
-								<Col span={16}>
+								)
+							},
+
+							{
+								key: "ds",
+								onRender: () => (
+									<DatePicker
+										onSelectDate={date => {
+											if (date) {
+												this.c.selected.year = date.getFullYear();
+												this.c.selected.month = date.getMonth();
+												this.c.selected.day = date.getDate();
+											}
+										}}
+										formatDate={() => {
+											return `${formatDate(
+												new Date(
+													this.c.selectedWeek[0].yearNum,
+													this.c.selectedWeek[0].monthNum,
+													this.c.selectedWeek[0].dateNum
+												),
+												modules.setting!.getSetting(
+													"date_format"
+												)
+											)} — ${formatDate(
+												new Date(
+													this.c.selectedWeek[
+														this.c.selectedWeek
+															.length - 1
+													].yearNum,
+													this.c.selectedWeek[
+														this.c.selectedWeek
+															.length - 1
+													].monthNum,
+													this.c.selectedWeek[
+														this.c.selectedWeek
+															.length - 1
+													].dateNum
+												),
+												modules.setting!.getSetting(
+													"date_format"
+												)
+											)}`;
+										}}
+										value={
+											new Date(
+												this.c.selected.year,
+												this.c.selected.month,
+												this.c.selected.day
+											)
+										}
+										firstDayOfWeek={firstDayOfTheWeekDayPicker(
+											modules.setting!.getSetting(
+												"weekend_num"
+											)
+										)}
+										calendarProps={{
+											dateRangeType: DateRangeType.Week,
+											strings: {
+												months: dateNames.months(),
+												shortMonths: dateNames.monthsShort(),
+												days: [
+													"Sunday",
+													"Monday",
+													"Tuesday",
+													"Wednesday",
+													"Thursday",
+													"Friday",
+													"Saturday"
+												],
+												shortDays: [
+													"Su",
+													"Mo",
+													"Tu",
+													"We",
+													"Th",
+													"Fr",
+													"Sa"
+												],
+												goToToday: "Go to today"
+											},
+											autoNavigateOnSelection: true
+										}}
+										isMonthPickerVisible={true}
+										showGoToToday={true}
+									/>
+								)
+							},
+							{
+								key: core.router.innerWidth > 600 ? "nw" : "",
+								onRender: () => (
+									<this.nextWeekBTN></this.nextWeekBTN>
+								)
+							},
+							{
+								key: core.router.innerWidth > 550 ? "tw" : "",
+								onRender: () => (
 									<IconButton
-										onClick={() =>
-											(this.collapsedMobileCalendar = !this
-												.collapsedMobileCalendar)
+										disabled={
+											!!this.c.selectedWeek.find(
+												x =>
+													x.dateNum ===
+														this.c.currentDay &&
+													x.monthNum ===
+														this.c.currentMonth &&
+													x.yearNum ===
+														this.c.currentYear
+											)
 										}
 										iconProps={{
-											iconName: this
-												.collapsedMobileCalendar
-												? "chevronDown"
-												: "ChevronUp"
+											iconName: "GotoToday"
 										}}
-									></IconButton>
-								</Col>
-								<Col span={4}>
-									<this.nextWeekBTN></this.nextWeekBTN>
-								</Col>
-							</Row>
-						</div>
-					</div>
-				)}
+										onClick={() => {
+											this.c.selected.day = this.c.currentDay;
+											this.c.selected.month = this.c.currentMonth;
+											this.c.selected.year = this.c.currentYear;
+										}}
+										text="Today"
+									/>
+								)
+							}
+						].filter(x => x.key)
+					}}
+				/>
 
 				{core.router.innerWidth > this.criticalWidth ? (
 					<div className="appointments-overview">
@@ -696,6 +649,95 @@ export class CalendarPage extends React.Component {
 						})}
 					</div>
 				</div>
+
+				{this.showAdditionPanel ? (
+					<Panel
+						isOpen={this.showAdditionPanel}
+						type={PanelType.smallFixedFar}
+						closeButtonAriaLabel="Close"
+						isLightDismiss={true}
+						onDismiss={() => {
+							this.showAdditionPanel = false;
+						}}
+					>
+						<br />
+						<TagInputComponent
+							label={text("Choose patient")}
+							options={modules.patients!.docs.map(patient => ({
+								text: patient.name,
+								key: patient._id
+							}))}
+							className="choose-patient"
+							suggestionsHeaderText={text("Select patient")}
+							noResultsFoundText={text("No patients found")}
+							maxItems={1}
+							disabled={!this.canEdit}
+							value={
+								this.newAppointmentForPatient
+									? [
+											{
+												key: this
+													.newAppointmentForPatientID,
+												text: this
+													.newAppointmentForPatient
+													.name
+											}
+									  ]
+									: []
+							}
+							onChange={selectedKeys => {
+								this.newAppointmentForPatientID =
+									selectedKeys[0] || "";
+							}}
+						/>
+						{this.newAppointmentForPatient ? (
+							<Dropdown
+								className="new-appointment"
+								onChange={(ev, option) => {
+									const newApt = modules.appointments!.new();
+									newApt.patientID = this.newAppointmentForPatientID;
+									newApt.date = new Date(
+										this.c.selected.year,
+										this.c.selected.month,
+										this.c.selected.day
+									).getTime();
+									newApt.treatmentID = option!.key.toString();
+									modules.appointments!.add(newApt);
+									this.showAdditionPanel = false;
+									this.newAppointmentForPatientID = "";
+									core.router.select({
+										id: newApt._id,
+										sub: "details"
+									});
+								}}
+								onRenderItem={(item, render) => {
+									return item!.key === "ph" ? (
+										<span />
+									) : (
+										render!(item)
+									);
+								}}
+								options={modules
+									.treatments!.docs.map(treatment => ({
+										text: treatment.type,
+										key: treatment._id
+									}))
+									.concat([
+										{
+											key: "ph",
+											text:
+												"＋ " + text("Select treatment")
+										}
+									])}
+								selectedKey="ph"
+							/>
+						) : (
+							""
+						)}
+					</Panel>
+				) : (
+					""
+				)}
 
 				{this.appointment && core.router.selectedSub ? (
 					<AppointmentEditorPanel

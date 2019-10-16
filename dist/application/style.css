@@ -5729,12 +5729,11 @@ hr {
     .calendar-component .appointments-toggle .ms-Toggle-stateText {
       font-size: 12px;
       line-height: 14px; }
-  .calendar-component .ms-CommandBar-primaryCommand > div {
+  .calendar-component .ms-CommandBar-primaryCommand > div:not(:first-of-type) {
     padding-top: 6px; }
-    .calendar-component .ms-CommandBar-primaryCommand > div .ms-TextField-fieldGroup {
-      border: 1px solid #f3f3f3;
-      width: 210px; }
-      .calendar-component .ms-CommandBar-primaryCommand > div .ms-TextField-fieldGroup:hover {
+    .calendar-component .ms-CommandBar-primaryCommand > div:not(:first-of-type) .ms-TextField-fieldGroup {
+      border: 1px solid #f3f3f3; }
+      .calendar-component .ms-CommandBar-primaryCommand > div:not(:first-of-type) .ms-TextField-fieldGroup:hover {
         background: #f3f3f3; }
   .calendar-component .ms-CommandBar {
     box-sizing: content-box;
@@ -5945,27 +5944,7 @@ hr {
         background: #eceff1;
         color: #000;
         padding: 5px; }
-  .ms-DatePicker-monthComponents {
-    align-self: unset; }
-  .ms-DatePicker-table {
-    width: initial;
-    margin: 0 auto; }
-    .ms-DatePicker-table td {
-      width: 40px;
-      font-size: 14px; }
-  .ms-DatePicker-header {
-    padding-bottom: 40px;
-    width: 100vw; }
-    .ms-DatePicker-header .ms-DatePicker-prevMonth,
-    .ms-DatePicker-header .ms-DatePicker-nextMonth {
-      margin-right: 5px;
-      border: 1px solid #9e9e9e; }
-  .ms-DatePicker-wrap {
-    padding: 0; }
-  .ms-DatePicker-weekday {
-    font-weight: 600; }
   .week-view {
-    margin-top: 320px;
     transition: 0.3s all; }
     .week-view.full-height {
       margin-top: 90px; }
