@@ -36,6 +36,7 @@ export class Router {
 	@observable currentLocation = "";
 
 	@observable innerWidth = 0;
+	@observable scrollPosition = 0;
 
 	@observable directory: Route[] = [];
 
@@ -210,7 +211,16 @@ export class Router {
 		};
 
 		this.innerWidth = innerWidth;
+		this.scrollPosition = document.getElementsByTagName(
+			"html"
+		)[0].scrollTop;
+
 		addEventListener("resize", () => (this.innerWidth = innerWidth));
+		addEventListener("scroll", () => {
+			this.scrollPosition = document.getElementsByTagName(
+				"html"
+			)[0].scrollTop;
+		});
 	}
 }
 

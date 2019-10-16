@@ -93,6 +93,7 @@
 				border-top: 1px solid #f5f5f5;
 				color: #607d8b;
 				border-color: #607d8b;
+				transition: 0.3s all;
 				&.done,
 				&.missed {
 					color: #fff;
@@ -112,11 +113,16 @@
 				cursor: pointer;
 				transition: 0.4s all;
 				&:hover {
-					color: #0d47a1;
+					text-decoration: underline;
 				}
 			}
 			&:hover {
-				border-bottom-color: #262626;
+				.time {
+					background: #eeeeee;
+					color: #9e9e9e;
+					opacity: 1;
+					border-top-color: transparent;
+				}
 			}
 		}
 	}

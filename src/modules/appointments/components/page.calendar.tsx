@@ -1,6 +1,6 @@
 import { Col, ProfileSquaredComponent, Row } from "@common-components";
-import { text } from "@core";
 import * as core from "@core";
+import { text } from "@core";
 import { Calendar, calendar } from "@modules";
 import { PatientLinkComponent } from "@modules";
 import * as modules from "@modules";
@@ -12,6 +12,7 @@ import {
 	CommandBar,
 	DatePicker,
 	DateRangeType,
+	DefaultButton,
 	Icon,
 	IconButton,
 	Shimmer,
@@ -172,14 +173,14 @@ export class CalendarPage extends React.Component {
 							],
 							items: [
 								{
-									key: "prev-week",
+									key: "pw",
 									onRender: () => (
 										<this.prevWeekBTN></this.prevWeekBTN>
 									)
 								},
 
 								{
-									key: "date-selector",
+									key: "ds",
 									onRender: () => (
 										<DatePicker
 											onSelectDate={date => {
@@ -265,9 +266,36 @@ export class CalendarPage extends React.Component {
 									)
 								},
 								{
-									key: "next-week",
+									key: "nw",
 									onRender: () => (
 										<this.nextWeekBTN></this.nextWeekBTN>
+									)
+								},
+								{
+									key: "tw",
+									onRender: () => (
+										<IconButton
+											disabled={
+												!!this.c.selectedWeek.find(
+													x =>
+														x.dateNum ===
+															this.c.currentDay &&
+														x.monthNum ===
+															this.c
+																.currentMonth &&
+														x.yearNum ===
+															this.c.currentYear
+												)
+											}
+											iconProps={{
+												iconName: "GotoToday"
+											}}
+											onClick={() => {
+												this.c.selected.day = this.c.currentDay;
+												this.c.selected.month = this.c.currentMonth;
+												this.c.selected.year = this.c.currentYear;
+											}}
+										/>
 									)
 								}
 							]
@@ -366,6 +394,7 @@ export class CalendarPage extends React.Component {
 										.map(day => {
 											return (
 												<th
+													key={`${day.yearNum}-${day.monthNum}-${day.dateNum}`}
 													onClick={() => {
 														this.c.selected.year =
 															day.yearNum;
@@ -415,6 +444,7 @@ export class CalendarPage extends React.Component {
 										.map(day => {
 											return (
 												<td
+													key={`${day.yearNum}-${day.monthNum}-${day.dateNum}`}
 													onClick={() => {
 														this.c.selected.year =
 															day.yearNum;
@@ -469,6 +499,7 @@ export class CalendarPage extends React.Component {
 											).length;
 											return (
 												<td
+													key={`${day.yearNum}-${day.monthNum}-${day.dateNum}`}
 													onClick={() => {
 														this.c.selected.year =
 															day.yearNum;
@@ -524,7 +555,7 @@ export class CalendarPage extends React.Component {
 						{this.c.selectedWeek.map((day, index) => {
 							return (
 								<div
-									key={day.dateNum}
+									key={`${day.yearNum}-${day.monthNum}-${day.dateNum}`}
 									id={"day" + "_" + day.dateNum}
 									className={
 										"full-day-col" +
