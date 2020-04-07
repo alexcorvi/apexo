@@ -35,17 +35,19 @@ h5 {
 		font-size: 14px;
 	}
 	th {
-		font-weight: 300;
+		font-weight: 400;
 		font-size: 13px;
 		padding: 12px 15px;
 		padding-bottom: 13px;
-		background: #fafafa;
+		background: #f8f9fb;
 		.sort-indicators .positive,
 		.sort-indicators .negative {
 			display: none;
 		}
 		&.current {
-			background: #eee;
+			border-bottom: 2px solid #0078d4;
+			color: #0078d4;
+			background: #f8f9fb;
 			.sort-indicators {
 				float: right;
 			}
@@ -64,8 +66,7 @@ h5 {
 	.table-head-sort {
 		cursor: pointer;
 		&:hover {
-			background: #f5f5f5;
-			color: #212121;
+			border-bottom: 2px solid #0078d4;
 		}
 	}
 }
@@ -98,7 +99,6 @@ h5 {
 				margin: 0 auto;
 				margin-top: 15px;
 				td {
-					display: block;
 					text-align: right;
 					font-size: 14px;
 				}

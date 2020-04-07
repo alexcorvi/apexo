@@ -1,6 +1,39 @@
 @import "./global-styles/shadows.scss";
 
 .settings-component {
+	.lock-icon {
+		display: inline-block;
+		font-size: 30px;
+		padding: 0 10px 0 0;
+		vertical-align: top;
+		margin-top: 25px;
+		margin-right: 10px;
+		color: #e3f3ff66;
+		border-right: 1px solid;
+	}
+	.lock-header {
+		display: inline-block;
+	}
+	.lock-msg {
+		max-width: 600px;
+		width: 90%;
+		padding: 5px 25px 25px;
+		margin: 0 auto;
+		margin-top: 15px;
+		border-radius: 3px;
+		background: #0078d4;
+		color: #fff;
+		border: 1px solid #0078d4;
+		box-shadow: 0 0 8px 0px #0078d49c;
+		hr {
+			border: none;
+			border-bottom: 1px solid #ffffff21;
+			margin-bottom: 30px;
+			margin-top: 20px;
+			margin-left: -25px;
+			margin-right: -25px;
+		}
+	}
 	.math-question {
 		.ms-TextField {
 			display: inline-block;

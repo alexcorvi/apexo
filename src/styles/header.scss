@@ -8,7 +8,7 @@
 	width: 100%;
 	top: 0;
 	background: #fff;
-	border-bottom: 1px solid #f3f3f3;
+	border-bottom: 1px solid #e8effd;
 	z-index: 2;
 	section {
 		float: left;
@@ -60,5 +60,14 @@
 		i {
 			color: #ff5722;
 		}
+	}
+	.menu-button button {
+		width: 66px;
+		margin-left: -20px;
+		height: 50px;
+		margin-top: -10px;
+		border-radius: 0;
+		background: #f8f9fb;
+		border-right: 1px solid #e8effd;
 	}
 }

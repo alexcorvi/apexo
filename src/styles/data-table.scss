@@ -1,6 +1,22 @@
 @import "./global-styles/shadows.scss";
 
 .data-table {
+	.row-actions {
+		padding-right: 0;
+		text-align: center;
+		width: 50px;
+		padding-left: 0;
+		background: #f8f9fb;
+		border-right: 1px solid #e8effd;
+		cursor: pointer;
+		display: table-cell !important;
+		&:hover {
+			background: #eceff4;
+		}
+	}
+	.dt-msg-bar {
+		background: #f8f9fb;
+	}
 	.commandBar.fixed {
 		position: fixed;
 		width: calc(100% - 66px);
@@ -11,18 +27,19 @@
 	.ms-CommandBar {
 		box-sizing: content-box;
 		background-color: #fff !important;
-		border-bottom: 1px solid #f3f3f3;
-		margin-top: -1px;
+		border-bottom: 1px solid #e9f0fd;
+		margin-top: -2px;
+		padding-bottom: 1px;
 	}
 
 	.ms-table {
 		margin-top: 94px;
 		background: #fafafa;
 		td.clickable {
-			transition: 0.3s all;
 			cursor: pointer;
 			&:hover {
-				background: #f5f5f5;
+				background: #f8f9fb;
+				border-bottom: 2px solid #e9f0fd;
 			}
 		}
 		td.no-label {
@@ -31,15 +48,16 @@
 	}
 
 	tr {
-		border-bottom: 1px solid #f3f3f3;
+		border-bottom: 2px solid #f8f9fb;
 	}
 
 	.ms-SearchBox {
 		border: none;
-		margin-top: 4px;
+		margin-top: 6px;
 	}
 	.ms-CommandBar-secondaryCommand {
-		border-left: 1px solid #f3f3f3;
+		border-left: 1px solid #ebf2fd;
+		padding-left: 1px;
 	}
 	.ms-CommandBarItem-link {
 		background: #fff !important;

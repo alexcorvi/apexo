@@ -21,6 +21,8 @@ export class Calendar {
 	currentMonth: number = new Date().getMonth();
 	currentDay: number = new Date().getDate();
 
+	@observable highlightedIndex: 0 | 1 | 2 = 1;
+
 	@observable selected: { year: number; month: number; day: number } = {
 		year: this.currentYear,
 		month: this.currentMonth,
@@ -134,11 +136,9 @@ export class Calendar {
 
 	@computed get overview() {
 		return [
-			this.weeksCalendar[this.selectedWeekIndex - 2],
 			this.weeksCalendar[this.selectedWeekIndex - 1],
 			this.weeksCalendar[this.selectedWeekIndex],
-			this.weeksCalendar[this.selectedWeekIndex + 1],
-			this.weeksCalendar[this.selectedWeekIndex + 2]
+			this.weeksCalendar[this.selectedWeekIndex + 1]
 		].filter(x => x);
 	}
 
