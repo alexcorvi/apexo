@@ -25,6 +25,25 @@ import * as React from "react";
 export class LabworkPage extends React.Component {
 	dt: null | DataTableComponent = null;
 
+	tabs = [
+		{
+			key: "details",
+			icon: "Contact",
+			title: "Case Details"
+		},
+		{
+			key: "lab",
+			icon: "TestBeaker",
+			title: "Lab Details"
+		},
+		{
+			key: "delete",
+			icon: "trash",
+			title: "Delete",
+			hidden: !this.canEdit
+		}
+	];
+
 	@computed
 	get canEdit() {
 		return core.user.currentUser!.canEditLabwork;
@@ -81,6 +100,25 @@ export class LabworkPage extends React.Component {
 						return {
 							id: labwork._id,
 							searchableString: labwork.searchableString,
+							actions: this.tabs
+								.filter(x => !x.hidden)
+								.map(x => ({
+									key: x.key,
+									title: x.title,
+									icon: x.icon,
+									onClick: () => {
+										if (x.key === "delete") {
+											modules.labworks!.deleteModal(
+												labwork._id
+											);
+										} else {
+											core.router.select({
+												id: labwork._id,
+												tab: x.key
+											});
+										}
+									}
+								})),
 							cells: [
 								{
 									dataValue: labwork.caseTitle,
@@ -264,23 +302,7 @@ export class LabworkPage extends React.Component {
 									onSelect={key =>
 										core.router.select({ tab: key })
 									}
-									items={[
-										{
-											key: "details",
-											icon: "Contact",
-											title: "Case Details"
-										},
-										{
-											key: "lab",
-											icon: "TestBeaker",
-											title: "Lab Details"
-										},
-										{
-											key: "delete",
-											icon: "trash",
-											title: "Delete"
-										}
-									]}
+									items={this.tabs}
 								/>
 							</div>
 						)}

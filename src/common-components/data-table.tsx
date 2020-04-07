@@ -4,6 +4,7 @@ import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
 	CommandBar,
+	ContextualMenu,
 	DefaultButton,
 	ICommandBarItemProps,
 	Icon,
@@ -27,6 +28,12 @@ interface Row {
 	cells: Cell[];
 	searchableString: string;
 	className?: string;
+	actions?: {
+		key: string;
+		title: string;
+		icon: string;
+		onClick: () => void;
+	}[];
 }
 
 interface Props {
@@ -51,6 +58,7 @@ export class DataTableComponent extends React.Component<Props, {}> {
 				: Number(row.cells[this.currentColIndex].dataValue);
 		});
 	}
+	@observable ctxMenusOpen: string = "";
 	@observable currentColIndex: number = 0;
 	@observable sortDirection: number = 1;
 	@observable filterString: string = "";
@@ -154,6 +162,7 @@ export class DataTableComponent extends React.Component<Props, {}> {
 											? " negative"
 											: "")
 									}
+									colSpan={index === 0 ? 2 : 1}
 									key={index}
 									onClick={() => {
 										if (this.currentColIndex === index) {
@@ -192,6 +201,49 @@ export class DataTableComponent extends React.Component<Props, {}> {
 										row.className ? row.className : ""
 									}`}
 								>
+									{row.actions ? (
+										<td
+											className="row-actions"
+											id={`cm-${row.id}`}
+											onClick={() =>
+												(this.ctxMenusOpen = row.id)
+											}
+										>
+											<Icon iconName="More"></Icon>
+											{this.ctxMenusOpen === row.id ? (
+												<ContextualMenu
+													items={
+														row.actions
+															? row.actions.map(
+																	action => ({
+																		key:
+																			action.key,
+																		text:
+																			action.title,
+																		title:
+																			action.title,
+																		iconProps: {
+																			iconName:
+																				action.icon
+																		},
+																		onClick:
+																			action.onClick
+																	})
+															  )
+															: []
+													}
+													target={`#cm-${row.id} i`}
+													onDismiss={() => {
+														this.ctxMenusOpen = "";
+													}}
+												></ContextualMenu>
+											) : (
+												""
+											)}
+										</td>
+									) : (
+										[]
+									)}
 									{row.cells.map((cell, index2) => {
 										return (
 											<td
@@ -209,6 +261,11 @@ export class DataTableComponent extends React.Component<Props, {}> {
 													""
 												}
 												onClick={cell.onClick}
+												onAuxClick={e => {
+													this.ctxMenusOpen = row.id;
+													e.stopPropagation();
+													return e.preventDefault();
+												}}
 											>
 												{typeof cell.component ===
 												"string"
@@ -217,25 +274,6 @@ export class DataTableComponent extends React.Component<Props, {}> {
 											</td>
 										);
 									})}
-									<td className="delete-td">
-										{this.props.onDelete ? (
-											<div>
-												<IconButton
-													className="delete-button"
-													iconProps={{
-														iconName: "delete"
-													}}
-													onClick={() => {
-														this.props.onDelete!(
-															row.id
-														);
-													}}
-												/>
-											</div>
-										) : (
-											""
-										)}
-									</td>
 								</tr>
 							);
 						})}

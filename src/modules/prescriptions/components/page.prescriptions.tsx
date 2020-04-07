@@ -27,6 +27,19 @@ import * as React from "react";
 
 @observer
 export class PrescriptionsPage extends React.Component {
+	tabs = [
+		{
+			key: "details",
+			icon: "pill",
+			title: "Prescription Details"
+		},
+		{
+			key: "delete",
+			icon: "trash",
+			title: "Delete",
+			hidden: !this.canEdit
+		}
+	];
 	@computed get selectedPrescription() {
 		return modules.prescriptions!.docs.find(
 			p => p._id === core.router.selectedID
@@ -83,6 +96,25 @@ export class PrescriptionsPage extends React.Component {
 						return {
 							id: prescription._id,
 							searchableString: prescription.searchableString,
+							actions: this.tabs
+								.filter(x => !x.hidden)
+								.map(x => ({
+									key: x.key,
+									title: x.title,
+									icon: x.icon,
+									onClick: () => {
+										if (x.key === "delete") {
+											modules.prescriptions!.deleteModal(
+												prescription._id
+											);
+										} else {
+											core.router.select({
+												id: prescription._id,
+												tab: x.key
+											});
+										}
+									}
+								})),
 							cells: [
 								{
 									dataValue: prescription.name,
@@ -173,18 +205,7 @@ export class PrescriptionsPage extends React.Component {
 									onSelect={key =>
 										core.router.select({ tab: key })
 									}
-									items={[
-										{
-											key: "details",
-											icon: "pill",
-											title: "Prescription Details"
-										},
-										{
-											key: "delete",
-											icon: "trash",
-											title: "Delete"
-										}
-									]}
+									items={this.tabs}
 								/>
 							</div>
 						)}

@@ -8,8 +8,8 @@ import {
 	TableActions,
 	TagComponent
 	} from "@common-components";
-import * as core from "@core";
 import { imagesTable, text } from "@core";
+import * as core from "@core";
 import { Patient, PatientAppointmentsPanel, PatientGalleryPanel } from "@modules";
 import * as modules from "@modules";
 import { computed, observable } from "mobx";
@@ -61,43 +61,35 @@ export class PatientsPage extends React.Component {
 		);
 	}
 
-	tabs(patient: Patient) {
-		return [
-			{
-				key: "details",
-				title: "Patient Details",
-				icon: "DietPlanNotebook"
-			},
-			{
-				key: "dental",
-				title: "Dental History",
-				icon: "teeth",
-				bubbleContent: patient.teeth.filter(
-					x => x.notes.length || x.condition !== "sound"
-				).length
-			},
-			{
-				key: "gallery",
-				title: "Gallery",
-				icon: "PhotoCollection",
-				bubbleContent: patient.gallery.length
-			},
-			{
-				key: "appointments",
-				title: "Appointments",
-				icon: "Calendar",
-				hidden: !core.user.currentUser!.canViewAppointments,
-				bubbleContent: patient.appointments.length
-			},
-			{
-				key: "delete",
-				title: "Delete",
-				icon: "Trash",
-				hidden: !this.canEdit,
-				hiddenOnPanel: true
-			}
-		];
-	}
+	tabs = [
+		{
+			key: "details",
+			title: "Patient Details",
+			icon: "DietPlanNotebook"
+		},
+		{
+			key: "dental",
+			title: "Dental History",
+			icon: "teeth"
+		},
+		{
+			key: "gallery",
+			title: "Gallery",
+			icon: "PhotoCollection"
+		},
+		{
+			key: "appointments",
+			title: "Appointments",
+			icon: "Calendar",
+			hidden: !core.user.currentUser!.canViewAppointments
+		},
+		{
+			key: "delete",
+			title: "Delete",
+			icon: "Trash",
+			hidden: !this.canEdit
+		}
+	];
 
 	render() {
 		return (
@@ -148,7 +140,7 @@ export class PatientsPage extends React.Component {
 										onSelect={key => {
 											core.router.select({ tab: key });
 										}}
-										items={this.tabs(this.selectedPatient!)}
+										items={this.tabs}
 									/>
 								</div>
 							);
@@ -238,6 +230,25 @@ export class PatientsPage extends React.Component {
 							"pg-pn-" +
 							patient.name.toLowerCase().replace(/\s/g, ""),
 						searchableString: patient.searchableString,
+						actions: this.tabs
+							.filter(x => !x.hidden)
+							.map(x => ({
+								key: x.key,
+								title: x.title,
+								icon: x.icon,
+								onClick: () => {
+									if (x.key === "delete") {
+										modules.patients!.deleteModal(
+											patient._id
+										);
+									} else {
+										core.router.select({
+											id: patient._id,
+											tab: x.key
+										});
+									}
+								}
+							})),
 						cells: [
 							{
 								dataValue:
@@ -275,22 +286,6 @@ export class PatientsPage extends React.Component {
 											size={3}
 										/>
 										<br />
-
-										<TableActions
-											items={this.tabs(patient)}
-											onSelect={key => {
-												if (key === "delete") {
-													modules.patients!.deleteModal(
-														patient._id
-													);
-												} else {
-													core.router.select({
-														id: patient._id,
-														tab: key
-													});
-												}
-											}}
-										/>
 									</div>
 								),
 								className: "no-label",

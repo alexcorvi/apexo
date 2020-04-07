@@ -10,8 +10,8 @@ import {
 	SectionComponent,
 	TableActions
 	} from "@common-components";
-import { text } from "@core";
 import * as core from "@core";
+import { text } from "@core";
 import * as modules from "@modules";
 import { AppointmentsList } from "@modules";
 import { dateNames, formatDate, num } from "@utils";
@@ -68,34 +68,30 @@ export class StaffPage extends React.Component {
 		return modules.staff!.docs.find(x => x._id === core.router.selectedID);
 	}
 
-	tabs(staff: modules.StaffMember) {
-		return [
-			{
-				key: "details",
-				title: "Staff Member Details",
-				icon: "DietPlanNotebook"
-			},
-			{
-				key: "permission",
-				title: "Level and Permission",
-				icon: "Permissions"
-			},
-			{
-				key: "appointments",
-				title: "Upcoming Appointments",
-				icon: "Calendar",
-				hidden: !core.user.currentUser!.canViewAppointments,
-				bubbleContent: staff.upcomingAppointments.length
-			},
-			{
-				key: "delete",
-				title: "Delete",
-				icon: "Trash",
-				hidden: !this.canEdit,
-				hiddenOnPanel: true
-			}
-		];
-	}
+	tabs = [
+		{
+			key: "details",
+			title: "Staff Member Details",
+			icon: "DietPlanNotebook"
+		},
+		{
+			key: "permission",
+			title: "Level and Permission",
+			icon: "Permissions"
+		},
+		{
+			key: "appointments",
+			title: "Upcoming Appointments",
+			icon: "Calendar",
+			hidden: !core.user.currentUser!.canViewAppointments
+		},
+		{
+			key: "delete",
+			title: "Delete",
+			icon: "Trash",
+			hidden: !this.canEdit
+		}
+	];
 
 	render() {
 		return (
@@ -110,6 +106,23 @@ export class StaffPage extends React.Component {
 					rows={modules.staff!.docs.map(member => ({
 						id: member._id,
 						searchableString: member.searchableString,
+						actions: this.tabs
+							.filter(x => !x.hidden)
+							.map(x => ({
+								key: x.key,
+								title: x.title,
+								icon: x.icon,
+								onClick: () => {
+									if (x.key === "delete") {
+										modules.staff!.deleteModal(member._id);
+									} else {
+										core.router.select({
+											id: member._id,
+											tab: x.key
+										});
+									}
+								}
+							})),
 						cells: [
 							{
 								dataValue: member.name,
@@ -132,21 +145,6 @@ export class StaffPage extends React.Component {
 											size={3}
 										/>
 										<br />
-										<TableActions
-											items={this.tabs(member)}
-											onSelect={key => {
-												if (key === "delete") {
-													modules.staff!.deleteModal(
-														member._id
-													);
-												} else {
-													core.router.select({
-														id: member._id,
-														tab: key
-													});
-												}
-											}}
-										/>
 									</div>
 								),
 								className: "no-label",
@@ -270,7 +268,7 @@ export class StaffPage extends React.Component {
 									onSelect={key => {
 										core.router.select({ tab: key });
 									}}
-									items={this.tabs(this.selectedMember!)}
+									items={this.tabs}
 								/>
 							</div>
 						)}

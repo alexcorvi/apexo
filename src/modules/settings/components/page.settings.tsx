@@ -6,8 +6,10 @@ import { dateNames, formatDate, second } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import {
+	ContextualMenu,
 	DefaultButton,
 	Dropdown,
+	Icon,
 	IconButton,
 	MessageBar,
 	MessageBarType,
@@ -51,13 +53,20 @@ export class SettingsPage extends React.Component {
 		return (
 			<div className="settings-component container-fluid">
 				{this.locked ? (
-					<div>
-						<h2>{text("Settings are locked")}</h2>
-						<h3>
-							{text(
-								"To prevent unintentional changes, solve the mathematical equation to unlock"
-							)}
-						</h3>
+					<div className="lock-msg">
+						<div className="lock-icon">
+							<Icon iconName="lock"></Icon>
+						</div>
+
+						<div className="lock-header">
+							<h2>{text("Settings are locked")}</h2>
+							<p>
+								{text(
+									"To prevent unintentional changes, solve the mathematical equation to unlock"
+								)}
+							</p>
+						</div>
+
 						<hr />
 						<div className="math-question">
 							{<span id="cc-1">{this.chosenCombination[0]}</span>}{" "}

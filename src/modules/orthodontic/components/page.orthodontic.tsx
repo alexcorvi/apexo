@@ -10,8 +10,8 @@ import {
 	TableActions,
 	TagInputComponent
 	} from "@common-components";
-import { imagesTable, text } from "@core";
 import * as core from "@core";
+import { imagesTable, text } from "@core";
 import { PatientAppointmentsPanel } from "@modules";
 import * as modules from "@modules";
 import { formatDate } from "@utils";
@@ -102,57 +102,45 @@ export class OrthoPage extends React.Component {
 		);
 	}
 
-	tabs(orthoCase: modules.OrthoCase) {
-		return [
-			{
-				key: "details",
-				title: "Patient Details",
-				icon: "DietPlanNotebook"
-			},
-			{
-				key: "dental",
-				title: "Dental History",
-				icon: "teeth",
-				bubbleContent: orthoCase.patient!.teeth.filter(
-					x => x.notes.length || x.condition !== "sound"
-				).length
-			},
-			{
-				key: "sheet",
-				title: "Case Sheet",
-				icon: "GroupedList",
-				bubbleContent:
-					orthoCase.computedProblems.length +
-					orthoCase.problemsList.length
-			},
-			{
-				key: "archive",
-				title: "Visits Archive",
-				icon: "Archive",
-				bubbleContent: orthoCase.visits.length
-			},
-			{
-				key: "gallery",
-				title: "Gallery",
-				icon: "PhotoCollection",
-				bubbleContent: orthoCase.patient!.gallery.length
-			},
-			{
-				key: "appointments",
-				title: "Appointments",
-				icon: "Calendar",
-				hidden: !core.user.currentUser!.canViewAppointments,
-				bubbleContent: orthoCase.patient!.appointments.length
-			},
-			{
-				key: "delete",
-				title: "Delete",
-				icon: "Trash",
-				hidden: !this.canEdit,
-				hiddenOnPanel: true
-			}
-		];
-	}
+	tabs = [
+		{
+			key: "details",
+			title: "Patient Details",
+			icon: "DietPlanNotebook"
+		},
+		{
+			key: "dental",
+			title: "Dental History",
+			icon: "teeth"
+		},
+		{
+			key: "sheet",
+			title: "Case Sheet",
+			icon: "GroupedList"
+		},
+		{
+			key: "archive",
+			title: "Visits Archive",
+			icon: "Archive"
+		},
+		{
+			key: "gallery",
+			title: "Gallery",
+			icon: "PhotoCollection"
+		},
+		{
+			key: "appointments",
+			title: "Appointments",
+			icon: "Calendar",
+			hidden: !core.user.currentUser!.canViewAppointments
+		},
+		{
+			key: "delete",
+			title: "Delete",
+			icon: "Trash",
+			hidden: !this.canEdit
+		}
+	];
 
 	render() {
 		return (
@@ -173,6 +161,25 @@ export class OrthoPage extends React.Component {
 							return {
 								id: orthoCase._id,
 								searchableString: orthoCase.searchableString,
+								actions: this.tabs
+									.filter(x => !x.hidden)
+									.map(x => ({
+										key: x.key,
+										title: x.title,
+										icon: x.icon,
+										onClick: () => {
+											if (x.key === "delete") {
+												modules.orthoCases!.deleteModal(
+													orthoCase._id
+												);
+											} else {
+												core.router.select({
+													id: orthoCase._id,
+													tab: x.key
+												});
+											}
+										}
+									})),
 								cells: [
 									{
 										dataValue: patient.name,
@@ -210,22 +217,6 @@ export class OrthoPage extends React.Component {
 													size={3}
 												/>
 												<br />
-												<TableActions
-													items={this.tabs(orthoCase)}
-													onSelect={key => {
-														if (key === "delete") {
-															modules.orthoCases!.deleteModal(
-																orthoCase._id
-															);
-														} else {
-															core.router.select({
-																id:
-																	orthoCase._id,
-																tab: key
-															});
-														}
-													}}
-												/>
 											</div>
 										),
 										className: "no-label",
@@ -545,7 +536,7 @@ export class OrthoPage extends React.Component {
 									onSelect={key => {
 										core.router.select({ tab: key });
 									}}
-									items={this.tabs(this.selectedCase)}
+									items={this.tabs}
 								/>
 							</div>
 						);

@@ -17,6 +17,19 @@ import * as React from "react";
 
 @observer
 export class Treatments extends React.Component {
+	tabs = [
+		{
+			key: "details",
+			icon: "cricket",
+			title: "Treatment Details"
+		},
+		{
+			key: "delete",
+			icon: "trash",
+			title: "Delete",
+			hidden: !this.canEdit
+		}
+	];
 	@computed
 	get canEdit() {
 		return core.user.currentUser!.canEditTreatments;
@@ -94,6 +107,25 @@ export class Treatments extends React.Component {
 						return {
 							id: treatment._id,
 							searchableString: treatment.searchableString,
+							actions: this.tabs
+								.filter(x => !x.hidden)
+								.map(x => ({
+									key: x.key,
+									title: x.title,
+									icon: x.icon,
+									onClick: () => {
+										if (x.key === "delete") {
+											modules.treatments!.deleteModal(
+												treatment._id
+											);
+										} else {
+											core.router.select({
+												id: treatment._id,
+												tab: x.key
+											});
+										}
+									}
+								})),
 							cells: [
 								{
 									dataValue: treatment.type,
@@ -183,18 +215,7 @@ export class Treatments extends React.Component {
 									onSelect={key =>
 										core.router.select({ tab: key })
 									}
-									items={[
-										{
-											key: "details",
-											icon: "cricket",
-											title: "Treatment Details"
-										},
-										{
-											key: "delete",
-											icon: "trash",
-											title: "Delete"
-										}
-									]}
+									items={this.tabs}
 								/>
 							</div>
 						)}

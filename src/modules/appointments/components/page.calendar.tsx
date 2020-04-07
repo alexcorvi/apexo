@@ -19,6 +19,7 @@ import {
 	Shimmer,
 	Toggle
 	} from "office-ui-fabric-react";
+import { DefaultButton, TextField } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
 
@@ -32,6 +33,7 @@ const AppointmentEditorPanel = loadable({
 @observer
 export class CalendarPage extends React.Component {
 	readonly criticalWidth = 500;
+	@observable newPatientName: string = "";
 	@observable filter: string = "";
 	@observable showAdditionPanel: boolean = false;
 	@observable newAppointmentForPatientID: string = "";
@@ -345,102 +347,6 @@ export class CalendarPage extends React.Component {
 											[]
 										)
 										.map(day => {
-											return (
-												<th
-													key={`${day.yearNum}-${day.monthNum}-${day.dateNum}`}
-													onClick={() => {
-														this.c.selected.year =
-															day.yearNum;
-														this.c.selected.month =
-															day.monthNum;
-														this.c.selected.day =
-															day.dateNum;
-													}}
-													className={
-														(day.weekDay.isWeekend
-															? "is-weekend"
-															: "") +
-														(this.c.selectedWeek.find(
-															x => x === day
-														)
-															? " is-selected"
-															: "") +
-														(day.dateNum ===
-															this.c.currentDay &&
-														this.c.currentMonth ===
-															day.monthNum &&
-														day.yearNum ===
-															this.c.currentYear
-															? " is-current"
-															: "")
-													}
-												>
-													{day.weekDay.dayLiteralShort.substr(
-														0,
-														2
-													)}
-												</th>
-											);
-										})}
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									{this.c.overview
-										.reduce(
-											(arr: modules.DayInfo[], arr2) => {
-												arr2.forEach(x => arr.push(x));
-												return arr;
-											},
-											[]
-										)
-										.map(day => {
-											return (
-												<td
-													key={`${day.yearNum}-${day.monthNum}-${day.dateNum}`}
-													onClick={() => {
-														this.c.selected.year =
-															day.yearNum;
-														this.c.selected.month =
-															day.monthNum;
-														this.c.selected.day =
-															day.dateNum;
-													}}
-													className={
-														(day.weekDay.isWeekend
-															? "is-weekend"
-															: "") +
-														(this.c.selectedWeek.find(
-															x => x === day
-														)
-															? " is-selected"
-															: "") +
-														(day.dateNum ===
-															this.c.currentDay &&
-														this.c.currentMonth ===
-															day.monthNum &&
-														day.yearNum ===
-															this.c.currentYear
-															? " is-current"
-															: "")
-													}
-												>
-													{day.dateNum}/
-													{day.monthNum + 1}
-												</td>
-											);
-										})}
-								</tr>
-								<tr>
-									{this.c.overview
-										.reduce(
-											(arr: modules.DayInfo[], arr2) => {
-												arr2.forEach(x => arr.push(x));
-												return arr;
-											},
-											[]
-										)
-										.map(day => {
 											const num = modules.appointments!.appointmentsForDay(
 												day.yearNum,
 												day.monthNum + 1,
@@ -450,6 +356,40 @@ export class CalendarPage extends React.Component {
 													? undefined
 													: core.user.currentUser!._id
 											).length;
+											const isWeekend =
+												day.weekDay.isWeekend;
+											const isSelected = this.c.selectedWeek.find(
+												x => x === day
+											);
+											const isCurrent =
+												day.dateNum ===
+													this.c.currentDay &&
+												this.c.currentMonth ===
+													day.monthNum &&
+												day.yearNum ===
+													this.c.currentYear;
+											return Object.assign(day, {
+												num,
+												isWeekend,
+												isSelected,
+												isCurrent
+											});
+										})
+										.map((day, index, arr) => {
+											const indexOfFirstIsSelected = arr.findIndex(
+												x => x.isSelected
+											);
+											const isPast =
+												indexOfFirstIsSelected > index;
+											const isFuture =
+												indexOfFirstIsSelected <
+													index && !day.isSelected;
+											return Object.assign(day, {
+												isFuture,
+												isPast
+											});
+										})
+										.map((day, index, arr) => {
 											return (
 												<td
 													key={`${day.yearNum}-${day.monthNum}-${day.dateNum}`}
@@ -462,34 +402,39 @@ export class CalendarPage extends React.Component {
 															day.dateNum;
 													}}
 													className={
-														(day.weekDay.isWeekend
-															? "is-weekend"
+														(day.isWeekend
+															? " is-weekend"
 															: "") +
-														(this.c.selectedWeek.find(
-															x => x === day
-														)
+														(day.isSelected
 															? " is-selected"
 															: "") +
-														(day.dateNum ===
-															this.c.currentDay &&
-														this.c.currentMonth ===
-															day.monthNum &&
-														day.yearNum ===
-															this.c.currentYear
+														(day.isCurrent
 															? " is-current"
 															: "")
 													}
 												>
-													<span
-														className={`appointments-num num-${num}`}
-													>
-														{num}
-													</span>
+													<div>
+														{day.weekDay.dayLiteralShort.substr(
+															0,
+															2
+														)}
+													</div>
+													<div>
+														{day.dateNum}/
+														{day.monthNum + 1}
+													</div>
+													<div>
+														<span
+															className={`appointments-num num-${day.num}`}
+														>
+															{day.num}
+														</span>
+													</div>
 												</td>
 											);
 										})}
 								</tr>
-							</tbody>
+							</thead>
 						</table>
 					</div>
 				) : (
@@ -546,7 +491,8 @@ export class CalendarPage extends React.Component {
 												&nbsp;&nbsp;
 												<span className="day-name">
 													{text(
-														day.weekDay.dayLiteral
+														day.weekDay
+															.dayLiteralShort
 													)}
 												</span>
 											</Col>
@@ -660,9 +606,8 @@ export class CalendarPage extends React.Component {
 							this.showAdditionPanel = false;
 						}}
 					>
-						<br />
 						<TagInputComponent
-							label={text("Choose patient")}
+							label={text("Create or choose patient")}
 							options={modules.patients!.docs.map(patient => ({
 								text: patient.name,
 								key: patient._id
@@ -672,6 +617,7 @@ export class CalendarPage extends React.Component {
 							noResultsFoundText={text("No patients found")}
 							maxItems={1}
 							disabled={!this.canEdit}
+							loose
 							value={
 								this.newAppointmentForPatient
 									? [
@@ -686,8 +632,24 @@ export class CalendarPage extends React.Component {
 									: []
 							}
 							onChange={selectedKeys => {
-								this.newAppointmentForPatientID =
-									selectedKeys[0] || "";
+								if (
+									modules.patients!.docs.find(
+										patient =>
+											patient._id === selectedKeys[0]
+									)
+								) {
+									this.newAppointmentForPatientID =
+										selectedKeys[0];
+								} else if (
+									selectedKeys[0] &&
+									selectedKeys[0].length
+								) {
+									const newPatient = modules.patients!.new();
+									newPatient.name = selectedKeys[0];
+									modules.patients!.add(newPatient);
+									this.newAppointmentForPatientID =
+										newPatient._id;
+								}
 							}}
 						/>
 						{this.newAppointmentForPatient ? (
