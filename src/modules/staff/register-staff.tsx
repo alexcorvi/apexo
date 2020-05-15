@@ -1,5 +1,4 @@
 import * as core from "@core";
-import { dbAction } from "@core";
 import * as modules from "@modules";
 import * as React from "react";
 export const registerStaff = async () => {
@@ -8,7 +7,7 @@ export const registerStaff = async () => {
 	modules.setStaffStore(
 		new modules.Staff({
 			model: modules.StaffMember,
-			DBInstance: dbs.localDatabase
+			DBInstance: dbs.localDatabase,
 		})
 	);
 
@@ -23,7 +22,7 @@ export const registerStaff = async () => {
 			return <StaffPage />;
 		},
 		condition: () =>
-			(core.user.currentUser || { canViewStaff: false }).canViewStaff
+			(core.user.currentUser || { canViewStaff: false }).canViewStaff,
 	});
 	core.menu.items.push({
 		icon: "Medical",
@@ -35,6 +34,6 @@ export const registerStaff = async () => {
 		order: 0,
 		url: "",
 		condition: () =>
-			(core.user.currentUser || { canViewStaff: false }).canViewStaff
+			(core.user.currentUser || { canViewStaff: false }).canViewStaff,
 	});
 };
