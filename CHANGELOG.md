@@ -1,5 +1,27 @@
 ## Changelog
 
+### 4.0.0
+
+-   New feature: hotlinking inside modules and panels is now supported
+-   New feature: Statistics now showing a list of the appointments included
+-   New feature: New module Labworks to manage and track cases sent to laboratories
+-   New feature: Book appointments from the calendar module
+-   New feature: Improved calendar to show more information about the appointments
+-   Enhancement: Overall improved looks and feels
+-   Enhancement: Improved dashboard
+-   Enhancement: Improved user experience by using tabs and context menus
+-   Enhancement: Can use gallery photos as avatars.
+-   Enhancement: Added loading indicators for actions defined in settings menu.
+-   Enhancement: Unified looks and feels across all modules and panels.
+-   Enhancement: Better MobX & PouchDB integration, the old one was buggy and slow, now using PouchX.
+-   Bug fix: Fixed faulty first sync
+-   Bug fix: Fixed when creating appointments it doesn't open
+-   Bug fix: Fixed messy scrolling
+-   Bug fix: Fixed scrolling to top when selecting an item in a module
+-   Bug fix: Fixed slow module registration
+-   Bug fix: dental chart is not updating
+-   And many more...
+
 ### 3.2.1
 
 -   Lock scrolling when a panel is opened
