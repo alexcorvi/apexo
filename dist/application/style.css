@@ -938,16 +938,18 @@ h5 {
     padding: 12px;
     font-size: 14px; }
   .ms-table th {
-    font-weight: 300;
+    font-weight: 400;
     font-size: 13px;
     padding: 12px 15px;
     padding-bottom: 13px;
-    background: #fafafa; }
+    background: #f8f9fb; }
     .ms-table th .sort-indicators .positive,
     .ms-table th .sort-indicators .negative {
       display: none; }
     .ms-table th.current {
-      background: #eee; }
+      border-bottom: 2px solid #0078d4;
+      color: #0078d4;
+      background: #f8f9fb; }
       .ms-table th.current .sort-indicators {
         float: right; }
       .ms-table th.current.positive .sort-indicators .positive {
@@ -957,8 +959,7 @@ h5 {
   .ms-table .table-head-sort {
     cursor: pointer; }
     .ms-table .table-head-sort:hover {
-      background: #f5f5f5;
-      color: #212121; }
+      border-bottom: 2px solid #0078d4; }
 
 @media screen and (max-width: 767px) {
   .ms-Panel-content {
@@ -982,7 +983,6 @@ h5 {
       margin: 0 auto;
       margin-top: 15px; }
       table.responsive tbody tr td {
-        display: block;
         text-align: right;
         font-size: 14px; } }
 
@@ -5738,8 +5738,7 @@ hr {
   .calendar-component .ms-CommandBar {
     box-sizing: content-box;
     background-color: #fff !important;
-    border-bottom: 1px solid #f3f3f3;
-    margin-top: -1px; }
+    border-bottom: 1px solid #e9edef; }
   .calendar-component .commandBar.fixed {
     position: fixed;
     width: calc(100% - 66px);
@@ -5767,7 +5766,7 @@ hr {
     .calendar-component .full-day-col h4 {
       margin: 0 -10px;
       padding: 10px;
-      background: #fafafa; }
+      background: #f8f9fb; }
       .calendar-component .full-day-col h4 b {
         border: 1px solid transparent;
         border-radius: 3px;
@@ -5858,40 +5857,38 @@ hr {
     padding: 10px;
     border-collapse: collapse;
     border-bottom: 1px solid #eee; }
+    .calendar-component .appointments-overview table td,
     .calendar-component .appointments-overview table th {
       text-transform: uppercase;
       font-size: 11px;
-      color: #9e9e9e; }
-    .calendar-component .appointments-overview table tr:nth-child(1) td {
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-      font-size: 11px;
-      color: #878787; }
-    .calendar-component .appointments-overview table td,
-    .calendar-component .appointments-overview table th {
       text-align: center;
       font-weight: 400;
-      width: 40px;
       padding: 15px 0;
       border-right: 1px solid #f5f5f5;
-      background-image: linear-gradient(to left, #f1f1f1, #f4f4f4);
-      box-shadow: 7px 20px 9px;
-      cursor: pointer; }
+      background: #e7eceeeb;
+      color: #607d8b;
+      cursor: pointer;
+      width: 40px;
+      transition: 0.3s all; }
+      .calendar-component .appointments-overview table td:hover:not(.is-selected),
+      .calendar-component .appointments-overview table th:hover:not(.is-selected) {
+        background: #eff2f4; }
       .calendar-component .appointments-overview table td.is-weekend,
       .calendar-component .appointments-overview table th.is-weekend {
         border-right: 1px solid #eee; }
       .calendar-component .appointments-overview table td.is-selected,
       .calendar-component .appointments-overview table th.is-selected {
-        background: #fafafa;
-        color: #607d8b !important;
-        cursor: initial; }
+        background-image: linear-gradient(to left, #f8f9fb, #fafafa);
+        cursor: initial;
+        width: 70px; }
       .calendar-component .appointments-overview table td.is-current,
       .calendar-component .appointments-overview table th.is-current {
-        color: #0078d4 !important; }
-
-@media screen and (max-width: 1250px) {
-  .appointments-overview {
-    display: none; } }
+        border-bottom: 3px solid #0078d4;
+        border-top: 4px solid #0078d4;
+        color: #0078d4; }
+      .calendar-component .appointments-overview table td div,
+      .calendar-component .appointments-overview table th div {
+        margin-bottom: 10px; }
 
 @media screen and (max-width: 1250px) {
   .calendar-component .full-day-col {
@@ -5901,7 +5898,9 @@ hr {
 @media screen and (max-width: 800px) {
   .calendar-component .full-day-col {
     width: 50% !important;
-    min-height: 150px; } }
+    min-height: 150px; }
+  .appointments-overview {
+    display: none; } }
 
 @media screen and (max-width: 500px) {
   .mobile-calendar {
@@ -5994,6 +5993,21 @@ hr {
 .crop-dialog .active-button {
   background: #e3e3e3; }
 
+.data-table .row-actions {
+  padding-right: 0;
+  text-align: center;
+  width: 50px;
+  padding-left: 0;
+  background: #f8f9fb;
+  border-right: 1px solid #e8effd;
+  cursor: pointer;
+  display: table-cell !important; }
+  .data-table .row-actions:hover {
+    background: #eceff4; }
+
+.data-table .dt-msg-bar {
+  background: #f8f9fb; }
+
 .data-table .commandBar.fixed {
   position: fixed;
   width: calc(100% - 66px);
@@ -6004,29 +6018,31 @@ hr {
 .data-table .ms-CommandBar {
   box-sizing: content-box;
   background-color: #fff !important;
-  border-bottom: 1px solid #f3f3f3;
-  margin-top: -1px; }
+  border-bottom: 1px solid #e9f0fd;
+  margin-top: -2px;
+  padding-bottom: 1px; }
 
 .data-table .ms-table {
   margin-top: 94px;
   background: #fafafa; }
   .data-table .ms-table td.clickable {
-    transition: 0.3s all;
     cursor: pointer; }
     .data-table .ms-table td.clickable:hover {
-      background: #f5f5f5; }
+      background: #f8f9fb;
+      border-bottom: 2px solid #e9f0fd; }
   .data-table .ms-table td.no-label {
     text-align: left; }
 
 .data-table tr {
-  border-bottom: 1px solid #f3f3f3; }
+  border-bottom: 2px solid #f8f9fb; }
 
 .data-table .ms-SearchBox {
   border: none;
-  margin-top: 4px; }
+  margin-top: 6px; }
 
 .data-table .ms-CommandBar-secondaryCommand {
-  border-left: 1px solid #f3f3f3; }
+  border-left: 1px solid #ebf2fd;
+  padding-left: 1px; }
 
 .data-table .ms-CommandBarItem-link {
   background: #fff !important;
@@ -6279,7 +6295,7 @@ hr {
   width: 100%;
   top: 0;
   background: #fff;
-  border-bottom: 1px solid #f3f3f3;
+  border-bottom: 1px solid #e8effd;
   z-index: 2; }
   .header-component section {
     float: left;
@@ -6320,6 +6336,14 @@ hr {
     border: 1px solid #ff5722; }
     .header-component .resync.error i {
       color: #ff5722; }
+  .header-component .menu-button button {
+    width: 66px;
+    margin-left: -20px;
+    height: 50px;
+    margin-top: -10px;
+    border-radius: 0;
+    background: #f8f9fb;
+    border-right: 1px solid #e8effd; }
 
 .home .duty-table td.names {
   padding: 0; }
@@ -6347,7 +6371,7 @@ hr {
   margin: 0;
   margin-top: 0;
   padding: 12px;
-  background: #eeeeee;
+  background: #edf0f5;
   font-weight: 400;
   font-size: 14px; }
 
@@ -6355,7 +6379,7 @@ hr {
   margin-bottom: 1px; }
 
 .home h2 {
-  background: #f5f5f5;
+  background: #f8f9fb;
   padding: 0.84em;
   text-align: left;
   font-weight: 400;
@@ -6510,20 +6534,31 @@ hr {
     bottom: 15px;
     background: #b71c1c; }
 
+.menu .ms-Panel-contentInner {
+  background: #f8f9fb; }
+
 .menu .ms-Panel-content {
-  padding: 0; }
+  padding: 0;
+  width: 90%;
+  margin: 0 auto;
+  padding-top: 5px; }
 
 .menu .ms-Nav ul .is-selected .ms-Nav-link {
-  background: #f5f5f5;
-  border-bottom: 1px solid #f3f3f3;
-  border-radius: 0;
-  border-top: 1px solid #f3f3f3;
-  font-weight: 600; }
+  background: #fff;
+  border-radius: 5px;
+  font-weight: 400;
+  border: 1px solid #8fc7f43d;
+  box-shadow: 0 0 8px 0px #8fc7f42e; }
   .menu .ms-Nav ul .is-selected .ms-Nav-link:after {
     border: 0; }
 
 .menu .ms-Nav ul .ms-Nav-link {
   text-transform: capitalize; }
+  .menu .ms-Nav ul .ms-Nav-link:hover {
+    background: transparent;
+    border-radius: 5px;
+    border: 1px solid #8fc7f43d;
+    color: #0078d4; }
 
 .ver {
   text-align: center;
@@ -6553,25 +6588,28 @@ hr {
     top: 50px;
     left: 0;
     cursor: pointer;
-    background: #fff;
-    border-right: 1px solid #f5f5f5;
+    background: #f8f9fb;
+    border-right: 1px solid #e8effd;
     height: 100%; }
     .icon-list .ms-TooltipHost:nth-child(2) .item {
       padding: 0.47em; }
     .icon-list .item {
       transition: 0.2s all;
-      background: #fff;
-      padding: 0.55em 0.67em;
+      padding: 0.55em 0 0.45em;
       font-size: 17px;
       text-align: center;
-      min-width: 65px;
-      border-bottom: 1px solid transparent; }
+      min-width: 45px;
+      border-bottom: 1px solid transparent;
+      margin: 3px 10px;
+      border-radius: 2px; }
       .icon-list .item:hover {
-        background: #f5f5f5; }
+        background: #dcebf7; }
       .icon-list .item.selected {
-        background: #eee;
-        color: #000;
-        cursor: initial; }
+        background: #0078d4;
+        color: #fff;
+        cursor: initial;
+        border: 1px solid #0078d4;
+        box-shadow: 0 0 8px 0px #0078d49c; }
       .icon-list .item .text {
         margin-top: 5px;
         font-size: 11px;
@@ -6868,6 +6906,35 @@ hr {
 
 .settings-component {
   font-size: 13px; }
+  .settings-component .lock-icon {
+    display: inline-block;
+    font-size: 30px;
+    padding: 0 10px 0 0;
+    vertical-align: top;
+    margin-top: 25px;
+    margin-right: 10px;
+    color: #e3f3ff66;
+    border-right: 1px solid; }
+  .settings-component .lock-header {
+    display: inline-block; }
+  .settings-component .lock-msg {
+    max-width: 600px;
+    width: 90%;
+    padding: 5px 25px 25px;
+    margin: 0 auto;
+    margin-top: 15px;
+    border-radius: 3px;
+    background: #0078d4;
+    color: #fff;
+    border: 1px solid #0078d4;
+    box-shadow: 0 0 8px 0px #0078d49c; }
+    .settings-component .lock-msg hr {
+      border: none;
+      border-bottom: 1px solid #ffffff21;
+      margin-bottom: 30px;
+      margin-top: 20px;
+      margin-left: -25px;
+      margin-right: -25px; }
   .settings-component .math-question .ms-TextField {
     display: inline-block;
     width: 70px; }
