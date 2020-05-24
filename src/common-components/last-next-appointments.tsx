@@ -31,15 +31,15 @@ export class LastNextAppointment extends React.Component<{
 							{this.props.lastAppointment
 								? `${
 										this.props.lastAppointment.isMissed
-											? text("Missed")
-											: text("Last")
+											? text("missed").c
+											: text("previous").c
 								  }: ${formatDate(
 										this.props.lastAppointment.date,
 										modules.setting!.getSetting(
 											"date_format"
 										)
 								  )}`
-								: text("No last appointment")}
+								: text("no last appointment").c}
 						</i>
 					)}
 					size={3}
@@ -61,7 +61,6 @@ export class LastNextAppointment extends React.Component<{
 							: PersonaInitialsColor.transparent
 					}
 				/>
-				<br />
 				<ProfileSquaredComponent
 					text={
 						this.props.nextAppointment
@@ -73,14 +72,14 @@ export class LastNextAppointment extends React.Component<{
 					onRenderSecondaryText={() => (
 						<i>
 							{this.props.nextAppointment
-								? `${text("Next")}: ${formatDate(
+								? `${text("next").c}: ${formatDate(
 										this.props.nextAppointment.date,
 										modules.setting!.getSetting(
 											"date_format"
 										)
 								  )}
 							`
-								: text("No next appointment")}
+								: text("no next appointment").c}
 						</i>
 					)}
 					size={3}

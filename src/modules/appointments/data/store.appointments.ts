@@ -34,7 +34,7 @@ export class Appointments extends Store<AppointmentSchema, Appointment> {
 			day = date.getDate();
 		}
 
-		let list = this.docs.filter(appointment => {
+		let list = this.docs.filter((appointment) => {
 			const date = new Date(appointment.date);
 			return (
 				date.getFullYear() === year &&
@@ -49,19 +49,19 @@ export class Appointments extends Store<AppointmentSchema, Appointment> {
 
 		if (operatorID) {
 			list = list.filter(
-				appointment => appointment.staffID.indexOf(operatorID) !== -1
+				(appointment) => appointment.staffID.indexOf(operatorID) !== -1
 			);
 		}
 		return list.sort((a, b) => a.date - b.date);
 	}
 	deleteModal(id: string) {
 		modals.newModal({
-			text: text("Are you sure you want to delete this appointment?"),
+			text: text("are you sure you want to delete this appointment?").c,
 			onConfirm: () => this.delete(id),
 			showCancelButton: true,
 			showConfirmButton: true,
 			input: false,
-			id: Math.random()
+			id: Math.random(),
 		});
 	}
 }

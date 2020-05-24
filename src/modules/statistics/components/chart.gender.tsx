@@ -23,16 +23,19 @@ export class GenderPieChart extends React.Component<{
 				height={400}
 				{...{
 					data: [
-						{ label: text("Male"), value: this.malePercentile },
-						{ label: text("Female"), value: this.femalePercentile }
-					]
+						{ label: text("male").c, value: this.malePercentile },
+						{
+							label: text("female").c,
+							value: this.femalePercentile,
+						},
+					],
 				}}
 			/>
 		);
 	}
 	calculateGenderPercentile(requiredG: keyof typeof gender) {
 		return this.props.selectedPatients.filter(
-			patient => patient.gender === requiredG
+			(patient) => patient.gender === requiredG
 		).length;
 	}
 }

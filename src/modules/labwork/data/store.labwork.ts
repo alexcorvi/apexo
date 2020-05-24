@@ -10,12 +10,12 @@ export class Labworks extends Store<LabworkSchema, Labwork> {
 	}
 
 	deleteModal(id: string) {
-		const labwork = this.docs.find(x => x._id === id);
+		const labwork = this.docs.find((x) => x._id === id);
 		if (!labwork) {
 			return;
 		}
 		modals.newModal({
-			text: `${text("Labwork")} "${labwork.caseTitle}" ${text(
+			text: `${text("labwork").c} "${labwork.caseTitle}" ${text(
 				"will be deleted"
 			)}`,
 			onConfirm: () => {
@@ -24,7 +24,7 @@ export class Labworks extends Store<LabworkSchema, Labwork> {
 			showCancelButton: true,
 			showConfirmButton: true,
 			input: false,
-			id: Math.random()
+			id: Math.random(),
 		});
 	}
 }

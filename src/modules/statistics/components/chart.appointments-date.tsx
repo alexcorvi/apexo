@@ -25,17 +25,17 @@ export class AppointmentsByDateChart extends React.Component<{
 			days: [],
 			missed: [],
 			outstanding: [],
-			paid: []
+			paid: [],
 		};
 
 		return this.props.selectedAppointmentsByDay.reduce((acc, val) => {
 			acc.paid.push(
-				val.appointments.filter(a => a.isPaid && !a.isMissed).length
+				val.appointments.filter((a) => a.isPaid && !a.isMissed).length
 			);
 			acc.outstanding.push(
-				val.appointments.filter(a => a.isOutstanding).length
+				val.appointments.filter((a) => a.isOutstanding).length
 			);
-			acc.missed.push(val.appointments.filter(a => a.isMissed).length);
+			acc.missed.push(val.appointments.filter((a) => a.isMissed).length);
 			acc.days.push(
 				formatDate(
 					val.day.getTime(),
@@ -54,19 +54,19 @@ export class AppointmentsByDateChart extends React.Component<{
 						xLabels: this.values.days,
 						bars: [
 							{
-								label: text("Missed"),
-								data: this.values.missed
+								label: text("missed").c,
+								data: this.values.missed,
 							},
 							{
-								label: text("Paid"),
-								data: this.values.paid
+								label: text("paid").c,
+								data: this.values.paid,
 							},
 							{
-								label: text("Outstanding"),
-								data: this.values.outstanding
-							}
-						]
-					}
+								label: text("outstanding").c,
+								data: this.values.outstanding,
+							},
+						],
+					},
 				}}
 			/>
 		);

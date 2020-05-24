@@ -3,9 +3,15 @@ import { text } from "@core";
 import { generateID } from "@utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { CommandBar, Dialog, IconButton, Slider, TooltipHost } from "office-ui-fabric-react";
 import * as React from "react";
 import * as ImageEditor from "react-avatar-editor";
+import {
+	CommandBar,
+	Dialog,
+	IconButton,
+	Slider,
+	TooltipHost,
+} from "office-ui-fabric-react";
 
 const Editor = ImageEditor.default || ImageEditor;
 
@@ -65,16 +71,16 @@ export class CropComponent extends React.Component<{
 											min={MIN_ZOOM * 100}
 											max={MAX_ZOOM * 100}
 											value={this.zoom * 100}
-											onChange={v => {
+											onChange={(v) => {
 												this.zoom = v / 100;
 											}}
-											label={text(`Zoom`)}
+											label={text(`zoom`).c}
 											showValue={false}
 										/>
 									</Col>
 									<Col span={4}>
 										<TooltipHost
-											content={text("Flip horizontal")}
+											content={text("flip horizontal").c}
 										>
 											<IconButton
 												onClick={() => {
@@ -94,14 +100,14 @@ export class CropComponent extends React.Component<{
 													this.forceUpdate();
 												}}
 												iconProps={{
-													iconName: "More"
+													iconName: "More",
 												}}
 											/>
 										</TooltipHost>
 									</Col>
 									<Col span={4}>
 										<TooltipHost
-											content={text("Flip vertical")}
+											content={text("flip vertical").c}
 										>
 											<IconButton
 												onClick={() => {
@@ -121,7 +127,7 @@ export class CropComponent extends React.Component<{
 													this.forceUpdate();
 												}}
 												iconProps={{
-													iconName: "MoreVertical"
+													iconName: "MoreVertical",
 												}}
 											/>
 										</TooltipHost>
@@ -135,18 +141,18 @@ export class CropComponent extends React.Component<{
 											min={-45}
 											max={45}
 											value={this.addedRotation}
-											onChange={v => {
+											onChange={(v) => {
 												if (v !== -1) {
 													this.addedRotation = v;
 												}
 											}}
-											label={text(`Rotation`)}
+											label={text(`rotation`).c}
 											showValue={false}
 										/>
 									</Col>
 									<Col span={4}>
 										<TooltipHost
-											content={text("Rotate clockwise")}
+											content={text("rotate clockwise").c}
 										>
 											<IconButton
 												onClick={() => {
@@ -155,7 +161,7 @@ export class CropComponent extends React.Component<{
 												}}
 												iconProps={{
 													iconName:
-														"Rotate90Clockwise"
+														"Rotate90Clockwise",
 												}}
 											/>
 										</TooltipHost>
@@ -171,7 +177,7 @@ export class CropComponent extends React.Component<{
 												}}
 												iconProps={{
 													iconName:
-														"Rotate90CounterClockwise"
+														"Rotate90CounterClockwise",
 												}}
 											/>
 										</TooltipHost>
@@ -185,7 +191,7 @@ export class CropComponent extends React.Component<{
 						items={[
 							{
 								key: "grid",
-								text: text("Grid"),
+								text: text("grid").c,
 								iconProps: { iconName: "GridViewSmall" },
 								className: this.showGrid
 									? "active-button"
@@ -193,11 +199,11 @@ export class CropComponent extends React.Component<{
 								active: true,
 								onClick: () => {
 									this.showGrid = !this.showGrid;
-								}
+								},
 							},
 							{
 								key: "overlay",
-								text: text("Overlay"),
+								text: text("overlay").c,
 								iconProps: { iconName: "MapLayers" },
 								className: this.overlay
 									? "active-button"
@@ -205,13 +211,13 @@ export class CropComponent extends React.Component<{
 								onClick: () => {
 									this.overlay = !this.overlay;
 								},
-								hidden: !this.props.prevSrc
-							}
+								hidden: !this.props.prevSrc,
+							},
 						]}
 						farItems={[
 							{
 								key: "save",
-								text: text("Save"),
+								text: text("save").c,
 								iconProps: { iconName: "save" },
 								classNames: "abc",
 								onClick: () => {
@@ -219,17 +225,17 @@ export class CropComponent extends React.Component<{
 										"." + this.unique
 									)[0] as HTMLCanvasElement;
 									this.props.onSave(canvas.toDataURL());
-								}
+								},
 							},
 							{
 								key: "cancel",
-								text: text("Cancel"),
+								text: text("cancel").c,
 								iconProps: { iconName: "cancel" },
 								classNames: "abc",
 								onClick: () => {
 									this.props.onDismiss();
-								}
-							}
+								},
+							},
 						]}
 					/>
 				</Dialog>

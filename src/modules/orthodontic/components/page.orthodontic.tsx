@@ -1,3 +1,12 @@
+import * as core from "@core";
+import { imagesTable, text } from "@core";
+import { PatientAppointmentsPanel } from "@modules";
+import * as modules from "@modules";
+import { formatDate } from "@utils";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
+import * as React from "react";
+import * as loadable from "react-loadable";
 import {
 	Col,
 	DataTableComponent,
@@ -8,15 +17,8 @@ import {
 	ProfileSquaredComponent,
 	Row,
 	TableActions,
-	TagInputComponent
-	} from "@common-components";
-import * as core from "@core";
-import { imagesTable, text } from "@core";
-import { PatientAppointmentsPanel } from "@modules";
-import * as modules from "@modules";
-import { formatDate } from "@utils";
-import { computed, observable } from "mobx";
-import { observer } from "mobx-react";
+	TagInputComponent,
+} from "@common-components";
 import {
 	DefaultButton,
 	Icon,
@@ -28,47 +30,45 @@ import {
 	PersonaInitialsColor,
 	PrimaryButton,
 	Shimmer,
-	TextField
-	} from "office-ui-fabric-react";
-import * as React from "react";
-import * as loadable from "react-loadable";
+	TextField,
+} from "office-ui-fabric-react";
 
 const PatientDetailsPanel = loadable({
 	loader: async () =>
 		(await import("modules/patients/components/patient-details"))
 			.PatientDetailsPanel,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 const DentalHistoryPanel = loadable({
 	loader: async () =>
 		(await import("modules/patients/components/dental-history"))
 			.DentalHistoryPanel,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 const OrthoCaseSheetPanel = loadable({
 	loader: async () =>
 		(await import("modules/orthodontic/components/case-sheet"))
 			.OrthoCaseSheetPanel,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 const OrthoRecordsPanel = loadable({
 	loader: async () =>
 		(await import("modules/orthodontic/components/records"))
 			.OrthoRecordsPanel,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 const OrthoGalleryPanel = loadable({
 	loader: async () =>
 		(await import("modules/orthodontic/components/ortho-gallery"))
 			.OrthoGalleryPanel,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 const AppointmentEditorPanel = loadable({
 	loader: async () =>
 		(await import("modules/appointments/components/appointment-editor"))
 			.AppointmentEditorPanel,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 @observer
@@ -80,7 +80,7 @@ export class OrthoPage extends React.Component {
 
 	@computed get selectedCase() {
 		return modules.orthoCases!.docs.find(
-			orthoCase => orthoCase._id === core.router.selectedID
+			(orthoCase) => orthoCase._id === core.router.selectedID
 		);
 	}
 
@@ -98,48 +98,48 @@ export class OrthoPage extends React.Component {
 
 	@computed get selectedAppointment() {
 		return modules.appointments!.docs.find(
-			x => x._id === this.selectedAppointmentId
+			(x) => x._id === this.selectedAppointmentId
 		);
 	}
 
 	tabs = [
 		{
 			key: "details",
-			title: "Patient Details",
-			icon: "DietPlanNotebook"
+			title: text("patient details").h,
+			icon: "DietPlanNotebook",
 		},
 		{
 			key: "dental",
-			title: "Dental History",
-			icon: "teeth"
+			title: text("dental history").h,
+			icon: "teeth",
 		},
 		{
 			key: "sheet",
-			title: "Case Sheet",
-			icon: "GroupedList"
+			title: text("case details").h,
+			icon: "GroupedList",
 		},
 		{
 			key: "archive",
-			title: "Visits Archive",
-			icon: "Archive"
+			title: text("visits").h,
+			icon: "Archive",
 		},
 		{
 			key: "gallery",
-			title: "Gallery",
-			icon: "PhotoCollection"
+			title: text("gallery").h,
+			icon: "PhotoCollection",
 		},
 		{
 			key: "appointments",
-			title: "Appointments",
+			title: text("appointments").h,
 			icon: "Calendar",
-			hidden: !core.user.currentUser!.canViewAppointments
+			hidden: !core.user.currentUser!.canViewAppointments,
 		},
 		{
 			key: "delete",
-			title: "Delete",
+			title: text("delete").h,
 			icon: "Trash",
-			hidden: !this.canEdit
-		}
+			hidden: !this.canEdit,
+		},
 	];
 
 	render() {
@@ -149,21 +149,29 @@ export class OrthoPage extends React.Component {
 					maxItemsOnLoad={10}
 					className={"orthodontic-cases-data-table"}
 					heads={[
-						text("Orthodontic Patient"),
-						text("Started/Finished Treatment"),
-						text("Last/Next Appointment"),
-						text("Total/Outstanding Payments")
+						text("orthodontic patient").h,
+						`${text("started").h}/${text("finished").h} ${text(
+							"treatment"
+						)}`,
+						`${text("previous").h}/${text("next").h} ${text(
+							"appointment"
+						)}`,
+						`${text("total").h}/${text("outstanding").h} ${
+							text("payment").h
+						}`,
 					]}
 					rows={modules
-						.orthoCases!.docs.filter(orthoCase => orthoCase.patient)
-						.map(orthoCase => {
+						.orthoCases!.docs.filter(
+							(orthoCase) => orthoCase.patient
+						)
+						.map((orthoCase) => {
 							const patient = orthoCase.patient!;
 							return {
 								id: orthoCase._id,
 								searchableString: orthoCase.searchableString,
 								actions: this.tabs
-									.filter(x => !x.hidden)
-									.map(x => ({
+									.filter((x) => !x.hidden)
+									.map((x) => ({
 										key: x.key,
 										title: x.title,
 										icon: x.icon,
@@ -175,10 +183,10 @@ export class OrthoPage extends React.Component {
 											} else {
 												core.router.select({
 													id: orthoCase._id,
-													tab: x.key
+													tab: x.key,
 												});
 											}
-										}
+										},
 									})),
 								cells: [
 									{
@@ -223,9 +231,9 @@ export class OrthoPage extends React.Component {
 										onClick: () => {
 											core.router.select({
 												id: orthoCase._id,
-												tab: "sheet"
+												tab: "sheet",
 											});
-										}
+										},
 									},
 									{
 										dataValue: orthoCase.isFinished
@@ -247,11 +255,11 @@ export class OrthoPage extends React.Component {
 													subText={
 														orthoCase.isStarted
 															? text(
-																	"Started treatment"
-															  )
+																	"started treatment"
+															  ).c
 															: text(
-																	"Has not started yet"
-															  )
+																	"has not started yet"
+															  ).c
 													}
 													size={3}
 													onRenderInitials={() => (
@@ -263,7 +271,6 @@ export class OrthoPage extends React.Component {
 															: PersonaInitialsColor.transparent
 													}
 												/>
-												<br />
 												<ProfileSquaredComponent
 													text={
 														orthoCase.isFinished
@@ -278,11 +285,11 @@ export class OrthoPage extends React.Component {
 													subText={
 														orthoCase.isFinished
 															? text(
-																	"Finished treatment"
-															  )
+																	"finished treatment"
+															  ).c
 															: text(
-																	"Has not finished yet"
-															  )
+																	"has not finished yet"
+															  ).c
 													}
 													size={3}
 													onRenderInitials={() => (
@@ -296,12 +303,12 @@ export class OrthoPage extends React.Component {
 												/>
 											</div>
 										),
-										className: "hidden-xs"
+										className: "hidden-xs",
 									},
 									{
 										dataValue: (
 											patient.nextAppointment || {
-												date: 0
+												date: 0,
 											}
 										).date,
 										component: (
@@ -312,15 +319,15 @@ export class OrthoPage extends React.Component {
 												nextAppointment={
 													patient.nextAppointment
 												}
-												onClick={id => {
+												onClick={(id) => {
 													this.selectedAppointmentId = id;
 													core.router.select({
-														sub: "details"
+														sub: "details",
 													});
 												}}
 											></LastNextAppointment>
 										),
-										className: "hidden-xs"
+										className: "hidden-xs",
 									},
 									{
 										dataValue: patient.totalPayments,
@@ -333,9 +340,9 @@ export class OrthoPage extends React.Component {
 														) +
 														patient.totalPayments.toString()
 													}
-													subText={text(
-														"Payments made"
-													)}
+													subText={
+														text("payments made").c
+													}
 													size={3}
 													onRenderInitials={() => (
 														<Icon iconName="CheckMark" />
@@ -347,7 +354,6 @@ export class OrthoPage extends React.Component {
 															: PersonaInitialsColor.transparent
 													}
 												/>
-												<br />
 												<ProfileSquaredComponent
 													text={
 														modules.setting!.getSetting(
@@ -365,16 +371,16 @@ export class OrthoPage extends React.Component {
 														patient.differenceAmount <
 														0
 															? text(
-																	"Outstanding amount"
-															  )
+																	"outstanding amount"
+															  ).c
 															: patient.differenceAmount >
 															  0
 															? text(
-																	"Overpaid amount"
-															  )
+																	"overpaid amount"
+															  ).c
 															: text(
-																	"No outstanding amount"
-															  )
+																	"no outstanding amount"
+															  ).c
 													}
 													size={3}
 													onRenderInitials={() => (
@@ -389,9 +395,9 @@ export class OrthoPage extends React.Component {
 												/>
 											</div>
 										),
-										className: "hidden-xs"
-									}
-								]
+										className: "hidden-xs",
+									},
+								],
 							};
 						})}
 					commands={
@@ -400,13 +406,13 @@ export class OrthoPage extends React.Component {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: text("Add new"),
+										name: text("add new").c,
 										onClick: () =>
 											(this.showAdditionPanel = true),
 										iconProps: {
-											iconName: "Add"
-										}
-									}
+											iconName: "Add",
+										},
+									},
 							  ]
 							: []
 					}
@@ -422,18 +428,18 @@ export class OrthoPage extends React.Component {
 				>
 					<br />
 					<TagInputComponent
-						label={text("Choose patient")}
-						options={modules.patients!.docs.map(patient => ({
+						label={text("select patient").c}
+						options={modules.patients!.docs.map((patient) => ({
 							text: patient.name,
-							key: patient._id
+							key: patient._id,
 						}))}
 						className="choose-patient"
-						suggestionsHeaderText={text("Select patient")}
-						noResultsFoundText={text("No patients found")}
+						suggestionsHeaderText={text("select patient").c}
+						noResultsFoundText={text("no patient found").c}
 						maxItems={1}
 						disabled={!this.canEdit}
 						value={[]}
-						onChange={selectedKeys => {
+						onChange={(selectedKeys) => {
 							if (selectedKeys[0]) {
 								this.showAdditionPanel = false;
 								const orthoCase = modules.orthoCases!.new();
@@ -441,7 +447,7 @@ export class OrthoPage extends React.Component {
 								modules.orthoCases!.add(orthoCase);
 								core.router.select({
 									id: orthoCase._id,
-									tab: "sheet"
+									tab: "sheet",
 								});
 							}
 						}}
@@ -460,7 +466,7 @@ export class OrthoPage extends React.Component {
 					</Row>
 					<TextField
 						label="Add new patient"
-						placeholder={text(`Patient name`)}
+						placeholder={text(`patient name`).c}
 						value={this.newPatientName}
 						onChange={(e, v) => (this.newPatientName = v!)}
 					/>
@@ -478,13 +484,13 @@ export class OrthoPage extends React.Component {
 							this.newPatientName = "";
 							core.router.select({
 								id: orthoCase._id,
-								tab: "details"
+								tab: "details",
 							});
 						}}
 						iconProps={{
-							iconName: "add"
+							iconName: "add",
 						}}
-						text={text("Add new")}
+						text={text("add new").c}
 					/>
 				</Panel>
 
@@ -513,7 +519,7 @@ export class OrthoPage extends React.Component {
 							<div className="panel-heading">
 								<PanelTop
 									title={this.selectedPatient!.name}
-									type={"Orthodontic case"}
+									type={text("orthodontic").c}
 									onDismiss={() => core.router.unSelect()}
 									avatar={
 										this.selectedPatient!.avatar
@@ -533,7 +539,7 @@ export class OrthoPage extends React.Component {
 								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
-									onSelect={key => {
+									onSelect={(key) => {
 										core.router.select({ tab: key });
 									}}
 									items={this.tabs}
@@ -548,7 +554,7 @@ export class OrthoPage extends React.Component {
 								{core.router.selectedTab === "details" ? (
 									<PatientDetailsPanel
 										patient={this.selectedPatient!}
-										onChangeViewWhich={key =>
+										onChangeViewWhich={(key) =>
 											core.router.select({ tab: key })
 										}
 									/>
@@ -604,17 +610,19 @@ export class OrthoPage extends React.Component {
 												MessageBarType.warning
 											}
 										>
-											{text(
-												"Orthodontic case will be deleted"
-											)}
+											{
+												text(
+													"orthodontic case will be deleted"
+												).c
+											}
 										</MessageBar>
 										<br />
 										<PrimaryButton
 											className="delete"
 											iconProps={{
-												iconName: "delete"
+												iconName: "delete",
 											}}
-											text={text("Delete")}
+											text={text("delete").c}
 											onClick={() => {
 												modules.orthoCases!.delete(
 													core.router.selectedID

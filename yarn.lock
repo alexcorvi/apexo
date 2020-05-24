@@ -861,9 +861,9 @@
     "@types/yargs" "^13.0.0"
 
 "@microsoft/load-themed-styles@^1.10.26":
-  version "1.10.46"
-  resolved "https://registry.yarnpkg.com/@microsoft/load-themed-styles/-/load-themed-styles-1.10.46.tgz#c232b005aa6bad754de1f38b934ab0e7fc1d6f60"
-  integrity sha512-Zhu/rW6XwkQC9ZXt7IWxDpMAyYIyNsT5ZF0gMfFDXnZCKNPm9GZca8HV5AYB1X6gvPGiz8gV60I+o9+KSH+aTw==
+  version "1.10.47"
+  resolved "https://registry.yarnpkg.com/@microsoft/load-themed-styles/-/load-themed-styles-1.10.47.tgz#381d3b322c7834e40a731d7f8aa1b337dfc1aa9f"
+  integrity sha512-WC2HOPOG70nUuBQ80BiFdChqpxpqYzSFZB2E5g3r4HrcILYihVcKxxpjhh3YQ3hVFfiSaguEUrDSaZrqj8FJnQ==
 
 "@sheerun/mutationobserver-shim@^0.3.2":
   version "0.3.2"

@@ -2,8 +2,14 @@ import { ModalInterface, text } from "@core";
 import * as core from "@core";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { DefaultButton, Panel, PanelType, PrimaryButton, TextField } from "office-ui-fabric-react";
 import * as React from "react";
+import {
+	DefaultButton,
+	Panel,
+	PanelType,
+	PrimaryButton,
+	TextField,
+} from "office-ui-fabric-react";
 
 @observer
 export class ModalsView extends React.Component {
@@ -53,7 +59,7 @@ export class ModalsView extends React.Component {
 									this.inputValue = "";
 								}}
 								iconProps={{ iconName: "CheckMark" }}
-								text={text("Confirm")}
+								text={text("confirm").c}
 								data-testid="modal-confirm"
 							/>
 						) : (
@@ -69,7 +75,7 @@ export class ModalsView extends React.Component {
 									}
 								}}
 								iconProps={{ iconName: "Cancel" }}
-								text={text("Cancel")}
+								text={text("cancel").c}
 							/>
 						) : (
 							""

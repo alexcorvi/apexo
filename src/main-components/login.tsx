@@ -3,6 +3,7 @@ import * as core from "@core";
 import { second, store } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
+import * as React from "react";
 import {
 	DefaultButton,
 	MessageBar,
@@ -10,9 +11,8 @@ import {
 	PrimaryButton,
 	Spinner,
 	SpinnerSize,
-	TextField
-	} from "office-ui-fabric-react";
-import * as React from "react";
+	TextField,
+} from "office-ui-fabric-react";
 
 @observer
 export class LoginView extends React.Component {
@@ -61,7 +61,7 @@ export class LoginView extends React.Component {
 					server: this.serverFieldValue.replace(
 						/([^\/])\/[^\/].+/,
 						"$1"
-					)
+					),
 			  })
 			: await core.status.loginWithCredentials({
 					username: this.usernameFieldValue,
@@ -69,7 +69,7 @@ export class LoginView extends React.Component {
 					server: this.serverFieldValue.replace(
 						/([^\/])\/[^\/].+/,
 						"$1"
-					)
+					),
 			  });
 		if (typeof result !== "boolean") {
 			this.errorMessage = result;
@@ -92,7 +92,7 @@ export class LoginView extends React.Component {
 								location.reload();
 							}}
 							iconProps={{
-								iconName: "Sync"
+								iconName: "Sync",
 							}}
 						/>
 					</div>
@@ -112,7 +112,7 @@ export class LoginView extends React.Component {
 										messageBarType={MessageBarType.warning}
 									>
 										{`${text(
-											`You're offline. Use the latest username/password you've successfully used on this machine to login to this server`
+											`you're offline. use the latest username/password you've successfully used on this machine to login to this server`
 										)}:
 								${(this.serverFieldValue || "").replace(/([^\/])\/[^\/].+/, "$1")}.
 							`}
@@ -129,7 +129,7 @@ export class LoginView extends React.Component {
 								>
 									<TextField
 										name="server"
-										label={text(`Server location`)}
+										label={text(`server location`).c}
 										value={this.serverFieldValue}
 										disabled={this.disableInputs}
 										onChange={(ev, v) =>
@@ -141,14 +141,14 @@ export class LoginView extends React.Component {
 
 								<TextField
 									name="identification"
-									label={text(`Username`)}
+									label={text(`username`).c}
 									disabled={this.disableInputs}
 									value={this.usernameFieldValue}
 									onChange={(e, v) =>
 										(this.usernameFieldValue = v!)
 									}
 									data-testid="input-identification"
-									onKeyDown={ev => {
+									onKeyDown={(ev) => {
 										if (ev.keyCode === 13) {
 											this.login();
 										}
@@ -157,14 +157,14 @@ export class LoginView extends React.Component {
 								<TextField
 									name="password"
 									type="Password"
-									label={text(`Password`)}
+									label={text(`password`).c}
 									disabled={this.disableInputs}
 									value={this.passwordFieldValue}
 									onChange={(e, v) =>
 										(this.passwordFieldValue = v!)
 									}
 									data-testid="input-password"
-									onKeyDown={ev => {
+									onKeyDown={(ev) => {
 										if (ev.keyCode === 13) {
 											this.login();
 										}
@@ -172,9 +172,9 @@ export class LoginView extends React.Component {
 								/>
 								<PrimaryButton
 									iconProps={{
-										iconName: "Permissions"
+										iconName: "Permissions",
 									}}
-									text={text("Login")}
+									text={text("login").c}
 									disabled={this.disableInputs}
 									className="m-t-15 m-b-15"
 									data-testid="proceed-primary"
@@ -184,7 +184,7 @@ export class LoginView extends React.Component {
 								/>
 								{core.status.tryOffline ? (
 									<PrimaryButton
-										text={text("Access offline")}
+										text={text("access offline").c}
 										disabled={this.disableInputs}
 										className="m-t-15 m-b-15 m-l-5 m-r-5"
 										data-testid="proceed-offline"
@@ -195,6 +195,15 @@ export class LoginView extends React.Component {
 								) : (
 									""
 								)}
+								<DefaultButton
+									onClick={() => core.status.startNoServer()}
+									className="no-server-mode m-t-15 m-b-15 m-l-5 m-r-5"
+									iconProps={{
+										iconName: "StatusErrorFull",
+									}}
+								>
+									no-server mode
+								</DefaultButton>
 							</div>
 						) : (
 							<div className="spinner-container">
@@ -228,7 +237,7 @@ export class LoginView extends React.Component {
 							core.status.startNoServer();
 						}}
 						iconProps={{
-							iconName: "StatusErrorFull"
+							iconName: "StatusErrorFull",
 						}}
 					/>
 				) : (

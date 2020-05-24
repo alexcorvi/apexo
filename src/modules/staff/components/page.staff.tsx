@@ -1,3 +1,13 @@
+import * as core from "@core";
+import { text } from "@core";
+import * as modules from "@modules";
+import { AppointmentsList } from "@modules";
+import { dateNames, formatDate, num } from "@utils";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
+import { PrimaryButton } from "office-ui-fabric-react";
+import * as React from "react";
+import * as loadable from "react-loadable";
 import {
 	Col,
 	DataTableComponent,
@@ -8,15 +18,8 @@ import {
 	ProfileSquaredComponent,
 	Row,
 	SectionComponent,
-	TableActions
-	} from "@common-components";
-import * as core from "@core";
-import { text } from "@core";
-import * as modules from "@modules";
-import { AppointmentsList } from "@modules";
-import { dateNames, formatDate, num } from "@utils";
-import { computed, observable } from "mobx";
-import { observer } from "mobx-react";
+	TableActions,
+} from "@common-components";
 import {
 	Checkbox,
 	Icon,
@@ -29,17 +32,14 @@ import {
 	PersonaInitialsColor,
 	Shimmer,
 	TextField,
-	Toggle
-	} from "office-ui-fabric-react";
-import { PrimaryButton } from "office-ui-fabric-react";
-import * as React from "react";
-import * as loadable from "react-loadable";
+	Toggle,
+} from "office-ui-fabric-react";
 
 const AppointmentEditorPanel = loadable({
 	loader: async () =>
 		(await import("modules/appointments/components/appointment-editor"))
 			.AppointmentEditorPanel,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 @observer
@@ -59,38 +59,40 @@ export class StaffPage extends React.Component {
 
 	@computed get selectedAppointment() {
 		return modules.appointments!.docs.find(
-			x => x._id === this.selectedAppointmentId
+			(x) => x._id === this.selectedAppointmentId
 		);
 	}
 
 	@computed
 	get selectedMember() {
-		return modules.staff!.docs.find(x => x._id === core.router.selectedID);
+		return modules.staff!.docs.find(
+			(x) => x._id === core.router.selectedID
+		);
 	}
 
 	tabs = [
 		{
 			key: "details",
-			title: "Staff Member Details",
-			icon: "DietPlanNotebook"
+			title: text("staff member details").h,
+			icon: "DietPlanNotebook",
 		},
 		{
 			key: "permission",
-			title: "Level and Permission",
-			icon: "Permissions"
+			title: text("level and permission").h,
+			icon: "Permissions",
 		},
 		{
 			key: "appointments",
-			title: "Upcoming Appointments",
+			title: text("upcoming appointments").h,
 			icon: "Calendar",
-			hidden: !core.user.currentUser!.canViewAppointments
+			hidden: !core.user.currentUser!.canViewAppointments,
 		},
 		{
 			key: "delete",
-			title: "Delete",
+			title: text("delete").h,
 			icon: "Trash",
-			hidden: !this.canEdit
-		}
+			hidden: !this.canEdit,
+		},
 	];
 
 	render() {
@@ -99,16 +101,18 @@ export class StaffPage extends React.Component {
 				<DataTableComponent
 					maxItemsOnLoad={10}
 					heads={[
-						text("Staff Member"),
-						text("Last/Next Appointment"),
-						text("Contact Details")
+						text("staff member").c,
+						`${text("previous").c}/${text("next").c} ${
+							text("appointment").c
+						}`,
+						text("contact details").c,
 					]}
-					rows={modules.staff!.docs.map(member => ({
+					rows={modules.staff!.docs.map((member) => ({
 						id: member._id,
 						searchableString: member.searchableString,
 						actions: this.tabs
-							.filter(x => !x.hidden)
-							.map(x => ({
+							.filter((x) => !x.hidden)
+							.map((x) => ({
 								key: x.key,
 								title: x.title,
 								icon: x.icon,
@@ -118,10 +122,10 @@ export class StaffPage extends React.Component {
 									} else {
 										core.router.select({
 											id: member._id,
-											tab: x.key
+											tab: x.key,
 										});
 									}
-								}
+								},
 							})),
 						cells: [
 							{
@@ -151,30 +155,30 @@ export class StaffPage extends React.Component {
 								onClick: () => {
 									core.router.select({
 										id: member._id,
-										tab: "details"
+										tab: "details",
 									});
-								}
+								},
 							},
 							{
 								dataValue: (
 									member.lastAppointment ||
 									member.nextAppointment || {
-										date: 0
+										date: 0,
 									}
 								).date,
 								component: (
 									<LastNextAppointment
 										lastAppointment={member.lastAppointment}
 										nextAppointment={member.nextAppointment}
-										onClick={id => {
+										onClick={(id) => {
 											this.selectedAppointmentId = id;
 											core.router.select({
-												sub: "details"
+												sub: "details",
 											});
 										}}
 									></LastNextAppointment>
 								),
-								className: "hidden-xs"
+								className: "hidden-xs",
 							},
 							{
 								dataValue: member.phone || member.email,
@@ -184,8 +188,8 @@ export class StaffPage extends React.Component {
 											text={member.phone}
 											subText={
 												member.phone
-													? text("Phone number")
-													: text("No phone number")
+													? text("phone number").c
+													: text("no phone number").c
 											}
 											size={3}
 											onRenderInitials={() => (
@@ -201,8 +205,8 @@ export class StaffPage extends React.Component {
 											text={member.email}
 											subText={
 												member.email
-													? text("Email")
-													: text("No Email")
+													? text("email").c
+													: text("no email").c
 											}
 											size={3}
 											onRenderInitials={() => (
@@ -216,9 +220,9 @@ export class StaffPage extends React.Component {
 										/>
 									</div>
 								),
-								className: "hidden-xs"
-							}
-						]
+								className: "hidden-xs",
+							},
+						],
 					}))}
 					commands={
 						this.canEdit
@@ -226,19 +230,19 @@ export class StaffPage extends React.Component {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: text("Add new"),
+										name: text("add new").c,
 										onClick: () => {
 											const member = modules.staff!.new();
 											modules.staff!.add(member);
 											core.router.select({
 												id: member._id,
-												tab: "details"
+												tab: "details",
 											});
 										},
 										iconProps: {
-											iconName: "Add"
-										}
-									}
+											iconName: "Add",
+										},
+									},
 							  ]
 							: []
 					}
@@ -260,12 +264,12 @@ export class StaffPage extends React.Component {
 							<div className="panel-heading">
 								<PanelTop
 									title={this.selectedMember!.name}
-									type={"Staff Member"}
+									type={text("staff member").c}
 									onDismiss={() => core.router.unSelect()}
 								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
-									onSelect={key => {
+									onSelect={(key) => {
 										core.router.select({ tab: key });
 									}}
 									items={this.tabs}
@@ -277,11 +281,11 @@ export class StaffPage extends React.Component {
 							{core.router.selectedTab === "details" ? (
 								<div>
 									<SectionComponent
-										title={text(`Basic Info`)}
+										title={text(`basic info`).c}
 									>
 										<div className="staff-input">
 											<TextField
-												label={text("Name")}
+												label={text("name").c}
 												value={this.selectedMember.name}
 												onChange={(ev, val) =>
 													(this.selectedMember!.name = val!)
@@ -293,7 +297,7 @@ export class StaffPage extends React.Component {
 
 										<div className="staff-input">
 											<Label>
-												{text("Days on duty")}
+												{text("days on duty").c}
 											</Label>
 											{dateNames
 												.days()
@@ -312,11 +316,15 @@ export class StaffPage extends React.Component {
 																	!this
 																		.canEdit
 																}
-																label={text(
-																	dateNames.daysShort()[
-																		x
-																	]
-																)}
+																label={
+																	text(
+																		dateNames
+																			.daysShort()
+																			[
+																				x
+																			].toLowerCase() as any
+																	).c
+																}
 																checked={
 																	this.selectedMember!.onDutyDays.indexOf(
 																		day
@@ -346,26 +354,27 @@ export class StaffPage extends React.Component {
 														s:
 															x > y
 																? x - y
-																: x + y + 7
+																: x + y + 7,
 													};
 												})
 												.sort((a, b) => {
 													return a.s - b.s;
 												})
-												.map(x => x.el)}
+												.map((x) => x.el)}
 										</div>
 									</SectionComponent>
 
 									<SectionComponent
-										title={text(`Contact Details`)}
+										title={text(`contact details`).h}
 									>
 										<Row gutter={8}>
 											<Col sm={12}>
 												<div className="staff-input">
 													<TextField
-														label={text(
-															"Phone number"
-														)}
+														label={
+															text("phone number")
+																.c
+														}
 														value={
 															this.selectedMember
 																.phone
@@ -381,7 +390,7 @@ export class StaffPage extends React.Component {
 											<Col sm={12}>
 												<div className="staff-input">
 													<TextField
-														label={text("Email")}
+														label={text("email").c}
 														value={
 															this.selectedMember
 																.email
@@ -406,12 +415,12 @@ export class StaffPage extends React.Component {
 									{this.selectedMember._id ===
 									core.user.currentUser!._id ? (
 										<SectionComponent
-											title={text(`Login PIN`)}
+											title={text(`login pin`).c}
 										>
 											<div className="staff-input">
 												<TextField
 													id="login-pin"
-													label={text("Login PIN")}
+													label={text("login pin").c}
 													value={
 														this.selectedMember.pin
 													}
@@ -431,16 +440,18 @@ export class StaffPage extends React.Component {
 													MessageBarType.info
 												}
 											>
-												{text(
-													"Only you can edit this PIN, and it can only be 4 numbers"
-												)}
+												{
+													text(
+														"only you can edit this pin, and it can only be 4 numbers"
+													).c
+												}
 											</MessageBar>
 										</SectionComponent>
 									) : (
 										""
 									)}
 									<SectionComponent
-										title={text(`Permission`)}
+										title={text(`permission`).c}
 									>
 										{this.sameUser ? (
 											<div>
@@ -449,9 +460,11 @@ export class StaffPage extends React.Component {
 														MessageBarType.warning
 													}
 												>
-													{text(
-														"You can't edit your own level and permissions"
-													)}
+													{
+														text(
+															"you can't edit your own level and permissions"
+														).c
+													}
 												</MessageBar>
 												<br />
 											</div>
@@ -465,12 +478,14 @@ export class StaffPage extends React.Component {
 											disabled={
 												this.sameUser || !this.canEdit
 											}
-											onText={text(
-												"Operates on patients"
-											)}
-											offText={text(
-												"Doesn't operate on patients"
-											)}
+											onText={
+												text("operates on patients").c
+											}
+											offText={
+												text(
+													"doesn't operate on patients"
+												).c
+											}
 											onChange={(ev, newVal) => {
 												this.selectedMember!.operates = newVal!;
 											}}
@@ -483,10 +498,13 @@ export class StaffPage extends React.Component {
 											disabled={
 												this.sameUser || !this.canEdit
 											}
-											onText={text("Can view staff page")}
-											offText={text(
-												"Can not view staff page"
-											)}
+											onText={
+												text("can view staff page").c
+											}
+											offText={
+												text("can not view staff page")
+													.c
+											}
 											onChange={(ev, newVal) => {
 												this.selectedMember!.canViewStaff = newVal!;
 											}}
@@ -499,12 +517,14 @@ export class StaffPage extends React.Component {
 											disabled={
 												this.sameUser || !this.canEdit
 											}
-											onText={text(
-												"Can view patients page"
-											)}
-											offText={text(
-												"Can not view patients page"
-											)}
+											onText={
+												text("can view patients page").c
+											}
+											offText={
+												text(
+													"can not view patients page"
+												).c
+											}
 											onChange={(ev, newVal) => {
 												this.selectedMember!.canViewPatients = newVal!;
 											}}
@@ -521,12 +541,16 @@ export class StaffPage extends React.Component {
 													this.sameUser ||
 													!this.canEdit
 												}
-												onText={text(
-													"Can view orthodontics page"
-												)}
-												offText={text(
-													"Can not view orthodontics page"
-												)}
+												onText={
+													text(
+														"can view orthodontics page"
+													).c
+												}
+												offText={
+													text(
+														"can not view orthodontics page"
+													).c
+												}
 												onChange={(ev, newVal) => {
 													this.selectedMember!.canViewOrtho = newVal!;
 												}}
@@ -542,12 +566,16 @@ export class StaffPage extends React.Component {
 											disabled={
 												this.sameUser || !this.canEdit
 											}
-											onText={text(
-												"Can view appointments page"
-											)}
-											offText={text(
-												"Can not view appointments page"
-											)}
+											onText={
+												text(
+													"can view appointments page"
+												).c
+											}
+											offText={
+												text(
+													"can not view appointments page"
+												).c
+											}
 											onChange={(ev, newVal) => {
 												this.selectedMember!.canViewAppointments = newVal!;
 											}}
@@ -560,12 +588,15 @@ export class StaffPage extends React.Component {
 											disabled={
 												this.sameUser || !this.canEdit
 											}
-											onText={text(
-												"Can view treatments page"
-											)}
-											offText={text(
-												"Can not view treatments page"
-											)}
+											onText={
+												text("can view treatments page")
+													.c
+											}
+											offText={
+												text(
+													"can not view treatments page"
+												).c
+											}
 											onChange={(ev, newVal) => {
 												this.selectedMember!.canViewTreatments = newVal!;
 											}}
@@ -582,12 +613,16 @@ export class StaffPage extends React.Component {
 													this.sameUser ||
 													!this.canEdit
 												}
-												onText={text(
-													"Can view prescriptions page"
-												)}
-												offText={text(
-													"Can not view prescriptions page"
-												)}
+												onText={
+													text(
+														"can view prescriptions page"
+													).c
+												}
+												offText={
+													text(
+														"can not view prescriptions page"
+													).c
+												}
 												onChange={(ev, newVal) => {
 													this.selectedMember!.canViewPrescriptions = newVal!;
 												}}
@@ -607,12 +642,16 @@ export class StaffPage extends React.Component {
 													this.sameUser ||
 													!this.canEdit
 												}
-												onText={text(
-													"Can view statistics page"
-												)}
-												offText={text(
-													"Can not view statistics page"
-												)}
+												onText={
+													text(
+														"can view statistics page"
+													).c
+												}
+												offText={
+													text(
+														"can not view statistics page"
+													).c
+												}
 												onChange={(ev, newVal) => {
 													this.selectedMember!.canViewStats = newVal!;
 												}}
@@ -629,12 +668,14 @@ export class StaffPage extends React.Component {
 											disabled={
 												this.sameUser || !this.canEdit
 											}
-											onText={text(
-												"Can view settings page"
-											)}
-											offText={text(
-												"Can not view settings page"
-											)}
+											onText={
+												text("can view settings page").c
+											}
+											offText={
+												text(
+													"can not view settings page"
+												).c
+											}
 											onChange={(ev, newVal) => {
 												this.selectedMember!.canViewSettings = newVal!;
 											}}
@@ -650,12 +691,15 @@ export class StaffPage extends React.Component {
 													this.sameUser ||
 													!this.canEdit
 												}
-												onText={text(
-													"Can edit staff page"
-												)}
-												offText={text(
-													"Can not edit staff page"
-												)}
+												onText={
+													text("can edit staff page")
+														.c
+												}
+												offText={
+													text(
+														"can not edit staff page"
+													).c
+												}
 												onChange={(ev, newVal) => {
 													this.selectedMember!.canEditStaff = newVal!;
 												}}
@@ -673,12 +717,16 @@ export class StaffPage extends React.Component {
 													this.sameUser ||
 													!this.canEdit
 												}
-												onText={text(
-													"Can edit patients page"
-												)}
-												offText={text(
-													"Can not edit patients page"
-												)}
+												onText={
+													text(
+														"can edit patients page"
+													).c
+												}
+												offText={
+													text(
+														"can not edit patients page"
+													).c
+												}
 												onChange={(ev, newVal) => {
 													this.selectedMember!.canEditPatients = newVal!;
 												}}
@@ -700,12 +748,16 @@ export class StaffPage extends React.Component {
 													this.sameUser ||
 													!this.canEdit
 												}
-												onText={text(
-													"Can edit orthodontics page"
-												)}
-												offText={text(
-													"Can not edit orthodontics page"
-												)}
+												onText={
+													text(
+														"can edit orthodontics page"
+													).c
+												}
+												offText={
+													text(
+														"can not edit orthodontics page"
+													).c
+												}
 												onChange={(ev, newVal) => {
 													this.selectedMember!.canEditOrtho = newVal!;
 												}}
@@ -725,12 +777,16 @@ export class StaffPage extends React.Component {
 													this.sameUser ||
 													!this.canEdit
 												}
-												onText={text(
-													"Can edit appointments page"
-												)}
-												offText={text(
-													"Can not edit appointments page"
-												)}
+												onText={
+													text(
+														"can edit appointments page"
+													).c
+												}
+												offText={
+													text(
+														"can not edit appointments page"
+													).c
+												}
 												onChange={(ev, newVal) => {
 													this.selectedMember!.canEditAppointments = newVal!;
 												}}
@@ -750,12 +806,16 @@ export class StaffPage extends React.Component {
 													this.sameUser ||
 													!this.canEdit
 												}
-												onText={text(
-													"Can edit treatments page"
-												)}
-												offText={text(
-													"Can not edit treatments page"
-												)}
+												onText={
+													text(
+														"can edit treatments page"
+													).c
+												}
+												offText={
+													text(
+														"can not edit treatments page"
+													).c
+												}
 												onChange={(ev, newVal) => {
 													this.selectedMember!.canEditTreatments = newVal!;
 												}}
@@ -778,12 +838,16 @@ export class StaffPage extends React.Component {
 													this.sameUser ||
 													!this.canEdit
 												}
-												onText={text(
-													"Can edit prescriptions page"
-												)}
-												offText={text(
-													"Can not edit prescriptions page"
-												)}
+												onText={
+													text(
+														"can edit prescriptions page"
+													).c
+												}
+												offText={
+													text(
+														"can not edit prescriptions page"
+													).c
+												}
 												onChange={(ev, newVal) => {
 													this.selectedMember!.canEditPrescriptions = newVal!;
 												}}
@@ -802,12 +866,16 @@ export class StaffPage extends React.Component {
 													this.sameUser ||
 													!this.canEdit
 												}
-												onText={text(
-													"Can edit settings page"
-												)}
-												offText={text(
-													"Can not edit settings page"
-												)}
+												onText={
+													text(
+														"can edit settings page"
+													).c
+												}
+												offText={
+													text(
+														"can not edit settings page"
+													).c
+												}
 												onChange={(ev, newVal) => {
 													this.selectedMember!.canEditSettings = newVal!;
 												}}
@@ -823,7 +891,7 @@ export class StaffPage extends React.Component {
 
 							{core.router.selectedTab === "appointments" ? (
 								<SectionComponent
-									title={text(`Upcoming Appointments`)}
+									title={text(`upcoming appointments`).h}
 								>
 									{this.selectedMember.upcomingAppointments
 										.length ? (
@@ -837,9 +905,11 @@ export class StaffPage extends React.Component {
 										<MessageBar
 											messageBarType={MessageBarType.info}
 										>
-											{text(
-												"There are no upcoming appointments for this staff member"
-											)}
+											{
+												text(
+													"there are no upcoming appointments for this staff member"
+												).c
+											}
 										</MessageBar>
 									)}
 								</SectionComponent>
@@ -853,17 +923,19 @@ export class StaffPage extends React.Component {
 									<MessageBar
 										messageBarType={MessageBarType.warning}
 									>
-										{text(
-											"Are you sure you want to delete"
-										)}
+										{
+											text(
+												"are you sure you want to delete"
+											).c
+										}
 									</MessageBar>
 									<br />
 									<PrimaryButton
 										className="delete"
 										iconProps={{
-											iconName: "delete"
+											iconName: "delete",
 										}}
-										text={text("Delete")}
+										text={text("delete").c}
 										onClick={() => {
 											modules.staff!.delete(
 												core.router.selectedID

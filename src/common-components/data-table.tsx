@@ -2,6 +2,7 @@ import * as core from "@core";
 import * as utils from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
+import * as React from "react";
 import {
 	CommandBar,
 	ContextualMenu,
@@ -11,9 +12,8 @@ import {
 	IconButton,
 	MessageBar,
 	MessageBarType,
-	SearchBox
-	} from "office-ui-fabric-react";
-import * as React from "react";
+	SearchBox,
+} from "office-ui-fabric-react";
 
 interface Cell {
 	component: string | React.ReactElement<any>;
@@ -52,7 +52,7 @@ interface Props {
 @observer
 export class DataTableComponent extends React.Component<Props, {}> {
 	@computed get sortableValues() {
-		return this.props.rows.map(row => {
+		return this.props.rows.map((row) => {
 			return isNaN(Number(row.cells[this.currentColIndex].dataValue))
 				? row.cells[this.currentColIndex].dataValue
 				: Number(row.cells[this.currentColIndex].dataValue);
@@ -76,7 +76,7 @@ export class DataTableComponent extends React.Component<Props, {}> {
 			.map((row, index) => {
 				return {
 					row,
-					index
+					index,
 				};
 			})
 			.sort((aVal, bVal) => {
@@ -90,7 +90,7 @@ export class DataTableComponent extends React.Component<Props, {}> {
 							this.sortableValues[aVal.index]
 					  );
 			})
-			.map(x => x.row);
+			.map((x) => x.row);
 	}
 
 	@computed
@@ -113,12 +113,12 @@ export class DataTableComponent extends React.Component<Props, {}> {
 				onRender: () => (
 					<SearchBox
 						value={this.filterString}
-						placeholder={core.text("Search")}
+						placeholder={core.text("search").c}
 						onChange={(ev, newVal) => {
 							this.filterString = newVal || "";
 						}}
 					/>
-				)
+				),
 			});
 		}
 
@@ -135,9 +135,9 @@ export class DataTableComponent extends React.Component<Props, {}> {
 					{...{
 						className: "commandBar fixed",
 						isSearchBoxVisible: !this.props.hideSearch,
-						elipisisAriaLabel: core.text("More options"),
+						elipisisAriaLabel: core.text("more options").c,
 						farItems: this.farItems,
-						items: this.props.commands || []
+						items: this.props.commands || [],
 					}}
 				/>
 				<table
@@ -215,7 +215,9 @@ export class DataTableComponent extends React.Component<Props, {}> {
 													items={
 														row.actions
 															? row.actions.map(
-																	action => ({
+																	(
+																		action
+																	) => ({
 																		key:
 																			action.key,
 																		text:
@@ -224,10 +226,10 @@ export class DataTableComponent extends React.Component<Props, {}> {
 																			action.title,
 																		iconProps: {
 																			iconName:
-																				action.icon
+																				action.icon,
 																		},
 																		onClick:
-																			action.onClick
+																			action.onClick,
 																	})
 															  )
 															: []
@@ -261,7 +263,7 @@ export class DataTableComponent extends React.Component<Props, {}> {
 													""
 												}
 												onClick={cell.onClick}
-												onAuxClick={e => {
+												onAuxClick={(e) => {
 													this.ctxMenusOpen = row.id;
 													e.stopPropagation();
 													return e.preventDefault();
@@ -285,7 +287,7 @@ export class DataTableComponent extends React.Component<Props, {}> {
 						className="load-more"
 						iconProps={{ iconName: "more" }}
 						onClick={() => (this.limit = this.limit + 10)}
-						text={core.text("Load more")}
+						text={core.text("load more").c}
 					/>
 				) : (
 					""
@@ -296,18 +298,22 @@ export class DataTableComponent extends React.Component<Props, {}> {
 						className="dt-msg-bar"
 						messageBarType={MessageBarType.info}
 					>
-						{core.text(
-							"No data in this section yet, you can add new data by clicking the button above"
-						)}
+						{
+							core.text(
+								"no data in this section yet, you can add new data by clicking the button above"
+							).c
+						}
 					</MessageBar>
 				) : this.filteredRows.length === 0 ? (
 					<MessageBar
 						className="dt-msg-bar"
 						messageBarType={MessageBarType.info}
 					>
-						{core.text(
-							"Did not find anything that matches your search criteria"
-						)}
+						{
+							core.text(
+								"did not find anything that matches your search criteria"
+							).c
+						}
 					</MessageBar>
 				) : (
 					""

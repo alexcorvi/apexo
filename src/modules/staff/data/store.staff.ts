@@ -6,7 +6,7 @@ import { Store } from "pouchx";
 
 export class Staff extends Store<StaffMemberSchema, StaffMember> {
 	@computed get operatingStaff() {
-		return this.docs.filter(x => x.operates);
+		return this.docs.filter((x) => x.operates);
 	}
 
 	async afterChange() {
@@ -15,17 +15,17 @@ export class Staff extends Store<StaffMemberSchema, StaffMember> {
 	}
 
 	deleteModal(id: string) {
-		const item = this.docs.find(x => x._id === id);
+		const item = this.docs.find((x) => x._id === id);
 		if (!item) {
 			return;
 		}
 		modals.newModal({
-			text: `${text("Are you sure you want to delete")} ${item.name}`,
+			text: `${text("are you sure you want to delete").c} ${item.name}`,
 			onConfirm: () => this.delete(item._id),
 			showCancelButton: true,
 			showConfirmButton: true,
 			input: false,
-			id: Math.random()
+			id: Math.random(),
 		});
 	}
 
@@ -34,7 +34,7 @@ export class Staff extends Store<StaffMemberSchema, StaffMember> {
 			// remove staff from operating on appointments
 			staffMember.appointments[index].staffID = staffMember.appointments[
 				index
-			].staffID.filter(x => x !== staffMember._id);
+			].staffID.filter((x) => x !== staffMember._id);
 		}
 
 		// logout if it's the same user

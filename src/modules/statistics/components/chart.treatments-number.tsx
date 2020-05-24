@@ -17,9 +17,9 @@ export class TreatmentsNumberChart extends React.Component<{
 	get values() {
 		return this.props.selectedTreatments.map((treatment, i) => ({
 			x: i,
-			y: treatment.profit,
+			y: Math.round(treatment.profit),
 			times: treatment.times,
-			title: treatment.treatment.type
+			title: treatment.treatment.type,
 		}));
 	}
 	render() {
@@ -30,18 +30,18 @@ export class TreatmentsNumberChart extends React.Component<{
 						height: 400,
 						notStacked: true,
 						data: {
-							xLabels: this.values.map(x => x.title),
+							xLabels: this.values.map((x) => x.title),
 							bars: [
 								{
-									label: text("Profits"),
-									data: this.values.map(x => x.y)
+									label: text("profits").c,
+									data: this.values.map((x) => x.y),
 								},
 								{
-									label: text("Applied times"),
-									data: this.values.map(x => x.times)
-								}
-							]
-						}
+									label: text("applied times").c,
+									data: this.values.map((x) => x.times),
+								},
+							],
+						},
 					}}
 				/>
 			</div>

@@ -12,13 +12,17 @@ import {
 import { computed, observable } from "mobx";
 import { Md5 } from "ts-md5";
 
-const demoHosts: string[] = ["demo.apexo.app"];
+const demoHosts: string[] = [
+	"demo.apexo.app",
+	"localhost:8000",
+	"192.168.1.102:8000",
+];
 
 export enum LoginStep {
 	loadingData,
 	allDone,
 	chooseUser,
-	initial
+	initial,
 }
 
 export enum LoginType {
@@ -26,7 +30,7 @@ export enum LoginType {
 	initialLSLHashTS = "initial-lsl-hash-ts",
 	loginCredentialsOnline = "login-credentials-online",
 	loginCredentialsOffline = "login-credentials-offline",
-	cypress = "no-server"
+	cypress = "no-server",
 }
 
 export class Status {
@@ -45,7 +49,7 @@ export class Status {
 	@observable isOnline = {
 		dropbox: false,
 		server: false,
-		client: false
+		client: false,
 	};
 
 	@observable tryOffline: boolean = false;
@@ -91,7 +95,7 @@ export class Status {
 	async loginWithCredentials({
 		username,
 		password,
-		server
+		server,
 	}: {
 		username: string;
 		password: string;
@@ -103,7 +107,7 @@ export class Status {
 			return this.loginWithCredentialsOffline({
 				username,
 				password,
-				server
+				server,
 			});
 		}
 
@@ -111,7 +115,7 @@ export class Status {
 			return this.loginWithCredentialsOnline({
 				username,
 				password,
-				server
+				server,
 			});
 		} else {
 			if (store.found("LSL_hash")) {
@@ -128,7 +132,7 @@ export class Status {
 		username,
 		password,
 		server,
-		noStart
+		noStart,
 	}: {
 		username: string;
 		password: string;
@@ -168,7 +172,7 @@ export class Status {
 		username,
 		password,
 		server,
-		noStart
+		noStart,
 	}: {
 		username: string;
 		password: string;
@@ -193,11 +197,13 @@ export class Status {
 		this.keepServerOffline = true;
 		this.loginType = LoginType.cypress;
 		await this.start({
-			server: "http://cypress"
+			server: "http://cypress",
 		});
 	}
 
 	async startDemoServer() {
+		await (window as any).hardResetApp;
+		await this.start({ server: "" });
 		(await import("core/demo")).loadDemoData();
 	}
 
@@ -248,7 +254,7 @@ export class Status {
 
 	checkAndSetUserID() {
 		const userID = store.get("user_id");
-		if (userID && staff!.docs.find(x => x._id === userID)) {
+		if (userID && staff!.docs.find((x) => x._id === userID)) {
 			this.setUser(userID);
 			return true;
 		} else {
@@ -276,9 +282,11 @@ export class Status {
 		PouchDB.plugin(auth);
 		try {
 			if (this.isOnline.server && !this.keepServerOffline) {
-				return !!(await new PouchDB(server, {
-					skip_setup: true
-				}).getSession()).userCtx.name;
+				return !!(
+					await new PouchDB(server, {
+						skip_setup: true,
+					}).getSession()
+				).userCtx.name;
 			}
 		} catch (e) {}
 		return false;
@@ -322,7 +330,11 @@ export class Status {
 			this.initialLoadingIndicatorText =
 				"checking files server connectivity";
 			if (modules.setting) {
-				this.isOnline.dropbox = await files.status();
+				this.isOnline.dropbox =
+					modules.setting.getSetting("dropbox_accessToken") ===
+					"direct"
+						? true
+						: await files.status();
 			}
 		} catch (e) {}
 		this.currentlyValidating = null;
@@ -335,7 +347,7 @@ export class Status {
 		this.isOnline = {
 			server: false,
 			client: false,
-			dropbox: false
+			dropbox: false,
 		};
 		this.tryOffline = false;
 		this.loginType = "";

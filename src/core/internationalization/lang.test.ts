@@ -4,7 +4,7 @@ describe("@core: internationalization", () => {
 	it("English as the default", () => {
 		expect(translate.loadedCode).toBe("en");
 	});
-	it("Setting another language", async done => {
+	it("Setting another language", async (done) => {
 		setting!.setSetting("lang", "ar");
 		setTimeout(() => {
 			expect(translate.loadedCode).toBe("ar");
@@ -15,6 +15,6 @@ describe("@core: internationalization", () => {
 		expect(text("search")).not.toBe("search");
 	});
 	it("getting a non registered term", () => {
-		expect(text("SOMETHING-ELSE")).toBe("SOMETHING-ELSE");
+		expect(text("SOMETHING-ELSE" as any)).toBe("SOMETHING-ELSE");
 	});
 });

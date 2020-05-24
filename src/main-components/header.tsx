@@ -27,12 +27,17 @@ export class HeaderView extends React.Component {
 					</Col>
 					<Col span={8}>
 						<section className="title" data-testid="page-title">
-							{text(core.router.currentNamespace || "Home")}
+							{
+								text(
+									(core.router.currentNamespace.toLowerCase() as any) ||
+										"home"
+								).c
+							}
 						</section>
 					</Col>
 					<Col span={8}>
 						<section className="right-buttons">
-							<TooltipHost content={text("User panel")}>
+							<TooltipHost content={text("user panel").c}>
 								<IconButton
 									onClick={() => core.user.show()}
 									iconProps={{ iconName: "Contact" }}
@@ -45,14 +50,10 @@ export class HeaderView extends React.Component {
 								<TooltipHost
 									content={
 										!core.status.isOnline.server
-											? text(
-													"Server is unavailable/offline"
-											  )
+											? text("server is unavailable").c
 											: core.status.invalidLogin
-											? text(
-													"Can't login to remote server"
-											  )
-											: text("Sync with server")
+											? text("can't login to server").c
+											: text("sync with server").c
 									}
 								>
 									<IconButton
@@ -73,7 +74,7 @@ export class HeaderView extends React.Component {
 												? "WifiWarning4"
 												: core.status.invalidLogin
 												? "Important"
-												: "Sync"
+												: "Sync",
 										}}
 										className={
 											"resync " +

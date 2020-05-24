@@ -17,17 +17,17 @@ export class TableActions extends React.Component<{
 	render() {
 		return (
 			<div className="table-actions hidden-xs">
-				{this.props.items.map(item =>
+				{this.props.items.map((item) =>
 					item.hidden ? (
 						""
 					) : (
-						<TooltipHost content={text(item.title)} key={item.key}>
+						<TooltipHost content={item.title} key={item.key}>
 							<IconButton
 								className={"action-button " + item.key}
 								iconProps={{
-									iconName: item.icon
+									iconName: item.icon,
 								}}
-								onClick={e => {
+								onClick={(e) => {
 									this.props.onSelect(item.key);
 									e.stopPropagation();
 								}}

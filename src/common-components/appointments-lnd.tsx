@@ -8,13 +8,13 @@ import * as React from "react";
 
 export enum ALSecondaryText {
 	patient,
-	operators
+	operators,
 }
 
 export enum ALRightColumn {
 	operators,
 	deleteButton,
-	patient
+	patient,
 }
 
 @observer
@@ -31,7 +31,7 @@ export class AppointmentsListNoDate extends React.Component<
 > {
 	secondaryText(appointment: modules.Appointment) {
 		if (this.props.secondaryText === ALSecondaryText.operators) {
-			return appointment.operatingStaff.map(x => x.name).join(", ");
+			return appointment.operatingStaff.map((x) => x.name).join(", ");
 		} else {
 			return (appointment.patient || { name: "" }).name;
 		}
@@ -65,14 +65,14 @@ export class AppointmentsListNoDate extends React.Component<
 				<Icon
 					iconName="delete"
 					className="delete"
-					onClick={ev => {
+					onClick={(ev) => {
 						modules.appointments!.deleteModal(appointment._id);
 						ev.stopPropagation();
 					}}
 				/>
 			);
 		} else {
-			return appointment.operatingStaff.map(operator => (
+			return appointment.operatingStaff.map((operator) => (
 				<div key={operator._id}>
 					<CC.Col xxl={0} xl={0} lg={0} md={0} sm={0} xs={24}>
 						<div key={operator._id} className="m-t-5 fs-11">
@@ -97,11 +97,11 @@ export class AppointmentsListNoDate extends React.Component<
 
 	dayString(appointment: modules.Appointment) {
 		if (utils.isToday(appointment.date)) {
-			return "Today";
+			return "today";
 		} else if (appointment.dueTomorrow) {
-			return "Tomorrow";
+			return "tomorrow";
 		} else if (appointment.dueYesterday) {
-			return "Yesterday";
+			return "yesterday";
 		} else {
 			return utils.formatDate(
 				appointment.date,
@@ -112,9 +112,9 @@ export class AppointmentsListNoDate extends React.Component<
 
 	timeString(appointment: modules.Appointment) {
 		if (appointment.isDone) {
-			return core.text("Done");
+			return core.text("done").c;
 		} else if (appointment.isMissed) {
-			return core.text("Missed");
+			return core.text("missed").c;
 		} else {
 			return appointment.formattedTime;
 		}
@@ -125,7 +125,7 @@ export class AppointmentsListNoDate extends React.Component<
 			<table
 				className={`ms-table appointments-lnd ${this.props.className}`}
 			>
-				{this.props.appointments.map(appointment => (
+				{this.props.appointments.map((appointment) => (
 					<tbody
 						key={appointment._id}
 						onClick={() => this.props.onClick(appointment._id)}
@@ -135,9 +135,11 @@ export class AppointmentsListNoDate extends React.Component<
 					>
 						<tr>
 							<td colSpan={2} className="hat-time">
-								{`${core.text(
-									this.dayString(appointment)
-								)} - ${this.timeString(appointment)}`}
+								{`${
+									core.text(
+										this.dayString(appointment) as any
+									).c
+								} - ${this.timeString(appointment)}`}
 							</td>
 						</tr>
 						<tr>

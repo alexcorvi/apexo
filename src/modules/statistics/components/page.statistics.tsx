@@ -1,13 +1,3 @@
-import {
-	Col,
-	DataTableComponent,
-	ProfileComponent,
-	ProfileSquaredComponent,
-	Row,
-	SectionComponent,
-	TagComponent,
-	tagType
-	} from "@common-components";
 import { text } from "@core";
 import * as core from "@core";
 import * as modules from "@modules";
@@ -17,57 +7,67 @@ import { observer } from "mobx-react";
 import { DatePicker, Dropdown, Label, Shimmer } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
+import {
+	Col,
+	DataTableComponent,
+	ProfileComponent,
+	ProfileSquaredComponent,
+	Row,
+	SectionComponent,
+	TagComponent,
+	tagType,
+} from "@common-components";
 const AppointmentEditorPanel = loadable({
 	loader: async () =>
 		(await import("modules/appointments/components/appointment-editor"))
 			.AppointmentEditorPanel,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 const AgeBarChart = loadable({
 	loader: async () => (await import("./chart.age")).AgeBarChart,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 const AppointmentsByDateChart = loadable({
 	loader: async () =>
 		(await import("./chart.appointments-date")).AppointmentsByDateChart,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 const FinancesByDateChart = loadable({
 	loader: async () => (await import("./chart.finance")).FinancesByDateChart,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 const GenderPieChart = loadable({
 	loader: async () => (await import("./chart.gender")).GenderPieChart,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 const MostAppliedTreatmentsChart = loadable({
 	loader: async () =>
 		(await import("./chart.most-applied-treatments"))
 			.MostAppliedTreatmentsChart,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 const MostInvolvedTeethChart = loadable({
 	loader: async () =>
 		(await import("./chart.most-involved-teeth")).MostInvolvedTeethChart,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 const TreatmentsByGenderChart = loadable({
 	loader: async () =>
 		(await import("./chart.treatments-gender")).TreatmentsByGenderChart,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 const TreatmentsNumberChart = loadable({
 	loader: async () =>
 		(await import("./chart.treatments-number")).TreatmentsNumberChart,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 @observer
 export class StatisticsPage extends React.Component {
 	@computed get appointment() {
 		return modules.appointments!.docs.find(
-			x => x._id === core.router.selectedID
+			(x) => x._id === core.router.selectedID
 		);
 	}
 
@@ -75,20 +75,20 @@ export class StatisticsPage extends React.Component {
 		return (
 			<div className="sc-pg">
 				<DataTableComponent
-					maxItemsOnLoad={20}
+					maxItemsOnLoad={3}
 					className={"appointments-data-table"}
 					heads={[
-						text("Appointment"),
-						text("Treatment"),
-						text("Paid"),
-						text("Outstanding"),
-						text("Expenses"),
-						text("Profits")
+						text("appointment").c,
+						text("treatment").c,
+						text("paid").c,
+						text("outstanding").c,
+						text("expenses").c,
+						text("profits").c,
 					]}
 					rows={
 						core.router.innerWidth > 999
 							? modules.statistics.selectedAppointments.map(
-									appointment => ({
+									(appointment) => ({
 										id: appointment._id,
 										searchableString:
 											appointment.searchableString,
@@ -96,7 +96,7 @@ export class StatisticsPage extends React.Component {
 											{
 												dataValue: (
 													appointment.patient || {
-														name: ""
+														name: "",
 													}
 												).name,
 												component: (
@@ -111,7 +111,7 @@ export class StatisticsPage extends React.Component {
 																)}{" "}
 																/{" "}
 																{appointment.operatingStaff.map(
-																	x => (
+																	(x) => (
 																		<i
 																			key={
 																				x._id
@@ -129,7 +129,7 @@ export class StatisticsPage extends React.Component {
 															(
 																appointment!
 																	.patient || {
-																	name: ""
+																	name: "",
 																}
 															).name
 														}
@@ -139,10 +139,14 @@ export class StatisticsPage extends React.Component {
 												onClick: () => {
 													core.router.select({
 														id: appointment._id,
-														sub: "details"
+														sub: "details",
 													});
 												},
-												className: "no-label"
+												className: "no-label",
+											},
+											{
+												dataValue: "",
+												component: <span></span>,
 											},
 											{
 												dataValue:
@@ -165,7 +169,7 @@ export class StatisticsPage extends React.Component {
 														size={3}
 													/>
 												),
-												className: "hidden-xs"
+												className: "hidden-xs",
 											},
 											{
 												dataValue:
@@ -180,7 +184,7 @@ export class StatisticsPage extends React.Component {
 															).toString()}
 													</span>
 												),
-												className: "hidden-xs"
+												className: "hidden-xs",
 											},
 											{
 												dataValue:
@@ -195,7 +199,7 @@ export class StatisticsPage extends React.Component {
 															).toString()}
 													</span>
 												),
-												className: "hidden-xs"
+												className: "hidden-xs",
 											},
 											{
 												dataValue: appointment.expenses,
@@ -209,7 +213,7 @@ export class StatisticsPage extends React.Component {
 															).toString()}
 													</span>
 												),
-												className: "hidden-xs"
+												className: "hidden-xs",
 											},
 											{
 												dataValue: appointment.profit,
@@ -223,9 +227,9 @@ export class StatisticsPage extends React.Component {
 															).toString()}
 													</span>
 												),
-												className: "hidden-xs"
-											}
-										]
+												className: "hidden-xs",
+											},
+										],
 									})
 							  )
 							: []
@@ -240,14 +244,15 @@ export class StatisticsPage extends React.Component {
 										options={[
 											{
 												key: "all",
-												text: text("All staff members")
-											}
+												text: text("all staff members")
+													.c,
+											},
 										].concat(
 											modules.staff!.operatingStaff.map(
-												member => {
+												(member) => {
 													return {
 														key: member._id,
-														text: member.name
+														text: member.name,
 													};
 												}
 											)
@@ -257,8 +262,8 @@ export class StatisticsPage extends React.Component {
 										}}
 									/>
 								);
-							}
-						}
+							},
+						},
 					]}
 					hideSearch
 					commands={[
@@ -267,7 +272,7 @@ export class StatisticsPage extends React.Component {
 							onRender: () => {
 								return (
 									<DatePicker
-										onSelectDate={date => {
+										onSelectDate={(date) => {
 											if (date) {
 												date.setHours(0, 0, 0, 0);
 												modules.statistics.startingDate = date.getTime();
@@ -278,8 +283,8 @@ export class StatisticsPage extends React.Component {
 												modules.statistics.startingDate
 											)
 										}
-										formatDate={d =>
-											`${text("From")}: ${formatDate(
+										formatDate={(d) =>
+											`${text("from").c}: ${formatDate(
 												d,
 												modules.setting!.getSetting(
 													"date_format"
@@ -293,14 +298,14 @@ export class StatisticsPage extends React.Component {
 										)}
 									/>
 								);
-							}
+							},
 						},
 						{
 							key: "3",
 							onRender: () => {
 								return (
 									<DatePicker
-										onSelectDate={date => {
+										onSelectDate={(date) => {
 											if (date) {
 												date.setHours(0, 0, 0, 0);
 												modules.statistics.endingDate = date.getTime();
@@ -311,8 +316,8 @@ export class StatisticsPage extends React.Component {
 												modules.statistics.endingDate
 											)
 										}
-										formatDate={d =>
-											`${text("Until")}: ${formatDate(
+										formatDate={(d) =>
+											`${text("until").c}: ${formatDate(
 												d,
 												modules.setting!.getSetting(
 													"date_format"
@@ -326,8 +331,8 @@ export class StatisticsPage extends React.Component {
 										)}
 									/>
 								);
-							}
-						}
+							},
+						},
 					]}
 				/>
 
@@ -339,12 +344,11 @@ export class StatisticsPage extends React.Component {
 				) : (
 					""
 				)}
-
 				<div className="totals">
 					<Row>
 						<Col sm={6} xs={12}>
 							<Label>
-								{text("Appointments")}:{" "}
+								{text("appointments").c}:{" "}
 								<TagComponent
 									text={round(
 										modules.statistics.selectedAppointments
@@ -356,7 +360,7 @@ export class StatisticsPage extends React.Component {
 						</Col>
 						<Col sm={6} xs={12}>
 							<Label>
-								{text("Payments")}:{" "}
+								{text("payments").c}:{" "}
 								<TagComponent
 									text={
 										modules.setting!.getSetting(
@@ -372,7 +376,7 @@ export class StatisticsPage extends React.Component {
 						</Col>
 						<Col sm={6} xs={12}>
 							<Label>
-								{text("Expenses")}:{" "}
+								{text("expenses").c}:{" "}
 								<TagComponent
 									text={
 										modules.setting!.getSetting(
@@ -388,7 +392,7 @@ export class StatisticsPage extends React.Component {
 						</Col>
 						<Col sm={6} xs={12}>
 							<Label>
-								{text("Profits")}:{" "}
+								{text("profits").c}:{" "}
 								<TagComponent
 									text={
 										modules.setting!.getSetting(
@@ -409,7 +413,7 @@ export class StatisticsPage extends React.Component {
 					<div className="row">
 						<div className={"chart-wrapper col-xs-12"}>
 							<SectionComponent
-								title={text("Appointments by Date")}
+								title={text("appointments by date").h}
 							>
 								<AppointmentsByDateChart
 									selectedAppointmentsByDay={
@@ -421,7 +425,9 @@ export class StatisticsPage extends React.Component {
 						</div>
 
 						<div className={"chart-wrapper col-xs-12"}>
-							<SectionComponent title={text("Finances by Date")}>
+							<SectionComponent
+								title={text("finances by date").h}
+							>
 								<FinancesByDateChart
 									dateFormat={modules.setting!.getSetting(
 										"date_format"
@@ -434,7 +440,9 @@ export class StatisticsPage extends React.Component {
 						</div>
 
 						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
-							<SectionComponent title={text("Patients' Gender")}>
+							<SectionComponent
+								title={text("patients' gender").h}
+							>
 								<GenderPieChart
 									selectedPatients={
 										modules.statistics.selectedPatients
@@ -445,7 +453,7 @@ export class StatisticsPage extends React.Component {
 
 						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
 							<SectionComponent
-								title={text("Most Applied Treatments")}
+								title={text("most applied treatments").h}
 							>
 								<MostAppliedTreatmentsChart
 									selectedAppointments={
@@ -457,7 +465,7 @@ export class StatisticsPage extends React.Component {
 
 						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
 							<SectionComponent
-								title={text("Most Involved Teeth")}
+								title={text("most involved teeth").h}
 							>
 								<MostInvolvedTeethChart
 									selectedAppointments={
@@ -469,7 +477,7 @@ export class StatisticsPage extends React.Component {
 
 						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
 							<SectionComponent
-								title={text("Treatments by gender")}
+								title={text("treatments by gender").h}
 							>
 								<TreatmentsByGenderChart
 									selectedTreatments={
@@ -481,7 +489,7 @@ export class StatisticsPage extends React.Component {
 
 						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
 							<SectionComponent
-								title={text("Treatments by profits")}
+								title={text("treatments by profits").h}
 							>
 								<TreatmentsNumberChart
 									selectedTreatments={
@@ -492,7 +500,7 @@ export class StatisticsPage extends React.Component {
 						</div>
 
 						<div className={"chart-wrapper col-xs-12 col-lg-6"}>
-							<SectionComponent title={text("Patients' Age")}>
+							<SectionComponent title={text("patients' age").h}>
 								<AgeBarChart
 									selectedPatients={
 										modules.statistics.selectedPatients

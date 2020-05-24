@@ -2,15 +2,15 @@ import { Col, Row } from "@common-components";
 import { text } from "@core";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
+import * as React from "react";
 import {
 	DetailsList,
 	Icon,
 	IconButton,
 	Label,
 	SelectionMode,
-	TextField
-	} from "office-ui-fabric-react";
-import * as React from "react";
+	TextField,
+} from "office-ui-fabric-react";
 
 @observer
 export class EditableListComponent extends React.Component<
@@ -39,14 +39,14 @@ export class EditableListComponent extends React.Component<
 				<Label>{this.props.label}</Label>
 				<TextField
 					className="new-item"
-					placeholder={text("Type here...")}
-					onKeyDown={keydown => {
+					placeholder={text("type here").c}
+					onKeyDown={(keydown) => {
 						if (keydown.keyCode === 13) {
 							this.addItem();
 							keydown.preventDefault();
 						}
 					}}
-					onKeyUp={keyUp => {
+					onKeyUp={(keyUp) => {
 						if (keyUp.keyCode === 13) {
 							this.addItem();
 							keyUp.preventDefault();
@@ -80,10 +80,10 @@ export class EditableListComponent extends React.Component<
 												onChange={(e, val) => {
 													this.props.value[i] = val!;
 
-													(this.props.onChange ||
-														(() => {}))(
-														this.props.value
-													);
+													(
+														this.props.onChange ||
+														(() => {})
+													)(this.props.value);
 												}}
 												onRenderSuffix={() => {
 													return (
@@ -91,16 +91,18 @@ export class EditableListComponent extends React.Component<
 															data-testid="delete-elc-item"
 															iconProps={{
 																iconName:
-																	"trash"
+																	"trash",
 															}}
 															onClick={() => {
 																this.props.value.splice(
 																	i,
 																	1
 																);
-																(this.props
-																	.onChange ||
-																	(() => {}))(
+																(
+																	this.props
+																		.onChange ||
+																	(() => {})
+																)(
 																	this.props
 																		.value
 																);
@@ -114,8 +116,8 @@ export class EditableListComponent extends React.Component<
 												}}
 											/>
 										</div>
-									</div>
-								])
+									</div>,
+								]),
 							]}
 							isHeaderVisible={false}
 							selectionMode={SelectionMode.none}

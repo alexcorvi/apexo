@@ -1,7 +1,9 @@
 .crop-dialog {
+	.ms-Dialog-header {
+		display: none;
+	}
 	.ms-Dialog-inner {
 		padding: 0;
-		margin-top: 10px;
 	}
 	.ms-Dialog-main {
 		max-width: none;

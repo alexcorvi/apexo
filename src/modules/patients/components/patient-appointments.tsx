@@ -1,12 +1,24 @@
 import { SectionComponent } from "@common-components";
 import { text } from "@core";
 import * as core from "@core";
-import { Appointment, AppointmentsList, Patient, PrescriptionItem, StaffMember } from "@modules";
 import * as modules from "@modules";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
-import { DefaultButton, Dropdown, Link, MessageBar, MessageBarType } from "office-ui-fabric-react";
 import * as React from "react";
+import {
+	Appointment,
+	AppointmentsList,
+	Patient,
+	PrescriptionItem,
+	StaffMember,
+} from "@modules";
+import {
+	DefaultButton,
+	Dropdown,
+	Link,
+	MessageBar,
+	MessageBarType,
+} from "office-ui-fabric-react";
 
 @observer
 export class PatientAppointmentsPanel extends React.Component<{
@@ -21,9 +33,9 @@ export class PatientAppointmentsPanel extends React.Component<{
 	render() {
 		return (
 			<div className="spa-panel appointments">
-				<SectionComponent title={text(`Patient Appointments`)}>
+				<SectionComponent title={text(`patient appointments`).h}>
 					<AppointmentsList
-						ref={l => (this.l = l)}
+						ref={(l) => (this.l = l)}
 						list={this.props.patient.appointments}
 						operatorsAsSecondaryText
 					/>
@@ -32,9 +44,11 @@ export class PatientAppointmentsPanel extends React.Component<{
 					) : (
 						<div style={{ marginTop: 15 }}>
 							<MessageBar messageBarType={MessageBarType.info}>
-								{text(
-									"This patient does not have any appointment"
-								)}
+								{
+									text(
+										"this patient does not have any appointment"
+									).c
+								}
 							</MessageBar>
 						</div>
 					)}
@@ -55,7 +69,7 @@ export class PatientAppointmentsPanel extends React.Component<{
 												this.l.selectedAppointmentID =
 													newApt._id;
 												core.router.select({
-													sub: "details"
+													sub: "details",
 												});
 											}
 										}}
@@ -68,9 +82,9 @@ export class PatientAppointmentsPanel extends React.Component<{
 										}}
 										options={modules
 											.treatments!.docs.map(
-												treatment => ({
+												(treatment) => ({
 													text: treatment.type,
-													key: treatment._id
+													key: treatment._id,
 												})
 											)
 											.concat([
@@ -79,9 +93,9 @@ export class PatientAppointmentsPanel extends React.Component<{
 													text:
 														"＋ " +
 														text(
-															"Book new appointment"
-														)
-												}
+															"book new appointment"
+														).c,
+												},
 											])}
 										selectedKey="ph"
 									/>
@@ -90,14 +104,16 @@ export class PatientAppointmentsPanel extends React.Component<{
 								<MessageBar
 									messageBarType={MessageBarType.info}
 								>
-									{text(
-										"You need to add treatments in the treatments section before being able to book new appointments"
-									)}
+									{
+										text(
+											"you need to add treatments in the treatments section before being able to book new appointments"
+										).c
+									}
 									<br />
 									<Link
 										onClick={() => {
 											core.router.go([
-												modules.treatmentsNamespace
+												modules.treatmentsNamespace,
 											]);
 										}}
 									>

@@ -28,8 +28,8 @@ export class ChooseUserComponent extends React.Component {
 							data-testid="new-user-name"
 							value={this.newDocName}
 							onChange={(ev, v) => (this.newDocName = v!)}
-							label={text("Register as new staff member")}
-							onKeyDown={ev => {
+							label={text("register as new staff member").c}
+							onKeyDown={(ev) => {
 								if (ev.keyCode === 13) {
 									this.newDoc();
 								}
@@ -40,13 +40,13 @@ export class ChooseUserComponent extends React.Component {
 							onClick={() => {
 								this.newDoc();
 							}}
-							text={text("Register")}
+							text={text("register").c}
 						/>
 					</div>
 				) : (
 					<div id="choose-user">
-						<h3>{text("Who are you?")}</h3>
-						{modules.staff!.docs.map(user => (
+						<h3>{text("who are you?").c}</h3>
+						{modules.staff!.docs.map((user) => (
 							<div
 								data-testid="user-chooser"
 								className="m-t-5 p-5 user-chooser pointer"
@@ -54,8 +54,9 @@ export class ChooseUserComponent extends React.Component {
 									if (user.pin) {
 										core.modals.newModal({
 											id: generateID(),
-											text: text("Please enter your PIN"),
-											onConfirm: providedPin => {
+											text: text("please enter your pin")
+												.c,
+											onConfirm: (providedPin) => {
 												if (providedPin === user.pin) {
 													core.status.setUser(
 														user._id
@@ -65,14 +66,14 @@ export class ChooseUserComponent extends React.Component {
 													core.messages.newMessage({
 														id: generateID(),
 														text: text(
-															`Invalid PIN provided`
-														)
+															`invalid pin provided`
+														).c,
 													});
 												}
 											},
 											input: true,
 											showCancelButton: true,
-											showConfirmButton: true
+											showConfirmButton: true,
 										});
 									} else {
 										core.status.setUser(user._id);

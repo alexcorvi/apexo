@@ -1,12 +1,3 @@
-import {
-	Col,
-	DataTableComponent,
-	PanelTabs,
-	PanelTop,
-	ProfileSquaredComponent,
-	Row,
-	SectionComponent
-	} from "@common-components";
 import { text, user } from "@core";
 import * as core from "@core";
 import { prescriptionItemForm, prescriptions } from "@modules";
@@ -14,6 +5,16 @@ import * as modules from "@modules";
 import { num } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
+import * as React from "react";
+import {
+	Col,
+	DataTableComponent,
+	PanelTabs,
+	PanelTop,
+	ProfileSquaredComponent,
+	Row,
+	SectionComponent,
+} from "@common-components";
 import {
 	Dropdown,
 	MessageBar,
@@ -21,9 +22,8 @@ import {
 	Panel,
 	PanelType,
 	PrimaryButton,
-	TextField
-	} from "office-ui-fabric-react";
-import * as React from "react";
+	TextField,
+} from "office-ui-fabric-react";
 
 @observer
 export class PrescriptionsPage extends React.Component {
@@ -31,18 +31,18 @@ export class PrescriptionsPage extends React.Component {
 		{
 			key: "details",
 			icon: "pill",
-			title: "Prescription Details"
+			title: text("prescription details").c,
 		},
 		{
 			key: "delete",
 			icon: "trash",
-			title: "Delete",
-			hidden: !this.canEdit
-		}
+			title: text("delete").c,
+			hidden: !this.canEdit,
+		},
 	];
 	@computed get selectedPrescription() {
 		return modules.prescriptions!.docs.find(
-			p => p._id === core.router.selectedID
+			(p) => p._id === core.router.selectedID
 		);
 	}
 
@@ -56,7 +56,7 @@ export class PrescriptionsPage extends React.Component {
 				<DataTableComponent
 					onDelete={
 						this.canEdit
-							? id => {
+							? (id) => {
 									prescriptions!.deleteModal(id);
 							  }
 							: undefined
@@ -67,7 +67,7 @@ export class PrescriptionsPage extends React.Component {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: text("Add new"),
+										name: text("add new").c,
 										onClick: () => {
 											const newDoc = prescriptions!.new();
 											prescriptions!
@@ -75,30 +75,30 @@ export class PrescriptionsPage extends React.Component {
 												.then(() => {
 													core.router.select({
 														id: newDoc._id,
-														tab: "details"
+														tab: "details",
 													});
 												});
 										},
 										iconProps: {
-											iconName: "Add"
-										}
-									}
+											iconName: "Add",
+										},
+									},
 							  ]
 							: []
 					}
 					heads={[
-						text("Item name"),
-						text("Dose"),
-						text("Frequency"),
-						text("Form")
+						text("item name").c,
+						text("dose").c,
+						text("frequency").c,
+						text("form").c,
 					]}
-					rows={prescriptions!.docs.map(prescription => {
+					rows={prescriptions!.docs.map((prescription) => {
 						return {
 							id: prescription._id,
 							searchableString: prescription.searchableString,
 							actions: this.tabs
-								.filter(x => !x.hidden)
-								.map(x => ({
+								.filter((x) => !x.hidden)
+								.map((x) => ({
 									key: x.key,
 									title: x.title,
 									icon: x.icon,
@@ -110,10 +110,10 @@ export class PrescriptionsPage extends React.Component {
 										} else {
 											core.router.select({
 												id: prescription._id,
-												tab: x.key
+												tab: x.key,
 											});
 										}
-									}
+									},
 								})),
 							cells: [
 								{
@@ -123,15 +123,17 @@ export class PrescriptionsPage extends React.Component {
 											text={prescription.name}
 											onRenderSecondaryText={() => (
 												<span className="itl">
-													{`${
-														prescription.doseInMg
-													}${text("mg")} ${
+													{`${prescription.doseInMg}${
+														text("mg").r
+													} ${
 														prescription.timesPerDay
 													}X${
 														prescription.unitsPerTime
-													} ${text(
-														prescription.form
-													)}`}
+													} ${
+														text(
+															prescription.form as any
+														).c
+													}`}
 												</span>
 											)}
 										/>
@@ -139,19 +141,20 @@ export class PrescriptionsPage extends React.Component {
 									onClick: () => {
 										core.router.select({
 											id: prescription._id,
-											tab: "details"
+											tab: "details",
 										});
 									},
-									className: "no-label"
+									className: "no-label",
 								},
 								{
 									dataValue: prescription.doseInMg,
 									component: (
 										<span>
-											{prescription.doseInMg} {text("mg")}
+											{prescription.doseInMg}{" "}
+											{text("mg").r}
 										</span>
 									),
-									className: "hidden-xs"
+									className: "hidden-xs",
 								},
 								{
 									dataValue: prescription.timesPerDay,
@@ -161,16 +164,18 @@ export class PrescriptionsPage extends React.Component {
 											{prescription.unitsPerTime}
 										</span>
 									),
-									className: "hidden-xs"
+									className: "hidden-xs",
 								},
 								{
 									dataValue: prescription.form,
 									component: (
-										<span>{text(prescription.form)}</span>
+										<span>
+											{text(prescription.form as any).c}
+										</span>
 									),
-									className: "hidden-xs"
-								}
-							]
+									className: "hidden-xs",
+								},
+							],
 						};
 					})}
 					maxItemsOnLoad={20}
@@ -189,20 +194,25 @@ export class PrescriptionsPage extends React.Component {
 							<div className="panel-heading">
 								<PanelTop
 									title={this.selectedPrescription!.name}
-									type={"Prescription"}
+									type={text("prescription").c}
 									subTitle={`${
 										this.selectedPrescription!.doseInMg
-									}${text("mg")} ${
+									}${text("mg")} - ${
 										this.selectedPrescription!.timesPerDay
-									}X${
+									}*${
 										this.selectedPrescription!.unitsPerTime
-									} ${text(this.selectedPrescription!.form)}`}
+									} ${
+										text(
+											this.selectedPrescription!
+												.form as any
+										).c
+									}`}
 									onDismiss={() => core.router.unSelect()}
 									square
 								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
-									onSelect={key =>
+									onSelect={(key) =>
 										core.router.select({ tab: key })
 									}
 									items={this.tabs}
@@ -213,10 +223,10 @@ export class PrescriptionsPage extends React.Component {
 						<div className="prescription-editor">
 							{core.router.selectedTab === "details" ? (
 								<SectionComponent
-									title={text("Prescription Details")}
+									title={text("prescription details").h}
 								>
 									<TextField
-										label={text("Item name")}
+										label={text("item name").c}
 										value={this.selectedPrescription.name}
 										onChange={(ev, val) =>
 											(this.selectedPrescription!.name = val!)
@@ -228,7 +238,7 @@ export class PrescriptionsPage extends React.Component {
 									<Row gutter={8}>
 										<Col md={8}>
 											<TextField
-												label={text("Dosage in mg")}
+												label={text("dosage in mg").c}
 												type="number"
 												value={this.selectedPrescription.doseInMg.toString()}
 												onChange={(ev, val) =>
@@ -242,7 +252,7 @@ export class PrescriptionsPage extends React.Component {
 										</Col>
 										<Col md={8}>
 											<TextField
-												label={text("Times per day")}
+												label={text("times per day").c}
 												type="number"
 												value={this.selectedPrescription.timesPerDay.toString()}
 												onChange={(ev, val) =>
@@ -256,7 +266,7 @@ export class PrescriptionsPage extends React.Component {
 										</Col>
 										<Col md={8}>
 											<TextField
-												label={text("Units per time")}
+												label={text("units per time").c}
 												type="number"
 												value={this.selectedPrescription.unitsPerTime.toString()}
 												onChange={(ev, val) =>
@@ -271,17 +281,17 @@ export class PrescriptionsPage extends React.Component {
 									</Row>
 									<Dropdown
 										disabled={!this.canEdit}
-										label={text("Item form")}
+										label={text("item form").c}
 										className="form-picker"
 										selectedKey={
 											this.selectedPrescription.form
 										}
 										options={Object.keys(
 											prescriptionItemForm
-										).map(form => {
+										).map((form) => {
 											return {
 												key: form,
-												text: text(form)
+												text: text(form as any).c,
 											};
 										})}
 										onChange={(ev, newValue) => {
@@ -299,17 +309,19 @@ export class PrescriptionsPage extends React.Component {
 									<MessageBar
 										messageBarType={MessageBarType.warning}
 									>
-										{text(
-											"Are you sure you want to delete"
-										)}
+										{
+											text(
+												"are you sure you want to delete"
+											).c
+										}
 									</MessageBar>
 									<br />
 									<PrimaryButton
 										className="delete"
 										iconProps={{
-											iconName: "delete"
+											iconName: "delete",
 										}}
-										text={text("Delete")}
+										text={text("delete").c}
 										onClick={() => {
 											modules.prescriptions!.delete(
 												core.router.selectedID

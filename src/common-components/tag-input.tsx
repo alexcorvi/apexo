@@ -27,21 +27,23 @@ export class TagInputComponent extends React.Component<
 			)
 				// apply filter
 				.filter(
-					option =>
+					(option) =>
 						option.text
 							.toLowerCase()
 							.indexOf(filter.toLowerCase()) !== -1
 				)
 				// no repetition
 				.filter(
-					option =>
-						!this.props.value.find(item => item.key === option.key)
+					(option) =>
+						!this.props.value.find(
+							(item) => item.key === option.key
+						)
 				)
 				// no empty option
-				.filter(option => option.text.length)
-				.map(option => ({
+				.filter((option) => option.text.length)
+				.map((option) => ({
 					name: option.text,
-					key: option.key
+					key: option.key,
 				}))
 		);
 	}
@@ -51,27 +53,31 @@ export class TagInputComponent extends React.Component<
 			<div className="tag-input-component">
 				<Label>{this.props.label}</Label>
 				<TagPicker
-					className={`${
-						this.props.errorMessage ? "has-error" : ""
-					} ${this.props.className || ""}`}
-					onResolveSuggestions={filter => this.filterOptions(filter)}
+					className={`${this.props.errorMessage ? "has-error" : ""} ${
+						this.props.className || ""
+					}`}
+					onResolveSuggestions={(filter) =>
+						this.filterOptions(filter)
+					}
 					pickerSuggestionsProps={{
 						suggestionsHeaderText: this.props.suggestionsHeaderText,
-						noResultsFoundText: this.props.noResultsFoundText
+						noResultsFoundText: this.props.noResultsFoundText,
 					}}
 					itemLimit={this.props.maxItems}
 					disabled={this.props.disabled}
 					selectedItems={
 						this.props.value
-							? this.props.value.map(x => ({
+							? this.props.value.map((x) => ({
 									key: x.key,
-									name: x.text
+									name: x.text,
 							  }))
 							: undefined
 					}
-					onChange={selected => {
+					onChange={(selected) => {
 						if (this.props.onChange && selected) {
-							this.props.onChange(selected.map(x => x.key));
+							this.props.onChange(
+								selected.map((x) => x.key.toString())
+							);
 						}
 					}}
 				/>

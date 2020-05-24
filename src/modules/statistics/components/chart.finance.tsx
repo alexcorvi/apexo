@@ -16,7 +16,7 @@ export class FinancesByDateChart extends React.Component<{
 }> {
 	@computed
 	private get _unsortedValues() {
-		return this.props.selectedFinancesByDay.map(dateFinances => {
+		return this.props.selectedFinancesByDay.map((dateFinances) => {
 			const timestamp = dateFinances.day.getTime();
 			let totalExpenses = 0;
 			let totalPayments = 0;
@@ -43,7 +43,7 @@ export class FinancesByDateChart extends React.Component<{
 				label: formatDate(timestamp, this.props.dateFormat),
 				totalPayments,
 				totalExpenses,
-				totalProfits
+				totalProfits,
 			};
 		});
 	}
@@ -53,28 +53,28 @@ export class FinancesByDateChart extends React.Component<{
 				{...{
 					height: 300,
 					data: {
-						xLabels: this._unsortedValues.map(x => x.label),
+						xLabels: this._unsortedValues.map((x) => x.label),
 						lines: [
 							{
-								label: text("Payments"),
+								label: text("payments").c,
 								data: this._unsortedValues.map(
-									x => x.totalPayments
-								)
+									(x) => x.totalPayments
+								),
 							},
 							{
-								label: text("Expenses"),
+								label: text("expenses").c,
 								data: this._unsortedValues.map(
-									x => x.totalExpenses
-								)
+									(x) => x.totalExpenses
+								),
 							},
 							{
-								label: text("Profits"),
+								label: text("profits").c,
 								data: this._unsortedValues.map(
-									x => x.totalProfits
-								)
-							}
-						]
-					}
+									(x) => x.totalProfits
+								),
+							},
+						],
+					},
 				}}
 			/>
 		);

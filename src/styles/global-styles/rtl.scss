@@ -246,7 +246,7 @@
 			right: 0;
 			left: auto;
 			margin-left: auto;
-			border-left: 1px solid #f5f5f5;
+			border-left: 1px solid #e8effd;
 			border-right: 0;
 		}
 		#router-outlet {
@@ -301,5 +301,48 @@
 
 	.calendar-component .full-day-col {
 		float: right;
+	}
+	.menu-button button {
+		margin-right: -20px;
+		border-right: none;
+		border-left: 1px solid #e8effd;
+	}
+
+	.time-input {
+		display: inline-block;
+		margin-bottom: 0;
+		width: 25%;
+		&:not(.seconds) .ms-TextField-wrapper div {
+			border-left: none;
+		}
+		.ms-TextField-wrapper div {
+			border-right: 1px solid !important;
+		}
+		&:nth-of-type(1) {
+			.ms-TextField-fieldGroup {
+				border-radius: 2px 0 0 2px;
+			}
+		}
+		&:nth-of-type(2),
+		&:nth-of-type(3) {
+			.ms-TextField-fieldGroup {
+				border-radius: 0;
+				border-right: 0;
+			}
+		}
+	}
+
+	.appointment-input .appendage {
+		border-radius: 2px 0 0 2px;
+	}
+
+	.data-table .commandBar.fixed,
+	.calendar-component .commandBar.fixed {
+		right: 66px;
+		left: 0;
+	}
+
+	.ms-ContextualMenu-linkContent {
+		text-align: right;
 	}
 }

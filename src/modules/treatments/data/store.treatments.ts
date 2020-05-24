@@ -10,12 +10,12 @@ export class Treatments extends Store<TreatmentSchema, Treatment> {
 	}
 
 	deleteModal(id: string) {
-		const treatment = this.docs.find(x => x._id === id);
+		const treatment = this.docs.find((x) => x._id === id);
 		if (!treatment) {
 			return;
 		}
 		modals.newModal({
-			text: `${text("Treatment")} "${treatment.type}" ${text(
+			text: `${text("treatment").c} "${treatment.type}" ${text(
 				"will be deleted"
 			)}`,
 			onConfirm: () => {
@@ -24,16 +24,16 @@ export class Treatments extends Store<TreatmentSchema, Treatment> {
 			showCancelButton: true,
 			showConfirmButton: true,
 			input: false,
-			id: Math.random()
+			id: Math.random(),
 		});
 	}
 
 	async afterDelete(treatment: Treatment) {
 		appointments!.docs.forEach((appointment, index) => {
 			if (appointment.treatmentID === treatment._id) {
-				appointments!.docs[index].treatmentID = `${treatment.type}|${
-					treatment.expenses
-				}`;
+				appointments!.docs[
+					index
+				].treatmentID = `${treatment.type}|${treatment.expenses}`;
 			}
 		});
 	}

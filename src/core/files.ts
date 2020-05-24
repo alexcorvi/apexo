@@ -13,7 +13,7 @@ function arrayBufferToBase64(
 	return new Promise((resolve, reject) => {
 		const blob = new Blob([buffer], { type: `image/${ext}` });
 		const reader = new FileReader();
-		reader.onload = function(evt: any) {
+		reader.onload = function (evt: any) {
 			const dataURL: string = evt.target.result;
 			resolve(dataURL);
 		};
@@ -25,7 +25,7 @@ export const files = {
 	async save({
 		blob,
 		ext,
-		dir
+		dir,
 	}: {
 		blob: Blob;
 		ext: string;
@@ -44,7 +44,7 @@ export const files = {
 				.split("//")
 				.join("/");
 
-			xhr.onload = function() {
+			xhr.onload = function () {
 				if (xhr.status === 200) {
 					return resolve(path);
 				} else {
@@ -61,7 +61,7 @@ export const files = {
 					path,
 					mode: "add",
 					autorename: true,
-					mute: false
+					mute: false,
 				})
 			);
 
@@ -71,13 +71,16 @@ export const files = {
 
 	async get(path: string): Promise<string> {
 		return new Promise((resolve, reject) => {
+			if (path.startsWith("https://")) {
+				return resolve(path);
+			}
 			const accessToken = setting!.getSetting("dropbox_accessToken");
 			if (!accessToken) {
 				return reject("Did not find DropBox access token");
 			}
 			const xhr = new XMLHttpRequest();
 			xhr.responseType = "arraybuffer";
-			xhr.onload = async function() {
+			xhr.onload = async function () {
 				if (xhr.status === 200) {
 					const splittedPath = path.split(".");
 					const ext = splittedPath[splittedPath.length - 1];
@@ -95,7 +98,7 @@ export const files = {
 			xhr.setRequestHeader(
 				"Dropbox-API-Arg",
 				JSON.stringify({
-					path: path.split("//").join("/")
+					path: path.split("//").join("/"),
 				})
 			);
 			xhr.send();
@@ -110,7 +113,7 @@ export const files = {
 			}
 			const xhr = new XMLHttpRequest();
 
-			xhr.onload = function() {
+			xhr.onload = function () {
 				if (xhr.status === 200) {
 					return resolve();
 				} else {
@@ -127,14 +130,14 @@ export const files = {
 	},
 
 	async status(): Promise<boolean> {
-		return new Promise(resolve => {
+		return new Promise((resolve) => {
 			const accessToken = setting!.getSetting("dropbox_accessToken");
 			if (!accessToken) {
 				return resolve(false);
 			}
 			const xhr = new XMLHttpRequest();
 
-			xhr.onreadystatechange = function() {
+			xhr.onreadystatechange = function () {
 				if (xhr.readyState === 4) {
 					if (xhr.status > 199 && xhr.status < 300) {
 						resolve(true);
@@ -166,7 +169,7 @@ export const files = {
 			}
 			const xhr = new XMLHttpRequest();
 
-			xhr.onload = function() {
+			xhr.onload = function () {
 				if (xhr.status === 200) {
 					return resolve(JSON.parse(xhr.response).entries);
 				} else {
@@ -183,9 +186,9 @@ export const files = {
 					recursive: false,
 					include_media_info: false,
 					include_deleted: false,
-					include_has_explicit_shared_members: false
+					include_has_explicit_shared_members: false,
 				})
 			);
 		});
-	}
+	},
 };

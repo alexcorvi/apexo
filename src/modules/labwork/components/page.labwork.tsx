@@ -1,3 +1,11 @@
+import { text } from "@core";
+import * as core from "@core";
+import * as modules from "@modules";
+import { firstDayOfTheWeekDayPicker, formatDate, num } from "@utils";
+import { computed } from "mobx";
+import { observer } from "mobx-react";
+import { DatePicker, MessageBar, PrimaryButton } from "office-ui-fabric-react";
+import * as React from "react";
 import {
 	Col,
 	DataTableComponent,
@@ -9,17 +17,15 @@ import {
 	Row,
 	SectionComponent,
 	TagComponent,
-	TagInputComponent
-	} from "@common-components";
-import { text } from "@core";
-import * as core from "@core";
-import * as modules from "@modules";
-import { firstDayOfTheWeekDayPicker, formatDate, num } from "@utils";
-import { computed } from "mobx";
-import { observer } from "mobx-react";
-import { MessageBarType, Panel, PanelType, TextField, Toggle } from "office-ui-fabric-react";
-import { DatePicker, MessageBar, PrimaryButton } from "office-ui-fabric-react";
-import * as React from "react";
+	TagInputComponent,
+} from "@common-components";
+import {
+	MessageBarType,
+	Panel,
+	PanelType,
+	TextField,
+	Toggle,
+} from "office-ui-fabric-react";
 
 @observer
 export class LabworkPage extends React.Component {
@@ -29,19 +35,19 @@ export class LabworkPage extends React.Component {
 		{
 			key: "details",
 			icon: "Contact",
-			title: "Case Details"
+			title: text("case details").h,
 		},
 		{
 			key: "lab",
 			icon: "TestBeaker",
-			title: "Lab Details"
+			title: text("lab details").h,
 		},
 		{
 			key: "delete",
 			icon: "trash",
-			title: "Delete",
-			hidden: !this.canEdit
-		}
+			title: text("delete").h,
+			hidden: !this.canEdit,
+		},
 	];
 
 	@computed
@@ -52,7 +58,7 @@ export class LabworkPage extends React.Component {
 	@computed
 	get selectedLabwork() {
 		return modules.labworks!.docs.find(
-			x => x._id === core.router.selectedID
+			(x) => x._id === core.router.selectedID
 		);
 	}
 
@@ -60,10 +66,10 @@ export class LabworkPage extends React.Component {
 		return (
 			<div className="lw-pg">
 				<DataTableComponent
-					ref={dt => (this.dt = dt)}
+					ref={(dt) => (this.dt = dt)}
 					onDelete={
 						this.canEdit
-							? id => {
+							? (id) => {
 									modules.labworks!.deleteModal(id);
 							  }
 							: undefined
@@ -74,35 +80,35 @@ export class LabworkPage extends React.Component {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: text("Add new"),
+										name: text("add new").c,
 										onClick: () => {
 											const labwork = modules.labworks!.new();
 											modules.labworks!.add(labwork);
 											core.router.select({
 												id: labwork._id,
-												tab: "details"
+												tab: "details",
 											});
 										},
 										iconProps: {
-											iconName: "Add"
-										}
-									}
+											iconName: "Add",
+										},
+									},
 							  ]
 							: []
 					}
 					heads={[
-						text("Labwork"),
-						text("Operating Staff"),
-						text("Laboratory"),
-						text("Dates")
+						text("labwork").c,
+						text("operating staff").c,
+						text("laboratory").c,
+						text("dates").c,
 					]}
-					rows={modules.labworks!.docs.map(labwork => {
+					rows={modules.labworks!.docs.map((labwork) => {
 						return {
 							id: labwork._id,
 							searchableString: labwork.searchableString,
 							actions: this.tabs
-								.filter(x => !x.hidden)
-								.map(x => ({
+								.filter((x) => !x.hidden)
+								.map((x) => ({
 									key: x.key,
 									title: x.title,
 									icon: x.icon,
@@ -114,10 +120,10 @@ export class LabworkPage extends React.Component {
 										} else {
 											core.router.select({
 												id: labwork._id,
-												tab: x.key
+												tab: x.key,
 											});
 										}
-									}
+									},
 								})),
 							cells: [
 								{
@@ -133,14 +139,19 @@ export class LabworkPage extends React.Component {
 																display:
 																	"block",
 																marginBottom:
-																	"-5px"
+																	labwork
+																		.involvedTeeth
+																		.length ||
+																	labwork.patient
+																		? "-5px"
+																		: "",
 															}}
 														>
 															{labwork.caseTitle}
 														</span>
 														<i
 															style={{
-																fontSize: 12
+																fontSize: 12,
 															}}
 														>
 															{(labwork
@@ -166,20 +177,20 @@ export class LabworkPage extends React.Component {
 									onClick: () => {
 										core.router.select({
 											id: labwork._id,
-											tab: "details"
+											tab: "details",
 										});
 									},
-									className: "no-label"
+									className: "no-label",
 								},
 
 								{
 									dataValue: labwork.operatingStaff
-										.map(x => x.name)
+										.map((x) => x.name)
 										.join(" "),
 									component: (
 										<div>
 											{labwork.operatingStaff.map(
-												member => (
+												(member) => (
 													<div
 														key={member._id}
 														className="m-b-5 m-r-5"
@@ -193,7 +204,7 @@ export class LabworkPage extends React.Component {
 											)}
 										</div>
 									),
-									className: "hidden-xs"
+									className: "hidden-xs",
 								},
 								{
 									dataValue: labwork.labName,
@@ -228,7 +239,7 @@ export class LabworkPage extends React.Component {
 									) : (
 										""
 									),
-									className: "hidden-xs"
+									className: "hidden-xs",
 								},
 								{
 									dataValue: labwork.sentDate,
@@ -267,9 +278,9 @@ export class LabworkPage extends React.Component {
 											)}
 										</div>
 									),
-									className: "hidden-xs"
-								}
-							]
+									className: "hidden-xs",
+								},
+							],
 						};
 					})}
 					maxItemsOnLoad={20}
@@ -288,7 +299,7 @@ export class LabworkPage extends React.Component {
 							<div className="panel-heading">
 								<PanelTop
 									title={this.selectedLabwork!.caseTitle}
-									type={"Labwork"}
+									type={text("labwork").c}
 									subTitle={
 										this.selectedLabwork!.patient
 											? this.selectedLabwork!.patient.name
@@ -299,7 +310,7 @@ export class LabworkPage extends React.Component {
 								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
-									onSelect={key =>
+									onSelect={(key) =>
 										core.router.select({ tab: key })
 									}
 									items={this.tabs}
@@ -309,11 +320,13 @@ export class LabworkPage extends React.Component {
 					>
 						<div className="labwork-editor">
 							{core.router.selectedTab === "details" ? (
-								<SectionComponent title={text("Case Details")}>
+								<SectionComponent
+									title={text("case details").h}
+								>
 									<Row gutter={8}>
 										<Col sm={12}>
 											<TextField
-												label={text("Case title")}
+												label={text("case title").c}
 												value={
 													this.selectedLabwork
 														.caseTitle
@@ -327,20 +340,20 @@ export class LabworkPage extends React.Component {
 										</Col>
 										<Col sm={12}>
 											<TagInputComponent
-												label={text("Patient")}
+												label={text("patient").c}
 												className="lw-patient"
 												options={modules.patients!.docs.map(
-													patient => ({
+													(patient) => ({
 														text: patient.name,
-														key: patient._id
+														key: patient._id,
 													})
 												)}
-												suggestionsHeaderText={text(
-													"Select patient"
-												)}
-												noResultsFoundText={text(
-													"No patients found"
-												)}
+												suggestionsHeaderText={
+													text("select patient").c
+												}
+												noResultsFoundText={
+													text("no patient found").c
+												}
 												maxItems={1}
 												disabled={!this.canEdit}
 												value={
@@ -354,12 +367,12 @@ export class LabworkPage extends React.Component {
 																	key: this
 																		.selectedLabwork
 																		.patient
-																		._id
-																}
+																		._id,
+																},
 														  ]
 														: []
 												}
-												onChange={selectedKeys => {
+												onChange={(selectedKeys) => {
 													this.selectedLabwork!.patientID =
 														selectedKeys[0] || "";
 												}}
@@ -367,36 +380,38 @@ export class LabworkPage extends React.Component {
 										</Col>
 									</Row>
 									<TagInputComponent
-										label={text("Involved teeth")}
+										label={text("involved teeth").c}
 										className="lw-teeth"
-										options={modules.ISOTeethArr.map(x => {
-											return {
-												key: x.toString(),
-												text: x.toString()
-											};
-										})}
-										suggestionsHeaderText={text(
-											"Select involved teeth"
+										options={modules.ISOTeethArr.map(
+											(x) => {
+												return {
+													key: x.toString(),
+													text: x.toString(),
+												};
+											}
 										)}
-										noResultsFoundText={text(
-											"No teeth found"
-										)}
+										suggestionsHeaderText={
+											text("select involved teeth").c
+										}
+										noResultsFoundText={
+											text("no teeth found").c
+										}
 										disabled={!this.canEdit}
 										value={this.selectedLabwork.involvedTeeth.map(
-											x => ({
+											(x) => ({
 												key: x.toString(),
-												text: x.toString()
+												text: x.toString(),
 											})
 										)}
-										onChange={selectedKeys => {
+										onChange={(selectedKeys) => {
 											this.selectedLabwork!.involvedTeeth = selectedKeys.map(
-												x => num(x)
+												(x) => num(x)
 											);
 										}}
 									/>
 									<br />
 									<TextField
-										label={text("Case Details")}
+										label={text("case details").c}
 										data-testid="lw-case"
 										value={this.selectedLabwork.caseDetails}
 										onChange={(ev, val) =>
@@ -406,48 +421,51 @@ export class LabworkPage extends React.Component {
 										multiline
 									/>
 									<TagInputComponent
-										label={text("Operating staff")}
+										label={text("operating staff").c}
 										className="lw-staff"
 										options={modules
 											.staff!.operatingStaff.sort(
 												(a, b) =>
 													a.name.localeCompare(b.name)
 											)
-											.map(s => {
+											.map((s) => {
 												return {
 													key: s._id,
-													text: s.name
+													text: s.name,
 												};
 											})}
 										value={this.selectedLabwork!.operatingStaff.map(
-											x => ({ key: x._id, text: x.name })
+											(x) => ({
+												key: x._id,
+												text: x.name,
+											})
 										)}
-										onChange={newKeys => {
+										onChange={(newKeys) => {
 											this.selectedLabwork!.operatingStaffIDs = newKeys;
 										}}
 										disabled={!this.canEdit}
-										suggestionsHeaderText={text(
-											"Operating staff"
-										)}
-										noResultsFoundText={text(
-											"No staff found"
-										)}
+										suggestionsHeaderText={
+											text("operating staff").c
+										}
+										noResultsFoundText={
+											text("no staff found").c
+										}
 									/>
 								</SectionComponent>
 							) : (
 								""
 							)}
 							{core.router.selectedTab === "lab" ? (
-								<SectionComponent title={text("Lab Details")}>
+								<SectionComponent title={text("lab details").h}>
 									<Row gutter={8}>
 										<Col sm={12}>
 											<TagInputComponent
 												className="lab-name"
-												label={text("Laboratory")}
+												label={text("laboratory").c}
 												loose
 												options={modules
 													.labworks!.docs.map(
-														x => x.labName
+														(x) => x.labName
 													)
 													.filter(
 														(x, i, a) =>
@@ -456,10 +474,10 @@ export class LabworkPage extends React.Component {
 													.sort((a, b) =>
 														a.localeCompare(b)
 													)
-													.map(labName => {
+													.map((labName) => {
 														return {
 															key: labName,
-															text: labName
+															text: labName,
 														};
 													})}
 												value={
@@ -471,12 +489,12 @@ export class LabworkPage extends React.Component {
 																		.labName,
 																	text: this
 																		.selectedLabwork
-																		.labName
-																}
+																		.labName,
+																},
 														  ]
 														: []
 												}
-												onChange={newKeys => {
+												onChange={(newKeys) => {
 													this.selectedLabwork!.labName =
 														newKeys[0] || "";
 
@@ -491,7 +509,7 @@ export class LabworkPage extends React.Component {
 																}
 															)
 															.find(
-																x =>
+																(x) =>
 																	x.labName ===
 																		this
 																			.selectedLabwork!
@@ -513,19 +531,20 @@ export class LabworkPage extends React.Component {
 												}}
 												maxItems={1}
 												disabled={!this.canEdit}
-												suggestionsHeaderText={text(
-													"Laboratory name"
-												)}
-												noResultsFoundText={text(
-													"No laboratory found"
-												)}
+												suggestionsHeaderText={
+													text("laboratory name").c
+												}
+												noResultsFoundText={
+													text("no laboratory found")
+														.c
+												}
 											/>
 										</Col>
 										<Col sm={12}>
 											<TextField
 												data-testid="lab-contact"
 												disabled={!this.canEdit}
-												label={text("Lab contact")}
+												label={text("lab contact").c}
 												value={
 													this.selectedLabwork
 														.labContact
@@ -544,8 +563,10 @@ export class LabworkPage extends React.Component {
 														this.selectedLabwork
 															.isPaid
 													}
-													onText={text("Paid")}
-													offText={text("Not paid")}
+													onText={text("paid").c}
+													offText={
+														text("outstanding").c
+													}
 													disabled={!this.canEdit}
 													onChange={(e, newVal) => {
 														this.selectedLabwork!.isPaid = newVal!;
@@ -555,7 +576,7 @@ export class LabworkPage extends React.Component {
 													<TextField
 														type="number"
 														disabled={!this.canEdit}
-														label={text("Price")}
+														label={text("price").c}
 														value={this.selectedLabwork.price.toString()}
 														onChange={(
 															e,
@@ -581,8 +602,8 @@ export class LabworkPage extends React.Component {
 														this.selectedLabwork
 															.isSent
 													}
-													onText={text("Sent")}
-													offText={text("Not sent")}
+													onText={text("sent").c}
+													offText={text("not sent").c}
 													disabled={!this.canEdit}
 													onChange={(e, newVal) => {
 														this.selectedLabwork!.isSent = newVal!;
@@ -595,24 +616,28 @@ export class LabworkPage extends React.Component {
 																"weekend_num"
 															)
 														)}
-														label={text(
-															"Sent date"
-														)}
+														label={
+															text("sent date").c
+														}
 														disabled={!this.canEdit}
-														placeholder={text(
-															"Select a date"
-														)}
+														placeholder={
+															text(
+																"select a date"
+															).c
+														}
 														value={
 															new Date(
 																this.selectedLabwork.sentDate
 															)
 														}
-														onSelectDate={date => {
+														onSelectDate={(
+															date
+														) => {
 															if (date) {
 																this.selectedLabwork!.sentDate = date.getTime();
 															}
 														}}
-														formatDate={d =>
+														formatDate={(d) =>
 															formatDate(
 																d || 0,
 																modules.setting!.getSetting(
@@ -633,10 +658,10 @@ export class LabworkPage extends React.Component {
 														this.selectedLabwork
 															.isReceived
 													}
-													onText={text("Received")}
-													offText={text(
-														"Not received"
-													)}
+													onText={text("received").c}
+													offText={
+														text("not received").c
+													}
 													disabled={!this.canEdit}
 													onChange={(e, newVal) => {
 														this.selectedLabwork!.isReceived = newVal!;
@@ -645,29 +670,35 @@ export class LabworkPage extends React.Component {
 												{this.selectedLabwork
 													.isReceived ? (
 													<DatePicker
-														label={text(
-															"Received date"
-														)}
+														label={
+															text(
+																"received date"
+															).c
+														}
 														firstDayOfWeek={firstDayOfTheWeekDayPicker(
 															modules.setting!.getSetting(
 																"weekend_num"
 															)
 														)}
 														disabled={!this.canEdit}
-														placeholder={text(
-															"Select a date"
-														)}
+														placeholder={
+															text(
+																"select a date"
+															).c
+														}
 														value={
 															new Date(
 																this.selectedLabwork.receivedDate
 															)
 														}
-														onSelectDate={date => {
+														onSelectDate={(
+															date
+														) => {
 															if (date) {
 																this.selectedLabwork!.receivedDate = date.getTime();
 															}
 														}}
-														formatDate={d =>
+														formatDate={(d) =>
 															formatDate(
 																d || 0,
 																modules.setting!.getSetting(
@@ -692,17 +723,19 @@ export class LabworkPage extends React.Component {
 									<MessageBar
 										messageBarType={MessageBarType.warning}
 									>
-										{text(
-											"Are you sure you want to delete"
-										)}
+										{
+											text(
+												"are you sure you want to delete"
+											).c
+										}
 									</MessageBar>
 									<br />
 									<PrimaryButton
 										className="delete"
 										iconProps={{
-											iconName: "delete"
+											iconName: "delete",
 										}}
-										text={text("Delete")}
+										text={text("delete").c}
 										onClick={() => {
 											modules.labworks!.delete(
 												core.router.selectedID

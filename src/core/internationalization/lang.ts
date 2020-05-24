@@ -1,3 +1,4 @@
+import { raw } from "./languages/raw";
 import { setting } from "@modules";
 import { observable } from "mobx";
 
@@ -12,15 +13,15 @@ class Translate {
 			RTL: true,
 			loadTerms: async () => {
 				return (await import("./languages/ar")).default;
-			}
+			},
 		},
 		{
 			code: "en",
 			RTL: false,
 			loadTerms: async () => {
 				return {};
-			}
-		}
+			},
+		},
 	];
 
 	@observable terms: { [key: string]: string } = {};
@@ -40,7 +41,7 @@ class Translate {
 	private async checkLang() {
 		const languageCode = setting ? setting.getSetting("lang") : "en";
 		if (languageCode !== this.loadedCode) {
-			const newLang = this.languages.find(l => l.code === languageCode);
+			const newLang = this.languages.find((l) => l.code === languageCode);
 			if (newLang) {
 				if (newLang.RTL) {
 					this.setRTL();
@@ -69,6 +70,21 @@ class Translate {
 
 export const translate = new Translate();
 
-export function text(term: string) {
-	return translate.text(term);
+class ResultTerm extends String {
+	get c() {
+		return this[0].toUpperCase() + this.substr(1);
+	}
+	get h() {
+		return this.split(" ")
+			.map((x) => x[0].toUpperCase() + x.substr(1))
+			.join(" ");
+	}
+	get r() {
+		return this.substr(0);
+	}
+}
+
+export function text(term: keyof typeof raw) {
+	// return new ResultTerm("$"); // for testing purposes
+	return new ResultTerm(translate.text(term));
 }

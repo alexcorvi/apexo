@@ -1,11 +1,23 @@
-import { Col, fileTypes, PickAndUploadComponent, Row, SectionComponent } from "@common-components";
 import { GALLERIES_DIR, imagesTable, status, text } from "@core";
 import * as core from "@core";
 import { Patient, StaffMember } from "@modules";
 import { computed, observable, observe } from "mobx";
 import { observer } from "mobx-react";
-import { Icon, IconButton, MessageBar, MessageBarType, TooltipHost } from "office-ui-fabric-react";
 import * as React from "react";
+import {
+	Col,
+	fileTypes,
+	PickAndUploadComponent,
+	Row,
+	SectionComponent,
+} from "@common-components";
+import {
+	Icon,
+	IconButton,
+	MessageBar,
+	MessageBarType,
+	TooltipHost,
+} from "office-ui-fabric-react";
 
 @observer
 export class PatientGalleryPanel extends React.Component<{
@@ -23,11 +35,11 @@ export class PatientGalleryPanel extends React.Component<{
 		return imagesTable.table[this.selectedImagePath];
 	}
 
-	stopObservation: () => void = function() {};
+	stopObservation: () => void = function () {};
 
 	render() {
 		return (
-			<SectionComponent title={text(`Patient Gallery`)}>
+			<SectionComponent title={text(`patient gallery`).h}>
 				{status.isOnline.client ? (
 					status.isOnline.dropbox ? (
 						<div className="spg-p">
@@ -45,11 +57,11 @@ export class PatientGalleryPanel extends React.Component<{
 												<PickAndUploadComponent
 													allowMultiple={true}
 													accept={fileTypes.image}
-													onFinish={paths => {
+													onFinish={(paths) => {
 														this.props.patient.gallery.push(
 															...paths
 														);
-														paths.forEach(x =>
+														paths.forEach((x) =>
 															imagesTable.fetchImage(
 																x
 															)
@@ -61,20 +73,18 @@ export class PatientGalleryPanel extends React.Component<{
 													onFinishLoading={() => {
 														this.uploading = false;
 													}}
-													targetDir={`${GALLERIES_DIR}/${
-														this.props.patient._id
-													}`}
+													targetDir={`${GALLERIES_DIR}/${this.props.patient._id}`}
 												>
 													<TooltipHost
-														content={text(
-															"Add photo"
-														)}
+														content={
+															text("add photo").c
+														}
 													>
 														<IconButton
 															className={`add-photo`}
 															iconProps={{
 																iconName:
-																	"Photo2Add"
+																	"Photo2Add",
 															}}
 														/>
 													</TooltipHost>
@@ -84,7 +94,7 @@ export class PatientGalleryPanel extends React.Component<{
 											""
 										)}
 										{this.props.patient.gallery.map(
-											imagePath => {
+											(imagePath) => {
 												const URI =
 													imagesTable.table[
 														imagePath
@@ -102,7 +112,7 @@ export class PatientGalleryPanel extends React.Component<{
 														style={{
 															backgroundImage: `url('${
 																URI ? URI : ""
-															}')`
+															}')`,
 														}}
 														onClick={() => {
 															this.selectedImagePath = imagePath;
@@ -131,9 +141,11 @@ export class PatientGalleryPanel extends React.Component<{
 										<MessageBar
 											messageBarType={MessageBarType.info}
 										>
-											{text(
-												"This patient does not seem to have any photo record uploaded, press the plus sign button below to start uploading"
-											)}
+											{
+												text(
+													"this patient does not seem to have any photo record uploaded, press the plus sign button below to start uploading"
+												).h
+											}
 										</MessageBar>
 									) : this.selectedImagePath ? (
 										<div className="viewport">
@@ -145,7 +157,7 @@ export class PatientGalleryPanel extends React.Component<{
 												<IconButton
 													className="delete-photo"
 													iconProps={{
-														iconName: "trash"
+														iconName: "trash",
 													}}
 													onClick={async () => {
 														await this.removeImage();
@@ -161,9 +173,11 @@ export class PatientGalleryPanel extends React.Component<{
 										<MessageBar
 											messageBarType={MessageBarType.info}
 										>
-											{text(
-												"Click a thumbnail to expand it"
-											)}
+											{
+												text(
+													"click a thumbnail to expand it"
+												).c
+											}
 										</MessageBar>
 									)}
 								</Col>
@@ -171,16 +185,20 @@ export class PatientGalleryPanel extends React.Component<{
 						</div>
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							{text(
-								"A valid DropBox access token is required for this section"
-							)}
+							{
+								text(
+									"a valid dropbox access token is required for this section"
+								).c
+							}
 						</MessageBar>
 					)
 				) : (
 					<MessageBar messageBarType={MessageBarType.warning}>
-						{text(
-							"You can not access patient gallery while offline"
-						)}
+						{
+							text(
+								"you can not access patient gallery while offline"
+							).c
+						}
 					</MessageBar>
 				)}
 			</SectionComponent>
@@ -188,7 +206,7 @@ export class PatientGalleryPanel extends React.Component<{
 	}
 
 	componentDidMount() {
-		this.props.patient.gallery.forEach(async path => {
+		this.props.patient.gallery.forEach(async (path) => {
 			await imagesTable.fetchImage(path);
 		});
 	}

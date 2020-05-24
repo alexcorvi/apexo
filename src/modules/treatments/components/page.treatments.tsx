@@ -1,19 +1,25 @@
-import { DataTableComponent, PanelTabs, PanelTop, ProfileSquaredComponent, SectionComponent } from "@common-components";
 import { text } from "@core";
 import * as core from "@core";
 import * as modules from "@modules";
 import { num } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
+import * as React from "react";
+import {
+	DataTableComponent,
+	PanelTabs,
+	PanelTop,
+	ProfileSquaredComponent,
+	SectionComponent,
+} from "@common-components";
 import {
 	MessageBar,
 	MessageBarType,
 	Panel,
 	PanelType,
 	PrimaryButton,
-	TextField
-	} from "office-ui-fabric-react";
-import * as React from "react";
+	TextField,
+} from "office-ui-fabric-react";
 
 @observer
 export class Treatments extends React.Component {
@@ -21,14 +27,14 @@ export class Treatments extends React.Component {
 		{
 			key: "details",
 			icon: "cricket",
-			title: "Treatment Details"
+			title: text("treatment details").h,
 		},
 		{
 			key: "delete",
 			icon: "trash",
-			title: "Delete",
-			hidden: !this.canEdit
-		}
+			title: text("delete").h,
+			hidden: !this.canEdit,
+		},
 	];
 	@computed
 	get canEdit() {
@@ -38,7 +44,7 @@ export class Treatments extends React.Component {
 	@computed
 	get selectedTreatment() {
 		return modules.treatments!.docs.find(
-			x => x._id === core.router.selectedID
+			(x) => x._id === core.router.selectedID
 		);
 	}
 
@@ -48,7 +54,7 @@ export class Treatments extends React.Component {
 				<DataTableComponent
 					onDelete={
 						this.canEdit
-							? id => {
+							? (id) => {
 									modules.treatments!.deleteModal(id);
 							  }
 							: undefined
@@ -59,29 +65,29 @@ export class Treatments extends React.Component {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: text("Add new"),
+										name: text("add new").c,
 										onClick: () => {
 											const treatment = modules.treatments!.new();
 											modules.treatments!.add(treatment);
 											core.router.select({
 												id: treatment._id,
-												tab: "details"
+												tab: "details",
 											});
 										},
 										iconProps: {
-											iconName: "Add"
-										}
-									}
+											iconName: "Add",
+										},
+									},
 							  ]
 							: []
 					}
 					heads={[
-						text("Treatment"),
-						text("Expenses/unit"),
-						text("Done appointments"),
-						text("Upcoming appointments")
+						text("treatment").c,
+						text("expenses/unit").c,
+						text("done appointments").c,
+						text("upcoming appointments").c,
 					]}
-					rows={modules.treatments!.docs.map(treatment => {
+					rows={modules.treatments!.docs.map((treatment) => {
 						let done = 0;
 						let upcoming = 0;
 
@@ -108,8 +114,8 @@ export class Treatments extends React.Component {
 							id: treatment._id,
 							searchableString: treatment.searchableString,
 							actions: this.tabs
-								.filter(x => !x.hidden)
-								.map(x => ({
+								.filter((x) => !x.hidden)
+								.map((x) => ({
 									key: x.key,
 									title: x.title,
 									icon: x.icon,
@@ -121,10 +127,10 @@ export class Treatments extends React.Component {
 										} else {
 											core.router.select({
 												id: treatment._id,
-												tab: x.key
+												tab: x.key,
 											});
 										}
-									}
+									},
 								})),
 							cells: [
 								{
@@ -133,9 +139,9 @@ export class Treatments extends React.Component {
 										<ProfileSquaredComponent
 											text={treatment.type}
 											onRenderSecondaryText={() => (
-												<span className="itl">{`${text(
-													"Expenses"
-												)}: ${modules.setting!.getSetting(
+												<span className="itl">{`${
+													text("expenses").c
+												}: ${modules.setting!.getSetting(
 													"currencySymbol"
 												)}${treatment.expenses} ${text(
 													"per unit"
@@ -146,10 +152,10 @@ export class Treatments extends React.Component {
 									onClick: () => {
 										core.router.select({
 											id: treatment._id,
-											tab: "details"
+											tab: "details",
 										});
 									},
-									className: "no-label"
+									className: "no-label",
 								},
 								{
 									dataValue: treatment.expenses,
@@ -161,7 +167,7 @@ export class Treatments extends React.Component {
 											{treatment.expenses}
 										</span>
 									),
-									className: "hidden-xs"
+									className: "hidden-xs",
 								},
 								{
 									dataValue: done,
@@ -170,7 +176,7 @@ export class Treatments extends React.Component {
 											{done} {text("done")}
 										</span>
 									),
-									className: "hidden-xs"
+									className: "hidden-xs",
 								},
 								{
 									dataValue: upcoming,
@@ -179,9 +185,9 @@ export class Treatments extends React.Component {
 											{upcoming} {text("upcoming")}
 										</span>
 									),
-									className: "hidden-xs"
-								}
-							]
+									className: "hidden-xs",
+								},
+							],
 						};
 					})}
 					maxItemsOnLoad={20}
@@ -200,10 +206,10 @@ export class Treatments extends React.Component {
 							<div className="panel-heading">
 								<PanelTop
 									title={this.selectedTreatment!.type}
-									type={"Treatment"}
-									subTitle={`${text(
-										"Expenses"
-									)}: ${modules.setting!.getSetting(
+									type={text("treatment").c}
+									subTitle={`${
+										text("expenses").c
+									}: ${modules.setting!.getSetting(
 										"currencySymbol"
 									)}${
 										this.selectedTreatment!.expenses
@@ -212,7 +218,7 @@ export class Treatments extends React.Component {
 								/>
 								<PanelTabs
 									currentSelectedKey={core.router.selectedTab}
-									onSelect={key =>
+									onSelect={(key) =>
 										core.router.select({ tab: key })
 									}
 									items={this.tabs}
@@ -223,11 +229,11 @@ export class Treatments extends React.Component {
 						<div className="treatment-editor">
 							{core.router.selectedTab === "details" ? (
 								<SectionComponent
-									title={text("Treatment Details")}
+									title={text("treatment details").h}
 								>
 									<div className="treatment-input">
 										<TextField
-											label={text("Treatment title")}
+											label={text("treatment title").c}
 											value={this.selectedTreatment.type}
 											onChange={(ev, val) =>
 												(this.selectedTreatment!.type = val!)
@@ -236,9 +242,11 @@ export class Treatments extends React.Component {
 											data-testid="treatment-title"
 										/>
 										<TextField
-											label={text(
-												"Treatment expenses (per unit)"
-											)}
+											label={
+												text(
+													"treatment expenses (per unit)"
+												).c
+											}
 											type="number"
 											value={this.selectedTreatment.expenses.toString()}
 											onChange={(ev, val) =>
@@ -263,17 +271,19 @@ export class Treatments extends React.Component {
 									<MessageBar
 										messageBarType={MessageBarType.warning}
 									>
-										{text(
-											"Are you sure you want to delete"
-										)}
+										{
+											text(
+												"are you sure you want to delete"
+											).c
+										}
 									</MessageBar>
 									<br />
 									<PrimaryButton
 										className="delete"
 										iconProps={{
-											iconName: "delete"
+											iconName: "delete",
 										}}
-										text={text("Delete")}
+										text={text("delete").c}
 										onClick={() => {
 											modules.treatments!.delete(
 												core.router.selectedID

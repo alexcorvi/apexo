@@ -11,12 +11,12 @@ export class Prescriptions extends Store<
 	@observable selectedID: string = router.currentLocation.split("/")[1] || "";
 	deleteModal(id: string) {
 		modals.newModal({
-			text: text(`Are you sure you want to delete the prescription?`),
+			text: text(`are you sure you want to delete the prescription?`).c,
 			onConfirm: () => this.delete(id),
 			showCancelButton: true,
 			showConfirmButton: true,
 			input: false,
-			id: Math.random()
+			id: Math.random(),
 		});
 	}
 

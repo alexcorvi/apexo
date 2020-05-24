@@ -2337,7 +2337,7 @@ hr {
     right: 0;
     left: auto;
     margin-left: auto;
-    border-left: 1px solid #f5f5f5;
+    border-left: 1px solid #e8effd;
     border-right: 0; }
   [dir="rtl"] #router-outlet {
     margin-right: 65px;
@@ -2379,6 +2379,36 @@ hr {
 
 [dir="rtl"] .calendar-component .full-day-col {
   float: right; }
+
+[dir="rtl"] .menu-button button {
+  margin-right: -20px;
+  border-right: none;
+  border-left: 1px solid #e8effd; }
+
+[dir="rtl"] .time-input {
+  display: inline-block;
+  margin-bottom: 0;
+  width: 25%; }
+  [dir="rtl"] .time-input:not(.seconds) .ms-TextField-wrapper div {
+    border-left: none; }
+  [dir="rtl"] .time-input .ms-TextField-wrapper div {
+    border-right: 1px solid !important; }
+  [dir="rtl"] .time-input:nth-of-type(1) .ms-TextField-fieldGroup {
+    border-radius: 2px 0 0 2px; }
+  [dir="rtl"] .time-input:nth-of-type(2) .ms-TextField-fieldGroup, [dir="rtl"] .time-input:nth-of-type(3) .ms-TextField-fieldGroup {
+    border-radius: 0;
+    border-right: 0; }
+
+[dir="rtl"] .appointment-input .appendage {
+  border-radius: 2px 0 0 2px; }
+
+[dir="rtl"] .data-table .commandBar.fixed,
+[dir="rtl"] .calendar-component .commandBar.fixed {
+  right: 66px;
+  left: 0; }
+
+[dir="rtl"] .ms-ContextualMenu-linkContent {
+  text-align: right; }
 
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
 /* stylelint-disable no-duplicate-selectors */
@@ -5955,9 +5985,11 @@ hr {
     left: 0 !important;
     width: 100% !important; } }
 
+.crop-dialog .ms-Dialog-header {
+  display: none; }
+
 .crop-dialog .ms-Dialog-inner {
-  padding: 0;
-  margin-top: 10px; }
+  padding: 0; }
 
 .crop-dialog .ms-Dialog-main {
   max-width: none; }
@@ -6560,6 +6592,9 @@ hr {
     border: 1px solid #8fc7f43d;
     color: #0078d4; }
 
+.menu .ms-Panel-commands {
+  display: none; }
+
 .ver {
   text-align: center;
   font-size: 9px;
@@ -6675,6 +6710,9 @@ hr {
 
 .confirmation-modal .ms-Panel-content {
   padding-top: 0; }
+
+.confirmation-modal .ms-Panel-commands {
+  display: none; }
 
 .confirmation-modal.input-modal .ms-Panel-main {
   box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.14) !important;

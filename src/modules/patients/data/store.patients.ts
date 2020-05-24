@@ -28,19 +28,19 @@ export class Patients extends Store<PatientSchema, Patient> {
 	}
 
 	deleteModal(id: string) {
-		const patient = this.docs.find(x => x._id === id);
+		const patient = this.docs.find((x) => x._id === id);
 		if (!patient) {
 			return;
 		}
 		modals.newModal({
-			text: `${text("All of the patient")} ${patient.name}${text(
+			text: `${text("all of the patient")} ${patient.name}${text(
 				"'s data will be deleted along with"
 			)} ${patient.appointments.length} ${text("of appointments")}.`,
 			onConfirm: () => this.delete(id),
 			showCancelButton: true,
 			showConfirmButton: true,
 			input: false,
-			id: Math.random()
+			id: Math.random(),
 		});
 	}
 }

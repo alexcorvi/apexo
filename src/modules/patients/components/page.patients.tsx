@@ -1,3 +1,10 @@
+import { imagesTable, text } from "@core";
+import * as core from "@core";
+import * as modules from "@modules";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
+import * as React from "react";
+import * as loadable from "react-loadable";
 import {
 	DataTableComponent,
 	LastNextAppointment,
@@ -6,37 +13,44 @@ import {
 	ProfileComponent,
 	ProfileSquaredComponent,
 	TableActions,
-	TagComponent
-	} from "@common-components";
-import { imagesTable, text } from "@core";
-import * as core from "@core";
-import { Patient, PatientAppointmentsPanel, PatientGalleryPanel } from "@modules";
-import * as modules from "@modules";
-import { computed, observable } from "mobx";
-import { observer } from "mobx-react";
-import { Icon, Panel, PanelType, PersonaInitialsColor, Shimmer } from "office-ui-fabric-react";
-import { MessageBar, MessageBarType, PrimaryButton } from "office-ui-fabric-react";
-import * as React from "react";
-import * as loadable from "react-loadable";
+	TagComponent,
+} from "@common-components";
+import {
+	Patient,
+	PatientAppointmentsPanel,
+	PatientGalleryPanel,
+} from "@modules";
+import {
+	Icon,
+	Panel,
+	PanelType,
+	PersonaInitialsColor,
+	Shimmer,
+} from "office-ui-fabric-react";
+import {
+	MessageBar,
+	MessageBarType,
+	PrimaryButton,
+} from "office-ui-fabric-react";
 
 const PatientDetailsPanel = loadable({
 	loader: async () =>
 		(await import("modules/patients/components/patient-details"))
 			.PatientDetailsPanel,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 const DentalHistoryPanel = loadable({
 	loader: async () =>
 		(await import("modules/patients/components/dental-history"))
 			.DentalHistoryPanel,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 const AppointmentEditorPanel = loadable({
 	loader: async () =>
 		(await import("modules/appointments/components/appointment-editor"))
 			.AppointmentEditorPanel,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 @observer
@@ -47,7 +61,7 @@ export class PatientsPage extends React.Component {
 	@computed
 	get selectedPatient() {
 		return modules.patients!.docs.find(
-			patient => patient._id === core.router.selectedID
+			(patient) => patient._id === core.router.selectedID
 		);
 	}
 
@@ -57,38 +71,38 @@ export class PatientsPage extends React.Component {
 
 	@computed get selectedAppointment() {
 		return modules.appointments!.docs.find(
-			x => x._id === this.selectedAppointmentId
+			(x) => x._id === this.selectedAppointmentId
 		);
 	}
 
 	tabs = [
 		{
 			key: "details",
-			title: "Patient Details",
-			icon: "DietPlanNotebook"
+			title: text("patient details").h,
+			icon: "DietPlanNotebook",
 		},
 		{
 			key: "dental",
-			title: "Dental History",
-			icon: "teeth"
+			title: text("dental history").h,
+			icon: "teeth",
 		},
 		{
 			key: "gallery",
-			title: "Gallery",
-			icon: "PhotoCollection"
+			title: text("gallery").h,
+			icon: "PhotoCollection",
 		},
 		{
 			key: "appointments",
-			title: "Appointments",
+			title: text("appointments").h,
 			icon: "Calendar",
-			hidden: !core.user.currentUser!.canViewAppointments
+			hidden: !core.user.currentUser!.canViewAppointments,
 		},
 		{
 			key: "delete",
-			title: "Delete",
+			title: text("delete").h,
 			icon: "Trash",
-			hidden: !this.canEdit
-		}
+			hidden: !this.canEdit,
+		},
 	];
 
 	render() {
@@ -109,10 +123,12 @@ export class PatientsPage extends React.Component {
 								<div className="panel-heading">
 									<PanelTop
 										title={this.selectedPatient!.name}
-										type={"Patient"}
+										type={text("patient").c}
 										subTitle={`${
-											this.selectedPatient!.gender
-										} - ${this.selectedPatient!.age} years`}
+											text(this.selectedPatient!.gender).c
+										} - ${this.selectedPatient!.age} ${
+											text("years old").r
+										}`}
 										onDismiss={() => core.router.unSelect()}
 										avatar={
 											this.selectedPatient!.avatar
@@ -137,7 +153,7 @@ export class PatientsPage extends React.Component {
 										currentSelectedKey={
 											core.router.selectedTab
 										}
-										onSelect={key => {
+										onSelect={(key) => {
 											core.router.select({ tab: key });
 										}}
 										items={this.tabs}
@@ -149,7 +165,7 @@ export class PatientsPage extends React.Component {
 						{core.router.selectedTab === "details" ? (
 							<PatientDetailsPanel
 								patient={this.selectedPatient!}
-								onChangeViewWhich={key =>
+								onChangeViewWhich={(key) =>
 									core.router.select({ tab: key })
 								}
 							/>
@@ -184,7 +200,7 @@ export class PatientsPage extends React.Component {
 								<MessageBar
 									messageBarType={MessageBarType.warning}
 								>
-									{`${text("All of the patient")} ${
+									{`${text("all of the patient").c} ${
 										this.selectedPatient.name
 									}${text(
 										"'s data will be deleted along with"
@@ -196,9 +212,9 @@ export class PatientsPage extends React.Component {
 								<PrimaryButton
 									className="delete"
 									iconProps={{
-										iconName: "delete"
+										iconName: "delete",
 									}}
-									text={text("Delete")}
+									text={text("delete").c}
 									onClick={() => {
 										modules.patients!.delete(
 											core.router.selectedID
@@ -215,24 +231,28 @@ export class PatientsPage extends React.Component {
 					""
 				)}
 				<DataTableComponent
-					ref={dt => (this.dt = dt)}
+					ref={(dt) => (this.dt = dt)}
 					maxItemsOnLoad={10}
 					className={"patients-data-table"}
 					heads={[
-						text("Patient"),
-						text("Last/Next Appointment"),
-						text("Total/Outstanding Payments"),
-						text("Label")
+						text("patient name").h,
+						`${text("previous").h}/${text("next").h} ${text(
+							"appointment"
+						)}`,
+						`${text("total").h}/${text("outstanding").h} ${
+							text("payment").h
+						}`,
+						text("labels").c,
 					]}
-					rows={modules.patients!.docs.map(patient => ({
+					rows={modules.patients!.docs.map((patient) => ({
 						id: patient._id,
 						className:
 							"pg-pn-" +
 							patient.name.toLowerCase().replace(/\s/g, ""),
 						searchableString: patient.searchableString,
 						actions: this.tabs
-							.filter(x => !x.hidden)
-							.map(x => ({
+							.filter((x) => !x.hidden)
+							.map((x) => ({
 								key: x.key,
 								title: x.title,
 								icon: x.icon,
@@ -244,10 +264,10 @@ export class PatientsPage extends React.Component {
 									} else {
 										core.router.select({
 											id: patient._id,
-											tab: x.key
+											tab: x.key,
 										});
 									}
-								}
+								},
 							})),
 						cells: [
 							{
@@ -292,9 +312,9 @@ export class PatientsPage extends React.Component {
 								onClick: () => {
 									core.router.select({
 										id: patient._id,
-										tab: "details"
+										tab: "details",
 									});
-								}
+								},
 							},
 							{
 								dataValue: (
@@ -309,15 +329,15 @@ export class PatientsPage extends React.Component {
 										nextAppointment={
 											patient.nextAppointment
 										}
-										onClick={id => {
+										onClick={(id) => {
 											this.selectedAppointmentId = id;
 											core.router.select({
-												sub: "details"
+												sub: "details",
 											});
 										}}
 									></LastNextAppointment>
 								),
-								className: "hidden-xs"
+								className: "hidden-xs",
 							},
 							{
 								dataValue: patient.totalPayments,
@@ -330,7 +350,7 @@ export class PatientsPage extends React.Component {
 												) +
 												patient.totalPayments.toString()
 											}
-											subText={text("Payments made")}
+											subText={text("payments made").c}
 											size={3}
 											onRenderInitials={() => (
 												<Icon iconName="CheckMark" />
@@ -341,7 +361,6 @@ export class PatientsPage extends React.Component {
 													: PersonaInitialsColor.transparent
 											}
 										/>
-										<br />
 										<ProfileSquaredComponent
 											text={
 												modules.setting!.getSetting(
@@ -356,13 +375,14 @@ export class PatientsPage extends React.Component {
 											}
 											subText={
 												patient.differenceAmount < 0
-													? text("Outstanding amount")
+													? text("outstanding amount")
+															.c
 													: patient.differenceAmount >
 													  0
-													? text("Overpaid amount")
+													? text("overpaid amount").c
 													: text(
-															"No outstanding amount"
-													  )
+															"no outstanding amount"
+													  ).c
 											}
 											size={3}
 											onRenderInitials={() => (
@@ -376,11 +396,11 @@ export class PatientsPage extends React.Component {
 										/>
 									</div>
 								),
-								className: "hidden-xs"
+								className: "hidden-xs",
 							},
 							{
 								dataValue: patient.labels
-									.map(x => x.text)
+									.map((x) => x.text)
 									.join(","),
 								component: (
 									<div>
@@ -418,9 +438,9 @@ export class PatientsPage extends React.Component {
 										})}
 									</div>
 								),
-								className: "hidden-xs"
-							}
-						]
+								className: "hidden-xs",
+							},
+						],
 					}))}
 					commands={
 						this.canEdit
@@ -428,20 +448,20 @@ export class PatientsPage extends React.Component {
 									{
 										key: "addNew",
 										title: "Add new",
-										name: text("Add new"),
+										name: text("add new").c,
 										onClick: () => {
 											const patient = modules.patients!.new();
 											patient.fromJSON(patient.toJSON()); // init. teeth
 											modules.patients!.add(patient);
 											core.router.select({
 												id: patient._id,
-												tab: "details"
+												tab: "details",
 											});
 										},
 										iconProps: {
-											iconName: "Add"
-										}
-									}
+											iconName: "Add",
+										},
+									},
 							  ]
 							: []
 					}

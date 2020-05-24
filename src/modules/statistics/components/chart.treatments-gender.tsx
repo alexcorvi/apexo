@@ -22,23 +22,23 @@ export class TreatmentsByGenderChart extends React.Component<{
 						notStacked: true,
 						data: {
 							xLabels: this.props.selectedTreatments.map(
-								x => x.treatment.type
+								(x) => x.treatment.type
 							),
 							bars: [
 								{
-									label: text("Male"),
+									label: text("male").c,
 									data: this.props.selectedTreatments.map(
-										x => x.male
-									)
+										(x) => x.male
+									),
 								},
 								{
-									label: text("Female"),
+									label: text("female").c,
 									data: this.props.selectedTreatments.map(
-										x => x.female * -1
-									)
-								}
-							]
-						}
+										(x) => x.female * -1
+									),
+								},
+							],
+						},
 					}}
 				/>
 			</div>

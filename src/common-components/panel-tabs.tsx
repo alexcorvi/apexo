@@ -20,7 +20,7 @@ export class PanelTabs extends React.Component<{
 				<Pivot
 					headersOnly
 					selectedKey={this.props.currentSelectedKey}
-					onLinkClick={item => {
+					onLinkClick={(item) => {
 						if (item && item.props.itemKey) {
 							this.props.onSelect(item.props.itemKey);
 						}
@@ -33,7 +33,7 @@ export class PanelTabs extends React.Component<{
 							<PivotItem
 								headerText={
 									this.props.currentSelectedKey === item.key
-										? text(item.title)
+										? item.title
 										: undefined
 								}
 								itemIcon={item.icon}

@@ -1,4 +1,3 @@
-import { Col, getRandomTagType, Row, SectionComponent, TagInputComponent } from "@common-components";
 import * as core from "@core";
 import { imagesTable, status, text } from "@core";
 import * as modules from "@modules";
@@ -6,14 +5,27 @@ import { gender, Patient, StaffMember } from "@modules";
 import { num } from "@utils";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
-import { Dropdown, Label, Link, Shimmer, TextField } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
+import {
+	Col,
+	getRandomTagType,
+	Row,
+	SectionComponent,
+	TagInputComponent,
+} from "@common-components";
+import {
+	Dropdown,
+	Label,
+	Link,
+	Shimmer,
+	TextField,
+} from "office-ui-fabric-react";
 
 const EditableListComponent = loadable({
 	loading: () => <Shimmer />,
 	loader: async () =>
-		(await import("common-components/editable-list")).EditableListComponent
+		(await import("common-components/editable-list")).EditableListComponent,
 });
 
 @observer
@@ -28,10 +40,10 @@ export class PatientDetailsPanel extends React.Component<{
 	render() {
 		return (
 			<div className="spd-pn">
-				<SectionComponent title={text(`Basic Info`)}>
+				<SectionComponent title={text(`basic info`).h}>
 					<div className="name">
 						<TextField
-							label={text(`Name`)}
+							label={text(`name`).c}
 							value={this.props.patient.name}
 							onChange={(ev, name) =>
 								(this.props.patient.name = name!)
@@ -44,7 +56,7 @@ export class PatientDetailsPanel extends React.Component<{
 						<Col sm={12}>
 							<div className="birth">
 								<TextField
-									label={text("Birth year / age")}
+									label={text("birth year / age").c}
 									value={this.props.patient.birthYear.toString()}
 									onChange={(ev, year) =>
 										(this.props.patient.birthYear = num(
@@ -59,11 +71,14 @@ export class PatientDetailsPanel extends React.Component<{
 						<Col sm={12}>
 							<div className="gender">
 								<Dropdown
-									label={text("Gender")}
+									label={text("gender").c}
 									selectedKey={this.props.patient.gender}
 									options={[
-										{ key: "male", text: text("Male") },
-										{ key: "female", text: text("Female") }
+										{ key: "male", text: text("male").c },
+										{
+											key: "female",
+											text: text("female").c,
+										},
 									]}
 									onChange={(ev, val) => {
 										if (val!.key === "male") {
@@ -82,7 +97,7 @@ export class PatientDetailsPanel extends React.Component<{
 						<div>
 							<Label>Avatar photo</Label>
 							<div className="thumbs">
-								{this.props.patient.gallery.map(image => {
+								{this.props.patient.gallery.map((image) => {
 									if (imagesTable.table[image]) {
 										return (
 											<a
@@ -100,7 +115,7 @@ export class PatientDetailsPanel extends React.Component<{
 																	image
 															  ]
 															: ""
-													}')`
+													}')`,
 												}}
 												onClick={() => {
 													this.props.patient.avatar = image;
@@ -120,7 +135,7 @@ export class PatientDetailsPanel extends React.Component<{
 											(this.props.patient.avatar = "")
 										}
 									>
-										{text("Unset")}
+										{text("delete").c}
 									</Link>{" "}
 									/{" "}
 								</span>
@@ -132,7 +147,7 @@ export class PatientDetailsPanel extends React.Component<{
 									this.props.onChangeViewWhich("gallery")
 								}
 							>
-								{text("Upload")}
+								{text("upload").c}
 							</Link>
 						</div>
 					) : (
@@ -140,11 +155,11 @@ export class PatientDetailsPanel extends React.Component<{
 					)}
 				</SectionComponent>
 
-				<SectionComponent title={text(`Contact Info`)}>
+				<SectionComponent title={text(`contact info`).h}>
 					<Row gutter={8}>
 						<Col sm={12}>
 							<TextField
-								label={text("Phone")}
+								label={text("phone").c}
 								value={this.props.patient.phone}
 								onChange={(ev, phone) =>
 									(this.props.patient.phone = phone!)
@@ -155,7 +170,7 @@ export class PatientDetailsPanel extends React.Component<{
 						</Col>
 						<Col sm={12}>
 							<TextField
-								label={text("Email")}
+								label={text("email").c}
 								value={this.props.patient.email}
 								onChange={(ev, email) =>
 									(this.props.patient.email = email!)
@@ -166,7 +181,7 @@ export class PatientDetailsPanel extends React.Component<{
 					</Row>
 
 					<TextField
-						label={text("Address")}
+						label={text("address").c}
 						value={this.props.patient.address}
 						onChange={(ev, address) =>
 							(this.props.patient.address = address!)
@@ -176,22 +191,22 @@ export class PatientDetailsPanel extends React.Component<{
 					/>
 				</SectionComponent>
 
-				<SectionComponent title={text(`Other Notes`)}>
+				<SectionComponent title={text(`other notes`).h}>
 					<TagInputComponent
 						className="patient-labels"
 						disabled={!this.canEdit}
-						label={text("Labels")}
+						label={text("labels").c}
 						loose
 						options={modules
-							.patients!.docs.map(x => x.labels)
+							.patients!.docs.map((x) => x.labels)
 							.reduce(
 								(a: string[], b) =>
-									a.concat(b.map(x => x.text)),
+									a.concat(b.map((x) => x.text)),
 								[]
 							)
-							.map(x => ({
+							.map((x) => ({
 								key: x,
-								text: x
+								text: x,
 							}))
 							.reduce(
 								(
@@ -203,7 +218,7 @@ export class PatientDetailsPanel extends React.Component<{
 								) => {
 									if (
 										arr.findIndex(
-											x => x.key === item.key
+											(x) => x.key === item.key
 										) === -1
 									) {
 										arr.push(item);
@@ -212,25 +227,25 @@ export class PatientDetailsPanel extends React.Component<{
 								},
 								[]
 							)}
-						onChange={newVal => {
-							this.props.patient.labels = newVal.map(item => {
+						onChange={(newVal) => {
+							this.props.patient.labels = newVal.map((item) => {
 								return {
 									text: item,
-									type: getRandomTagType(item)
+									type: getRandomTagType(item),
 								};
 							});
 						}}
-						value={this.props.patient.labels.map(label => ({
+						value={this.props.patient.labels.map((label) => ({
 							key: label.text,
-							text: label.text
+							text: label.text,
 						}))}
 					/>
 					<br />
 					<div className="medical-history">
 						<EditableListComponent
-							label={text("Notes")}
+							label={text("notes").c}
 							value={this.props.patient.medicalHistory}
-							onChange={newVal => {
+							onChange={(newVal) => {
 								this.props.patient.medicalHistory = newVal;
 							}}
 							style={{ marginTop: "0" }}

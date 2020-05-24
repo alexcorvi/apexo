@@ -12,8 +12,8 @@ export class AgeBarChart extends React.Component<{
 	@computed
 	get values() {
 		return this.props.selectedPatients
-			.filter(x => x && x.birthYear)
-			.map(x => {
+			.filter((x) => x && x.birthYear)
+			.map((x) => {
 				if (!x || x.birthYear === 0) {
 					return 0;
 				}
@@ -23,11 +23,11 @@ export class AgeBarChart extends React.Component<{
 				);
 			})
 			.reduce((result: { x: number; y: number }[], occ) => {
-				const i = result.findIndex(rOCC => rOCC.x === occ);
+				const i = result.findIndex((rOCC) => rOCC.x === occ);
 				if (i === -1) {
 					result.push({
 						x: occ,
-						y: 1
+						y: 1,
 					});
 				} else {
 					result[i].y++;
@@ -43,14 +43,14 @@ export class AgeBarChart extends React.Component<{
 					{...{
 						height: 400,
 						data: {
-							xLabels: this.values.map(x => x.x.toString()),
+							xLabels: this.values.map((x) => x.x.toString()),
 							bars: [
 								{
-									data: this.values.map(x => x.y),
-									label: text("Age")
-								}
-							]
-						}
+									data: this.values.map((x) => x.y),
+									label: text("age").c,
+								},
+							],
+						},
 					}}
 				/>
 			</div>

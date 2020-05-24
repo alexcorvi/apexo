@@ -1,25 +1,31 @@
 import { text } from "@core";
-import { OrthoCaseSchema, patients, PhotoSchema, setting, VisitSchema } from "@modules";
 import { formatDate, generateID } from "@utils";
 import { computed, observable } from "mobx";
 import { Model, observeModel, SubModel } from "pouchx";
+import {
+	OrthoCaseSchema,
+	patients,
+	PhotoSchema,
+	setting,
+	VisitSchema,
+} from "@modules";
 
 export const Lips = {
 	competent: "competent lips",
 	incompetent: "incompetent lips",
-	potentially_competent: "potentially competent lips"
+	potentially_competent: "potentially competent lips",
 };
 
 export const FacialProfile = {
 	brachycephalic: "brachycephalic profile",
 	dolichocephalic: "dolichocephalic profile",
-	mesocephalic: "mesocephalic profile"
+	mesocephalic: "mesocephalic profile",
 };
 
 export const OralHygiene = {
 	good: "good oral hygiene",
 	bad: "bad oral hygiene",
-	moderate: "moderate oral hygiene"
+	moderate: "moderate oral hygiene",
 };
 
 export class Photo extends SubModel<PhotoSchema> implements PhotoSchema {
@@ -37,7 +43,7 @@ export class Photo extends SubModel<PhotoSchema> implements PhotoSchema {
 		return {
 			id: this.id,
 			photoID: this.photoID,
-			comment: this.comment
+			comment: this.comment,
 		};
 	}
 }
@@ -50,7 +56,7 @@ export class Visit extends SubModel<VisitSchema> implements VisitSchema {
 		new Photo(), // 2 Right
 		new Photo(), // 3 Left
 		new Photo(), // 4 Lingual
-		new Photo() // 5 Palatal
+		new Photo(), // 5 Palatal
 	];
 	@observable date: number = new Date().getTime();
 	@observable appliance: string = "";
@@ -68,7 +74,7 @@ export class Visit extends SubModel<VisitSchema> implements VisitSchema {
 		this.date = json.date;
 		this.appliance = json.appliance;
 		this.target = json.target || "";
-		this.photos = json.photos.map(x => new Photo().fromJSON(x));
+		this.photos = json.photos.map((x) => new Photo().fromJSON(x));
 		return this;
 	}
 
@@ -79,7 +85,7 @@ export class Visit extends SubModel<VisitSchema> implements VisitSchema {
 			date: this.date,
 			appliance: this.appliance,
 			target: this.target,
-			photos: this.photos.map(x => x.toJSON())
+			photos: this.photos.map((x) => x.toJSON()),
 		};
 	}
 }
@@ -92,7 +98,7 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 	@observable patientID: string = "";
 	@computed
 	get patient() {
-		return patients!.docs.find(x => x._id === this.patientID);
+		return patients!.docs.find((x) => x._id === this.patientID);
 	}
 
 	/**
@@ -163,20 +169,24 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 	get computedProblems() {
 		const computedProblemsArr: string[] = [];
 		if (this.lips !== "competent") {
-			computedProblemsArr.push(text(Lips[this.lips]));
+			computedProblemsArr.push(text(Lips[this.lips] as any).r);
 		}
 
 		if (this.facialProfile !== "mesocephalic") {
-			computedProblemsArr.push(text(FacialProfile[this.facialProfile]));
+			computedProblemsArr.push(
+				text(FacialProfile[this.facialProfile] as any).r
+			);
 		}
 
 		if (this.oralHygiene === "bad") {
-			computedProblemsArr.push(text(OralHygiene[this.oralHygiene]));
+			computedProblemsArr.push(
+				text(OralHygiene[this.oralHygiene] as any).r
+			);
 		}
 
 		if (this.nasioLabialAngle < 90 || this.nasioLabialAngle > 93) {
 			computedProblemsArr.push(
-				`${text("Nasio-labial angle")}: ${this.nasioLabialAngle} ${text(
+				`${text("nasio-labial angle")}: ${this.nasioLabialAngle} ${text(
 					"degrees"
 				)}`
 			);
@@ -184,7 +194,7 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 
 		if (this.skeletalRelationship !== 1) {
 			computedProblemsArr.push(
-				`${text("Skeletal relationship: Class ")}${
+				`${text("skeletal relationship")} ${text("class")}: ${
 					this.skeletalRelationship
 				}`
 			);
@@ -192,7 +202,7 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 
 		if (this.molarsRelationship !== 1) {
 			computedProblemsArr.push(
-				`${text("Molars relationship: Class ")}${
+				`${text("molars relationship")} ${text("class")}: ${
 					this.molarsRelationship
 				}`
 			);
@@ -200,7 +210,7 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 
 		if (this.canineRelationship !== 1) {
 			computedProblemsArr.push(
-				`${text("Canine relationship: Class ")}${
+				`${text("canine relationship")} ${text("class")}: ${
 					this.canineRelationship
 				}`
 			);
@@ -208,19 +218,19 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 
 		if (this.overJet > 3 || this.overJet < 1) {
 			computedProblemsArr.push(
-				`${text("Overjet")} :${this.overJet} ${text("mm")}`
+				`${text("overjet")} :${this.overJet} ${text("mm")}`
 			);
 		}
 
 		if (this.overBite > 4 || this.overBite < 2) {
 			computedProblemsArr.push(
-				`${text("Overbite")} :${this.overBite} ${text("mm")}`
+				`${text("overbite")} :${this.overBite} ${text("mm")}`
 			);
 		}
 
 		if (this.crossScissorBite.length) {
 			computedProblemsArr.push(
-				`${text("Cross/scissors bite")}: ${this.crossScissorBite.join(
+				`${text("cross/scissors bite")}: ${this.crossScissorBite.join(
 					", "
 				)}`
 			);
@@ -228,7 +238,7 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 
 		if (this.u_crowding > 0) {
 			computedProblemsArr.push(
-				`${text("Upper arch crowding by")} ${this.u_crowding}${text(
+				`${text("upper arch crowding by")} ${this.u_crowding}${text(
 					"mm"
 				)}`
 			);
@@ -236,7 +246,7 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 
 		if (this.u_spacing > 0) {
 			computedProblemsArr.push(
-				`${text("Upper arch spacing by")} ${this.u_spacing}${text(
+				`${text("upper arch spacing by")} ${this.u_spacing}${text(
 					"mm"
 				)}`
 			);
@@ -244,7 +254,7 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 
 		if (this.l_crowding > 0) {
 			computedProblemsArr.push(
-				`${text("Lower arch crowding by")} ${this.l_crowding}${text(
+				`${text("lower arch crowding by")} ${this.l_crowding}${text(
 					"mm"
 				)}`
 			);
@@ -252,7 +262,7 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 
 		if (this.l_spacing > 0) {
 			computedProblemsArr.push(
-				`${text("Lower arch spacing by")} ${this.l_spacing}${text(
+				`${text("lower arch spacing by")} ${this.l_spacing}${text(
 					"mm"
 				)}`
 			);
@@ -271,9 +281,9 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 					this.patient.gender
 			  }
 			${this.patient.name} ${this.patient.labels
-					.map(x => x.text)
+					.map((x) => x.text)
 					.join(" ")} ${this.patient.medicalHistory.join(" ")}
-			${this.patient.teeth.map(x => x.notes.join(" ")).join(" ")}
+			${this.patient.teeth.map((x) => x.notes.join(" ")).join(" ")}
 			${
 				this.patient.nextAppointment
 					? (this.patient.nextAppointment.treatment || { type: "" })
@@ -341,7 +351,7 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 			isFinished: this.isFinished,
 			finishedDate: this.finishedDate,
 			nextVisitNotes: Array.from(this.nextVisitNotes),
-			visits: Array.from(this.visits).map(x => x.toJSON())
+			visits: Array.from(this.visits).map((x) => x.toJSON()),
 		};
 	}
 
@@ -384,7 +394,7 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 		this.finishedDate = json.finishedDate || 0;
 		this.nextVisitNotes = json.nextVisitNotes || [];
 		this.visits = json.visits
-			? json.visits.map(x => new Visit().fromJSON(x))
+			? json.visits.map((x) => new Visit().fromJSON(x))
 			: [];
 		this.isFinished = !!json.isFinished;
 		this.isStarted = !!json.isStarted;

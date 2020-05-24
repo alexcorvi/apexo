@@ -17,7 +17,7 @@ export interface DatabaseDump {
 }
 
 export const backup = {
-	toJSON: async function() {
+	toJSON: async function () {
 		const PouchDB: PouchDB.Static = ((await import(
 			"pouchdb-browser"
 		)) as any).default;
@@ -35,15 +35,17 @@ export const backup = {
 					fetch: (url, opts) =>
 						PouchDB.fetch(url, {
 							...opts,
-							credentials: "include"
-						})
+							credentials: "include",
+						}),
 				}
 			);
 
-			const data = (await remoteDatabase.allDocs({
-				include_docs: true,
-				attachments: true
-			})).rows.map(entry => {
+			const data = (
+				await remoteDatabase.allDocs({
+					include_docs: true,
+					attachments: true,
+				})
+			).rows.map((entry) => {
 				if (entry.doc) {
 					delete entry.doc._rev;
 				}
@@ -56,39 +58,39 @@ export const backup = {
 		return dumps;
 	},
 
-	toBase64: async function() {
+	toBase64: async function () {
 		const JSONDump = await backup.toJSON();
 		return encode(JSON.stringify(JSONDump));
 	},
 
-	toBlob: async function() {
+	toBlob: async function () {
 		const base64 = await backup.toBase64();
 		return new Blob(["apexo-backup:" + base64], {
-			type: "text/plain;charset=utf-8"
+			type: "text/plain;charset=utf-8",
 		});
 	},
 
-	toDropbox: async function(): Promise<string> {
+	toDropbox: async function (): Promise<string> {
 		const blob = await backup.toBlob();
 		const path = await core.files.save({
 			blob,
 			ext,
-			dir: core.BACKUPS_DIR
+			dir: core.BACKUPS_DIR,
 		});
 		return path;
 	},
 
-	list: async function() {
+	list: async function () {
 		return await core.files.list(core.BACKUPS_DIR);
 	},
 
-	deleteFromDropbox: async function(path: string) {
+	deleteFromDropbox: async function (path: string) {
 		return await core.files.remove(path);
-	}
+	},
 };
 
 export const restore = {
-	fromJSON: async function(json: DatabaseDump[]) {
+	fromJSON: async function (json: DatabaseDump[]) {
 		view.hideEverything();
 		return new Promise(async (resolve, reject) => {
 			const PouchDB: PouchDB.Static = ((await import(
@@ -107,8 +109,8 @@ export const restore = {
 						fetch: (url, opts) =>
 							PouchDB.fetch(url, {
 								...opts,
-								credentials: "include"
-							})
+								credentials: "include",
+							}),
 					}
 				);
 				await remoteDatabase1.destroy();
@@ -123,8 +125,8 @@ export const restore = {
 						fetch: (url, opts) =>
 							PouchDB.fetch(url, {
 								...opts,
-								credentials: "include"
-							})
+								credentials: "include",
+							}),
 					}
 				);
 				await remoteDatabase2.bulkDocs(dump.data);
@@ -148,7 +150,7 @@ export const restore = {
 		});
 	},
 
-	fromBase64: async function(base64Data: string, ignoreConfirm?: boolean) {
+	fromBase64: async function (base64Data: string, ignoreConfirm?: boolean) {
 		return new Promise(async (resolve, reject) => {
 			if (ignoreConfirm) {
 				const json = JSON.parse(decode(base64Data));
@@ -157,8 +159,8 @@ export const restore = {
 			} else {
 				core.modals.newModal({
 					text: core.text(
-						`All unsaved data will be lost. All data will be removed and replaced by the backup file. Type "yes" to confirm`
-					),
+						'all unsaved data will be lost. all data will be removed and replaced by the backup file. type "yes" to confirm'
+					).c,
 					onConfirm: async (input: string) => {
 						if (input.toLowerCase() === "yes") {
 							const json = JSON.parse(decode(base64Data));
@@ -167,7 +169,7 @@ export const restore = {
 						} else {
 							core.messages.newMessage({
 								id: generateID(),
-								text: core.text("Restoration cancelled")
+								text: core.text("restoration cancelled").c,
 							});
 							return reject();
 						}
@@ -175,24 +177,24 @@ export const restore = {
 					input: true,
 					showCancelButton: false,
 					showConfirmButton: true,
-					id: generateID()
+					id: generateID(),
 				});
 			}
 		});
 	},
 
-	fromFile: async function(file: Blob) {
+	fromFile: async function (file: Blob) {
 		return new Promise((resolve, reject) => {
 			function terminate() {
 				core.messages.newMessage({
 					id: generateID(),
-					text: core.text("Invalid file")
+					text: core.text("invalid file").c,
 				});
 				return reject();
 			}
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
-			reader.onloadend = async function() {
+			reader.onloadend = async function () {
 				const base64data = reader.result;
 				if (typeof base64data === "string") {
 					const fileData = atob(base64data.split("base64,")[1]).split(
@@ -211,22 +213,22 @@ export const restore = {
 		});
 	},
 
-	fromDropbox: async function(filePath: string) {
+	fromDropbox: async function (filePath: string) {
 		const base64File = (await core.files.get(filePath)).split(
 			";base64,"
 		)[1];
 		const base64Data = decode(base64File).split("apexo-backup:")[1];
 		this.fromBase64(base64Data);
-	}
+	},
 };
 
 export async function downloadCurrentStateAsBackup() {
 	const blob = await backup.toBlob();
-	return new Promise(resolve => {
+	return new Promise((resolve) => {
 		core.modals.newModal({
 			id: generateID(),
-			text: core.text("Please enter file name"),
-			onConfirm: fileName => {
+			text: core.text("please enter file name").c,
+			onConfirm: (fileName) => {
 				saveAs(blob, `${fileName || "apexo-backup"}.${ext}`);
 				resolve();
 			},
@@ -235,14 +237,14 @@ export async function downloadCurrentStateAsBackup() {
 			},
 			input: true,
 			showCancelButton: true,
-			showConfirmButton: true
+			showConfirmButton: true,
 		});
 	});
 }
 
 const view = {
 	el: document.getElementById("root"),
-	hideEverything: function() {
+	hideEverything: function () {
 		this.el!.innerHTML = `
 		<style>
 		#root {
@@ -272,10 +274,10 @@ const view = {
 		<hr>
 	`;
 	},
-	msg: function(str: string, finish?: boolean) {
+	msg: function (str: string, finish?: boolean) {
 		this.el!.innerHTML = `${this.el!.innerHTML}<p class="${
 			finish ? "finish" : "start"
 		}">${str}</p>`;
 		window.scrollTo(0, document.body.scrollHeight);
-	}
+	},
 };

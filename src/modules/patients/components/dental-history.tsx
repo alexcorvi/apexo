@@ -1,16 +1,23 @@
+import { text } from "@core";
+import * as core from "@core";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
+import * as React from "react";
+import * as loadable from "react-loadable";
 import {
 	Col,
 	PanelTabs,
 	PanelTop,
 	ProfileComponent,
 	Row,
-	SectionComponent
-	} from "@common-components";
-import { text } from "@core";
-import * as core from "@core";
-import { conditionToColor, Patient, StaffMember, ToothCondition } from "@modules";
-import { computed, observable } from "mobx";
-import { observer } from "mobx-react";
+	SectionComponent,
+} from "@common-components";
+import {
+	conditionToColor,
+	Patient,
+	StaffMember,
+	ToothCondition,
+} from "@modules";
 import {
 	Dropdown,
 	Icon,
@@ -18,29 +25,27 @@ import {
 	Panel,
 	PanelType,
 	Shimmer,
-	Toggle
-	} from "office-ui-fabric-react";
-import * as React from "react";
-import * as loadable from "react-loadable";
+	Toggle,
+} from "office-ui-fabric-react";
 
 const EditableListComponent = loadable({
 	loading: () => <Shimmer />,
 	loader: async () =>
-		(await import("common-components/editable-list")).EditableListComponent
+		(await import("common-components/editable-list")).EditableListComponent,
 });
 
 const TeethDeciduousChart = loadable({
 	loader: async () =>
 		(await import("modules/patients/components/teeth-deciduous"))
 			.TeethDeciduousChart,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 const TeethPermanentChart = loadable({
 	loader: async () =>
 		(await import("modules/patients/components/teeth-permanent"))
 			.TeethPermanentChart,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 @observer
@@ -62,8 +67,8 @@ export class DentalHistoryPanel extends React.Component<
 				<div>
 					<Toggle
 						defaultChecked={true}
-						onText={text("View graphic chart")}
-						offText={text("View sorted table")}
+						onText={text("view graphic chart").c}
+						offText={text("view sorted table").c}
 						onChange={(ev, newVal) => {
 							this.viewChart = newVal!;
 						}}
@@ -71,22 +76,22 @@ export class DentalHistoryPanel extends React.Component<
 					/>
 					{this.viewChart ? (
 						<div className="chart">
-							<SectionComponent title={text(`Permanent Teeth`)}>
+							<SectionComponent title={text(`permanent teeth`).h}>
 								<TeethPermanentChart
 									teeth={this.props.patient.teeth}
-									onClick={number =>
+									onClick={(number) =>
 										core.router.select({
-											sub: number.toString()
+											sub: number.toString(),
 										})
 									}
 								/>
 							</SectionComponent>
-							<SectionComponent title={text(`Deciduous Teeth`)}>
+							<SectionComponent title={text(`deciduous teeth`).h}>
 								<TeethDeciduousChart
 									teeth={this.props.patient.teeth}
-									onClick={number =>
+									onClick={(number) =>
 										core.router.select({
-											sub: number.toString()
+											sub: number.toString(),
 										})
 									}
 								/>
@@ -94,37 +99,37 @@ export class DentalHistoryPanel extends React.Component<
 						</div>
 					) : (
 						<div className="tabulated">
-							<SectionComponent title={text(`Permanent Teeth`)}>
+							<SectionComponent title={text(`permanent teeth`).c}>
 								<table className="permanent">
 									<tbody>
 										<tr>
 											{[
 												this.mapQuadrant(11, 18, true),
-												this.mapQuadrant(21, 28, false)
+												this.mapQuadrant(21, 28, false),
 											]}
 										</tr>
 										<tr>
 											{[
 												this.mapQuadrant(41, 48, true),
-												this.mapQuadrant(31, 38, false)
+												this.mapQuadrant(31, 38, false),
 											]}
 										</tr>
 									</tbody>
 								</table>
 							</SectionComponent>
-							<SectionComponent title={text(`Deciduous Teeth`)}>
+							<SectionComponent title={text(`deciduous teeth`).c}>
 								<table className="deciduous">
 									<tbody>
 										<tr>
 											{[
 												this.mapQuadrant(51, 55, true),
-												this.mapQuadrant(61, 65, false)
+												this.mapQuadrant(61, 65, false),
 											]}
 										</tr>
 										<tr>
 											{[
 												this.mapQuadrant(81, 85, true),
-												this.mapQuadrant(71, 75, false)
+												this.mapQuadrant(71, 75, false),
 											]}
 										</tr>
 									</tbody>
@@ -175,8 +180,8 @@ export class DentalHistoryPanel extends React.Component<
 											{
 												key: "details",
 												icon: "teeth",
-												title: "Tooth Details"
-											}
+												title: text("tooth history").h,
+											},
 										]}
 									/>
 								</div>
@@ -188,7 +193,7 @@ export class DentalHistoryPanel extends React.Component<
 						] ? (
 							<div className="tooth-details">
 								<Dropdown
-									label={text(`Tooth condition`)}
+									label={text(`tooth condition`).c}
 									onChange={(ev, newVal: any) => {
 										this.props.patient.teeth[
 											Number(core.router.selectedSub)
@@ -202,22 +207,22 @@ export class DentalHistoryPanel extends React.Component<
 									}
 									className="single-tooth-condition"
 									options={Object.keys(ToothCondition).map(
-										c => ({
+										(c) => ({
 											key: c,
-											text: text(c)
+											text: text(c as any).r,
 										})
 									)}
 									disabled={!this.canEdit}
 								/>
 								<EditableListComponent
-									label={text("Tooth history")}
+									label={text("tooth history").c}
 									value={
 										this.props.patient.teeth[
 											Number(core.router.selectedSub)
 										].notes
 									}
 									disabled={!this.canEdit}
-									onChange={e => {
+									onChange={(e) => {
 										this.props.patient.teeth[
 											Number(core.router.selectedSub)
 										].notes = e;
@@ -238,9 +243,9 @@ export class DentalHistoryPanel extends React.Component<
 
 	mapQuadrant(min: number, max: number, reverse: boolean) {
 		let arr = this.props.patient.teeth;
-		arr = arr.filter(tooth => tooth.ISO >= min && tooth.ISO <= max);
+		arr = arr.filter((tooth) => tooth.ISO >= min && tooth.ISO <= max);
 		arr = reverse ? arr.reverse() : arr;
-		return arr.map(tooth => (
+		return arr.map((tooth) => (
 			<td
 				key={"tooth" + tooth.ISO}
 				style={{ background: conditionToColor(tooth.condition) }}

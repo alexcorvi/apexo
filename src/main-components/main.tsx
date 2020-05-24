@@ -4,33 +4,39 @@ import * as core from "@core";
 import { MessagesView, ModalsView } from "@main-components";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { MessageBar, PrimaryButton, Shimmer, Spinner, SpinnerSize } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
+import {
+	MessageBar,
+	PrimaryButton,
+	Shimmer,
+	Spinner,
+	SpinnerSize,
+} from "office-ui-fabric-react";
 
 const MenuView = loadable({
 	loader: async () => (await import("./menu")).MenuView,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 const HeaderView = loadable({
 	loader: async () => (await import("./header")).HeaderView,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 const UserPanelView = loadable({
 	loader: async () => (await import("./user")).UserPanelView,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 const ChooseUserComponent = loadable({
 	loader: async () => (await import("./choose-user")).ChooseUserComponent,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 const LoginView = loadable({
 	loader: async () => (await import("./login")).LoginView,
-	loading: () => <Shimmer />
+	loading: () => <Shimmer />,
 });
 
 @observer
@@ -63,7 +69,7 @@ export class ErrorBoundaryView extends React.Component<{}> {
 							location.href = location.href.split("#")[0];
 							location.reload();
 						}}
-						text={text("Reload")}
+						text={text("reload").c}
 					/>
 				</MessageBar>
 			);

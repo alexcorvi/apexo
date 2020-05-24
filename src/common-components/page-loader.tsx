@@ -12,13 +12,13 @@ export class PageLoader extends React.Component<{
 		<div className="spinner-container">
 			<Spinner
 				size={SpinnerSize.large}
-				label={core.text(`Please wait`)}
+				label={core.text(`please wait`).c}
 			/>
 		</div>
 	);
 
 	componentDidMount() {
-		this.props.pageComponent().then(c => (this.componentToRender = c));
+		this.props.pageComponent().then((c) => (this.componentToRender = c));
 	}
 	render() {
 		return this.componentToRender;

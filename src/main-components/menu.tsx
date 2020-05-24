@@ -4,15 +4,15 @@ import { Row } from "@common-components";
 import { menu, text } from "@core";
 import * as core from "@core";
 import { observer } from "mobx-react";
+import * as React from "react";
 import {
 	Icon,
 	IconButton,
 	Nav,
 	Panel,
 	PanelType,
-	TooltipHost
-	} from "office-ui-fabric-react";
-import * as React from "react";
+	TooltipHost,
+} from "office-ui-fabric-react";
 
 class Version extends React.Component {
 	render() {
@@ -33,7 +33,9 @@ export class MenuView extends React.Component {
 				<Version />
 				<div className="visible-lg visible-md icon-list">
 					{menu.sortedItems.map((item, index) => {
-						const pageDisplayName = text(item.name);
+						const pageDisplayName = text(
+							item.name.toLowerCase() as any
+						);
 						return (
 							<TooltipHost
 								key={item.key}
@@ -44,8 +46,8 @@ export class MenuView extends React.Component {
 								directionalHint={12}
 								tooltipProps={{
 									calloutProps: {
-										className: "menu-item-tt"
-									}
+										className: "menu-item-tt",
+									},
 								}}
 							>
 								<div
@@ -78,18 +80,19 @@ export class MenuView extends React.Component {
 					<Nav
 						groups={[
 							{
-								links: core.menu.sortedItems.map(x => {
+								links: core.menu.sortedItems.map((x) => {
 									return {
 										icon: x.icon,
-										name: text(x.name),
+										name: text(x.name.toLowerCase() as any)
+											.c,
 										title: x.name.toLocaleLowerCase(),
 										key: x.key,
 										url: x.url,
 										onClick: x.onClick,
-										"data-testid": "menu-item-sd"
+										"data-testid": "menu-item-sd",
 									};
-								})
-							}
+								}),
+							},
 						]}
 						selectedKey={core.router.currentNamespace}
 						className="main-nav"

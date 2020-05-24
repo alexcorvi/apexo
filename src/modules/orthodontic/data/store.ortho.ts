@@ -25,18 +25,18 @@ export class OrthoCases extends Store<OrthoCaseSchema, OrthoCase> {
 
 	@computed
 	get orthoPatientsIDs() {
-		return this.docs.map(orthoCase => orthoCase.patientID);
+		return this.docs.map((orthoCase) => orthoCase.patientID);
 	}
 
 	@computed
 	get patientsWithNoOrtho() {
 		return patients!.docs.filter(
-			patient => this.orthoPatientsIDs.indexOf(patient._id) === -1
+			(patient) => this.orthoPatientsIDs.indexOf(patient._id) === -1
 		);
 	}
 
 	deleteByPatientID(id: string) {
-		const ortho = this.docs.find(o => o.patientID === id);
+		const ortho = this.docs.find((o) => o.patientID === id);
 		if (ortho) {
 			this.delete(ortho._id);
 		}
@@ -44,12 +44,12 @@ export class OrthoCases extends Store<OrthoCaseSchema, OrthoCase> {
 
 	deleteModal(id: string) {
 		modals.newModal({
-			text: text(`Orthodontic case will be deleted`),
+			text: text(`orthodontic case will be deleted`).c,
 			onConfirm: () => this.delete(id),
 			showCancelButton: true,
 			showConfirmButton: true,
 			input: false,
-			id: Math.random()
+			id: Math.random(),
 		});
 	}
 }

@@ -1,18 +1,26 @@
-import {
-	Col,
-	fileTypes,
-	GridTableComponent,
-	PickAndUploadComponent,
-	Row,
-	SectionComponent
-	} from "@common-components";
-import { imagesTable, ModalInterface, ORTHO_RECORDS_DIR, status, text } from "@core";
 import * as core from "@core";
 import { OrthoCase, Photo, StaffMember, Visit } from "@modules";
 import * as modules from "@modules";
 import { day, formatDate, num } from "@utils";
 import { computed, observable, observe } from "mobx";
 import { observer } from "mobx-react";
+import * as React from "react";
+import * as loadable from "react-loadable";
+import {
+	Col,
+	fileTypes,
+	GridTableComponent,
+	PickAndUploadComponent,
+	Row,
+	SectionComponent,
+} from "@common-components";
+import {
+	imagesTable,
+	ModalInterface,
+	ORTHO_RECORDS_DIR,
+	status,
+	text,
+} from "@core";
 import {
 	CommandBar,
 	DefaultButton,
@@ -27,15 +35,13 @@ import {
 	Shimmer,
 	TextField,
 	Toggle,
-	TooltipHost
-	} from "office-ui-fabric-react";
-import * as React from "react";
-import * as loadable from "react-loadable";
+	TooltipHost,
+} from "office-ui-fabric-react";
 
 const EditableListComponent = loadable({
 	loading: () => <Shimmer />,
 	loader: async () =>
-		(await import("common-components/editable-list")).EditableListComponent
+		(await import("common-components/editable-list")).EditableListComponent,
 });
 
 const viewsTerms = [
@@ -43,7 +49,7 @@ const viewsTerms = [
 	"Right Buccal",
 	"Left Buccal",
 	"Palatal",
-	"Lingual"
+	"Lingual",
 ];
 
 @observer
@@ -73,23 +79,23 @@ export class OrthoRecordsPanel extends React.Component<{
 			return [];
 		}
 		return this.props.orthoCase.patient.appointments
-			.map(appointment => ({
+			.map((appointment) => ({
 				date: appointment.date,
 				treatmentType: (appointment.treatment || { type: "" }).type,
-				appointment
+				appointment,
 			}))
 			.sort((a, b) => b.date - a.date);
 	}
 
 	@computed get patientDoneAppointments() {
-		return this.patientAppointments.filter(x => x.appointment.isDone);
+		return this.patientAppointments.filter((x) => x.appointment.isDone);
 	}
 
 	@computed get allImages() {
 		return this.props.orthoCase.visits.reduce((all: string[], visit) => {
 			visit.photos
-				.map(x => x.photoID)
-				.forEach(path => {
+				.map((x) => x.photoID)
+				.forEach((path) => {
 					if (path) {
 						all.push(path);
 					}
@@ -98,10 +104,10 @@ export class OrthoRecordsPanel extends React.Component<{
 		}, []);
 	}
 
-	stopObservation: () => void = function() {};
+	stopObservation: () => void = function () {};
 
 	componentDidMount() {
-		this.allImages.forEach(async path => {
+		this.allImages.forEach(async (path) => {
 			await imagesTable.fetchImage(path);
 		});
 	}
@@ -118,12 +124,12 @@ export class OrthoRecordsPanel extends React.Component<{
 	render() {
 		return (
 			<div className="ortho-records">
-				<SectionComponent title={text(`Problems`)}>
+				<SectionComponent title={text(`problems`).h}>
 					{this.props.orthoCase.computedProblems.length === 0 &&
 					this.props.orthoCase.problemsList.length === 0 ? (
 						<MessageBar messageBarType={MessageBarType.warning}>
 							{text(
-								"This patient does not seem to have any problems or concerns, have you filled the case sheet?"
+								"this patient does not seem to have any problems or concerns, have you filled the case sheet?"
 							)}
 						</MessageBar>
 					) : (
@@ -133,40 +139,45 @@ export class OrthoRecordsPanel extends React.Component<{
 								...[
 									...this.props.orthoCase.computedProblems,
 									...this.props.orthoCase.problemsList.map(
-										x => text("Patient concern") + ": " + x
-									)
-								].map((x, i) => [`${i + 1}. ${x}`])
+										(x) =>
+											text("patient concern").c + ": " + x
+									),
+								].map((x, i) => [`${i + 1}. ${x}`]),
 							]}
 							isHeaderVisible={false}
 							selectionMode={SelectionMode.none}
 						/>
 					)}
 				</SectionComponent>
-				<SectionComponent title={text(`Treatment Plan`)}>
+				<SectionComponent title={text(`treatment plan`).h}>
 					{this.props.orthoCase.treatmentPlan_appliance.length ? (
 						""
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							{text(
-								"A treatment plan must be before starting the treatment"
-							)}
+							{
+								text(
+									"a treatment plan must be before starting the treatment"
+								).c
+							}
 						</MessageBar>
 					)}
 					<EditableListComponent
-						label={text(`Add Plan`)}
+						label={text(`add plan`).c}
 						value={this.props.orthoCase.treatmentPlan_appliance}
-						onChange={val => {
+						onChange={(val) => {
 							this.props.orthoCase.treatmentPlan_appliance = val;
 						}}
 						disabled={!this.canEdit}
 					/>
 				</SectionComponent>
-				<SectionComponent title={text(`Started/Finished`)}>
+				<SectionComponent
+					title={`${text("started").h}/${text("finished").c}`}
+				>
 					<Row gutter={8}>
 						<Col span={12}>
 							<Toggle
-								onText={text("Started")}
-								offText={text("Not started yet")}
+								onText={text("started").c}
+								offText={text("not started yet").c}
 								checked={this.props.orthoCase.isStarted}
 								onChange={(ev, val) =>
 									(this.props.orthoCase.isStarted = val!)
@@ -177,7 +188,7 @@ export class OrthoRecordsPanel extends React.Component<{
 								<Dropdown
 									selectedKey={this.props.orthoCase.startedDate.toString()}
 									options={this.patientDoneAppointments.map(
-										date => {
+										(date) => {
 											return {
 												key: date.date.toString(),
 												text: `${formatDate(
@@ -187,11 +198,9 @@ export class OrthoRecordsPanel extends React.Component<{
 													)
 												)} ${
 													date.treatmentType
-														? `, ${
-																date.treatmentType
-														  }`
+														? `, ${date.treatmentType}`
 														: ""
-												}`
+												}`,
 											};
 										}
 									)}
@@ -208,8 +217,8 @@ export class OrthoRecordsPanel extends React.Component<{
 						</Col>{" "}
 						<Col span={12}>
 							<Toggle
-								onText={text("Finished")}
-								offText={text("Not finished yet")}
+								onText={text("finished").c}
+								offText={text("not finished yet").c}
 								checked={this.props.orthoCase.isFinished}
 								onChange={(ev, val) =>
 									(this.props.orthoCase.isFinished = val!)
@@ -220,7 +229,7 @@ export class OrthoRecordsPanel extends React.Component<{
 								<Dropdown
 									selectedKey={this.props.orthoCase.finishedDate.toString()}
 									options={this.patientDoneAppointments.map(
-										date => {
+										(date) => {
 											return {
 												key: date.date.toString(),
 												text: `${formatDate(
@@ -230,11 +239,9 @@ export class OrthoRecordsPanel extends React.Component<{
 													)
 												)} ${
 													date.treatmentType
-														? `, ${
-																date.treatmentType
-														  }`
+														? `, ${date.treatmentType}`
 														: ""
-												}`
+												}`,
 											};
 										}
 									)}
@@ -251,7 +258,7 @@ export class OrthoRecordsPanel extends React.Component<{
 						</Col>
 					</Row>
 				</SectionComponent>
-				<SectionComponent title={text(`Records`)}>
+				<SectionComponent title={text(`records`).h}>
 					{status.isOnline.client ? (
 						status.isOnline.dropbox ? (
 							<div className="album">
@@ -293,7 +300,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																					" "
 																				)
 																				.map(
-																					x =>
+																					(
+																						x
+																					) =>
 																						x.charAt(
 																							0
 																						)
@@ -306,9 +315,11 @@ export class OrthoRecordsPanel extends React.Component<{
 																	<br />
 
 																	<TooltipHost
-																		content={text(
-																			"Zoom"
-																		)}
+																		content={
+																			text(
+																				"zoom"
+																			).c
+																		}
 																	>
 																		<IconButton
 																			iconProps={{
@@ -317,7 +328,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																						.zoomedColumn ===
 																					index
 																						? "ZoomOut"
-																						: "ZoomIn"
+																						: "ZoomIn",
 																			}}
 																			className="clickable-icon"
 																			onClick={() => {
@@ -337,14 +348,17 @@ export class OrthoRecordsPanel extends React.Component<{
 																		.zoomedColumn ===
 																	index ? (
 																		<TooltipHost
-																			content={text(
-																				"View grid"
-																			)}
+																			content={
+																				text(
+																					"view grid"
+																				)
+																					.c
+																			}
 																		>
 																			<IconButton
 																				iconProps={{
 																					iconName:
-																						"gridViewSmall"
+																						"gridViewSmall",
 																				}}
 																				className="clickable-icon"
 																				onClick={() => {
@@ -404,7 +418,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																			)}
 																			iconProps={{
 																				iconName:
-																					"info"
+																					"info",
 																			}}
 																			onClick={() => {
 																				this.openCallouts.push(
@@ -416,7 +430,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																	<Dialog
 																		onDismiss={() => {
 																			this.openCallouts = this.openCallouts.filter(
-																				x =>
+																				(
+																					x
+																				) =>
 																					x !==
 																					visit.id
 																			);
@@ -440,9 +456,12 @@ export class OrthoRecordsPanel extends React.Component<{
 																							<TextField
 																								autoFocus
 																								type="number"
-																								label={text(
-																									`Visit number`
-																								)}
+																								label={
+																									text(
+																										`visit number`
+																									)
+																										.c
+																								}
 																								value={visit.visitNumber.toString()}
 																								onBlur={() => {
 																									this.expandedField =
@@ -464,13 +483,16 @@ export class OrthoRecordsPanel extends React.Component<{
 																								}}
 																							/>
 																						) : (
-																							`${text(
-																								"Visit"
-																							)} #${
+																							`${
+																								text(
+																									"visit"
+																								)
+																									.c
+																							} #${
 																								visit.visitNumber
 																							}`
 																						)}
-																					</div>
+																					</div>,
 																				],
 																				[
 																					<div id="gf-date">
@@ -478,16 +500,21 @@ export class OrthoRecordsPanel extends React.Component<{
 																							.expandedField ===
 																						"gf-date" ? (
 																							<Dropdown
-																								label={text(
-																									`Visit date`
-																								)}
+																								label={
+																									text(
+																										`visit date`
+																									)
+																										.c
+																								}
 																								selectedKey={visit.date.toString()}
 																								disabled={
 																									!this
 																										.canEdit
 																								}
 																								options={this.patientDoneAppointments.map(
-																									date => {
+																									(
+																										date
+																									) => {
 																										return {
 																											key: date.date.toString(),
 																											text: `${formatDate(
@@ -497,11 +524,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																												)
 																											)} ${
 																												date.treatmentType
-																													? `, ${
-																															date.treatmentType
-																													  }`
+																													? `, ${date.treatmentType}`
 																													: ""
-																											}`
+																											}`,
 																										};
 																									}
 																								)}
@@ -518,16 +543,19 @@ export class OrthoRecordsPanel extends React.Component<{
 																								}}
 																							/>
 																						) : (
-																							`${text(
-																								"Date"
-																							)}: ${formatDate(
+																							`${
+																								text(
+																									"date"
+																								)
+																									.c
+																							}: ${formatDate(
 																								visit.date,
 																								modules.setting!.getSetting(
 																									"date_format"
 																								)
 																							)}`
 																						)}
-																					</div>
+																					</div>,
 																				],
 																				[
 																					<div id="gf-appliance">
@@ -536,9 +564,12 @@ export class OrthoRecordsPanel extends React.Component<{
 																						"gf-appliance" ? (
 																							<TextField
 																								autoFocus
-																								label={text(
-																									`Appliance`
-																								)}
+																								label={
+																									text(
+																										`appliance`
+																									)
+																										.c
+																								}
 																								disabled={
 																									!this
 																										.canEdit
@@ -561,17 +592,21 @@ export class OrthoRecordsPanel extends React.Component<{
 																								}}
 																							/>
 																						) : (
-																							`${text(
-																								"Appliance"
-																							)}: ${
+																							`${
+																								text(
+																									"appliance"
+																								)
+																									.c
+																							}: ${
 																								visit.appliance
 																									? visit.appliance
 																									: text(
-																											"No appliance info"
+																											"no appliance info"
 																									  )
+																											.c
 																							}`
 																						)}
-																					</div>
+																					</div>,
 																				],
 																				[
 																					<div id="gf-target">
@@ -580,9 +615,12 @@ export class OrthoRecordsPanel extends React.Component<{
 																						"gf-target" ? (
 																							<TextField
 																								autoFocus
-																								label={text(
-																									`Target & expectations`
-																								)}
+																								label={
+																									text(
+																										`target & expectations`
+																									)
+																										.c
+																								}
 																								disabled={
 																									!this
 																										.canEdit
@@ -605,18 +643,22 @@ export class OrthoRecordsPanel extends React.Component<{
 																								}}
 																							/>
 																						) : (
-																							`${text(
-																								"Target & expectations"
-																							)}: ${
+																							`${
+																								text(
+																									"target & expectations"
+																								)
+																									.c
+																							}: ${
 																								visit.target
 																									? visit.target
 																									: text(
-																											"No target info"
+																											"no target info"
 																									  )
+																											.c
 																							}`
 																						)}
-																					</div>
-																				]
+																					</div>,
+																				],
 																			]}
 																			isHeaderVisible={
 																				false
@@ -624,7 +666,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																			selectionMode={
 																				SelectionMode.none
 																			}
-																			onActiveItemChanged={row => {
+																			onActiveItemChanged={(
+																				row
+																			) => {
 																				this.expandedField =
 																					row[0].props.id;
 																			}}
@@ -694,7 +738,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																							<img
 																								style={{
 																									width:
-																										"100%"
+																										"100%",
 																								}}
 																								src={
 																									imagesTable
@@ -711,7 +755,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																								<Dialog
 																									modalProps={{
 																										className:
-																											"photo-dialog"
+																											"photo-dialog",
 																									}}
 																									hidden={
 																										false
@@ -724,13 +768,13 @@ export class OrthoRecordsPanel extends React.Component<{
 																									<div
 																										style={{
 																											position:
-																												"relative"
+																												"relative",
 																										}}
 																									>
 																										<img
 																											style={{
 																												width:
-																													"100%"
+																													"100%",
 																											}}
 																											src={
 																												imagesTable
@@ -793,9 +837,12 @@ export class OrthoRecordsPanel extends React.Component<{
 																																	.canEdit
 																															}
 																															type="number"
-																															label={text(
-																																`Visit number`
-																															)}
+																															label={
+																																text(
+																																	`visit number`
+																																)
+																																	.c
+																															}
 																															value={visit.visitNumber.toString()}
 																															onBlur={() => {
 																																this.expandedField =
@@ -813,13 +860,16 @@ export class OrthoRecordsPanel extends React.Component<{
 																															}}
 																														/>
 																													) : (
-																														`${text(
-																															"Visit"
-																														)} #${
+																														`${
+																															text(
+																																"visit"
+																															)
+																																.c
+																														} #${
 																															visit.visitNumber
 																														}`
 																													)}
-																												</div>
+																												</div>,
 																											],
 																											[
 																												<div id="gf-date">
@@ -827,16 +877,21 @@ export class OrthoRecordsPanel extends React.Component<{
 																														.expandedField ===
 																													"gf-date" ? (
 																														<Dropdown
-																															label={text(
-																																`Visit date`
-																															)}
+																															label={
+																																text(
+																																	`visit date`
+																																)
+																																	.c
+																															}
 																															disabled={
 																																!this
 																																	.canEdit
 																															}
 																															selectedKey={visit.date.toString()}
 																															options={this.patientDoneAppointments.map(
-																																date => {
+																																(
+																																	date
+																																) => {
 																																	return {
 																																		key: date.date.toString(),
 																																		text: `${formatDate(
@@ -846,11 +901,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																																			)
 																																		)} ${
 																																			date.treatmentType
-																																				? `, ${
-																																						date.treatmentType
-																																				  }`
+																																				? `, ${date.treatmentType}`
 																																				: ""
-																																		}`
+																																		}`,
 																																	};
 																																}
 																															)}
@@ -867,16 +920,19 @@ export class OrthoRecordsPanel extends React.Component<{
 																															}}
 																														/>
 																													) : (
-																														`${text(
-																															"Date"
-																														)}: ${formatDate(
+																														`${
+																															text(
+																																"date"
+																															)
+																																.c
+																														}: ${formatDate(
 																															visit.date,
 																															modules.setting!.getSetting(
 																																"date_format"
 																															)
 																														)}`
 																													)}
-																												</div>
+																												</div>,
 																											],
 																											[
 																												<div id="gf-appliance">
@@ -885,9 +941,12 @@ export class OrthoRecordsPanel extends React.Component<{
 																													"gf-appliance" ? (
 																														<TextField
 																															autoFocus
-																															label={text(
-																																`Appliance`
-																															)}
+																															label={
+																																text(
+																																	`appliance`
+																																)
+																																	.c
+																															}
 																															value={
 																																visit.appliance
 																															}
@@ -910,17 +969,21 @@ export class OrthoRecordsPanel extends React.Component<{
 																															}}
 																														/>
 																													) : (
-																														`${text(
-																															"Appliance"
-																														)}: ${
+																														`${
+																															text(
+																																"appliance"
+																															)
+																																.c
+																														}: ${
 																															visit.appliance
 																																? visit.appliance
 																																: text(
-																																		"No appliance info"
+																																		"no appliance info"
 																																  )
+																																		.c
 																														}`
 																													)}
-																												</div>
+																												</div>,
 																											],
 																											[
 																												<div id="gf-comment">
@@ -929,9 +992,12 @@ export class OrthoRecordsPanel extends React.Component<{
 																													"gf-comment" ? (
 																														<TextField
 																															autoFocus
-																															label={text(
-																																`Comment`
-																															)}
+																															label={
+																																text(
+																																	`comment`
+																																)
+																																	.c
+																															}
 																															disabled={
 																																!this
 																																	.canEdit
@@ -956,18 +1022,22 @@ export class OrthoRecordsPanel extends React.Component<{
 																															}}
 																														/>
 																													) : (
-																														`${text(
-																															"Comment"
-																														)}: ${
+																														`${
+																															text(
+																																"comment"
+																															)
+																																.c
+																														}: ${
 																															photo.comment
 																																? photo.comment
 																																: text(
 																																		"no comment on this photo"
 																																  )
+																																		.c
 																														}`
 																													)}
-																												</div>
-																											]
+																												</div>,
+																											],
 																										]}
 																										isHeaderVisible={
 																											false
@@ -975,7 +1045,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																										selectionMode={
 																											SelectionMode.none
 																										}
-																										onActiveItemChanged={row => {
+																										onActiveItemChanged={(
+																											row
+																										) => {
 																											this.expandedField =
 																												row[0].props.id;
 																										}}
@@ -986,11 +1058,12 @@ export class OrthoRecordsPanel extends React.Component<{
 																												key:
 																													"overlay prev",
 																												text: text(
-																													"Overlay prev"
-																												),
+																													"overlay prev"
+																												)
+																													.c,
 																												iconProps: {
 																													iconName:
-																														"MapLayers"
+																														"MapLayers",
 																												},
 																												className: this
 																													.overlayWithPrev
@@ -1007,17 +1080,18 @@ export class OrthoRecordsPanel extends React.Component<{
 																														photoIndex
 																													]
 																														.photoID
-																												]
+																												],
 																											},
 																											{
 																												key:
 																													"overlay next",
 																												text: text(
-																													"Overlay next"
-																												),
+																													"overlay next"
+																												)
+																													.c,
 																												iconProps: {
 																													iconName:
-																														"MapLayers"
+																														"MapLayers",
 																												},
 																												className: this
 																													.overlayWithNext
@@ -1034,19 +1108,20 @@ export class OrthoRecordsPanel extends React.Component<{
 																														photoIndex
 																													]
 																														.photoID
-																												]
-																											}
+																												],
+																											},
 																										]}
 																										farItems={[
 																											{
 																												key:
 																													"delete photo",
 																												text: text(
-																													"Delete"
-																												),
+																													"delete"
+																												)
+																													.c,
 																												iconProps: {
 																													iconName:
-																														"trash"
+																														"trash",
 																												},
 																												disabled: !this
 																													.canEdit,
@@ -1070,8 +1145,8 @@ export class OrthoRecordsPanel extends React.Component<{
 																													] = new Photo();
 																													this.selectedPhotoId =
 																														"";
-																												}
-																											}
+																												},
+																											},
 																										]}
 																									/>
 																								</Dialog>
@@ -1103,7 +1178,9 @@ export class OrthoRecordsPanel extends React.Component<{
 																								],
 																							disabled: !this
 																								.canEdit,
-																							onFinish: e => {
+																							onFinish: (
+																								e
+																							) => {
 																								if (
 																									e[0]
 																								) {
@@ -1126,23 +1203,21 @@ export class OrthoRecordsPanel extends React.Component<{
 																								this.uploadingPhotoID =
 																									"";
 																							},
-																							targetDir: `${ORTHO_RECORDS_DIR}/${
-																								this
-																									.props
-																									.orthoCase
-																									._id
-																							}`
+																							targetDir: `${ORTHO_RECORDS_DIR}/${this.props.orthoCase._id}`,
 																						}}
 																					>
 																						<TooltipHost
-																							content={text(
-																								"Add photo"
-																							)}
+																							content={
+																								text(
+																									"add photo"
+																								)
+																									.c
+																							}
 																						>
 																							<IconButton
 																								iconProps={{
 																									iconName:
-																										"Photo2Add"
+																										"Photo2Add",
 																								}}
 																								className="clickable-icon add-photo"
 																								disabled={
@@ -1159,9 +1234,11 @@ export class OrthoRecordsPanel extends React.Component<{
 																)}
 																<td>
 																	<TooltipHost
-																		content={text(
-																			"Delete visit"
-																		)}
+																		content={
+																			text(
+																				"delete visit"
+																			).c
+																		}
 																	>
 																		<IconButton
 																			className="clickable-icon delete-visit"
@@ -1174,21 +1251,24 @@ export class OrthoRecordsPanel extends React.Component<{
 																			}
 																			iconProps={{
 																				iconName:
-																					"DeleteRows"
+																					"DeleteRows",
 																			}}
 																			onClick={() => {
 																				core.modals.newModal(
 																					{
 																						text: text(
-																							"This visit data will be deleted along with all photos and notes"
-																						),
+																							"this visit data will be deleted along with all photos and notes"
+																						)
+																							.c,
 																						onConfirm: () => {
 																							const deletedVisit = this.props.orthoCase.visits.splice(
 																								visitIndex,
 																								1
 																							);
 																							deletedVisit[0].photos.forEach(
-																								photo =>
+																								(
+																									photo
+																								) =>
 																									this.removeImage(
 																										photo.photoID
 																									)
@@ -1196,7 +1276,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																						},
 																						showCancelButton: true,
 																						showConfirmButton: true,
-																						id: Math.random()
+																						id: Math.random(),
 																					}
 																				);
 																			}}
@@ -1229,7 +1309,7 @@ export class OrthoRecordsPanel extends React.Component<{
 																		""
 																	)}
 																</td>
-															</tr>
+															</tr>,
 														];
 													}
 												)}
@@ -1239,16 +1319,18 @@ export class OrthoRecordsPanel extends React.Component<{
 									<MessageBar
 										messageBarType={MessageBarType.info}
 									>
-										{text(
-											"No visits recorded yet! add a new visit using the button below"
-										)}
+										{
+											text(
+												"no visits recorded yet! add a new visit using the button below"
+											).c
+										}
 									</MessageBar>
 								)}
 								<br />
 								<DefaultButton
 									disabled={!this.canEdit}
 									iconProps={{ iconName: "ExploreContent" }}
-									text={text("Add visit")}
+									text={text("add visit").c}
 									onClick={() => {
 										const visitNumber = this.props.orthoCase
 											.visits.length
@@ -1270,24 +1352,28 @@ export class OrthoRecordsPanel extends React.Component<{
 							</div>
 						) : (
 							<MessageBar messageBarType={MessageBarType.warning}>
-								{text(
-									"A valid DropBox access token is required for this section"
-								)}
+								{
+									text(
+										"a valid dropbox access token is required for this section"
+									).c
+								}
 							</MessageBar>
 						)
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
-							{text(
-								"You can not access orthodontic records while offline"
-							)}
+							{
+								text(
+									"you can not access orthodontic records while offline"
+								).c
+							}
 						</MessageBar>
 					)}
 				</SectionComponent>
-				<SectionComponent title={text(`Notes for the next visit`)}>
+				<SectionComponent title={text(`notes for the next visit`).h}>
 					<EditableListComponent
-						label={text(`Add note`)}
+						label={text(`add note`).c}
 						value={this.props.orthoCase.nextVisitNotes}
-						onChange={val => {
+						onChange={(val) => {
 							this.props.orthoCase.nextVisitNotes = val;
 						}}
 						disabled={!this.canEdit}

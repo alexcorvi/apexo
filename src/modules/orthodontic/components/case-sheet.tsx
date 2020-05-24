@@ -1,18 +1,18 @@
 import { SectionComponent, TagInputComponent } from "@common-components";
 import { text } from "@core";
 import * as core from "@core";
+import { num } from "@utils";
+import { computed } from "mobx";
+import { observer } from "mobx-react";
+import * as React from "react";
+import * as loadable from "react-loadable";
 import {
 	FacialProfile,
 	ISOTeethArr,
 	Lips,
 	OralHygiene,
 	OrthoCase,
-	StaffMember
-	} from "@modules";
-import * as modules from "@modules";
-import { num } from "@utils";
-import { computed } from "mobx";
-import { observer } from "mobx-react";
+} from "@modules";
 import {
 	ConstrainMode,
 	DetailsList,
@@ -21,15 +21,13 @@ import {
 	MessageBarType,
 	SelectionMode,
 	Shimmer,
-	TextField
-	} from "office-ui-fabric-react";
-import * as React from "react";
-import * as loadable from "react-loadable";
+	TextField,
+} from "office-ui-fabric-react";
 
 const EditableListComponent = loadable({
 	loading: () => <Shimmer />,
 	loader: async () =>
-		(await import("common-components/editable-list")).EditableListComponent
+		(await import("common-components/editable-list")).EditableListComponent,
 });
 
 @observer
@@ -43,13 +41,13 @@ export class OrthoCaseSheetPanel extends React.Component<{
 	render() {
 		return (
 			<div>
-				<SectionComponent title={text(`Extra-Oral Features`)}>
+				<SectionComponent title={text(`extra-oral features`).h}>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeholder={text("Lips competency")}
-						options={Object.keys(Lips).map(x => ({
+						placeholder={text("lips competency").c}
+						options={Object.keys(Lips).map((x) => ({
 							key: x,
-							text: text((Lips as any)[x])
+							text: text((Lips as any)[x]).r,
 						}))}
 						selectedKey={this.props.orthoCase.lips}
 						onChange={(ev, has: any) => {
@@ -58,10 +56,10 @@ export class OrthoCaseSheetPanel extends React.Component<{
 					/>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeholder={text("Facial profile")}
-						options={Object.keys(FacialProfile).map(x => ({
+						placeholder={text("facial profile").c}
+						options={Object.keys(FacialProfile).map((x) => ({
 							key: x,
-							text: text((FacialProfile as any)[x])
+							text: text((FacialProfile as any)[x]).r,
 						}))}
 						selectedKey={this.props.orthoCase.facialProfile}
 						onChange={(ev, has: any) => {
@@ -70,10 +68,10 @@ export class OrthoCaseSheetPanel extends React.Component<{
 					/>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeholder={text("Oral hygiene")}
-						options={Object.keys(OralHygiene).map(x => ({
+						placeholder={text("oral hygiene").c}
+						options={Object.keys(OralHygiene).map((x) => ({
 							key: x,
-							text: text((OralHygiene as any)[x])
+							text: text((OralHygiene as any)[x]).r,
 						}))}
 						selectedKey={this.props.orthoCase.oralHygiene}
 						onChange={(ev, has: any) => {
@@ -89,17 +87,21 @@ export class OrthoCaseSheetPanel extends React.Component<{
 							this.props.orthoCase.nasioLabialAngle = num(v!);
 						}}
 						type="number"
-						prefix={text(`Nasio-labial angle`)}
+						prefix={text(`nasio-labial angle`).c}
 					/>
 				</SectionComponent>
 
-				<SectionComponent title={text(`Jaw-Jaw Relationships`)}>
+				<SectionComponent title={text(`jaw - jaw relationships`).h}>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeholder={text(`Skeletal relationship`)}
-						options={[1, 2, 3].map(n => ({
+						placeholder={text(`skeletal relationship`).c}
+						options={[1, 2, 3].map((n) => ({
 							key: n.toString(),
-							text: text("Skeletal relationship: Class ") + n
+							text:
+								text("skeletal relationship") +
+								": " +
+								text("class") +
+								n,
 						}))}
 						selectedKey={this.props.orthoCase.skeletalRelationship.toString()}
 						onChange={(ev, n) => {
@@ -110,10 +112,14 @@ export class OrthoCaseSheetPanel extends React.Component<{
 					/>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeholder={text(`Molars relationship`)}
-						options={[1, 2, 3].map(n => ({
+						placeholder={text(`molars relationship`).c}
+						options={[1, 2, 3].map((n) => ({
 							key: n.toString(),
-							text: text("Molars relationship: Class ") + n
+							text:
+								text("molars relationship") +
+								": " +
+								text("class") +
+								n,
 						}))}
 						selectedKey={this.props.orthoCase.molarsRelationship.toString()}
 						onChange={(ev, n) => {
@@ -124,10 +130,14 @@ export class OrthoCaseSheetPanel extends React.Component<{
 					/>
 					<Dropdown
 						disabled={!this.canEdit}
-						placeholder={text(`Canine relationship`)}
-						options={[1, 2, 3].map(n => ({
+						placeholder={text(`canine relationship`).c}
+						options={[1, 2, 3].map((n) => ({
 							key: n.toString(),
-							text: text("Canine relationship: Class ") + n
+							text:
+								text("canine relationship") +
+								": " +
+								text("class") +
+								n,
 						}))}
 						selectedKey={this.props.orthoCase.canineRelationship.toString()}
 						onChange={(ev, n) => {
@@ -139,12 +149,12 @@ export class OrthoCaseSheetPanel extends React.Component<{
 				</SectionComponent>
 
 				<SectionComponent
-					title={text(`Intercuspal-Interincisal Relationships`)}
+					title={text(`intercuspal - interincisal relationships`).h}
 				>
 					<TextField
 						disabled={!this.canEdit}
 						type="number"
-						prefix={text(`Overjet`)}
+						prefix={text(`overjet`).r}
 						value={this.props.orthoCase.overJet.toString()}
 						onChange={(ev, n) => {
 							this.props.orthoCase.overJet = num(n!);
@@ -153,42 +163,42 @@ export class OrthoCaseSheetPanel extends React.Component<{
 					<TextField
 						disabled={!this.canEdit}
 						type="number"
-						prefix={text(`Overbite`)}
+						prefix={text(`overbite`).c}
 						value={this.props.orthoCase.overBite.toString()}
 						onChange={(ev, n) => {
 							this.props.orthoCase.overBite = num(n!);
 						}}
 					/>
 					<TagInputComponent
-						label={text("Cross/scissors bite")}
-						options={ISOTeethArr.map(x => {
+						label={text("cross/scissors bite").r}
+						options={ISOTeethArr.map((x) => {
 							return {
 								key: x.toString(),
-								text: x.toString()
+								text: x.toString(),
 							};
 						})}
-						suggestionsHeaderText={text("Cross/scissors bite")}
-						noResultsFoundText={text("No teeth found")}
+						suggestionsHeaderText={text("cross/scissors bite").c}
+						noResultsFoundText={text("no teeth found").c}
 						disabled={!this.canEdit}
 						value={Array.from(
 							this.props.orthoCase.crossScissorBite
-						).map(x => ({
+						).map((x) => ({
 							key: x.toString(),
-							text: x.toString()
+							text: x.toString(),
 						}))}
-						onChange={newValue => {
+						onChange={(newValue) => {
 							this.props.orthoCase.crossScissorBite = newValue.map(
-								x => num(x)
+								(x) => num(x)
 							);
 						}}
 					/>
 				</SectionComponent>
 
-				<SectionComponent title={text(`Upper Arch Space Analysis`)}>
+				<SectionComponent title={text(`upper arch space analysis`).h}>
 					<TextField
 						disabled={!this.canEdit}
 						type="number"
-						prefix={text(`Space available`)}
+						prefix={text(`space available`).c}
 						value={this.props.orthoCase.u_spaceAvailable.toString()}
 						onChange={(ev, v) => {
 							this.props.orthoCase.u_spaceAvailable = num(v!);
@@ -197,7 +207,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 					<TextField
 						disabled={!this.canEdit}
 						type="number"
-						prefix={text(`Space required`)}
+						prefix={text(`space required`).c}
 						value={this.props.orthoCase.u_spaceNeeded.toString()}
 						onChange={(ev, v) => {
 							this.props.orthoCase.u_spaceNeeded = num(v!);
@@ -207,7 +217,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 						<TextField
 							type="number"
 							disabled
-							prefix={text(`Crowding`)}
+							prefix={text(`crowding`).c}
 							value={this.props.orthoCase.u_crowding.toString()}
 						/>
 					) : (
@@ -218,7 +228,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 						<TextField
 							type="number"
 							disabled
-							prefix={text(`Spacing`)}
+							prefix={text(`spacing`).c}
 							value={this.props.orthoCase.u_spacing.toString()}
 						/>
 					) : (
@@ -226,10 +236,10 @@ export class OrthoCaseSheetPanel extends React.Component<{
 					)}
 				</SectionComponent>
 
-				<SectionComponent title={text(`Lower Arch Space Analysis`)}>
+				<SectionComponent title={text(`lower arch space analysis`).h}>
 					<TextField
 						type="number"
-						prefix={text(`Space available`)}
+						prefix={text(`space available`).c}
 						disabled={!this.canEdit}
 						value={this.props.orthoCase.l_spaceAvailable.toString()}
 						onChange={(ev, v) => {
@@ -238,7 +248,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 					/>
 					<TextField
 						type="number"
-						prefix={text(`Space required`)}
+						prefix={text(`space required`).c}
 						disabled={!this.canEdit}
 						value={this.props.orthoCase.l_spaceNeeded.toString()}
 						onChange={(ev, v) => {
@@ -249,7 +259,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 						<TextField
 							type="number"
 							disabled
-							prefix={text(`Crowding`)}
+							prefix={text(`crowding`).c}
 							value={this.props.orthoCase.l_crowding.toString()}
 						/>
 					) : (
@@ -260,7 +270,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 						<TextField
 							type="number"
 							disabled
-							prefix={text(`Spacing`)}
+							prefix={text(`spacing`).c}
 							value={this.props.orthoCase.l_spacing.toString()}
 						/>
 					) : (
@@ -268,23 +278,25 @@ export class OrthoCaseSheetPanel extends React.Component<{
 					)}
 				</SectionComponent>
 
-				<SectionComponent title={text(`Problems`)}>
+				<SectionComponent title={text(`problems`).h}>
 					<EditableListComponent
 						disabled={!this.canEdit}
-						label={text("Patient concerns")}
+						label={text("patient concerns").c}
 						value={this.props.orthoCase.problemsList}
-						onChange={v => {
+						onChange={(v) => {
 							this.props.orthoCase.problemsList = v;
 						}}
 					/>
 					<br />
 					<br />
-					<h3>{text("Other Problems")}</h3>
+					<h3>{text("other problems").h}</h3>
 					{this.props.orthoCase.computedProblems.length === 0 ? (
 						<MessageBar messageBarType={MessageBarType.info}>
-							{text(
-								"The case sheet of this patient does not show any problems that needs orthodontic treatment"
-							)}
+							{
+								text(
+									"the case sheet of this patient does not show any problems that needs orthodontic treatment"
+								).c
+							}
 						</MessageBar>
 					) : (
 						<DetailsList
@@ -293,7 +305,7 @@ export class OrthoCaseSheetPanel extends React.Component<{
 							items={[
 								...this.props.orthoCase.computedProblems.map(
 									(x, i) => [`${i + 1}. ${x}`]
-								)
+								),
 							]}
 							isHeaderVisible={false}
 							selectionMode={SelectionMode.none}
