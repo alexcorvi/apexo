@@ -243,7 +243,7 @@ export class AppointmentEditorPanel extends React.Component<
 			>
 				<div className="appointment-editor">
 					{core.router.selectedSub === "details" ? (
-						<SectionComponent title={text("appointment").c}>
+						<SectionComponent title={text("appointment").h}>
 							<Row gutter={8}>
 								<Col sm={12}>
 									<div className="appointment-input date">

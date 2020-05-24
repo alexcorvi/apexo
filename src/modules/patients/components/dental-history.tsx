@@ -99,7 +99,7 @@ export class DentalHistoryPanel extends React.Component<
 						</div>
 					) : (
 						<div className="tabulated">
-							<SectionComponent title={text(`permanent teeth`).c}>
+							<SectionComponent title={text(`permanent teeth`).h}>
 								<table className="permanent">
 									<tbody>
 										<tr>
@@ -117,7 +117,7 @@ export class DentalHistoryPanel extends React.Component<
 									</tbody>
 								</table>
 							</SectionComponent>
-							<SectionComponent title={text(`deciduous teeth`).c}>
+							<SectionComponent title={text(`deciduous teeth`).h}>
 								<table className="deciduous">
 									<tbody>
 										<tr>

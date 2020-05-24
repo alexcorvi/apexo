@@ -11,5 +11,5 @@ export const dictionary = {
 	dropbox_accessToken: "dropbox_accessToken",
 	lang: "lang",
 	date_format: "date_format",
-	weekend_num: "weekend_num"
+	weekend_num: "weekend_num",
 };

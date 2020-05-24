@@ -80,7 +80,7 @@ export class UserPanelView extends React.Component {
 				)}
 			>
 				{core.router.selectedTab === "today" ? (
-					<SectionComponent title={text("appointments for today").c}>
+					<SectionComponent title={text("appointments for today").h}>
 						{core.user.todayAppointments.length === 0 ? (
 							<MessageBar
 								messageBarType={MessageBarType.info}

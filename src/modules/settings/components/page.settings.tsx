@@ -1,3 +1,4 @@
+import { translate } from "../../../core/internationalization/lang";
 import * as core from "@core";
 import { status, text } from "@core";
 import * as modules from "@modules";
@@ -98,10 +99,12 @@ export class SettingsPage extends React.Component {
 								element={
 									<Dropdown
 										label={text("language").c}
-										options={[
-											{ key: "en", text: "English" },
-											{ key: "ar", text: "العربية" },
-										]}
+										options={translate.languages.map(
+											(x) => ({
+												key: x.code,
+												text: x.localName,
+											})
+										)}
 										defaultSelectedKey={modules.setting!.getSetting(
 											"lang"
 										)}

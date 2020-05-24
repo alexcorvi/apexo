@@ -6,9 +6,11 @@ class Translate {
 	languages: {
 		code: string;
 		RTL: boolean;
+		localName: string;
 		loadTerms: () => Promise<{ [key: string]: string }>;
 	}[] = [
 		{
+			localName: "عربي",
 			code: "ar",
 			RTL: true,
 			loadTerms: async () => {
@@ -16,10 +18,36 @@ class Translate {
 			},
 		},
 		{
+			localName: "Espanol",
+			code: "es",
+			RTL: false,
+			loadTerms: async () => {
+				return (await import("./languages/es")).default;
+			},
+		},
+		{
+			localName: "English",
 			code: "en",
 			RTL: false,
 			loadTerms: async () => {
 				return {};
+			},
+		},
+		{
+			localName: "中文",
+			code: "zh-cn",
+			RTL: false,
+			loadTerms: async () => {
+				return (await import("./languages/zh-cn")).default;
+			},
+		},
+
+		{
+			localName: "Deutsche",
+			code: "de",
+			RTL: false,
+			loadTerms: async () => {
+				return (await import("./languages/de")).default;
 			},
 		},
 	];

@@ -4,7 +4,8 @@ export const dict = {
 	LSL_hash: "", // when truly logging in
 	LSL_TS: "", // when starting
 	user_id: "", // current user ID
-	server_location: "" // current server location
+	server_location: "", // current server location
+	lang: "",
 };
 
 export const store = {
@@ -28,5 +29,5 @@ export const store = {
 
 	clear() {
 		localStorage.clear();
-	}
+	},
 };

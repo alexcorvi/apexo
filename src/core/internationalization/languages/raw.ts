@@ -1,5 +1,5 @@
 export const raw = {
-	/**========================================
+	/**
 	 * common
 	 */
 	patient: "",
@@ -55,7 +55,7 @@ export const raw = {
 	visits: "",
 	gallery: "",
 
-	/**========================================
+	/**
 	 * Appointments tables
 	 */
 	"appointments for today": "",
@@ -66,7 +66,7 @@ export const raw = {
 	"all upcoming appointments": "",
 	"no upcoming appointments": "",
 
-	/**========================================
+	/**
 	 * menu items
 	 */
 
@@ -80,7 +80,7 @@ export const raw = {
 	appointments: "",
 	statistics: "",
 
-	/**========================================
+	/**
 	 * section title
 	 */
 	"case details": "",
@@ -121,46 +121,7 @@ export const raw = {
 	"patients' age": "",
 	"other problems": "",
 
-	/**========================================
-	 * message bars
-	 */
-	"no data in this section yet, you can add new data by clicking the button above":
-		"",
-	"did not find anything that matches your search criteria": "",
-	"you're offline. use the latest username/password you've successfully used on this machine to login to this server":
-		"",
-	"the case sheet of this patient does not show any problems that needs orthodontic treatment":
-		"",
-	"a valid dropbox access token is required for this section": "",
-	"this patient does not seem to have any problems or concerns, have you filled the case sheet?":
-		"",
-	"a treatment plan must be before starting the treatment": "",
-	"you can not access orthodontic records while offline": "",
-	"no visits recorded yet! add a new visit using the button below": "",
-	"this patient does not seem to have any photo record uploaded, press the plus sign button below to start uploading":
-		"",
-	"you can not access patient gallery while offline": "",
-	"this patient does not have any appointment": "",
-	"backup and restore functionality are not available while you're offline":
-		"",
-	"choose the main language of display menus and items": "",
-	"set the date format to be used across this application": "",
-	"this access token is used to store files across the application, like backups and images":
-		"",
-	// tslint:disable-next-line:max-line-length
-	"when time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses so here you can put the electricity, rent, and other time dependent expenses":
-		"",
-	"this symbol you enter here will be used across your application": "",
-	"only you can edit this pin, and it can only be 4 numbers": "",
-	"you can't edit your own level and permissions": "",
-	"there are no upcoming appointments for this staff member": "",
-	"might not be available on this day": "",
-	"price is too low": "",
-	"you need to add treatments in the treatments section before being able to book new appointments":
-		"",
-	"click a thumbnail to expand it": "",
-
-	/**========================================
+	/**
 	 * toggles
 	 */
 	"operates on patients": "",
@@ -210,31 +171,7 @@ export const raw = {
 	"time tracking enabled": "",
 	"time tracking disabled": "",
 
-	/**========================================
-	 * prompts
-	 */
-	'all unsaved data will be lost. all data will be removed and replaced by the backup file. type "yes" to confirm':
-		"",
-	"please enter file name": "",
-	"please enter your pin": "",
-	"are you sure you want to delete this appointment?": "",
-	"orthodontic case will be deleted": "",
-	"all of the patient": "",
-	"'s data will be deleted along with": "",
-	"of appointments": "",
-	"are you sure you want to delete the prescription?": "",
-	"are you sure you want to delete": "",
-	"will be deleted": "",
-	"this visit data will be deleted along with all photos and notes": "",
-
-	/**========================================
-	 * messages
-	 */
-	"invalid file": "",
-	"invalid pin provided": "",
-	"restoration cancelled": "",
-
-	/**========================================
+	/**
 	 * buttons
 	 */
 	"load more": "",
@@ -253,7 +190,7 @@ export const raw = {
 	overlay: "",
 	"access offline": "",
 
-	/**========================================
+	/**
 	 * inputs
 	 */
 	"type here": "",
@@ -341,7 +278,7 @@ export const raw = {
 	"create or choose patient": "",
 	upload: "",
 
-	/**========================================
+	/**
 	 * dropdown options
 	 */
 
@@ -370,7 +307,7 @@ export const raw = {
 	monthly: "",
 	never: "",
 
-	/**========================================
+	/**
 	 * tooltips
 	 */
 
@@ -392,7 +329,7 @@ export const raw = {
 	"level and permission": "",
 	"staff member details": "",
 
-	/**========================================
+	/**
 	 * dental history
 	 */
 	sound: "",
@@ -404,7 +341,7 @@ export const raw = {
 	displaced: "",
 	"gum-recessed": "",
 
-	/**========================================
+	/**
 	 * table headings
 	 */
 
@@ -418,14 +355,14 @@ export const raw = {
 	"expenses/unit": "",
 	"done appointments": "",
 
-	/**========================================
+	/**
 	 * units of measurement
 	 */
 	mg: "",
 	mm: "",
 	degrees: "",
 
-	/**========================================
+	/**
 	 * calendar
 	 */
 	january: "",
@@ -466,7 +403,7 @@ export const raw = {
 	nov: "",
 	dec: "",
 
-	/**========================================
+	/**
 	 * editing appointment
 	 */
 	"other appointment": "",
@@ -475,13 +412,13 @@ export const raw = {
 	"profit percentage": "",
 	unpaid: "",
 
-	/**========================================
+	/**
 	 * searching and filtering
 	 */
 
 	"out of": "",
 
-	/**========================================
+	/**
 	 * settings
 	 */
 	backup: "",
@@ -489,7 +426,7 @@ export const raw = {
 	"settings are locked": "",
 	"to prevent unintentional changes, solve the mathematical equation to unlock":
 		"",
-	/**========================================
+	/**
 	 * other
 	 */
 
@@ -514,19 +451,19 @@ export const raw = {
 	"lower arch spacing by": "",
 	"target & expectations": "",
 	"no target info": "",
-	/**========================================
+	/**
 	 * statistics page
 	 */
 
 	"applied times": "",
 	"all staff members": "",
 
-	/**========================================
+	/**
 	 * treatments page
 	 */
 	"per unit": "",
 
-	/**========================================
+	/**
 	 * labworks pages
 	 */
 	labwork: "",
@@ -544,4 +481,67 @@ export const raw = {
 	received: "",
 	"not received": "",
 	"received date": "",
+
+	/**
+	 * message bars
+	 */
+	"no data in this section yet, you can add new data by clicking the button above":
+		"",
+	"did not find anything that matches your search criteria": "",
+	"you're offline. use the latest username/password you've successfully used on this machine to login to this server":
+		"",
+	"the case sheet of this patient does not show any problems that needs orthodontic treatment":
+		"",
+	"a valid dropbox access token is required for this section": "",
+	"this patient does not seem to have any problems or concerns, have you filled the case sheet?":
+		"",
+	"a treatment plan must be before starting the treatment": "",
+	"you can not access orthodontic records while offline": "",
+	"no visits recorded yet! add a new visit using the button below": "",
+	"this patient does not seem to have any photo record uploaded, press the plus sign button below to start uploading":
+		"",
+	"you can not access patient gallery while offline": "",
+	"this patient does not have any appointment": "",
+	"backup and restore functionality are not available while you're offline":
+		"",
+	"choose the main language of display menus and items": "",
+	"set the date format to be used across this application": "",
+	"this access token is used to store files across the application, like backups and images":
+		"",
+	// tslint:disable-next-line:max-line-length
+	"when time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses so here you can put the electricity, rent, and other time dependent expenses":
+		"",
+	"this symbol you enter here will be used across your application": "",
+	"only you can edit this pin, and it can only be 4 numbers": "",
+	"you can't edit your own level and permissions": "",
+	"there are no upcoming appointments for this staff member": "",
+	"might not be available on this day": "",
+	"price is too low": "",
+	"you need to add treatments in the treatments section before being able to book new appointments":
+		"",
+	"click a thumbnail to expand it": "",
+
+	/**
+	 * prompts
+	 */
+	'all unsaved data will be lost. all data will be removed and replaced by the backup file. type "yes" to confirm':
+		"",
+	"please enter file name": "",
+	"please enter your pin": "",
+	"are you sure you want to delete this appointment?": "",
+	"orthodontic case will be deleted": "",
+	"all of the patient": "",
+	"'s data will be deleted along with": "",
+	"of appointments": "",
+	"are you sure you want to delete the prescription?": "",
+	"are you sure you want to delete": "",
+	"will be deleted": "",
+	"this visit data will be deleted along with all photos and notes": "",
+
+	/**
+	 * messages
+	 */
+	"invalid file": "",
+	"invalid pin provided": "",
+	"restoration cancelled": "",
 };
