@@ -302,6 +302,8 @@ export const raw = {
 	mouthwash: "",
 	suspension: "",
 	toothpaste: "",
+	ointment: "",
+	spray: "",
 	daily: "",
 	weekly: "",
 	monthly: "",

@@ -1,5 +1,5 @@
 import { raw } from "./raw";
-export const zhCn: Partial<typeof raw> = {
+export const zhCn: typeof raw = {
 	patient: "患者",
 	appointment: "约定",
 	treatment: "治疗",
@@ -268,6 +268,8 @@ export const zhCn: Partial<typeof raw> = {
 	syrup: "糖浆",
 	powder: "粉末",
 	mouthwash: "漱口水",
+	ointment: "软膏",
+	spray: "喷雾",
 	suspension: "悬挂",
 	toothpaste: "牙膏",
 	daily: "日常",

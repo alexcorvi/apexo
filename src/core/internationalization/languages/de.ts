@@ -281,6 +281,8 @@ export const de: typeof raw = {
 	syrup: "sirup",
 	powder: "pulver",
 	mouthwash: "mundwasser",
+	ointment: "salbe",
+	spray: "sprühen",
 	suspension: "suspension",
 	toothpaste: "zahnpasta",
 	daily: "täglich",

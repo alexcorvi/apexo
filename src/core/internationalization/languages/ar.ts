@@ -381,6 +381,8 @@ export const ar: typeof raw = {
 	syrup: "شراب",
 	powder: "باودر",
 	mouthwash: "غسول فموي",
+	ointment: "كريم",
+	spray: "بخاخ",
 	suspension: "مستحضر",
 	toothpaste: "معجون اسنان",
 	daily: "يوميًا",

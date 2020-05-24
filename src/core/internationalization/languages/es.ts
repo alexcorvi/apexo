@@ -343,6 +343,8 @@ export const es: typeof raw = {
 	syrup: "jarabe",
 	powder: "polvo",
 	mouthwash: "enjuague bucal",
+	ointment: "pomada",
+	spray: "rociar",
 	suspension: "suspensión",
 	toothpaste: "pasta dental",
 	daily: "diario",
