@@ -10,6 +10,14 @@ class Translate {
 		loadTerms: () => Promise<{ [key: string]: string }>;
 	}[] = [
 		{
+			localName: "English",
+			code: "en",
+			RTL: false,
+			loadTerms: async () => {
+				return {};
+			},
+		},
+		{
 			localName: "عربي",
 			code: "ar",
 			RTL: true,
@@ -23,14 +31,6 @@ class Translate {
 			RTL: false,
 			loadTerms: async () => {
 				return (await import("./languages/es")).default;
-			},
-		},
-		{
-			localName: "English",
-			code: "en",
-			RTL: false,
-			loadTerms: async () => {
-				return {};
 			},
 		},
 		{
