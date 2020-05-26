@@ -162,7 +162,7 @@ export class OrthoRecordsPanel extends React.Component<{
 						</MessageBar>
 					)}
 					<EditableListComponent
-						label={text(`add plan`).c}
+						label={""}
 						value={this.props.orthoCase.treatmentPlan_appliance}
 						onChange={(val) => {
 							this.props.orthoCase.treatmentPlan_appliance = val;

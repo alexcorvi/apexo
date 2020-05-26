@@ -12,11 +12,7 @@ import {
 import { computed, observable } from "mobx";
 import { Md5 } from "ts-md5";
 
-const demoHosts: string[] = [
-	"demo.apexo.app",
-	"localhost:8000",
-	"192.168.1.102:8000",
-];
+const demoHosts: string[] = ["demo.apexo.app"];
 
 export enum LoginStep {
 	loadingData,
