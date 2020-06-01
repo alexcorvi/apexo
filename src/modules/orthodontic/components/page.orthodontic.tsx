@@ -465,7 +465,7 @@ export class OrthoPage extends React.Component {
 						</Col>
 					</Row>
 					<TextField
-						label="Add new patient"
+						label={text("add new").c}
 						placeholder={text(`patient name`).c}
 						value={this.newPatientName}
 						onChange={(e, v) => (this.newPatientName = v!)}
