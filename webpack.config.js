@@ -89,5 +89,11 @@ module.exports = {
 					maxChunks: 10,
 				}),
 		  ]
-		: [processHTML, new StringReplacePlugin()],
+		: [
+				processHTML,
+				new StringReplacePlugin(),
+				new webpack.optimize.LimitChunkCountPlugin({
+					maxChunks: 10,
+				}),
+		  ],
 };
