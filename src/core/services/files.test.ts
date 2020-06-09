@@ -1,4 +1,4 @@
-import { dropboxAccessToken } from "../secrets";
+import { dropboxAccessToken } from "../../secrets";
 import { files } from "@core";
 import { setting } from "@modules";
 import { decode } from "@utils";
@@ -36,15 +36,15 @@ describe("@core: files", () => {
 	});
 	describe("Saving/getting files", () => {
 		const fileA = new Blob(["a"], {
-			type: "text/plain"
+			type: "text/plain",
 		});
-		it("saves, gets, removes files", async done => {
+		it("saves, gets, removes files", async (done) => {
 			jest.setTimeout(90000);
 			setting!.setSetting("dropbox_accessToken", dropboxAccessToken);
 			const pathA = await files.save({
 				blob: fileA,
 				ext: "temp",
-				dir
+				dir,
 			});
 			expect(typeof pathA).toBe("string");
 			const resA = await files.get(pathA);
