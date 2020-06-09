@@ -25,6 +25,6 @@
 			"@utils": ["utils"]
 		}
 	},
-	"include": ["./src/**/*"],
+	"include": ["./src/**/*", "mocks"],
 	"exclude": ["node_modules"]
 }
