@@ -1,6 +1,6 @@
-import "../mocks/browser-mocks";
-import { mockResponse } from "../mocks/browser-mocks";
-import "../mocks/state-mocks";
+import "../../mocks/browser-mocks";
+import { mockResponse } from "../../mocks/browser-mocks";
+import "../../mocks/state-mocks";
 import { LoginStep, Status } from "@core";
 import { staff } from "@modules";
 import { store } from "@utils";
@@ -18,27 +18,27 @@ describe("@core: status: login & logout", () => {
 	});
 
 	describe("Online login", () => {
-		it("false credentials", async done => {
+		it("false credentials", async (done) => {
 			const errorMessage = "Incorrect credentials were given";
 			mockResponse("post", 401, {
-				reason: errorMessage
+				reason: errorMessage,
 			});
 			const res = await status.loginWithCredentialsOnline({
 				username,
 				password,
 				server,
-				noStart: true
+				noStart: true,
 			});
 			expect(res).toBe(errorMessage);
 			done();
 		});
-		it("correct credentials", async done => {
+		it("correct credentials", async (done) => {
 			mockResponse("post", 200, {});
 			const res = await status.loginWithCredentialsOnline({
 				username,
 				password,
 				server,
-				noStart: true
+				noStart: true,
 			});
 			expect(res).toBe(true);
 			done();
@@ -51,12 +51,12 @@ describe("@core: status: login & logout", () => {
 			Md5.hashStr(server + username + password).toString()
 		);
 
-		it("Login while offline: false credentials", async done => {
+		it("Login while offline: false credentials", async (done) => {
 			const res = await status.loginWithCredentialsOffline({
 				username,
 				password: "else",
 				server,
-				noStart: true
+				noStart: true,
 			});
 			expect(res).toBe(
 				"This was not the last username/password combination you used!"
@@ -64,12 +64,12 @@ describe("@core: status: login & logout", () => {
 			done();
 		});
 
-		it("Login while offline: correct credentials", async done => {
+		it("Login while offline: correct credentials", async (done) => {
 			const res = await status.loginWithCredentialsOffline({
 				username,
 				password,
 				server,
-				noStart: true
+				noStart: true,
 			});
 			expect(res).toBe(true);
 			done();

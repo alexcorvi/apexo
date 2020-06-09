@@ -1,15 +1,15 @@
-import "../mocks/browser-mocks";
-import "../mocks/state-mocks";
+import "../../mocks/browser-mocks";
+import "../../mocks/state-mocks";
 import { user } from "@core";
 import * as core from "@core";
 import * as modules from "@modules";
 
 function setUserA() {
-	core.status.setUser(modules.staff!.docs.find(x => x.name === "A")!._id);
+	core.status.setUser(modules.staff!.docs.find((x) => x.name === "A")!._id);
 }
 
 function setUserB() {
-	core.status.setUser(modules.staff!.docs.find(x => x.name === "B")!._id);
+	core.status.setUser(modules.staff!.docs.find((x) => x.name === "B")!._id);
 }
 
 describe("@core: user panel", () => {
@@ -29,7 +29,7 @@ describe("@core: user panel", () => {
 	});
 });
 
-describe("@core: user A info", function(this: any) {
+describe("@core: user A info", function (this: any) {
 	it("Staff name", () => {
 		setUserA();
 		expect(user.currentUser!.name).toBe("A");

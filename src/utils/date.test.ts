@@ -1,4 +1,4 @@
-import "../mocks/browser-mocks";
+import "../../mocks/browser-mocks";
 import {
 	comparableDate,
 	day,
@@ -6,8 +6,8 @@ import {
 	getDayStartingPoint,
 	isToday,
 	isTomorrow,
-	isYesterday
-	} from "@utils";
+	isYesterday,
+} from "@utils";
 
 describe("@utils: date basic functions", () => {
 	it("starting point", () => {
