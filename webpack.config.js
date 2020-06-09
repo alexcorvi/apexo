@@ -86,14 +86,14 @@ module.exports = {
 				}),
 				new StringReplacePlugin(),
 				new webpack.optimize.LimitChunkCountPlugin({
-					maxChunks: 10,
+					maxChunks: 5,
 				}),
 		  ]
 		: [
 				processHTML,
 				new StringReplacePlugin(),
 				new webpack.optimize.LimitChunkCountPlugin({
-					maxChunks: 10,
+					maxChunks: 5,
 				}),
 		  ],
 };
