@@ -1,3 +1,4 @@
+import { loginService } from "../core/services/login";
 import { status, text } from "@core";
 import * as core from "@core";
 import { second, store } from "@utils";
@@ -22,7 +23,7 @@ export class LoginView extends React.Component {
 	@observable usernameFieldValue = "";
 	@observable passwordFieldValue = "";
 	@observable serverFieldValue =
-		(window as any).couchDBServer ||
+		((window as any).couchDBServer as string) ||
 		store.get("server_location") ||
 		location.origin.replace(/:\d+$/g, ":5984");
 
@@ -33,21 +34,13 @@ export class LoginView extends React.Component {
 
 	@observable formType: "s" | "c" = "s";
 
-	@computed get impossibleToLogin() {
-		return (
-			!status.isOnline.server &&
-			!status.isOnline.client &&
-			!store.found("LSL_hash")
-		);
-	}
-
 	componentDidMount() {
 		core.status
 			.initialCheck(this.serverFieldValue)
 			.finally(() => (this.initiallyChecked = true));
 	}
 
-	async login(offline?: boolean) {
+	async login() {
 		if (
 			!(
 				this.usernameFieldValue &&
@@ -59,29 +52,39 @@ export class LoginView extends React.Component {
 			return;
 		}
 		this.errorMessage = "";
-		const result = offline
-			? await core.status.loginWithCredentialsOffline({
-					username: this.usernameFieldValue,
-					password: this.passwordFieldValue,
-					server: this.serverFieldValue.replace(
-						/([^\/])\/[^\/].+/,
-						"$1"
-					),
-			  })
-			: await core.status.loginWithCredentials({
-					username: this.usernameFieldValue,
-					password: this.passwordFieldValue,
-					server: this.serverFieldValue.replace(
-						/([^\/])\/[^\/].+/,
-						"$1"
-					),
-			  });
-		if (typeof result !== "boolean") {
+		console.log(loginService());
+		const result = await loginService().login(
+			this.usernameFieldValue,
+			this.passwordFieldValue,
+			this.serverFieldValue
+		);
+		if (result !== true) {
 			this.errorMessage = result;
 		}
 	}
 
-	async loginSupported() {}
+	loginSupported() {
+		store.set("version", "supported");
+		core.status.version = "supported";
+		this.serverFieldValue = "https://apexo.app";
+		store.set("server_location", this.serverFieldValue);
+		this.login();
+	}
+
+	loginCommunity() {
+		store.set("version", "community");
+		core.status.version = "community";
+		store.set("server_location", this.serverFieldValue);
+		this.login();
+	}
+
+	loginOffline() {
+		store.set("version", "offline");
+		core.status.version = "offline";
+		this.serverFieldValue = "http://cypress";
+		store.set("server_location", this.serverFieldValue);
+		this.login();
+	}
 
 	render() {
 		return (
@@ -200,7 +203,7 @@ export class LoginView extends React.Component {
 										data-testid="input-identification"
 										onKeyDown={(ev) => {
 											if (ev.keyCode === 13) {
-												this.login();
+												this.loginCommunity();
 											}
 										}}
 									/>
@@ -216,7 +219,7 @@ export class LoginView extends React.Component {
 										data-testid="input-password"
 										onKeyDown={(ev) => {
 											if (ev.keyCode === 13) {
-												this.login();
+												this.loginCommunity();
 											}
 										}}
 									/>
@@ -229,22 +232,9 @@ export class LoginView extends React.Component {
 										className="m-t-15 m-b-15"
 										data-testid="proceed-primary"
 										onClick={() => {
-											this.login();
+											this.loginCommunity();
 										}}
 									/>
-									{core.status.tryOffline ? (
-										<PrimaryButton
-											text={text("access offline").c}
-											disabled={this.disableInputs}
-											className="m-t-15 m-b-15 m-l-5 m-r-5"
-											data-testid="proceed-offline"
-											onClick={() => {
-												this.login(true);
-											}}
-										/>
-									) : (
-										""
-									)}
 								</div>
 							</div>
 						</PivotItem>
@@ -268,7 +258,7 @@ export class LoginView extends React.Component {
 									<PrimaryButton
 										iconProps={{ iconName: "WifiWarning4" }}
 										onClick={() => {
-											core.status.startNoServer();
+											this.loginOffline();
 										}}
 									>
 										Use offline

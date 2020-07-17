@@ -1,4 +1,4 @@
-import { dbAction, files, localDBRefs } from "@core";
+import { dbAction, files, localDBRefs, loginService } from "@core";
 import { registerModules, staff } from "@modules";
 import * as modules from "@modules";
 import {
@@ -47,10 +47,10 @@ export class Status {
 		server: false,
 		client: false,
 	};
-
-	@observable tryOffline: boolean = false;
-
 	@observable loginType: LoginType | "" = "";
+
+	@observable version: "community" | "supported" | "offline" =
+		(store.get("version") as any) || "community";
 
 	constructor() {
 		this.validateOnlineStatus().then(() => {
@@ -71,8 +71,13 @@ export class Status {
 		await this.validateOnlineStatus();
 
 		this.initialLoadingIndicatorText = "checking active session";
+
+		if (this.version === "offline") {
+			this.startNoServer();
+		}
+
 		if (this.isOnline.server) {
-			if (await this.activeSession(this.server)) {
+			if (await loginService().activeSession(this.server)) {
 				this.loginType = LoginType.initialActiveSession;
 				await this.start({ server });
 				store.set("LSL_TS", new Date().getTime().toString());
@@ -85,107 +90,6 @@ export class Status {
 				this.loginType = LoginType.initialLSLHashTS;
 				this.start({ server });
 			}
-		}
-	}
-
-	async loginWithCredentials({
-		username,
-		password,
-		server,
-	}: {
-		username: string;
-		password: string;
-		server: string;
-	}) {
-		this.server = server;
-		await this.validateOnlineStatus();
-		if (!this.isOnline.server && store.found("LSL_hash")) {
-			return this.loginWithCredentialsOffline({
-				username,
-				password,
-				server,
-			});
-		}
-
-		if (this.isOnline.server) {
-			return this.loginWithCredentialsOnline({
-				username,
-				password,
-				server,
-			});
-		} else {
-			if (store.found("LSL_hash")) {
-				this.tryOffline = true;
-			}
-			return `
-				An error occurred, please make sure that the server is online and it\'s accessible.
-				Click "change" to change into another server
-			`;
-		}
-	}
-
-	async loginWithCredentialsOnline({
-		username,
-		password,
-		server,
-		noStart,
-	}: {
-		username: string;
-		password: string;
-		server: string;
-		noStart?: boolean;
-	}) {
-		const PouchDB: PouchDB.Static =
-			((await import("pouchdb-browser")) as any).default ||
-			((await import("pouchdb-browser")) as any);
-		const auth: PouchDB.Plugin =
-			((await import("pouchdb-authentication")) as any).default ||
-			((await import("pouchdb-authentication")) as any);
-		PouchDB.plugin(auth);
-		try {
-			await new PouchDB(server, { skip_setup: true }).logIn(
-				username,
-				password
-			);
-			if (noStart) {
-				return true;
-			}
-			store.set(
-				"LSL_hash",
-				Md5.hashStr(server + username + password).toString()
-			);
-			store.set("LSL_TS", new Date().getTime().toString());
-			this.loginType = LoginType.loginCredentialsOnline;
-			this.start({ server });
-			return true;
-		} catch (e) {
-			console.error(e);
-			return (e.reason as string) || "Could not login";
-		}
-	}
-
-	async loginWithCredentialsOffline({
-		username,
-		password,
-		server,
-		noStart,
-	}: {
-		username: string;
-		password: string;
-		server: string;
-		noStart?: boolean;
-	}) {
-		const LSL_hash = store.get("LSL_hash");
-		if (LSL_hash === Md5.hashStr(server + username + password).toString()) {
-			if (noStart) {
-				return true;
-			} else {
-				this.loginType = LoginType.loginCredentialsOffline;
-				this.start({ server });
-				return true;
-			}
-		} else {
-			return "This was not the last username/password combination you used!";
 		}
 	}
 
@@ -235,19 +139,6 @@ export class Status {
 		return await new PouchDB(this.server, { skip_setup: true }).logOut();
 	}
 
-	async logout() {
-		if (this.isOnline.server && !this.keepServerOffline) {
-			try {
-				this.removeCookies();
-				await dbAction("logout");
-			} catch (e) {
-				console.log("Failed to logout", e);
-			}
-		}
-		store.clear();
-		location.reload();
-	}
-
 	checkAndSetUserID() {
 		const userID = store.get("user_id");
 		if (userID && staff!.docs.find((x) => x._id === userID)) {
@@ -266,26 +157,6 @@ export class Status {
 		this.currentUserID = id;
 		this.step = LoginStep.allDone;
 		store.set("user_id", id);
-	}
-
-	async activeSession(server: string) {
-		const PouchDB: PouchDB.Static = ((await import(
-			"pouchdb-browser"
-		)) as any).default;
-		const auth: PouchDB.Plugin = ((await import(
-			"pouchdb-authentication"
-		)) as any).default;
-		PouchDB.plugin(auth);
-		try {
-			if (this.isOnline.server && !this.keepServerOffline) {
-				return !!(
-					await new PouchDB(server, {
-						skip_setup: true,
-					}).getSession()
-				).userCtx.name;
-			}
-		} catch (e) {}
-		return false;
 	}
 
 	async validateOnlineStatus() {
@@ -345,7 +216,6 @@ export class Status {
 			client: false,
 			dropbox: false,
 		};
-		this.tryOffline = false;
 		this.loginType = "";
 	}
 }

@@ -159,7 +159,7 @@ export class UserPanelView extends React.Component {
 							className="m-5"
 							text={text("logout").c}
 							iconProps={{ iconName: "lock" }}
-							onClick={() => core.status.logout()}
+							onClick={() => core.loginService().logout()}
 							data-testid="logout"
 						/>
 						<DefaultButton
