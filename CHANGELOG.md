@@ -7,6 +7,12 @@
 -   New feature: New module Labworks to manage and track cases sent to laboratories
 -   New feature: Book appointments from the calendar module
 -   New feature: Improved calendar to show more information about the appointments
+-   New feature: virtual file system for offline version
+-   Enhancement: Almost all information viewed are clickable and hotlinked to the relative panels
+-   Enhancement: Showing more information at the table views
+-   Enhancement: Better user panel
+-   Enhancement: Better network & login status at the top right
+-   Enhancement: Redesigned dashboard at the home page
 -   Enhancement: Overall improved looks and feels
 -   Enhancement: Improved dashboard
 -   Enhancement: Improved user experience by using tabs and context menus
@@ -20,7 +26,9 @@
 -   Bug fix: Fixed scrolling to top when selecting an item in a module
 -   Bug fix: Fixed slow module registration
 -   Bug fix: dental chart is not updating
--   And many more...
+-   And many many more...
+
+> P.S. This version was such a huge update that I actually lost track of all the bugs and enhancements that was done
 
 ### 3.2.1
 
