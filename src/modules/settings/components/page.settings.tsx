@@ -435,7 +435,7 @@ export class SettingsPage extends React.Component {
 							title={text(`automated backup and restore`).h}
 						>
 							{status.isOnline.client ? (
-								status.isOnline.dropbox ? (
+								status.isOnline.files ? (
 									<div>
 										<Dropdown
 											label={text("backup frequency").c}
@@ -641,8 +641,11 @@ export class SettingsPage extends React.Component {
 									<MessageBar
 										messageBarType={MessageBarType.warning}
 									>
-										A valid DropBox access token is required
-										for this section
+										{
+											text(
+												"files server is offline, make sure you're online and connected"
+											).c
+										}
 									</MessageBar>
 								)
 							) : (

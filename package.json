@@ -11,6 +11,7 @@
 		"fast-array-diff": "^0.2.0",
 		"file-saver": "^2.0.2",
 		"heic2any": "^0.0.3",
+		"idb-keyval": "^3.2.0",
 		"is-online": "^8.3.1",
 		"lz-string": "^1.4.4",
 		"mobx": "^5.15.4",

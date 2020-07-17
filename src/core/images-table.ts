@@ -6,7 +6,9 @@ class ImagesTable {
 
 	fetchImage(path: string) {
 		if (!this.table[path]) {
-			files.get(path).then(imageURI => (this.table[path] = imageURI));
+			files()
+				.get(path)
+				.then((imageURI) => (this.table[path] = imageURI));
 		}
 		return undefined;
 	}

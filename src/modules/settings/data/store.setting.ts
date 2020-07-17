@@ -15,11 +15,11 @@ export class Settings extends Store<SettingItemSchema, SettingsItem> {
 	}
 
 	getSetting(id: keyof typeof dictionary): string {
-		return (this.docs.find(x => x._id.endsWith(id)) || { val: "" }).val;
+		return (this.docs.find((x) => x._id.endsWith(id)) || { val: "" }).val;
 	}
 
 	setSetting(id: keyof typeof dictionary, val: string) {
-		const i = this.docs.findIndex(x => x._id.endsWith(id));
+		const i = this.docs.findIndex((x) => x._id.endsWith(id));
 		if (i === -1) {
 			// add
 			this.add(this.new({ _id: generateID(20, id), val }));
@@ -27,7 +27,7 @@ export class Settings extends Store<SettingItemSchema, SettingsItem> {
 			// update
 			this.docs[i].val = val;
 		}
-		this.settingChangeCallbacks.forEach(callback => callback());
+		this.settingChangeCallbacks.forEach((callback) => callback());
 	}
 
 	onSettingChange(callback: () => void) {
@@ -37,7 +37,7 @@ export class Settings extends Store<SettingItemSchema, SettingsItem> {
 	async updateDropboxBackups() {
 		try {
 			const sortedResult = (await backup.list())
-				.filter(x => x.client_modified && x.name.endsWith(".apx"))
+				.filter((x) => x.client_modified && x.name.endsWith(".apx"))
 				.sort(
 					(a, b) =>
 						new Date(a.client_modified).getTime() -
@@ -57,7 +57,7 @@ export class Settings extends Store<SettingItemSchema, SettingsItem> {
 		const retain = num(this.getSetting("backup_retain")) || 3;
 
 		// carry on, only if there's access token
-		if (!status.isOnline.dropbox) {
+		if (!status.isOnline.files) {
 			return;
 		}
 
@@ -74,7 +74,7 @@ export class Settings extends Store<SettingItemSchema, SettingsItem> {
 			path_lower: "",
 			id: "",
 			size: 0,
-			client_modified: new Date(0).getTime()
+			client_modified: new Date(0).getTime(),
 		};
 
 		const now = new Date().getTime();
@@ -102,7 +102,7 @@ export class Settings extends Store<SettingItemSchema, SettingsItem> {
 			backupsToDeleteNumber--;
 		}
 
-		backupsToDeleteFiles.forEach(async file => {
+		backupsToDeleteFiles.forEach(async (file) => {
 			await backup.deleteFromDropbox(file.path_lower);
 			await this.updateDropboxBackups();
 		});

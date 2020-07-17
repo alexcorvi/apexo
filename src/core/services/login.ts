@@ -94,8 +94,6 @@ const supportedLoginService: LoginService = {
 			});
 		}
 
-		console.log(status.isOnline);
-
 		if (status.isOnline.server) {
 			const loginRes = await supportedOnlineLogin(username, password);
 			if (loginRes.success) {

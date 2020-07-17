@@ -115,8 +115,8 @@ export const es: typeof raw = {
 		"estás desconectado ",
 	"the case sheet of this patient does not show any problems that needs orthodontic treatment":
 		"la hoja de caso de este paciente no muestra ningún problema que necesite tratamiento de ortodoncia.",
-	"a valid dropbox access token is required for this section":
-		"se requiere un token de acceso de dropbox válido para esta sección",
+	"files server is offline, make sure you're online and connected":
+		"el servidor de archivos está fuera de línea, asegúrese de estar conectado y conectado",
 	"this patient does not seem to have any problems or concerns, have you filled the case sheet?":
 		"este paciente no parece tener ningún problema o inquietud, ¿ha llenado la hoja del caso?",
 	"a treatment plan must be before starting the treatment":

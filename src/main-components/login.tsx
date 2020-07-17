@@ -52,7 +52,6 @@ export class LoginView extends React.Component {
 			return;
 		}
 		this.errorMessage = "";
-		console.log(loginService());
 		const result = await loginService().login(
 			this.usernameFieldValue,
 			this.passwordFieldValue,
@@ -61,6 +60,8 @@ export class LoginView extends React.Component {
 		if (result !== true) {
 			this.errorMessage = result;
 		}
+
+		// TODO: disable login buttons when trying to login
 	}
 
 	loginSupported() {

@@ -408,8 +408,8 @@ export const zhCn: typeof raw = {
 		"您处于离线状态。",
 	"the case sheet of this patient does not show any problems that needs orthodontic treatment":
 		"该患者的病例表未显示任何需要正畸治疗的问题",
-	"a valid dropbox access token is required for this section":
-		"此部分需要有效的保管箱访问令牌",
+	"files server is offline, make sure you're online and connected":
+		"文件服务器处于脱机状态，请确保您在线且已连接",
 	"this patient does not seem to have any problems or concerns, have you filled the case sheet?":
 		"该患者似乎没有任何问题或疑虑，您是否填写了病历表？",
 	"a treatment plan must be before starting the treatment":

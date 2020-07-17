@@ -133,8 +133,8 @@ export const ar: typeof raw = {
 		"لست على اتصال، قم باستخدام اخر معلومات قمت بادخالها على هذا السيرفر",
 	"the case sheet of this patient does not show any problems that needs orthodontic treatment":
 		"تفاصيل الحالة لهذا المريض لا تتضمن اي مشاكل ليتم علاجها",
-	"a valid dropbox access token is required for this section":
-		"يتطلب هذا القسم رمز دروبوكس صالح للاستخدام",
+	"files server is offline, make sure you're online and connected":
+		"خادم الملفات غير متصل، تاكد من اتصالك بالانترنت",
 	"this patient does not seem to have any problems or concerns, have you filled the case sheet?":
 		"تفاصيل الحالة لهذا المريض لا تتضمن اي مشاكل ليتم علاجها",
 	"a treatment plan must be before starting the treatment":

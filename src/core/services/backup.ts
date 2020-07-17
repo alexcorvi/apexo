@@ -72,7 +72,7 @@ export const backup = {
 
 	toDropbox: async function (): Promise<string> {
 		const blob = await backup.toBlob();
-		const path = await core.files.save({
+		const path = await core.files().save({
 			blob,
 			ext,
 			dir: core.BACKUPS_DIR,
@@ -81,11 +81,11 @@ export const backup = {
 	},
 
 	list: async function () {
-		return await core.files.list(core.BACKUPS_DIR);
+		return await core.files().backups();
 	},
 
 	deleteFromDropbox: async function (path: string) {
-		return await core.files.remove(path);
+		return await core.files().remove(path);
 	},
 };
 
@@ -214,13 +214,15 @@ export const restore = {
 	},
 
 	fromDropbox: async function (filePath: string) {
-		const base64File = (await core.files.get(filePath)).split(
+		const base64File = (await core.files().get(filePath)).split(
 			";base64,"
 		)[1];
 		const base64Data = decode(base64File).split("apexo-backup:")[1];
 		this.fromBase64(base64Data);
 	},
 };
+
+// TODO: encrypt backup files
 
 export async function downloadCurrentStateAsBackup() {
 	const blob = await backup.toBlob();

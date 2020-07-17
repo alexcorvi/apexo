@@ -421,8 +421,8 @@ export const de: typeof raw = {
 		"du bist offline. ",
 	"the case sheet of this patient does not show any problems that needs orthodontic treatment":
 		"das fallblatt dieses patienten zeigt keine probleme, die eine kieferorthopädische behandlung erfordern",
-	"a valid dropbox access token is required for this section":
-		"für diesen abschnitt ist ein gültiges dropbox-zugriffstoken erforderlich",
+	"files server is offline, make sure you're online and connected":
+		"der dateiserver ist offline. Stellen Sie sicher, dass Sie online und verbunden sind",
 	"this patient does not seem to have any problems or concerns, have you filled the case sheet?":
 		"dieser patient scheint keine probleme oder bedenken zu haben. haben sie das fallblatt ausgefüllt?",
 	"a treatment plan must be before starting the treatment":

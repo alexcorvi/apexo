@@ -494,7 +494,7 @@ export const raw = {
 		"",
 	"the case sheet of this patient does not show any problems that needs orthodontic treatment":
 		"",
-	"a valid dropbox access token is required for this section": "",
+	"files server is offline, make sure you're online and connected": "",
 	"this patient does not seem to have any problems or concerns, have you filled the case sheet?":
 		"",
 	"a treatment plan must be before starting the treatment": "",

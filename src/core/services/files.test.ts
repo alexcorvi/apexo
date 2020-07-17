@@ -7,7 +7,7 @@ describe("@core: files", () => {
 	describe("DropBox storage status", () => {
 		it("With no DropBox AT", () => {
 			let caught = false;
-			files
+			files()
 				.status()
 				.then()
 				.catch(() => (caught = true))
@@ -17,7 +17,7 @@ describe("@core: files", () => {
 		it("With invalid DropBox AT", () => {
 			let caught = false;
 			setting!.setSetting("dropbox_accessToken", "something invalid");
-			files
+			files()
 				.status()
 				.then()
 				.catch(() => (caught = true))
@@ -27,7 +27,7 @@ describe("@core: files", () => {
 		it("With valid DropBox AT", () => {
 			let valid = false;
 			setting!.setSetting("dropbox_accessToken", dropboxAccessToken);
-			files
+			files()
 				.status()
 				.then(() => (valid = true))
 				.catch(() => (valid = false))
@@ -41,17 +41,17 @@ describe("@core: files", () => {
 		it("saves, gets, removes files", async (done) => {
 			jest.setTimeout(90000);
 			setting!.setSetting("dropbox_accessToken", dropboxAccessToken);
-			const pathA = await files.save({
+			const pathA = await files().save({
 				blob: fileA,
 				ext: "temp",
 				dir,
 			});
 			expect(typeof pathA).toBe("string");
-			const resA = await files.get(pathA);
+			const resA = await files().get(pathA);
 			expect(decode(resA.split(";base64,")[1])).toBe("a");
-			await files.remove(pathA);
+			await files().remove(pathA);
 			let thrown = false;
-			files
+			files()
 				.get(pathA)
 				.then()
 				.catch(() => (thrown = true))

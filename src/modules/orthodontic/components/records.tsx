@@ -111,7 +111,7 @@ export class OrthoRecordsPanel extends React.Component<{
 	}
 
 	async removeImage(path: string) {
-		await core.files.remove(path);
+		await core.files().remove(path);
 		return;
 	}
 
@@ -253,1111 +253,1090 @@ export class OrthoRecordsPanel extends React.Component<{
 					</Row>
 				</SectionComponent>
 				<SectionComponent title={text(`records`).h}>
-					{status.isOnline.client ? (
-						status.isOnline.dropbox ? (
-							<div className="album">
-								{this.props.orthoCase.visits.length ? (
-									<table>
-										<tbody>
-											<tr>
-												<td />
-												{viewsTerms.map(
-													(term, index) => {
-														if (
-															this
-																.zoomedColumn !==
-																-1 &&
-															this
-																.zoomedColumn !==
-																index
-														) {
-															return undefined;
-														} else {
-															return (
-																<td key={term}>
-																	{this
-																		.zoomedColumn ===
-																	index ? (
-																		<p className="column-header">
-																			{
-																				viewsTerms[
-																					index
-																				]
-																			}
-																		</p>
-																	) : (
-																		<p className="term-initials">
-																			{viewsTerms[
-																				index
-																			]
-																				.split(
-																					" "
+					{status.isOnline.files ? (
+						<div className="album">
+							{this.props.orthoCase.visits.length ? (
+								<table>
+									<tbody>
+										<tr>
+											<td />
+											{viewsTerms.map((term, index) => {
+												if (
+													this.zoomedColumn !== -1 &&
+													this.zoomedColumn !== index
+												) {
+													return undefined;
+												} else {
+													return (
+														<td key={term}>
+															{this
+																.zoomedColumn ===
+															index ? (
+																<p className="column-header">
+																	{
+																		viewsTerms[
+																			index
+																		]
+																	}
+																</p>
+															) : (
+																<p className="term-initials">
+																	{viewsTerms[
+																		index
+																	]
+																		.split(
+																			" "
+																		)
+																		.map(
+																			(
+																				x
+																			) =>
+																				x.charAt(
+																					0
 																				)
-																				.map(
-																					(
-																						x
-																					) =>
-																						x.charAt(
-																							0
-																						)
-																				)
-																				.join(
-																					""
-																				)}
-																		</p>
-																	)}
-																	<br />
+																		)
+																		.join(
+																			""
+																		)}
+																</p>
+															)}
+															<br />
 
-																	<TooltipHost
-																		content={
-																			text(
-																				"zoom"
-																			).c
-																		}
-																	>
-																		<IconButton
-																			iconProps={{
-																				iconName:
-																					this
-																						.zoomedColumn ===
-																					index
-																						? "ZoomOut"
-																						: "ZoomIn",
-																			}}
-																			className="clickable-icon"
-																			onClick={() => {
-																				if (
-																					this
-																						.zoomedColumn ===
-																					index
-																				) {
-																					this.zoomedColumn = -1;
-																					return;
-																				}
-																				this.zoomedColumn = index;
-																			}}
-																		/>
-																	</TooltipHost>
-																	{this
-																		.zoomedColumn ===
-																	index ? (
-																		<TooltipHost
-																			content={
-																				text(
-																					"view grid"
-																				)
-																					.c
-																			}
-																		>
-																			<IconButton
-																				iconProps={{
-																					iconName:
-																						"gridViewSmall",
-																				}}
-																				className="clickable-icon"
-																				onClick={() => {
-																					this.showGrid = !this
-																						.showGrid;
-																				}}
-																			/>
-																		</TooltipHost>
-																	) : (
-																		""
-																	)}
-																</td>
-															);
-														}
-													}
-												)}
-												<td />
-											</tr>
-											{this.props.orthoCase.visits
-												.slice()
-												.sort(
-													(a, b) =>
-														a.visitNumber -
-														b.visitNumber
-												)
-												.map(
-													(
-														visit,
-														visitIndex,
-														sortedVisits
-													) => {
-														const prevVisit =
-															sortedVisits[
-																visitIndex - 1
-															] || new Visit();
-														const nextVisit =
-															sortedVisits[
-																visitIndex + 1
-															] || new Visit();
-														return [
-															<tr key={visit.id}>
-																<td>
-																	<TooltipHost
-																		content={`#${
-																			visit.visitNumber
-																		}, ${formatDate(
-																			visit.date,
-																			modules.setting!.getSetting(
-																				"date_format"
-																			)
-																		)}`}
-																	>
-																		<IconButton
-																			id={visit.id.replace(
-																				/[0-9]/g,
-																				""
-																			)}
-																			iconProps={{
-																				iconName:
-																					"info",
-																			}}
-																			onClick={() => {
-																				this.openCallouts.push(
-																					visit.id
-																				);
-																			}}
-																		/>
-																	</TooltipHost>
-																	<Dialog
-																		onDismiss={() => {
-																			this.openCallouts = this.openCallouts.filter(
-																				(
-																					x
-																				) =>
-																					x !==
-																					visit.id
-																			);
-																		}}
-																		hidden={
-																			this.openCallouts.indexOf(
-																				visit.id
-																			) ===
-																			-1
-																		}
-																		className="visit-dialog"
-																	>
-																		<DetailsList
-																			compact
-																			items={[
-																				[
-																					<div id="gf-visit">
-																						{this
-																							.expandedField ===
-																						"gf-visit" ? (
-																							<TextField
-																								autoFocus
-																								type="number"
-																								label={
-																									text(
-																										`visit number`
-																									)
-																										.c
-																								}
-																								value={visit.visitNumber.toString()}
-																								onBlur={() => {
-																									this.expandedField =
-																										"";
-																								}}
-																								disabled={
-																									!this
-																										.canEdit
-																								}
-																								onChange={(
-																									ev,
-																									val
-																								) => {
-																									this.props.orthoCase.visits[
-																										visitIndex
-																									].visitNumber = num(
-																										val!
-																									);
-																								}}
-																							/>
-																						) : (
-																							`${
-																								text(
-																									"visit"
-																								)
-																									.c
-																							} #${
-																								visit.visitNumber
-																							}`
-																						)}
-																					</div>,
-																				],
-																				[
-																					<div id="gf-date">
-																						{this
-																							.expandedField ===
-																						"gf-date" ? (
-																							<Dropdown
-																								label={
-																									text(
-																										`visit date`
-																									)
-																										.c
-																								}
-																								selectedKey={visit.date.toString()}
-																								disabled={
-																									!this
-																										.canEdit
-																								}
-																								options={this.patientDoneAppointments.map(
-																									(
-																										date
-																									) => {
-																										return {
-																											key: date.date.toString(),
-																											text: `${formatDate(
-																												date.date,
-																												modules.setting!.getSetting(
-																													"date_format"
-																												)
-																											)} ${
-																												date.treatmentType
-																													? `, ${date.treatmentType}`
-																													: ""
-																											}`,
-																										};
-																									}
-																								)}
-																								onChange={(
-																									ev,
-																									newValue
-																								) => {
-																									this.props.orthoCase.visits[
-																										visitIndex
-																									].date = num(
-																										newValue!
-																											.key
-																									);
-																								}}
-																							/>
-																						) : (
-																							`${
-																								text(
-																									"date"
-																								)
-																									.c
-																							}: ${formatDate(
-																								visit.date,
-																								modules.setting!.getSetting(
-																									"date_format"
-																								)
-																							)}`
-																						)}
-																					</div>,
-																				],
-																				[
-																					<div id="gf-appliance">
-																						{this
-																							.expandedField ===
-																						"gf-appliance" ? (
-																							<TextField
-																								autoFocus
-																								label={
-																									text(
-																										`appliance`
-																									)
-																										.c
-																								}
-																								disabled={
-																									!this
-																										.canEdit
-																								}
-																								value={
-																									visit.appliance
-																								}
-																								onBlur={() => {
-																									this.expandedField =
-																										"";
-																								}}
-																								multiline
-																								onChange={(
-																									ev,
-																									val
-																								) => {
-																									this.props.orthoCase.visits[
-																										visitIndex
-																									].appliance = val!;
-																								}}
-																							/>
-																						) : (
-																							`${
-																								text(
-																									"appliance"
-																								)
-																									.c
-																							}: ${
-																								visit.appliance
-																									? visit.appliance
-																									: text(
-																											"no appliance info"
-																									  )
-																											.c
-																							}`
-																						)}
-																					</div>,
-																				],
-																				[
-																					<div id="gf-target">
-																						{this
-																							.expandedField ===
-																						"gf-target" ? (
-																							<TextField
-																								autoFocus
-																								label={
-																									text(
-																										`target & expectations`
-																									)
-																										.c
-																								}
-																								disabled={
-																									!this
-																										.canEdit
-																								}
-																								value={
-																									visit.target
-																								}
-																								onBlur={() => {
-																									this.expandedField =
-																										"";
-																								}}
-																								multiline
-																								onChange={(
-																									ev,
-																									val
-																								) => {
-																									this.props.orthoCase.visits[
-																										visitIndex
-																									].target = val!;
-																								}}
-																							/>
-																						) : (
-																							`${
-																								text(
-																									"target & expectations"
-																								)
-																									.c
-																							}: ${
-																								visit.target
-																									? visit.target
-																									: text(
-																											"no target info"
-																									  )
-																											.c
-																							}`
-																						)}
-																					</div>,
-																				],
-																			]}
-																			isHeaderVisible={
-																				false
-																			}
-																			selectionMode={
-																				SelectionMode.none
-																			}
-																			onActiveItemChanged={(
-																				row
-																			) => {
-																				this.expandedField =
-																					row[0].props.id;
-																			}}
-																		/>
-																	</Dialog>
-																</td>
-																{viewsTerms.map(
-																	(
-																		term,
-																		photoIndex
-																	) => {
-																		const photo =
-																			visit
-																				.photos[
-																				photoIndex
-																			];
+															<TooltipHost
+																content={
+																	text("zoom")
+																		.c
+																}
+															>
+																<IconButton
+																	iconProps={{
+																		iconName:
+																			this
+																				.zoomedColumn ===
+																			index
+																				? "ZoomOut"
+																				: "ZoomIn",
+																	}}
+																	className="clickable-icon"
+																	onClick={() => {
 																		if (
 																			this
-																				.zoomedColumn !==
-																				-1 &&
-																			this
-																				.zoomedColumn !==
-																				photoIndex
+																				.zoomedColumn ===
+																			index
 																		) {
-																			return undefined;
+																			this.zoomedColumn = -1;
+																			return;
 																		}
-																		return (
-																			<td
-																				key={
-																					term
-																				}
-																			>
-																				{this
-																					.showGrid &&
-																				this
-																					.zoomedColumn ===
-																					photoIndex &&
+																		this.zoomedColumn = index;
+																	}}
+																/>
+															</TooltipHost>
+															{this
+																.zoomedColumn ===
+															index ? (
+																<TooltipHost
+																	content={
+																		text(
+																			"view grid"
+																		).c
+																	}
+																>
+																	<IconButton
+																		iconProps={{
+																			iconName:
+																				"gridViewSmall",
+																		}}
+																		className="clickable-icon"
+																		onClick={() => {
+																			this.showGrid = !this
+																				.showGrid;
+																		}}
+																	/>
+																</TooltipHost>
+															) : (
+																""
+															)}
+														</td>
+													);
+												}
+											})}
+											<td />
+										</tr>
+										{this.props.orthoCase.visits
+											.slice()
+											.sort(
+												(a, b) =>
+													a.visitNumber -
+													b.visitNumber
+											)
+											.map(
+												(
+													visit,
+													visitIndex,
+													sortedVisits
+												) => {
+													const prevVisit =
+														sortedVisits[
+															visitIndex - 1
+														] || new Visit();
+													const nextVisit =
+														sortedVisits[
+															visitIndex + 1
+														] || new Visit();
+													return [
+														<tr key={visit.id}>
+															<td>
+																<TooltipHost
+																	content={`#${
+																		visit.visitNumber
+																	}, ${formatDate(
+																		visit.date,
+																		modules.setting!.getSetting(
+																			"date_format"
+																		)
+																	)}`}
+																>
+																	<IconButton
+																		id={visit.id.replace(
+																			/[0-9]/g,
+																			""
+																		)}
+																		iconProps={{
+																			iconName:
+																				"info",
+																		}}
+																		onClick={() => {
+																			this.openCallouts.push(
+																				visit.id
+																			);
+																		}}
+																	/>
+																</TooltipHost>
+																<Dialog
+																	onDismiss={() => {
+																		this.openCallouts = this.openCallouts.filter(
+																			(
+																				x
+																			) =>
+																				x !==
+																				visit.id
+																		);
+																	}}
+																	hidden={
+																		this.openCallouts.indexOf(
+																			visit.id
+																		) === -1
+																	}
+																	className="visit-dialog"
+																>
+																	<DetailsList
+																		compact
+																		items={[
+																			[
+																				<div id="gf-visit">
+																					{this
+																						.expandedField ===
+																					"gf-visit" ? (
+																						<TextField
+																							autoFocus
+																							type="number"
+																							label={
+																								text(
+																									`visit number`
+																								)
+																									.c
+																							}
+																							value={visit.visitNumber.toString()}
+																							onBlur={() => {
+																								this.expandedField =
+																									"";
+																							}}
+																							disabled={
+																								!this
+																									.canEdit
+																							}
+																							onChange={(
+																								ev,
+																								val
+																							) => {
+																								this.props.orthoCase.visits[
+																									visitIndex
+																								].visitNumber = num(
+																									val!
+																								);
+																							}}
+																						/>
+																					) : (
+																						`${
+																							text(
+																								"visit"
+																							)
+																								.c
+																						} #${
+																							visit.visitNumber
+																						}`
+																					)}
+																				</div>,
+																			],
+																			[
+																				<div id="gf-date">
+																					{this
+																						.expandedField ===
+																					"gf-date" ? (
+																						<Dropdown
+																							label={
+																								text(
+																									`visit date`
+																								)
+																									.c
+																							}
+																							selectedKey={visit.date.toString()}
+																							disabled={
+																								!this
+																									.canEdit
+																							}
+																							options={this.patientDoneAppointments.map(
+																								(
+																									date
+																								) => {
+																									return {
+																										key: date.date.toString(),
+																										text: `${formatDate(
+																											date.date,
+																											modules.setting!.getSetting(
+																												"date_format"
+																											)
+																										)} ${
+																											date.treatmentType
+																												? `, ${date.treatmentType}`
+																												: ""
+																										}`,
+																									};
+																								}
+																							)}
+																							onChange={(
+																								ev,
+																								newValue
+																							) => {
+																								this.props.orthoCase.visits[
+																									visitIndex
+																								].date = num(
+																									newValue!
+																										.key
+																								);
+																							}}
+																						/>
+																					) : (
+																						`${
+																							text(
+																								"date"
+																							)
+																								.c
+																						}: ${formatDate(
+																							visit.date,
+																							modules.setting!.getSetting(
+																								"date_format"
+																							)
+																						)}`
+																					)}
+																				</div>,
+																			],
+																			[
+																				<div id="gf-appliance">
+																					{this
+																						.expandedField ===
+																					"gf-appliance" ? (
+																						<TextField
+																							autoFocus
+																							label={
+																								text(
+																									`appliance`
+																								)
+																									.c
+																							}
+																							disabled={
+																								!this
+																									.canEdit
+																							}
+																							value={
+																								visit.appliance
+																							}
+																							onBlur={() => {
+																								this.expandedField =
+																									"";
+																							}}
+																							multiline
+																							onChange={(
+																								ev,
+																								val
+																							) => {
+																								this.props.orthoCase.visits[
+																									visitIndex
+																								].appliance = val!;
+																							}}
+																						/>
+																					) : (
+																						`${
+																							text(
+																								"appliance"
+																							)
+																								.c
+																						}: ${
+																							visit.appliance
+																								? visit.appliance
+																								: text(
+																										"no appliance info"
+																								  )
+																										.c
+																						}`
+																					)}
+																				</div>,
+																			],
+																			[
+																				<div id="gf-target">
+																					{this
+																						.expandedField ===
+																					"gf-target" ? (
+																						<TextField
+																							autoFocus
+																							label={
+																								text(
+																									`target & expectations`
+																								)
+																									.c
+																							}
+																							disabled={
+																								!this
+																									.canEdit
+																							}
+																							value={
+																								visit.target
+																							}
+																							onBlur={() => {
+																								this.expandedField =
+																									"";
+																							}}
+																							multiline
+																							onChange={(
+																								ev,
+																								val
+																							) => {
+																								this.props.orthoCase.visits[
+																									visitIndex
+																								].target = val!;
+																							}}
+																						/>
+																					) : (
+																						`${
+																							text(
+																								"target & expectations"
+																							)
+																								.c
+																						}: ${
+																							visit.target
+																								? visit.target
+																								: text(
+																										"no target info"
+																								  )
+																										.c
+																						}`
+																					)}
+																				</div>,
+																			],
+																		]}
+																		isHeaderVisible={
+																			false
+																		}
+																		selectionMode={
+																			SelectionMode.none
+																		}
+																		onActiveItemChanged={(
+																			row
+																		) => {
+																			this.expandedField =
+																				row[0].props.id;
+																		}}
+																	/>
+																</Dialog>
+															</td>
+															{viewsTerms.map(
+																(
+																	term,
+																	photoIndex
+																) => {
+																	const photo =
+																		visit
+																			.photos[
+																			photoIndex
+																		];
+																	if (
+																		this
+																			.zoomedColumn !==
+																			-1 &&
+																		this
+																			.zoomedColumn !==
+																			photoIndex
+																	) {
+																		return undefined;
+																	}
+																	return (
+																		<td
+																			key={
+																				term
+																			}
+																		>
+																			{this
+																				.showGrid &&
+																			this
+																				.zoomedColumn ===
+																				photoIndex &&
+																			imagesTable
+																				.table[
+																				photo
+																					.photoID
+																			] ? (
+																				<GridTableComponent />
+																			) : (
+																				""
+																			)}
+																			{photo.photoID ? (
 																				imagesTable
 																					.table[
 																					photo
 																						.photoID
 																				] ? (
-																					<GridTableComponent />
-																				) : (
-																					""
-																				)}
-																				{photo.photoID ? (
-																					imagesTable
-																						.table[
-																						photo
-																							.photoID
-																					] ? (
-																						<div
-																							key={
-																								visit.id
-																							}
-																							className="photo"
-																							onClick={() => {
-																								this.selectedPhotoId =
-																									photo.id;
+																					<div
+																						key={
+																							visit.id
+																						}
+																						className="photo"
+																						onClick={() => {
+																							this.selectedPhotoId =
+																								photo.id;
+																						}}
+																					>
+																						<Icon
+																							iconName="MiniExpandMirrored"
+																							className="hover-effect"
+																						/>
+																						<img
+																							style={{
+																								width:
+																									"100%",
 																							}}
-																						>
-																							<Icon
-																								iconName="MiniExpandMirrored"
-																								className="hover-effect"
-																							/>
-																							<img
-																								style={{
-																									width:
-																										"100%",
+																							src={
+																								imagesTable
+																									.table[
+																									photo
+																										.photoID
+																								]
+																							}
+																							className="ortho-img-el"
+																						/>
+																						{this
+																							.selectedPhotoId ===
+																						photo.id ? (
+																							<Dialog
+																								modalProps={{
+																									className:
+																										"photo-dialog",
 																								}}
-																								src={
-																									imagesTable
-																										.table[
-																										photo
-																											.photoID
-																									]
+																								hidden={
+																									false
 																								}
-																								className="ortho-img-el"
-																							/>
-																							{this
-																								.selectedPhotoId ===
-																							photo.id ? (
-																								<Dialog
-																									modalProps={{
-																										className:
-																											"photo-dialog",
+																								onDismiss={() =>
+																									(this.selectedPhotoId =
+																										"")
+																								}
+																							>
+																								<div
+																									style={{
+																										position:
+																											"relative",
 																									}}
-																									hidden={
-																										false
-																									}
-																									onDismiss={() =>
-																										(this.selectedPhotoId =
-																											"")
-																									}
 																								>
-																									<div
+																									<img
 																										style={{
-																											position:
-																												"relative",
+																											width:
+																												"100%",
 																										}}
-																									>
+																										src={
+																											imagesTable
+																												.table[
+																												photo
+																													.photoID
+																											]
+																										}
+																									/>
+																									{this
+																										.overlayWithNext ? (
 																										<img
-																											style={{
-																												width:
-																													"100%",
-																											}}
+																											className="overlay-img"
 																											src={
 																												imagesTable
-																													.table[
-																													photo
-																														.photoID
-																												]
-																											}
-																										/>
-																										{this
-																											.overlayWithNext ? (
-																											<img
-																												className="overlay-img"
-																												src={
-																													imagesTable
-																														.table[
-																														nextVisit
-																															.photos[
-																															photoIndex
-																														]
-																															.photoID
-																													]
-																												}
-																											/>
-																										) : (
-																											""
-																										)}
-																										{this
-																											.overlayWithPrev ? (
-																											<img
-																												className="overlay-img"
-																												src={
-																													imagesTable
-																														.table[
-																														prevVisit
-																															.photos[
-																															photoIndex
-																														]
-																															.photoID
-																													]
-																												}
-																											/>
-																										) : (
-																											""
-																										)}
-																									</div>
-
-																									<DetailsList
-																										compact
-																										items={[
-																											[
-																												<div id="gf-visit">
-																													{this
-																														.expandedField ===
-																													"gf-visit" ? (
-																														<TextField
-																															autoFocus
-																															disabled={
-																																!this
-																																	.canEdit
-																															}
-																															type="number"
-																															label={
-																																text(
-																																	`visit number`
-																																)
-																																	.c
-																															}
-																															value={visit.visitNumber.toString()}
-																															onBlur={() => {
-																																this.expandedField =
-																																	"";
-																															}}
-																															onChange={(
-																																ev,
-																																val
-																															) => {
-																																this.props.orthoCase.visits[
-																																	visitIndex
-																																].visitNumber = num(
-																																	val!
-																																);
-																															}}
-																														/>
-																													) : (
-																														`${
-																															text(
-																																"visit"
-																															)
-																																.c
-																														} #${
-																															visit.visitNumber
-																														}`
-																													)}
-																												</div>,
-																											],
-																											[
-																												<div id="gf-date">
-																													{this
-																														.expandedField ===
-																													"gf-date" ? (
-																														<Dropdown
-																															label={
-																																text(
-																																	`visit date`
-																																)
-																																	.c
-																															}
-																															disabled={
-																																!this
-																																	.canEdit
-																															}
-																															selectedKey={visit.date.toString()}
-																															options={this.patientDoneAppointments.map(
-																																(
-																																	date
-																																) => {
-																																	return {
-																																		key: date.date.toString(),
-																																		text: `${formatDate(
-																																			date.date,
-																																			modules.setting!.getSetting(
-																																				"date_format"
-																																			)
-																																		)} ${
-																																			date.treatmentType
-																																				? `, ${date.treatmentType}`
-																																				: ""
-																																		}`,
-																																	};
-																																}
-																															)}
-																															onChange={(
-																																ev,
-																																newValue
-																															) => {
-																																this.props.orthoCase.visits[
-																																	visitIndex
-																																].date = num(
-																																	newValue!
-																																		.key
-																																);
-																															}}
-																														/>
-																													) : (
-																														`${
-																															text(
-																																"date"
-																															)
-																																.c
-																														}: ${formatDate(
-																															visit.date,
-																															modules.setting!.getSetting(
-																																"date_format"
-																															)
-																														)}`
-																													)}
-																												</div>,
-																											],
-																											[
-																												<div id="gf-appliance">
-																													{this
-																														.expandedField ===
-																													"gf-appliance" ? (
-																														<TextField
-																															autoFocus
-																															label={
-																																text(
-																																	`appliance`
-																																)
-																																	.c
-																															}
-																															value={
-																																visit.appliance
-																															}
-																															disabled={
-																																!this
-																																	.canEdit
-																															}
-																															onBlur={() => {
-																																this.expandedField =
-																																	"";
-																															}}
-																															multiline
-																															onChange={(
-																																ev,
-																																val
-																															) => {
-																																this.props.orthoCase.visits[
-																																	visitIndex
-																																].appliance = val!;
-																															}}
-																														/>
-																													) : (
-																														`${
-																															text(
-																																"appliance"
-																															)
-																																.c
-																														}: ${
-																															visit.appliance
-																																? visit.appliance
-																																: text(
-																																		"no appliance info"
-																																  )
-																																		.c
-																														}`
-																													)}
-																												</div>,
-																											],
-																											[
-																												<div id="gf-comment">
-																													{this
-																														.expandedField ===
-																													"gf-comment" ? (
-																														<TextField
-																															autoFocus
-																															label={
-																																text(
-																																	`comment`
-																																)
-																																	.c
-																															}
-																															disabled={
-																																!this
-																																	.canEdit
-																															}
-																															value={
-																																photo.comment
-																															}
-																															onBlur={() => {
-																																this.expandedField =
-																																	"";
-																															}}
-																															multiline
-																															onChange={(
-																																ev,
-																																val
-																															) => {
-																																this.props.orthoCase.visits[
-																																	visitIndex
-																																].photos[
-																																	photoIndex
-																																].comment = val!;
-																															}}
-																														/>
-																													) : (
-																														`${
-																															text(
-																																"comment"
-																															)
-																																.c
-																														}: ${
-																															photo.comment
-																																? photo.comment
-																																: text(
-																																		"no comment on this photo"
-																																  )
-																																		.c
-																														}`
-																													)}
-																												</div>,
-																											],
-																										]}
-																										isHeaderVisible={
-																											false
-																										}
-																										selectionMode={
-																											SelectionMode.none
-																										}
-																										onActiveItemChanged={(
-																											row
-																										) => {
-																											this.expandedField =
-																												row[0].props.id;
-																										}}
-																									/>
-																									<CommandBar
-																										items={[
-																											{
-																												key:
-																													"overlay prev",
-																												text: text(
-																													"overlay prev"
-																												)
-																													.c,
-																												iconProps: {
-																													iconName:
-																														"MapLayers",
-																												},
-																												className: this
-																													.overlayWithPrev
-																													? "active-button"
-																													: undefined,
-																												onClick: () => {
-																													this.overlayWithPrev = !this
-																														.overlayWithPrev;
-																												},
-																												hidden: !imagesTable
-																													.table[
-																													prevVisit
-																														.photos[
-																														photoIndex
-																													]
-																														.photoID
-																												],
-																											},
-																											{
-																												key:
-																													"overlay next",
-																												text: text(
-																													"overlay next"
-																												)
-																													.c,
-																												iconProps: {
-																													iconName:
-																														"MapLayers",
-																												},
-																												className: this
-																													.overlayWithNext
-																													? "active-button"
-																													: undefined,
-																												onClick: () => {
-																													this.overlayWithNext = !this
-																														.overlayWithNext;
-																												},
-																												hidden: !imagesTable
 																													.table[
 																													nextVisit
 																														.photos[
 																														photoIndex
 																													]
 																														.photoID
-																												],
-																											},
-																										]}
-																										farItems={[
-																											{
-																												key:
-																													"delete photo",
-																												text: text(
-																													"delete"
-																												)
-																													.c,
-																												iconProps: {
-																													iconName:
-																														"trash",
-																												},
-																												disabled: !this
-																													.canEdit,
-																												onClick: () => {
-																													this.removeImage(
-																														this
-																															.props
-																															.orthoCase
-																															.visits[
-																															visitIndex
-																														]
-																															.photos[
-																															photoIndex
-																														]
-																															.photoID
-																													);
-																													this.props.orthoCase.visits[
-																														visitIndex
-																													].photos[
+																												]
+																											}
+																										/>
+																									) : (
+																										""
+																									)}
+																									{this
+																										.overlayWithPrev ? (
+																										<img
+																											className="overlay-img"
+																											src={
+																												imagesTable
+																													.table[
+																													prevVisit
+																														.photos[
 																														photoIndex
-																													] = new Photo();
-																													this.selectedPhotoId =
-																														"";
-																												},
+																													]
+																														.photoID
+																												]
+																											}
+																										/>
+																									) : (
+																										""
+																									)}
+																								</div>
+
+																								<DetailsList
+																									compact
+																									items={[
+																										[
+																											<div id="gf-visit">
+																												{this
+																													.expandedField ===
+																												"gf-visit" ? (
+																													<TextField
+																														autoFocus
+																														disabled={
+																															!this
+																																.canEdit
+																														}
+																														type="number"
+																														label={
+																															text(
+																																`visit number`
+																															)
+																																.c
+																														}
+																														value={visit.visitNumber.toString()}
+																														onBlur={() => {
+																															this.expandedField =
+																																"";
+																														}}
+																														onChange={(
+																															ev,
+																															val
+																														) => {
+																															this.props.orthoCase.visits[
+																																visitIndex
+																															].visitNumber = num(
+																																val!
+																															);
+																														}}
+																													/>
+																												) : (
+																													`${
+																														text(
+																															"visit"
+																														)
+																															.c
+																													} #${
+																														visit.visitNumber
+																													}`
+																												)}
+																											</div>,
+																										],
+																										[
+																											<div id="gf-date">
+																												{this
+																													.expandedField ===
+																												"gf-date" ? (
+																													<Dropdown
+																														label={
+																															text(
+																																`visit date`
+																															)
+																																.c
+																														}
+																														disabled={
+																															!this
+																																.canEdit
+																														}
+																														selectedKey={visit.date.toString()}
+																														options={this.patientDoneAppointments.map(
+																															(
+																																date
+																															) => {
+																																return {
+																																	key: date.date.toString(),
+																																	text: `${formatDate(
+																																		date.date,
+																																		modules.setting!.getSetting(
+																																			"date_format"
+																																		)
+																																	)} ${
+																																		date.treatmentType
+																																			? `, ${date.treatmentType}`
+																																			: ""
+																																	}`,
+																																};
+																															}
+																														)}
+																														onChange={(
+																															ev,
+																															newValue
+																														) => {
+																															this.props.orthoCase.visits[
+																																visitIndex
+																															].date = num(
+																																newValue!
+																																	.key
+																															);
+																														}}
+																													/>
+																												) : (
+																													`${
+																														text(
+																															"date"
+																														)
+																															.c
+																													}: ${formatDate(
+																														visit.date,
+																														modules.setting!.getSetting(
+																															"date_format"
+																														)
+																													)}`
+																												)}
+																											</div>,
+																										],
+																										[
+																											<div id="gf-appliance">
+																												{this
+																													.expandedField ===
+																												"gf-appliance" ? (
+																													<TextField
+																														autoFocus
+																														label={
+																															text(
+																																`appliance`
+																															)
+																																.c
+																														}
+																														value={
+																															visit.appliance
+																														}
+																														disabled={
+																															!this
+																																.canEdit
+																														}
+																														onBlur={() => {
+																															this.expandedField =
+																																"";
+																														}}
+																														multiline
+																														onChange={(
+																															ev,
+																															val
+																														) => {
+																															this.props.orthoCase.visits[
+																																visitIndex
+																															].appliance = val!;
+																														}}
+																													/>
+																												) : (
+																													`${
+																														text(
+																															"appliance"
+																														)
+																															.c
+																													}: ${
+																														visit.appliance
+																															? visit.appliance
+																															: text(
+																																	"no appliance info"
+																															  )
+																																	.c
+																													}`
+																												)}
+																											</div>,
+																										],
+																										[
+																											<div id="gf-comment">
+																												{this
+																													.expandedField ===
+																												"gf-comment" ? (
+																													<TextField
+																														autoFocus
+																														label={
+																															text(
+																																`comment`
+																															)
+																																.c
+																														}
+																														disabled={
+																															!this
+																																.canEdit
+																														}
+																														value={
+																															photo.comment
+																														}
+																														onBlur={() => {
+																															this.expandedField =
+																																"";
+																														}}
+																														multiline
+																														onChange={(
+																															ev,
+																															val
+																														) => {
+																															this.props.orthoCase.visits[
+																																visitIndex
+																															].photos[
+																																photoIndex
+																															].comment = val!;
+																														}}
+																													/>
+																												) : (
+																													`${
+																														text(
+																															"comment"
+																														)
+																															.c
+																													}: ${
+																														photo.comment
+																															? photo.comment
+																															: text(
+																																	"no comment on this photo"
+																															  )
+																																	.c
+																													}`
+																												)}
+																											</div>,
+																										],
+																									]}
+																									isHeaderVisible={
+																										false
+																									}
+																									selectionMode={
+																										SelectionMode.none
+																									}
+																									onActiveItemChanged={(
+																										row
+																									) => {
+																										this.expandedField =
+																											row[0].props.id;
+																									}}
+																								/>
+																								<CommandBar
+																									items={[
+																										{
+																											key:
+																												"overlay prev",
+																											text: text(
+																												"overlay prev"
+																											)
+																												.c,
+																											iconProps: {
+																												iconName:
+																													"MapLayers",
 																											},
-																										]}
-																									/>
-																								</Dialog>
-																							) : (
-																								""
-																							)}
-																						</div>
-																					) : (
-																						<Icon
-																							iconName="sync"
-																							className="rotate"
-																						/>
-																					)
+																											className: this
+																												.overlayWithPrev
+																												? "active-button"
+																												: undefined,
+																											onClick: () => {
+																												this.overlayWithPrev = !this
+																													.overlayWithPrev;
+																											},
+																											hidden: !imagesTable
+																												.table[
+																												prevVisit
+																													.photos[
+																													photoIndex
+																												]
+																													.photoID
+																											],
+																										},
+																										{
+																											key:
+																												"overlay next",
+																											text: text(
+																												"overlay next"
+																											)
+																												.c,
+																											iconProps: {
+																												iconName:
+																													"MapLayers",
+																											},
+																											className: this
+																												.overlayWithNext
+																												? "active-button"
+																												: undefined,
+																											onClick: () => {
+																												this.overlayWithNext = !this
+																													.overlayWithNext;
+																											},
+																											hidden: !imagesTable
+																												.table[
+																												nextVisit
+																													.photos[
+																													photoIndex
+																												]
+																													.photoID
+																											],
+																										},
+																									]}
+																									farItems={[
+																										{
+																											key:
+																												"delete photo",
+																											text: text(
+																												"delete"
+																											)
+																												.c,
+																											iconProps: {
+																												iconName:
+																													"trash",
+																											},
+																											disabled: !this
+																												.canEdit,
+																											onClick: () => {
+																												this.removeImage(
+																													this
+																														.props
+																														.orthoCase
+																														.visits[
+																														visitIndex
+																													]
+																														.photos[
+																														photoIndex
+																													]
+																														.photoID
+																												);
+																												this.props.orthoCase.visits[
+																													visitIndex
+																												].photos[
+																													photoIndex
+																												] = new Photo();
+																												this.selectedPhotoId =
+																													"";
+																											},
+																										},
+																									]}
+																								/>
+																							</Dialog>
+																						) : (
+																							""
+																						)}
+																					</div>
 																				) : (
-																					<PickAndUploadComponent
-																						{...{
-																							crop: true,
-																							allowMultiple: false,
-																							accept:
-																								fileTypes.image,
-																							prevSrc:
-																								imagesTable
-																									.table[
-																									prevVisit
-																										.photos[
-																										photoIndex
-																									]
-																										.photoID
-																								],
-																							disabled: !this
-																								.canEdit,
-																							onFinish: (
-																								e
-																							) => {
-																								if (
+																					<Icon
+																						iconName="sync"
+																						className="rotate"
+																					/>
+																				)
+																			) : (
+																				<PickAndUploadComponent
+																					{...{
+																						crop: true,
+																						allowMultiple: false,
+																						accept:
+																							fileTypes.image,
+																						prevSrc:
+																							imagesTable
+																								.table[
+																								prevVisit
+																									.photos[
+																									photoIndex
+																								]
+																									.photoID
+																							],
+																						disabled: !this
+																							.canEdit,
+																						onFinish: (
+																							e
+																						) => {
+																							if (
+																								e[0]
+																							) {
+																								this.props.orthoCase.visits[
+																									visitIndex
+																								].photos[
+																									photoIndex
+																								].photoID =
+																									e[0];
+																								imagesTable.fetchImage(
 																									e[0]
-																								) {
-																									this.props.orthoCase.visits[
-																										visitIndex
-																									].photos[
-																										photoIndex
-																									].photoID =
-																										e[0];
-																									imagesTable.fetchImage(
-																										e[0]
-																									);
-																								}
-																							},
-																							onStartLoading: () => {
-																								this.uploadingPhotoID =
-																									photo.id;
-																							},
-																							onFinishLoading: () => {
-																								this.uploadingPhotoID =
-																									"";
-																							},
-																							targetDir: `${ORTHO_RECORDS_DIR}/${this.props.orthoCase._id}`,
-																						}}
-																					>
-																						<TooltipHost
-																							content={
-																								text(
-																									"add photo"
-																								)
-																									.c
+																								);
 																							}
-																						>
-																							<IconButton
-																								iconProps={{
-																									iconName:
-																										"Photo2Add",
-																								}}
-																								className="clickable-icon add-photo"
-																								disabled={
-																									!this
-																										.canEdit
-																								}
-																							/>
-																						</TooltipHost>
-																					</PickAndUploadComponent>
-																				)}
-																			</td>
-																		);
-																	}
-																)}
-																<td>
-																	<TooltipHost
-																		content={
-																			text(
-																				"delete visit"
-																			).c
-																		}
-																	>
-																		<IconButton
-																			className="clickable-icon delete-visit"
-																			key={
-																				visit.id
-																			}
-																			disabled={
-																				!this
-																					.canEdit
-																			}
-																			iconProps={{
-																				iconName:
-																					"DeleteRows",
-																			}}
-																			onClick={() => {
-																				core.modals.newModal(
-																					{
-																						text: text(
-																							"this visit data will be deleted along with all photos and notes"
-																						)
-																							.c,
-																						onConfirm: () => {
-																							const deletedVisit = this.props.orthoCase.visits.splice(
-																								visitIndex,
-																								1
-																							);
-																							deletedVisit[0].photos.forEach(
-																								(
-																									photo
-																								) =>
-																									this.removeImage(
-																										photo.photoID
-																									)
-																							);
 																						},
-																						showCancelButton: true,
-																						showConfirmButton: true,
-																						id: Math.random(),
-																					}
-																				);
-																			}}
-																		/>
-																	</TooltipHost>
-																</td>
-															</tr>,
-															<tr
-																key={
-																	visit.id +
-																	"days"
-																}
-															>
-																<td colSpan={7}>
-																	{sortedVisits[
-																		visitIndex +
-																			1
-																	] ? (
-																		<i className="days-num">
-																			{Math.round(
-																				(nextVisit.date -
-																					visit.date) /
-																					day
-																			)}{" "}
-																			{text(
-																				"days"
+																						onStartLoading: () => {
+																							this.uploadingPhotoID =
+																								photo.id;
+																						},
+																						onFinishLoading: () => {
+																							this.uploadingPhotoID =
+																								"";
+																						},
+																						targetDir: `${ORTHO_RECORDS_DIR}/${this.props.orthoCase._id}`,
+																					}}
+																				>
+																					<TooltipHost
+																						content={
+																							text(
+																								"add photo"
+																							)
+																								.c
+																						}
+																					>
+																						<IconButton
+																							iconProps={{
+																								iconName:
+																									"Photo2Add",
+																							}}
+																							className="clickable-icon add-photo"
+																							disabled={
+																								!this
+																									.canEdit
+																							}
+																						/>
+																					</TooltipHost>
+																				</PickAndUploadComponent>
 																			)}
-																		</i>
-																	) : (
-																		""
-																	)}
-																</td>
-															</tr>,
-														];
-													}
-												)}
-										</tbody>
-									</table>
-								) : (
-									<MessageBar
-										messageBarType={MessageBarType.info}
-									>
-										{
-											text(
-												"no visits recorded yet! add a new visit using the button below"
-											).c
-										}
-									</MessageBar>
-								)}
-								<br />
-								<DefaultButton
-									disabled={!this.canEdit}
-									iconProps={{ iconName: "ExploreContent" }}
-									text={text("add visit").c}
-									onClick={() => {
-										const visitNumber = this.props.orthoCase
-											.visits.length
-											? this.props.orthoCase.visits
-													.slice()
-													.sort(
-														(a, b) =>
-															b.visitNumber -
-															a.visitNumber
-													)[0].visitNumber + 1
-											: 1;
-										this.props.orthoCase.visits.push(
-											new Visit().withVisitNumber(
-												visitNumber
-											)
-										);
-									}}
-								/>
-							</div>
-						) : (
-							<MessageBar messageBarType={MessageBarType.warning}>
-								{
-									text(
-										"a valid dropbox access token is required for this section"
-									).c
-								}
-							</MessageBar>
-						)
+																		</td>
+																	);
+																}
+															)}
+															<td>
+																<TooltipHost
+																	content={
+																		text(
+																			"delete visit"
+																		).c
+																	}
+																>
+																	<IconButton
+																		className="clickable-icon delete-visit"
+																		key={
+																			visit.id
+																		}
+																		disabled={
+																			!this
+																				.canEdit
+																		}
+																		iconProps={{
+																			iconName:
+																				"DeleteRows",
+																		}}
+																		onClick={() => {
+																			core.modals.newModal(
+																				{
+																					text: text(
+																						"this visit data will be deleted along with all photos and notes"
+																					)
+																						.c,
+																					onConfirm: () => {
+																						const deletedVisit = this.props.orthoCase.visits.splice(
+																							visitIndex,
+																							1
+																						);
+																						deletedVisit[0].photos.forEach(
+																							(
+																								photo
+																							) =>
+																								this.removeImage(
+																									photo.photoID
+																								)
+																						);
+																					},
+																					showCancelButton: true,
+																					showConfirmButton: true,
+																					id: Math.random(),
+																				}
+																			);
+																		}}
+																	/>
+																</TooltipHost>
+															</td>
+														</tr>,
+														<tr
+															key={
+																visit.id +
+																"days"
+															}
+														>
+															<td colSpan={7}>
+																{sortedVisits[
+																	visitIndex +
+																		1
+																] ? (
+																	<i className="days-num">
+																		{Math.round(
+																			(nextVisit.date -
+																				visit.date) /
+																				day
+																		)}{" "}
+																		{text(
+																			"days"
+																		)}
+																	</i>
+																) : (
+																	""
+																)}
+															</td>
+														</tr>,
+													];
+												}
+											)}
+									</tbody>
+								</table>
+							) : (
+								<MessageBar
+									messageBarType={MessageBarType.info}
+								>
+									{
+										text(
+											"no visits recorded yet! add a new visit using the button below"
+										).c
+									}
+								</MessageBar>
+							)}
+							<br />
+							<DefaultButton
+								disabled={!this.canEdit}
+								iconProps={{ iconName: "ExploreContent" }}
+								text={text("add visit").c}
+								onClick={() => {
+									const visitNumber = this.props.orthoCase
+										.visits.length
+										? this.props.orthoCase.visits
+												.slice()
+												.sort(
+													(a, b) =>
+														b.visitNumber -
+														a.visitNumber
+												)[0].visitNumber + 1
+										: 1;
+									this.props.orthoCase.visits.push(
+										new Visit().withVisitNumber(visitNumber)
+									);
+								}}
+							/>
+						</div>
 					) : (
 						<MessageBar messageBarType={MessageBarType.warning}>
 							{
 								text(
-									"you can not access orthodontic records while offline"
+									"files server is offline, make sure you're online and connected"
 								).c
 							}
 						</MessageBar>

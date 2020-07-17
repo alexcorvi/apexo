@@ -43,7 +43,7 @@ export class Status {
 	@observable step: LoginStep = LoginStep.initial;
 
 	@observable isOnline = {
-		dropbox: false,
+		files: false,
 		server: false,
 		client: false,
 	};
@@ -197,11 +197,10 @@ export class Status {
 			this.initialLoadingIndicatorText =
 				"checking files server connectivity";
 			if (modules.setting) {
-				this.isOnline.dropbox =
-					modules.setting.getSetting("dropbox_accessToken") ===
-					"direct"
+				this.isOnline.files =
+					modules.setting.getSetting("dropbox_accessToken") === "demo"
 						? true
-						: await files.status();
+						: await files().status();
 			}
 		} catch (e) {}
 		this.currentlyValidating = null;
@@ -214,7 +213,7 @@ export class Status {
 		this.isOnline = {
 			server: false,
 			client: false,
-			dropbox: false,
+			files: false,
 		};
 		this.loginType = "";
 	}

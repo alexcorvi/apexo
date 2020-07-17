@@ -13,7 +13,7 @@ export class OrthoCases extends Store<OrthoCaseSchema, OrthoCase> {
 			const visit = orthoCase.visits[x];
 			for (let y = 0; y < visit.photos.length; y++) {
 				const photo = visit.photos[y];
-				await files.remove(photo.photoID);
+				await files().remove(photo.photoID);
 			}
 		}
 	}

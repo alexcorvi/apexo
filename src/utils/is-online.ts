@@ -22,7 +22,6 @@ export async function checkServer(
 		http.open("GET", server + "/_session", true);
 		http.onreadystatechange = function () {
 			if (http.readyState === 4) {
-				console.log(http.status, " // for server ", server);
 				if (http.status > 199 && http.status < 300) {
 					resolve(
 						JSON.parse(http.response).userCtx ||

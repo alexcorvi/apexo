@@ -15,7 +15,7 @@ export class Patients extends Store<PatientSchema, Patient> {
 		// delete photos
 		for (let index = 0; index < patient.gallery.length; index++) {
 			const fileID = patient.gallery[index];
-			await files.remove(fileID);
+			await files().remove(fileID);
 		}
 
 		// delete orthodontic case

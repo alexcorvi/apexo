@@ -293,7 +293,7 @@ export function loadDemoData() {
 					labworks: modules.LabworkSchema[];
 					prescriptions: modules.PrescriptionItemSchema[];
 				} = JSON.parse(Http.responseText);
-				modules.setting!.setSetting("dropbox_accessToken", "direct");
+				modules.setting!.setSetting("dropbox_accessToken", "demo");
 				modules.setting!.setSetting("module_labwork", "enabled");
 				modules.setting!.setSetting("module_orthodontics", "enabled");
 				modules.setting!.setSetting("module_prescriptions", "enabled");
