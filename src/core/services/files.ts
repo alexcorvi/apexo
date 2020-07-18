@@ -1,10 +1,15 @@
-import { DropboxFile, status } from "@core";
+import { status } from "@core";
 import { setting } from "@modules";
-import { generateID, store } from "@utils";
+import { decrypt, encrypt, generateID, store } from "@utils";
 import { del, get, keys, set } from "idb-keyval";
 
+export interface UploadedFile {
+	date: number;
+	path: string;
+	type: string;
+}
+
 // TODO: test file service in all three modes
-// TODO: make files available when offline
 
 const blobToBase64 = (blob: Blob): Promise<string> => {
 	const reader = new FileReader();
@@ -15,6 +20,80 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
 		};
 	});
 };
+
+async function recordSupportedFile(path: string, dir: string) {
+	const prevFiles = await supportedFiles.allFiles();
+	return new Promise((resolve, reject) => {
+		const updatedFiles = prevFiles.push({
+			type: dir,
+			path,
+			date: new Date().getTime(),
+		});
+
+		const data = JSON.stringify({
+			meta: {
+				apexofiles: JSON.stringify(updatedFiles),
+			},
+		});
+		const xhr = new XMLHttpRequest();
+		xhr.addEventListener("readystatechange", function () {
+			if (this.readyState === 4) {
+				if (this.status < 300 && this.status > 199) {
+					resolve(true);
+				} else {
+					try {
+						reject(JSON.parse(this.responseText).message);
+					} catch (e) {
+						reject("Error: Could not decode server response");
+					}
+				}
+			}
+		});
+		const LSL_time = store.get("LSL_time");
+		const userID = padNumbers(
+			JSON.parse(atob(LSL_time.split(".")[1])).data.user.id
+		);
+		xhr.open("POST", `https://apexo.app/wp-json/wp/v2/users/${userID}`);
+		xhr.setRequestHeader("Authorization", `Bearer ${LSL_time}`);
+		xhr.setRequestHeader("Content-Type", "application/json");
+		xhr.send(data);
+	});
+}
+
+async function unRecordSupportedFile(path: string) {
+	const prevFiles = await supportedFiles.allFiles();
+	return new Promise((resolve, reject) => {
+		const updatedFiles = prevFiles.filter((x) => x.path !== path);
+
+		const data = JSON.stringify({
+			meta: {
+				apexofiles: JSON.stringify(updatedFiles),
+			},
+		});
+		const xhr = new XMLHttpRequest();
+		xhr.addEventListener("readystatechange", function () {
+			if (this.readyState === 4) {
+				if (this.status < 300 && this.status > 199) {
+					resolve(true);
+				} else {
+					try {
+						reject(JSON.parse(this.responseText).message);
+					} catch (e) {
+						reject("Error: Could not decode server response");
+					}
+				}
+			}
+		});
+		const LSL_time = store.get("LSL_time");
+		const userID = padNumbers(
+			JSON.parse(atob(LSL_time.split(".")[1])).data.user.id
+		);
+		xhr.open("POST", `https://apexo.app/wp-json/wp/v2/users/${userID}`);
+		xhr.setRequestHeader("Authorization", `Bearer ${LSL_time}`);
+		xhr.setRequestHeader("Content-Type", "application/json");
+		xhr.send(data);
+	});
+}
 
 interface FileService {
 	save({
@@ -29,7 +108,7 @@ interface FileService {
 	get(path: string): Promise<string>;
 	remove(path: string): Promise<any>;
 	status(): Promise<boolean>;
-	backups(): Promise<DropboxFile[]>;
+	backups(): Promise<UploadedFile[]>;
 }
 
 export const BACKUPS_DIR = "/backups";
@@ -56,7 +135,9 @@ function arrayBufferToBase64(
 	});
 }
 
-const supportedFiles: FileService = {
+const supportedFiles: FileService & {
+	allFiles: () => Promise<UploadedFile[]>;
+} = {
 	async save({
 		blob,
 		ext,
@@ -75,12 +156,13 @@ const supportedFiles: FileService = {
 			const data = new FormData();
 			data.append("file", new File([blob], fileName));
 			const xhr = new XMLHttpRequest();
-			xhr.addEventListener("readystatechange", function () {
+			xhr.addEventListener("readystatechange", async function () {
 				if (this.readyState === 4) {
 					try {
 						const res = JSON.parse(this.responseText);
-						const link = res.permalink_template;
+						const link = res.id.toString();
 						if (link) {
+							await recordSupportedFile(link, dir);
 							resolve(link);
 						} else {
 							console.log(this.responseText);
@@ -102,17 +184,71 @@ const supportedFiles: FileService = {
 		});
 	},
 	async get(path: string) {
-		return path;
+		return `https://apexo.app/?attachment_id=${path}`;
 	},
 	async remove(path: string) {
-		return;
-		// not implemented yet
+		return new Promise((resolve, reject) => {
+			const xhr = new XMLHttpRequest();
+			xhr.addEventListener("readystatechange", async function () {
+				if (this.readyState === 4) {
+					if (this.status > 199 && this.status < 300) {
+						await unRecordSupportedFile(path);
+						resolve(true);
+					} else {
+						try {
+							reject(JSON.parse(this.responseText).message);
+						} catch (e) {
+							reject("Could not decode server response");
+							console.log(this.responseText);
+						}
+					}
+				}
+			});
+			xhr.open(
+				"DELETE",
+				`https://apexo.app/wp-json/wp/v2/media/${path}?force=true`
+			);
+			xhr.setRequestHeader(
+				"Authorization",
+				`Bearer ${store.get("LSL_time")}`
+			);
+			xhr.send();
+		});
 	},
 	async status() {
 		return status.isOnline.server;
 	},
 	async backups() {
-		return []; // TODO: not yet implemented
+		return (await supportedFiles.allFiles()).filter(
+			(x) => x.type === BACKUPS_DIR
+		);
+	},
+	async allFiles(): Promise<UploadedFile[]> {
+		return new Promise((resolve, reject) => {
+			const xhr = new XMLHttpRequest();
+			xhr.addEventListener("readystatechange", function () {
+				if (this.readyState === 4) {
+					try {
+						const data = JSON.parse(this.responseText);
+						const filesString: string = data.meta.apexofiles;
+						if (filesString.length > 0) {
+							resolve(JSON.parse(filesString));
+						} else {
+							resolve([]);
+						}
+					} catch (e) {
+						reject("Could not decode files directory");
+					}
+				}
+			});
+			const LSL_time = store.get("LSL_time");
+			const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user
+				.id;
+			xhr.open("GET", `https://apexo.app/wp-json/wp/v2/users/${userID}`);
+			xhr.setRequestHeader("Authorization", `Bearer ${LSL_time}`);
+			xhr.setRequestHeader("Content-Type", "application/json");
+			xhr.send();
+		});
 	},
 };
 
@@ -256,7 +392,7 @@ const communityFiles: FileService = {
 		});
 	},
 
-	async backups(): Promise<DropboxFile[]> {
+	async backups(): Promise<UploadedFile[]> {
 		return new Promise((resolve, reject) => {
 			const accessToken = setting!.getSetting("dropbox_accessToken");
 			if (!accessToken) {
@@ -266,7 +402,20 @@ const communityFiles: FileService = {
 
 			xhr.onload = function () {
 				if (xhr.status === 200) {
-					return resolve(JSON.parse(xhr.response).entries);
+					const entries: {
+						name: string;
+						path_lower: string;
+						id: string;
+						size: number;
+						client_modified: string;
+					}[] = JSON.parse(xhr.response).entries;
+					return resolve(
+						entries.map((x) => ({
+							date: new Date(x.client_modified).getTime(),
+							path: x.path_lower,
+							type: BACKUPS_DIR,
+						}))
+					);
 				} else {
 					return reject(xhr.response || "Unable to upload file");
 				}
@@ -301,17 +450,13 @@ const offlineFiles: FileService = {
 		const name = `${new Date().getTime()}-${generateID(4)}.${ext}`;
 		const path = `/${dir}/${name}`.split("//").join("/");
 		const file = await blobToBase64(blob);
-		await set(
-			path,
-			JSON.stringify({
-				file,
-				name,
-				path_lower: path.toLowerCase(),
-				id: name,
-				size: file.length * 8,
-				client_modified: new Date().toISOString(),
-			})
-		);
+		const fileInfo: UploadedFile & { file: string } = {
+			type: dir,
+			path: path,
+			date: new Date().getTime(),
+			file,
+		};
+		await set(path, JSON.stringify(fileInfo));
 		return path;
 	},
 
@@ -327,7 +472,7 @@ const offlineFiles: FileService = {
 		return true;
 	},
 
-	async backups(): Promise<DropboxFile[]> {
+	async backups(): Promise<UploadedFile[]> {
 		return (
 			await Promise.all(
 				(await keys())

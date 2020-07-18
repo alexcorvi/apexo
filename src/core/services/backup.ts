@@ -3,14 +3,6 @@ import { decode, encode, generateID, second } from "@utils";
 import { saveAs } from "file-saver";
 const ext = "apx";
 
-export interface DropboxFile {
-	name: string;
-	path_lower: string;
-	id: string;
-	size: number;
-	client_modified: string;
-}
-
 export interface DatabaseDump {
 	dbName: string;
 	data: any[];
