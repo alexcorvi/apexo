@@ -463,6 +463,13 @@ export const zhCn: typeof raw = {
 	"invalid file": "无效文件",
 	"invalid pin provided": "提供的密码无效",
 	"restoration cancelled": "恢复已取消",
+
+	/**
+	 * backup actions
+	 */
+	"days ago": "几天前",
+	renew: "更新",
+	download: "下载",
 };
 
 export default zhCn;

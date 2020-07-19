@@ -484,6 +484,13 @@ export const de: typeof raw = {
 	"invalid file": "ungültige datei",
 	"invalid pin provided": "ungültiger pin bereitgestellt",
 	"restoration cancelled": "restaurierung abgebrochen",
+
+	/**
+	 * backup actions
+	 */
+	"days ago": "vor tagen",
+	renew: "erneuern",
+	download: "herunterladen",
 };
 
 export default de;

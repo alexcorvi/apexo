@@ -475,6 +475,13 @@ export const es: typeof raw = {
 	received: "recibido",
 	"not received": "no recibido",
 	"received date": "fecha de recibo",
+
+	/**
+	 * backup actions
+	 */
+	"days ago": "hace días",
+	renew: "renovar",
+	download: "descargar",
 };
 
 export default es;

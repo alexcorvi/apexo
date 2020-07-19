@@ -564,6 +564,13 @@ export const ar: typeof raw = {
 	received: "مستلم",
 	"not received": "غير مستلم",
 	"received date": "تاريخ الاستلام",
+
+	/**
+	 * backup actions
+	 */
+	"days ago": "أيام مضت",
+	renew: "تجديد",
+	download: "تنزيل",
 };
 
 export default ar;

@@ -546,4 +546,11 @@ export const raw = {
 	"invalid file": "",
 	"invalid pin provided": "",
 	"restoration cancelled": "",
+
+	/**
+	 * backup actions
+	 */
+	"days ago": "",
+	renew: "",
+	download: "",
 };
