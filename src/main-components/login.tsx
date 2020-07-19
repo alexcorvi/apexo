@@ -52,16 +52,20 @@ export class LoginView extends React.Component {
 			return;
 		}
 		this.errorMessage = "";
-		const result = await loginService().login(
-			this.usernameFieldValue,
-			this.passwordFieldValue,
-			this.serverFieldValue
-		);
-		if (result !== true) {
-			this.errorMessage = result;
+		this.disableInputs = true;
+		try {
+			const result = await loginService().login(
+				this.usernameFieldValue,
+				this.passwordFieldValue,
+				this.serverFieldValue
+			);
+			if (result !== true) {
+				this.errorMessage = result;
+			}
+		} catch (error) {
+			this.errorMessage = "Error occurred while trying to login";
 		}
-
-		// TODO: disable login buttons when trying to login
+		this.disableInputs = false;
 	}
 
 	loginSupported() {
