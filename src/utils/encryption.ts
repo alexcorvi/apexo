@@ -1,22 +1,16 @@
-import { decode, encode, num } from "@utils";
+import { decode, encode } from "./base64";
+import * as sjcl from "sjcl";
 
-const salt = location.host
+export const defaultSecret = location.host
 	.split("")
 	.map((x) => x.charCodeAt(0))
-	.reduce((a, b) => a + b, 0);
+	.reduce((a, b) => a + b, 0)
+	.toString();
 
-export function encrypt(str: string, specificSalt?: number) {
-	return encode(
-		str
-			.split("")
-			.map((x) => x.charCodeAt(0) + (specificSalt || salt))
-			.join(",")
-	);
+export function encrypt(str: string, secret?: string) {
+	return encode((sjcl as any).encrypt(secret || defaultSecret, str));
 }
 
-export function decrypt(str: string, specificSalt?: number) {
-	return decode(str)
-		.split(",")
-		.map((x) => String.fromCharCode(num(x) - (specificSalt || salt)))
-		.join("");
+export function decrypt(str: string, secret?: string) {
+	return sjcl.decrypt(secret || defaultSecret, decode(str));
 }

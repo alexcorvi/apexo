@@ -26,6 +26,7 @@
 -   Bug fix: Fixed scrolling to top when selecting an item in a module
 -   Bug fix: Fixed slow module registration
 -   Bug fix: dental chart is not updating
+-   Bug fix: fixed an issue in messages where it becomes behind content
 -   And many many more...
 
 > P.S. This version was such a huge update that I actually lost track of all the bugs and enhancements that was done
