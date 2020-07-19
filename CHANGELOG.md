@@ -2,6 +2,7 @@
 
 ### 4.0.0
 
+-   New feature: Supported version
 -   New feature: hotlinking inside modules and panels is now supported
 -   New feature: Statistics now showing a list of the appointments included
 -   New feature: New module Labworks to manage and track cases sent to laboratories
@@ -20,6 +21,8 @@
 -   Enhancement: Added loading indicators for actions defined in settings menu.
 -   Enhancement: Unified looks and feels across all modules and panels.
 -   Enhancement: Better MobX & PouchDB integration, the old one was buggy and slow, now using PouchX.
+-   Enhancement: Better encryption alogorthim (SJCL).
+-   Enhancement: More simplified and enhanced backup & restore functionality
 -   Bug fix: Fixed faulty first sync
 -   Bug fix: Fixed when creating appointments it doesn't open
 -   Bug fix: Fixed messy scrolling
