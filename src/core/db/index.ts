@@ -18,7 +18,7 @@ const methods: {
 	resync: [],
 	compact: [],
 	destroy: [],
-	logout: []
+	logout: [],
 };
 
 export async function dbAction(action: keyof typeof methods, dbName?: string) {
@@ -33,7 +33,7 @@ export async function dbAction(action: keyof typeof methods, dbName?: string) {
 				await singleAction();
 			}
 		} else {
-			await Promise.all(methods[action].map(x => x()));
+			await Promise.all(methods[action].map((x) => x()));
 		}
 	} catch (e) {
 		console.log(e);
@@ -76,7 +76,7 @@ function compressDB(db: PouchDB.Database) {
 				_id: document._id,
 				_rev: document._rev,
 				_revisions: document._revisions,
-				_lz: ""
+				_lz: "",
 			};
 			delete document._id;
 			delete document._rev;
@@ -93,7 +93,7 @@ function compressDB(db: PouchDB.Database) {
 			document._rev = result._rev;
 			document._revisions = result._revisions;
 			return document;
-		}
+		},
 	});
 }
 
@@ -103,8 +103,12 @@ export function encryptDB(db: PouchDB.Database, secret: string) {
 
 export async function connect<S>(dbName: string) {
 	const PouchDB = await importPouchDB();
-
-	const unique = Md5.hashStr(store.get("LSL_hash")).toString();
+	let unique = Md5.hashStr(store.get("LSL_hash")).toString();
+	if (status.version === "supported") {
+		const LSL_time = store.get("LSL_time");
+		const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user.id;
+		unique = userID;
+	}
 	const localName = dbName + "_" + Md5.hashStr(status.server);
 	const localDatabase = new PouchDB<S>(localName, { auto_compaction: true });
 	compressDB(localDatabase);
@@ -115,8 +119,8 @@ export async function connect<S>(dbName: string) {
 		fetch: (url, opts) =>
 			PouchDB.fetch(url, {
 				...opts,
-				credentials: "include"
-			})
+				credentials: "include",
+			}),
 	});
 	remoteDBRefs.push(remoteDatabase);
 
@@ -134,7 +138,7 @@ export async function connect<S>(dbName: string) {
 	methods.resync.push(async () => {
 		if (remoteDatabase) {
 			await localDatabase.sync(remoteDatabase, {
-				batch_size: 50
+				batch_size: 50,
 			});
 		}
 	});
