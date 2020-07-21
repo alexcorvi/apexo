@@ -1,8 +1,7 @@
-import { hour, minute } from "../utils/date";
 import { getRandomTagType } from "@common-components";
 import { Label } from "@modules";
 import * as modules from "@modules";
-import { day } from "@utils";
+import { day, hour, minute } from "@utils";
 import { config, Store } from "pouchx";
 
 function randomInRange(minimum: number, maximum: number) {
