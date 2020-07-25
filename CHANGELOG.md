@@ -9,6 +9,7 @@
 -   New feature: Book appointments from the calendar module
 -   New feature: Improved calendar to show more information about the appointments
 -   New feature: virtual file system for offline version
+-   New feature: compressed data inside indexeddb
 -   Enhancement: Almost all information viewed are clickable and hotlinked to the relative panels
 -   Enhancement: Showing more information at the table views
 -   Enhancement: Better user panel
@@ -22,6 +23,7 @@
 -   Enhancement: Unified looks and feels across all modules and panels.
 -   Enhancement: Better MobX & PouchDB integration, the old one was buggy and slow, now using PouchX.
 -   Enhancement: Better encryption alogorthim (SJCL).
+-   Enhancement: Database files are smaller & encrypted.
 -   Enhancement: More simplified and enhanced backup & restore functionality
 -   Bug fix: Fixed faulty first sync
 -   Bug fix: Fixed when creating appointments it doesn't open
