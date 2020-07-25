@@ -9,3 +9,5 @@ export * from "./round";
 export * from "./store";
 export * from "./teeth-numbering-systems";
 export * from "./textual-filter";
+export * from "./username";
+export * from "./log";

@@ -15,18 +15,6 @@ const register = [
 	modules.registerStats,
 ];
 
-(window as any).getData = function getData() {
-	return {
-		staff: modules.staff!.docs.map((x) => x.toJSON()),
-		treatments: modules.treatments!.docs.map((x) => x.toJSON()),
-		patients: modules.patients!.docs.map((x) => x.toJSON()),
-		appointments: modules.appointments!.docs.map((x) => x.toJSON()),
-		orthoCases: modules.orthoCases!.docs.map((x) => x.toJSON()),
-		labworks: modules.labworks!.docs.map((x) => x.toJSON()),
-		prescriptions: modules.prescriptions!.docs.map((x) => x.toJSON()),
-	};
-};
-
 export async function registerModules() {
 	await Promise.all(register.map((singleModule) => singleModule()));
 	// resync on load: only staff database initially

@@ -1,16 +1,9 @@
 import { dbAction, files, localDBRefs, loginService } from "@core";
 import { registerModules, staff } from "@modules";
 import * as modules from "@modules";
-import {
-	checkClient,
-	checkServer,
-	day,
-	num,
-	second,
-	store
-	} from "@utils";
-import { computed, observable } from "mobx";
-import { Md5 } from "ts-md5";
+import { checkServer, day, num, second, store } from "@utils";
+import * as utils from "@utils";
+import { observable } from "mobx";
 
 const demoHosts: string[] = ["demo.apexo.app"];
 
@@ -62,7 +55,7 @@ export class Status {
 		this.initialLoadingIndicatorText = "running initial check";
 		// If we're on a demo host
 		if (demoHosts.indexOf(location.host) !== -1) {
-			console.log("Login: Demo mode");
+			utils.log("Login: Demo mode");
 			return await this.startDemoServer();
 		}
 
@@ -108,7 +101,7 @@ export class Status {
 	}
 
 	async start({ server }: { server: string }) {
-		console.log("Login Type:", this.loginType);
+		utils.log("Login Type:", this.loginType);
 		this.server = server;
 		store.set("server_location", server);
 		this.step = LoginStep.loadingData;
@@ -120,23 +113,27 @@ export class Status {
 				this.step = LoginStep.chooseUser;
 			}
 		} catch (e) {
-			console.log("Registering modules failed", e);
-			console.log("possible DB corruption, deleting local databases");
+			utils.log("Registering modules failed", e);
+			utils.log("possible DB corruption, deleting local databases");
 			for (let i = 0; i < localDBRefs.length; i++) {
 				await localDBRefs[i].destroy({});
 			}
-			location.reload();
+			// location.reload();
 		}
 	}
 
 	async removeCookies() {
-		const PouchDB: PouchDB.Static =
-			((await import("pouchdb-browser")) as any).default ||
-			((await import("pouchdb-browser")) as any);
-		const auth: PouchDB.Plugin =
-			((await import("pouchdb-authentication")) as any).default ||
-			((await import("pouchdb-authentication")) as any);
-		return await new PouchDB(this.server, { skip_setup: true }).logOut();
+		if (this.version === "community") {
+			const PouchDB: PouchDB.Static =
+				((await import("pouchdb-browser")) as any).default ||
+				((await import("pouchdb-browser")) as any);
+			const auth: PouchDB.Plugin =
+				((await import("pouchdb-authentication")) as any).default ||
+				((await import("pouchdb-authentication")) as any);
+			return await new PouchDB(this.server, {
+				skip_setup: true,
+			}).logOut();
+		}
 	}
 
 	checkAndSetUserID() {
@@ -160,12 +157,14 @@ export class Status {
 	}
 
 	async validateOnlineStatus() {
+		// TODO: check JWT expiration time
+		// refresh token when it's halfway into expiring
+		// BLOCKED BY: https://github.com/usefulteam/jwt-auth/issues/1
 		if (this.currentlyValidating === this.server) {
 			return;
 		} else {
 			this.currentlyValidating = this.server;
 		}
-
 		try {
 			if (this.keepServerOffline) {
 				this.isOnline.server = false;
@@ -192,8 +191,6 @@ export class Status {
 					this.invalidLogin = false;
 				}
 			}
-			this.initialLoadingIndicatorText = "checking client connectivity";
-			this.isOnline.client = await checkClient();
 			this.initialLoadingIndicatorText =
 				"checking files server connectivity";
 			if (modules.setting) {

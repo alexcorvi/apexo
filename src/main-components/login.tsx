@@ -1,5 +1,4 @@
-import { loginService } from "../core/services/login";
-import { status, text } from "@core";
+import { loginService, status, text } from "@core";
 import * as core from "@core";
 import { second, store } from "@utils";
 import { computed, observable } from "mobx";
@@ -71,7 +70,7 @@ export class LoginView extends React.Component {
 	loginSupported() {
 		store.set("version", "supported");
 		core.status.version = "supported";
-		this.serverFieldValue = "https://apexo.app";
+		this.serverFieldValue = "https://db.apexo.app";
 		store.set("server_location", this.serverFieldValue);
 		this.login();
 	}
@@ -110,7 +109,7 @@ export class LoginView extends React.Component {
 							itemKey={"s"}
 							key={"s"}
 						>
-							<div className="supported-login-forum">
+							<form className="supported-login-forum">
 								<TextField
 									label="Clinic ID"
 									disabled={this.disableInputs}
@@ -153,7 +152,7 @@ export class LoginView extends React.Component {
 										this.loginSupported();
 									}}
 								/>
-							</div>
+							</form>
 						</PivotItem>
 						<PivotItem
 							headerText={"Community"}
@@ -161,7 +160,7 @@ export class LoginView extends React.Component {
 							itemKey={"c"}
 							key={"c"}
 						>
-							<div className="community-login-forum">
+							<form className="community-login-forum">
 								<div className="login-step">
 									<div
 										className={
@@ -241,7 +240,7 @@ export class LoginView extends React.Component {
 										}}
 									/>
 								</div>
-							</div>
+							</form>
 						</PivotItem>
 						<PivotItem
 							headerText={"Offline"}

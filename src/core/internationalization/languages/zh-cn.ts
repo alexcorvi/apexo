@@ -89,8 +89,7 @@ export const zhCn: typeof raw = {
 	"general setting": "通用设置",
 	"financial settings": "财务状况",
 	"optional modules and features": "可选模块和功能",
-	"backup and restore": "备份还原",
-	"automated backup and restore": "自动备份和还原",
+	"automated backups": "自动备份和还原",
 	"login pin": "登录密码",
 	permission: "允许",
 	"upcoming appointments": "即将到来的约会",
@@ -424,6 +423,8 @@ export const zhCn: typeof raw = {
 	"this patient does not have any appointment": "这个病人没有预约",
 	"backup and restore functionality are not available while you're offline":
 		"离线时无法使用备份和还原功能",
+	"you can download a backup from below and use this button to restore it":
+		"您可以从下面下载备份，然后使用此按钮将其还原",
 	"choose the main language of display menus and items":
 		"选择显示菜单和项目的主要语言",
 	"set the date format to be used across this application":
@@ -445,7 +446,7 @@ export const zhCn: typeof raw = {
 	"you need to add treatments in the treatments section before being able to book new appointments":
 		"您需要先在治疗部分添加治疗，然后才能预定新约会",
 	"click a thumbnail to expand it": "单击缩略图将其展开",
-	'all unsaved data will be lost. all data will be removed and replaced by the backup file. type "yes" to confirm':
+	"all unsaved data will be lost. all data will be removed and replaced by the backup file":
 		"所有未保存的数据将丢失。",
 	"please enter file name": "请输入文件名",
 	"please enter your pin": "请输入您的密码",
@@ -502,6 +503,6 @@ async function objTrans(obj: { [key: string]: string }) {
 }
 
 objTrans(raw).then((x) => {
-	console.log(JSON.stringify(x));
+	console.info(JSON.stringify(x));
 });
 */

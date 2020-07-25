@@ -69,6 +69,30 @@
 		line-height: 20px;
 		margin-bottom: 30px;
 	}
+
+	.backups {
+		.ms-Link:first-of-type {
+			padding-left: 0;
+		}
+
+		.ms-Link:last-of-type {
+			border: none;
+		}
+
+		.ms-Link {
+			padding: 0 10px;
+			border-right: 1px solid #9e9e9e;
+			border-radius: 0;
+		}
+
+		.ms-Link i {
+			margin-right: 3px;
+		}
+
+		.profile-squared {
+			margin-top: 10px;
+		}
+	}
 }
 
 @media screen and (min-width: 992px) {

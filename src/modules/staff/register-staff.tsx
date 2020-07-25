@@ -2,7 +2,10 @@ import * as core from "@core";
 import * as modules from "@modules";
 import * as React from "react";
 export const registerStaff = async () => {
-	const dbs = await core.connect<modules.StaffMemberSchema>("doctors");
+	const dbs = await core.connect<modules.StaffMemberSchema>(
+		"doctors",
+		modules.StaffMember
+	);
 
 	modules.setStaffStore(
 		new modules.Staff({

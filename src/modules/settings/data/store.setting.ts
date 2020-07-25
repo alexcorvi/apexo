@@ -1,12 +1,14 @@
-import { backup, dbAction, DropboxFile, status } from "@core";
+import { backup, dbAction, status, UploadedFile } from "@core";
 import { dictionary, SettingItemSchema, SettingsItem } from "@modules";
 import * as modules from "@modules";
 import { day, generateID, minute, num } from "@utils";
+import * as utils from "@utils";
 import { observable, observe } from "mobx";
 import { Store } from "pouchx";
 
 export class Settings extends Store<SettingItemSchema, SettingsItem> {
-	@observable dropboxBackups: DropboxFile[] = [];
+	@observable autoBackups: UploadedFile[] = [];
+
 	private settingChangeCallbacks: (() => void)[] = [];
 
 	async afterChange() {
@@ -34,77 +36,48 @@ export class Settings extends Store<SettingItemSchema, SettingsItem> {
 		this.settingChangeCallbacks.push(callback);
 	}
 
-	async updateDropboxBackups() {
+	async updateAutoBackups() {
 		try {
-			const sortedResult = (await backup.list())
-				.filter((x) => x.client_modified && x.name.endsWith(".apx"))
-				.sort(
-					(a, b) =>
-						new Date(a.client_modified).getTime() -
-						new Date(b.client_modified).getTime()
-				);
+			const sortedResult = (await backup.list()).sort(
+				(a, b) =>
+					new Date(a.date).getTime() - new Date(b.date).getTime()
+			);
 
-			this.dropboxBackups = sortedResult;
+			this.autoBackups = sortedResult;
 		} catch (e) {
-			console.log("Could not update dropbox backups", e);
+			utils.log("Could not update auto backups", e);
 		}
 	}
 
 	async automatedBackups() {
-		const frequency: "d" | "w" | "m" | "n" = this.getSetting(
-			"backup_freq"
-		) as any;
-		const retain = num(this.getSetting("backup_retain")) || 3;
-
-		// carry on, only if there's access token
+		// carry on, only if file server is online
 		if (!status.isOnline.files) {
 			return;
 		}
 
-		if (["m", "w", "d"].indexOf(frequency) === -1) {
-			return;
-		}
-
-		await this.updateDropboxBackups();
-
-		const lastBackupFile = this.dropboxBackups[
-			this.dropboxBackups.length - 1
-		] || {
-			name: "",
-			path_lower: "",
-			id: "",
-			size: 0,
-			client_modified: new Date(0).getTime(),
-		};
-
+		await this.updateAutoBackups();
+		const lastBackupFile = this.autoBackups[this.autoBackups.length - 1];
 		const now = new Date().getTime();
-		const then = new Date(lastBackupFile.client_modified).getTime();
+		const then = new Date((lastBackupFile || { date: 0 }).date).getTime();
 		const diffInDays = Math.floor((now - then) / day);
-
-		if (frequency === "d" && diffInDays > 1) {
-			await backup.toDropbox();
-			await this.updateDropboxBackups();
-		} else if (frequency === "w" && diffInDays > 7) {
-			await backup.toDropbox();
-			await this.updateDropboxBackups();
-		} else if (frequency === "m" && diffInDays > 30) {
-			await backup.toDropbox();
-			await this.updateDropboxBackups();
+		if (diffInDays > 1) {
+			await backup.toFilesServer();
+			await this.updateAutoBackups();
 		}
 
-		let backupsToDeleteNumber = this.dropboxBackups.length - retain;
-		const backupsToDeleteFiles: DropboxFile[] = [];
+		let backupsToDeleteNumber = this.autoBackups.length - 30;
+		const backupsToDeleteFiles: UploadedFile[] = [];
 
 		while (backupsToDeleteNumber > 0) {
 			backupsToDeleteFiles.push(
-				this.dropboxBackups[backupsToDeleteNumber - 1]
+				this.autoBackups[backupsToDeleteNumber - 1]
 			);
 			backupsToDeleteNumber--;
 		}
 
 		backupsToDeleteFiles.forEach(async (file) => {
-			await backup.deleteFromDropbox(file.path_lower);
-			await this.updateDropboxBackups();
+			await backup.deleteFromFilesServer(file.path);
+			await this.updateAutoBackups();
 		});
 	}
 }
@@ -116,5 +89,5 @@ export const setSettingsStore = (store: Settings) => {
 		if (setting) {
 			setting.automatedBackups();
 		}
-	}, 2 * minute); // check every 2 minutes
+	}, 2 * minute);
 };

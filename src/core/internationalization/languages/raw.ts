@@ -104,8 +104,7 @@ export const raw = {
 	"general setting": "",
 	"financial settings": "",
 	"optional modules and features": "",
-	"backup and restore": "",
-	"automated backup and restore": "",
+	"automated backups": "",
 	"login pin": "",
 	permission: "",
 	"upcoming appointments": "",
@@ -522,11 +521,13 @@ export const raw = {
 	"you need to add treatments in the treatments section before being able to book new appointments":
 		"",
 	"click a thumbnail to expand it": "",
+	"you can download a backup from below and use this button to restore it":
+		"",
 
 	/**
 	 * prompts
 	 */
-	'all unsaved data will be lost. all data will be removed and replaced by the backup file. type "yes" to confirm':
+	"all unsaved data will be lost. all data will be removed and replaced by the backup file":
 		"",
 	"please enter file name": "",
 	"please enter your pin": "",

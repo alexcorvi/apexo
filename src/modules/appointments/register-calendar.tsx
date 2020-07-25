@@ -4,13 +4,14 @@ import * as React from "react";
 
 export const registerAppointments = async () => {
 	const dbs = await core.connect<modules.AppointmentSchema>(
-		modules.appointmentsNamespace
+		modules.appointmentsNamespace,
+		modules.Appointment
 	);
 
 	modules.setAppointmentsStore(
 		new modules.Appointments({
 			model: modules.Appointment,
-			DBInstance: dbs.localDatabase
+			DBInstance: dbs.localDatabase,
 		})
 	);
 
@@ -26,7 +27,7 @@ export const registerAppointments = async () => {
 		},
 		condition: () =>
 			(core.user.currentUser || { canViewAppointments: false })
-				.canViewAppointments
+				.canViewAppointments,
 	});
 	core.menu.items.push({
 		icon: "Calendar",
@@ -39,6 +40,6 @@ export const registerAppointments = async () => {
 		url: "",
 		condition: () =>
 			(core.user.currentUser || { canViewAppointments: false })
-				.canViewAppointments
+				.canViewAppointments,
 	});
 };

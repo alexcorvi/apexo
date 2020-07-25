@@ -3,13 +3,14 @@ import * as modules from "@modules";
 import * as React from "react";
 export const registerTreatments = async () => {
 	const dbs = await core.connect<modules.TreatmentSchema>(
-		modules.treatmentsNamespace
+		modules.treatmentsNamespace,
+		modules.Treatment
 	);
 
 	modules.setTreatmentsStore(
 		new modules.Treatments({
 			model: modules.Treatment,
-			DBInstance: dbs.localDatabase
+			DBInstance: dbs.localDatabase,
 		})
 	);
 
@@ -25,7 +26,7 @@ export const registerTreatments = async () => {
 		},
 		condition: () =>
 			(core.user.currentUser || { canViewTreatments: false })
-				.canViewTreatments
+				.canViewTreatments,
 	});
 
 	core.menu.items.push({
@@ -39,6 +40,6 @@ export const registerTreatments = async () => {
 		key: modules.treatmentsNamespace,
 		condition: () =>
 			(core.user.currentUser || { canViewTreatments: false })
-				.canViewTreatments
+				.canViewTreatments,
 	});
 };

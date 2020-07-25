@@ -4,13 +4,14 @@ import * as React from "react";
 
 export const registerPatients = async () => {
 	const dbs = await core.connect<modules.PatientSchema>(
-		modules.patientsNamespace
+		modules.patientsNamespace,
+		modules.Patient
 	);
 
 	modules.setPatientsStore(
 		new modules.Patients({
 			model: modules.Patient,
-			DBInstance: dbs.localDatabase
+			DBInstance: dbs.localDatabase,
 		})
 	);
 
@@ -26,7 +27,7 @@ export const registerPatients = async () => {
 		},
 		condition: () =>
 			(core.user.currentUser || { canViewPatients: false })
-				.canViewPatients
+				.canViewPatients,
 	});
 
 	core.menu.items.push({
@@ -40,6 +41,6 @@ export const registerPatients = async () => {
 		url: "",
 		condition: () =>
 			(core.user.currentUser || { canViewPatients: false })
-				.canViewPatients
+				.canViewPatients,
 	});
 };

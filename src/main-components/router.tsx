@@ -1,6 +1,7 @@
 import * as core from "@core";
 import { HomeView } from "@main-components";
 import * as modules from "@modules";
+import * as utils from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
@@ -42,7 +43,7 @@ export class Router {
 
 	@computed get currentRoute(): Route {
 		return (
-			this.directory.find(route => {
+			this.directory.find((route) => {
 				return (
 					(!route.condition || route.condition()) &&
 					route.regex.test(this.currentLocation)
@@ -50,7 +51,7 @@ export class Router {
 			}) || {
 				component: async () => <HomeView />,
 				namespace: "Home",
-				regex: /a/
+				regex: /a/,
 			}
 		);
 	}
@@ -74,21 +75,21 @@ export class Router {
 				namespace === "staff" ? "doctors" : namespace
 			);
 		} catch (e) {
-			console.log(e);
+			utils.log(e);
 		}
 		return true;
 	}
 
 	register({ regex, component, namespace, condition }: Route) {
-		if (this.directory.find(x => x.namespace === namespace)) {
-			console.log(namespace, "route name already registered, skipping");
+		if (this.directory.find((x) => x.namespace === namespace)) {
+			utils.log(namespace, "route name already registered, skipping");
 			return;
 		}
 		this.directory.push({
 			regex: regex,
 			component: component,
 			namespace: namespace,
-			condition
+			condition,
 		});
 	}
 
@@ -103,14 +104,14 @@ export class Router {
 	}
 
 	private filterOutCategory(input: string[], category: string) {
-		return input.filter(x => !x.startsWith(category + ":"));
+		return input.filter((x) => !x.startsWith(category + ":"));
 	}
 
 	select({
 		id,
 		tab,
 		sub,
-		main
+		main,
 	}: {
 		id?: string;
 		tab?: string;
@@ -151,7 +152,7 @@ export class Router {
 			id: "",
 			tab: "",
 			main: "",
-			sub: ""
+			sub: "",
 		});
 	}
 
@@ -168,19 +169,19 @@ export class Router {
 
 		const id = this.currentLocation
 			.split("/")
-			.find(x => x.startsWith("id:"));
+			.find((x) => x.startsWith("id:"));
 
 		const tab = this.currentLocation
 			.split("/")
-			.find(x => x.startsWith("tab:"));
+			.find((x) => x.startsWith("tab:"));
 
 		const sub = this.currentLocation
 			.split("/")
-			.find(x => x.startsWith("sub:"));
+			.find((x) => x.startsWith("sub:"));
 
 		const main = this.currentLocation
 			.split("/")
-			.find(x => x.startsWith("main:"));
+			.find((x) => x.startsWith("main:"));
 		if (id) {
 			this._selectedID = id.replace(/id:/, "");
 		} else {

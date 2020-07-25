@@ -1763,7 +1763,7 @@ arraybuffer.slice@~0.0.7:
   resolved "https://registry.yarnpkg.com/arraybuffer.slice/-/arraybuffer.slice-0.0.7.tgz#3bbc4275dd584cc1b10809b89d4e8b63a69e7675"
   integrity sha512-wGUIVQXuehL5TCqQun8OW81jGzAWycqzFF8lFp+GOM5BXLYj3bKNsYC4daB7n6XjCqxQA/qgTJ+8ANR3acjrog==
 
-asn1.js@^4.0.0, asn1.js@^4.5.0, asn1.js@^4.5.2:
+asn1.js@^4.0.0:
   version "4.10.1"
   resolved "https://registry.yarnpkg.com/asn1.js/-/asn1.js-4.10.1.tgz#b9c2bf5805f1e64aadeed6df3a2bfafb5a73f5a0"
   integrity sha512-p32cOF5q0Zqs9uBiONKYLm6BClCoBCM5O9JfeUSlnQLBTxYdTK+pW+nXflm8UkKd2UYlEbYz5qEi0JuZR9ckSw==
@@ -2050,13 +2050,6 @@ binary-extensions@^1.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.13.1.tgz#598afe54755b2868a5330d2aff9d4ebb53209b65"
   integrity sha512-Un7MIEDdUC5gNpcGDV97op1Ywk748MpHcFTHoYs6qnj1Z3j7I53VG3nwZhKzoBZmbdRNnb6WRdFlwl7tSDuZGw==
 
-bindings@^1.2.1:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
-  integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
-  dependencies:
-    file-uri-to-path "1.0.0"
-
 blob@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/blob/-/blob-0.0.5.tgz#d680eeef25f8cd91ad533f5b01eed48e64caf683"
@@ -2079,7 +2072,7 @@ bluebird@^3.5.5:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.5.tgz#a8d0afd73251effbbd5fe384a77d73003c17a71f"
   integrity sha512-5am6HnnfN+urzt4yfg7IgTbotDjIT/u8AJpEt0sIU9FtXfVeezXAPKswrG+xKUCOYAINpSdgZVDU6QFh+cuH3w==
 
-bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.10.3, bn.js@^4.4.0:
+bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
   integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
@@ -2225,7 +2218,7 @@ browser-sync@^2.26.7:
     ua-parser-js "0.7.17"
     yargs "6.4.0"
 
-browserify-aes@^1.0.0, browserify-aes@^1.0.4, browserify-aes@^1.0.5:
+browserify-aes@^1.0.0, browserify-aes@^1.0.4:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/browserify-aes/-/browserify-aes-1.2.0.tgz#326734642f403dabc3003209853bb70ad428ef48"
   integrity sha512-+7CHXqGuspUn/Sl5aO7Ea0xWGAtETPXNSAjHo48JfLdPWcMng33Xe4znFvQweqc/uzk5zSOI3H52CYnjCfb5hA==
@@ -2321,11 +2314,6 @@ buffer-crc32@~0.2.3:
   version "0.2.13"
   resolved "https://registry.yarnpkg.com/buffer-crc32/-/buffer-crc32-0.2.13.tgz#0d333e3f00eac50aa1454abd30ef8c2a5d9a7242"
   integrity sha1-DTM+PwDqxQqhRUq9MO+MKl2ackI=
-
-buffer-equal-constant-time@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/buffer-equal-constant-time/-/buffer-equal-constant-time-1.0.1.tgz#f8e71132f7ffe6e01a5c9697a4c6f3e48d5cc819"
-  integrity sha1-+OcRMvf/5uAaXJaXpMbz5I1cyBk=
 
 buffer-from@0.1.1:
   version "0.1.1"
@@ -2483,25 +2471,6 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
-
-chacha-native@^2.0.0:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/chacha-native/-/chacha-native-2.0.2.tgz#fa0aebccecb04c49673d2a73d059462067f5bee4"
-  integrity sha1-+grrzOywTElnPSpz0FlGIGf1vuQ=
-  dependencies:
-    bindings "^1.2.1"
-    inherits "^2.0.1"
-    nan "^2.4.0"
-
-chacha@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/chacha/-/chacha-2.1.0.tgz#f4d57c8768a1b4206e9967f858b48da7dd28eaa6"
-  integrity sha1-9NV8h2ihtCBumWf4WLSNp90o6qY=
-  dependencies:
-    inherits "^2.0.1"
-    readable-stream "^1.0.33"
-  optionalDependencies:
-    chacha-native "^2.0.0"
 
 chai@^4.1.2:
   version "4.2.0"
@@ -3034,18 +3003,6 @@ crypto-browserify@^3.11.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
-crypto-pouch@^3.1.3:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/crypto-pouch/-/crypto-pouch-3.1.3.tgz#1db8a04664ae93e3f2143f35da794fbcf7a43c02"
-  integrity sha512-sHTsAchKCyl4jAig+1Jn9TfheZHnF9rq9+16U4nmBYWUOObB/47/utxKMLy/VXlQcCLu4gPceIKrADnBCf9mhg==
-  dependencies:
-    chacha "^2.1.0"
-    native-crypto "^1.5.2"
-    pouchdb-promise "^6.1.0"
-    randombytes "^2.0.3"
-    transform-pouch "^1.1.0"
-    uuid "^3.0.1"
-
 css-loader@^0.9.1:
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-0.9.1.tgz#2e1aa00ce7e30ef2c6a7a4b300a080a7c979e0dc"
@@ -3473,13 +3430,6 @@ ecc-jsbn@~0.1.1:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
 
-ecdsa-sig-formatter@^1.0.7:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.11.tgz#ae0f0fa2d85045ef14a817daa3ce9acd0489e5bf"
-  integrity sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==
-  dependencies:
-    safe-buffer "^5.0.1"
-
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
@@ -3504,19 +3454,6 @@ elliptic@^6.0.0:
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.1.tgz#c380f5f909bf1b9b4428d028cd18d3b0efd6b52b"
   integrity sha512-xvJINNLbTeWQjrl6X+7eQCrIy/YPv5XCpKW6kB5mKvtnGILoLDcySuwomfdzt0BMdLNVnuRNTuzKNHj0bva1Cg==
-  dependencies:
-    bn.js "^4.4.0"
-    brorand "^1.0.1"
-    hash.js "^1.0.0"
-    hmac-drbg "^1.0.0"
-    inherits "^2.0.1"
-    minimalistic-assert "^1.0.0"
-    minimalistic-crypto-utils "^1.0.0"
-
-elliptic@^6.0.1, elliptic@^6.2.3:
-  version "6.4.1"
-  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.4.1.tgz#c2d0b7776911b86722c632c3c06c60f2f819939a"
-  integrity sha512-BsXLz5sqX8OHcsh7CqBMztyXARmGQ3LWPtGjJi6DiJHq5C/qvi9P3OqgswKSDftbu8+IoI/QDTAm2fFnQ9SZSQ==
   dependencies:
     bn.js "^4.4.0"
     brorand "^1.0.1"
@@ -4102,11 +4039,6 @@ file-saver@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/file-saver/-/file-saver-2.0.2.tgz#06d6e728a9ea2df2cce2f8d9e84dfcdc338ec17a"
   integrity sha512-Wz3c3XQ5xroCxd1G8b7yL0Ehkf0TC9oYC6buPFkNnU9EnaPlifeAFCyCh+iewXTyFRcg0a6j3J7FmJsIhlhBdw==
-
-file-uri-to-path@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
-  integrity sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==
 
 filesize@^3.6.1:
   version "3.6.1"
@@ -5946,15 +5878,6 @@ jstransform@~11.0.0:
     object-assign "^2.0.0"
     source-map "^0.4.2"
 
-jwk-to-pem@^1.2.2:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/jwk-to-pem/-/jwk-to-pem-1.2.6.tgz#d507cece40089c5248e09ec68266a2030a9c6325"
-  integrity sha1-1QfOzkAInFJI4J7GgmaiAwqcYyU=
-  dependencies:
-    asn1.js "^4.5.2"
-    elliptic "^6.2.3"
-    safe-buffer "^5.0.1"
-
 keyv@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-3.1.0.tgz#ecc228486f69991e49e9476485a5be1e8fc5c4d9"
@@ -6678,20 +6601,10 @@ nan-x@^1.0.0:
   resolved "https://registry.yarnpkg.com/nan-x/-/nan-x-1.0.2.tgz#5f34e9d3115242486219eee3c8bc49fd2425b19a"
   integrity sha512-dndRmy03JQEN+Nh6WjQl7/OstIozeEmrtWe4TE7mEqJ8W8oMD8m2tHjsLPWt//e3hLAeRSbs4pxMyc5pk/nCkQ==
 
-nan@^2.1.0, nan@^2.4.0:
-  version "2.13.2"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.13.2.tgz#f51dc7ae66ba7d5d55e1e6d4d8092e802c9aefe7"
-  integrity sha512-TghvYc72wlMGMVMluVo9WRJc0mB8KxxF/gZ4YYFy7V2ZQX9l7rgbPg7vjS9mt6U5HXODVFVI2bOduCzwOMv/lw==
-
 nan@^2.12.1, nan@^2.13.2:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
   integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==
-
-nan@~2.3.3:
-  version "2.3.5"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.3.5.tgz#822a0dc266290ce4cd3a12282ca3e7e364668a08"
-  integrity sha1-gioNwmYpDOTNOhIoLKPn42Rmigg=
 
 nanomatch@^1.2.9:
   version "1.2.13"
@@ -6709,33 +6622,6 @@ nanomatch@^1.2.9:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
-
-native-crypto@^1.5.2:
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/native-crypto/-/native-crypto-1.8.1.tgz#129c7972db9f4eb12dcbaf697d5360c383278376"
-  integrity sha512-A+nv9MY/ZYxqhB86DQUrLPfbljqMmGhWM0Z3iTgKi9NvBgi4cj4H/7uFA3c2W/rx5M9VOr+zkvQURsAQB/uuPg==
-  dependencies:
-    asn1.js "^4.5.0"
-    bn.js "^4.10.3"
-    browserify-aes "^1.0.5"
-    browserify-sign "^4.0.0"
-    buffer-equal-constant-time "^1.0.1"
-    create-ecdh "^4.0.0"
-    create-hash "^1.1.2"
-    create-hmac "^1.1.4"
-    debug "^2.2.0"
-    ecdsa-sig-formatter "^1.0.7"
-    elliptic "^6.0.1"
-    jwk-to-pem "^1.2.2"
-    miller-rabin "^4.0.0"
-    minimalistic-assert "^1.0.0"
-    pbkdf2 "^3.0.4"
-    pemstrip "0.0.1"
-    public-encrypt "^4.0.0"
-    randombytes "^2.0.2"
-  optionalDependencies:
-    raw-ecdsa "^1.1.1"
-    rsa-keygen "^1.0.5"
 
 natural-compare@^1.4.0:
   version "1.4.0"
@@ -7514,7 +7400,7 @@ pathval@^1.1.0:
   resolved "https://registry.yarnpkg.com/pathval/-/pathval-1.1.0.tgz#b942e6d4bde653005ef6b71361def8727d0645e0"
   integrity sha1-uULm1L3mUwBe9rcTYd74cn0GReA=
 
-pbkdf2@^3.0.3, pbkdf2@^3.0.4:
+pbkdf2@^3.0.3:
   version "3.0.17"
   resolved "https://registry.yarnpkg.com/pbkdf2/-/pbkdf2-3.0.17.tgz#976c206530617b14ebb32114239f7b09336e93a6"
   integrity sha512-U/il5MsrZp7mGg3mSQfn742na2T+1/vHDCG5/iTI3X9MKUuYUZVLQhyRsg06mCgDBTd57TxzgZt7P+fYfjRLtA==
@@ -7524,11 +7410,6 @@ pbkdf2@^3.0.3, pbkdf2@^3.0.4:
     ripemd160 "^2.0.1"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
-
-pemstrip@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/pemstrip/-/pemstrip-0.0.1.tgz#39f7071720cfa13d542c9bde75f1fa5bf9d08806"
-  integrity sha1-OfcHFyDPoT1ULJvedfH6W/nQiAY=
 
 pend@~1.2.0:
   version "1.2.0"
@@ -7672,7 +7553,7 @@ pouchdb-promise@5.4.3:
   dependencies:
     lie "3.0.4"
 
-pouchdb-promise@6.4.3, pouchdb-promise@^6.1.0, pouchdb-promise@~6.4.0:
+pouchdb-promise@6.4.3, pouchdb-promise@~6.4.0:
   version "6.4.3"
   resolved "https://registry.yarnpkg.com/pouchdb-promise/-/pouchdb-promise-6.4.3.tgz#74516f4acf74957b54debd0fb2c0e5b5a68ca7b3"
   integrity sha512-ruJaSFXwzsxRHQfwNHjQfsj58LBOY1RzGzde4PM5CWINZwFjCQAhZwfMrch2o/0oZT6d+Xtt0HTWhq35p3b0qw==
@@ -7692,13 +7573,6 @@ pouchdb-utils@6.4.3, pouchdb-utils@~6.4.0:
     pouchdb-errors "6.4.3"
     pouchdb-promise "6.4.3"
     uuid "3.2.1"
-
-pouchdb-wrappers@1.3.6:
-  version "1.3.6"
-  resolved "https://registry.yarnpkg.com/pouchdb-wrappers/-/pouchdb-wrappers-1.3.6.tgz#f3e11b664e89a9b317e785c96151ccb1736f25d0"
-  integrity sha1-8+EbZk6JqbMX54XJYVHMsXNvJdA=
-  dependencies:
-    promise-nodify "^1.0.1"
 
 pouchdb-wrappers@4.1.0:
   version "4.1.0"
@@ -7754,7 +7628,7 @@ promise-inflight@^1.0.1:
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
 
-promise-nodify@^1.0.1, promise-nodify@^1.0.2:
+promise-nodify@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/promise-nodify/-/promise-nodify-1.0.2.tgz#0d0fb143c33400b0061b47e581257557047d4c5a"
   integrity sha1-DQ+xQ8M0ALAGG0flgSV1VwR9TFo=
@@ -7947,7 +7821,7 @@ randexp@0.4.6:
     discontinuous-range "1.0.0"
     ret "~0.1.10"
 
-randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.2, randombytes@^2.0.3, randombytes@^2.0.5:
+randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/randombytes/-/randombytes-2.1.0.tgz#df6f84372f0270dc65cdf6291349ab7a473d4f2a"
   integrity sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==
@@ -7986,14 +7860,6 @@ raw-body@^2.3.2:
     http-errors "1.7.3"
     iconv-lite "0.4.24"
     unpipe "1.0.0"
-
-raw-ecdsa@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/raw-ecdsa/-/raw-ecdsa-1.1.1.tgz#9d276a60d7123991f0a2b846ea4ccc33406bdcfd"
-  integrity sha1-nSdqYNcSOZHworhG6kzMM0Br3P0=
-  dependencies:
-    bindings "^1.2.1"
-    nan "^2.1.0"
 
 rc@^1.2.7:
   version "1.2.8"
@@ -8109,16 +7975,6 @@ read-pkg@^3.0.0:
   version "1.0.34"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-1.0.34.tgz#125820e34bc842d2f2aaafafe4c2916ee32c157c"
   integrity sha1-Elgg40vIQtLyqq+v5MKRbuMsFXw=
-  dependencies:
-    core-util-is "~1.0.0"
-    inherits "~2.0.1"
-    isarray "0.0.1"
-    string_decoder "~0.10.x"
-
-readable-stream@^1.0.33:
-  version "1.1.14"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-1.1.14.tgz#7cf4c54ef648e3813084c636dd2079e166c081d9"
-  integrity sha1-fPTFTvZI44EwhMY23SB54WbAgdk=
   dependencies:
     core-util-is "~1.0.0"
     inherits "~2.0.1"
@@ -8479,13 +8335,6 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
   dependencies:
     hash-base "^3.0.0"
     inherits "^2.0.1"
-
-rsa-keygen@^1.0.5:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/rsa-keygen/-/rsa-keygen-1.0.6.tgz#3da3bf8147c96247cf695681b0bda17a6efa4086"
-  integrity sha1-PaO/gUfJYkfPaVaBsL2hem76QIY=
-  dependencies:
-    nan "~2.3.3"
 
 rst-selector-parser@^2.2.3:
   version "2.2.3"
@@ -9584,20 +9433,6 @@ tr46@^1.0.1:
   dependencies:
     punycode "^2.1.0"
 
-transform-pouch@^1.1.0:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/transform-pouch/-/transform-pouch-1.1.4.tgz#a16930c2bc5d974d36e056f5b3a5ae536921c235"
-  integrity sha512-YRiWhJxrzXyj9JfqkpYoIAJ3EtlNVfxldTo8NsPsbNHEIv5F8duWrAPeLujzXrb3Nmi+b9M2jVWj44oJBvxzqw==
-  dependencies:
-    argsarray "0.0.1"
-    es3ify "0.2.2"
-    immediate "~3.0.5"
-    inherits "2.0.1"
-    lie "3.0.4"
-    pouchdb-extend "0.1.2"
-    pouchdb-promise "5.4.3"
-    pouchdb-wrappers "1.3.6"
-
 transform-pouch@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/transform-pouch/-/transform-pouch-1.1.5.tgz#6f2636e353d3499908a58040d7cc87dd10187b29"
@@ -10013,7 +9848,7 @@ uuid@3.3.3, uuid@^3.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.3.tgz#4568f0216e78760ee1dbf3a4d2cf53e224112866"
   integrity sha512-pW0No1RGHgzlpHJO1nsVrHKpOEIxkGg1xB+v0ZmdNH5OAeAwzAVrCnI2/6Mtx+Uys6iaylxa+D3g4j63IKKjSQ==
 
-uuid@^3.0.1, uuid@^3.1.0:
+uuid@^3.1.0:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==

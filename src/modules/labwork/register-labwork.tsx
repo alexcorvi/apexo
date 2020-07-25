@@ -4,13 +4,14 @@ import * as React from "react";
 
 export const registerLabwork = async () => {
 	const dbs = await core.connect<modules.LabworkSchema>(
-		modules.labworkNamespace
+		modules.labworkNamespace,
+		modules.Labwork
 	);
 
 	modules.setLabworksStore(
 		new modules.Labworks({
 			model: modules.Labwork,
-			DBInstance: dbs.localDatabase
+			DBInstance: dbs.localDatabase,
 		})
 	);
 
@@ -26,7 +27,7 @@ export const registerLabwork = async () => {
 		},
 		condition: () =>
 			!!modules.setting!.getSetting("module_labwork") &&
-			(core.user.currentUser || { canViewLabwork: false }).canViewLabwork
+			(core.user.currentUser || { canViewLabwork: false }).canViewLabwork,
 	});
 
 	core.menu.items.push({
@@ -40,6 +41,6 @@ export const registerLabwork = async () => {
 		key: modules.labworkNamespace,
 		condition: () =>
 			!!modules.setting!.getSetting("module_labwork") &&
-			(core.user.currentUser || { canViewLabwork: false }).canViewLabwork
+			(core.user.currentUser || { canViewLabwork: false }).canViewLabwork,
 	});
 };

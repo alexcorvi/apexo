@@ -1,6 +1,8 @@
 import { status } from "@core";
+import * as core from "@core";
 import { setting } from "@modules";
 import { decrypt, encrypt, generateID, store } from "@utils";
+import * as utils from "@utils";
 import { del, get, keys, set } from "idb-keyval";
 
 export interface UploadedFile {
@@ -22,17 +24,21 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
 };
 
 async function recordSupportedFile(path: string, dir: string) {
-	const prevFiles = await supportedFiles.allFiles();
+	const allFiles = await supportedFiles.allFiles();
 	return new Promise((resolve, reject) => {
-		const updatedFiles = prevFiles.push({
+		allFiles.push({
 			type: dir,
 			path,
 			date: new Date().getTime(),
 		});
-
+		const LSL_time = store.get("LSL_time");
+		const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user.id;
 		const data = JSON.stringify({
 			meta: {
-				apexofiles: JSON.stringify(updatedFiles),
+				apexofiles: encrypt(
+					JSON.stringify(allFiles),
+					core.uniqueString()
+				),
 			},
 		});
 		const xhr = new XMLHttpRequest();
@@ -49,10 +55,6 @@ async function recordSupportedFile(path: string, dir: string) {
 				}
 			}
 		});
-		const LSL_time = store.get("LSL_time");
-		const userID = padNumbers(
-			JSON.parse(atob(LSL_time.split(".")[1])).data.user.id
-		);
 		xhr.open("POST", `https://apexo.app/wp-json/wp/v2/users/${userID}`);
 		xhr.setRequestHeader("Authorization", `Bearer ${LSL_time}`);
 		xhr.setRequestHeader("Content-Type", "application/json");
@@ -64,10 +66,14 @@ async function unRecordSupportedFile(path: string) {
 	const prevFiles = await supportedFiles.allFiles();
 	return new Promise((resolve, reject) => {
 		const updatedFiles = prevFiles.filter((x) => x.path !== path);
-
+		const LSL_time = store.get("LSL_time");
+		const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user.id;
 		const data = JSON.stringify({
 			meta: {
-				apexofiles: JSON.stringify(updatedFiles),
+				apexofiles: encrypt(
+					JSON.stringify(updatedFiles),
+					core.uniqueString()
+				),
 			},
 		});
 		const xhr = new XMLHttpRequest();
@@ -84,10 +90,6 @@ async function unRecordSupportedFile(path: string) {
 				}
 			}
 		});
-		const LSL_time = store.get("LSL_time");
-		const userID = padNumbers(
-			JSON.parse(atob(LSL_time.split(".")[1])).data.user.id
-		);
 		xhr.open("POST", `https://apexo.app/wp-json/wp/v2/users/${userID}`);
 		xhr.setRequestHeader("Authorization", `Bearer ${LSL_time}`);
 		xhr.setRequestHeader("Content-Type", "application/json");
@@ -105,7 +107,7 @@ interface FileService {
 		ext: string;
 		dir: string;
 	}): Promise<string>;
-	get(path: string): Promise<string>;
+	get(path: string, download?: boolean): Promise<string>;
 	remove(path: string): Promise<any>;
 	status(): Promise<boolean>;
 	backups(): Promise<UploadedFile[]>;
@@ -149,12 +151,12 @@ const supportedFiles: FileService & {
 	}): Promise<string> {
 		return new Promise((resolve, reject) => {
 			const LSL_time = store.get("LSL_time");
-			const userID = padNumbers(
+			const paddedUserID = padNumbers(
 				JSON.parse(atob(LSL_time.split(".")[1])).data.user.id
 			);
-			const fileName = `${userID}-${generateID()}.${ext}`;
+			const fileName = `${paddedUserID}-${generateID()}.${ext}`;
 			const data = new FormData();
-			data.append("file", new File([blob], fileName));
+			data.append("file", blob, fileName);
 			const xhr = new XMLHttpRequest();
 			xhr.addEventListener("readystatechange", async function () {
 				if (this.readyState === 4) {
@@ -162,24 +164,20 @@ const supportedFiles: FileService & {
 						const res = JSON.parse(this.responseText);
 						const link = res.id.toString();
 						if (link) {
-							await recordSupportedFile(link, dir);
+							if (dir === BACKUPS_DIR) {
+								await recordSupportedFile(link, dir);
+							}
 							resolve(link);
 						} else {
-							console.log(this.responseText);
 							reject(res.message);
 						}
 					} catch (e) {
-						console.log(this.responseText);
 						reject("Unable to decode server response");
 					}
 				}
 			});
 			xhr.open("POST", "https://apexo.app/wp-json/wp/v2/media");
 			xhr.setRequestHeader("Authorization", `Bearer ${LSL_time}`);
-			xhr.setRequestHeader(
-				"Content-Type",
-				"application/x-www-form-urlencoded"
-			);
 			xhr.send(data);
 		});
 	},
@@ -199,7 +197,6 @@ const supportedFiles: FileService & {
 							reject(JSON.parse(this.responseText).message);
 						} catch (e) {
 							reject("Could not decode server response");
-							console.log(this.responseText);
 						}
 					}
 				}
@@ -225,6 +222,9 @@ const supportedFiles: FileService & {
 	},
 	async allFiles(): Promise<UploadedFile[]> {
 		return new Promise((resolve, reject) => {
+			const LSL_time = store.get("LSL_time");
+			const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user
+				.id;
 			const xhr = new XMLHttpRequest();
 			xhr.addEventListener("readystatechange", function () {
 				if (this.readyState === 4) {
@@ -232,7 +232,11 @@ const supportedFiles: FileService & {
 						const data = JSON.parse(this.responseText);
 						const filesString: string = data.meta.apexofiles;
 						if (filesString.length > 0) {
-							resolve(JSON.parse(filesString));
+							resolve(
+								JSON.parse(
+									decrypt(filesString, core.uniqueString())
+								)
+							);
 						} else {
 							resolve([]);
 						}
@@ -241,9 +245,6 @@ const supportedFiles: FileService & {
 					}
 				}
 			});
-			const LSL_time = store.get("LSL_time");
-			const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user
-				.id;
 			xhr.open("GET", `https://apexo.app/wp-json/wp/v2/users/${userID}`);
 			xhr.setRequestHeader("Authorization", `Bearer ${LSL_time}`);
 			xhr.setRequestHeader("Content-Type", "application/json");
@@ -386,7 +387,6 @@ const communityFiles: FileService = {
 			try {
 				xhr.send(null);
 			} catch (e) {
-				console.log(e);
 				resolve(false);
 			}
 		});
@@ -449,12 +449,13 @@ const offlineFiles: FileService = {
 	}): Promise<string> {
 		const name = `${new Date().getTime()}-${generateID(4)}.${ext}`;
 		const path = `/${dir}/${name}`.split("//").join("/");
-		const file = await blobToBase64(blob);
+		const b64 = await blobToBase64(blob);
+		console.log(b64);
 		const fileInfo: UploadedFile & { file: string } = {
 			type: dir,
 			path: path,
 			date: new Date().getTime(),
-			file,
+			file: b64,
 		};
 		await set(path, JSON.stringify(fileInfo));
 		return path;

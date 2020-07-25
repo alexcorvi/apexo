@@ -1,13 +1,15 @@
+import { documentTransformation } from "./transform";
 import { status } from "@core";
-import { store } from "@utils";
-import { compressToUTF16, decompressFromUTF16 } from "lz-string";
+import { store, username } from "@utils";
+import * as utils from "@utils";
 import { Md5 } from "ts-md5";
 
 type methodsArr = Array<() => Promise<void>>;
 
 export const DBNames: string[] = [];
-export const localDBRefs: PouchDB.Database[] = [];
+export const defaultsArr: any[] = [];
 export const remoteDBRefs: PouchDB.Database[] = [];
+export const localDBRefs: PouchDB.Database[] = [];
 
 const methods: {
 	resync: methodsArr;
@@ -36,8 +38,8 @@ export async function dbAction(action: keyof typeof methods, dbName?: string) {
 			await Promise.all(methods[action].map((x) => x()));
 		}
 	} catch (e) {
-		console.log(e);
-		console.log(JSON.stringify(e));
+		utils.log(e);
+		utils.log(JSON.stringify(e));
 	}
 	status.dbActionProgress.splice(
 		status.dbActionProgress.indexOf(progressID),
@@ -49,9 +51,6 @@ export async function importPouchDB() {
 	const pouchdb: PouchDB.Static =
 		((await import("pouchdb-browser")) as any).default ||
 		((await import("pouchdb-browser")) as any);
-	const cryptoPouch =
-		((await import("crypto-pouch")) as any).default ||
-		((await import("crypto-pouch")) as any);
 	const transformPouch =
 		((await import("transform-pouch")) as any).default ||
 		((await import("transform-pouch")) as any);
@@ -59,70 +58,62 @@ export async function importPouchDB() {
 		((await import("pouchdb-authentication")) as any).default ||
 		((await import("pouchdb-authentication")) as any);
 	pouchdb.plugin(auth);
-	pouchdb.plugin(cryptoPouch);
 	pouchdb.plugin(transformPouch);
 	return pouchdb;
 }
 
-function compressDB(db: PouchDB.Database) {
-	db.transform<
-		PouchDB.Meta,
-		PouchDB.Meta & {
-			_lz: string | undefined;
-		}
-	>({
-		incoming(document) {
-			const compressed = {
-				_id: document._id,
-				_rev: document._rev,
-				_revisions: document._revisions,
-				_lz: "",
-			};
-			delete document._id;
-			delete document._rev;
-			delete document._revisions;
-			compressed._lz = compressToUTF16(JSON.stringify(document));
-			return compressed;
-		},
-		outgoing(result) {
-			if (!result._lz) {
-				return result;
-			}
-			const document = JSON.parse(decompressFromUTF16(result._lz));
-			document._id = result._id;
-			document._rev = result._rev;
-			document._revisions = result._revisions;
-			return document;
-		},
-	});
-}
-
-export function encryptDB(db: PouchDB.Database, secret: string) {
-	db.crypto(secret);
-}
-
-export async function connect<S>(dbName: string) {
-	const PouchDB = await importPouchDB();
+export function uniqueString() {
 	let unique = Md5.hashStr(store.get("LSL_hash")).toString();
 	if (status.version === "supported") {
 		const LSL_time = store.get("LSL_time");
 		const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user.id;
-		unique = userID;
+		unique = Md5.hashStr(userID.toString()).toString();
 	}
-	const localName = dbName + "_" + Md5.hashStr(status.server);
-	const localDatabase = new PouchDB<S>(localName, { auto_compaction: true });
-	compressDB(localDatabase);
-	encryptDB(localDatabase, unique);
-	localDBRefs.push(localDatabase);
+	return unique;
+}
 
-	const remoteDatabase = new PouchDB(`${status.server}/${dbName}`, {
-		fetch: (url, opts) =>
-			PouchDB.fetch(url, {
-				...opts,
-				credentials: "include",
-			}),
-	});
-	remoteDBRefs.push(remoteDatabase);
+export async function connect<S>(dbName: string, defaults: any) {
+	const usableDefaults = new defaults(null).toJSON();
+
+	const PouchDB = await importPouchDB();
+	const unique = uniqueString();
+	const localName = dbName + "_" + Md5.hashStr(status.server + username());
+	const remoteName =
+		status.version === "supported" ? `c_${username()}_${dbName}` : dbName;
+	const localDatabase = new PouchDB<S>(localName, { auto_compaction: true });
+	documentTransformation(localDatabase, unique, usableDefaults);
+
+	const remoteDatabase = new PouchDB(
+		`${
+			status.version === "supported"
+				? "https://db.apexo.app"
+				: status.server
+		}/${remoteName}`,
+		{
+			fetch: (url, opts) => {
+				return PouchDB.fetch(url, {
+					...opts,
+					credentials:
+						status.version === "community" ? "include" : "omit",
+					headers: {
+						Authorization: `Bearer ${store.get("LSL_time")}`,
+						"Content-Type": "application/json",
+					},
+				});
+			},
+		}
+	);
+	if (status.version === "supported") {
+		documentTransformation(remoteDatabase, unique, usableDefaults);
+		/**
+		 * You might be tempted to try this on
+		 * the community version.
+		 * But the problem is 'unique' is not
+		 * static on the community version,
+		 * so an encryption with the wrong value,
+		 * might lead to a permanent data loss
+		 */
+	}
 
 	// preventing duplicates
 	const oldIndex = DBNames.indexOf(dbName);
@@ -135,26 +126,33 @@ export async function connect<S>(dbName: string) {
 	}
 
 	DBNames.push(dbName);
-	methods.resync.push(async () => {
+	const refI = DBNames.indexOf(dbName);
+	defaultsArr[refI] = usableDefaults;
+	localDBRefs[refI] = localDatabase;
+	remoteDBRefs[refI] = remoteDatabase;
+	methods.resync[refI] = async () => {
 		if (remoteDatabase) {
 			await localDatabase.sync(remoteDatabase, {
 				batch_size: 50,
 			});
 		}
-	});
-	methods.destroy.push(async () => {
+	};
+	methods.destroy[refI] = async () => {
 		await localDatabase.destroy();
-	});
-	methods.logout.push(async () => {
+	};
+	methods.logout[refI] = async () => {
 		if (remoteDatabase) {
 			await remoteDatabase.logOut();
 		}
-	});
-	methods.compact.push(async () => {
+	};
+	methods.compact[refI] = async () => {
 		await localDatabase.compact();
 		if (remoteDatabase) {
 			await remoteDatabase.compact();
 		}
-	});
+	};
 	return { localDatabase, remoteDatabase };
 }
+
+export { documentTransformation };
+export { DTF } from "./transform";

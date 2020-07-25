@@ -1,7 +1,7 @@
-import { store } from "../../utils/store";
-import { LoginType, status } from "../status";
+import { dbAction, LoginType, status } from "@core";
 import * as core from "@core";
-import { dbAction } from "@core";
+import { store } from "@utils";
+import * as utils from "@utils";
 import { Md5 } from "ts-md5";
 interface LoginService {
 	login: (
@@ -36,12 +36,12 @@ function supportedOnlineLogin(
 				try {
 					resolve(JSON.parse(this.responseText));
 				} catch (e) {
-					console.log(this.responseText);
+					utils.log(this.responseText);
 					resolve({
 						success: false,
 						statusCode: 503,
 						message:
-							"Internal Server Error, Unable to parse server response to JSON, check console log for more details",
+							"An error occurred, please make sure that you're connected & online.",
 						data: {
 							token: "",
 						},
@@ -83,7 +83,7 @@ async function offlineCheck({
 
 const supportedLoginService: LoginService = {
 	login: async (username, password: string) => {
-		const supportedServer = "https://apexo.app";
+		const supportedServer = "https://db.apexo.app";
 		status.server = supportedServer;
 		await status.validateOnlineStatus();
 		if (!status.isOnline.server && store.found("LSL_hash")) {
@@ -94,39 +94,25 @@ const supportedLoginService: LoginService = {
 			});
 		}
 
-		if (status.isOnline.server) {
-			const loginRes = await supportedOnlineLogin(username, password);
-			if (loginRes.success) {
-				store.set("LSL_time", loginRes.data.token);
-				store.set(
-					"LSL_hash",
-					Md5.hashStr(
-						supportedServer + username + password
-					).toString()
-				);
-
-				store.set("LSL_TS", new Date().getTime().toString());
-				status.loginType = LoginType.loginCredentialsOnline;
-				status.start({ server: supportedServer });
-				return true;
-			} else {
-				return loginRes.message;
-			}
+		const loginRes = await supportedOnlineLogin(username, password);
+		if (loginRes.success) {
+			store.set("LSL_time", loginRes.data.token);
+			store.set(
+				"LSL_hash",
+				Md5.hashStr(supportedServer + username + password).toString()
+			);
+			store.set("LSL_TS", new Date().getTime().toString());
+			status.loginType = LoginType.loginCredentialsOnline;
+			status.start({ server: supportedServer });
+			return true;
 		} else {
-			return `
-				An error occurred, please make sure that you're connected & online.
-			`;
+			return (
+				loginRes.message ||
+				`An error occurred, please make sure that you're connected & online.`
+			);
 		}
 	},
 	logout: async () => {
-		if (status.isOnline.server && !status.keepServerOffline) {
-			try {
-				status.removeCookies();
-				await dbAction("logout");
-			} catch (e) {
-				console.log("Failed to logout", e);
-			}
-		}
 		store.clear();
 		location.reload();
 		return true;
@@ -189,7 +175,7 @@ const communityLoginService = {
 				status.removeCookies();
 				await dbAction("logout");
 			} catch (e) {
-				console.log("Failed to logout", e);
+				utils.log("Failed to logout", e);
 			}
 		}
 		store.clear();

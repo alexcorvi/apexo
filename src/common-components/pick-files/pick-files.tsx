@@ -120,7 +120,6 @@ export class PickAndUploadComponent extends React.Component<
 							if (this.resultArr.length !== this.filesNumber) {
 								return;
 							}
-							this.pickFileEl!.value = "";
 							this.loading = false;
 							if (this.props.onFinishLoading) {
 								this.props.onFinishLoading();

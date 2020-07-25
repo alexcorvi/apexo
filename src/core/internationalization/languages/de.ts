@@ -91,9 +91,8 @@ export const de: typeof raw = {
 	"general setting": "allgemeine einstellung",
 	"financial settings": "finanzielle einstellungen",
 	"optional modules and features": "optionale module und funktionen",
-	"backup and restore": "sichern und wiederherstellen",
-	"automated backup and restore":
-		"automatisierte sicherung und wiederherstellung",
+	backup: "sichern",
+	"automated backups": "automatisierte sicherung",
 	"login pin": "login-pin",
 	permission: "genehmigung",
 	"upcoming appointments": "bevorstehende termine",
@@ -369,7 +368,6 @@ export const de: typeof raw = {
 	"profit percentage": "gewinnprozentsatz",
 	unpaid: "unbezahlt",
 	"out of": "aus",
-	backup: "backup",
 	actions: "aktionen",
 	"settings are locked": "einstellungen sind gesperrt",
 	"to prevent unintentional changes, solve the mathematical equation to unlock":
@@ -439,6 +437,8 @@ export const de: typeof raw = {
 		"dieser patient hat keinen termin",
 	"backup and restore functionality are not available while you're offline":
 		"sicherungs- und wiederherstellungsfunktionen sind nicht verfügbar, wenn sie offline sind",
+	"you can download a backup from below and use this button to restore it":
+		"sie können ein backup von unten herunterladen und über diese schaltfläche wiederherstellen",
 	"choose the main language of display menus and items":
 		"wählen sie die hauptsprache der anzeigemenüs und -elemente",
 	"set the date format to be used across this application":
@@ -462,8 +462,8 @@ export const de: typeof raw = {
 		'sie müssen behandlungen im abschnitt "behandlungen" hinzufügen, bevor sie neue termine buchen können',
 	"click a thumbnail to expand it":
 		"klicken sie auf eine miniaturansicht, um sie zu erweitern",
-	'all unsaved data will be lost. all data will be removed and replaced by the backup file. type "yes" to confirm':
-		"alle nicht gespeicherten daten gehen verloren. ",
+	"all unsaved data will be lost. all data will be removed and replaced by the backup file":
+		"alle nicht gespeicherten daten gehen verloren",
 	"please enter file name": "bitte geben sie den dateinamen ein",
 	"please enter your pin": "bitte geben sie ihre pin ein",
 	"are you sure you want to delete this appointment?":

@@ -275,7 +275,6 @@ function randomCondition():
 
 export function loadDemoData() {
 	return new Promise((resolve, reject) => {
-		(window as any).modules = modules;
 		const Http = new XMLHttpRequest();
 		const url = "./demo.json";
 		Http.open("GET", url);

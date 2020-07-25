@@ -6,8 +6,6 @@ export const dictionary = {
 	module_statistics: "module_statistics",
 	module_labwork: "module_labwork",
 	time_tracking: "time_tracking",
-	backup_freq: "backup_freq",
-	backup_retain: "backup_retain",
 	dropbox_accessToken: "dropbox_accessToken",
 	lang: "lang",
 	date_format: "date_format",

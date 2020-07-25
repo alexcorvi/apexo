@@ -2,6 +2,7 @@ import { PageLoader } from "@common-components";
 import { LoginStep, text } from "@core";
 import * as core from "@core";
 import { MessagesView, ModalsView } from "@main-components";
+import * as utils from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
@@ -47,7 +48,7 @@ export class ErrorBoundaryView extends React.Component<{}> {
 	componentDidCatch(error: any, info: { componentStack: string }) {
 		this.hasError = true;
 		this.stackTrace = error.stack;
-		console.log(
+		utils.log(
 			error,
 			error.stack,
 			error.toString(),
@@ -123,7 +124,7 @@ export class MainView extends React.Component {
 	}
 
 	componentDidCatch() {
-		console.log("Error");
+		utils.log("Error");
 	}
 
 	componentDidMount() {

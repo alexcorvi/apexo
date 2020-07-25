@@ -141,7 +141,7 @@ export class PatientGalleryPanel extends React.Component<{
 										{
 											text(
 												"this patient does not seem to have any photo record uploaded, press the plus sign button below to start uploading"
-											).h
+											).c
 										}
 									</MessageBar>
 								) : this.selectedImagePath ? (

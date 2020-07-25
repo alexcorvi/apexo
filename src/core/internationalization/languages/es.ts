@@ -90,9 +90,8 @@ export const es: typeof raw = {
 	"general setting": "ajustes generales",
 	"financial settings": "ajustes financieros",
 	"optional modules and features": "módulos opcionales y características",
-	"backup and restore": "copia de seguridad y restaurar",
-	"automated backup and restore":
-		"copia de seguridad y restauración automatizadas",
+	backup: "copia de seguridad",
+	"automated backups": "copia de seguridad automatizadas",
 	"login pin": "pin de inicio de sesión",
 	permission: "permiso",
 	"upcoming appointments": "próximas citas",
@@ -132,6 +131,8 @@ export const es: typeof raw = {
 	"this patient does not have any appointment": "este paciente no tiene cita",
 	"backup and restore functionality are not available while you're offline":
 		"la funcionalidad de copia de seguridad y restauración no está disponible mientras está desconectado",
+	"you can download a backup from below and use this button to restore it":
+		"puede descargar una copia de seguridad desde abajo y usar este botón para restaurarla",
 	"choose the main language of display menus and items":
 		"elija el idioma principal de los menús y elementos de visualización",
 	"set the date format to be used across this application":
@@ -205,8 +206,8 @@ export const es: typeof raw = {
 	"labwork module disabled": "módulo de trabajo de laboratorio deshabilitado",
 	"time tracking enabled": "seguimiento de tiempo habilitado",
 	"time tracking disabled": "seguimiento de tiempo deshabilitado",
-	'all unsaved data will be lost. all data will be removed and replaced by the backup file. type "yes" to confirm':
-		"todos los datos no guardados se perderán. ",
+	"all unsaved data will be lost. all data will be removed and replaced by the backup file":
+		"todos los datos no guardados se perderán",
 	"please enter file name": "por favor ingrese el nombre del archivo",
 	"please enter your pin": "por favor ingrese su pin",
 	"are you sure you want to delete this appointment?":
@@ -431,7 +432,6 @@ export const es: typeof raw = {
 	"profit percentage": "porcentaje de beneficio",
 	unpaid: "no pagado",
 	"out of": "fuera de",
-	backup: "apoyo",
 	actions: "comportamiento",
 	"settings are locked": "la configuración está bloqueada",
 	"to prevent unintentional changes, solve the mathematical equation to unlock":

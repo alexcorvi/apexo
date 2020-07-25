@@ -105,8 +105,7 @@ export const ar: typeof raw = {
 	"general setting": "اعدادات عامة",
 	"financial settings": "اعدادات مالية",
 	"optional modules and features": "ميزات اختيارية",
-	"backup and restore": "الحفظ والاسترجاع",
-	"automated backup and restore": "حفظ واسترجاع تلقائي",
+	"automated backups": "خزن احتياطي تلقائي",
 	"login pin": "رمز الدخول",
 	permission: "التفويض",
 	"upcoming appointments": "المواعيد القادمة",
@@ -151,6 +150,8 @@ export const ar: typeof raw = {
 		"لم يتم تسجيل اي موعد لهذا المريض",
 	"backup and restore functionality are not available while you're offline":
 		"عمليات الخزن الاحتياطي والاسترجاع تتطلب اتصالا بالانترنت",
+	"you can download a backup from below and use this button to restore it":
+		"يمكنك تنزيل احدى النسخ الاحتياطية ادناه والقيام باسترجاع بياناتها عبر هذا الزر",
 	"choose the main language of display menus and items":
 		"اختر لغة العرض والقوائم",
 	"set the date format to be used across this application":
@@ -227,8 +228,8 @@ export const ar: typeof raw = {
 	/**========================================
 	 * prompts
 	 */
-	'all unsaved data will be lost. all data will be removed and replaced by the backup file. type "yes" to confirm':
-		"جميع البيانات سيتم حذفها واستبدالها بالبيانات الموجودة في النسخة الاحتياطية، أكتب yes للتاكيد",
+	"all unsaved data will be lost. all data will be removed and replaced by the backup file":
+		"جميع البيانات سيتم حذفها واستبدالها بالبيانات الموجودة في النسخة الاحتياطية",
 	"please enter file name": "يرجى كتابة اسم للملف",
 	"please enter your pin": "يرجى ادخال رمز الدخول",
 	"are you sure you want to delete this appointment?":

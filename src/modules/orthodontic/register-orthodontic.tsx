@@ -3,13 +3,14 @@ import * as modules from "@modules";
 import * as React from "react";
 export const registerOrthodontic = async () => {
 	const dbs = await core.connect<modules.OrthoCaseSchema>(
-		modules.orthoNamespace
+		modules.orthoNamespace,
+		modules.OrthoCase
 	);
 
 	modules.setOrthoCasesStore(
 		new modules.OrthoCases({
 			model: modules.OrthoCase,
-			DBInstance: dbs.localDatabase
+			DBInstance: dbs.localDatabase,
 		})
 	);
 
@@ -25,7 +26,7 @@ export const registerOrthodontic = async () => {
 		},
 		condition: () =>
 			!!modules.setting!.getSetting("module_orthodontics") &&
-			(core.user.currentUser || { canViewOrtho: false }).canViewOrtho
+			(core.user.currentUser || { canViewOrtho: false }).canViewOrtho,
 	});
 	core.menu.items.push({
 		icon: "MiniLink",
@@ -39,6 +40,6 @@ export const registerOrthodontic = async () => {
 
 		condition: () =>
 			(core.user.currentUser || { canViewOrtho: false }).canViewOrtho &&
-			!!modules.setting!.getSetting("module_orthodontics")
+			!!modules.setting!.getSetting("module_orthodontics"),
 	});
 };

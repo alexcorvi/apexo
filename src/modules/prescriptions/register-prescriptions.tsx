@@ -3,13 +3,14 @@ import * as modules from "@modules";
 import * as React from "react";
 export const registerPrescriptions = async () => {
 	const dbs = await core.connect<modules.PrescriptionItemSchema>(
-		modules.prescriptionsNamespace
+		modules.prescriptionsNamespace,
+		modules.PrescriptionItem
 	);
 
 	modules.setPrescriptionsStore(
 		new modules.Prescriptions({
 			model: modules.PrescriptionItem,
-			DBInstance: dbs.localDatabase
+			DBInstance: dbs.localDatabase,
 		})
 	);
 
@@ -19,16 +20,16 @@ export const registerPrescriptions = async () => {
 		namespace: modules.prescriptionsNamespace,
 		regex: /^prescriptions/,
 		component: async () => {
-			const PrescriptionsPage = (await import(
-				"./components/page.prescriptions"
-			)).PrescriptionsPage;
+			const PrescriptionsPage = (
+				await import("./components/page.prescriptions")
+			).PrescriptionsPage;
 			return <PrescriptionsPage />;
 		},
 		condition: () =>
 			!!modules.setting!.getSetting("module_prescriptions") &&
 			(core.user.currentUser || { canViewPrescriptions: false })
 				.canViewPrescriptions &&
-			!!modules.prescriptions
+			!!modules.prescriptions,
 	});
 
 	core.menu.items.push({
@@ -44,6 +45,6 @@ export const registerPrescriptions = async () => {
 			(core.user.currentUser || { canViewPrescriptions: false })
 				.canViewPrescriptions &&
 			!!modules.setting!.getSetting("module_prescriptions") &&
-			!!modules.prescriptions
+			!!modules.prescriptions,
 	});
 };

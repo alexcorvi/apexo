@@ -3,13 +3,14 @@ import * as modules from "@modules";
 import * as React from "react";
 export const registerSettings = async () => {
 	const dbs = await core.connect<modules.SettingItemSchema>(
-		modules.settingsNamespace
+		modules.settingsNamespace,
+		modules.SettingsItem
 	);
 
 	modules.setSettingsStore(
 		new modules.Settings({
 			model: modules.SettingsItem,
-			DBInstance: dbs.localDatabase
+			DBInstance: dbs.localDatabase,
 		})
 	);
 
@@ -33,7 +34,7 @@ export const registerSettings = async () => {
 		},
 		condition: () =>
 			(core.user.currentUser || { canViewSettings: false })
-				.canViewSettings
+				.canViewSettings,
 	});
 
 	core.menu.items.push({
@@ -47,6 +48,6 @@ export const registerSettings = async () => {
 		url: "",
 		condition: () =>
 			(core.user.currentUser || { canViewSettings: false })
-				.canViewSettings
+				.canViewSettings,
 	});
 };

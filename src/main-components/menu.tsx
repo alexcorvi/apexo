@@ -1,6 +1,4 @@
-import Col from "../common-components/grid/col";
-import { ProfileSquaredComponent } from "../common-components/profile/profile-squared";
-import { Row } from "@common-components";
+import { Col, ProfileSquaredComponent, Row } from "@common-components";
 import { menu, text } from "@core";
 import * as core from "@core";
 import { observer } from "mobx-react";
@@ -19,7 +17,10 @@ class Version extends React.Component {
 		return (
 			<div className="ver">
 				apexo
-				<br /> <span>--VERSION--</span>
+				<br />{" "}
+				<span>
+					--VERSION--{core.status.version.charAt(0).toUpperCase()}
+				</span>
 			</div>
 		);
 	}

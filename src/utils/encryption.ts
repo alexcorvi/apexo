@@ -1,4 +1,3 @@
-import { decode, encode } from "./base64";
 import * as sjcl from "sjcl";
 
 export const defaultSecret = location.host
@@ -8,9 +7,9 @@ export const defaultSecret = location.host
 	.toString();
 
 export function encrypt(str: string, secret?: string) {
-	return encode((sjcl as any).encrypt(secret || defaultSecret, str));
+	return (sjcl as any).encrypt(secret || defaultSecret, str);
 }
 
 export function decrypt(str: string, secret?: string) {
-	return sjcl.decrypt(secret || defaultSecret, decode(str));
+	return sjcl.decrypt(secret || defaultSecret, str);
 }

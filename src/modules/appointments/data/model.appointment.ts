@@ -1,11 +1,13 @@
+import { computed, observable } from "mobx";
+import { Model, observeModel } from "pouchx";
 import {
 	AppointmentSchema,
 	patients,
 	setting,
 	staff,
 	Treatment,
-	treatments
-	} from "@modules";
+	treatments,
+} from "@modules";
 import {
 	comparableDate,
 	generateID,
@@ -14,10 +16,8 @@ import {
 	isTomorrow,
 	isYesterday,
 	num,
-	second
-	} from "@utils";
-import { computed, observable } from "mobx";
-import { Model, observeModel } from "pouchx";
+	second,
+} from "@utils";
 
 @observeModel
 export class Appointment extends Model<AppointmentSchema>
@@ -28,7 +28,7 @@ export class Appointment extends Model<AppointmentSchema>
 
 	@observable diagnosis: string = "";
 
-	@observable treatmentID: string = (treatments!.docs[0] || { _id: "" })._id;
+	@observable treatmentID: string = "";
 
 	@observable units: number = 1;
 
@@ -66,18 +66,18 @@ export class Appointment extends Model<AppointmentSchema>
 	@computed
 	get operatingStaff() {
 		return staff!.docs.filter(
-			member => this.staffID.indexOf(member._id) !== -1
+			(member) => this.staffID.indexOf(member._id) !== -1
 		);
 	}
 
 	@computed
 	get patient() {
-		return patients!.docs.find(x => x._id === this.patientID);
+		return patients!.docs.find((x) => x._id === this.patientID);
 	}
 
 	@computed
 	get treatment() {
-		return treatments!.docs.find(x => x._id === this.treatmentID);
+		return treatments!.docs.find((x) => x._id === this.treatmentID);
 	}
 
 	@computed
@@ -177,7 +177,7 @@ export class Appointment extends Model<AppointmentSchema>
 				${this.dueTomorrow ? "tomorrow" : ""}
 				${this.isUpcoming ? "upcoming future" : ""}
 				${(this.patient || { name: "" }).name}
-				${this.operatingStaff.map(x => x.name).join(" ")}
+				${this.operatingStaff.map((x) => x.name).join(" ")}
 				${this.notes}
 		`.toLowerCase();
 	}
@@ -225,7 +225,7 @@ Diagnosis: ${json.diagnosis}`
 			complaint: this.complaint,
 			staffID: Array.from(this.staffID),
 			units: this.units,
-			notes: this.notes
+			notes: this.notes,
 		};
 	}
 

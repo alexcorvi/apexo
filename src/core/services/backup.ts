@@ -1,8 +1,20 @@
+import { BACKUPS_DIR, UploadedFile } from "@core";
 import * as core from "@core";
-import { decode, encode, generateID, second } from "@utils";
 import { saveAs } from "file-saver";
-const ext = "apx";
-
+import { compressToUTF16, decompressFromUTF16 } from "lz-string";
+import {
+	decode,
+	encode,
+	generateID,
+	second,
+	store,
+	encrypt,
+	decrypt,
+	defaultSecret,
+	day,
+	username,
+} from "@utils";
+export const backupsExtension = "apx";
 export interface DatabaseDump {
 	dbName: string;
 	data: any[];
@@ -20,63 +32,56 @@ export const backup = {
 
 		for (let index = 0; index < core.DBNames.length; index++) {
 			const dbName = core.DBNames[index];
-
-			const remoteDatabase = new PouchDB(
-				`${core.status.server}/${dbName}`,
-				{
-					fetch: (url, opts) =>
-						PouchDB.fetch(url, {
-							...opts,
-							credentials: "include",
-						}),
-				}
-			);
+			const DB = core.localDBRefs[index];
 
 			const data = (
-				await remoteDatabase.allDocs({
+				await DB.allDocs({
 					include_docs: true,
-					attachments: true,
 				})
 			).rows.map((entry) => {
 				if (entry.doc) {
 					delete entry.doc._rev;
 				}
-				return entry.doc;
+				let doc = entry.doc;
+				doc = core.DTF.minify.do(doc, core.defaultsArr[index]);
+				doc = core.DTF.compress.do(doc);
+				doc = core.DTF.encrypt.do(doc, core.uniqueString());
+				return doc;
 			});
-
 			dumps.push({ dbName, data });
 		}
-
 		return dumps;
 	},
 
-	toBase64: async function () {
+	toCompressed: async function () {
 		const JSONDump = await backup.toJSON();
-		return encode(JSON.stringify(JSONDump));
+		const string = JSON.stringify(JSONDump);
+		const compressed = "LZC/" + compressToUTF16(string);
+		return compressed;
 	},
 
 	toBlob: async function () {
-		const base64 = await backup.toBase64();
-		return new Blob(["apexo-backup:" + base64], {
+		const compressed = await backup.toCompressed();
+		return new Blob(["apexo-backup:" + compressed], {
 			type: "text/plain;charset=utf-8",
 		});
 	},
 
-	toDropbox: async function (): Promise<string> {
+	toFilesServer: async function (): Promise<string> {
 		const blob = await backup.toBlob();
 		const path = await core.files().save({
 			blob,
-			ext,
+			ext: backupsExtension,
 			dir: core.BACKUPS_DIR,
 		});
 		return path;
 	},
 
-	list: async function () {
+	list: async function (): Promise<UploadedFile[]> {
 		return await core.files().backups();
 	},
 
-	deleteFromDropbox: async function (path: string) {
+	deleteFromFilesServer: async function (path: string) {
 		return await core.files().remove(path);
 	},
 };
@@ -84,7 +89,7 @@ export const backup = {
 export const restore = {
 	fromJSON: async function (json: DatabaseDump[]) {
 		view.hideEverything();
-		return new Promise(async (resolve, reject) => {
+		return new Promise(async () => {
 			const PouchDB: PouchDB.Static = ((await import(
 				"pouchdb-browser"
 			)) as any).default;
@@ -96,13 +101,27 @@ export const restore = {
 				view.msg(`starting: deleting all server/"${dump.dbName}"`);
 				const dbName = dump.dbName;
 				const remoteDatabase1 = new PouchDB(
-					`${core.status.server}/${dbName}`,
+					`${core.status.server}/${
+						core.status.version === "supported"
+							? `c_${username()}_${dbName}`
+							: dbName
+					}`,
 					{
-						fetch: (url, opts) =>
-							PouchDB.fetch(url, {
+						fetch: (url, opts) => {
+							return PouchDB.fetch(url, {
 								...opts,
-								credentials: "include",
-							}),
+								credentials:
+									core.status.version === "community"
+										? "include"
+										: "omit",
+								headers: {
+									Authorization: `Bearer ${store.get(
+										"LSL_time"
+									)}`,
+									"Content-Type": "application/json",
+								},
+							});
+						},
 					}
 				);
 				await remoteDatabase1.destroy();
@@ -112,14 +131,33 @@ export const restore = {
 				);
 				view.msg(`starting: uploading data to server/"${dump.dbName}"`);
 				const remoteDatabase2 = new PouchDB(
-					`${core.status.server}/${dbName}`,
+					`${core.status.server}/${
+						core.status.version === "supported"
+							? `c_${username()}_${dbName}`
+							: dbName
+					}`,
 					{
-						fetch: (url, opts) =>
-							PouchDB.fetch(url, {
+						fetch: (url, opts) => {
+							return PouchDB.fetch(url, {
 								...opts,
-								credentials: "include",
-							}),
+								credentials:
+									core.status.version === "community"
+										? "include"
+										: "omit",
+								headers: {
+									Authorization: `Bearer ${store.get(
+										"LSL_time"
+									)}`,
+									"Content-Type": "application/json",
+								},
+							});
+						},
 					}
+				);
+				core.documentTransformation(
+					remoteDatabase2,
+					core.uniqueString(),
+					core.defaultsArr[index]
 				);
 				await remoteDatabase2.bulkDocs(dump.data);
 				view.msg(
@@ -142,36 +180,35 @@ export const restore = {
 		});
 	},
 
-	fromBase64: async function (base64Data: string, ignoreConfirm?: boolean) {
-		return new Promise(async (resolve, reject) => {
-			if (ignoreConfirm) {
-				const json = JSON.parse(decode(base64Data));
-				await restore.fromJSON(json);
-				resolve();
+	fromBase64: async function (base64Data: string) {
+		function decodeData(data: string) {
+			if (data.startsWith("LZC/")) {
+				return decompressFromUTF16(data.substr(4));
 			} else {
-				core.modals.newModal({
-					text: core.text(
-						'all unsaved data will be lost. all data will be removed and replaced by the backup file. type "yes" to confirm'
-					).c,
-					onConfirm: async (input: string) => {
-						if (input.toLowerCase() === "yes") {
-							const json = JSON.parse(decode(base64Data));
-							await restore.fromJSON(json);
-							resolve();
-						} else {
-							core.messages.newMessage({
-								id: generateID(),
-								text: core.text("restoration cancelled").c,
-							});
-							return reject();
-						}
-					},
-					input: true,
-					showCancelButton: false,
-					showConfirmButton: true,
-					id: generateID(),
-				});
+				return decode(base64Data);
 			}
+		}
+		return new Promise(async (resolve, reject) => {
+			core.modals.newModal({
+				text: core.text(
+					"all unsaved data will be lost. all data will be removed and replaced by the backup file"
+				).c,
+				onConfirm: async () => {
+					const json = JSON.parse(decodeData(base64Data));
+					await restore.fromJSON(json);
+					resolve();
+				},
+				onDismiss: () => {
+					core.messages.newMessage({
+						id: generateID(),
+						text: core.text("restoration cancelled").c,
+					});
+					return reject();
+				},
+				showCancelButton: true,
+				showConfirmButton: true,
+				id: generateID(),
+			});
 		});
 	},
 
@@ -189,52 +226,40 @@ export const restore = {
 			reader.onloadend = async function () {
 				const base64data = reader.result;
 				if (typeof base64data === "string") {
-					const fileData = atob(base64data.split("base64,")[1]).split(
-						"apexo-backup:"
-					)[1];
-					if (fileData) {
-						await restore.fromBase64(fileData);
+					const fileData0 = base64data.split("base64,")[1];
+					const fileData1 = decode(fileData0);
+					let fileData2 = fileData1.split("apexo-backup:")[1];
+					if (
+						fileData1.startsWith(`data:image/apx;base64,`) &&
+						!fileData2
+					) {
+						fileData2 = fileData1.split(
+							"data:image/apx;base64,"
+						)[1];
+						fileData2 = decode(fileData2);
+						fileData2 = fileData2.split("apexo-backup:")[1];
+					}
+					if (fileData2) {
+						await restore.fromBase64(fileData2);
 						resolve();
 					} else {
-						terminate();
+						return terminate();
 					}
 				} else {
-					terminate();
+					return terminate();
 				}
 			};
 		});
 	},
 
-	fromDropbox: async function (filePath: string) {
-		const base64File = (await core.files().get(filePath)).split(
+	fromFilesServer: async function (filePath: string) {
+		const base64File = (await core.files().get(filePath, true)).split(
 			";base64,"
 		)[1];
 		const base64Data = decode(base64File).split("apexo-backup:")[1];
 		this.fromBase64(base64Data);
 	},
 };
-
-// TODO: encrypt backup files
-
-export async function downloadCurrentStateAsBackup() {
-	const blob = await backup.toBlob();
-	return new Promise((resolve) => {
-		core.modals.newModal({
-			id: generateID(),
-			text: core.text("please enter file name").c,
-			onConfirm: (fileName) => {
-				saveAs(blob, `${fileName || "apexo-backup"}.${ext}`);
-				resolve();
-			},
-			onDismiss: () => {
-				resolve();
-			},
-			input: true,
-			showCancelButton: true,
-			showConfirmButton: true,
-		});
-	});
-}
 
 const view = {
 	el: document.getElementById("root"),

@@ -1,8 +1,8 @@
-import { translate } from "../../../core/internationalization/lang";
 import * as core from "@core";
-import { status, text } from "@core";
+import { text } from "@core";
 import * as modules from "@modules";
-import { dateNames, formatDate, second } from "@utils";
+import { dateNames, day, formatDate, generateID, second } from "@utils";
+import { saveAs } from "file-saver";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
@@ -13,16 +13,14 @@ import {
 	SectionComponent,
 } from "@common-components";
 import {
-	ContextualMenu,
 	DefaultButton,
 	Dropdown,
 	Icon,
-	IconButton,
 	MessageBar,
 	MessageBarType,
 	TextField,
 	Toggle,
-	TooltipHost,
+	Link,
 } from "office-ui-fabric-react";
 
 @observer
@@ -38,21 +36,20 @@ export class SettingsPage extends React.Component {
 
 	chosenCombination = this.unlockCombinations[Math.floor(Math.random() * 6)];
 
-	@observable compactionInProgress = false;
-	@observable downloadInProgress = false;
-
 	@observable inputEl: HTMLInputElement | null = null;
 
 	@computed get canEdit() {
 		return core.user.currentUser!.canEditSettings;
 	}
 
-	@observable remoteBackupInProgress: boolean = false;
+	@observable inProgress: boolean = false;
 
 	@observable locked: boolean = true;
 
+	@observable key: string = Math.random().toString();
+
 	componentDidMount() {
-		setTimeout(() => modules.setting!.updateDropboxBackups(), second);
+		setTimeout(() => modules.setting!.updateAutoBackups(), second);
 	}
 
 	render() {
@@ -94,572 +91,598 @@ export class SettingsPage extends React.Component {
 				) : (
 					<div className="unlocked">
 						{" "}
-						<SectionComponent title={text(`general setting`).h}>
-							<SettingInputComponent
-								element={
-									<Dropdown
-										label={text("language").c}
-										options={translate.languages.map(
-											(x) => ({
-												key: x.code,
-												text: x.localName,
-											})
-										)}
-										defaultSelectedKey={modules.setting!.getSetting(
-											"lang"
-										)}
-										onChange={(ev, v) => {
-											modules.setting!.setSetting(
-												"lang",
-												v!.key.toString()
-											);
-										}}
-										disabled={!this.canEdit}
-									/>
-								}
-								info={
-									text(
-										`choose the main language of display menus and items`
-									).c
-								}
-							/>
-
-							<SettingInputComponent
-								element={
-									<Dropdown
-										label={text("date format").c}
-										options={[
-											{
-												key: "dd/mm/yyyy",
-												text: "dd/mm/yyyy",
-											},
-											{
-												key: "mm/dd/yyyy",
-												text: "mm/dd/yyyy",
-											},
-											{
-												key: "dd MM 'YY",
-												text: "dd MM 'YY",
-											},
-										]}
-										defaultSelectedKey={modules.setting!.getSetting(
-											"date_format"
-										)}
-										onChange={(ev, v) => {
-											modules.setting!.setSetting(
-												"date_format",
-												v!.key.toString()
-											);
-										}}
-										disabled={!this.canEdit}
-									/>
-								}
-								info={
-									text(
-										`set the date format to be used across this application`
-									).c
-								}
-							/>
-
-							<SettingInputComponent
-								element={
-									<Dropdown
-										label={text("week ends on").c}
-										options={dateNames
-											.days()
-											.map((dayName, index) => ({
-												key: index.toString(),
-												text: text(
-													dayName.toLowerCase() as any
-												).c,
-											}))}
-										defaultSelectedKey={modules.setting!.getSetting(
-											"weekend_num"
-										)}
-										onChange={(ev, v) => {
-											modules.setting!.setSetting(
-												"weekend_num",
-												v!.key.toString()
-											);
-										}}
-										disabled={!this.canEdit}
-									/>
-								}
-								info={text(`on which day the week ends`).c}
-							/>
-
-							<SettingInputComponent
-								element={
-									<TextField
-										value={modules.setting!.getSetting(
-											"dropbox_accessToken"
-										)}
-										label={text("dropbox access token").c}
-										onChange={(ev, val) => {
-											modules.setting!.setSetting(
-												"dropbox_accessToken",
-												val!
-											);
-
-											setTimeout(
-												() =>
-													core.status.validateOnlineStatus(),
-												second / 2
-											);
-										}}
-										disabled={!this.canEdit}
-									/>
-								}
-								info={
-									text(
-										`this access token is used to store files across the application, like backups and images`
-									).c
-								}
-							/>
-						</SectionComponent>
-						<SectionComponent title={text(`financial settings`).h}>
-							{modules.setting!.getSetting("time_tracking") ? (
-								<SettingInputComponent
-									element={
-										<TextField
-											label={
-												text("time expenses (per hour)")
-													.c
-											}
-											type="number"
-											value={modules.setting!.getSetting(
-												"hourlyRate"
-											)}
-											onChange={(ev, newVal) => {
-												modules.setting!.setSetting(
-													"hourlyRate",
-													newVal!.toString()
-												);
-											}}
-											disabled={!this.canEdit}
-										/>
-									}
-									info={
-										text(
-											// tslint:disable-next-line:max-line-length
-											`when time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses so here you can put the electricity, rent, and other time dependent expenses`
-										).c
-									}
-								/>
-							) : (
-								""
-							)}
-
-							<SettingInputComponent
-								element={
-									<TextField
-										label={text("currency symbol").c}
-										value={modules.setting!.getSetting(
-											"currencySymbol"
-										)}
-										onChange={(ev, newVal) => {
-											modules.setting!.setSetting(
-												"currencySymbol",
-												newVal!.toString()
-											);
-										}}
-										disabled={!this.canEdit}
-									/>
-								}
-								info={
-									text(
-										`this symbol you enter here will be used across your application`
-									).c
-								}
-							/>
-						</SectionComponent>
-						<SectionComponent
-							title={text(`optional modules and features`).h}
-						>
-							<Toggle
-								data-testid="prescriptions-toggle"
-								onText={text("prescriptions module enabled").c}
-								offText={
-									text("prescriptions module disabled").c
-								}
-								checked={
-									!!modules.setting!.getSetting(
-										"module_prescriptions"
-									)
-								}
-								onChange={(ev, val) => {
-									modules.setting!.setSetting(
-										"module_prescriptions",
-										val ? "enable" : ""
-									);
-								}}
-								disabled={!this.canEdit}
-							/>
-							<Toggle
-								data-testid="ortho-toggle"
-								onText={text("orthodontic module enabled").c}
-								offText={text("orthodontic module disabled").c}
-								checked={
-									!!modules.setting!.getSetting(
-										"module_orthodontics"
-									)
-								}
-								onChange={(ev, val) => {
-									modules.setting!.setSetting(
-										"module_orthodontics",
-										val ? "enable" : ""
-									);
-								}}
-								disabled={!this.canEdit}
-							/>
-							<Toggle
-								data-testid="labwork-toggle"
-								onText={text("labwork module enabled").c}
-								offText={text("labwork module disabled").c}
-								checked={
-									!!modules.setting!.getSetting(
-										"module_labwork"
-									)
-								}
-								onChange={(ev, val) => {
-									modules.setting!.setSetting(
-										"module_labwork",
-										val ? "enable" : ""
-									);
-								}}
-								disabled={!this.canEdit}
-							/>
-							<Toggle
-								data-testid="stats-toggle"
-								onText={text("statistics module enabled").c}
-								offText={text("statistics module disabled").c}
-								checked={
-									!!modules.setting!.getSetting(
-										"module_statistics"
-									)
-								}
-								onChange={(ev, val) => {
-									modules.setting!.setSetting(
-										"module_statistics",
-										val ? "enable" : ""
-									);
-								}}
-								disabled={!this.canEdit}
-							/>
-							<Toggle
-								data-testid="time-tracking-toggle"
-								onText={text("time tracking enabled").c}
-								offText={text("time tracking disabled").c}
-								checked={
-									!!modules.setting!.getSetting(
-										"time_tracking"
-									)
-								}
-								onChange={(ev, val) => {
-									modules.setting!.setSetting(
-										"time_tracking",
-										val ? "enable" : ""
-									);
-								}}
-								disabled={!this.canEdit}
-							/>
-						</SectionComponent>
-						<SectionComponent title={text(`backup and restore`).h}>
-							{status.isOnline.server ? (
-								<div>
-									<DefaultButton
-										onClick={async () => {
-											this.compactionInProgress = true;
-											await core.dbAction("compact");
-											this.compactionInProgress = false;
-										}}
-										iconProps={{ iconName: "ZipFolder" }}
-										className="m-l-5 m-t-5"
-										text={text("run compaction").c}
-										disabled={this.compactionInProgress}
-									/>
-
-									<DefaultButton
-										onClick={async () => {
-											this.downloadInProgress = true;
-											await core.downloadCurrentStateAsBackup();
-											this.downloadInProgress = false;
-										}}
-										className="m-l-5 m-t-5"
-										iconProps={{ iconName: "Database" }}
-										text={text("download a backup").c}
-										disabled={this.downloadInProgress}
-									/>
-
-									<DefaultButton
-										onClick={() =>
-											this.inputEl
-												? this.inputEl.click()
-												: ""
-										}
-										className="m-l-5 m-t-5"
-										iconProps={{ iconName: "DatabaseSync" }}
-										text={text("restore from file").c}
-									/>
-
-									<input
-										ref={(el) => (this.inputEl = el)}
-										hidden
-										type="file"
-										multiple={false}
-										onChange={async (e) => {
-											if (
-												e.target.files &&
-												e.target.files.length > 0
-											) {
-												core.restore.fromFile(
-													e.target.files[0]
-												);
-											}
-										}}
-									/>
-								</div>
-							) : (
-								<MessageBar
-									messageBarType={MessageBarType.warning}
+						<Row gutter={8}>
+							<Col md={15}>
+								<SectionComponent
+									title={text(`general setting`).h}
 								>
-									{
-										text(
-											"backup and restore functionality are not available while you're offline"
-										).c
-									}
-								</MessageBar>
-							)}
-						</SectionComponent>
-						<SectionComponent
-							title={text(`automated backup and restore`).h}
-						>
-							{status.isOnline.client ? (
-								status.isOnline.files ? (
-									<div>
-										<Dropdown
-											label={text("backup frequency").c}
-											options={[
-												{
-													key: "d",
-													text: text("daily").c,
-												},
-												{
-													key: "w",
-													text: text("weekly").c,
-												},
-												{
-													key: "m",
-													text: text("monthly").c,
-												},
-												{
-													key: "n",
-													text: text("never").c,
-												},
-											]}
-											selectedKey={modules.setting!.getSetting(
-												"backup_freq"
-											)}
-											onChange={(ev, v) => {
-												modules.setting!.setSetting(
-													"backup_freq",
-													v!.key.toString()
-												);
-											}}
-											disabled={!this.canEdit}
-										/>
+									<SettingInputComponent
+										element={
+											<Dropdown
+												label={text("language").c}
+												options={core.translate.languages.map(
+													(x) => ({
+														key: x.code,
+														text: x.localName,
+													})
+												)}
+												defaultSelectedKey={modules.setting!.getSetting(
+													"lang"
+												)}
+												onChange={(ev, v) => {
+													modules.setting!.setSetting(
+														"lang",
+														v!.key.toString()
+													);
+												}}
+												disabled={!this.canEdit}
+											/>
+										}
+										info={
+											text(
+												`choose the main language of display menus and items`
+											).c
+										}
+									/>
 
-										<TextField
-											value={modules.setting!.getSetting(
-												"backup_retain"
-											)}
-											label={
+									<SettingInputComponent
+										element={
+											<Dropdown
+												label={text("date format").c}
+												options={[
+													{
+														key: "dd/mm/yyyy",
+														text: "dd/mm/yyyy",
+													},
+													{
+														key: "mm/dd/yyyy",
+														text: "mm/dd/yyyy",
+													},
+													{
+														key: "dd MM 'YY",
+														text: "dd MM 'YY",
+													},
+												]}
+												defaultSelectedKey={modules.setting!.getSetting(
+													"date_format"
+												)}
+												onChange={(ev, v) => {
+													modules.setting!.setSetting(
+														"date_format",
+														v!.key.toString()
+													);
+												}}
+												disabled={!this.canEdit}
+											/>
+										}
+										info={
+											text(
+												`set the date format to be used across this application`
+											).c
+										}
+									/>
+
+									<SettingInputComponent
+										element={
+											<Dropdown
+												label={text("week ends on").c}
+												options={dateNames
+													.days()
+													.map((dayName, index) => ({
+														key: index.toString(),
+														text: text(
+															dayName.toLowerCase() as any
+														).c,
+													}))}
+												defaultSelectedKey={modules.setting!.getSetting(
+													"weekend_num"
+												)}
+												onChange={(ev, v) => {
+													modules.setting!.setSetting(
+														"weekend_num",
+														v!.key.toString()
+													);
+												}}
+												disabled={!this.canEdit}
+											/>
+										}
+										info={
+											text(`on which day the week ends`).c
+										}
+									/>
+
+									{core.status.version === "community" ? (
+										<SettingInputComponent
+											element={
+												<TextField
+													value={modules.setting!.getSetting(
+														"dropbox_accessToken"
+													)}
+													label={
+														text(
+															"dropbox access token"
+														).c
+													}
+													onChange={(ev, val) => {
+														modules.setting!.setSetting(
+															"dropbox_accessToken",
+															val!
+														);
+
+														setTimeout(
+															() =>
+																core.status.validateOnlineStatus(),
+															second / 2
+														);
+													}}
+													disabled={!this.canEdit}
+												/>
+											}
+											info={
 												text(
-													"how many backups to retain"
+													`this access token is used to store files across the application, like backups and images`
 												).c
 											}
-											onChange={(ev, val) => {
-												modules.setting!.setSetting(
-													"backup_retain",
-													val!
-												);
-											}}
-											disabled={!this.canEdit}
-											type="number"
 										/>
+									) : (
+										""
+									)}
+								</SectionComponent>
+								<SectionComponent
+									title={text(`financial settings`).h}
+								>
+									{modules.setting!.getSetting(
+										"time_tracking"
+									) ? (
+										<SettingInputComponent
+											element={
+												<TextField
+													label={
+														text(
+															"time expenses (per hour)"
+														).c
+													}
+													type="number"
+													value={modules.setting!.getSetting(
+														"hourlyRate"
+													)}
+													onChange={(ev, newVal) => {
+														modules.setting!.setSetting(
+															"hourlyRate",
+															newVal!.toString()
+														);
+													}}
+													disabled={!this.canEdit}
+												/>
+											}
+											info={
+												text(
+													// tslint:disable-next-line:max-line-length
+													`when time tracking enabled, this is used to calculate profits and expenses, as time is also added to the expenses so here you can put the electricity, rent, and other time dependent expenses`
+												).c
+											}
+										/>
+									) : (
+										""
+									)}
 
-										{modules.setting!.dropboxBackups
-											.length ? (
-											<table className="ms-table">
-												<thead>
-													<tr>
-														<th>
-															{text("backup").c}
-														</th>
-														<th>
-															{text("actions").c}
-														</th>
-													</tr>
-												</thead>
-												<tbody>
-													{modules.setting!.dropboxBackups.map(
-														(file) => {
-															const date = new Date(
-																file.client_modified
-															);
+									<SettingInputComponent
+										element={
+											<TextField
+												label={
+													text("currency symbol").c
+												}
+												value={modules.setting!.getSetting(
+													"currencySymbol"
+												)}
+												onChange={(ev, newVal) => {
+													modules.setting!.setSetting(
+														"currencySymbol",
+														newVal!.toString()
+													);
+												}}
+												disabled={!this.canEdit}
+											/>
+										}
+										info={
+											text(
+												`this symbol you enter here will be used across your application`
+											).c
+										}
+									/>
+								</SectionComponent>
+								<SectionComponent
+									title={
+										text(`optional modules and features`).h
+									}
+								>
+									<Toggle
+										data-testid="prescriptions-toggle"
+										onText={
+											text("prescriptions module enabled")
+												.c
+										}
+										offText={
+											text(
+												"prescriptions module disabled"
+											).c
+										}
+										checked={
+											!!modules.setting!.getSetting(
+												"module_prescriptions"
+											)
+										}
+										onChange={(ev, val) => {
+											modules.setting!.setSetting(
+												"module_prescriptions",
+												val ? "enable" : ""
+											);
+										}}
+										disabled={!this.canEdit}
+									/>
+									<Toggle
+										data-testid="ortho-toggle"
+										onText={
+											text("orthodontic module enabled").c
+										}
+										offText={
+											text("orthodontic module disabled")
+												.c
+										}
+										checked={
+											!!modules.setting!.getSetting(
+												"module_orthodontics"
+											)
+										}
+										onChange={(ev, val) => {
+											modules.setting!.setSetting(
+												"module_orthodontics",
+												val ? "enable" : ""
+											);
+										}}
+										disabled={!this.canEdit}
+									/>
+									<Toggle
+										data-testid="labwork-toggle"
+										onText={
+											text("labwork module enabled").c
+										}
+										offText={
+											text("labwork module disabled").c
+										}
+										checked={
+											!!modules.setting!.getSetting(
+												"module_labwork"
+											)
+										}
+										onChange={(ev, val) => {
+											modules.setting!.setSetting(
+												"module_labwork",
+												val ? "enable" : ""
+											);
+										}}
+										disabled={!this.canEdit}
+									/>
+									<Toggle
+										data-testid="stats-toggle"
+										onText={
+											text("statistics module enabled").c
+										}
+										offText={
+											text("statistics module disabled").c
+										}
+										checked={
+											!!modules.setting!.getSetting(
+												"module_statistics"
+											)
+										}
+										onChange={(ev, val) => {
+											modules.setting!.setSetting(
+												"module_statistics",
+												val ? "enable" : ""
+											);
+										}}
+										disabled={!this.canEdit}
+									/>
+									<Toggle
+										data-testid="time-tracking-toggle"
+										onText={text("time tracking enabled").c}
+										offText={
+											text("time tracking disabled").c
+										}
+										checked={
+											!!modules.setting!.getSetting(
+												"time_tracking"
+											)
+										}
+										onChange={(ev, val) => {
+											modules.setting!.setSetting(
+												"time_tracking",
+												val ? "enable" : ""
+											);
+										}}
+										disabled={!this.canEdit}
+									/>
+								</SectionComponent>
+							</Col>
+							<Col md={9} className="backups">
+								<SectionComponent
+									title={text("restore from file").h}
+								>
+									{core.status.isOnline.files &&
+									core.status.version !== "offline" ? (
+										<div>
+											<DefaultButton
+												onClick={() =>
+													this.inputEl
+														? this.inputEl.click()
+														: ""
+												}
+												disabled={
+													this.inProgress ||
+													!this.canEdit
+												}
+												className="m-l-5 m-t-5"
+												iconProps={{
+													iconName: "DatabaseSync",
+												}}
+												text={
+													text("restore from file").c
+												}
+											/>
 
-															return (
-																<tr
-																	key={
-																		file.id
-																	}
-																>
-																	<td>
-																		<ProfileSquaredComponent
-																			onRenderInitials={() => (
-																				<div
-																					style={{
-																						textAlign:
-																							"center",
-																						fontSize: 10,
-																					}}
-																				>
-																					{`${date.getDate()}/${
-																						date.getMonth() +
-																						1
-																					}`}
-																				</div>
-																			)}
-																			text={formatDate(
-																				date,
+											<input
+												ref={(el) =>
+													(this.inputEl = el)
+												}
+												hidden
+												type="file"
+												multiple={false}
+												key={this.key}
+												onChange={async (e) => {
+													if (
+														e.target.files &&
+														e.target.files.length >
+															0
+													) {
+														core.restore.fromFile(
+															e.target.files[0]
+														);
+														this.key = Math.random().toString();
+													}
+												}}
+											/>
+
+											<MessageBar
+												style={{ marginTop: 22 }}
+												messageBarType={
+													MessageBarType.info
+												}
+											>
+												{
+													text(
+														"you can download a backup from below and use this button to restore it"
+													).c
+												}
+											</MessageBar>
+										</div>
+									) : (
+										<MessageBar
+											messageBarType={
+												MessageBarType.warning
+											}
+										>
+											{
+												text(
+													"backup and restore functionality are not available while you're offline"
+												).c
+											}
+										</MessageBar>
+									)}
+								</SectionComponent>
+								<SectionComponent
+									title={text("automated backups").h}
+								>
+									{core.status.isOnline.files &&
+									core.status.version !== "offline" ? (
+										modules.setting!.autoBackups.length ? (
+											modules
+												.setting!.autoBackups.slice()
+												.reverse()
+												.map((backup) => {
+													const now = new Date().getTime();
+													const then = new Date(
+														(
+															backup || {
+																date: 0,
+															}
+														).date
+													).getTime();
+													const diffInDays = Math.floor(
+														(now - then) / day
+													);
+													return (
+														<div key={backup.path}>
+															<ProfileSquaredComponent
+																size={4}
+																onRenderInitials={() => (
+																	<div>
+																		{
+																			diffInDays
+																		}
+																	</div>
+																)}
+																onRenderSecondaryText={() => (
+																	<div>
+																		<div>
+																			{formatDate(
+																				backup.date,
 																				modules.setting!.getSetting(
 																					"date_format"
 																				)
 																			)}
-																			subText={`${Math.round(
-																				file.size /
-																					1000
-																			)} KB`}
-																		/>
-																	</td>
-																	<td>
-																		<TooltipHost
-																			content={
-																				text(
-																					"delete"
-																				)
-																					.c
-																			}
-																		>
-																			<IconButton
-																				style={{
-																					marginRight: 6,
-																				}}
-																				iconProps={{
-																					iconName:
-																						"delete",
-																				}}
+																		</div>
+																		<span>
+																			<Link
 																				disabled={
-																					!this
-																						.canEdit ||
 																					this
-																						.remoteBackupInProgress
-																				}
-																				onClick={() => {
-																					this.remoteBackupInProgress = true;
-																					core.backup
-																						.deleteFromDropbox(
-																							file.path_lower
-																						)
-																						.then(
-																							() => {
-																								this.remoteBackupInProgress = false;
-																								modules.setting!.updateDropboxBackups();
-																							}
-																						)
-																						.catch(
-																							() => {
-																								this.remoteBackupInProgress = false;
-																								modules.setting!.updateDropboxBackups();
-																							}
-																						);
-																				}}
-																			/>
-																		</TooltipHost>
-
-																		<TooltipHost
-																			content={
-																				text(
-																					"restore"
-																				)
-																					.c
-																			}
-																		>
-																			<IconButton
-																				style={{
-																					marginRight: 6,
-																				}}
-																				iconProps={{
-																					iconName:
-																						"DatabaseSync",
-																				}}
-																				disabled={
+																						.inProgress ||
 																					!this
-																						.canEdit ||
-																					this
-																						.remoteBackupInProgress
+																						.canEdit
 																				}
-																				onClick={() => {
-																					this.remoteBackupInProgress = true;
-																					core.restore
-																						.fromDropbox(
-																							file.path_lower
-																						)
-																						.then(
-																							() =>
-																								(this.remoteBackupInProgress = false)
-																						)
-																						.catch(
-																							() =>
-																								(this.remoteBackupInProgress = false)
+																				onClick={async () => {
+																					const file = await core
+																						.files()
+																						.get(
+																							backup.path
 																						);
+																					saveAs(
+																						file.startsWith(
+																							"http"
+																						)
+																							? file
+																							: new Blob(
+																									[
+																										file,
+																									],
+																									{
+																										type:
+																											"text/plain;charset=utf-8",
+																									}
+																							  ),
+																						`apexo-backup-${formatDate(
+																							backup.date,
+																							modules.setting!.getSetting(
+																								"date_format"
+																							)
+																						).replace(
+																							/\W/g,
+																							"-"
+																						)}.${
+																							core.backupsExtension
+																						}`
+																					);
 																				}}
-																			/>
-																		</TooltipHost>
-																	</td>
-																</tr>
-															);
-														}
-													)}
-												</tbody>
-											</table>
+																			>
+																				<Icon iconName="download"></Icon>
+																				{
+																					text(
+																						"download"
+																					)
+																						.c
+																				}
+																			</Link>
+																			{diffInDays ? (
+																				<Link
+																					disabled={
+																						this
+																							.inProgress ||
+																						!this
+																							.canEdit
+																					}
+																					onClick={async () => {
+																						this.inProgress = true;
+																						try {
+																							await core.backup.deleteFromFilesServer(
+																								backup.path
+																							);
+																							await modules.setting!.updateAutoBackups();
+																						} catch (e) {}
+																						this.inProgress = false;
+																					}}
+																				>
+																					<Icon iconName="trash"></Icon>
+																					{
+																						text(
+																							"delete"
+																						)
+																							.c
+																					}
+																				</Link>
+																			) : (
+																				<Link
+																					disabled={
+																						this
+																							.inProgress ||
+																						!this
+																							.canEdit
+																					}
+																					onClick={async () => {
+																						this.inProgress = true;
+																						try {
+																							await core.backup.deleteFromFilesServer(
+																								backup.path
+																							);
+																							await modules.setting!.updateAutoBackups();
+																							await core.backup.toFilesServer();
+																							await modules.setting!.updateAutoBackups();
+																						} catch (e) {}
+																						this.inProgress = false;
+																					}}
+																				>
+																					<Icon iconName="sync"></Icon>
+																					{
+																						text(
+																							"renew"
+																						)
+																							.c
+																					}
+																				</Link>
+																			)}
+																		</span>
+																	</div>
+																)}
+																text={
+																	diffInDays
+																		? diffInDays +
+																		  " " +
+																		  text(
+																				"days ago"
+																		  ).c
+																		: text(
+																				"today"
+																		  ).c
+																}
+															/>
+														</div>
+													);
+												})
 										) : (
-											""
-										)}
-									</div>
-								) : (
-									<MessageBar
-										messageBarType={MessageBarType.warning}
-									>
-										{
-											text(
-												"files server is offline, make sure you're online and connected"
-											).c
-										}
-									</MessageBar>
-								)
-							) : (
-								<MessageBar
-									messageBarType={MessageBarType.warning}
-								>
-									{
-										text(
-											"backup and restore functionality are not available while you're offline"
-										).c
-									}
-								</MessageBar>
-							)}
-						</SectionComponent>
+											<div>
+												<DefaultButton
+													onClick={async () => {
+														this.inProgress = true;
+														modules.setting!.automatedBackups();
+														this.inProgress = false;
+													}}
+													disabled={
+														this.inProgress ||
+														!this.canEdit
+													}
+													className="m-l-5 m-t-5"
+													iconProps={{
+														iconName: "Database",
+													}}
+													text={text("backup").c}
+												/>
+											</div>
+										)
+									) : (
+										<MessageBar
+											messageBarType={
+												MessageBarType.warning
+											}
+										>
+											{
+												text(
+													"backup and restore functionality are not available while you're offline"
+												).c
+											}
+										</MessageBar>
+									)}
+								</SectionComponent>
+							</Col>
+						</Row>
 					</div>
 				)}
 			</div>
