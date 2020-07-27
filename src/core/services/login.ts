@@ -13,6 +13,22 @@ interface LoginService {
 	logout: () => Promise<true | string>;
 }
 
+function isSupportedPayload(token: string) {
+	if (!token) {
+		return false;
+	}
+	const payload = token.split(".")[1];
+	if (!payload) {
+		return false;
+	}
+	try {
+		const decoded = JSON.parse(atob(payload));
+		return !!decoded.data.user.supported;
+	} catch (e) {
+		return false;
+	}
+}
+
 function supportedOnlineLogin(
 	username: string,
 	password: string
@@ -95,8 +111,17 @@ const supportedLoginService: LoginService = {
 		}
 
 		const loginRes = await supportedOnlineLogin(username, password);
-		if (loginRes.success) {
-			store.set("LSL_time", loginRes.data.token);
+		if (!loginRes.success) {
+			return (
+				loginRes.message ||
+				`An error occurred, please make sure that you're connected & online.`
+			);
+		} else {
+			const token = loginRes.data.token;
+			if (!isSupportedPayload(token)) {
+				return "Your account is registered, but you do not have an active subscription to the supported version.";
+			}
+			store.set("LSL_time", token);
 			store.set(
 				"LSL_hash",
 				Md5.hashStr(supportedServer + username + password).toString()
@@ -105,11 +130,6 @@ const supportedLoginService: LoginService = {
 			status.loginType = LoginType.loginCredentialsOnline;
 			status.start({ server: supportedServer });
 			return true;
-		} else {
-			return (
-				loginRes.message ||
-				`An error occurred, please make sure that you're connected & online.`
-			);
 		}
 	},
 	logout: async () => {
@@ -119,6 +139,10 @@ const supportedLoginService: LoginService = {
 	},
 	activeSession: () => {
 		return new Promise((resolve, reject) => {
+			const token = store.get("LSL_time");
+			if (!isSupportedPayload(token)) {
+				return resolve(false);
+			}
 			const xhr = new XMLHttpRequest();
 			xhr.withCredentials = true;
 			xhr.addEventListener("readystatechange", function () {
@@ -134,10 +158,7 @@ const supportedLoginService: LoginService = {
 				"POST",
 				"https://apexo.app/wp-json/jwt-auth/v1/token/validate"
 			);
-			xhr.setRequestHeader(
-				"Authorization",
-				`Bearer ${store.get("LSL_time")}`
-			);
+			xhr.setRequestHeader("Authorization", `Bearer ${token}`);
 
 			xhr.send();
 		});
