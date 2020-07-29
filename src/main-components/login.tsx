@@ -113,7 +113,7 @@ export class LoginView extends React.Component {
 						>
 							<form className="supported-login-forum">
 								<TextField
-									label="Clinic ID"
+									label="Username"
 									disabled={this.disableInputs}
 									value={this.usernameFieldValue}
 									onChange={(e, v) =>
