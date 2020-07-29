@@ -85,6 +85,8 @@ export class LoginView extends React.Component {
 	loginOffline() {
 		store.set("version", "offline");
 		core.status.version = "offline";
+		this.usernameFieldValue = "any";
+		this.passwordFieldValue = "any";
 		this.serverFieldValue = "http://cypress";
 		store.set("server_location", this.serverFieldValue);
 		this.login();
