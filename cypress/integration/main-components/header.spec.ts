@@ -38,7 +38,7 @@ describe("header", () => {
 		});
 	});
 
-	describe.only("requiring real server", () => {
+	describe("requiring real server", () => {
 		beforeEach(() => {
 			cy.visit("http://localhost:8000");
 			cy.clearCookies();

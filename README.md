@@ -16,26 +16,16 @@ After cloning the repository, run `yarn install`, this will install the required
 -   `yarn run jest`: will run unit tests.
 -   `yarn run cypress`: will run e2e tests.
 
-### Testing
+### Documentation
 
--   This project uses end-to-end/integration testing in addition to unit tests.
+-   [For developer](https://docs.apexo.app/)
+-   [The blog](https://apexo.app/blog)
 
-#### Unit testing
+### Community & Supported version
 
--   Using Jest, run `yarn run jest`.
+This project is 100% free and open source, you just need to follow the documentation and you can set up your server in no time. However, we offer a paid supported version that doesn't need any setup from your part, as you will be using our optimized, encrypted and HIPAA-ready servers.
 
-#### E2E Testing
-
-##### Prequisites
-
--   Internet connection.
--   CouchDB installed and running on `http://localhost:5984`.
--   Admin username `test`, with password `test`.
--   Application being served on `http://localhost:8000` (preferably on development mode).
-
-##### Running tests
-
--   Using cypress, run `yarn run cypress`.
+[Subscribe to supported version for £299](https://apexo.app/register/)
 
 ---
 

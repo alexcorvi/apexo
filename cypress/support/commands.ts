@@ -86,24 +86,36 @@ Cypress.Commands.add(
 	"pickDate",
 	(
 		datePickerClassName: string,
-		pick: "today" | "tomorrow" | "yesterday" | number
+		pick: "today" | "tomorrow" | "yesterday" | "next-month" | "past-month"
 	) => {
 		cy.get(`.${datePickerClassName}`).click();
 		if (pick === "today") {
 			cy.get(".ms-DatePicker-day--today")
 				.parent()
 				.click();
-		}
-		if (pick === "tomorrow") {
-			const tomorrow = (new Date().getDate() + 1).toString();
+		} else if (pick === "next-month" || pick === "past-month") {
+			if (pick === "past-month") {
+				cy.get(".ms-DatePicker-prevMonth").click();
+			} else if (pick === "next-month") {
+				cy.get(".ms-DatePicker-nextMonth").click();
+			}
 			cy.get(".ms-DatePicker-day--infocus")
-				.contains(tomorrow)
+				.first()
 				.click();
-		}
-		if (pick === "yesterday") {
-			const yesterday = (new Date().getDate() - 1).toString();
+		} else {
+			const now = new Date().getTime();
+			const target =
+				pick === "tomorrow" ? now + 86400000 : now - 86400000;
+			const nowMonth = new Date(now).getMonth();
+			const targetMonth = new Date(target).getMonth();
+			if (nowMonth !== targetMonth && pick === "tomorrow") {
+				cy.get(".ms-DatePicker-nextMonth").click();
+			}
+			if (nowMonth !== targetMonth && pick === "yesterday") {
+				cy.get(".ms-DatePicker-prevMonth").click();
+			}
 			cy.get(".ms-DatePicker-day--infocus")
-				.contains(yesterday)
+				.contains(new Date(target).getDate().toString())
 				.click();
 		}
 	}
@@ -133,6 +145,12 @@ Cypress.Commands.add(
 	}
 );
 
+Cypress.Commands.add("clickItem", (contains: string) => {
+	cy.get(".ms-Persona")
+		.contains(contains)
+		.click();
+});
+
 Cypress.Commands.add(
 	"slowType",
 	{ prevSubject: "element" },
@@ -143,3 +161,17 @@ Cypress.Commands.add(
 		});
 	}
 );
+
+Cypress.Commands.add("getInputByLabel", (label: string, type?: string) => {
+	return cy
+		.get(".ms-TextField")
+		.contains(label)
+		.parent()
+		.find(type ? type : "input");
+});
+
+Cypress.Commands.add("clickBtn", (text: string) => {
+	cy.get(".ms-Button")
+		.contains(text)
+		.click();
+});
