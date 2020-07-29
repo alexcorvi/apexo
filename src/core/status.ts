@@ -56,6 +56,10 @@ export class Status {
 		// If we're on a demo host
 		if (demoHosts.indexOf(location.host) !== -1) {
 			utils.log("Login: Demo mode");
+			store.set("version", "offline");
+			this.version = "offline";
+			this.server = "http://cypress";
+			store.set("server_location", this.server);
 			return await this.startDemoServer();
 		}
 
@@ -97,7 +101,9 @@ export class Status {
 	async startDemoServer() {
 		await (window as any).hardResetApp;
 		await this.start({ server: "" });
-		(await import("core/demo")).loadDemoData();
+		setTimeout(async () => {
+			(await import("core/demo")).loadDemoData();
+		}, 1000);
 	}
 
 	async start({ server }: { server: string }) {
