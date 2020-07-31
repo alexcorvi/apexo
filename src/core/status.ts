@@ -122,9 +122,10 @@ export class Status {
 			utils.log("Registering modules failed", e);
 			utils.log("possible DB corruption, deleting local databases");
 			for (let i = 0; i < localDBRefs.length; i++) {
+				store.clear();
 				await localDBRefs[i].destroy({});
 			}
-			// location.reload();
+			location.reload();
 		}
 	}
 
