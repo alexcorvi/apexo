@@ -223,3 +223,12 @@ hr {
 .ms-Toggle-stateText {
 	line-height: 1;
 }
+
+.ms-ShimmerLine-root:after {
+	content: "LOADING...";
+	padding: 3px;
+	display: block;
+	text-align: center;
+	font-size: 10px;
+	color: #9e9e9e;
+}
