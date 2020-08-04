@@ -70,7 +70,7 @@ export class LoginView extends React.Component {
 	loginSupported() {
 		store.set("version", "supported");
 		core.status.version = "supported";
-		this.serverFieldValue = "https://db.apexo.app";
+		this.serverFieldValue = "https://sdb.apexo.app";
 		store.set("server_location", this.serverFieldValue);
 		this.login();
 	}

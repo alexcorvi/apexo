@@ -99,7 +99,7 @@ async function offlineCheck({
 
 const supportedLoginService: LoginService = {
 	login: async (username, password: string) => {
-		const supportedServer = "https://db.apexo.app";
+		const supportedServer = "https://sdb.apexo.app";
 		status.server = supportedServer;
 		await status.validateOnlineStatus();
 		if (!status.isOnline.server && store.found("LSL_hash")) {

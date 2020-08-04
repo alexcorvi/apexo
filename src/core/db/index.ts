@@ -86,7 +86,7 @@ export async function connect<S>(dbName: string, defaults: any) {
 	const remoteDatabase = new PouchDB(
 		`${
 			status.version === "supported"
-				? "https://db.apexo.app"
+				? "https://sdb.apexo.app"
 				: status.server
 		}/${remoteName}`,
 		{

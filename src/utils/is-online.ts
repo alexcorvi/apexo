@@ -17,11 +17,11 @@ export async function checkServer(
 		xhr.timeout = 2500;
 		xhr.withCredentials = true;
 		if (supported) {
-			server = "https://db.apexo.app/status";
+			server = "https://sdb.apexo.app/status";
 			xhr.withCredentials = false;
 		}
 		xhr.open("GET", server + `${supported ? "" : "/_session"}`, true);
-		if (server === "https://db.apexo.app/status") {
+		if (server === "https://sdb.apexo.app/status") {
 			xhr.setRequestHeader(
 				"Authorization",
 				`Bearer ${store.get("LSL_time")}`
