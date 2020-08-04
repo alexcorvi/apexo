@@ -5,6 +5,8 @@ import { Model, observeModel } from "pouchx";
 @observeModel
 export class Treatment extends Model<TreatmentSchema>
 	implements TreatmentSchema {
+	@observable _id: string = generateID();
+
 	@observable type: string = "";
 
 	@observable expenses: number = 0;
@@ -20,7 +22,7 @@ export class Treatment extends Model<TreatmentSchema>
 		return {
 			_id: this._id,
 			type: this.type,
-			expenses: this.expenses
+			expenses: this.expenses,
 		};
 	}
 

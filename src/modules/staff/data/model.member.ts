@@ -1,11 +1,20 @@
-import { Appointment, appointments, calendar, setting, StaffMemberSchema } from "@modules";
 import { dateNames, formatDate } from "@utils";
+import * as utils from "@utils";
 import { computed, observable } from "mobx";
 import { Model, observeModel } from "pouchx";
+import {
+	Appointment,
+	appointments,
+	calendar,
+	setting,
+	StaffMemberSchema,
+} from "@modules";
 
 @observeModel
 export class StaffMember extends Model<StaffMemberSchema>
 	implements StaffMemberSchema {
+	@observable _id: string = utils.generateID();
+
 	@observable name: string = "";
 
 	@observable email: string = "";
@@ -52,7 +61,7 @@ export class StaffMember extends Model<StaffMemberSchema>
 	@computed
 	get appointments() {
 		return appointments!.docs.filter(
-			x => x.staffID.indexOf(this._id) !== -1
+			(x) => x.staffID.indexOf(this._id) !== -1
 		);
 	}
 
@@ -61,16 +70,17 @@ export class StaffMember extends Model<StaffMemberSchema>
 		const resAppointments: {
 			[key: string]: Appointment[] | undefined;
 		} = {};
-		calendar.currentWeek.forEach(day => {
+		calendar.currentWeek.forEach((day) => {
 			const d = day.dateNum;
 			const m = day.monthNum;
 			const y = day.yearNum;
 			appointments!
 				.appointmentsForDay(y, m + 1, d)
 				.filter(
-					appointment => appointment.staffID.indexOf(this._id) !== -1
+					(appointment) =>
+						appointment.staffID.indexOf(this._id) !== -1
 				)
-				.forEach(appointment => {
+				.forEach((appointment) => {
 					if (!resAppointments[day.weekDay.dayLiteral]) {
 						resAppointments[day.weekDay.dayLiteral] = [];
 					}
@@ -83,7 +93,7 @@ export class StaffMember extends Model<StaffMemberSchema>
 	@computed
 	get lastAppointment() {
 		return this.appointments
-			.filter(appointment => appointment.isPast)
+			.filter((appointment) => appointment.isPast)
 			.sort((a, b) => b.date - a.date)[0];
 	}
 
@@ -129,7 +139,7 @@ export class StaffMember extends Model<StaffMemberSchema>
 	@computed
 	get upcomingAppointments() {
 		return this.appointments
-			.filter(appointment => appointment.isUpcoming)
+			.filter((appointment) => appointment.isUpcoming)
 			.sort((a, b) => a.date - b.date);
 	}
 
@@ -156,7 +166,7 @@ export class StaffMember extends Model<StaffMemberSchema>
 			canViewPrescriptions: this.canViewPrescriptions,
 			canViewSettings: this.canViewSettings,
 			canViewStats: this.canViewStats,
-			pin: this.pin
+			pin: this.pin,
 		};
 	}
 

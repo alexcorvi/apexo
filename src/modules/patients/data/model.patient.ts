@@ -1,3 +1,6 @@
+import { formatDate, generateID } from "@utils";
+import { computed, observable, observe } from "mobx";
+import { Model, observeModel } from "pouchx";
 import {
 	Appointment,
 	appointments,
@@ -6,14 +9,13 @@ import {
 	Label,
 	PatientSchema,
 	setting,
-	Tooth
-	} from "@modules";
-import { formatDate, generateID } from "@utils";
-import { computed, observable, observe } from "mobx";
-import { Model, observeModel } from "pouchx";
+	Tooth,
+} from "@modules";
 
 @observeModel
 export class Patient extends Model<PatientSchema> implements PatientSchema {
+	@observable _id: string = generateID();
+
 	@observable name: string = "";
 
 	@observable avatar: string = "";
@@ -47,27 +49,27 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 	@computed
 	get appointments(): Appointment[] {
 		return appointments!.docs.filter(
-			appointment => appointment.patientID === this._id
+			(appointment) => appointment.patientID === this._id
 		);
 	}
 
 	@computed
 	get lastAppointment() {
 		return this.appointments
-			.filter(appointment => appointment.isPast)
+			.filter((appointment) => appointment.isPast)
 			.sort((a, b) => b.date - a.date)[0];
 	}
 
 	@computed
 	get nextAppointment() {
 		return this.appointments
-			.filter(appointment => appointment.isUpcoming)
+			.filter((appointment) => appointment.isUpcoming)
 			.sort((a, b) => a.date - b.date)[0];
 	}
 
 	@computed get totalPayments() {
 		return this.appointments
-			.map(x => x.paidAmount)
+			.map((x) => x.paidAmount)
 			.reduce((t, c) => {
 				t = t + c;
 				return t;
@@ -76,7 +78,7 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 
 	@computed get outstandingAmount() {
 		return this.appointments
-			.map(x => x.outstandingAmount)
+			.map((x) => x.outstandingAmount)
 			.reduce((t, c) => {
 				t = t + c;
 				return t;
@@ -85,7 +87,7 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 
 	@computed get overpaidAmount() {
 		return this.appointments
-			.map(x => x.overpaidAmount)
+			.map((x) => x.overpaidAmount)
 			.reduce((t, c) => {
 				t = t + c;
 				return t;
@@ -102,9 +104,9 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 			${this.age} ${this.birthYear}
 			${this.phone} ${this.email} ${this.address} ${this.gender}
 			${this.name} ${this.labels
-			.map(x => x.text)
+			.map((x) => x.text)
 			.join(" ")} ${this.medicalHistory.join(" ")}
-			${this.teeth.map(x => x.notes.join(" ")).join(" ")}
+			${this.teeth.map((x) => x.notes.join(" ")).join(" ")}
 			${
 				this.nextAppointment
 					? (this.nextAppointment.treatment || { type: "" }).type
@@ -159,16 +161,16 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 			? json.medicalHistory
 			: [];
 		this.gallery = json.gallery || [];
-		json.teeth.map(toothObj => {
+		json.teeth.map((toothObj) => {
 			if (toothObj) {
 				const tooth = new Tooth().fromJSON(toothObj);
 				this.teeth[tooth.ISO] = tooth;
 			}
 		});
-		this.labels = json.labels.map(x => {
+		this.labels = json.labels.map((x) => {
 			return {
 				text: x.text,
-				type: x.type
+				type: x.type,
 			};
 		});
 		return this;
@@ -189,18 +191,18 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 			gallery: Array.from(this.gallery),
 			teeth: Array.from(
 				this.teeth
-					.filter(x => x)
-					.filter(x => x.condition !== "sound" || x.notes.length)
-					.map(x => x.toJSON())
+					.filter((x) => x)
+					.filter((x) => x.condition !== "sound" || x.notes.length)
+					.map((x) => x.toJSON())
 			),
 			labels: Array.from(
-				this.labels.map(x => {
+				this.labels.map((x) => {
 					return {
 						text: x.text,
-						type: x.type
+						type: x.type,
 					};
 				})
-			)
+			),
 		};
 	}
 }

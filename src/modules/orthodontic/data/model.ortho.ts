@@ -93,6 +93,8 @@ export class Visit extends SubModel<VisitSchema> implements VisitSchema {
 @observeModel
 export class OrthoCase extends Model<OrthoCaseSchema>
 	implements OrthoCaseSchema {
+	@observable _id: string = generateID();
+
 	@observable startedDate: number = 0;
 
 	@observable patientID: string = "";

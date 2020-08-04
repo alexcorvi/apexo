@@ -22,6 +22,7 @@ import {
 @observeModel
 export class Appointment extends Model<AppointmentSchema>
 	implements AppointmentSchema {
+	@observable _id: string = generateID();
 	@observable timer: number | null = null;
 
 	@observable complaint: string = "";

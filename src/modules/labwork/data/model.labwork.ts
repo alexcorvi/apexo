@@ -1,11 +1,13 @@
 import { LabworkSchema } from "@modules";
 import * as modules from "@modules";
+import * as utils from "@utils";
 import { computed, observable } from "mobx";
 import { patients } from "modules/patients";
 import { Model, observeModel } from "pouchx";
 
 @observeModel
 export class Labwork extends Model<LabworkSchema> implements LabworkSchema {
+	@observable _id: string = utils.generateID();
 	@observable caseTitle = "";
 	@observable caseDetails = "";
 	@observable patientID = "";
@@ -21,12 +23,12 @@ export class Labwork extends Model<LabworkSchema> implements LabworkSchema {
 	@observable isReceived = false;
 
 	@computed get patient() {
-		return modules.patients!.docs.find(x => x._id === this.patientID);
+		return modules.patients!.docs.find((x) => x._id === this.patientID);
 	}
 
 	@computed get operatingStaff() {
 		return modules.staff!.docs.filter(
-			x => this.operatingStaffIDs.indexOf(x._id) !== -1
+			(x) => this.operatingStaffIDs.indexOf(x._id) !== -1
 		);
 	}
 
@@ -52,7 +54,7 @@ export class Labwork extends Model<LabworkSchema> implements LabworkSchema {
 			isPaid: this.isPaid,
 			isSent: this.isSent,
 			receivedDate: this.receivedDate,
-			isReceived: this.isReceived
+			isReceived: this.isReceived,
 		};
 	}
 

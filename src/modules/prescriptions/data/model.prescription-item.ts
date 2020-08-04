@@ -7,6 +7,8 @@ import { Model, observeModel } from "pouchx";
 @observeModel
 export class PrescriptionItem extends Model<PrescriptionItemSchema>
 	implements PrescriptionItemSchema {
+	@observable _id: string = generateID();
+
 	@observable name: string = "";
 
 	@observable unitsPerTime: number = 1;
@@ -33,7 +35,7 @@ export class PrescriptionItem extends Model<PrescriptionItemSchema>
 			doseInMg: this.doseInMg,
 			timesPerDay: this.timesPerDay,
 			form: this.form,
-			unitsPerTime: this.unitsPerTime
+			unitsPerTime: this.unitsPerTime,
 		};
 	}
 
