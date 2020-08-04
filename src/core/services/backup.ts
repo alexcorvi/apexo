@@ -157,7 +157,10 @@ export const restore = {
 				core.documentTransformation(
 					remoteDatabase2,
 					core.uniqueString(),
-					core.defaultsArr[index]
+					core.defaultsArr[index],
+					true,
+					core.status.version === "supported",
+					core.status.version === "supported"
 				);
 				await remoteDatabase2.bulkDocs(dump.data);
 				view.msg(

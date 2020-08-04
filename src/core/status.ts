@@ -137,7 +137,8 @@ export class Status {
 			const auth: PouchDB.Plugin =
 				((await import("pouchdb-authentication")) as any).default ||
 				((await import("pouchdb-authentication")) as any);
-			return await new PouchDB(this.server, {
+			PouchDB.plugin(auth);
+			await new PouchDB(this.server, {
 				skip_setup: true,
 			}).logOut();
 		}

@@ -450,7 +450,6 @@ const offlineFiles: FileService = {
 		const name = `${new Date().getTime()}-${generateID(4)}.${ext}`;
 		const path = `/${dir}/${name}`.split("//").join("/");
 		const b64 = await blobToBase64(blob);
-		console.log(b64);
 		const fileInfo: UploadedFile & { file: string } = {
 			type: dir,
 			path: path,

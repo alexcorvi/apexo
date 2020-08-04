@@ -193,7 +193,7 @@ const communityLoginService = {
 	logout: async () => {
 		if (status.isOnline.server && !status.keepServerOffline) {
 			try {
-				status.removeCookies();
+				await status.removeCookies();
 				await dbAction("logout");
 			} catch (e) {
 				utils.log("Failed to logout", e);

@@ -155,9 +155,18 @@ function encryptDatabase(database: PouchDB.Database, uniqueStr: string) {
 export function documentTransformation(
 	db: PouchDB.Database,
 	unique: string,
-	defaults: any
+	defaults: any,
+	doMinify: boolean = true,
+	doCompress: boolean = true,
+	doEncrypt: boolean = true
 ) {
-	minifyDatabase(db, defaults);
-	compressDatabase(db);
-	encryptDatabase(db, unique);
+	if (doMinify) {
+		minifyDatabase(db, defaults);
+	}
+	if (doCompress) {
+		compressDatabase(db);
+	}
+	if (doEncrypt) {
+		encryptDatabase(db, unique);
+	}
 }
