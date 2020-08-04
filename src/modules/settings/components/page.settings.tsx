@@ -48,10 +48,13 @@ export class SettingsPage extends React.Component {
 
 	@observable key: string = Math.random().toString();
 
+	switchLang(code: string) {
+		modules.setting!.setSetting("lang", code);
+		this.forceUpdate();
+	}
 	componentDidMount() {
 		setTimeout(() => modules.setting!.updateAutoBackups(), second);
 	}
-
 	render() {
 		return (
 			<div className="settings-component container-fluid">
@@ -110,8 +113,7 @@ export class SettingsPage extends React.Component {
 													"lang"
 												)}
 												onChange={(ev, v) => {
-													modules.setting!.setSetting(
-														"lang",
+													this.switchLang(
 														v!.key.toString()
 													);
 												}}
