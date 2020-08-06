@@ -173,6 +173,12 @@ export const es: typeof raw = {
 	"can view statistics page": "puede ver la página de estadísticas",
 	"can not view statistics page": "no se puede ver la página de estadísticas",
 	"can view settings page": "puede ver la página de configuración",
+	"can view labwork page": "puede ver la página de trabajo de laboratorio",
+	"can not view labwork page":
+		"no se puede ver la página de trabajo de laboratorio",
+	"can edit labwork page": "puede editar la página de trabajo de laboratorio",
+	"can not edit labwork page":
+		"no se puede editar la página de trabajo de laboratorio",
 	"can not view settings page": "no se puede ver la página de configuración",
 	"can edit staff page": "puede editar la página del personal",
 	"can not edit staff page": "no se puede editar la página del personal",

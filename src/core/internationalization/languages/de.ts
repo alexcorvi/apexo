@@ -129,6 +129,12 @@ export const de: typeof raw = {
 	"can view settings page": "kann die einstellungsseite anzeigen",
 	"can not view settings page":
 		"einstellungsseite kann nicht angezeigt werden",
+	"can view labwork page": "kann die Laborarbeitsseite anzeigen",
+	"can not view labwork page":
+		"Laborarbeitsseite kann nicht angezeigt werden",
+	"can edit labwork page": "kann die Laborarbeitsseite bearbeiten",
+	"can not edit labwork page":
+		"Laborarbeitsseite kann nicht bearbeitet werden",
 	"can edit staff page": "kann personalseite bearbeiten",
 	"can not edit staff page": "kann die personalseite nicht bearbeiten",
 	"can edit patients page": "kann patientenseite bearbeiten",
