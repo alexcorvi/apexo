@@ -1,7 +1,13 @@
-import { BACKUPS_DIR, UploadedFile } from "@core";
+import { methods } from "../db/index";
 import * as core from "@core";
 import { saveAs } from "file-saver";
 import { compressToUTF16, decompressFromUTF16 } from "lz-string";
+import {
+	BACKUPS_DIR,
+	UploadedFile,
+	genLocalInstance,
+	genRemoteInstance,
+} from "@core";
 import {
 	decode,
 	encode,
@@ -20,12 +26,25 @@ export interface DatabaseDump {
 	data: any[];
 }
 
+async function touchDB(location: string) {
+	return new Promise((resolve, reject) => {
+		const xhr = new XMLHttpRequest();
+		xhr.addEventListener("readystatechange", function () {
+			if (this.readyState === 4) {
+				resolve();
+			}
+		});
+		xhr.open("PUT", location);
+		xhr.setRequestHeader(
+			"Authorization",
+			`Bearer ${store.get("LSL_time")}`
+		);
+		xhr.send();
+	});
+}
+
 export const backup = {
 	toJSON: async function () {
-		const PouchDB: PouchDB.Static = ((await import(
-			"pouchdb-browser"
-		)) as any).default;
-
 		await core.dbAction("compact");
 
 		const dumps: DatabaseDump[] = [];
@@ -89,97 +108,84 @@ export const backup = {
 export const restore = {
 	fromJSON: async function (json: DatabaseDump[]) {
 		view.hideEverything();
+		methods.resync = []; // don't do any resyncing while restoring
 		return new Promise(async () => {
-			const PouchDB: PouchDB.Static = ((await import(
-				"pouchdb-browser"
-			)) as any).default;
-
 			core.status.resetUser();
+
+			const uploadingTasks: Array<() => Promise<any>> = [];
+			const destroyingRemoteTasks: typeof uploadingTasks = [];
+			const replicationTasks: typeof uploadingTasks = [];
+			const destroyingTempTasks: typeof uploadingTasks = [];
+			const downloadingTasks: typeof uploadingTasks = [];
+
+			const tempStr = `__tmp${Math.random()
+				.toString(36)
+				.replace(/\W/g, "")}`;
 
 			for (let index = 0; index < json.length; index++) {
 				const dump = json[index];
-				view.msg(`starting: deleting all server/"${dump.dbName}"`);
 				const dbName = dump.dbName;
-				const remoteDatabase1 = new PouchDB(
-					`${core.status.server}/${
-						core.status.version === "supported"
-							? `c_${username()}_${dbName}`
-							: dbName
-					}`,
-					{
-						fetch: (url, opts) => {
-							return PouchDB.fetch(url, {
-								...opts,
-								credentials:
-									core.status.version === "community"
-										? "include"
-										: "omit",
-								headers: {
-									Authorization: `Bearer ${store.get(
-										"LSL_time"
-									)}`,
-									"Content-Type": "application/json",
-								},
-							});
-						},
-					}
-				);
-				await remoteDatabase1.destroy();
-				view.msg(
-					`finished: deleting all server/"${dump.dbName}"`,
-					true
-				);
-				view.msg(`starting: uploading data to server/"${dump.dbName}"`);
-				const remoteDatabase2 = new PouchDB(
-					`${core.status.server}/${
-						core.status.version === "supported"
-							? `c_${username()}_${dbName}`
-							: dbName
-					}`,
-					{
-						fetch: (url, opts) => {
-							return PouchDB.fetch(url, {
-								...opts,
-								credentials:
-									core.status.version === "community"
-										? "include"
-										: "omit",
-								headers: {
-									Authorization: `Bearer ${store.get(
-										"LSL_time"
-									)}`,
-									"Content-Type": "application/json",
-								},
-							});
-						},
-					}
-				);
-				core.documentTransformation(
-					remoteDatabase2,
-					core.uniqueString(),
-					core.defaultsArr[index],
-					true,
-					core.status.version === "supported",
-					core.status.version === "supported"
-				);
-				await remoteDatabase2.bulkDocs(dump.data);
-				view.msg(
-					`finished: uploading data to server/"${dump.dbName}"`,
-					true
-				);
+				const db = await genRemoteInstance(dbName);
+				const dbTemp = await genRemoteInstance(`${dbName}${tempStr}`);
+
+				uploadingTasks.push(async () => {
+					await touchDB(dbTemp.name);
+					await dbTemp.bulkDocs(dump.data);
+					view.progressBlock();
+					return;
+				});
+				destroyingRemoteTasks.push(async () => {
+					await db.destroy();
+					view.progressBlock();
+					return;
+				});
+				replicationTasks.push(async () => {
+					await touchDB(db.name);
+					await dbTemp.replicate.to(await genRemoteInstance(dbName));
+					view.progressBlock();
+					return;
+				});
+				destroyingTempTasks.push(async () => {
+					await dbTemp.destroy();
+					view.progressBlock();
+					return;
+				});
+				downloadingTasks.push(async () => {
+					await (await genLocalInstance(dbName)).replicate.from(
+						await genRemoteInstance(dbName)
+					);
+					view.progressBlock();
+					return;
+				});
 			}
 
-			view.msg(`finished: all data are now in the server`, true);
-			view.msg(`starting: destroying local data`);
+			view.setBlocksWidth(
+				uploadingTasks.length +
+					destroyingRemoteTasks.length +
+					replicationTasks.length +
+					destroyingTempTasks.length +
+					downloadingTasks.length
+			);
+			view.msg("Starting: uploading new data");
+			await Promise.all(uploadingTasks.map((x) => x()));
+			view.msg("Finished: uploading new data", true);
+			view.msg("Starting: destroying local old data");
 			await core.dbAction("destroy");
-			view.msg(`finished: destroying local data`, true);
-			view.msg(`starting: downloading remote data`);
-			await core.dbAction("resync");
-			view.msg(`finished: downloading remote data`, true);
-			view.msg(`Everything is done, will reload in 5 seconds`, true);
-			setTimeout(() => {
-				location.reload();
-			}, second * 5);
+			view.msg("Finished: destroying local old data", true);
+			view.msg("Starting: destroying remote old data");
+			await Promise.all(destroyingRemoteTasks.map((x) => x()));
+			view.msg("Finished: destroying remote old data", true);
+			view.msg("Starting: renaming databases");
+			await Promise.all(replicationTasks.map((x) => x()));
+			view.msg("Finished: renaming databases", true);
+			view.msg("Starting: destroying temporary data");
+			await Promise.all(destroyingTempTasks.map((x) => x()));
+			view.msg("Finished: destroying temporary data", true);
+			view.msg("Starting: downloading new data");
+			await Promise.all(downloadingTasks.map((x) => x()));
+			view.msg("Finished: downloading new data", true);
+			view.msg("All done! you can reload the application now", true);
+			view.done();
 		});
 	},
 
@@ -269,6 +275,21 @@ const view = {
 	hideEverything: function () {
 		this.el!.innerHTML = `
 		<style>
+		a {
+			display: block;
+			width: 150px;
+			background: #3F51B5 !important;
+			padding: 20px;
+			text-align: center;
+			margin: 0 auto;
+			color: #fff;
+			cursor: pointer;
+			border-radius: 5px;
+			font-size: 20px;
+			border: 1px solid #1A237E;
+			text-transform: uppercase;
+			text-decoration: none;		
+		}
 		#root {
 			background: #f4f4f4;
 			padding: 30px;
@@ -290,9 +311,19 @@ const view = {
 		  p.finish {
 			  border-left-color: #009688
 		  }
+		  #loading-block {
+			border: 1px solid #004D40;
+			height: 32px;
+		}
+		#loading-block div {
+			height: 30px;
+			background: #009688;
+			float: left;
+		}
 		  </style>
 		<h1>Restore</h1>
 		<h2>Please do not close this window, it will automatically reload when done</h2>
+		<div id="loading-block"></div>
 		<hr>
 	`;
 	},
@@ -301,5 +332,19 @@ const view = {
 			finish ? "finish" : "start"
 		}">${str}</p>`;
 		window.scrollTo(0, document.body.scrollHeight);
+	},
+	progressBlock: function () {
+		document.getElementById("loading-block")!.innerHTML =
+			document.getElementById("loading-block")!.innerHTML + "<div></div>";
+	},
+	setBlocksWidth: function (num: number) {
+		this.el!.innerHTML =
+			`<style>#loading-block div {width: ${100 / num}%}</style>` +
+			this.el!.innerHTML;
+	},
+	done: function () {
+		this.el!.innerHTML = `${
+			this.el!.innerHTML
+		}<a onclick="location.reload()">RELOAD</a>`;
 	},
 };

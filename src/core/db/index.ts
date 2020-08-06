@@ -11,7 +11,7 @@ export const defaultsArr: any[] = [];
 export const remoteDBRefs: PouchDB.Database[] = [];
 export const localDBRefs: PouchDB.Database[] = [];
 
-const methods: {
+export const methods: {
 	resync: methodsArr;
 	compact: methodsArr;
 	destroy: methodsArr;
@@ -35,11 +35,22 @@ export async function dbAction(action: keyof typeof methods, dbName?: string) {
 				await singleAction();
 			}
 		} else {
-			await Promise.all(methods[action].map((x) => x()));
+			for (let index = 0; index < methods[action].length; index++) {
+				const func = methods[action][index];
+				try {
+					await func();
+				} catch (e) {
+					utils.log(
+						"PERFORMING MULTIPLE DBs ACTION",
+						action,
+						DBNames[index],
+						e
+					);
+				}
+			}
 		}
 	} catch (e) {
-		utils.log(e);
-		utils.log(JSON.stringify(e));
+		utils.log("PERFORMING SINGLE DB ACTION", action, dbName, e);
 	}
 	status.dbActionProgress.splice(
 		status.dbActionProgress.indexOf(progressID),
@@ -72,46 +83,87 @@ export function uniqueString() {
 	return unique;
 }
 
-export async function connect<S>(dbName: string, defaults: any) {
-	const usableDefaults = new defaults(null).toJSON();
-
+export async function genLocalInstance(dbName: string) {
 	const PouchDB = await importPouchDB();
-	const unique = uniqueString();
 	const localName = dbName + "_" + Md5.hashStr(status.server + username());
+	return localTransformation(
+		new PouchDB(localName, { auto_compaction: true }),
+		dbName
+	);
+}
+
+export async function genRemoteInstance(dbName: string) {
+	const PouchDB = await importPouchDB();
 	const remoteName =
 		status.version === "supported" ? `c_${username()}_${dbName}` : dbName;
-	const localDatabase = new PouchDB<S>(localName, { auto_compaction: true });
-	documentTransformation(localDatabase, unique, usableDefaults);
-
-	const remoteDatabase = new PouchDB(
-		`${
-			status.version === "supported"
-				? "https://sdb.apexo.app"
-				: status.server
-		}/${remoteName}`,
-		{
-			fetch: (url, opts) => {
-				return PouchDB.fetch(url, {
-					...opts,
-					credentials:
-						status.version === "community" ? "include" : "omit",
-					headers: {
-						Authorization: `Bearer ${store.get("LSL_time")}`,
-						"Content-Type": "application/json",
-					},
-				});
-			},
-		}
+	return remoteTransformations(
+		new PouchDB(
+			`${
+				status.version === "supported"
+					? "https://sdb.apexo.app"
+					: status.server
+			}/${remoteName}`,
+			{
+				fetch: (url, opts) => {
+					return PouchDB.fetch(url, {
+						...opts,
+						credentials:
+							status.version === "community" ? "include" : "omit",
+						headers: {
+							Authorization: `Bearer ${store.get("LSL_time")}`,
+							"Content-Type": "application/json",
+						},
+					});
+				},
+			}
+		),
+		dbName
 	);
+}
 
+const transVars: { unique: string; usableDefaults: any } = {
+	unique: "",
+	usableDefaults: {},
+};
+
+(window as any).transVars = transVars;
+
+export function remoteTransformations(
+	db: PouchDB.Database,
+	name: string
+): PouchDB.Database {
 	documentTransformation(
-		remoteDatabase,
-		unique,
-		usableDefaults,
+		db,
+		transVars.unique,
+		transVars.usableDefaults[name] || {},
 		true,
 		status.version === "supported",
 		status.version === "supported"
 	);
+	return db;
+}
+
+export function localTransformation(
+	db: PouchDB.Database,
+	name: string
+): PouchDB.Database {
+	documentTransformation(
+		db,
+		transVars.unique,
+		transVars.usableDefaults[name] || {}
+	);
+	return db;
+}
+
+export async function connect<S>(dbName: string, defaults: any) {
+	const usableDefaults = new defaults(null).toJSON();
+	const unique = uniqueString();
+	transVars.unique = unique;
+	transVars.usableDefaults[dbName] = usableDefaults;
+
+	const localDatabase = await genLocalInstance(dbName);
+	const remoteDatabase = await genRemoteInstance(dbName);
+
 	/**
 	 * You might be tempted to try encrypting
 	 * the community version.
