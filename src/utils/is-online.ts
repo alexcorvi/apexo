@@ -39,7 +39,7 @@ export async function checkServer(
 		try {
 			xhr.send(null);
 		} catch (exception) {
-			utils.log(exception);
+			utils.log("IS-ONLINE: ", exception);
 			return resolve(false);
 		}
 	});

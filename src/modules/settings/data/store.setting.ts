@@ -45,7 +45,7 @@ export class Settings extends Store<SettingItemSchema, SettingsItem> {
 
 			this.autoBackups = sortedResult;
 		} catch (e) {
-			utils.log("Could not update auto backups", e);
+			utils.log("Could not update auto backups:", e);
 		}
 	}
 

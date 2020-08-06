@@ -75,7 +75,7 @@ export class Router {
 				namespace === "staff" ? "doctors" : namespace
 			);
 		} catch (e) {
-			utils.log(e);
+			utils.log("RESYNCING", namespace, e);
 		}
 		return true;
 	}

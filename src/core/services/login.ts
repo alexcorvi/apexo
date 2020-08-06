@@ -52,7 +52,10 @@ function supportedOnlineLogin(
 				try {
 					resolve(JSON.parse(this.responseText));
 				} catch (e) {
-					utils.log(this.responseText);
+					utils.log(
+						"PARSING JSON OF RESPONSE TEXT",
+						this.responseText
+					);
 					resolve({
 						success: false,
 						statusCode: 503,
