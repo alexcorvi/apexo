@@ -12,3 +12,16 @@ If you want to add your own language or fix any of the translations above make s
 ## How to write a translation
 
 You need to use the file [raw.ts](https://github.com/alexcorvi/apexo/blob/master/src/core/internationalization/languages/raw.ts) and simply, for each sentence or word in the file add the translation between the empty double quotes at the same line.
+
+#### Example
+
+```
+{
+    "hello": "hola",
+    "bye": "adios",
+    "good morning": "buenos días",
+    "book an appointment": "reservar una cita,
+}
+```
+
+any non translated word or sentence will be displayed in the default language (English)
