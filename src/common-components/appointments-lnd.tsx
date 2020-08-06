@@ -2,8 +2,9 @@ import * as CC from "@common-components";
 import * as core from "@core";
 import * as modules from "@modules";
 import * as utils from "@utils";
+import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { Icon } from "office-ui-fabric-react";
+import { Icon, Link } from "office-ui-fabric-react";
 import * as React from "react";
 
 export enum ALSecondaryText {
@@ -29,6 +30,7 @@ export class AppointmentsListNoDate extends React.Component<
 	},
 	{}
 > {
+	@observable deleteConfirmation: string = "";
 	secondaryText(appointment: modules.Appointment) {
 		if (this.props.secondaryText === ALSecondaryText.operators) {
 			return appointment.operatingStaff.map((x) => x.name).join(", ");
@@ -38,7 +40,46 @@ export class AppointmentsListNoDate extends React.Component<
 	}
 
 	rightColumn(appointment: modules.Appointment) {
-		if (this.props.rightColumn === ALRightColumn.patient) {
+		if (this.deleteConfirmation === appointment._id) {
+			return (
+				<div style={{ textAlign: "center" }}>
+					<Link
+						style={{
+							textAlign: "center",
+							width: "100%",
+							padding: "3px 0",
+							background: "#FFEBEE",
+						}}
+						onClick={(ev) => {
+							modules.appointments!.delete(appointment._id);
+							ev.stopPropagation();
+						}}
+					>
+						{core.text("delete").c}
+					</Link>
+					<hr
+						style={{
+							marginTop: 0,
+							marginBottom: 0,
+						}}
+					></hr>
+					<Link
+						style={{
+							textAlign: "center",
+							width: "100%",
+							padding: "3px 0",
+							background: "#E3F2FD",
+						}}
+						onClick={(ev) => {
+							this.deleteConfirmation = "";
+							ev.stopPropagation();
+						}}
+					>
+						{core.text("cancel").c}
+					</Link>
+				</div>
+			);
+		} else if (this.props.rightColumn === ALRightColumn.patient) {
 			const patient = appointment.patient!;
 			return (
 				<div key={patient._id}>
@@ -69,7 +110,7 @@ export class AppointmentsListNoDate extends React.Component<
 					iconName="delete"
 					className="delete"
 					onClick={(ev) => {
-						modules.appointments!.deleteModal(appointment._id);
+						this.deleteConfirmation = appointment._id;
 						ev.stopPropagation();
 					}}
 				/>
