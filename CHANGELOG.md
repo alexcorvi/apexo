@@ -1,5 +1,16 @@
 ## Changelog
 
+### 4.0.1
+
+-   Bug fix: Fixed an issue with offline mode
+-   Bug fix: Fixed and issue with decrypting localstorage data
+-   Bug fix: Mobx failed invariant issue
+-   Bug fix: Appointments list panel gets hidden once the delete button is clicked
+-   Bug fix: Fixed labworks and few other permission issues
+-   Enhancement: document transformations on community version
+-   Enhancement: less IDs length for less storage space
+-   Enhancement: removing default values from documents before storing into DB
+
 ### 4.0.0
 
 -   New feature: Supported version
