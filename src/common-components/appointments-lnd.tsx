@@ -60,7 +60,10 @@ export class AppointmentsListNoDate extends React.Component<
 					</CC.Col>
 				</div>
 			);
-		} else if (this.props.rightColumn === ALRightColumn.deleteButton) {
+		} else if (
+			this.props.rightColumn === ALRightColumn.deleteButton &&
+			this.props.canDelete
+		) {
 			return (
 				<Icon
 					iconName="delete"

@@ -558,6 +558,35 @@ export class StaffPage extends React.Component {
 										) : (
 											""
 										)}
+										{modules.setting!.getSetting(
+											"module_labwork"
+										) ? (
+											<Toggle
+												checked={
+													this.selectedMember
+														.canViewLabwork
+												}
+												disabled={
+													this.sameUser ||
+													!this.canEdit
+												}
+												onText={
+													text(
+														"can view labwork page"
+													).c
+												}
+												offText={
+													text(
+														"can not view labwork page"
+													).c
+												}
+												onChange={(ev, newVal) => {
+													this.selectedMember!.canViewLabwork = newVal!;
+												}}
+											/>
+										) : (
+											""
+										)}
 										<Toggle
 											checked={
 												this.selectedMember
@@ -760,6 +789,36 @@ export class StaffPage extends React.Component {
 												}
 												onChange={(ev, newVal) => {
 													this.selectedMember!.canEditOrtho = newVal!;
+												}}
+											/>
+										) : (
+											""
+										)}
+										{modules.setting!.getSetting(
+											"module_labwork"
+										) &&
+										this.selectedMember.canViewLabwork ? (
+											<Toggle
+												checked={
+													this.selectedMember
+														.canEditLabwork
+												}
+												disabled={
+													this.sameUser ||
+													!this.canEdit
+												}
+												onText={
+													text(
+														"can edit labwork page"
+													).c
+												}
+												offText={
+													text(
+														"can not edit labwork page"
+													).c
+												}
+												onChange={(ev, newVal) => {
+													this.selectedMember!.canEditLabwork = newVal!;
 												}}
 											/>
 										) : (

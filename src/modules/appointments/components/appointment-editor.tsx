@@ -301,6 +301,7 @@ export class AppointmentEditorPanel extends React.Component<
 											<Row gutter={0}>
 												<Col span={8}>
 													<Dropdown
+														disabled={!this.canEdit}
 														className="ae-hr"
 														options={[
 															12,
@@ -335,6 +336,7 @@ export class AppointmentEditorPanel extends React.Component<
 												</Col>
 												<Col span={8}>
 													<Dropdown
+														disabled={!this.canEdit}
 														className="ae-mn"
 														options={[
 															"00",
@@ -357,6 +359,7 @@ export class AppointmentEditorPanel extends React.Component<
 												</Col>
 												<Col span={8}>
 													<Dropdown
+														disabled={!this.canEdit}
 														className="ae-am"
 														options={[
 															{
