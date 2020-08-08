@@ -491,7 +491,7 @@ export class SettingsPage extends React.Component {
 											modules
 												.setting!.autoBackups.slice()
 												.reverse()
-												.map((backup) => {
+												.map((backup, index) => {
 													const now = new Date().getTime();
 													const then = new Date(
 														(
@@ -574,7 +574,8 @@ export class SettingsPage extends React.Component {
 																						.c
 																				}
 																			</Link>
-																			{diffInDays ? (
+																			{diffInDays ||
+																			index ? (
 																				<Link
 																					disabled={
 																						this
