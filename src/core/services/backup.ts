@@ -1,25 +1,8 @@
 import { methods } from "../db/index";
 import * as core from "@core";
-import { saveAs } from "file-saver";
+import { genLocalInstance, genRemoteInstance, UploadedFile } from "@core";
+import { decode, generateID, store } from "@utils";
 import { compressToUTF16, decompressFromUTF16 } from "lz-string";
-import {
-	BACKUPS_DIR,
-	UploadedFile,
-	genLocalInstance,
-	genRemoteInstance,
-} from "@core";
-import {
-	decode,
-	encode,
-	generateID,
-	second,
-	store,
-	encrypt,
-	decrypt,
-	defaultSecret,
-	day,
-	username,
-} from "@utils";
 export const backupsExtension = "apx";
 export interface DatabaseDump {
 	dbName: string;
@@ -63,8 +46,14 @@ export const backup = {
 				}
 				let doc = entry.doc;
 				doc = core.DTF.minify.do(doc, core.defaultsArr[index]);
-				doc = core.DTF.compress.do(doc);
-				doc = core.DTF.encrypt.do(doc, core.uniqueString());
+				if (core.status.version === "supported") {
+					doc = core.DTF.compress.do(doc);
+					doc = core.DTF.encrypt.do(doc, core.uniqueString());
+					// saving an encrypted version of the document
+					// however, when uploading, it will not be
+					// encrypted again, as the encryption/compression
+					// functions checks that
+				}
 				return doc;
 			});
 			dumps.push({ dbName, data });
