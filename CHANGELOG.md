@@ -2,6 +2,16 @@
 
 ### 4.0.1
 
+-   Bug fix: Clicking staff member from home page should goes to members appointments
+-   Bug fix: If todays has two backups, you should be able to delete the second
+-   Bug fix: Critical bug with backups being needlessly encrypted
+-   Enhancement: Safer restoring, not deleting data unless everything is ready
+-   Enhancement: Loading bar at startup
+-   Enhancement: Loading bar at restoring
+-   Enhancement: better console logging, with updated PouchDB
+
+### 4.0.1
+
 -   Bug fix: Fixed an issue with offline mode
 -   Bug fix: Fixed and issue with decrypting localstorage data
 -   Bug fix: Mobx failed invariant issue
