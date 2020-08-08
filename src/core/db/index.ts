@@ -92,21 +92,23 @@ export function uniqueString() {
 	return unique;
 }
 
-export async function genLocalInstance(dbName: string) {
+export async function genLocalInstance<S = any>(
+	dbName: string
+): Promise<PouchDB.Database<S>> {
 	const PouchDB = await importPouchDB();
 	const localName = dbName + "_" + Md5.hashStr(status.server + username());
 	return localTransformation(
-		new PouchDB(localName, { auto_compaction: true }),
+		new PouchDB<S>(localName, { auto_compaction: true }),
 		dbName
 	);
 }
 
-export async function genRemoteInstance(dbName: string) {
+export async function genRemoteInstance<S = any>(dbName: string) {
 	const PouchDB = await importPouchDB();
 	const remoteName =
 		status.version === "supported" ? `c_${username()}_${dbName}` : dbName;
 	return remoteTransformations(
-		new PouchDB(
+		new PouchDB<S>(
 			`${
 				status.version === "supported"
 					? "https://sdb.apexo.app"
@@ -135,10 +137,10 @@ const transVars: { unique: string; usableDefaults: any } = {
 	usableDefaults: {},
 };
 
-export function remoteTransformations(
-	db: PouchDB.Database,
+export function remoteTransformations<S>(
+	db: PouchDB.Database<S>,
 	name: string
-): PouchDB.Database {
+): PouchDB.Database<S> {
 	documentTransformation(
 		db,
 		transVars.unique,
@@ -150,10 +152,10 @@ export function remoteTransformations(
 	return db;
 }
 
-export function localTransformation(
-	db: PouchDB.Database,
+export function localTransformation<S>(
+	db: PouchDB.Database<S>,
 	name: string
-): PouchDB.Database {
+): PouchDB.Database<S> {
 	documentTransformation(
 		db,
 		transVars.unique,
@@ -168,8 +170,8 @@ export async function connect<S>(dbName: string, defaults: any) {
 	transVars.unique = unique;
 	transVars.usableDefaults[dbName] = usableDefaults;
 
-	const localDatabase = await genLocalInstance(dbName);
-	const remoteDatabase = await genRemoteInstance(dbName);
+	const localDatabase = await genLocalInstance<S>(dbName);
+	const remoteDatabase = await genRemoteInstance<S>(dbName);
 
 	/**
 	 * You might be tempted to try encrypting
