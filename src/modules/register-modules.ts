@@ -16,14 +16,20 @@ const register = [
 ];
 
 export async function registerModules() {
-	await Promise.all(register.map((singleModule) => singleModule()));
+	await Promise.all(
+		register.map(async (singleModule) => {
+			await singleModule();
+			core.status.finishedTasks++;
+			return;
+		})
+	);
 	// resync on load: only staff database initially
 	// because we need it in login
 	core.status.loadingIndicatorText = "Downloading your clinic data";
 	if (core.status.server !== "http://cypress") {
-		await dbAction("resync");
+		await dbAction("resync", "", true);
 		setInterval(() => {
 			dbAction("resync");
-		}, 2 * utils.minute);
+		}, 3 * utils.minute);
 	}
 }

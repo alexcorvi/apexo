@@ -23,7 +23,11 @@ export const methods: {
 	logout: [],
 };
 
-export async function dbAction(action: keyof typeof methods, dbName?: string) {
+export async function dbAction(
+	action: keyof typeof methods,
+	dbName?: string,
+	initial?: boolean
+) {
 	const progressID = Math.random().toString();
 	status.dbActionProgress.push(progressID);
 	try {
@@ -35,19 +39,24 @@ export async function dbAction(action: keyof typeof methods, dbName?: string) {
 				await singleAction();
 			}
 		} else {
-			for (let index = 0; index < methods[action].length; index++) {
-				const func = methods[action][index];
-				try {
-					await func();
-				} catch (e) {
-					utils.log(
-						"PERFORMING MULTIPLE DBs ACTION",
-						action,
-						DBNames[index],
-						e
-					);
-				}
-			}
+			await Promise.all(
+				methods[action].map(async (func, index) => {
+					try {
+						await func();
+					} catch (e) {
+						utils.log(
+							"PERFORMING MULTIPLE DBs ACTION",
+							action,
+							DBNames[index],
+							e
+						);
+					}
+					if (initial) {
+						status.finishedTasks++;
+					}
+					return;
+				})
+			);
 		}
 	} catch (e) {
 		utils.log("PERFORMING SINGLE DB ACTION", action, dbName, e);
@@ -125,8 +134,6 @@ const transVars: { unique: string; usableDefaults: any } = {
 	unique: "",
 	usableDefaults: {},
 };
-
-(window as any).transVars = transVars;
 
 export function remoteTransformations(
 	db: PouchDB.Database,

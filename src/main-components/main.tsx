@@ -118,6 +118,21 @@ export class MainView extends React.Component {
 								: "Please wait"
 						}
 					/>
+					<div className="loading-bar">
+						<div
+							className="inner-loading-bar"
+							style={{
+								width: `${Math.min(
+									100,
+									Math.round(
+										(core.status.finishedTasks /
+											core.status.totalTasks) *
+											100
+									)
+								)}%`,
+							}}
+						></div>
+					</div>
 				</div>
 			);
 		}

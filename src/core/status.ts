@@ -24,6 +24,8 @@ export enum LoginType {
 
 export class Status {
 	private currentlyValidating: string | null = null;
+	totalTasks = 18;
+	@observable finishedTasks = 0;
 	@observable dbActionProgress: string[] = [];
 	@observable loadingIndicatorText = "";
 	@observable initialLoadingIndicatorText = "";
@@ -118,6 +120,7 @@ export class Status {
 			if (!this.checkAndSetUserID()) {
 				this.step = LoginStep.chooseUser;
 			}
+			this.finishedTasks++;
 		} catch (e) {
 			utils.log("Registering modules failed", e);
 			utils.log("possible DB corruption, deleting local databases");
