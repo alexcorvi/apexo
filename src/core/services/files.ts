@@ -11,8 +11,6 @@ export interface UploadedFile {
 	type: string;
 }
 
-// TODO: test file service in all three modes
-
 const blobToBase64 = (blob: Blob): Promise<string> => {
 	const reader = new FileReader();
 	reader.readAsDataURL(blob);
