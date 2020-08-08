@@ -139,9 +139,19 @@ export class HomeView extends React.Component {
 																		core.router.go(
 																			[
 																				modules.staffNamespace,
-																				member._id,
-																				"appointments",
 																			]
+																		);
+																		setTimeout(
+																			() =>
+																				core.router.select(
+																					{
+																						id:
+																							member._id,
+																						tab:
+																							"appointments",
+																					}
+																				),
+																			100
 																		);
 																	}}
 																	style={{
