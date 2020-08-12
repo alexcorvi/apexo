@@ -149,9 +149,9 @@ const supportedFiles: FileService & {
 	}): Promise<string> {
 		return new Promise((resolve, reject) => {
 			const LSL_time = store.get("LSL_time");
-			const paddedUserID = padNumbers(
-				JSON.parse(atob(LSL_time.split(".")[1])).data.user.id
-			);
+			const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user
+				.id;
+			const paddedUserID = padNumbers(userID);
 			const fileName = `${paddedUserID}-${generateID()}.${ext}`;
 			const data = new FormData();
 			data.append("file", blob, fileName);
