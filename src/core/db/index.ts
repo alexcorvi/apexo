@@ -148,6 +148,14 @@ export function remoteTransformations<S>(
 		true,
 		status.version === "supported",
 		status.version === "supported"
+		/**
+		 * You might be tempted to try encrypting
+		 * the community version.
+		 * But the problem is 'unique' is not
+		 * static on the community version,
+		 * so an encryption with the wrong value,
+		 * might lead to a permanent data loss
+		 */
 	);
 	return db;
 }
@@ -172,15 +180,6 @@ export async function connect<S>(dbName: string, defaults: any) {
 
 	const localDatabase = await genLocalInstance<S>(dbName);
 	const remoteDatabase = await genRemoteInstance<S>(dbName);
-
-	/**
-	 * You might be tempted to try encrypting
-	 * the community version.
-	 * But the problem is 'unique' is not
-	 * static on the community version,
-	 * so an encryption with the wrong value,
-	 * might lead to a permanent data loss
-	 */
 
 	// preventing duplicates
 	const oldIndex = DBNames.indexOf(dbName);
