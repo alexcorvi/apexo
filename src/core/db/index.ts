@@ -86,8 +86,9 @@ export function uniqueString() {
 	let unique = Md5.hashStr(store.get("LSL_hash")).toString();
 	if (status.version === "supported") {
 		const LSL_time = store.get("LSL_time");
-		const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user.id;
-		unique = Md5.hashStr(userID.toString()).toString();
+		const payload = JSON.parse(atob(LSL_time.split(".")[1]));
+		const secret = payload.data.user.secret;
+		unique = Md5.hashStr(secret.toString()).toString();
 	}
 	return unique;
 }
