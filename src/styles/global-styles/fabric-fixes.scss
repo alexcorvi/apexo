@@ -248,3 +248,53 @@ hr {
 	background: #2196f3;
 	border-radius: 4px;
 }
+
+.inpage-menu {
+	z-index: 3;
+	border: 1px solid #e8effd;
+	position: fixed;
+	top: 50px;
+	height: 100vh;
+	background: #fff;
+	button {
+		width: 50px;
+		height: 43px;
+		display: block;
+		border-bottom: 1px solid #e8effd;
+		&:hover {
+			background: #f8f9fb;
+		}
+		&.active {
+			background: #f8f9fb;
+		}
+	}
+
+	+ .sub-page {
+		margin-left: 50px;
+		.commandBar.fixed {
+			margin-left: 27px;
+		}
+	}
+}
+
+.top-bot-info {
+	padding: 6px 0 5px;
+	background: #f8f9fb;
+	border-bottom: 1px solid #e8effd;
+}
+
+.top-bot-steps {
+	background: #f8f9fb;
+}
+
+.top-bot-steps:last-child {
+	border-bottom: 1px solid #e8effd;
+}
+
+.top-bot-steps strong {
+	background: #e8eaf6;
+	padding: 3px;
+	margin: 3px;
+	border: 1px solid #9fa8da;
+	border-radius: 3px;
+}

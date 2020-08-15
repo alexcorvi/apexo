@@ -13,12 +13,17 @@ const register = [
 	modules.registerLabwork,
 	modules.registerPrescriptions,
 	modules.registerStats,
+	modules.registerBot,
 ];
 
 export async function registerModules() {
 	await Promise.all(
 		register.map(async (singleModule) => {
-			await singleModule();
+			try {
+				await singleModule();
+			} catch (e) {
+				console.log(singleModule);
+			}
 			core.status.finishedTasks++;
 			return;
 		})
