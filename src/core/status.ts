@@ -149,7 +149,7 @@ export class Status {
 
 	checkAndSetUserID() {
 		const userID = store.get("user_id");
-		if (userID && staff!.docs.find((x) => x._id === userID)) {
+		if (userID && staff && staff.docs.find((x) => x._id === userID)) {
 			this.setUser(userID);
 			return true;
 		} else {
