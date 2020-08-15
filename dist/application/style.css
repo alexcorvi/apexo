@@ -6363,6 +6363,9 @@ hr {
     right: 5px;
     background: #fff;
     border: 1px solid #f1f1f1; }
+    .spg-p .viewport .delete-photo.rotate {
+      background: none;
+      border: none; }
 
 .grid-table {
   position: absolute;

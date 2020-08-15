@@ -40,6 +40,10 @@
 			right: 5px;
 			background: #fff;
 			border: 1px solid #f1f1f1;
+			&.rotate {
+				background: none;
+				border: none;
+			}
 		}
 	}
 }

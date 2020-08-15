@@ -28,7 +28,7 @@ export class PatientGalleryPanel extends React.Component<{
 	}
 
 	@observable uploading: boolean = false;
-
+	@observable deleting: boolean = false;
 	@observable selectedImagePath: string = "";
 
 	@computed get selectedImageURI() {
@@ -151,16 +151,34 @@ export class PatientGalleryPanel extends React.Component<{
 											src={this.selectedImageURI}
 										/>
 										{this.canEdit ? (
-											<IconButton
-												className="delete-photo"
-												iconProps={{
-													iconName: "trash",
-												}}
-												onClick={async () => {
-													await this.removeImage();
-													this.selectedImagePath = "";
-												}}
-											/>
+											this.deleting ? (
+												<IconButton
+													className="delete-photo rotate"
+													disabled
+													iconProps={{
+														iconName: "sync",
+													}}
+													onClick={async () => {
+														await this.removeImage();
+														this.selectedImagePath =
+															"";
+													}}
+												/>
+											) : (
+												<IconButton
+													className="delete-photo"
+													iconProps={{
+														iconName: "trash",
+													}}
+													onClick={async () => {
+														this.deleting = true;
+														await this.removeImage();
+														this.selectedImagePath =
+															"";
+														this.deleting = false;
+													}}
+												/>
+											)
 										) : (
 											""
 										)}
