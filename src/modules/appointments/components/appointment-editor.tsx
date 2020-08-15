@@ -267,7 +267,8 @@ export class AppointmentEditorPanel extends React.Component<
 											onSelectDate={(date) => {
 												if (date) {
 													this.props.appointment!.setDate(
-														date.getTime()
+														date.getTime() +
+															60 * 1000 // adds a minute
 													);
 												}
 											}}
