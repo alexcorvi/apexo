@@ -10,7 +10,10 @@ import * as ReactDOM from "react-dom";
 // 1. Download the subset
 // 2. put the font file in the dist/application/fonts/
 // 3. put the contents of src dir in './core/icons-subset/'
+// 4. add font file in PWA HTML list
+
 core.initializeIcons("./fonts/");
+core.initializeIconsB("./fonts/");
 
 const App = observer(() => (
 	<Fabric>
@@ -21,7 +24,7 @@ const App = observer(() => (
 ReactDOM.render(<App />, document.getElementById("root"));
 
 (window as any).hardResetApp = () => {
-	return new Promise(async resolve => {
+	return new Promise(async (resolve) => {
 		ReactDOM.unmountComponentAtNode(document.getElementById("root")!);
 		await core.dbAction("destroy");
 		core.status.reset();

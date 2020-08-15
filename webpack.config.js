@@ -8,6 +8,7 @@ var nonJSAssets = [
 	"style.css",
 	"apple-touch-icon.png",
 	"fonts/fabric-icons-72e4a0ad.woff",
+	"fonts/fabric-icons-8d8d4ac2.woff",
 	"fonts/segoeui-westeuropean/segoeui-light.woff",
 	"fonts/segoeui-westeuropean/segoeui-light.woff2",
 	"fonts/segoeui-westeuropean/segoeui-regular.woff",

@@ -4,6 +4,7 @@ export * from "./services/files";
 export * from "./status";
 export * from "./internationalization";
 export * from "./icons-subset/subset-a";
+export * from "./icons-subset/subset-b";
 export * from "./images-table";
 export * from "./services/login";
 export * from "../main-components/menu.data";
