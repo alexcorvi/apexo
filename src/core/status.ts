@@ -23,7 +23,6 @@ export enum LoginType {
 }
 
 export class Status {
-	private currentlyValidating: string | null = null;
 	totalTasks = 18;
 	@observable finishedTasks = 0;
 	@observable dbActionProgress: string[] = [];
@@ -48,9 +47,7 @@ export class Status {
 		(store.get("version") as any) || "community";
 
 	constructor() {
-		this.validateOnlineStatus().then(() => {
-			setInterval(() => this.validateOnlineStatus(), second * 2);
-		});
+		this.validateOnlineStatus();
 	}
 
 	async initialCheck(server: string) {
@@ -171,11 +168,7 @@ export class Status {
 		// TODO: check JWT expiration time
 		// refresh token when it's halfway into expiring
 		// BLOCKED BY: https://github.com/usefulteam/jwt-auth/issues/1
-		if (this.currentlyValidating === this.server) {
-			return;
-		} else {
-			this.currentlyValidating = this.server;
-		}
+		const t0 = new Date().getTime();
 		try {
 			if (this.keepServerOffline) {
 				this.isOnline.server = false;
@@ -211,7 +204,12 @@ export class Status {
 						: await files().status();
 			}
 		} catch (e) {}
-		this.currentlyValidating = null;
+		const t1 = new Date().getTime();
+		const tt = t1 - t0;
+		setTimeout(
+			() => this.validateOnlineStatus(),
+			Math.max(tt * 5, 5 * second)
+		);
 	}
 	reset() {
 		this.server = "";
