@@ -22,7 +22,7 @@ export async function registerModules() {
 			try {
 				await singleModule();
 			} catch (e) {
-				console.log(singleModule);
+				console.log("error while registering", singleModule.name, e);
 			}
 			core.status.finishedTasks++;
 			return;
