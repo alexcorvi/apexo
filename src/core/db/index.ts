@@ -82,13 +82,17 @@ export async function importPouchDB() {
 	return pouchdb;
 }
 
+export function preUniqueString() {
+	const LSL_time = store.get("LSL_time");
+	const payload = JSON.parse(atob(LSL_time.split(".")[1]));
+	const secret = payload.data.user.secret;
+	return secret;
+}
+
 export function uniqueString() {
 	let unique = Md5.hashStr(store.get("LSL_hash")).toString();
 	if (status.version === "supported") {
-		const LSL_time = store.get("LSL_time");
-		const payload = JSON.parse(atob(LSL_time.split(".")[1]));
-		const secret = payload.data.user.secret;
-		unique = Md5.hashStr(secret.toString()).toString();
+		unique = Md5.hashStr(preUniqueString()).toString();
 	}
 	return unique;
 }
