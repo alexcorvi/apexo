@@ -60,9 +60,39 @@ async function recordSupportedFile(path: string, dir: string) {
 	});
 }
 
-async function unRecordSupportedFile(path: string) {
-	const prevFiles = await supportedFiles.allFiles();
+async function resetSupportedRecords() {
 	return new Promise((resolve, reject) => {
+		const LSL_time = store.get("LSL_time");
+		const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user.id;
+		const data = JSON.stringify({
+			meta: {
+				apexofiles: encrypt(JSON.stringify([]), core.uniqueString()),
+			},
+		});
+		const xhr = new XMLHttpRequest();
+		xhr.addEventListener("readystatechange", function () {
+			if (this.readyState === 4) {
+				if (this.status < 300 && this.status > 199) {
+					resolve(true);
+				} else {
+					try {
+						reject(JSON.parse(this.responseText).message);
+					} catch (e) {
+						reject("Error: Could not decode server response");
+					}
+				}
+			}
+		});
+		xhr.open("POST", `https://apexo.app/wp-json/wp/v2/users/${userID}`);
+		xhr.setRequestHeader("Authorization", `Bearer ${LSL_time}`);
+		xhr.setRequestHeader("Content-Type", "application/json");
+		xhr.send(data);
+	});
+}
+
+async function unRecordSupportedFile(path: string) {
+	return new Promise(async (resolve, reject) => {
+		const prevFiles = await supportedFiles.allFiles();
 		const updatedFiles = prevFiles.filter((x) => x.path !== path);
 		const LSL_time = store.get("LSL_time");
 		const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user.id;
@@ -187,16 +217,8 @@ const supportedFiles: FileService & {
 			const xhr = new XMLHttpRequest();
 			xhr.addEventListener("readystatechange", async function () {
 				if (this.readyState === 4) {
-					if (this.status > 199 && this.status < 300) {
-						await unRecordSupportedFile(path);
-						resolve(true);
-					} else {
-						try {
-							reject(JSON.parse(this.responseText).message);
-						} catch (e) {
-							reject("Could not decode server response");
-						}
-					}
+					await unRecordSupportedFile(path);
+					resolve(true);
 				}
 			});
 			xhr.open(
@@ -224,7 +246,7 @@ const supportedFiles: FileService & {
 			const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user
 				.id;
 			const xhr = new XMLHttpRequest();
-			xhr.addEventListener("readystatechange", function () {
+			xhr.addEventListener("readystatechange", async function () {
 				if (this.readyState === 4) {
 					try {
 						const data = JSON.parse(this.responseText);
@@ -239,7 +261,9 @@ const supportedFiles: FileService & {
 							resolve([]);
 						}
 					} catch (e) {
-						reject("Could not decode files directory");
+						utils.log("Could not read dir, resetting");
+						await resetSupportedRecords();
+						resolve(await supportedFiles.allFiles());
 					}
 				}
 			});
