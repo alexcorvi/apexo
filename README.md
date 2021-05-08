@@ -18,14 +18,8 @@ After cloning the repository, run `yarn install`, this will install the required
 
 ### Documentation
 
--   [For developer](https://docs.apexo.app/)
--   [The blog](https://apexo.app/blog)
+-   [Documentation](https://docs.apexo.app/)
 
-### Community & Supported version
-
-This project is 100% free and open source, you just need to follow the documentation and you can set up your server in no time. However, we offer a paid supported version that doesn't need any setup from your part, as you will be using our optimized, encrypted and HIPAA-ready servers.
-
-[Subscribe to supported version for £299](https://apexo.app/register/)
 
 ---
 
