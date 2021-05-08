@@ -1,5 +1,5 @@
 import { formatDate, generateID } from "@utils";
-import { computed, observable, observe } from "mobx";
+import { computed, observable } from "mobx";
 import { Model, observeModel } from "pouchx";
 import {
 	Appointment,
@@ -39,6 +39,12 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 	@observable gallery: string[] = [];
 
 	teeth: Tooth[] = [];
+
+	@computed get inactive() {
+		return (
+			this.nextAppointment === undefined && this.outstandingAmount === 0
+		);
+	}
 
 	@computed
 	get age() {

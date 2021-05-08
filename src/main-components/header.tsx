@@ -18,7 +18,6 @@ export class HeaderView extends React.Component {
 						<section className="menu-button">
 							<IconButton
 								onClick={() => core.menu.show()}
-								disabled={false}
 								iconProps={{ iconName: "GlobalNavButton" }}
 								ariaLabel="Menu"
 								data-testid="expand-menu"

@@ -14,7 +14,12 @@ interface BookingRequestSchema extends Schema {
 	gender: string;
 	age: number;
 	complaint: string;
-	operator: string;
+	notes: string;
 	daysOfWeek: string;
 	timeOfDay: string;
+	date: number;
+	confirmed: boolean;
+	confirmationMessage: string;
+	appointmentID: string;
+	hide: boolean;
 }

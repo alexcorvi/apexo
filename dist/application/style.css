@@ -1014,8 +1014,7 @@ h5 {
 .ms-Panel-content {
   height: 100%;
   padding-top: 5px;
-  padding-bottom: 35px;
-  overflow-y: auto; }
+  padding-bottom: 35px; }
 
 html,
 body {
@@ -1136,6 +1135,14 @@ hr {
   margin: 3px;
   border: 1px solid #9fa8da;
   border-radius: 3px; }
+
+.after-confirm-actions {
+  display: inline-block;
+  border: 1px solid #b4ddb2;
+  border-radius: 3px;
+  overflow: hidden; }
+  .after-confirm-actions button {
+    border: 0; }
 
 .fs-10 {
   font-size: 10px; }
@@ -6198,6 +6205,23 @@ hr {
       pointer-events: none;
       color: #fff; }
 
+.data-table .inactive {
+  border-top: 3px solid #78909c0d;
+  box-shadow: inset 0 4px 10px #ededed; }
+
+.data-table .inactive ~ .inactive {
+  box-shadow: none;
+  border-top: none; }
+
+.data-table tr.inactive td {
+  background: #0078d400;
+  color: #d6ddea; }
+
+.data-table tr.inactive td.row-actions i {
+  color: #004e8c;
+  padding: 5px;
+  border-radius: 100%; }
+
 .date-link a {
   font-size: 12px;
   color: #2196F3;
@@ -6723,7 +6747,18 @@ hr {
       min-width: 45px;
       border-bottom: 1px solid transparent;
       margin: 3px 10px;
-      border-radius: 2px; }
+      border-radius: 2px;
+      position: relative; }
+      .icon-list .item .bubble {
+        position: absolute;
+        right: 0px;
+        top: 24px;
+        text-align: center;
+        border-radius: 50%;
+        height: 18px;
+        width: 18px;
+        padding-top: 0em;
+        font-size: 11px; }
       .icon-list .item:hover {
         background: #dcebf7; }
       .icon-list .item.selected {

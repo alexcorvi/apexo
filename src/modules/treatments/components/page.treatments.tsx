@@ -290,6 +290,7 @@ export class Treatments extends React.Component {
 											);
 											core.router.unSelect();
 										}}
+										disabled={!this.canEdit}
 									/>
 								</div>
 							) : (

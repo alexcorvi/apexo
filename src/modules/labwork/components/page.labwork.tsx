@@ -742,6 +742,7 @@ export class LabworkPage extends React.Component {
 											);
 											core.router.unSelect();
 										}}
+										disabled={!this.canEdit}
 									/>
 								</div>
 							) : (

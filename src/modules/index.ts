@@ -6,6 +6,5 @@ export * from "./settings";
 export * from "./staff";
 export * from "./statistics";
 export * from "./treatments";
-export * from "./bot";
 export * from "./labwork";
 export * from "./register-modules";

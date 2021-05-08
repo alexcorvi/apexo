@@ -221,6 +221,7 @@ export class PatientsPage extends React.Component {
 										);
 										core.router.unSelect();
 									}}
+									disabled={!this.canEdit}
 								/>
 							</div>
 						) : (
@@ -246,9 +247,10 @@ export class PatientsPage extends React.Component {
 					]}
 					rows={modules.patients!.docs.map((patient) => ({
 						id: patient._id,
-						className:
+						className: `${
 							"pg-pn-" +
-							patient.name.toLowerCase().replace(/\s/g, ""),
+							patient.name.toLowerCase().replace(/\s/g, "")
+						}`,
 						searchableString: patient.searchableString,
 						actions: this.tabs
 							.filter((x) => !x.hidden)

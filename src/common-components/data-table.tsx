@@ -34,6 +34,7 @@ interface Row {
 		icon: string;
 		onClick: () => void;
 	}[];
+	actionsIcon?: string;
 }
 
 interface Props {
@@ -209,7 +210,13 @@ export class DataTableComponent extends React.Component<Props, {}> {
 												(this.ctxMenusOpen = row.id)
 											}
 										>
-											<Icon iconName="More"></Icon>
+											<Icon
+												iconName={
+													row.actionsIcon
+														? row.actionsIcon
+														: "More"
+												}
+											></Icon>
 											{this.ctxMenusOpen === row.id ? (
 												<ContextualMenu
 													items={

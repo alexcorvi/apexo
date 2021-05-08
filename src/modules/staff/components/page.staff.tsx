@@ -1002,6 +1002,7 @@ export class StaffPage extends React.Component {
 
 											core.router.unSelect();
 										}}
+										disabled={!this.canEdit}
 									/>
 								</div>
 							) : (

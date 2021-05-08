@@ -1,4 +1,4 @@
-import { methods } from "../db/index";
+import { DBNames, methods } from "../db/index";
 import * as core from "@core";
 import { genLocalInstance, genRemoteInstance, UploadedFile } from "@core";
 import { decode, generateID, store } from "@utils";

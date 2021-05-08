@@ -145,7 +145,6 @@ h5 {
 	height: 100%;
 	padding-top: 5px;
 	padding-bottom: 35px;
-	overflow-y: auto;
 }
 
 html,
@@ -297,4 +296,15 @@ hr {
 	margin: 3px;
 	border: 1px solid #9fa8da;
 	border-radius: 3px;
+}
+
+.after-confirm-actions {
+	display: inline-block;
+	border: 1px solid #b4ddb2;
+	border-radius: 3px;
+	overflow: hidden;
+
+	button {
+		border: 0;
+	}
 }

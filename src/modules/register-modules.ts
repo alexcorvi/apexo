@@ -13,7 +13,6 @@ const register = [
 	modules.registerLabwork,
 	modules.registerPrescriptions,
 	modules.registerStats,
-	modules.registerBot,
 ];
 
 export async function registerModules() {
@@ -22,7 +21,7 @@ export async function registerModules() {
 			try {
 				await singleModule();
 			} catch (e) {
-				console.log("error while registering", singleModule.name, e);
+				utils.log("error while registering", singleModule.name, e);
 			}
 			core.status.finishedTasks++;
 			return;

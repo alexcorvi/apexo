@@ -491,6 +491,7 @@ export class OrthoPage extends React.Component {
 							iconName: "add",
 						}}
 						text={text("add new").c}
+						disabled={!this.canEdit}
 					/>
 				</Panel>
 
@@ -629,6 +630,7 @@ export class OrthoPage extends React.Component {
 												);
 												core.router.unSelect();
 											}}
+											disabled={!this.canEdit}
 										/>
 									</div>
 								) : (

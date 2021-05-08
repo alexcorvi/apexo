@@ -1,5 +1,17 @@
 ## Changelog
 
+### 4.0.3
+
+-   Fixed touch screen scrolling (for good)
+
+### 4.0.2
+
+-   Better error logs
+-   Safer logging in
+-   Fixed: status being cancelled
+-   Less failures on files deletion
+-   Showing progress on image deletion
+
 ### 4.0.1
 
 -   Bug fix: Clicking staff member from home page should goes to members appointments

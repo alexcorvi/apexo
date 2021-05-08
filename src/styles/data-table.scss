@@ -127,4 +127,22 @@
 			}
 		}
 	}
+	.inactive {
+		border-top: 3px solid #78909c0d;
+		box-shadow: inset 0 4px 10px #ededed;
+	}
+	.inactive ~ .inactive {
+		box-shadow: none;
+		border-top: none;
+	}
+
+	tr.inactive td {
+		background: #0078d400;
+		color: #d6ddea;
+	}
+	tr.inactive td.row-actions i {
+		color: #004e8c;
+		padding: 5px;
+		border-radius: 100%;
+	}
 }

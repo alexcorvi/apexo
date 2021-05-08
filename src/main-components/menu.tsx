@@ -5,7 +5,6 @@ import { observer } from "mobx-react";
 import * as React from "react";
 import {
 	Icon,
-	IconButton,
 	Nav,
 	Panel,
 	PanelType,

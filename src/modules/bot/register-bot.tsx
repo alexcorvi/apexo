@@ -25,6 +25,7 @@ export const registerBot = async () => {
 			return <BotPage />;
 		},
 		condition: () =>
+			false &&
 			core.status.version === "supported" &&
 			(core.user.currentUser || { canViewBotPage: false }).canViewBotPage,
 	});
@@ -39,6 +40,7 @@ export const registerBot = async () => {
 		url: "",
 		key: modules.botNamespace,
 		condition: () =>
+			false &&
 			core.status.version === "supported" &&
 			(core.user.currentUser || { canViewBotPage: false }).canViewBotPage,
 	});

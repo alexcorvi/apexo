@@ -55,7 +55,11 @@ export const DTF = {
 			}
 			const compressedDoc: any = {};
 			Object.keys(doc).forEach((key) => {
-				if (key.startsWith("_") || key.endsWith("date")) {
+				if (
+					key.startsWith("_") ||
+					key.endsWith("date") ||
+					key === "confirmationMessage"
+				) {
 					compressedDoc[key] = JSON.parse(
 						JSON.stringify((doc as any)[key])
 					);
@@ -86,7 +90,11 @@ export const DTF = {
 			}
 			const encryptedDoc: any = {};
 			Object.keys(doc).forEach((key) => {
-				if (key.startsWith("_") || key.endsWith("date")) {
+				if (
+					key.startsWith("_") ||
+					key.endsWith("date") ||
+					key === "confirmationMessage"
+				) {
 					encryptedDoc[key] = JSON.parse(
 						JSON.stringify((doc as any)[key])
 					);
