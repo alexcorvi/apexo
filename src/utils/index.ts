@@ -11,3 +11,4 @@ export * from "./teeth-numbering-systems";
 export * from "./textual-filter";
 export * from "./username";
 export * from "./log";
+export * from "./gphotos";

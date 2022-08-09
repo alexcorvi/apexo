@@ -1,8 +1,6 @@
 import { status } from "@core";
-import * as core from "@core";
 import { setting } from "@modules";
-import { decrypt, encrypt, generateID, store } from "@utils";
-import * as utils from "@utils";
+import { generateID } from "@utils";
 import { del, get, keys, set } from "idb-keyval";
 
 export interface UploadedFile {
@@ -20,110 +18,6 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
 		};
 	});
 };
-
-async function recordSupportedFile(path: string, dir: string) {
-	const allFiles = await supportedFiles.allFiles();
-	return new Promise((resolve, reject) => {
-		allFiles.push({
-			type: dir,
-			path,
-			date: new Date().getTime(),
-		});
-		const LSL_time = store.get("LSL_time");
-		const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user.id;
-		const data = JSON.stringify({
-			meta: {
-				apexofiles: encrypt(
-					JSON.stringify(allFiles),
-					core.uniqueString()
-				),
-			},
-		});
-		const xhr = new XMLHttpRequest();
-		xhr.addEventListener("readystatechange", function () {
-			if (this.readyState === 4) {
-				if (this.status < 300 && this.status > 199) {
-					resolve(true);
-				} else {
-					try {
-						reject(JSON.parse(this.responseText).message);
-					} catch (e) {
-						reject("Error: Could not decode server response");
-					}
-				}
-			}
-		});
-		xhr.open("POST", `https://apexo.app/wp-json/wp/v2/users/${userID}`);
-		xhr.setRequestHeader("Authorization", `Bearer ${LSL_time}`);
-		xhr.setRequestHeader("Content-Type", "application/json");
-		xhr.send(data);
-	});
-}
-
-async function resetSupportedRecords() {
-	return new Promise((resolve, reject) => {
-		const LSL_time = store.get("LSL_time");
-		const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user.id;
-		const data = JSON.stringify({
-			meta: {
-				apexofiles: encrypt(JSON.stringify([]), core.uniqueString()),
-			},
-		});
-		const xhr = new XMLHttpRequest();
-		xhr.addEventListener("readystatechange", function () {
-			if (this.readyState === 4) {
-				if (this.status < 300 && this.status > 199) {
-					resolve(true);
-				} else {
-					try {
-						reject(JSON.parse(this.responseText).message);
-					} catch (e) {
-						reject("Error: Could not decode server response");
-					}
-				}
-			}
-		});
-		xhr.open("POST", `https://apexo.app/wp-json/wp/v2/users/${userID}`);
-		xhr.setRequestHeader("Authorization", `Bearer ${LSL_time}`);
-		xhr.setRequestHeader("Content-Type", "application/json");
-		xhr.send(data);
-	});
-}
-
-async function unRecordSupportedFile(path: string) {
-	return new Promise(async (resolve, reject) => {
-		const prevFiles = await supportedFiles.allFiles();
-		const updatedFiles = prevFiles.filter((x) => x.path !== path);
-		const LSL_time = store.get("LSL_time");
-		const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user.id;
-		const data = JSON.stringify({
-			meta: {
-				apexofiles: encrypt(
-					JSON.stringify(updatedFiles),
-					core.uniqueString()
-				),
-			},
-		});
-		const xhr = new XMLHttpRequest();
-		xhr.addEventListener("readystatechange", function () {
-			if (this.readyState === 4) {
-				if (this.status < 300 && this.status > 199) {
-					resolve(true);
-				} else {
-					try {
-						reject(JSON.parse(this.responseText).message);
-					} catch (e) {
-						reject("Error: Could not decode server response");
-					}
-				}
-			}
-		});
-		xhr.open("POST", `https://apexo.app/wp-json/wp/v2/users/${userID}`);
-		xhr.setRequestHeader("Authorization", `Bearer ${LSL_time}`);
-		xhr.setRequestHeader("Content-Type", "application/json");
-		xhr.send(data);
-	});
-}
 
 interface FileService {
 	save({
@@ -164,116 +58,6 @@ function arrayBufferToBase64(
 		reader.readAsDataURL(blob);
 	});
 }
-
-const supportedFiles: FileService & {
-	allFiles: () => Promise<UploadedFile[]>;
-} = {
-	async save({
-		blob,
-		ext,
-		dir,
-	}: {
-		blob: Blob;
-		ext: string;
-		dir: string;
-	}): Promise<string> {
-		return new Promise((resolve, reject) => {
-			const LSL_time = store.get("LSL_time");
-			const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user
-				.id;
-			const paddedUserID = padNumbers(userID);
-			const fileName = `${paddedUserID}-${generateID()}.${ext}`;
-			const data = new FormData();
-			data.append("file", blob, fileName);
-			const xhr = new XMLHttpRequest();
-			xhr.addEventListener("readystatechange", async function () {
-				if (this.readyState === 4) {
-					try {
-						const res = JSON.parse(this.responseText);
-						const link = res.id.toString();
-						if (link) {
-							if (dir === BACKUPS_DIR) {
-								await recordSupportedFile(link, dir);
-							}
-							resolve(link);
-						} else {
-							reject(res.message);
-						}
-					} catch (e) {
-						reject("Unable to decode server response");
-					}
-				}
-			});
-			xhr.open("POST", "https://apexo.app/wp-json/wp/v2/media");
-			xhr.setRequestHeader("Authorization", `Bearer ${LSL_time}`);
-			xhr.send(data);
-		});
-	},
-	async get(path: string) {
-		return `https://apexo.app/?attachment_id=${path}`;
-	},
-	async remove(path: string) {
-		return new Promise((resolve, reject) => {
-			const xhr = new XMLHttpRequest();
-			xhr.addEventListener("readystatechange", async function () {
-				if (this.readyState === 4) {
-					await unRecordSupportedFile(path);
-					resolve(true);
-				}
-			});
-			xhr.open(
-				"DELETE",
-				`https://apexo.app/wp-json/wp/v2/media/${path}?force=true`
-			);
-			xhr.setRequestHeader(
-				"Authorization",
-				`Bearer ${store.get("LSL_time")}`
-			);
-			xhr.send();
-		});
-	},
-	async status() {
-		return status.isOnline.server;
-	},
-	async backups() {
-		return (await supportedFiles.allFiles()).filter(
-			(x) => x.type === BACKUPS_DIR
-		);
-	},
-	async allFiles(): Promise<UploadedFile[]> {
-		return new Promise((resolve, reject) => {
-			const LSL_time = store.get("LSL_time");
-			const userID = JSON.parse(atob(LSL_time.split(".")[1])).data.user
-				.id;
-			const xhr = new XMLHttpRequest();
-			xhr.addEventListener("readystatechange", async function () {
-				if (this.readyState === 4) {
-					try {
-						const data = JSON.parse(this.responseText);
-						const filesString: string = data.meta.apexofiles;
-						if (filesString.length > 0) {
-							resolve(
-								JSON.parse(
-									decrypt(filesString, core.uniqueString())
-								)
-							);
-						} else {
-							resolve([]);
-						}
-					} catch (e) {
-						utils.log("Could not read dir, resetting");
-						await resetSupportedRecords();
-						resolve(await supportedFiles.allFiles());
-					}
-				}
-			});
-			xhr.open("GET", `https://apexo.app/wp-json/wp/v2/users/${userID}`);
-			xhr.setRequestHeader("Authorization", `Bearer ${LSL_time}`);
-			xhr.setRequestHeader("Content-Type", "application/json");
-			xhr.send();
-		});
-	},
-};
 
 const communityFiles: FileService = {
 	async save({
@@ -359,7 +143,7 @@ const communityFiles: FileService = {
 		});
 	},
 
-	async remove(path: string) {
+	async remove(path: string): Promise<void> {
 		return new Promise((resolve, reject) => {
 			const accessToken = setting!.getSetting("dropbox_accessToken");
 			if (!accessToken) {
@@ -511,8 +295,6 @@ export function files() {
 			return communityFiles;
 		case "offline":
 			return offlineFiles;
-		case "supported":
-			return supportedFiles;
 		default:
 			return communityFiles;
 	}

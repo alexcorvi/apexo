@@ -1,1 +1,1 @@
-export const orthoNamespace = "orthodontic";
+export const orthoNamespace = "ortho";

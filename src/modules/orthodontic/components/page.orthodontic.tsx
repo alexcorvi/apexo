@@ -51,18 +51,6 @@ const OrthoCaseSheetPanel = loadable({
 			.OrthoCaseSheetPanel,
 	loading: () => <Shimmer />,
 });
-const OrthoRecordsPanel = loadable({
-	loader: async () =>
-		(await import("modules/orthodontic/components/records"))
-			.OrthoRecordsPanel,
-	loading: () => <Shimmer />,
-});
-const OrthoGalleryPanel = loadable({
-	loader: async () =>
-		(await import("modules/orthodontic/components/ortho-gallery"))
-			.OrthoGalleryPanel,
-	loading: () => <Shimmer />,
-});
 
 const AppointmentEditorPanel = loadable({
 	loader: async () =>
@@ -117,16 +105,6 @@ export class OrthoPage extends React.Component {
 			key: "sheet",
 			title: text("case details").h,
 			icon: "GroupedList",
-		},
-		{
-			key: "archive",
-			title: text("visits").h,
-			icon: "Archive",
-		},
-		{
-			key: "gallery",
-			title: text("gallery").h,
-			icon: "PhotoCollection",
 		},
 		{
 			key: "appointments",
@@ -197,10 +175,15 @@ export class OrthoPage extends React.Component {
 													name={patient.name}
 													avatar={
 														patient.avatar
-															? imagesTable.table[
-																	patient
-																		.avatar
-															  ]
+															? patient.isGooglePhotos(
+																	patient.avatar
+															  )
+																? patient.avatar
+																: imagesTable
+																		.table[
+																		patient
+																			.avatar
+																  ]
 																? imagesTable
 																		.table[
 																		patient
@@ -320,7 +303,8 @@ export class OrthoPage extends React.Component {
 													patient.nextAppointment
 												}
 												onClick={(id) => {
-													this.selectedAppointmentId = id;
+													this.selectedAppointmentId =
+														id;
 													core.router.select({
 														sub: "details",
 													});
@@ -524,9 +508,14 @@ export class OrthoPage extends React.Component {
 									onDismiss={() => core.router.unSelect()}
 									avatar={
 										this.selectedPatient!.avatar
-											? imagesTable.table[
-													this.selectedPatient!.avatar
-											  ]
+											? this.selectedPatient.isGooglePhotos(
+													this.selectedPatient.avatar
+											  )
+												? this.selectedPatient.avatar
+												: imagesTable.table[
+														this.selectedPatient!
+															.avatar
+												  ]
 												? imagesTable.table[
 														this.selectedPatient!
 															.avatar
@@ -573,22 +562,6 @@ export class OrthoPage extends React.Component {
 
 								{core.router.selectedTab === "sheet" ? (
 									<OrthoCaseSheetPanel
-										orthoCase={this.selectedCase}
-									/>
-								) : (
-									""
-								)}
-
-								{core.router.selectedTab === "archive" ? (
-									<OrthoRecordsPanel
-										orthoCase={this.selectedCase}
-									/>
-								) : (
-									""
-								)}
-
-								{core.router.selectedTab === "gallery" ? (
-									<OrthoGalleryPanel
 										orthoCase={this.selectedCase}
 									/>
 								) : (

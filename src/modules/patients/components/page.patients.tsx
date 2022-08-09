@@ -1,6 +1,7 @@
 import { imagesTable, text } from "@core";
 import * as core from "@core";
 import * as modules from "@modules";
+import { Patient, PatientAppointmentsPanel } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
@@ -15,11 +16,6 @@ import {
 	TableActions,
 	TagComponent,
 } from "@common-components";
-import {
-	Patient,
-	PatientAppointmentsPanel,
-	PatientGalleryPanel,
-} from "@modules";
 import {
 	Icon,
 	Panel,
@@ -86,11 +82,7 @@ export class PatientsPage extends React.Component {
 			title: text("dental history").h,
 			icon: "teeth",
 		},
-		{
-			key: "gallery",
-			title: text("gallery").h,
-			icon: "PhotoCollection",
-		},
+
 		{
 			key: "appointments",
 			title: text("appointments").h,
@@ -132,10 +124,17 @@ export class PatientsPage extends React.Component {
 										onDismiss={() => core.router.unSelect()}
 										avatar={
 											this.selectedPatient!.avatar
-												? imagesTable.table[
+												? this.selectedPatient!.isGooglePhotos(
 														this.selectedPatient!
 															.avatar
-												  ]
+												  )
+													? this.selectedPatient!
+															.avatar
+													: imagesTable.table[
+															this
+																.selectedPatient!
+																.avatar
+													  ]
 													? imagesTable.table[
 															this
 																.selectedPatient!
@@ -179,13 +178,7 @@ export class PatientsPage extends React.Component {
 						) : (
 							""
 						)}
-						{core.router.selectedTab === "gallery" ? (
-							<PatientGalleryPanel
-								patient={this.selectedPatient}
-							/>
-						) : (
-							""
-						)}
+
 						{core.router.selectedTab === "appointments" ? (
 							<PatientAppointmentsPanel
 								patient={this.selectedPatient}
@@ -285,9 +278,13 @@ export class PatientsPage extends React.Component {
 											name={patient.name}
 											avatar={
 												patient.avatar
-													? imagesTable.table[
+													? patient.isGooglePhotos(
 															patient.avatar
-													  ]
+													  )
+														? patient.avatar
+														: imagesTable.table[
+																patient.avatar
+														  ]
 														? imagesTable.table[
 																patient.avatar
 														  ]
@@ -452,7 +449,8 @@ export class PatientsPage extends React.Component {
 										title: "Add new",
 										name: text("add new").c,
 										onClick: () => {
-											const patient = modules.patients!.new();
+											const patient =
+												modules.patients!.new();
 											patient.fromJSON(patient.toJSON()); // init. teeth
 											modules.patients!.add(patient);
 											core.router.select({

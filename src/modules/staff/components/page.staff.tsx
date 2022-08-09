@@ -288,7 +288,8 @@ export class StaffPage extends React.Component {
 												label={text("name").c}
 												value={this.selectedMember.name}
 												onChange={(ev, val) =>
-													(this.selectedMember!.name = val!)
+													(this.selectedMember!.name =
+														val!)
 												}
 												disabled={!this.canEdit}
 												data-testid="staff-name"
@@ -380,7 +381,8 @@ export class StaffPage extends React.Component {
 																.phone
 														}
 														onChange={(ev, val) =>
-															(this.selectedMember!.phone = val!)
+															(this.selectedMember!.phone =
+																val!)
 														}
 														disabled={!this.canEdit}
 														data-testid="phone-number"
@@ -396,7 +398,8 @@ export class StaffPage extends React.Component {
 																.email
 														}
 														onChange={(ev, val) =>
-															(this.selectedMember!.email = val!)
+															(this.selectedMember!.email =
+																val!)
 														}
 														disabled={!this.canEdit}
 														data-testid="email"
@@ -426,7 +429,8 @@ export class StaffPage extends React.Component {
 													}
 													onChange={(ev, v) => {
 														if (num(v!) < 10000) {
-															this.selectedMember!.pin = v!.toString();
+															this.selectedMember!.pin =
+																v!.toString();
 														} else {
 															this.forceUpdate();
 														}
@@ -487,7 +491,8 @@ export class StaffPage extends React.Component {
 												).c
 											}
 											onChange={(ev, newVal) => {
-												this.selectedMember!.operates = newVal!;
+												this.selectedMember!.operates =
+													newVal!;
 											}}
 										/>
 
@@ -506,7 +511,8 @@ export class StaffPage extends React.Component {
 													.c
 											}
 											onChange={(ev, newVal) => {
-												this.selectedMember!.canViewStaff = newVal!;
+												this.selectedMember!.canViewStaff =
+													newVal!;
 											}}
 										/>
 										<Toggle
@@ -526,7 +532,8 @@ export class StaffPage extends React.Component {
 												).c
 											}
 											onChange={(ev, newVal) => {
-												this.selectedMember!.canViewPatients = newVal!;
+												this.selectedMember!.canViewPatients =
+													newVal!;
 											}}
 										/>
 										{modules.setting!.getSetting(
@@ -552,7 +559,8 @@ export class StaffPage extends React.Component {
 													).c
 												}
 												onChange={(ev, newVal) => {
-													this.selectedMember!.canViewOrtho = newVal!;
+													this.selectedMember!.canViewOrtho =
+														newVal!;
 												}}
 											/>
 										) : (
@@ -581,7 +589,8 @@ export class StaffPage extends React.Component {
 													).c
 												}
 												onChange={(ev, newVal) => {
-													this.selectedMember!.canViewLabwork = newVal!;
+													this.selectedMember!.canViewLabwork =
+														newVal!;
 												}}
 											/>
 										) : (
@@ -606,7 +615,8 @@ export class StaffPage extends React.Component {
 												).c
 											}
 											onChange={(ev, newVal) => {
-												this.selectedMember!.canViewAppointments = newVal!;
+												this.selectedMember!.canViewAppointments =
+													newVal!;
 											}}
 										/>
 										<Toggle
@@ -627,7 +637,8 @@ export class StaffPage extends React.Component {
 												).c
 											}
 											onChange={(ev, newVal) => {
-												this.selectedMember!.canViewTreatments = newVal!;
+												this.selectedMember!.canViewTreatments =
+													newVal!;
 											}}
 										/>
 										{modules.setting!.getSetting(
@@ -653,7 +664,8 @@ export class StaffPage extends React.Component {
 													).c
 												}
 												onChange={(ev, newVal) => {
-													this.selectedMember!.canViewPrescriptions = newVal!;
+													this.selectedMember!.canViewPrescriptions =
+														newVal!;
 												}}
 											/>
 										) : (
@@ -682,7 +694,8 @@ export class StaffPage extends React.Component {
 													).c
 												}
 												onChange={(ev, newVal) => {
-													this.selectedMember!.canViewStats = newVal!;
+													this.selectedMember!.canViewStats =
+														newVal!;
 												}}
 											/>
 										) : (
@@ -706,7 +719,8 @@ export class StaffPage extends React.Component {
 												).c
 											}
 											onChange={(ev, newVal) => {
-												this.selectedMember!.canViewSettings = newVal!;
+												this.selectedMember!.canViewSettings =
+													newVal!;
 											}}
 										/>
 
@@ -730,7 +744,8 @@ export class StaffPage extends React.Component {
 													).c
 												}
 												onChange={(ev, newVal) => {
-													this.selectedMember!.canEditStaff = newVal!;
+													this.selectedMember!.canEditStaff =
+														newVal!;
 												}}
 											/>
 										) : (
@@ -757,7 +772,8 @@ export class StaffPage extends React.Component {
 													).c
 												}
 												onChange={(ev, newVal) => {
-													this.selectedMember!.canEditPatients = newVal!;
+													this.selectedMember!.canEditPatients =
+														newVal!;
 												}}
 											/>
 										) : (
@@ -788,7 +804,8 @@ export class StaffPage extends React.Component {
 													).c
 												}
 												onChange={(ev, newVal) => {
-													this.selectedMember!.canEditOrtho = newVal!;
+													this.selectedMember!.canEditOrtho =
+														newVal!;
 												}}
 											/>
 										) : (
@@ -818,7 +835,8 @@ export class StaffPage extends React.Component {
 													).c
 												}
 												onChange={(ev, newVal) => {
-													this.selectedMember!.canEditLabwork = newVal!;
+													this.selectedMember!.canEditLabwork =
+														newVal!;
 												}}
 											/>
 										) : (
@@ -847,7 +865,8 @@ export class StaffPage extends React.Component {
 													).c
 												}
 												onChange={(ev, newVal) => {
-													this.selectedMember!.canEditAppointments = newVal!;
+													this.selectedMember!.canEditAppointments =
+														newVal!;
 												}}
 											/>
 										) : (
@@ -876,7 +895,8 @@ export class StaffPage extends React.Component {
 													).c
 												}
 												onChange={(ev, newVal) => {
-													this.selectedMember!.canEditTreatments = newVal!;
+													this.selectedMember!.canEditTreatments =
+														newVal!;
 												}}
 											/>
 										) : (
@@ -908,7 +928,8 @@ export class StaffPage extends React.Component {
 													).c
 												}
 												onChange={(ev, newVal) => {
-													this.selectedMember!.canEditPrescriptions = newVal!;
+													this.selectedMember!.canEditPrescriptions =
+														newVal!;
 												}}
 											/>
 										) : (
@@ -936,7 +957,8 @@ export class StaffPage extends React.Component {
 													).c
 												}
 												onChange={(ev, newVal) => {
-													this.selectedMember!.canEditSettings = newVal!;
+													this.selectedMember!.canEditSettings =
+														newVal!;
 												}}
 											/>
 										) : (

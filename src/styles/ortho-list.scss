@@ -4,3 +4,38 @@
 	line-height: 13px;
 	font-weight: 600;
 }
+
+
+
+.txplan .ms-BasePicker-itemsWrapper, .problems .ms-BasePicker-itemsWrapper{
+	padding: 2px;
+	width: 100%;
+	overflow:hidden;
+	position: relative;
+  }
+  
+  .txplan .ms-TagItem, .problems .ms-TagItem {
+	display: block !important;
+	min-width: 99%;
+  }
+  
+  .txplan .ms-TagItem-close {
+	float: right;
+  }
+  
+  .problems .ms-TagItem-close {
+	display: none;
+  }
+  
+  .problems .ms-BasePicker-text:after {
+	background:transparent;
+  }
+  
+  .ms-TagItem {
+	background: #fafafa;
+  }
+
+  .ortho-single-component h3 {
+	font-weight: 400;
+	margin: 12px 0;
+  }

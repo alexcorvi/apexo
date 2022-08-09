@@ -1,9 +1,6 @@
 import * as core from "@core";
 import * as utils from "@utils";
 export function username() {
-	if (core.status.version !== "supported") {
-		return "";
-	}
 	const pl = utils.store.get("LSL_time").split(".")[1];
 	if (!pl) {
 		return "";

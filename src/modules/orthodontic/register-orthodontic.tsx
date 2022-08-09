@@ -18,7 +18,7 @@ export const registerOrthodontic = async () => {
 
 	core.router.register({
 		namespace: modules.orthoNamespace,
-		regex: /^orthodontic/,
+		regex: /^ortho/,
 		component: async () => {
 			const OrthoPage = (await import("./components/page.orthodontic"))
 				.OrthoPage;

@@ -41,34 +41,21 @@ export class PatientDetailsPanel extends React.Component<{
 		return (
 			<div className="spd-pn">
 				<SectionComponent title={text(`basic info`).h}>
-					<div className="name">
-						<TextField
-							label={text(`name`).c}
-							value={this.props.patient.name}
-							onChange={(ev, name) =>
-								(this.props.patient.name = name!)
-							}
-							disabled={!this.canEdit}
-							data-testid="patient-name"
-						/>
-					</div>
 					<Row gutter={8}>
 						<Col sm={12}>
-							<div className="birth">
+							<div className="name">
 								<TextField
-									label={text("birth year / age").c}
-									value={this.props.patient.birthYear.toString()}
-									onChange={(ev, year) =>
-										(this.props.patient.birthYear = num(
-											year!
-										))
+									label={text(`name`).c}
+									value={this.props.patient.name}
+									onChange={(ev, name) =>
+										(this.props.patient.name = name!)
 									}
-									type="number"
 									disabled={!this.canEdit}
+									data-testid="patient-name"
 								/>
 							</div>
 						</Col>
-						<Col sm={12}>
+						<Col sm={6}>
 							<div className="gender">
 								<Dropdown
 									label={text("gender").c}
@@ -92,72 +79,24 @@ export class PatientDetailsPanel extends React.Component<{
 								/>
 							</div>
 						</Col>
-					</Row>
-					{status.isOnline.files ? (
-						<div>
-							<Label>Avatar photo</Label>
-							<div className="thumbs">
-								{this.props.patient.gallery.map((image) => {
-									if (imagesTable.table[image]) {
-										return (
-											<a
-												className={`thumb ${
-													this.props.patient
-														.avatar === image
-														? "selected"
-														: ""
-												}`}
-												key={image}
-												style={{
-													backgroundImage: `url('${
-														imagesTable.table[image]
-															? imagesTable.table[
-																	image
-															  ]
-															: ""
-													}')`,
-												}}
-												onClick={() => {
-													this.props.patient.avatar = image;
-												}}
-											/>
-										);
-									} else {
-										imagesTable.fetchImage(image);
+						<Col sm={6}>
+							<div className="birth">
+								<TextField
+									label={text("age").c}
+									value={this.props.patient.birthYear.toString()}
+									onChange={(ev, year) =>
+										(this.props.patient.birthYear = num(
+											year!
+										))
 									}
-								})}
+									type="number"
+									disabled={!this.canEdit}
+								/>
 							</div>
-							<br />
-							{this.props.patient.avatar ? (
-								<span>
-									<Link
-										onClick={() =>
-											(this.props.patient.avatar = "")
-										}
-									>
-										{text("delete").c}
-									</Link>{" "}
-									/{" "}
-								</span>
-							) : (
-								""
-							)}
-							<Link
-								onClick={() =>
-									this.props.onChangeViewWhich("gallery")
-								}
-							>
-								{text("upload").c}
-							</Link>
-						</div>
-					) : (
-						""
-					)}
-				</SectionComponent>
-
-				<SectionComponent title={text(`contact info`).h}>
+						</Col>
+					</Row>
 					<Row gutter={8}>
-						<Col sm={12}>
+						<Col sm={8}>
 							<TextField
 								label={text("phone").c}
 								value={this.props.patient.phone}
@@ -168,7 +107,7 @@ export class PatientDetailsPanel extends React.Component<{
 								disabled={!this.canEdit}
 							/>
 						</Col>
-						<Col sm={12}>
+						<Col sm={8}>
 							<TextField
 								label={text("email").c}
 								value={this.props.patient.email}
@@ -178,81 +117,125 @@ export class PatientDetailsPanel extends React.Component<{
 								disabled={!this.canEdit}
 							/>
 						</Col>
+						<Col sm={8}>
+							<TextField
+								label={text("address").c}
+								value={this.props.patient.address}
+								onChange={(ev, address) =>
+									(this.props.patient.address = address!)
+								}
+								disabled={!this.canEdit}
+							/>
+						</Col>
 					</Row>
-
-					<TextField
-						label={text("address").c}
-						value={this.props.patient.address}
-						onChange={(ev, address) =>
-							(this.props.patient.address = address!)
-						}
-						disabled={!this.canEdit}
-						multiline
-					/>
+					<Row gutter={8}>
+						<Col sm={12}>
+							<TagInputComponent
+								className="patient-labels"
+								disabled={!this.canEdit}
+								label={text("labels").c}
+								loose
+								options={modules
+									.patients!.docs.map((x) => x.labels)
+									.reduce(
+										(a: string[], b) =>
+											a.concat(b.map((x) => x.text)),
+										[]
+									)
+									.map((x) => ({
+										key: x,
+										text: x,
+									}))
+									.reduce(
+										(
+											arr: {
+												key: string;
+												text: string;
+											}[],
+											item
+										) => {
+											if (
+												arr.findIndex(
+													(x) => x.key === item.key
+												) === -1
+											) {
+												arr.push(item);
+											}
+											return arr;
+										},
+										[]
+									)}
+								onChange={(newVal) => {
+									this.props.patient.labels = newVal.map(
+										(item) => {
+											return {
+												text: item,
+												type: getRandomTagType(item),
+											};
+										}
+									);
+								}}
+								value={this.props.patient.labels.map(
+									(label) => ({
+										key: label.text,
+										text: label.text,
+									})
+								)}
+							/>
+						</Col>
+						<Col sm={12}>
+							<TagInputComponent
+								className="patient-labels"
+								disabled={!this.canEdit}
+								label={text("notes").c}
+								loose
+								options={modules
+									.patients!.docs.map((x) => x.labels)
+									.reduce(
+										(a: string[], b) =>
+											a.concat(b.map((x) => x.text)),
+										[]
+									)
+									.map((x) => ({
+										key: x,
+										text: x,
+									}))
+									.reduce(
+										(
+											arr: {
+												key: string;
+												text: string;
+											}[],
+											item
+										) => {
+											if (
+												arr.findIndex(
+													(x) => x.key === item.key
+												) === -1
+											) {
+												arr.push(item);
+											}
+											return arr;
+										},
+										[]
+									)}
+								onChange={(newVal) => {
+									this.props.patient.medicalHistory = newVal;
+								}}
+								value={this.props.patient.medicalHistory.map(
+									(label) => ({
+										key: label,
+										text: label,
+									})
+								)}
+							/>
+						</Col>
+					</Row>
 				</SectionComponent>
 
-				<SectionComponent title={text(`other notes`).h}>
-					<TagInputComponent
-						className="patient-labels"
-						disabled={!this.canEdit}
-						label={text("labels").c}
-						loose
-						options={modules
-							.patients!.docs.map((x) => x.labels)
-							.reduce(
-								(a: string[], b) =>
-									a.concat(b.map((x) => x.text)),
-								[]
-							)
-							.map((x) => ({
-								key: x,
-								text: x,
-							}))
-							.reduce(
-								(
-									arr: {
-										key: string;
-										text: string;
-									}[],
-									item
-								) => {
-									if (
-										arr.findIndex(
-											(x) => x.key === item.key
-										) === -1
-									) {
-										arr.push(item);
-									}
-									return arr;
-								},
-								[]
-							)}
-						onChange={(newVal) => {
-							this.props.patient.labels = newVal.map((item) => {
-								return {
-									text: item,
-									type: getRandomTagType(item),
-								};
-							});
-						}}
-						value={this.props.patient.labels.map((label) => ({
-							key: label.text,
-							text: label.text,
-						}))}
-					/>
-					<br />
-					<div className="medical-history">
-						<EditableListComponent
-							label={text("notes").c}
-							value={this.props.patient.medicalHistory}
-							onChange={(newVal) => {
-								this.props.patient.medicalHistory = newVal;
-							}}
-							style={{ marginTop: "0" }}
-							disabled={!this.canEdit}
-						/>
-					</div>
-				</SectionComponent>
+				<modules.PatientGalleryPanel
+					patient={this.props.patient}
+				></modules.PatientGalleryPanel>
 			</div>
 		);
 	}

@@ -9,7 +9,7 @@ export interface DatabaseDump {
 	data: any[];
 }
 
-async function touchDB(location: string) {
+async function touchDB(location: string): Promise<void> {
 	return new Promise((resolve, reject) => {
 		const xhr = new XMLHttpRequest();
 		xhr.addEventListener("readystatechange", function () {
@@ -42,18 +42,10 @@ export const backup = {
 				})
 			).rows.map((entry) => {
 				if (entry.doc) {
-					delete entry.doc._rev;
+					delete (entry as any).doc._rev;
 				}
 				let doc = entry.doc;
 				doc = core.DTF.minify.do(doc, core.defaultsArr[index]);
-				if (core.status.version === "supported") {
-					doc = core.DTF.compress.do(doc);
-					doc = core.DTF.encrypt.do(doc, core.uniqueString());
-					// saving an encrypted version of the document
-					// however, when uploading, it will not be
-					// encrypted again, as the encryption/compression
-					// functions checks that
-				}
 				return doc;
 			});
 			dumps.push({ dbName, data });
@@ -140,9 +132,9 @@ export const restore = {
 					return;
 				});
 				downloadingTasks.push(async () => {
-					await (await genLocalInstance(dbName)).replicate.from(
-						await genRemoteInstance(dbName)
-					);
+					await (
+						await genLocalInstance(dbName)
+					).replicate.from(await genRemoteInstance(dbName));
 					view.progressBlock();
 					return;
 				});
@@ -178,7 +170,7 @@ export const restore = {
 		});
 	},
 
-	fromBase64: async function (base64Data: string) {
+	fromBase64: async function (base64Data: string): Promise<void> {
 		function decodeData(data: string) {
 			if (data.startsWith("LZC/")) {
 				return decompressFromUTF16(data.substr(4));
@@ -210,7 +202,7 @@ export const restore = {
 		});
 	},
 
-	fromFile: async function (file: Blob) {
+	fromFile: async function (file: Blob): Promise<void> {
 		return new Promise((resolve, reject) => {
 			function terminate() {
 				core.messages.newMessage({

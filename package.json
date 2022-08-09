@@ -1,10 +1,9 @@
 {
 	"name": "apexo.app",
-	"version": "4.0.3",
+	"version": "4.1.0",
 	"description": "Clinic Manager",
 	"author": "Ali Saleem",
 	"dependencies": {
-		"@types/sjcl": "^1.0.29",
 		"chart.js": "^2.9.3",
 		"classnames": "^2.2.6",
 		"enquire.js": "^2.1.6",
@@ -18,11 +17,11 @@
 		"mobx-react": "^6.2.2",
 		"office-ui-fabric-react": "^7.115.0",
 		"pouchdb-authentication": "^1.1.3",
-		"pouchdb-browser": "^7.2.2",
-		"pouchx": "^1.0.9",
-		"react": "^16.13.1",
+		"pouchdb-browser": "^7.3.0",
+		"pouchx": "^1.0.10",
+		"react": "^18.2.0",
 		"react-avatar-editor": "^11.0.9",
-		"react-dom": "^16.13.1",
+		"react-dom": "^18.2.0",
 		"react-loadable": "^5.5.0",
 		"sjcl": "^1.0.8",
 		"transform-pouch": "^1.1.5",
@@ -30,6 +29,7 @@
 		"tslib": "^1.10.0"
 	},
 	"devDependencies": {
+		"@types/sjcl": "^1.0.29",
 		"@cypress/webpack-preprocessor": "^4.1.0",
 		"@testing-library/react": "^8.0.5",
 		"@types/chart.js": "^2.7.55",

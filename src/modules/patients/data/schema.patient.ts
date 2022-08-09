@@ -5,7 +5,6 @@ import { Schema } from "pouchx";
 export interface PatientSchema extends Schema {
 	_id: string;
 	name: string;
-	avatar: string;
 	birthYear: number;
 	gender: keyof typeof gender;
 	tags: string;
@@ -14,6 +13,7 @@ export interface PatientSchema extends Schema {
 	phone: string;
 	medicalHistory: string[];
 	gallery: string[];
+	galbum: string;
 	teeth: Array<ToothSchema | null>;
 	labels: {
 		text: string;

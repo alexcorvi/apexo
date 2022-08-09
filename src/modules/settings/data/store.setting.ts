@@ -17,6 +17,9 @@ export class Settings extends Store<SettingItemSchema, SettingsItem> {
 	}
 
 	getSetting(id: keyof typeof dictionary): string {
+		if (id === "lang") {
+			return localStorage.getItem("lang") || "";
+		}
 		return (this.docs.find((x) => x._id.endsWith(id)) || { val: "" }).val;
 	}
 

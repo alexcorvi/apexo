@@ -67,14 +67,6 @@ export class LoginView extends React.Component {
 		this.disableInputs = false;
 	}
 
-	loginSupported() {
-		store.set("version", "supported");
-		core.status.version = "supported";
-		this.serverFieldValue = "https://sdb.apexo.app";
-		store.set("server_location", this.serverFieldValue);
-		this.login();
-	}
-
 	loginCommunity() {
 		store.set("version", "community");
 		core.status.version = "community";
@@ -106,58 +98,7 @@ export class LoginView extends React.Component {
 						}}
 					>
 						<PivotItem
-							headerText={"Supported"}
-							itemIcon={"Medical"}
-							itemKey={"s"}
-							key={"s"}
-						>
-							<form className="supported-login-forum">
-								<TextField
-									label="Username"
-									disabled={this.disableInputs}
-									value={this.usernameFieldValue}
-									onChange={(e, v) =>
-										(this.usernameFieldValue = v!)
-									}
-									data-testid="input-identification"
-									onKeyDown={(ev) => {
-										if (ev.keyCode === 13) {
-											this.loginSupported();
-										}
-									}}
-								/>
-								<TextField
-									name="password"
-									type="Password"
-									label={text(`password`).c}
-									disabled={this.disableInputs}
-									value={this.passwordFieldValue}
-									onChange={(e, v) =>
-										(this.passwordFieldValue = v!)
-									}
-									data-testid="input-password"
-									onKeyDown={(ev) => {
-										if (ev.keyCode === 13) {
-											this.loginSupported();
-										}
-									}}
-								/>
-								<PrimaryButton
-									iconProps={{
-										iconName: "Permissions",
-									}}
-									text={text("login").c}
-									disabled={this.disableInputs}
-									className="m-t-15 m-b-15"
-									data-testid="proceed-primary"
-									onClick={() => {
-										this.loginSupported();
-									}}
-								/>
-							</form>
-						</PivotItem>
-						<PivotItem
-							headerText={"Community"}
+							headerText={"Login"}
 							itemIcon={"Database"}
 							itemKey={"c"}
 							key={"c"}

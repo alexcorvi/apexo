@@ -27,6 +27,7 @@ export async function registerModules() {
 			return;
 		})
 	);
+
 	// resync on load: only staff database initially
 	// because we need it in login
 	core.status.loadingIndicatorText = "Downloading your clinic data";

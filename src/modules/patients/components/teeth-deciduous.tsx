@@ -122,8 +122,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[51] &&
-							this.props.teeth[51].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[51].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							51
@@ -141,8 +141,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[52] &&
-							this.props.teeth[52].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[52].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							52
@@ -160,8 +160,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[53] &&
-							this.props.teeth[53].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[53].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							53
@@ -179,8 +179,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[54] &&
-							this.props.teeth[54].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[54].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							54
@@ -198,8 +198,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[55] &&
-							this.props.teeth[55].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[55].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							55
@@ -280,8 +280,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[61] &&
-							this.props.teeth[61].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[61].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							61
@@ -299,8 +299,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[62] &&
-							this.props.teeth[62].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[62].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							62
@@ -318,8 +318,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[63] &&
-							this.props.teeth[63].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[63].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							63
@@ -337,8 +337,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[64] &&
-							this.props.teeth[64].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[64].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							64
@@ -356,8 +356,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[65] &&
-							this.props.teeth[65].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[65].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							65
@@ -425,8 +425,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[81] &&
-							this.props.teeth[81].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[81].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							81
@@ -444,8 +444,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[82] &&
-							this.props.teeth[82].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[82].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							82
@@ -463,8 +463,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[83] &&
-							this.props.teeth[83].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[83].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							83
@@ -482,8 +482,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[84] &&
-							this.props.teeth[84].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[84].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							84
@@ -501,8 +501,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[85] &&
-							this.props.teeth[85].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[85].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							85
@@ -570,8 +570,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[71] &&
-							this.props.teeth[71].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[71].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							71
@@ -589,8 +589,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[73] &&
-							this.props.teeth[73].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[73].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							73
@@ -608,8 +608,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[72] &&
-							this.props.teeth[72].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[72].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							72
@@ -627,8 +627,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[74] &&
-							this.props.teeth[74].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[74].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							74
@@ -646,8 +646,8 @@ export class TeethDeciduousChart extends React.Component<
 							dy="0em"
 							dominantBaseline="text-before-edge"
 							{...(this.props.teeth[75] &&
-							this.props.teeth[75].notes.length
-								? { stroke: "#212121" }
+							this.props.teeth[75].concern
+								? { stroke: "red" }
 								: {})}
 						>
 							75

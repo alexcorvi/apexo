@@ -229,7 +229,8 @@ export class PrescriptionsPage extends React.Component {
 										label={text("item name").c}
 										value={this.selectedPrescription.name}
 										onChange={(ev, val) =>
-											(this.selectedPrescription!.name = val!)
+											(this.selectedPrescription!.name =
+												val!)
 										}
 										disabled={!this.canEdit}
 										data-testid="rx-name"
@@ -242,9 +243,8 @@ export class PrescriptionsPage extends React.Component {
 												type="number"
 												value={this.selectedPrescription.doseInMg.toString()}
 												onChange={(ev, val) =>
-													(this.selectedPrescription!.doseInMg = num(
-														val!
-													))
+													(this.selectedPrescription!.doseInMg =
+														num(val!))
 												}
 												disabled={!this.canEdit}
 												data-testid="rx-dose"
@@ -256,9 +256,8 @@ export class PrescriptionsPage extends React.Component {
 												type="number"
 												value={this.selectedPrescription.timesPerDay.toString()}
 												onChange={(ev, val) =>
-													(this.selectedPrescription!.timesPerDay = num(
-														val!
-													))
+													(this.selectedPrescription!.timesPerDay =
+														num(val!))
 												}
 												disabled={!this.canEdit}
 												data-testid="rx-times"
@@ -270,9 +269,8 @@ export class PrescriptionsPage extends React.Component {
 												type="number"
 												value={this.selectedPrescription.unitsPerTime.toString()}
 												onChange={(ev, val) =>
-													(this.selectedPrescription!.unitsPerTime = num(
-														val!
-													))
+													(this.selectedPrescription!.unitsPerTime =
+														num(val!))
 												}
 												disabled={!this.canEdit}
 												data-testid="rx-units"
@@ -295,7 +293,9 @@ export class PrescriptionsPage extends React.Component {
 											};
 										})}
 										onChange={(ev, newValue) => {
-											this.selectedPrescription!.form = (newValue as any).text;
+											this.selectedPrescription!.form = (
+												newValue as any
+											).key;
 										}}
 										data-testid="rx-form"
 									/>

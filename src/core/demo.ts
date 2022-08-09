@@ -273,7 +273,7 @@ function randomCondition():
 	return randomFromArray(conditions) as any;
 }
 
-export function loadDemoData() {
+export function loadDemoData(): Promise<void> {
 	return new Promise((resolve, reject) => {
 		const Http = new XMLHttpRequest();
 		const url = "./demo.json";
@@ -322,7 +322,6 @@ export function loadDemoData() {
 						}
 						return y;
 					});
-					patient.avatar = randomImage() || "";
 					patient.gallery = [
 						randomImage(),
 						randomImage(),
@@ -345,17 +344,16 @@ export function loadDemoData() {
 					])} in the ${randomFromArray([
 						"upper",
 						"lower",
-					])} ${randomFromArray([
-						"left",
-						"right",
-					])} ${randomFromArray([
-						"arch",
-						"jaw",
-						"central",
-						"canine",
-						"second molar",
-						"premolar",
-					])}`;
+					])} ${randomFromArray(["left", "right"])} ${randomFromArray(
+						[
+							"arch",
+							"jaw",
+							"central",
+							"canine",
+							"second molar",
+							"premolar",
+						]
+					)}`;
 					appointment.date = randomDate();
 					appointment.diagnosis = randomFromArray([
 						"pulpitis",

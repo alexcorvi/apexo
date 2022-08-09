@@ -6,7 +6,6 @@ import * as modules from "@modules";
 import { dateNames, firstDayOfTheWeekDayPicker, formatDate } from "@utils";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { DefaultButton, TextField } from "office-ui-fabric-react";
 import * as React from "react";
 import * as loadable from "react-loadable";
 import {
@@ -115,21 +114,22 @@ export class CalendarPage extends React.Component {
 			<IconButton
 				iconProps={{ iconName: "Next" }}
 				onClick={() => {
-					const target = this.c.weeksCalendar[
-						this.c.selectedWeekIndex + 1
-					];
+					const target =
+						this.c.weeksCalendar[this.c.selectedWeekIndex + 1];
 					if (target) {
 						this.c.selected.year = target[0].yearNum;
 						this.c.selected.month = target[0].monthNum;
 						this.c.selected.day = target[0].dateNum;
 					} else {
 						this.c.selected.year = this.c.selected.year + 1;
-						this.c.selected.month = this.c.weeksCalendar[0][
-							this.c.weeksCalendar[0].length - 1
-						].monthNum;
-						this.c.selected.day = this.c.weeksCalendar[0][
-							this.c.weeksCalendar[0].length - 1
-						].dateNum;
+						this.c.selected.month =
+							this.c.weeksCalendar[0][
+								this.c.weeksCalendar[0].length - 1
+							].monthNum;
+						this.c.selected.day =
+							this.c.weeksCalendar[0][
+								this.c.weeksCalendar[0].length - 1
+							].dateNum;
 					}
 				}}
 			></IconButton>
@@ -140,21 +140,22 @@ export class CalendarPage extends React.Component {
 		return (
 			<IconButton
 				onClick={() => {
-					const target = this.c.weeksCalendar[
-						this.c.selectedWeekIndex - 1
-					];
+					const target =
+						this.c.weeksCalendar[this.c.selectedWeekIndex - 1];
 					if (target) {
 						this.c.selected.year = target[0].yearNum;
 						this.c.selected.month = target[0].monthNum;
 						this.c.selected.day = target[0].dateNum;
 					} else {
 						this.c.selected.year = this.c.selected.year - 1;
-						this.c.selected.month = this.c.weeksCalendar[
-							this.c.weeksCalendar.length - 1
-						][0].monthNum;
-						this.c.selected.day = this.c.weeksCalendar[
-							this.c.weeksCalendar.length - 1
-						][0].dateNum;
+						this.c.selected.month =
+							this.c.weeksCalendar[
+								this.c.weeksCalendar.length - 1
+							][0].monthNum;
+						this.c.selected.day =
+							this.c.weeksCalendar[
+								this.c.weeksCalendar.length - 1
+							][0].dateNum;
 					}
 				}}
 				iconProps={{ iconName: "Previous" }}
@@ -191,7 +192,8 @@ export class CalendarPage extends React.Component {
 														ev,
 														newValue
 													) => {
-														this.showAll = newValue!;
+														this.showAll =
+															newValue!;
 													}}
 													className="appointments-toggle"
 												/>
@@ -225,9 +227,12 @@ export class CalendarPage extends React.Component {
 									<DatePicker
 										onSelectDate={(date) => {
 											if (date) {
-												this.c.selected.year = date.getFullYear();
-												this.c.selected.month = date.getMonth();
-												this.c.selected.day = date.getDate();
+												this.c.selected.year =
+													date.getFullYear();
+												this.c.selected.month =
+													date.getMonth();
+												this.c.selected.day =
+													date.getDate();
 											}
 										}}
 										formatDate={() => {
@@ -276,7 +281,8 @@ export class CalendarPage extends React.Component {
 											dateRangeType: DateRangeType.Week,
 											strings: {
 												months: dateNames.months(),
-												shortMonths: dateNames.monthsShort(),
+												shortMonths:
+													dateNames.monthsShort(),
 												days: [
 													"Sunday",
 													"Monday",
@@ -329,9 +335,12 @@ export class CalendarPage extends React.Component {
 											iconName: "GotoToday",
 										}}
 										onClick={() => {
-											this.c.selected.day = this.c.currentDay;
-											this.c.selected.month = this.c.currentMonth;
-											this.c.selected.year = this.c.currentYear;
+											this.c.selected.day =
+												this.c.currentDay;
+											this.c.selected.month =
+												this.c.currentMonth;
+											this.c.selected.year =
+												this.c.currentYear;
 										}}
 										text="Today"
 									/>
@@ -357,20 +366,23 @@ export class CalendarPage extends React.Component {
 											[]
 										)
 										.map((day) => {
-											const num = modules.appointments!.appointmentsForDay(
-												day.yearNum,
-												day.monthNum + 1,
-												day.dateNum,
-												this.filter,
-												this.showAll
-													? undefined
-													: core.user.currentUser!._id
-											).length;
+											const num =
+												modules.appointments!.appointmentsForDay(
+													day.yearNum,
+													day.monthNum + 1,
+													day.dateNum,
+													this.filter,
+													this.showAll
+														? undefined
+														: core.user.currentUser!
+																._id
+												).length;
 											const isWeekend =
 												day.weekDay.isWeekend;
-											const isSelected = this.c.selectedWeek.find(
-												(x) => x === day
-											);
+											const isSelected =
+												this.c.selectedWeek.find(
+													(x) => x === day
+												);
 											const isCurrent =
 												day.dateNum ===
 													this.c.currentDay &&
@@ -386,9 +398,10 @@ export class CalendarPage extends React.Component {
 											});
 										})
 										.map((day, index, arr) => {
-											const indexOfFirstIsSelected = arr.findIndex(
-												(x) => x.isSelected
-											);
+											const indexOfFirstIsSelected =
+												arr.findIndex(
+													(x) => x.isSelected
+												);
 											const isPast =
 												indexOfFirstIsSelected > index;
 											const isFuture =
@@ -676,7 +689,8 @@ export class CalendarPage extends React.Component {
 								className="new-appointment"
 								onChange={(ev, option) => {
 									const newApt = modules.appointments!.new();
-									newApt.patientID = this.newAppointmentForPatientID;
+									newApt.patientID =
+										this.newAppointmentForPatientID;
 									newApt.date = new Date(
 										this.c.selected.year,
 										this.c.selected.month,

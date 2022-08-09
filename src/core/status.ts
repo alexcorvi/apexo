@@ -43,7 +43,7 @@ export class Status {
 	};
 	@observable loginType: LoginType | "" = "";
 
-	@observable version: "community" | "supported" | "offline" =
+	@observable version: "community" | "offline" =
 		(store.get("version") as any) || "community";
 
 	constructor() {
@@ -165,9 +165,6 @@ export class Status {
 	}
 
 	async validateOnlineStatus() {
-		// TODO: check JWT expiration time
-		// refresh token when it's halfway into expiring
-		// BLOCKED BY: https://github.com/usefulteam/jwt-auth/issues/1
 		const t0 = new Date().getTime();
 		try {
 			if (this.keepServerOffline) {

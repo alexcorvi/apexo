@@ -1,3 +1,4 @@
+import { imagesTable } from "../../../core/images-table";
 import { formatDate, generateID } from "@utils";
 import { computed, observable } from "mobx";
 import { Model, observeModel } from "pouchx";
@@ -18,8 +19,6 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 
 	@observable name: string = "";
 
-	@observable avatar: string = "";
-
 	@observable birthYear: number = 0;
 
 	@observable gender: keyof typeof gender = gender.male;
@@ -37,6 +36,18 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 	@observable medicalHistory: string[] = [];
 
 	@observable gallery: string[] = [];
+
+	@observable galbum: string = "";
+
+	@observable galbumPhotos: string[] = [];
+
+	@computed get totalImages() {
+		return this.gallery.concat(this.galbumPhotos);
+	}
+
+	@computed get avatar() {
+		return this.totalImages[0];
+	}
 
 	teeth: Tooth[] = [];
 
@@ -147,29 +158,37 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 	fromJSON(json: PatientSchema) {
 		for (let index = 0; index < ISOTeeth.permanent.length; index++) {
 			const number = ISOTeeth.permanent[index];
-			this.teeth[number] = new Tooth().fromISO(number);
+			this.teeth[number] = new Tooth(this).fromISO(number);
 		}
 		for (let index = 0; index < ISOTeeth.deciduous.length; index++) {
 			const number = ISOTeeth.deciduous[index];
-			this.teeth[number] = new Tooth().fromISO(number);
+			this.teeth[number] = new Tooth(this).fromISO(number);
 		}
 
 		this._id = json._id;
 		this.name = json.name;
-		this.avatar = json.avatar || "";
 		this.birthYear = json.birthYear;
 		this.gender = json.gender;
 		this.tags = json.tags;
 		this.address = json.address;
 		this.email = json.email;
 		this.phone = json.phone;
+		this.galbum = json.galbum || "";
+
+		// async grab google photos
+		if (this.galbum) {
+			imagesTable.grabGPhotos(this.galbum).then((res) => {
+				this.galbumPhotos = res;
+			});
+		}
+
 		this.medicalHistory = Array.isArray(json.medicalHistory)
 			? json.medicalHistory
 			: [];
 		this.gallery = json.gallery || [];
 		json.teeth.map((toothObj) => {
 			if (toothObj) {
-				const tooth = new Tooth().fromJSON(toothObj);
+				const tooth = new Tooth(this).fromJSON(toothObj);
 				this.teeth[tooth.ISO] = tooth;
 			}
 		});
@@ -186,7 +205,6 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 		return {
 			_id: this._id,
 			name: this.name,
-			avatar: this.avatar,
 			birthYear: this.birthYear,
 			gender: this.gender,
 			tags: this.tags,
@@ -195,6 +213,7 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 			phone: this.phone,
 			medicalHistory: Array.from(this.medicalHistory),
 			gallery: Array.from(this.gallery),
+			galbum: this.galbum,
 			teeth: Array.from(
 				this.teeth
 					.filter((x) => x)
@@ -210,5 +229,9 @@ export class Patient extends Model<PatientSchema> implements PatientSchema {
 				})
 			),
 		};
+	}
+
+	isGooglePhotos(link: string) {
+		return this.totalImages.indexOf(link) + 1 > this.gallery.length;
 	}
 }

@@ -12,6 +12,7 @@ export class TagInputComponent extends React.Component<
 		noResultsFoundText?: string;
 		maxItems?: number;
 		className?: string;
+		mainClassName?: string;
 		disabled?: boolean;
 		value: { key: string; text: string }[];
 		onChange?: (keys: string[]) => void;
@@ -21,9 +22,12 @@ export class TagInputComponent extends React.Component<
 > {
 	filterOptions(filter: string) {
 		return (
-			(this.props.loose && filter.length
-				? [{ key: filter, text: filter }].concat(this.props.options)
-				: this.props.options
+			(
+				this.props.loose &&
+				filter.length &&
+				this.props.options.findIndex((o) => o.text === filter) === -1
+					? [{ key: filter, text: filter }].concat(this.props.options)
+					: this.props.options
 			)
 				// apply filter
 				.filter(
@@ -50,7 +54,11 @@ export class TagInputComponent extends React.Component<
 
 	render() {
 		return (
-			<div className="tag-input-component">
+			<div
+				className={`tag-input-component ${
+					this.props.mainClassName ? this.props.mainClassName : ""
+				}`}
+			>
 				<Label>{this.props.label}</Label>
 				<TagPicker
 					className={`${this.props.errorMessage ? "has-error" : ""} ${

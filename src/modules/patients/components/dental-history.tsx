@@ -1,5 +1,6 @@
 import { text } from "@core";
 import * as core from "@core";
+import { AppointmentsList } from "@modules";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
@@ -150,9 +151,10 @@ export class DentalHistoryPanel extends React.Component<
 						isLightDismiss={true}
 						onDismiss={() => core.router.unSelectSub()}
 						onRenderNavigation={() => {
-							const tooth = this.props.patient.teeth[
-								Number(core.router.selectedSub)
-							];
+							const tooth =
+								this.props.patient.teeth[
+									Number(core.router.selectedSub)
+								];
 
 							return (
 								<div className="panel-heading panel-heading-tooth">
@@ -229,6 +231,16 @@ export class DentalHistoryPanel extends React.Component<
 										this.props.patient.saveToPouch();
 									}}
 								/>
+								<h4>Related Appointments:</h4>
+								<div>
+									<AppointmentsList
+										list={
+											this.props.patient.teeth[
+												Number(core.router.selectedSub)
+											].appointments
+										}
+									></AppointmentsList>
+								</div>
 							</div>
 						) : (
 							""
@@ -255,7 +267,7 @@ export class DentalHistoryPanel extends React.Component<
 			>
 				<span
 					className="has-notes"
-					style={tooth.notes.length ? {} : { display: "none" }}
+					style={tooth.concern ? {} : { display: "none" }}
 				/>
 				{tooth.ISO}
 			</td>

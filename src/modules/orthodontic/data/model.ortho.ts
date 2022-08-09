@@ -91,8 +91,10 @@ export class Visit extends SubModel<VisitSchema> implements VisitSchema {
 }
 
 @observeModel
-export class OrthoCase extends Model<OrthoCaseSchema>
-	implements OrthoCaseSchema {
+export class OrthoCase
+	extends Model<OrthoCaseSchema>
+	implements OrthoCaseSchema
+{
 	@observable _id: string = generateID();
 
 	@observable startedDate: number = 0;
@@ -218,16 +220,20 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 			);
 		}
 
-		if (this.overJet > 3 || this.overJet < 1) {
-			computedProblemsArr.push(
-				`${text("overjet")} :${this.overJet} ${text("mm")}`
-			);
+		if (this.overJet > 3) {
+			computedProblemsArr.push(`${text("overjet")} ↥`);
 		}
 
-		if (this.overBite > 4 || this.overBite < 2) {
-			computedProblemsArr.push(
-				`${text("overbite")} :${this.overBite} ${text("mm")}`
-			);
+		if (this.overJet < 1) {
+			computedProblemsArr.push(`${text("overjet")} ↧`);
+		}
+
+		if (this.overBite > 4) {
+			computedProblemsArr.push(`${text("overbite")} ↥`);
+		}
+
+		if (this.overBite < 2) {
+			computedProblemsArr.push(`${text("overbite")} ↧`);
 		}
 
 		if (this.crossScissorBite.length) {
@@ -239,35 +245,23 @@ export class OrthoCase extends Model<OrthoCaseSchema>
 		}
 
 		if (this.u_crowding > 0) {
-			computedProblemsArr.push(
-				`${text("upper arch crowding by")} ${this.u_crowding}${text(
-					"mm"
-				)}`
-			);
+			const trTxt = text("upper arch crowding by");
+			computedProblemsArr.push(trTxt.substring(0, trTxt.length - 3));
 		}
 
 		if (this.u_spacing > 0) {
-			computedProblemsArr.push(
-				`${text("upper arch spacing by")} ${this.u_spacing}${text(
-					"mm"
-				)}`
-			);
+			const trTxt = text("upper arch spacing by");
+			computedProblemsArr.push(trTxt.substring(0, trTxt.length - 3));
 		}
 
 		if (this.l_crowding > 0) {
-			computedProblemsArr.push(
-				`${text("lower arch crowding by")} ${this.l_crowding}${text(
-					"mm"
-				)}`
-			);
+			const trTxt = text("lower arch crowding by");
+			computedProblemsArr.push(trTxt.substring(0, trTxt.length - 3));
 		}
 
 		if (this.l_spacing > 0) {
-			computedProblemsArr.push(
-				`${text("lower arch spacing by")} ${this.l_spacing}${text(
-					"mm"
-				)}`
-			);
+			const trTxt = text("lower arch spacing by");
+			computedProblemsArr.push(trTxt.substring(0, trTxt.length - 3));
 		}
 
 		return computedProblemsArr;

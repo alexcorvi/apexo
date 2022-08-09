@@ -90,10 +90,7 @@ export function preUniqueString() {
 }
 
 export function uniqueString() {
-	let unique = Md5.hashStr(store.get("LSL_hash")).toString();
-	if (status.version === "supported") {
-		unique = Md5.hashStr(preUniqueString()).toString();
-	}
+	const unique = Md5.hashStr(store.get("LSL_hash")).toString();
 	return unique;
 }
 
@@ -103,36 +100,29 @@ export async function genLocalInstance<S = any>(
 	const PouchDB = await importPouchDB();
 	const localName = dbName + "_" + Md5.hashStr(status.server + username());
 	return localTransformation(
-		new PouchDB<S>(localName, { auto_compaction: true }),
+		new PouchDB<S>(localName, { auto_compaction: true, revs_limit: 2 }),
 		dbName
 	);
 }
 
 export async function genRemoteInstance<S = any>(dbName: string) {
 	const PouchDB = await importPouchDB();
-	const remoteName =
-		status.version === "supported" ? `c_${username()}_${dbName}` : dbName;
+	const remoteName = dbName;
 	return remoteTransformations(
-		new PouchDB<S>(
-			`${
-				status.version === "supported"
-					? "https://sdb.apexo.app"
-					: status.server
-			}/${remoteName}`,
-			{
-				fetch: (url, opts) => {
-					return PouchDB.fetch(url, {
-						...opts,
-						credentials:
-							status.version === "community" ? "include" : "omit",
-						headers: {
-							Authorization: `Bearer ${store.get("LSL_time")}`,
-							"Content-Type": "application/json",
-						},
-					});
-				},
-			}
-		),
+		new PouchDB<S>(`${status.server}/${remoteName}`, {
+			revs_limit: 2,
+			auto_compaction: true,
+			fetch: (url, opts) => {
+				return PouchDB.fetch(url, {
+					...opts,
+					credentials: "include",
+					headers: {
+						Authorization: `Bearer ${store.get("LSL_time")}`,
+						"Content-Type": "application/json",
+					},
+				});
+			},
+		}),
 		dbName
 	);
 }
@@ -150,17 +140,7 @@ export function remoteTransformations<S>(
 		db,
 		transVars.unique,
 		transVars.usableDefaults[name] || {},
-		true,
-		status.version === "supported",
-		status.version === "supported"
-		/**
-		 * You might be tempted to try encrypting
-		 * the community version.
-		 * But the problem is 'unique' is not
-		 * static on the community version,
-		 * so an encryption with the wrong value,
-		 * might lead to a permanent data loss
-		 */
+		true
 	);
 	return db;
 }
@@ -222,7 +202,36 @@ export async function connect<S>(dbName: string, defaults: any) {
 			await remoteDatabase.compact();
 		}
 	};
+	await removeConflicts(localDatabase);
 	return { localDatabase, remoteDatabase };
+}
+
+export async function removeConflicts(db: PouchDB.Database<any>) {
+	const res = await db.allDocs({
+		conflicts: true,
+		include_docs: true,
+	});
+
+	for (let index = 0; index < res.rows.length; index++) {
+		const entry = res.rows[index];
+		if (
+			entry.doc &&
+			entry.doc!._conflicts &&
+			entry.doc!._conflicts.length
+		) {
+			const currentRevision = entry.value.rev;
+			const conflicts = entry.doc!._conflicts;
+			for (let cIndex = 0; cIndex < conflicts.length; cIndex++) {
+				const conflict = conflicts[cIndex];
+				if (conflict !== currentRevision) {
+					await db.remove({
+						_id: entry.doc!._id,
+						_rev: conflict,
+					});
+				}
+			}
+		}
+	}
 }
 
 export { documentTransformation };

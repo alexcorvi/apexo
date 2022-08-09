@@ -2,6 +2,7 @@
 node_modules
 
 # misc
+token
 .DS_Store
 .env
 npm-debug.log*

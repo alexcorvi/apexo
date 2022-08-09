@@ -9,18 +9,14 @@ export async function checkServer(
 	server: string
 ): Promise<false | { name: string | null }> {
 	return new Promise((resolve) => {
-		const supported = core.status.version === "supported";
 		if (connSetting.emulateOffline) {
 			resolve(false);
 		}
 		const xhr = new XMLHttpRequest();
 		xhr.timeout = 2500;
 		xhr.withCredentials = true;
-		if (supported) {
-			server = "https://sdb.apexo.app/status";
-			xhr.withCredentials = false;
-		}
-		xhr.open("GET", server + `${supported ? "" : "/_session"}`, true);
+
+		xhr.open("GET", server + `${"/_session"}`, true);
 		if (server === "https://sdb.apexo.app/status") {
 			xhr.setRequestHeader(
 				"Authorization",

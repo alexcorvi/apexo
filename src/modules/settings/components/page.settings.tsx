@@ -49,7 +49,7 @@ export class SettingsPage extends React.Component {
 	@observable key: string = Math.random().toString();
 
 	switchLang(code: string) {
-		modules.setting!.setSetting("lang", code);
+		localStorage.setItem("lang", code);
 		this.forceUpdate();
 	}
 	componentDidMount() {
@@ -109,9 +109,11 @@ export class SettingsPage extends React.Component {
 														text: x.localName,
 													})
 												)}
-												defaultSelectedKey={modules.setting!.getSetting(
-													"lang"
-												)}
+												selectedKey={
+													localStorage.getItem(
+														"lang"
+													) || ""
+												}
 												onChange={(ev, v) => {
 													this.switchLang(
 														v!.key.toString()
@@ -450,7 +452,8 @@ export class SettingsPage extends React.Component {
 														core.restore.fromFile(
 															e.target.files[0]
 														);
-														this.key = Math.random().toString();
+														this.key =
+															Math.random().toString();
 													}
 												}}
 											/>
@@ -492,7 +495,8 @@ export class SettingsPage extends React.Component {
 												.setting!.autoBackups.slice()
 												.reverse()
 												.map((backup, index) => {
-													const now = new Date().getTime();
+													const now =
+														new Date().getTime();
 													const then = new Date(
 														(
 															backup || {
@@ -500,9 +504,10 @@ export class SettingsPage extends React.Component {
 															}
 														).date
 													).getTime();
-													const diffInDays = Math.floor(
-														(now - then) / day
-													);
+													const diffInDays =
+														Math.floor(
+															(now - then) / day
+														);
 													return (
 														<div key={backup.path}>
 															<ProfileSquaredComponent
@@ -533,11 +538,12 @@ export class SettingsPage extends React.Component {
 																						.canEdit
 																				}
 																				onClick={async () => {
-																					const file = await core
-																						.files()
-																						.get(
-																							backup.path
-																						);
+																					const file =
+																						await core
+																							.files()
+																							.get(
+																								backup.path
+																							);
 																					saveAs(
 																						file.startsWith(
 																							"http"
@@ -548,8 +554,7 @@ export class SettingsPage extends React.Component {
 																										file,
 																									],
 																									{
-																										type:
-																											"text/plain;charset=utf-8",
+																										type: "text/plain;charset=utf-8",
 																									}
 																							  ),
 																						`apexo-backup-${formatDate(
@@ -584,14 +589,16 @@ export class SettingsPage extends React.Component {
 																							.canEdit
 																					}
 																					onClick={async () => {
-																						this.inProgress = true;
+																						this.inProgress =
+																							true;
 																						try {
 																							await core.backup.deleteFromFilesServer(
 																								backup.path
 																							);
 																							await modules.setting!.updateAutoBackups();
 																						} catch (e) {}
-																						this.inProgress = false;
+																						this.inProgress =
+																							false;
 																					}}
 																				>
 																					<Icon iconName="trash"></Icon>
@@ -611,7 +618,8 @@ export class SettingsPage extends React.Component {
 																							.canEdit
 																					}
 																					onClick={async () => {
-																						this.inProgress = true;
+																						this.inProgress =
+																							true;
 																						try {
 																							await core.backup.deleteFromFilesServer(
 																								backup.path
@@ -620,7 +628,8 @@ export class SettingsPage extends React.Component {
 																							await core.backup.toFilesServer();
 																							await modules.setting!.updateAutoBackups();
 																						} catch (e) {}
-																						this.inProgress = false;
+																						this.inProgress =
+																							false;
 																					}}
 																				>
 																					<Icon iconName="sync"></Icon>
