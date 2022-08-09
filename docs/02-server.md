@@ -1,20 +1,14 @@
 # Server
 
-As mentioned above, Apexo, as an application doesn't really offer a backend server so, unless you have a supported version subscription ([Can be obtained from here](https://apexo.app/#start)) then you're responsible for setting your own server and maintaining it.
-
-The good news it: **it's not that hard**, especially for developers.
-
 ## The role of servers?
 
-Browsers are really good at displaying your data and maybe storing them temporarily, but when it comes to your patients data, then it must be securely stored in database software. Using a database, your data can be viewed and synchronized across multiple devices too.
+Your data, including patient details, appointments, contact information and financials, need to be securely stored in a remote server using a database. The next step is to create that server and setup the database software. Using a remote server and a database, the data can be viewed and synchronized across multiple devices.
 
-To store your data, apexo uses a database software called [CouchDB](https://couchdb.apache.org/), it's open source and free. And to setup your server, you will not need anything than just a regular installation of CouchDB with minimal configuration.
+### Step 1: Create the server
 
-### Step 1: Deploy your server
+Many cloud services offer affordable services. Personally, I've had success with Vultr high frequency plan, it costs 6\$/month and it runs CouchDB very smoothly.
 
-The first step in the process of setting up your own server, is buying it. Many cloud services offer affordable services. Personally, I've had success with Vultr high frequency plan, it costs 6\$/month and it runs CouchDB very smoothly.
-
--   Use this affiliate link to register for vultr: [https://www.vultr.com/?ref=8564891-6G](https://www.vultr.com/?ref=8564891-6G) and you will get \$100 for free as you signup.
+-   Use this affiliate link to register for vultr: [https://www.vultr.com/?ref=8564890](https://www.vultr.com/?ref=8564890) and you will get \$100 for free as you signup.
 
 -   After signing up deploy a new [high frequency server](https://my.vultr.com/deploy/) with Ubuntu 20.04.
 
@@ -198,11 +192,3 @@ Next, head to [apexo](https://web.apexo.app), use the _community version_ tab, e
 4. **Maintaining**: Every server needs regular maintenance, always consider looking through your log files, monitoring your uptime and checking the overall health of your server.
 
 5. **Performance**: as your data begin to pile, you will need to scale your server accordingly, CouchDB has been designed beautifully for this. (Lookup CouchDB clustering & horizontal scaling).
-
----
-
-> Note: The supported version doesn't include any of the above (or below) steps, as you'll be using our HIPAA-compliant, secure, highly optimized and regularly maintained servers in addition to 24/7 priority support. You can subscribe to the supported version for only £299 / year.
-
-> Get the supported version using this link: [https://apexo.app/#start](https://apexo.app/#start)
-
----

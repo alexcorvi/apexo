@@ -1,5 +1,12 @@
 ## Changelog
 
+### 4.1.0
+
+-   Fixed few issues with conflicts
+-   Sorted patient details and orthodontic panels for better and faster input
+-   Add support for google photos albums
+-   Permanently stopped supported version
+
 ### 4.0.3
 
 -   Fixed touch screen scrolling (for good)

@@ -78,7 +78,7 @@ async function fetchMD(relativePath, linesToDelete) {
 
 async function placeMDContent(relativePath, linesToDelete, elementID) {
 	let content = await fetchMD(relativePath, linesToDelete);
-	document.getElementById(elementID).innerHTML = marked(content);
+	document.getElementById(elementID).innerHTML = marked.parse(content);
 }
 
 async function loadContent() {
@@ -86,7 +86,6 @@ async function loadContent() {
 	await placeMDContent("./docs/01-front.md", 1, "front-content");
 	await placeMDContent("./docs/02-server.md", 1, "server-content");
 	await placeMDContent("./docs/03-dropbox.md", 1, "dropbox-content");
-	await placeMDContent("./docs/04-translation.md", 1, "translation-content");
 	await placeMDContent("./CHANGELOG.md", 1, "changelog-content");
 	await placeMDContent("./CONTRIBUTING.md", 1, "contributing-content");
 	await placeMDContent("./CODE_OF_CONDUCT.md", 1, "code-of-conduct-content");
