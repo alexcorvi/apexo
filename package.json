@@ -1,7 +1,7 @@
 {
-	"name": "apexo.app",
+	"name": "probot.app",
 	"version": "4.1.0",
-	"description": "Clinic Manager",
+	"description": "Probot Corp",
 	"author": "Ali Saleem",
 	"dependencies": {
 		"chart.js": "^2.9.3",
