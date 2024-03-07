@@ -1,7 +1,7 @@
 {
 	"lang": "en",
-	"name": "Apexo",
-	"short_name": "Apexo",
+	"name": "Probot Corp",
+	"short_name": "Probot",
 	"icons": [
 		{
 			"src": "/android-chrome-192x192.png",
@@ -60,7 +60,7 @@
 			"type": "image/png"
 		}
 	],
-	"start_url": "https://web.apexo.app",
+	"start_url": "https://web.probot.app",
 	"theme_color": "#ffffff",
 	"background_color": "#ffffff",
 	"display": "standalone"
